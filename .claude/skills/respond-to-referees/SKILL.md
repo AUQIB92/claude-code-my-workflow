@@ -15,16 +15,16 @@ Produce a complete response-to-referees document by cross-referencing the refere
 - `$0` — path to the referee report
 - `$1` — path to the revised manuscript
 
-Supported formats and how to read them:
+Supported formats and how to read them. In the commands below, `FILE` stands for the input path being converted — either `$0` (referee report) or `$1` (revised manuscript). Always use `mktemp` for the temp file (not a predictable `/tmp/...` name) so paths with spaces and concurrent runs don't collide, and so untrusted `FILE` paths can't clobber other temp files via symlink races.
 
 | Format | How to extract text |
 | --- | --- |
 | `.tex`, `.qmd`, `.md`, `.txt` | Read directly with the `Read` tool. |
-| `.pdf` | `pdftotext "$file" -` (poppler-utils, available on macOS/Linux). Pipe into a temp file in `/tmp/` for grep. |
-| `.docx` | `pandoc "$file" -t plain -o /tmp/$(basename "$file" .docx).txt` (or `docx2txt`). Then read/grep the temp file. |
-| `.html` | `pandoc "$file" -t plain -o /tmp/...txt`. |
+| `.pdf` | `TMP=$(mktemp --suffix=.txt) && pdftotext "FILE" "$TMP"` (poppler-utils; use `mktemp -t ...` on macOS if `--suffix` is unsupported). Grep `"$TMP"`. |
+| `.docx` | `TMP=$(mktemp --suffix=.txt) && pandoc "FILE" -t plain -o "$TMP"` (or `docx2txt "FILE" "$TMP"`). Grep `"$TMP"`. |
+| `.html` | `TMP=$(mktemp --suffix=.txt) && pandoc "FILE" -t plain -o "$TMP"`. Grep `"$TMP"`. |
 
-If a tool is missing or extraction fails, ask the user to provide a plain-text version (`.txt` or `.md`) and stop.
+If a required tool is missing or extraction fails, ask the user to provide a plain-text version (`.txt` or `.md`) and stop.
 
 ## Workflow
 
@@ -50,7 +50,7 @@ Before any parsing or grep, convert non-text inputs (`.pdf`, `.docx`, `.html`) t
 For every concern:
 
 1. Extract the key terms from the referee's wording.
-2. `Grep` the **plain-text version** of the revised manuscript for those terms (and synonyms). Note: Grep only works on text — if the original was `.pdf` or `.docx`, grep the converted file from Step 0.
+2. `Grep` the **plain-text version** of the revised manuscript for those terms (and synonyms). Note: Grep only works on text — if the original was any non-text format (for example, `.pdf`, `.docx`, or `.html`), grep the converted temp file from Step 0.
 3. `Read` the surrounding context (±20 lines) to confirm the change addresses the concern.
 4. Note the page/section/line numbers in the **original** file (not the temp file) for the response document.
 
