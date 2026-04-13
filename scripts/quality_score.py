@@ -96,8 +96,10 @@ class IssueDetector:
     def check_quarto_compilation(filepath: Path) -> Tuple[bool, str]:
         """Check if Quarto file compiles successfully."""
         try:
+            # Run from the file's parent directory with just the filename,
+            # so relative paths inside the .qmd (themes, includes) resolve.
             result = subprocess.run(
-                ['quarto', 'render', str(filepath), '--to', 'html'],
+                ['quarto', 'render', filepath.name, '--to', 'html'],
                 capture_output=True,
                 text=True,
                 timeout=120,

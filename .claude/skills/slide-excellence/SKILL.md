@@ -38,9 +38,11 @@ Parse `$ARGUMENTS` for the filename. Resolve path in `Quarto/` or `Slides/`.
 - Frame count comparison, environment parity, content drift
 - Save: `quality_reports/[FILE]_parity_report.md`
 
-**Agent 6: Substance Review** (optional, for .tex files)
-- Domain correctness via domain-reviewer protocol
+**Agent 6: Substance Review** (MANDATORY for .tex files, optional for .qmd)
+- Spawn via `Task` with `subagent_type=domain-reviewer`
+- Domain correctness via the 5-lens framework (Assumption Audit, Derivation Check, Citation Fidelity, Code-Theory Alignment, Logic Chain)
 - Save: `quality_reports/[FILE]_substance_review.md`
+- **Customize first:** `.claude/agents/domain-reviewer.md` ships as a template. Replace the 5 lenses with checks for your field (economics, physics, biology, etc.) before running. See the guide's "Customizing for Your Domain" section.
 
 ### 3. Synthesize Combined Summary
 
