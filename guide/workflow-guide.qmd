@@ -153,13 +153,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 10 agents, 22 skills, and 18 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 10 agents, 23 skills, and 18 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 10 agents, 22 skills, 18 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 10 agents, 23 skills, 18 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -1751,6 +1751,8 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 
 **Adapting for other artifacts:** The same principle works for replication packages (7 passes: code, data, documentation, licensing, runtime, outputs, README) or grant proposals (significance, approach, innovation, environment, budget).
 
+**For the R&R stage (after referee comments arrive):** Use `/respond-to-referees [report] [revised-manuscript]`. It parses each concern, classifies coverage (addressed / partially / deferred / disagreement), points to specific revisions, and drafts the response document using `templates/response-to-referees.md`.
+
 ---
 
 # The Ecosystem: What Others Have Built {#sec-ecosystem}
@@ -2205,6 +2207,7 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/research-ideation` | `.claude/skills/research-ideation/` | Research questions and strategies |
 | `/interview-me` | `.claude/skills/interview-me/` | Interactive research interview |
 | `/review-paper` | `.claude/skills/review-paper/` | Manuscript review |
+| `/respond-to-referees` | `.claude/skills/respond-to-referees/` | R&R cross-reference and response draft |
 | `/data-analysis` | `.claude/skills/data-analysis/` | End-to-end R analysis |
 | `/learn` | `.claude/skills/learn/` | Extract discoveries into persistent skills |
 | `/context-status` | `.claude/skills/context-status/` | Show session health and context usage |
