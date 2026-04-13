@@ -1,14 +1,12 @@
 # My Claude Code Setup
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Last Updated](https://img.shields.io/badge/Last%20Updated-2026--04--13-brightgreen.svg)](CHANGELOG.md)
 [![Changelog](https://img.shields.io/badge/See-CHANGELOG-blue.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
 
-> **Actively maintained.** A summary of how I use Claude Code for academic work — slides, papers, data analysis, and more — packaged so you can fork it for your own research. See [CHANGELOG.md](CHANGELOG.md) for what's new.
+> **Actively maintained.** A summary of how I use Claude Code for academic work — slides, papers, data analysis, and more — packaged so you can fork it for your own research. See [CHANGELOG.md](CHANGELOG.md) for the latest changes.
 
 **Live site:** [psantanna.com/claude-code-my-workflow](https://psantanna.com/claude-code-my-workflow/)
-**Last Updated:** 2026-04-13
 
 A ready-to-fork foundation for AI-assisted academic work. You describe what you want — lecture slides, a research paper, a data analysis, a replication package — and Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results. Like a contractor who handles the entire job. Extracted from a production PhD course and extended by a growing [community](#community--extensions).
 
