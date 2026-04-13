@@ -63,15 +63,20 @@ check_optional "GitHub CLI"   "gh"       "https://cli.github.com/"
 echo ""
 
 echo -e "${BOLD}Git configuration:${RESET}"
-git_name=$(git config user.name 2>/dev/null || true)
-git_email=$(git config user.email 2>/dev/null || true)
-if [ -n "$git_name" ] && [ -n "$git_email" ]; then
-    echo -e "  ${GREEN}✓${RESET} git user: $git_name <$git_email>"
-    pass=$((pass + 1))
+if command -v git >/dev/null 2>&1; then
+    git_name=$(git config user.name 2>/dev/null || true)
+    git_email=$(git config user.email 2>/dev/null || true)
+    if [ -n "$git_name" ] && [ -n "$git_email" ]; then
+        echo -e "  ${GREEN}✓${RESET} git user: $git_name <$git_email>"
+        pass=$((pass + 1))
+    else
+        echo -e "  ${YELLOW}⚠${RESET} git user.name / user.email not set"
+        echo -e "    Run: git config --global user.name \"Your Name\""
+        echo -e "    Run: git config --global user.email \"you@example.com\""
+        warn=$((warn + 1))
+    fi
 else
-    echo -e "  ${YELLOW}⚠${RESET} git user.name / user.email not set"
-    echo -e "    Run: git config --global user.name \"Your Name\""
-    echo -e "    Run: git config --global user.email \"you@example.com\""
+    echo -e "  ${YELLOW}⚠${RESET} skipped — install git first (see required tools above)"
     warn=$((warn + 1))
 fi
 echo ""
