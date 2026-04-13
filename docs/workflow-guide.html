@@ -2547,7 +2547,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 20, 2026</p>
+      <p class="date-modified">April 13, 2026</p>
     </div>
   </div>
     
@@ -2745,7 +2745,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>You talk, Claude orchestrates.</strong> The 10 agents, 22 skills, and 18 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
+<p><strong>You talk, Claude orchestrates.</strong> The 10 agents, 23 skills, and 18 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2758,7 +2758,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This guide describes the full system — 10 agents, 22 skills, 18 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
+<p>This guide describes the full system — 10 agents, 23 skills, 18 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
 </div>
 </div>
 <hr>
@@ -5235,6 +5235,7 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
        → Produces 7 independent reports
        → Synthesizes into prioritized revision checklist</code></pre>
 <p><strong>Adapting for other artifacts:</strong> The same principle works for replication packages (7 passes: code, data, documentation, licensing, runtime, outputs, README) or grant proposals (significance, approach, innovation, environment, budget).</p>
+<p><strong>For the R&amp;R stage (after referee comments arrive):</strong> Use <code>/respond-to-referees [report] [revised-manuscript]</code>. It parses each concern, classifies coverage (addressed / partially / deferred / disagreement), points to specific revisions, and drafts the response document using <code>templates/response-to-referees.md</code>.</p>
 <hr>
 </section>
 </section>
@@ -5935,21 +5936,26 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <td>Manuscript review</td>
 </tr>
 <tr class="odd">
+<td><code>/respond-to-referees</code></td>
+<td><code>.claude/skills/respond-to-referees/</code></td>
+<td>R&amp;R cross-reference and response draft</td>
+</tr>
+<tr class="even">
 <td><code>/data-analysis</code></td>
 <td><code>.claude/skills/data-analysis/</code></td>
 <td>End-to-end R analysis</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/learn</code></td>
 <td><code>.claude/skills/learn/</code></td>
 <td>Extract discoveries into persistent skills</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/context-status</code></td>
 <td><code>.claude/skills/context-status/</code></td>
 <td>Show session health and context usage</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/deep-audit</code></td>
 <td><code>.claude/skills/deep-audit/</code></td>
 <td>Repository-wide consistency audit</td>

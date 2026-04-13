@@ -11,6 +11,8 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 
 **Input:** `$ARGUMENTS` — path to a paper (.tex, .pdf, or .qmd), or a filename in `master_supporting_docs/`.
 
+> **Already received referee comments?** Use [`/respond-to-referees`](../respond-to-referees/SKILL.md) instead. That skill cross-references each referee concern against the revised manuscript and drafts a complete response document.
+
 ---
 
 ## Steps

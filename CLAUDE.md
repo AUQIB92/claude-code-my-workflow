@@ -94,6 +94,7 @@ python scripts/quality_score.py Quarto/file.qmd
 | `/research-ideation [topic]` | Research questions + strategies |
 | `/interview-me [topic]` | Interactive research interview |
 | `/review-paper [file]` | Manuscript review |
+| `/respond-to-referees [report] [manuscript]` | R&R cross-reference + response draft |
 | `/data-analysis [dataset]` | End-to-end R analysis |
 | `/learn [skill-name]` | Extract discovery into persistent skill |
 | `/context-status` | Show session health + context usage |
