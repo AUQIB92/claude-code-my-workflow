@@ -17,7 +17,9 @@
 - **Verify after** -- compile/render and confirm output at the end of every task
 - **Single source of truth** -- Beamer `.tex` is authoritative; Quarto `.qmd` derives from it
 - **Quality gates** -- nothing ships below 80/100
-- **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to MEMORY.md
+- **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to [MEMORY.md](MEMORY.md)
+
+Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and session logs are in [quality_reports/](quality_reports/).
 
 ---
 
@@ -99,38 +101,30 @@ python scripts/quality_score.py Quarto/file.qmd
 
 ---
 
-<!-- CUSTOMIZE: Replace the example entries below with your own
-     Beamer environments and Quarto CSS classes. These are examples
-     from the original project — delete them and add yours. -->
+<!-- CUSTOMIZE: Replace placeholder rows ([your-env], [.your-class]) with your own.
+     Delete the rows marked "(example — delete)" once you've added yours. -->
 
 ## Beamer Custom Environments
 
-| Environment       | Effect        | Use Case       |
-|-------------------|---------------|----------------|
-| `[your-env]`      | [Description] | [When to use]  |
-
-<!-- Example entries (delete and replace with yours):
-| `keybox` | Gold background box | Key points |
-| `highlightbox` | Gold left-accent box | Highlights |
-| `definitionbox[Title]` | Blue-bordered titled box | Formal definitions |
--->
+| Environment | Effect | Use Case |
+| --- | --- | --- |
+| `[your-env]` | [Description] | [When to use] |
+| `keybox` | Gold background box | Key points *(example — delete)* |
+| `definitionbox[Title]` | Blue-bordered titled box | Formal definitions *(example — delete)* |
 
 ## Quarto CSS Classes
 
-| Class              | Effect        | Use Case       |
-|--------------------|---------------|----------------|
-| `[.your-class]`    | [Description] | [When to use]  |
-
-<!-- Example entries (delete and replace with yours):
-| `.smaller` | 85% font | Dense content slides |
-| `.positive` | Green bold | Good annotations |
--->
+| Class | Effect | Use Case |
+| --- | --- | --- |
+| `[.your-class]` | [Description] | [When to use] |
+| `.smaller` | 85% font | Dense content *(example — delete)* |
+| `.positive` | Green bold | Good annotations *(example — delete)* |
 
 ---
 
 ## Current Project State
 
 | Lecture | Beamer | Quarto | Key Content |
-|---------|--------|--------|-------------|
+| --- | --- | --- | --- |
+| HelloWorld *(sample — delete when ready)* | `HelloWorld.tex` | `HelloWorld.qmd` | Minimal deck to verify setup |
 | 1: [Topic] | `Lecture01_Topic.tex` | `Lecture1_Topic.qmd` | [Brief description] |
-| 2: [Topic] | `Lecture02_Topic.tex` | -- | [Brief description] |

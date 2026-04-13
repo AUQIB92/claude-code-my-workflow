@@ -37,6 +37,23 @@ The [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.ht
 
 **What this does:** Claude reads all the configuration files, fills in your project name, institution, and preferences, then enters contractor mode — planning, implementing, reviewing, and verifying autonomously. You approve the plan and Claude handles the rest.
 
+### 3. Verify Your Setup
+
+Before building real lectures, confirm your environment works:
+
+```bash
+./scripts/validate-setup.sh        # Checks XeLaTeX, Quarto, Python, git, etc.
+```
+
+Then inside Claude:
+
+```text
+/compile-latex HelloWorld          # Compiles Slides/HelloWorld.tex to PDF
+/deploy HelloWorld                 # Renders Quarto/HelloWorld.qmd to HTML
+```
+
+If both succeed, delete `Slides/HelloWorld.tex` and `Quarto/HelloWorld.qmd` and start on your real work.
+
 ---
 
 ## How It Works
