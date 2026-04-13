@@ -12,12 +12,25 @@ Produce a complete response-to-referees document by cross-referencing the refere
 
 ## Inputs
 
-- `$0` — path to the referee report (PDF, .txt, .md, or .docx)
-- `$1` — path to the revised manuscript (`.tex`, `.qmd`, `.md`, or `.docx`)
+- `$0` — path to the referee report
+- `$1` — path to the revised manuscript
 
-If `$0` is a PDF, extract text with `pdftotext "$0" -` (the macOS/Linux poppler-utils tool). If extraction fails, ask the user to provide a `.txt` version.
+Supported formats and how to read them:
+
+| Format | How to extract text |
+| --- | --- |
+| `.tex`, `.qmd`, `.md`, `.txt` | Read directly with the `Read` tool. |
+| `.pdf` | `pdftotext "$file" -` (poppler-utils, available on macOS/Linux). Pipe into a temp file in `/tmp/` for grep. |
+| `.docx` | `pandoc "$file" -t plain -o /tmp/$(basename "$file" .docx).txt` (or `docx2txt`). Then read/grep the temp file. |
+| `.html` | `pandoc "$file" -t plain -o /tmp/...txt`. |
+
+If a tool is missing or extraction fails, ask the user to provide a plain-text version (`.txt` or `.md`) and stop.
 
 ## Workflow
+
+### Step 0: Convert Inputs to Plain Text
+
+Before any parsing or grep, convert non-text inputs (`.pdf`, `.docx`, `.html`) to plain text using the table above. Keep both the temp text file (for grep) and the original (for citation page references).
 
 ### Step 1: Parse the Referee Report
 
@@ -37,9 +50,9 @@ If `$0` is a PDF, extract text with `pdftotext "$0" -` (the macOS/Linux poppler-
 For every concern:
 
 1. Extract the key terms from the referee's wording.
-2. `Grep` the revised manuscript for those terms (and synonyms).
+2. `Grep` the **plain-text version** of the revised manuscript for those terms (and synonyms). Note: Grep only works on text — if the original was `.pdf` or `.docx`, grep the converted file from Step 0.
 3. `Read` the surrounding context (±20 lines) to confirm the change addresses the concern.
-4. Note the page/section/line numbers of the revision.
+4. Note the page/section/line numbers in the **original** file (not the temp file) for the response document.
 
 ### Step 3: Classify Coverage
 
@@ -67,7 +80,7 @@ Tone conventions: courteous but firm; never defensive; never quote the referee b
 
 ### Step 5: Produce the Response Document
 
-Write the output to `response_to_referees.md` (or a path the user specifies). Use the structure in `templates/response-to-referees.md`:
+Write the output to `response-to-referees.md` (matching the template filename) or a path the user specifies. Use the structure in `templates/response-to-referees.md`:
 
 1. **Header** — journal, manuscript ID, revision round, date.
 2. **Cover paragraph** — one paragraph thanking the editor and referees, summarizing the major changes at a high level.
@@ -76,7 +89,7 @@ Write the output to `response_to_referees.md` (or a path the user specifies). Us
 
 ### Step 6: Warning Summary (MANDATORY)
 
-After the document is written, print to stdout (NOT into the document):
+After the document is written, include this summary in your **final chat message to the user** (NOT inside the response document):
 
 ```
 ## Unaddressed concerns requiring author input
@@ -85,12 +98,12 @@ After the document is written, print to stdout (NOT into the document):
 - R2.7: [summary] — flagged as deferred but no rationale yet drafted
 ```
 
-If everything is covered, print `All concerns addressed or explicitly classified.`
+If everything is covered, the final message should say `All concerns addressed or explicitly classified.`
 
 ## Output Files
 
-- `response_to_referees.md` — the deliverable
-- (Optional) `response_to_referees_matrix.csv` — machine-readable concern-to-response mapping for tracking across revisions
+- `response-to-referees.md` — the deliverable (filename matches `templates/response-to-referees.md`)
+- (Optional) `response-to-referees-matrix.csv` — machine-readable concern-to-response mapping for tracking across revisions
 
 ## Cross-References
 
