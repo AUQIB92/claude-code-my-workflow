@@ -6,7 +6,7 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
-## [v1.2.0] — 2026-04-13
+## v1.2.0 — 2026-04-13
 
 ### Added
 
@@ -34,7 +34,7 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
-## [v1.1.0] — 2026-03-20
+## v1.1.0 — 2026-03-20
 
 ### Added
 
@@ -60,7 +60,7 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
-## [v1.0.0] — 2026-02-28
+## v1.0.0 — 2026-02-28
 
 ### Initial Release
 
