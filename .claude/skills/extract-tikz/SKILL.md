@@ -9,6 +9,8 @@ allowed-tools: ["Read", "Bash", "Glob", "Task"]
 
 Extract TikZ diagrams from the Beamer source, compile to multi-page PDF, and convert each page to SVG for use in Quarto slides.
 
+> **Creating a brand-new diagram instead of extracting?** Use [`/new-diagram`](../new-diagram/SKILL.md) — it scaffolds from `templates/tikz-snippets/` with the prevention rules pre-applied.
+
 ## Steps
 
 ### Step 0: Freshness Check (MANDATORY)

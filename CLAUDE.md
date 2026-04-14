@@ -84,6 +84,7 @@ python scripts/quality_score.py Quarto/file.qmd
 | `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
 | `/deploy [LectureN]` | Render Quarto + sync to docs/ |
 | `/extract-tikz [LectureN]` | TikZ → PDF → SVG |
+| `/new-diagram [snippet] [output.tex]` | Scaffold a TikZ diagram from the gallery with prevention + review |
 | `/proofread [file]` | Grammar/typo/overflow review |
 | `/visual-audit [file]` | Slide layout audit |
 | `/pedagogy-review [file]` | Narrative, notation, pacing review |

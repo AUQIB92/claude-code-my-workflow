@@ -2745,7 +2745,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>You talk, Claude orchestrates.</strong> The 10 agents, 23 skills, and 20 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
+<p><strong>You talk, Claude orchestrates.</strong> The 10 agents, 24 skills, and 20 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2758,7 +2758,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This guide describes the full system — 10 agents, 23 skills, 20 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
+<p>This guide describes the full system — 10 agents, 24 skills, 20 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
 </div>
 </div>
 <hr>
@@ -5863,101 +5863,106 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <td>TikZ to SVG conversion</td>
 </tr>
 <tr class="even">
+<td><code>/new-diagram</code></td>
+<td><code>.claude/skills/new-diagram/</code></td>
+<td>Scaffold a TikZ diagram from the gallery</td>
+</tr>
+<tr class="odd">
 <td><code>/proofread</code></td>
 <td><code>.claude/skills/proofread/</code></td>
 <td>Run proofreading agent</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/visual-audit</code></td>
 <td><code>.claude/skills/visual-audit/</code></td>
 <td>Run layout audit agent</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/pedagogy-review</code></td>
 <td><code>.claude/skills/pedagogy-review/</code></td>
 <td>Run pedagogy review agent</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/review-r</code></td>
 <td><code>.claude/skills/review-r/</code></td>
 <td>Run R code review agent</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/qa-quarto</code></td>
 <td><code>.claude/skills/qa-quarto/</code></td>
 <td>Critic-fixer adversarial loop</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/slide-excellence</code></td>
 <td><code>.claude/skills/slide-excellence/</code></td>
 <td>Combined multi-agent review</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/translate-to-quarto</code></td>
 <td><code>.claude/skills/translate-to-quarto/</code></td>
 <td>Beamer to Quarto translation</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/validate-bib</code></td>
 <td><code>.claude/skills/validate-bib/</code></td>
 <td>Bibliography validation</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/devils-advocate</code></td>
 <td><code>.claude/skills/devils-advocate/</code></td>
 <td>Design challenge questions</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/create-lecture</code></td>
 <td><code>.claude/skills/create-lecture/</code></td>
 <td>Full lecture creation</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/commit</code></td>
 <td><code>.claude/skills/commit/</code></td>
 <td>Stage, commit, PR, and merge</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/lit-review</code></td>
 <td><code>.claude/skills/lit-review/</code></td>
 <td>Literature search and synthesis</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/research-ideation</code></td>
 <td><code>.claude/skills/research-ideation/</code></td>
 <td>Research questions and strategies</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/interview-me</code></td>
 <td><code>.claude/skills/interview-me/</code></td>
 <td>Interactive research interview</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/review-paper</code></td>
 <td><code>.claude/skills/review-paper/</code></td>
 <td>Manuscript review</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/respond-to-referees</code></td>
 <td><code>.claude/skills/respond-to-referees/</code></td>
 <td>R&amp;R cross-reference and response draft</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/data-analysis</code></td>
 <td><code>.claude/skills/data-analysis/</code></td>
 <td>End-to-end R analysis</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/learn</code></td>
 <td><code>.claude/skills/learn/</code></td>
 <td>Extract discoveries into persistent skills</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>/context-status</code></td>
 <td><code>.claude/skills/context-status/</code></td>
 <td>Show session health and context usage</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>/deep-audit</code></td>
 <td><code>.claude/skills/deep-audit/</code></td>
 <td>Repository-wide consistency audit</td>
