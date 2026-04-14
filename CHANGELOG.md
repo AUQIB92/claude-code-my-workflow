@@ -130,4 +130,4 @@ git merge upstream/main           # or: git rebase upstream/main
 
 Files you almost certainly customized — `CLAUDE.md`, `Bibliography_base.bib`, `Quarto/theme-template.scss`, your lecture files in `Slides/` and `Quarto/`, `.claude/agents/domain-reviewer.md` — may produce merge conflicts. Resolve in favor of your customizations; pull only the infrastructure improvements.
 
-To pin to a specific version: `git checkout v1.2.0`.
+To pin to a specific version: `git checkout v1.3.0` (latest as of 2026-04-13).
