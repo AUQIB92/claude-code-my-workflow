@@ -6,6 +6,35 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## v1.3.0 — 2026-04-13
+
+### Added — TikZ story overhaul
+
+Ported the best parts of Scott Cunningham's [MixtapeTools](https://github.com/scunning1975/MixtapeTools) TikZ infrastructure and wired them into our pipeline end-to-end.
+
+- **`.claude/rules/tikz-prevention.md`** — 6 authoring rules (P1–P6) that stop collisions at write-time: explicit node dimensions, coordinate-map comments, prohibition on `scale=`, directional keyword on every edge label, use the snippet gallery, one tikzpicture per idea.
+- **`.claude/rules/tikz-measurement.md`** — six-pass protocol with concrete formulas: Bézier `max_depth = (chord/2)·tan(bend/2)`, character-width table by font size, label-gap calculation, 0.4 cm shape-boundary rule, matplotlib `arc3` Bézier helpers, full margin matrix.
+- **`templates/tikz-snippets/`** — 8 production-ready standalone `.tex` diagrams (DAG basic, DAG mediation, two-period DiD, event study, timeline, regression scatter, 3-step flowchart, supply-demand). Every snippet compiles on the first try and passes the prevention grep checks.
+- **`Preambles/header.tex`** — production-ready Beamer preamble (previously empty): 11-color palette matching the SCSS, shared TikZ styles (`dag-node`, `decision-node`, `observed-edge`, `counterfactual-edge`, `confound-edge`, `observed-dot`, `counterfactual-dot`), Beamer theme assignments, convenience macros (`\muted`, `\key`, `\good`, `\bad`, `\transitionslide`).
+- **`Preambles/README.md`** — usage + palette contract + inventory.
+- **`scripts/check-palette-sync.sh`** — greps `Preambles/header.tex` and `Quarto/theme-template.scss`, enforces that the five core palette names exist on both sides. Wired into `validate-setup.sh`.
+- **`.claude/skills/new-diagram/`** — scaffold a new TikZ diagram from the gallery with prevention checks pre-applied; compiles standalone, invokes `tikz-reviewer` with measurement citations, loops until APPROVED (max 5 rounds).
+
+### Changed
+
+- **`/extract-tikz`** — mandatory Step 1 prevention pre-check (greps for bare edge labels and `scale=`) before the expensive compile + SVG cycle.
+- **`tikz-reviewer`** agent now requires citing the specific pass and formula from `tikz-measurement.md` for every CRITICAL/MAJOR finding. Vague reports are rejected.
+- **`protect-files.sh`** now recognises two explicit bypass signals: `CLAUDE_CODE_DISABLE_FILE_PROTECTION=1` env var or `permission_mode == "bypassPermissions"` in the hook input. Blocks otherwise. Enables fully-automated runs under bypass mode without weakening default protection.
+- **`settings.json`** allowlist +24 entries for commonly-used tools (read-only: grep/cat/head/tail/awk/find/tree/basename/dirname/file; file ops: cp/mv/touch/mktemp; pipeline: pandoc/docx2txt/pdftotext/npm; git/gh subcommands). Benefits non-bypass users; bypass users unaffected.
+- **Counts:** 23 → 24 skills, 18 → 20 rules. Synced across README, `docs/index.html`, guide body, guide appendix, and CLAUDE.md.
+- **Guide** Step 3 "Adapt Your Theme" rewritten to document the two-surface palette contract and the sync script.
+
+### Attribution
+
+TikZ prevention + measurement rules adapted from `tikz_rules.md` in [scunning1975/MixtapeTools](https://github.com/scunning1975/MixtapeTools). The source repo has no LICENSE file; its README says "Use freely. Attribution appreciated but not required." Both ported rule files cite Scott at the top.
+
+---
+
 ## v1.2.0 — 2026-04-13
 
 ### Added

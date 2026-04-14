@@ -153,13 +153,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 10 agents, 23 skills, and 20 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 10 agents, 24 skills, and 20 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 10 agents, 23 skills, 20 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 10 agents, 24 skills, 20 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -2195,6 +2195,7 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/compile-latex` | `.claude/skills/compile-latex/` | XeLaTeX 3-pass compilation |
 | `/deploy` | `.claude/skills/deploy/` | Quarto render + GitHub Pages sync |
 | `/extract-tikz` | `.claude/skills/extract-tikz/` | TikZ to SVG conversion |
+| `/new-diagram` | `.claude/skills/new-diagram/` | Scaffold a TikZ diagram from the gallery |
 | `/proofread` | `.claude/skills/proofread/` | Run proofreading agent |
 | `/visual-audit` | `.claude/skills/visual-audit/` | Run layout audit agent |
 | `/pedagogy-review` | `.claude/skills/pedagogy-review/` | Run pedagogy review agent |
