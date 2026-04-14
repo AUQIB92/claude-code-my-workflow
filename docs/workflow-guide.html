@@ -5465,12 +5465,14 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 </section>
 <section id="step-3-adapt-your-theme" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="step-3-adapt-your-theme"><span class="header-section-number">7.3</span> Step 3: Adapt Your Theme</h2>
-<p>The template includes an example Quarto theme SCSS file. To customize:</p>
+<p>The template includes matching LaTeX and Quarto palettes. To customize:</p>
 <ol type="1">
-<li>Change the color palette to your institution’s colors</li>
-<li>Update CSS class names if needed</li>
-<li>Modify the beamer-translator environment mapping to match your classes</li>
+<li>Edit <code>Preambles/header.tex</code> (Beamer/TikZ) <strong>and</strong> <code>Quarto/theme-template.scss</code> (Quarto) together — same color names, matching HEX values.</li>
+<li>Run <code>./scripts/check-palette-sync.sh</code> to confirm they agree. The check is also invoked by <code>./scripts/validate-setup.sh</code> after any palette edit.</li>
+<li>Update CSS class names in the SCSS if needed.</li>
+<li>Modify the <code>beamer-translator</code> environment mapping to match your classes.</li>
 </ol>
+<p><strong>Palette contract.</strong> The core palette names (<code>primary-blue</code>, <code>primary-gold</code>, <code>highlight-yellow</code>, <code>light-bg</code>, <code>jet</code>) must exist on both surfaces. Snippets in <code>templates/tikz-snippets/</code> currently inline their colors for standalone compilation, but real lectures that <code>\input{header}</code> inherit the palette automatically. See <a href="../Preambles/README.md"><code>Preambles/README.md</code></a> for the full contract and TikZ style library.</p>
 </section>
 <section id="sec-create-skills" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="sec-create-skills"><span class="header-section-number">7.4</span> Step 4: Creating Custom Skills</h2>
