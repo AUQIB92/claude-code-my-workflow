@@ -906,13 +906,12 @@ The first four layers are your safety net. Anything written to disk survives ind
 
 The session log reminder above is one example of a broader pattern: using **hooks** to enforce rules that Claude might otherwise forget during long sessions. Rules live in context and can be compressed away. Hooks live in `.claude/settings.json` and fire every time, regardless of context state.
 
-The template includes hooks for logging, notifications, file protection, and context survival:
+The template includes hooks for logging, notifications, and context survival:
 
 | Hook | Event | What It Does |
 |------|-------|-------------|
 | Session log reminder | `Stop` | Reminds about session logs after every response |
 | Desktop notification | `Notification` | Desktop alert when Claude needs attention (macOS/Linux) |
-| File protection | `PreToolUse[Edit|Write]` | Blocks accidental edits to bibliography and settings |
 | Context state capture | `PreCompact` | Saves plan state before auto-compaction |
 | Context restoration | `SessionStart[compact|resume]` | Restores context after compaction or resume |
 | Context monitor | `PostToolUse[Bash|Task]` | Progressive warnings at 40%/55%/65%/80%/90% context |
@@ -1185,6 +1184,18 @@ The `/create-lecture` skill guides you through a structured lecture creation wor
         +-- /translate-to-quarto (optional)
         +-- /deploy
 ```
+
+::: {.callout-tip}
+## TikZ diagrams: start from the gallery, not from scratch
+
+Writing TikZ from a blank page reliably produces label-over-arrow collisions because the compiler doesn't warn about them. The template ships three reinforcing layers:
+
+- **[`templates/tikz-snippets/`](https://github.com/pedrohcgs/claude-code-my-workflow/tree/main/templates/tikz-snippets)** — 8 production-ready standalone diagrams (DAG basic, DAG mediation, two-period DiD, event study, timeline, regression scatter, 3-step flowchart, supply-demand). Each embeds the prevention rules (explicit node dimensions, coordinate map, directional edge labels) by construction.
+- **Rules `tikz-prevention.md` + `tikz-measurement.md`** — Upstream authoring rules (P1–P6) and the six-pass collision protocol with formulas (Bézier depth, character widths, 0.4 cm boundary clearance). Adapted from Scott Cunningham's [MixtapeTools](https://github.com/scunning1975/MixtapeTools).
+- **[`/new-diagram`](#all-skills) skill** — Scaffolds from the gallery, runs the P3/P4 grep pre-check before compiling, invokes `tikz-reviewer` with measurement citations, loops until APPROVED.
+
+For existing diagrams in a Beamer deck, `/extract-tikz` runs the same pre-check plus the SVG pipeline.
+:::
 
 ## Pattern 4: Translating Beamer to Quarto {#pattern-4-translating-beamer-to-quarto}
 
@@ -1966,7 +1977,7 @@ The template includes matching LaTeX and Quarto palettes. To customize:
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
-The guide includes 22 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
+The guide includes 24 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
 
 ### When to Create a Skill
 
