@@ -12,7 +12,9 @@ A ready-to-fork foundation for AI-assisted academic work. You describe what you 
 
 ---
 
-## Quick Start (5 minutes)
+## Quick Start (5–10 minutes, plus ~30 min for first-time installs)
+
+> **Before you start:** You need Claude Code, XeLaTeX, Quarto, git, and Python 3 (R and GitHub CLI recommended). First-time setup takes ~30 min on a fresh Mac. Full list: [Prerequisites](#prerequisites). The fastest path: clone first, then run `./scripts/validate-setup.sh` — it reports exactly what's missing with install links.
 
 ### 1. Fork & Clone
 
@@ -20,6 +22,7 @@ A ready-to-fork foundation for AI-assisted academic work. You describe what you 
 # Fork this repo on GitHub (click "Fork" on the repo page), then:
 git clone https://github.com/YOUR_USERNAME/claude-code-my-workflow.git my-project
 cd my-project
+./scripts/validate-setup.sh        # reports missing tools with install links
 ```
 
 Replace `YOUR_USERNAME` with your GitHub username.
@@ -31,6 +34,8 @@ claude
 ```
 
 **Using VS Code?** Open the Claude Code panel instead. Everything works the same — see the [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-setup) for details.
+
+> **Avoid prompt fatigue.** Out of the box, Claude Code asks permission for every tool invocation. After the first few approvals, toggle **Auto-accept edits** mode (a keybinding; see the [permission modes section](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#settings---permissions-and-hooks) of the guide) or run `claude --permission-mode acceptEdits`. For fully-autonomous runs on a trusted repo, **Bypass** mode skips prompts entirely. The template's `.claude/settings.json` pre-approves ~100 common Bash and Edit/Write patterns, so even at default permissions most work is unattended.
 
 Then paste the [starter prompt](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-first-session) from the guide, filling in your project details:
 
@@ -260,7 +265,7 @@ Not all tools are needed — install only what your project uses. Claude Code is
 
 1. **Fill in the knowledge base** (`.claude/rules/knowledge-base-template.md`) with your notation, applications, and design principles
 2. **Customize the domain reviewer** (`.claude/agents/domain-reviewer.md`) with review lenses specific to your field
-3. **Update the color palette** in your Quarto theme SCSS file — change the color variables at the top
+3. **Update the color palette** — this is a **two-surface contract**: change the HEX values at the top of **both** [`Preambles/header.tex`](Preambles/header.tex) (Beamer/TikZ) **and** [`Quarto/theme-template.scss`](Quarto/theme-template.scss) (Quarto slides) so they agree. Then run `./scripts/check-palette-sync.sh` to verify. Forgetting one surface silently produces mismatched Beamer vs. Quarto renderings. See [`Preambles/README.md`](Preambles/README.md) for the full contract and the TikZ style library.
 4. **Add field-specific R pitfalls** to `.claude/rules/r-code-conventions.md`
 5. **Fill in the lecture mapping** in `.claude/rules/beamer-quarto-sync.md`
 6. **Customize the workflow quick reference** (`.claude/WORKFLOW_QUICK_REF.md`) with your non-negotiables and preferences
