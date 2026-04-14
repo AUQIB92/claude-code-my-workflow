@@ -2745,7 +2745,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>You talk, Claude orchestrates.</strong> The 10 agents, 23 skills, and 18 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
+<p><strong>You talk, Claude orchestrates.</strong> The 10 agents, 23 skills, and 20 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2758,7 +2758,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This guide describes the full system — 10 agents, 23 skills, 18 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
+<p>This guide describes the full system — 10 agents, 23 skills, 20 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
 </div>
 </div>
 <hr>
@@ -3373,7 +3373,7 @@ APPROVED   NEEDS WORK
 ├── replication-protocol.md      # paths: [&quot;scripts/**/*.R&quot;] — replicate first
 ├── exploration-folder-protocol.md  # paths: [&quot;explorations/**&quot;] — sandbox rules
 ├── orchestrator-research.md     # paths: [&quot;scripts/**/*.R&quot;, &quot;explorations/**&quot;] — simple loop
-└── ...14 path-scoped rules total</code></pre>
+└── ...16 path-scoped rules total</code></pre>
 <p>The first three always-on rules total ~148 lines of actionable instructions. <code>meta-governance</code> is a reference document for the template’s dual nature (working project vs. public template) and loads passively. Path-scoped rules add rich, domain-specific guidance exactly when Claude needs it.</p>
 <p><strong>Sync vs. translate:</strong> The <code>beamer-quarto-sync</code> rule handles incremental edits — fix a typo in Beamer, same fix goes to Quarto. The <code>/translate-to-quarto</code> skill is for full initial translation of a new lecture. Translate once, sync thereafter.</p>
 <p><strong>Why rules matter:</strong> Without them, Claude will use generic defaults. With them, Claude follows <em>your</em> standards consistently across sessions.</p>
@@ -5732,7 +5732,7 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <li><strong>Verify everything.</strong> The verification rule exists for a reason. Never skip compilation or rendering checks.</li>
 <li><strong>Session logs matter.</strong> Document design decisions, not just what changed. Future-you will thank present-you.</li>
 <li><strong>Devil’s Advocate early.</strong> Challenge slide structure before you’ve built 50 slides on a shaky foundation.</li>
-<li><strong>Progressive disclosure.</strong> Start with CLAUDE.md + 2–3 rules. Add more as your workflow matures. Newcomers should not face 18 rules on day one.</li>
+<li><strong>Progressive disclosure.</strong> Start with CLAUDE.md + 2–3 rules. Add more as your workflow matures. Newcomers should not face 20 rules on day one.</li>
 <li><strong>Use <code>CLAUDE.local.md</code> for personal overrides.</strong> This file is automatically gitignored and loaded alongside <code>CLAUDE.md</code>. Put machine-specific paths, personal preferences, and local tool versions here — they won’t pollute the shared repo.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -6041,6 +6041,16 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <td>TikZ Quality</td>
 <td><code>tikz-visual-quality.md</code></td>
 <td><code>.tex</code></td>
+</tr>
+<tr class="even">
+<td>TikZ Prevention</td>
+<td><code>tikz-prevention.md</code></td>
+<td><code>Slides/**</code>, <code>Figures/**</code>, <code>Preambles/**</code></td>
+</tr>
+<tr class="odd">
+<td>TikZ Measurement</td>
+<td><code>tikz-measurement.md</code></td>
+<td><code>Slides/**</code>, <code>Figures/**</code>, <code>Preambles/**</code>, <code>scripts/**</code></td>
 </tr>
 <tr class="even">
 <td>Beamer-Quarto Sync</td>
