@@ -37,6 +37,15 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 - Read previous lecture's structure and ending
 - State pedagogical goal, get user confirmation
 
+**First-lecture fallback (fresh fork, empty knowledge base).** If `.claude/rules/knowledge-base-template.md` still has unfilled placeholder tables (no notation registry entries, no applications, no prior lectures in `Slides/`), do NOT halt waiting for it. Instead:
+
+1. Acknowledge the template is empty and we're creating the course's first lecture.
+2. Propose a **minimal starter knowledge base** from the user's topic: 5-8 key symbols with conventions, 1-2 running applications, a short narrative arc (intro → main idea → implications). Present for approval.
+3. Write the approved stub into the knowledge base template so subsequent lectures inherit it.
+4. Continue to Phase 1.
+
+This prevents `/create-lecture` from deadlocking for every new forker.
+
 ### Phase 1: Paper Analysis (When Papers Provided)
 - Split into chunks, extract key ideas
 - Map paper notation → course notation

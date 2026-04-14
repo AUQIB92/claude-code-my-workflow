@@ -120,8 +120,39 @@ echo ""
 echo -e "${BOLD}Summary:${RESET} ${GREEN}${pass} passed${RESET}, ${YELLOW}${warn} warnings${RESET}, ${RED}${fail} failed${RESET}"
 echo ""
 
+# Which tools did we actually find? Gate the next-step suggestions accordingly.
+has_claude=false; command -v claude   >/dev/null 2>&1 && has_claude=true
+has_xelatex=false; command -v xelatex >/dev/null 2>&1 && has_xelatex=true
+has_quarto=false;  command -v quarto  >/dev/null 2>&1 && has_quarto=true
+has_r=false;       command -v R       >/dev/null 2>&1 && has_r=true
+
 if [ "$fail" -gt 0 ]; then
-    echo -e "${RED}Setup incomplete.${RESET} Install the missing required tools, then run this script again."
+    echo -e "${RED}Some required tools are missing.${RESET}"
+    echo ""
+    echo -e "${BOLD}What you CAN do right now:${RESET}"
+    if $has_claude; then
+        echo "  - Open Claude Code:                      claude"
+        if $has_quarto; then
+            echo "  - Deploy the Quarto sample:             /deploy HelloWorld"
+        fi
+        if $has_xelatex; then
+            echo "  - Compile the Beamer sample:            /compile-latex HelloWorld"
+        fi
+        if $has_r; then
+            echo "  - Run R analyses:                       /data-analysis"
+        fi
+        if ! $has_xelatex; then
+            echo "  - (Beamer workflow disabled until you install XeLaTeX)"
+        fi
+        if ! $has_quarto; then
+            echo "  - (Quarto deploy disabled until you install Quarto)"
+        fi
+    else
+        echo "  - Install Claude Code first: https://claude.ai/install"
+        echo "    (Everything else in this template is orchestrated through Claude.)"
+    fi
+    echo ""
+    echo -e "${BOLD}Next:${RESET} install the missing required tool(s) listed above, then re-run this script."
     exit 1
 fi
 
