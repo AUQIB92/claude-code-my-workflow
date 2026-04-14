@@ -64,19 +64,17 @@ Ask the user what the diagram should show. Edit `$DST` with the `Edit` tool:
 
 ### Step 4: Prevention pre-check (MANDATORY)
 
-Run the identical grep patterns as `/extract-tikz` Step 1. Use single-quoted regex strings to avoid bash escaping gotchas. Halt and iterate if any fail:
+Run the same shared Python checker `/extract-tikz` uses — this is the one tool that enforces both P3 and P4 consistently across the two skills:
 
 ```bash
-# P3 — bare scale= in tikzpicture options without node scaling on the same line.
-grep -nE '\\begin\{tikzpicture\}\[[^]]*scale=[0-9.]+' "$DST" \
-  | grep -vE 'every node/.style=\{[^}]*scale=|transform shape'
-
-# P4 — edge labels missing any directional keyword (above/below/left/right).
-grep -nE '\\draw[^%]*node(\[[^]]*\])?[[:space:]]*\{' "$DST" \
-  | grep -vE '\b(above|below|left|right)\b'
+python3 scripts/check-tikz-prevention.py "$DST"
 ```
 
-Both pipelines should produce **zero** output. If either has matches, fix the offending line in `$DST` before compiling. The grep patterns here must stay in sync with `/extract-tikz` — if you change one, change both.
+- Exit `0` → passed, continue.
+- Exit `1` → violations (stderr reports line, rule, snippet). Fix `$DST` and re-run until zero.
+- Exit `2` → usage error (missing file etc.).
+
+Do NOT re-implement the grep inline. The Python checker correctly handles multi-line `\begin{tikzpicture}[...]` options and multi-line `\draw ... node {...}` spans that a line-oriented grep cannot see.
 
 ### Step 5: Standalone compile
 

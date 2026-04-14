@@ -67,7 +67,7 @@ The PreCompact hook (`.claude/hooks/pre-compact.py`) writes state to `~/.claude/
 
 ### `/commit` fails with `quality_score.py` below threshold
 
-The script detected issues in changed files. Either fix them (recommended) or override with `/commit --skip-quality-gate "reason"` — the override is logged in the commit message.
+The script detected issues in changed files. Either fix them (recommended) or re-run `/commit` and explicitly tell Claude **"commit anyway"** or **"skip quality gate"** with a reason — the override is logged in the commit message. (There is no `--skip-quality-gate` CLI flag; the override is a natural-language signal to the skill.)
 
 ## Palette / theming
 

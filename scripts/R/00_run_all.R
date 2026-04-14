@@ -27,9 +27,14 @@ OUT_DIR <- here("scripts", "R", "_outputs")
 dir.create(OUT_DIR, showWarnings = FALSE, recursive = TRUE)
 
 # ---- Pipeline --------------------------------------------------------------
-# Scripts share state through a single environment. 01_load.R produces
-# raw_main, which 02_clean.R consumes; 02 produces df, which 03 consumes;
-# 03 writes results.rds, which 04 and 05 read from disk.
+# Scripts share state through a single shared environment. Parent is
+# globalenv() so standard R functions (rnorm, ggplot2 exports loaded by the
+# user, etc.) resolve normally. Cross-run contamination is prevented by each
+# script using `exists("varname", inherits = FALSE)` to check ONLY the
+# pipeline env, never the user's global state.
+#
+# 01_load.R produces raw_main; 02_clean.R consumes it and produces df;
+# 03_analyze.R consumes df and writes results.rds; 04 and 05 read from disk.
 pipeline_env <- new.env(parent = globalenv())
 # Propagate the orchestrator's seed + OUT_DIR into the shared env so scripts
 # can reference them without re-computing.

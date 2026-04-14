@@ -6,7 +6,7 @@ This directory ships a numbered-script template for **reproducible** data analys
 
 - **Run everything from `00_run_all.R`** — never source mid-pipeline scripts individually unless you're debugging.
 - **Paths via [`here::here()`](https://here.r-lib.org/)** — never `setwd()`. The project root is the git repo root.
-- **Fixed seed** in every script that uses randomness: `set.seed(20260413)`. Change only with a recorded reason in the session log.
+- **Fixed seed** set once in `00_run_all.R`: `set.seed(20260413)`. Stochastic scripts (`01_load.R`, `05_figures.R`) also re-seed locally from `PROJECT_SEED` so running them directly for debugging still produces deterministic outputs. Change only with a recorded reason in the session log.
 - **`sessionInfo()` written to `scripts/R/_outputs/sessionInfo.txt`** at the end of `00_run_all.R` so reviewers can verify the environment.
 - **Outputs to `scripts/R/_outputs/`** — tables (`*.tex`), figures (`*.pdf`, `*.svg`), and RDS snapshots (`*.rds`). Directory is `.gitignore`d in most setups; decide per-project.
 - **No hardcoded absolute paths anywhere.** `/review-r` enforces this.

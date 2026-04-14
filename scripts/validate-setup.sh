@@ -121,31 +121,36 @@ echo -e "${BOLD}Summary:${RESET} ${GREEN}${pass} passed${RESET}, ${YELLOW}${warn
 echo ""
 
 # Which tools did we actually find? Gate the next-step suggestions accordingly.
-has_claude=false; command -v claude   >/dev/null 2>&1 && has_claude=true
-has_xelatex=false; command -v xelatex >/dev/null 2>&1 && has_xelatex=true
-has_quarto=false;  command -v quarto  >/dev/null 2>&1 && has_quarto=true
-has_r=false;       command -v R       >/dev/null 2>&1 && has_r=true
+# Use string flags (not command names) so shellcheck is happy and `if` bodies
+# read naturally.
+has_claude="false";  command -v claude  >/dev/null 2>&1 && has_claude="true"
+has_xelatex="false"; command -v xelatex >/dev/null 2>&1 && has_xelatex="true"
+has_quarto="false";  command -v quarto  >/dev/null 2>&1 && has_quarto="true"
+has_r="false";       command -v R       >/dev/null 2>&1 && has_r="true"
 
 if [ "$fail" -gt 0 ]; then
     echo -e "${RED}Some required tools are missing.${RESET}"
     echo ""
     echo -e "${BOLD}What you CAN do right now:${RESET}"
-    if $has_claude; then
+    if [ "$has_claude" = "true" ]; then
         echo "  - Open Claude Code:                      claude"
-        if $has_quarto; then
-            echo "  - Deploy the Quarto sample:             /deploy HelloWorld"
+        echo ""
+        echo "  ${BOLD}Inside Claude Code${RESET} (these are slash-commands, NOT shell commands):"
+        if [ "$has_quarto" = "true" ]; then
+            echo "    /deploy HelloWorld         # render Quarto sample"
         fi
-        if $has_xelatex; then
-            echo "  - Compile the Beamer sample:            /compile-latex HelloWorld"
+        if [ "$has_xelatex" = "true" ]; then
+            echo "    /compile-latex HelloWorld  # compile Beamer sample"
         fi
-        if $has_r; then
-            echo "  - Run R analyses:                       /data-analysis"
+        if [ "$has_r" = "true" ]; then
+            echo "    /data-analysis             # orchestrate R analysis"
         fi
-        if ! $has_xelatex; then
-            echo "  - (Beamer workflow disabled until you install XeLaTeX)"
+        if [ "$has_xelatex" != "true" ]; then
+            echo ""
+            echo "  (Beamer workflow disabled until you install XeLaTeX: https://tug.org/texlive/)"
         fi
-        if ! $has_quarto; then
-            echo "  - (Quarto deploy disabled until you install Quarto)"
+        if [ "$has_quarto" != "true" ]; then
+            echo "  (Quarto deploy disabled until you install Quarto: https://quarto.org/docs/get-started/)"
         fi
     else
         echo "  - Install Claude Code first: https://claude.ai/install"
