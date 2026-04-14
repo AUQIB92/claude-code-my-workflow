@@ -5,8 +5,12 @@
 # don't have to refit. Keeps the downstream steps fast and deterministic.
 # =============================================================================
 
-if (!exists("df")) {
-  stop("03_analyze.R: df not found. Run 00_run_all.R, not this script directly.")
+# inherits = FALSE so a stale `df` from the user's global environment
+# cannot satisfy this guard — matches the contract in 00_run_all.R and
+# 02_clean.R / 05_figures.R. Without this, debug reruns can silently
+# analyze the wrong dataset and persist results.rds from it.
+if (!exists("df", inherits = FALSE)) {
+  stop("03_analyze.R: df not found in the pipeline env. Run 00_run_all.R, not this script directly.")
 }
 
 # ---- Primary specification -------------------------------------------------
