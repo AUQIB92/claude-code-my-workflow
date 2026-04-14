@@ -1,24 +1,38 @@
 ---
 name: review-paper
-description: Comprehensive manuscript review covering argument structure, econometric specification, citation completeness, and potential referee objections
-argument-hint: "[paper filename in master_supporting_docs/ or path to .tex/.pdf]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+description: Comprehensive manuscript review covering argument structure, econometric specification, citation completeness, and potential referee objections. Single-pass by default; supports adversarial critic-fixer mode for iterative revision.
+argument-hint: "[paper path] [--adversarial]"
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 ---
 
 # Manuscript Review
 
 Produce a thorough, constructive review of an academic manuscript — the kind of report a top-journal referee would write.
 
-**Input:** `$ARGUMENTS` — path to a paper (.tex, .pdf, or .qmd), or a filename in `master_supporting_docs/`.
+**Input:** `$ARGUMENTS` — path to a paper (`.tex`, `.pdf`, or `.qmd`), or a filename in `master_supporting_docs/`. Optional flag `--adversarial` to run the critic-fixer loop (see below).
 
 > **Already received referee comments?** Use [`/respond-to-referees`](../respond-to-referees/SKILL.md) instead. That skill cross-references each referee concern against the revised manuscript and drafts a complete response document.
 
 ---
 
-## Steps
+## Modes
+
+### Default mode (single-pass)
+
+One comprehensive review report. Fast, low token cost, suitable for early drafts where the author wants feedback and will iterate manually.
+
+### Adversarial mode (`--adversarial`)
+
+Iterative critic-fixer loop modeled on [`/qa-quarto`](../qa-quarto/SKILL.md). The critic identifies issues, the fixer proposes and applies edits (with user approval), and the critic re-audits. Loops until APPROVED or max 5 rounds.
+
+Use when: preparing a pre-submission draft, responding to a journal-desk rejection with substantive revisions, or after your own major rewrite. Costs more tokens but produces a manuscript the critic has signed off on.
+
+---
+
+## Steps (both modes)
 
 1. **Locate and read the manuscript.** Check:
-   - Direct path from `$ARGUMENTS`
+   - Direct path from `$ARGUMENTS` (ignoring any flags)
    - `master_supporting_docs/supporting_papers/$ARGUMENTS`
    - Glob for partial matches
 
@@ -26,11 +40,13 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 
 3. **Evaluate across 6 dimensions** (see below).
 
-4. **Generate 3-5 "referee objections"** — the tough questions a top referee would ask.
+4. **Generate 3–5 "referee objections"** — the tough questions a top referee would ask.
 
 5. **Produce the review report.**
 
-6. **Save to** `quality_reports/paper_review_[sanitized_name].md`
+6. **Save to** `quality_reports/paper_review_[sanitized_name]_round[N].md` (N=1 in default mode; N increments in adversarial mode).
+
+7. **If `--adversarial` is in `$ARGUMENTS`:** invoke the critic-fixer loop defined in the next section. Otherwise stop here.
 
 ---
 
@@ -154,3 +170,97 @@ These are the tough questions a top referee would likely raise:
 - **Distinguish fatal flaws from minor issues.** Not everything is equally important.
 - **Acknowledge what's done well.** Good research deserves recognition.
 - **Do NOT fabricate details.** If you can't read a section clearly, say so.
+
+---
+
+## Adversarial Mode — Critic-Fixer Loop
+
+**Only runs if `--adversarial` is in `$ARGUMENTS`.**
+
+Pattern adapted from [`/qa-quarto`](../qa-quarto/SKILL.md), which uses the same loop to iterate on slide quality. Papers get it now because the single-pass review leaves authors doing manual fix-and-resubmit cycles.
+
+### Flow
+
+```
+Phase 0: Pre-flight
+  │
+  ├─ Verify the manuscript compiles (xelatex / quarto render) if applicable
+  ├─ Snapshot the pre-review version: git stash OR copy to a .review-backup/
+  │
+Phase 1: Critic audit (round N=1,2,3,...)
+  │
+  ├─ Run the default review above, producing a round-N report
+  ├─ If the report has ZERO Major Concerns and ZERO Referee Objections
+  │  rated "fatal":
+  │     → VERDICT = APPROVED. Stop the loop. Write final summary.
+  │  Else: continue.
+  │
+Phase 2: Fixer
+  │
+  ├─ For each Major Concern in the round-N report, produce a concrete
+  │  proposed edit (diff or new text block).
+  ├─ Present proposed edits to the user grouped by severity (Critical →
+  │  Major → Minor). Ask for approval: "apply all", "apply critical+major
+  │  only", "review each", or "abort".
+  ├─ Apply approved edits with Edit / MultiEdit tools.
+  ├─ If the manuscript is a compile target (`.tex` / `.qmd`), re-compile
+  │  and verify it still builds.
+  │
+Phase 3: Re-audit
+  │
+  └─ Spawn a FRESH-CONTEXT subagent (via Task, `subagent_type` set to
+     general-purpose) to re-read the paper and produce a round-(N+1)
+     report. Fresh context prevents anchoring bias — the new reviewer
+     sees the edited paper, not the diff.
+     → Jump back to Phase 1.
+```
+
+### Iteration limits
+
+- **Max 5 rounds.** After round 5, halt regardless of verdict.
+- **Fix round limits:** if the same Concern label appears in rounds N and N+2, flag as "author disagreement" and let the user decide (keep-as-is with rationale vs. another fix attempt).
+- **Budget escape:** if token cost across all rounds exceeds ~200k, warn and let the user cap further rounds.
+
+### Stopping criteria
+
+| Condition | Action |
+|---|---|
+| Zero Major Concerns, zero fatal Referee Objections | APPROVED — final summary |
+| Max 5 rounds reached | HALTED — list remaining concerns, user decides |
+| User approves zero fixes in a round | HALTED — user signals "I disagree with this review" |
+| Compile fails after applied fixes | ROLLED BACK to pre-round-N snapshot, report compile error, user decides |
+
+### Final report
+
+After the loop ends, write `quality_reports/paper_review_[sanitized_name]_FINAL.md`:
+
+```markdown
+# Final Review: [Paper Title]
+
+**Rounds:** N
+**Verdict:** APPROVED | HALTED (max rounds) | HALTED (user override) | ROLLED BACK
+**Token cost estimate:** ~XXk
+
+## Round Summary
+| Round | Major Concerns | Fatal Objections | Status |
+|---|---|---|---|
+| 1 | 7 | 2 | Fixed 5, deferred 2 |
+| 2 | 3 | 1 | ...              |
+| ... | ... | ... | ...         |
+| N | 0 | 0 | APPROVED        |
+
+## Changes Applied
+[link to git diff between the pre-round-1 snapshot and HEAD]
+
+## Remaining Concerns (if HALTED)
+[list with severity + rationale]
+
+## Next Steps
+[recommended action: submit / one more pass / substantial revision]
+```
+
+### When NOT to use adversarial mode
+
+- Early exploratory drafts (the loop forces premature polish on ideas still being shaped)
+- Papers you don't yet have compilable source for (can't verify edits)
+- When you'd rather get ONE opinion and decide for yourself (adversarial-mode enforces "critic signed off" semantics — that's sometimes the wrong frame)
