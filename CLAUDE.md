@@ -58,7 +58,12 @@ TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 
 # Quality score
 python scripts/quality_score.py Quarto/file.qmd
+
+# Palette sync (LaTeX ↔ SCSS)
+./scripts/check-palette-sync.sh
 ```
+
+**Palette contract:** color names in `Preambles/header.tex` must match SCSS variables in `Quarto/theme-template.scss`. See [`Preambles/README.md`](Preambles/README.md).
 
 ---
 

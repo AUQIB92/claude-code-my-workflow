@@ -1955,11 +1955,14 @@ Copy `.claude/agents/domain-reviewer.md` and customize the [5-lens framework](#s
 
 ## Step 3: Adapt Your Theme
 
-The template includes an example Quarto theme SCSS file. To customize:
+The template includes matching LaTeX and Quarto palettes. To customize:
 
-1. Change the color palette to your institution's colors
-2. Update CSS class names if needed
-3. Modify the beamer-translator environment mapping to match your classes
+1. Edit `Preambles/header.tex` (Beamer/TikZ) **and** `Quarto/theme-template.scss` (Quarto) together — same color names, matching HEX values.
+2. Run `./scripts/check-palette-sync.sh` to confirm they agree. The check is also invoked by `./scripts/validate-setup.sh` after any palette edit.
+3. Update CSS class names in the SCSS if needed.
+4. Modify the `beamer-translator` environment mapping to match your classes.
+
+**Palette contract.** The core palette names (`primary-blue`, `primary-gold`, `highlight-yellow`, `light-bg`, `jet`) must exist on both surfaces. Snippets in `templates/tikz-snippets/` currently inline their colors for standalone compilation, but real lectures that `\input{header}` inherit the palette automatically. See [`Preambles/README.md`](../Preambles/README.md) for the full contract and TikZ style library.
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
