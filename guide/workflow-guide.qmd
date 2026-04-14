@@ -2255,7 +2255,6 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 |------|------|--------------|
 | Session log reminder | Stop (command) | `.claude/hooks/log-reminder.py` |
 | Desktop notification | Notification (command) | `.claude/hooks/notify.sh` |
-| File protection | PreToolUse[Edit\|Write] (command) | `.claude/hooks/protect-files.sh` |
 | Context state capture | PreCompact (command) | `.claude/hooks/pre-compact.py` |
 | Context restoration | SessionStart[compact\|resume] (command) | `.claude/hooks/post-compact-restore.py` |
 | Context monitor | PostToolUse[Bash\|Task] (command) | `.claude/hooks/context-monitor.py` |

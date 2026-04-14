@@ -6134,26 +6134,21 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <td><code>.claude/hooks/notify.sh</code></td>
 </tr>
 <tr class="odd">
-<td>File protection</td>
-<td>PreToolUse[Edit|Write] (command)</td>
-<td><code>.claude/hooks/protect-files.sh</code></td>
-</tr>
-<tr class="even">
 <td>Context state capture</td>
 <td>PreCompact (command)</td>
 <td><code>.claude/hooks/pre-compact.py</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Context restoration</td>
 <td>SessionStart[compact|resume] (command)</td>
 <td><code>.claude/hooks/post-compact-restore.py</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Context monitor</td>
 <td>PostToolUse[Bash|Task] (command)</td>
 <td><code>.claude/hooks/context-monitor.py</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Verification reminder</td>
 <td>PostToolUse[Write|Edit] (command)</td>
 <td><code>.claude/hooks/verify-reminder.py</code></td>
