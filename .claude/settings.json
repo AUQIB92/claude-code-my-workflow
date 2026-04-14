@@ -31,10 +31,8 @@
       "Bash(pdf2svg *)",
       "Bash(quarto render *)",
       "Bash(Rscript *)",
-      "Bash(python3 *)",
       "Bash(./scripts/sync_to_docs.sh *)",
       "Bash(./scripts/sync_to_docs.sh)",
-      "Bash(chmod *)",
       "Bash(open *)",
       "Bash(xdg-open *)",
       "Bash(ls *)",
@@ -54,8 +52,6 @@
       "Bash(basename *)",
       "Bash(dirname *)",
       "Bash(file *)",
-      "Bash(cp *)",
-      "Bash(mv *)",
       "Bash(touch *)",
       "Bash(mktemp *)",
       "Bash(pandoc *)",
@@ -106,7 +102,16 @@
       "Edit(.claude/agents/**)",
       "Write(.claude/agents/**)",
       "Edit(.claude/rules/**)",
-      "Write(.claude/rules/**)"
+      "Write(.claude/rules/**)",
+      "Bash(python3 scripts/*)",
+      "Bash(python3 scripts/**)",
+      "Bash(python3 -c *)",
+      "Bash(cp templates/**)",
+      "Bash(cp Figures/**)",
+      "Bash(mv templates/**)",
+      "Bash(mv Figures/**)",
+      "Bash(chmod +x scripts/*)",
+      "Bash(chmod +x scripts/**)"
     ],
     "deny": [
       "Edit(.claude/settings.json)",
@@ -179,6 +184,18 @@
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-reminder.py",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-sensitive-paths.sh",
+            "timeout": 5
           }
         ]
       }

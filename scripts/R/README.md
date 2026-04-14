@@ -25,12 +25,21 @@ This directory ships a numbered-script template for **reproducible** data analys
 
 ## First-time setup
 
+Hard dependencies (pipeline fails loudly if missing):
+
 ```r
 # From the R console, at the repo root
-install.packages(c("here", "renv"))         # minimal bootstrap
-renv::init()                                 # capture current package versions
-# OR, if you don't want renv, commit a DESCRIPTION with your top-level deps
+install.packages(c("here", "ggplot2"))       # required — pipeline won't run without these
 ```
+
+Optional but recommended:
+
+```r
+install.packages(c("svglite", "renv"))        # svglite = SVG figures for Quarto; renv = version pinning
+renv::init()                                  # capture current package versions if you want a lockfile
+```
+
+Why the split? `here` + `ggplot2` are load-bearing: without them the pipeline either can't resolve paths or can't build the documented `fig_main.pdf`. `svglite` is optional — if absent, `05_figures.R` emits a **warning** and skips `fig_main.svg`. Quarto slides that reference the SVG will fail to render that figure; Beamer slides (PDF only) are unaffected.
 
 Then run:
 
@@ -38,12 +47,20 @@ Then run:
 source("scripts/R/00_run_all.R")
 ```
 
-Expected outputs will land in `scripts/R/_outputs/`. Verify with:
+Expected outputs in `scripts/R/_outputs/`:
+
+| File | Condition |
+| --- | --- |
+| `fig_main.pdf` | Always |
+| `fig_main.svg` | Only if `svglite` is installed |
+| `table_main.tex` | Always |
+| `results.rds` | Always |
+| `sessionInfo.txt` | Always |
+
+Verify:
 
 ```r
 list.files("scripts/R/_outputs/")
-#> [1] "fig_main.pdf"  "fig_main.svg"  "sessionInfo.txt"
-#> [4] "table_main.tex" "results.rds"
 ```
 
 ## Reviewing
