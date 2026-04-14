@@ -277,6 +277,6 @@ After **any** TikZ fix, re-audit **every** TikZ figure in the deck. The same err
 
 ## Integration with the workflow
 
-- **`/extract-tikz`**: Step 1.5 checks Pass 0 (consistency) and Pass 3 (positional keywords) before compiling. Pass 1 (Bézier), Pass 2 (gaps), Pass 4 (boundaries), and Pass 5 (margins) are checked by `tikz-reviewer`.
-- **`tikz-reviewer` agent**: must cite the specific pass and formula when reporting a collision.
-- **`quality_score.py`** TikZ rubric deducts −5 for any label/arrow overlap caught post-compile.
+- **`/extract-tikz` and `/new-diagram`** — both run a Step 1 prevention pre-check against the rules in [`tikz-prevention.md`](tikz-prevention.md) (P3 bare `scale=`, P4 missing directional keyword) before compiling. Both skills use identical grep patterns so behavior doesn't drift.
+- **`tikz-reviewer` agent** — runs the measurement passes here (Pass 1 Bézier, Pass 2 gaps, Pass 3 keywords, Pass 4 boundaries, Pass 4b arc3, Pass 4c text pairs, Pass 5 margins, Pass 5b plotted curves, Pass 6 visual). Must cite the specific pass and formula when reporting a collision.
+- **`quality_score.py`** — see [`quality-gates.md`](quality-gates.md) for the authoritative TikZ rubric. A label/arrow overlap finding currently costs −5 in the Quarto and Beamer rubrics.

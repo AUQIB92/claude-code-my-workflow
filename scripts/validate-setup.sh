@@ -102,8 +102,9 @@ echo ""
 echo -e "${BOLD}Palette sync (LaTeX ↔ SCSS):${RESET}"
 palette_script="$(dirname "$0")/check-palette-sync.sh"
 if [ -x "$palette_script" ]; then
-    # Run the sync check but indent its output so it fits under our summary.
-    if "$palette_script" 2>&1 | grep -qE "in sync"; then
+    # Rely on the helper's exit code — stable contract, not text matching.
+    # 0 = in sync, 1 = divergence.
+    if "$palette_script" >/dev/null 2>&1; then
         echo -e "  ${GREEN}✓${RESET} Preambles/header.tex ↔ Quarto/theme-template.scss agree on the core palette"
         pass=$((pass + 1))
     else

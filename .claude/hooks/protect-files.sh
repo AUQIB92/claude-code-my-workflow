@@ -13,12 +13,13 @@
 
 set -uo pipefail
 
-INPUT=$(cat)
-
-# Escape hatch 1 — explicit env var
+# Escape hatch 1 — explicit env var. Check BEFORE reading stdin so the
+# hook really exits immediately (and doesn't block on a missing pipe).
 if [ "${CLAUDE_CODE_DISABLE_FILE_PROTECTION:-0}" = "1" ]; then
   exit 0
 fi
+
+INPUT=$(cat)
 
 # Escape hatch 2 — bypass permission mode detected in hook input.
 # Claude Code has used slightly different field names across versions;

@@ -25,25 +25,29 @@ Extract TikZ diagrams from the Beamer source, compile to multi-page PDF, and con
 
 ### Step 1: Prevention pre-check (MANDATORY — halt on violation)
 
-Before compiling, verify every `\begin{tikzpicture}` block in `Figures/$ARGUMENTS/extract_tikz.tex` satisfies the prevention rules in [`.claude/rules/tikz-prevention.md`](../../rules/tikz-prevention.md):
+Before compiling, verify every `\begin{tikzpicture}` block in `Figures/$ARGUMENTS/extract_tikz.tex` satisfies the prevention rules in [`.claude/rules/tikz-prevention.md`](../../rules/tikz-prevention.md). The grep-checkable rules are P3 and P4; P1 (boxed-node dimensions) and P2 (coordinate map) are structural and get flagged by `tikz-reviewer`.
 
-- **P1 — Explicit node dimensions.** Every `\node` carrying text declares `minimum width`, `minimum height`, or `text width`.
-- **P2 — Coordinate map comment.** Any tikzpicture with three or more nodes is preceded by a comment listing named coordinates.
-- **P4 — Directional keyword on edge labels.** Every edge label (`node {...}` inside a `\draw`) has `above`, `below`, `left`, `right`, or a compound variant.
-- **P3 — No `scale=X`** on complex diagrams (3+ nodes).
+- **P3 — `scale=X` without node scaling.** Bare `scale=` shrinks coordinates but not text. Allowed forms: `scale=X, every node/.style={scale=X}` or `scale=X, transform shape`.
+- **P4 — Directional keyword on edge labels.** Every edge label (`node` inside a `\draw`) must carry `above`, `below`, `left`, `right`, or a compound (e.g. `above left`). `midway` alone is a path position, not a direction — not acceptable.
 
-Fast grep-based checks:
+Grep pre-check — both `/extract-tikz` and `/new-diagram` use this identical pattern so behavior never drifts. **Use single-quoted regex strings** (escaping in double-quoted bash is error-prone):
 
 ```bash
-# Find edge labels missing a directional keyword (heuristic: node inside \draw that doesn't carry above/below/left/right)
-grep -nE "\\\\draw.*node(\\[[^]]*\\])?\\s*\\{" Figures/$ARGUMENTS/extract_tikz.tex \
-  | grep -vE "above|below|left|right|midway,\\s*(above|below|left|right)"
+FILE="Figures/$ARGUMENTS/extract_tikz.tex"
 
-# Find \scale= inside tikzpicture options (prefer: none)
-grep -nE "scale=[0-9.]+" Figures/$ARGUMENTS/extract_tikz.tex
+# P3 — bare scale= in tikzpicture options without node scaling on the same line.
+# Allowed siblings: every node/.style={scale=...} OR transform shape.
+grep -nE '\\begin\{tikzpicture\}\[[^]]*scale=[0-9.]+' "$FILE" \
+  | grep -vE 'every node/.style=\{[^}]*scale=|transform shape'
+
+# P4 — edge labels missing any directional keyword.
+# Matches: \draw ... node[...] {text}   (and node {text}).
+# `midway` alone is NOT a direction — it's a path position. Required: above/below/left/right.
+grep -nE '\\draw[^%]*node(\[[^]]*\])?[[:space:]]*\{' "$FILE" \
+  | grep -vE '\b(above|below|left|right)\b'
 ```
 
-If any violation is found: halt, report the offending block, and ask the user to fix the Beamer source (single source of truth). Do NOT compile.
+If either pipeline produces output: halt, report the offending lines, and ask the user to fix the Beamer source (single source of truth). Do NOT compile. When both pipelines produce zero output, the pre-check has passed.
 
 ### Step 2: Navigate to the lecture's Figures directory
 ```bash
