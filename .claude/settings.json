@@ -75,8 +75,6 @@
       "Write(CHANGELOG.md)",
       "Edit(MEMORY.md)",
       "Write(MEMORY.md)",
-      "Edit(.claude/**)",
-      "Write(.claude/**)",
       "Edit(guide/**)",
       "Write(guide/**)",
       "Edit(docs/**)",
@@ -102,7 +100,19 @@
       "Edit(.github/**)",
       "Write(.github/**)",
       "Edit(.gitignore)",
-      "Write(.gitignore)"
+      "Write(.gitignore)",
+      "Edit(.claude/skills/**)",
+      "Write(.claude/skills/**)",
+      "Edit(.claude/agents/**)",
+      "Write(.claude/agents/**)",
+      "Edit(.claude/rules/**)",
+      "Write(.claude/rules/**)"
+    ],
+    "deny": [
+      "Edit(.claude/settings.json)",
+      "Write(.claude/settings.json)",
+      "Edit(.claude/hooks/**)",
+      "Write(.claude/hooks/**)"
     ]
   },
   "hooks": {

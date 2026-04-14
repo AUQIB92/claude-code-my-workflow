@@ -14,7 +14,7 @@ A ready-to-fork foundation for AI-assisted academic work. You describe what you 
 
 ## Quick Start (5–10 minutes, plus ~30 min for first-time installs)
 
-> **Before you start:** You need Claude Code, XeLaTeX, Quarto, git, and Python 3 (R and GitHub CLI recommended). First-time setup takes ~30 min on a fresh Mac. Full list: [Prerequisites](#prerequisites). The fastest path: clone first, then run `./scripts/validate-setup.sh` — it reports exactly what's missing with install links.
+> **Before you start:** Claude Code + git are the minimum. To run the included `HelloWorld` demos end-to-end you also need XeLaTeX (Beamer sample) and Quarto (Quarto sample). R and the GitHub CLI are recommended. Python 3 is used by a few internal scripts (`check-palette-sync.py`, `check-tikz-prevention.py`) and is pre-installed on macOS/Linux. Full list in [Prerequisites](#prerequisites) below. Fastest path: clone first, then run `./scripts/validate-setup.sh` — it reports exactly what's missing with install links.
 
 ### 1. Fork & Clone
 
@@ -250,14 +250,20 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 
 | Tool | Required For | Install |
 |------|-------------|---------|
-| [Claude Code](https://code.claude.com/docs/en/overview) | Everything | `npm install -g @anthropic-ai/claude-code` |
-| XeLaTeX | LaTeX compilation | [TeX Live](https://tug.org/texlive/) or [MacTeX](https://tug.org/mactex/) |
-| [Quarto](https://quarto.org) | Web slides | [quarto.org/docs/get-started](https://quarto.org/docs/get-started/) |
-| R | Figures & analysis | [r-project.org](https://www.r-project.org/) |
-| pdf2svg | TikZ to SVG | `brew install pdf2svg` (macOS) |
-| [gh CLI](https://cli.github.com/) | PR workflow | `brew install gh` (macOS) |
+| [Claude Code](https://code.claude.com/docs/en/overview) | Everything | [claude.ai/install](https://claude.ai/install) |
+| git | Clone + version control | [git-scm.com](https://git-scm.com/downloads) |
+| Python 3 (3.9+) | Internal checkers (palette sync, TikZ prevention) | Preinstalled on macOS/Linux; [python.org](https://www.python.org/) for Windows |
+| XeLaTeX | LaTeX compilation (Beamer `HelloWorld`, real lectures) | [TeX Live](https://tug.org/texlive/) or [MacTeX](https://tug.org/mactex/) |
+| [Quarto](https://quarto.org) | Web slides (Quarto `HelloWorld`, real lectures) | [quarto.org/docs/get-started](https://quarto.org/docs/get-started/) |
+| R | Figures and analysis (`/data-analysis`, `scripts/R/` template) | [r-project.org](https://www.r-project.org/) |
+| pdf2svg | TikZ → SVG for Quarto (`/extract-tikz`) | `brew install pdf2svg` (macOS), `apt install pdf2svg` (Debian) |
+| [gh CLI](https://cli.github.com/) | PR / issue workflow | `brew install gh` (macOS), `apt install gh` (Debian) |
 
-Not all tools are needed — install only what your project uses. Claude Code is the only hard requirement.
+**Minimum to fork this template:** Claude Code + git + Python 3 (Python is already installed on macOS/Linux).
+
+**Minimum to run the included HelloWorld demos end-to-end:** add XeLaTeX (for `/compile-latex HelloWorld`) and Quarto (for `/deploy HelloWorld`).
+
+**Your real lectures may need more** — R for `scripts/R/` analyses, pdf2svg if you use TikZ extraction, gh CLI if you use the PR-based commit workflow. `./scripts/validate-setup.sh` reports which of these are installed and what each unlocks.
 
 ---
 

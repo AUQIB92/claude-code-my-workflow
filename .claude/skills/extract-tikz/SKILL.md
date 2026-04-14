@@ -25,29 +25,22 @@ Extract TikZ diagrams from the Beamer source, compile to multi-page PDF, and con
 
 ### Step 1: Prevention pre-check (MANDATORY — halt on violation)
 
-Before compiling, verify every `\begin{tikzpicture}` block in `Figures/$ARGUMENTS/extract_tikz.tex` satisfies the prevention rules in [`.claude/rules/tikz-prevention.md`](../../rules/tikz-prevention.md). The grep-checkable rules are P3 and P4; P1 (boxed-node dimensions) and P2 (coordinate map) are structural and get flagged by `tikz-reviewer`.
-
-- **P3 — `scale=X` without node scaling.** Bare `scale=` shrinks coordinates but not text. Allowed forms: `scale=X, every node/.style={scale=X}` or `scale=X, transform shape`.
-- **P4 — Directional keyword on edge labels.** Every edge label (`node` inside a `\draw`) must carry `above`, `below`, `left`, `right`, or a compound (e.g. `above left`). `midway` alone is a path position, not a direction — not acceptable.
-
-Grep pre-check — both `/extract-tikz` and `/new-diagram` use this identical pattern so behavior never drifts. **Use single-quoted regex strings** (escaping in double-quoted bash is error-prone):
+Before compiling, verify every `\begin{tikzpicture}` block in `Figures/$ARGUMENTS/extract_tikz.tex` satisfies the prevention rules in [`.claude/rules/tikz-prevention.md`](../../rules/tikz-prevention.md). The pre-check is a small Python script shared with `/new-diagram` so both skills enforce identical behavior:
 
 ```bash
-FILE="Figures/$ARGUMENTS/extract_tikz.tex"
-
-# P3 — bare scale= in tikzpicture options without node scaling on the same line.
-# Allowed siblings: every node/.style={scale=...} OR transform shape.
-grep -nE '\\begin\{tikzpicture\}\[[^]]*scale=[0-9.]+' "$FILE" \
-  | grep -vE 'every node/.style=\{[^}]*scale=|transform shape'
-
-# P4 — edge labels missing any directional keyword.
-# Matches: \draw ... node[...] {text}   (and node {text}).
-# `midway` alone is NOT a direction — it's a path position. Required: above/below/left/right.
-grep -nE '\\draw[^%]*node(\[[^]]*\])?[[:space:]]*\{' "$FILE" \
-  | grep -vE '\b(above|below|left|right)\b'
+python3 scripts/check-tikz-prevention.py "Figures/$ARGUMENTS/extract_tikz.tex"
 ```
 
-If either pipeline produces output: halt, report the offending lines, and ask the user to fix the Beamer source (single source of truth). Do NOT compile. When both pipelines produce zero output, the pre-check has passed.
+What it checks:
+
+- **P3 — `scale=X` without node scaling.** Bare `scale=` shrinks coordinates but not text. Allowed forms: `scale=X, every node/.style={scale=X}` or `scale=X, transform shape`. The checker parses the full `\begin{tikzpicture}[...]` options block even when it spans multiple lines.
+- **P4 — Directional keyword on edge labels.** Every edge label (`node` inside a `\draw`) must carry `above`, `below`, `left`, `right`, or a compound (e.g. `above left`). `midway` alone is a path position, not a direction. The checker scans the full `\draw ...;` statement so `\draw` on one line and `node[...]{...}` on the next line are still linked.
+
+Note what the pre-check does NOT enforce: P1 (boxed-node explicit dimensions) and P2 (coordinate-map comment) are structural and get flagged by `tikz-reviewer` in Step 8, not here.
+
+Exit codes: `0` = all files pass, `1` = one or more P3/P4 violations (stderr lists file, line, snippet, rule), `2` = usage error.
+
+If exit is non-zero: halt, report the offending lines, and ask the user to fix the Beamer source (single source of truth). Do NOT compile.
 
 ### Step 2: Navigate to the lecture's Figures directory
 ```bash
