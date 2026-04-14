@@ -59,23 +59,24 @@ Ask the user what the diagram should show. Edit `$DST` with the `Edit` tool:
 1. Update the comment block at the top so the **intent sentence** matches the user's goal.
 2. Update the **coordinate map** comment if coordinates change.
 3. Rename nodes and edit labels. Keep node style (`dag-node`, `flow-node`, etc.) unless the meaning actually changes.
-4. **Do not** add `scale=X` to the tikzpicture options. If the diagram needs to be larger or smaller, redesign at the intended size. This is an explicit prevention rule ([`tikz-prevention.md` P3](../../rules/tikz-prevention.md)).
-5. **Every** new edge label must carry a directional keyword (`above`, `below`, `left`, `right`, `above left`, etc.). Bare labels are a P4 violation.
+4. **Do not** add a bare `scale=X` to the tikzpicture options. Coordinates shrink, text does not — collisions follow. Allowed forms: `scale=X, every node/.style={scale=X}` or `scale=X, transform shape`. See [`tikz-prevention.md` P3](../../rules/tikz-prevention.md) for the full rule and `tikz-visual-quality.md` for the `scale=1.1` convention.
+5. **Every** new edge label must carry a directional keyword (`above`, `below`, `left`, `right`, `above left`, etc.). `midway` alone is a path position, not a direction — P4 violation.
 
 ### Step 4: Prevention pre-check (MANDATORY)
 
-Run the same grep checks that `/extract-tikz` uses. Halt and iterate if any fail:
+Run the identical grep patterns as `/extract-tikz` Step 1. Use single-quoted regex strings to avoid bash escaping gotchas. Halt and iterate if any fail:
 
 ```bash
-# P3 — no scale= on complex diagrams
-grep -nE "scale=[0-9.]+" "$DST"
+# P3 — bare scale= in tikzpicture options without node scaling on the same line.
+grep -nE '\\begin\{tikzpicture\}\[[^]]*scale=[0-9.]+' "$DST" \
+  | grep -vE 'every node/.style=\{[^}]*scale=|transform shape'
 
-# P4 — edge labels without a directional keyword
-grep -nE "\\\\draw" "$DST" | grep -E "node\\s*\\{" \
-  | grep -v "above\\|below\\|left\\|right\\|midway"
+# P4 — edge labels missing any directional keyword (above/below/left/right).
+grep -nE '\\draw[^%]*node(\[[^]]*\])?[[:space:]]*\{' "$DST" \
+  | grep -vE '\b(above|below|left|right)\b'
 ```
 
-Both should produce empty output. If either has matches, fix the offending line in `$DST` before compiling.
+Both pipelines should produce **zero** output. If either has matches, fix the offending line in `$DST` before compiling. The grep patterns here must stay in sync with `/extract-tikz` — if you change one, change both.
 
 ### Step 5: Standalone compile
 
@@ -101,13 +102,13 @@ Loop:
 
 ### Step 7: Optional — convert to SVG for Quarto
 
-If the user plans to use the diagram in Quarto slides (not just Beamer), convert the compiled PDF to SVG with 0-based indexing, matching the `/extract-tikz` output convention:
+If the user plans to use the diagram in Quarto slides (not just Beamer), convert the compiled PDF to SVG:
 
 ```bash
 pdf2svg "${DST%.tex}.pdf" "${DST%.tex}.svg" 1
 ```
 
-Single-page snippets produce a single SVG; multi-page compile output would use the 0-indexed loop from `/extract-tikz`.
+Snippet-based diagrams are single-page, so a single `.svg` with the same basename as `.tex` is correct here. This differs from `/extract-tikz`, which produces a multi-page PDF from a `Figures/LectureN/extract_tikz.tex` master and names outputs `tikz_exact_00.svg, tikz_exact_01.svg, ...` (0-based filenames over 1-indexed PDF pages). If you need multi-page output for slide-by-slide reveals, use `/extract-tikz` instead.
 
 ### Step 8: Clean up build artifacts
 

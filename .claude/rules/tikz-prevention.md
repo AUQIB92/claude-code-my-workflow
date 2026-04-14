@@ -15,9 +15,9 @@ The LaTeX compiler does **not** warn on label-over-arrow overlaps, labels crossi
 
 ---
 
-## Rule P1: Explicit node dimensions (MANDATORY)
+## Rule P1: Explicit dimensions on **boxed** nodes (MANDATORY)
 
-Every node that holds text must declare its size explicitly. Implicit sizing means the label can grow past the box edge without anyone noticing.
+Every *boxed* text-bearing node — one drawn with `draw`, `fill`, a custom node style from the TikZ styles library (e.g. `dag-node`, `flow-node`, `decision-node`), or any shape style like `rectangle`, `diamond`, `circle` with `draw`/`fill` — must declare its size explicitly. Implicit sizing means the label can grow past the box edge without anyone noticing.
 
 ```latex
 % BAD — node size grows silently with text length
@@ -29,10 +29,17 @@ Every node that holds text must declare its size explicitly. Implicit sizing mea
 ```
 
 Use either:
+
 - `minimum width` + `minimum height` — for boxes whose size should not depend on the text.
 - `text width` + `align=center` (or `left`) — for boxes whose height should grow with text.
 
 `text width` is required for any multi-line content (anything containing `\\`).
+
+### Scope — what P1 does **not** cover
+
+Plain labels, axis ticks, axis titles, and free-floating annotations (`\node[above] {label}`, `\node[below, font=\footnotesize] at (\x, -0.1) {\x}`, etc.) are intentionally **not** subject to P1. Forcing dimensions on them would make every axis tick a syntax burden and conflict with the snippet gallery's own usage.
+
+For those unboxed labels, correctness is enforced by P4 (directional keywords) and by the measurement rules (gap calculation, boundary clearance) in `tikz-measurement.md`.
 
 ---
 
@@ -54,18 +61,23 @@ For any diagram with three or more nodes, precede `\begin{tikzpicture}` with a c
 
 ---
 
-## Rule P3: Prohibition on `scale=X` for complex diagrams
+## Rule P3: `scale=X` alone is banned — scale nodes with it
 
-`scale=0.8` shrinks coordinates but not text. A 2 cm gap becomes 1.6 cm; the 1.2 cm label that fit before now overlaps. This failure mode silently produces the exact collisions the measurement rule is designed to prevent.
+The real failure mode is **asymmetric scaling**: `scale=0.8` shrinks coordinates but *not* text. A 2 cm gap becomes 1.6 cm; the 1.2 cm label that fit before now overlaps. This silently produces the exact collisions the measurement rule exists to prevent.
 
-**Never use `scale=` on a diagram with more than two labeled nodes.** Design at the intended size.
+**Ban.** `\begin{tikzpicture}[scale=X]` with no accompanying node scaling. This is the unsafe pattern.
 
-If you *must* scale (e.g., matching a slide layout):
+**Allowed — the symmetric forms.** These scale coordinates *and* nodes together, so gap/label geometry survives:
 
 ```latex
-% If scale is unavoidable, scale everything — but prefer to redesign.
-\begin{tikzpicture}[scale=0.8, every node/.style={scale=0.8}]
+% Full-width diagrams — recommended default in tikz-visual-quality.md
+\begin{tikzpicture}[scale=1.1, every node/.style={scale=1.1}]
+
+% Or use transform shape to scale node contents with coordinates
+\begin{tikzpicture}[scale=0.85, transform shape]
 ```
+
+When you stick to those forms, the `[scale=1.1]` convention from `tikz-visual-quality.md` is fine. When you write a bare `scale=` without node scaling, the prevention pre-check in `/extract-tikz` (Step 1) halts the pipeline.
 
 ---
 
@@ -117,6 +129,7 @@ This keeps each diagram small enough that the measurement rules are tractable.
 
 ## Enforcement
 
-- `/extract-tikz` runs a prevention pre-check (Step 1.5) before compiling. Violations of P1, P2, P3, or P4 halt the pipeline and report the offending block.
+- `/extract-tikz` runs a prevention pre-check as **Step 1** before compiling. Violations of P1 (boxed nodes only), P3 (bare `scale=`), or P4 (missing directional keyword on edge labels) halt the pipeline and report the offending block. P2 (coordinate map) and P5–P6 are reviewer concerns, not grep-checkable.
+- `/new-diagram` runs the same Step 1 grep patterns before its standalone compile — both skills use identical regexes so behavior doesn't drift.
 - `tikz-reviewer` cites these rules by name when reporting CRITICAL/MAJOR issues.
-- Quality score deducts −5 per violation caught post-hoc (see `quality-gates.md` TikZ section).
+- Quality scoring is defined in [`quality-gates.md`](quality-gates.md). The TikZ section there deducts −5 for a label-overlap finding (which is typically the symptom of a P1/P3/P4 violation that reached production); it does **not** currently deduct per-rule. That may change — consult `quality-gates.md` for the authoritative scoring rubric.

@@ -61,13 +61,48 @@
       "Bash(pandoc *)",
       "Bash(docx2txt *)",
       "Bash(pdftotext *)",
-      "Bash(npm *)",
       "Bash(git tag *)",
       "Bash(git rm *)",
       "Bash(git mv *)",
       "Bash(git remote *)",
       "Bash(gh issue *)",
-      "Bash(gh release *)"
+      "Bash(gh release *)",
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)",
+      "Edit(README.md)",
+      "Write(README.md)",
+      "Edit(CHANGELOG.md)",
+      "Write(CHANGELOG.md)",
+      "Edit(MEMORY.md)",
+      "Write(MEMORY.md)",
+      "Edit(.claude/**)",
+      "Write(.claude/**)",
+      "Edit(guide/**)",
+      "Write(guide/**)",
+      "Edit(docs/**)",
+      "Write(docs/**)",
+      "Edit(scripts/**)",
+      "Write(scripts/**)",
+      "Edit(templates/**)",
+      "Write(templates/**)",
+      "Edit(Preambles/**)",
+      "Write(Preambles/**)",
+      "Edit(Slides/**)",
+      "Write(Slides/**)",
+      "Edit(Quarto/**)",
+      "Write(Quarto/**)",
+      "Edit(Figures/**)",
+      "Write(Figures/**)",
+      "Edit(quality_reports/**)",
+      "Write(quality_reports/**)",
+      "Edit(explorations/**)",
+      "Write(explorations/**)",
+      "Edit(master_supporting_docs/**)",
+      "Write(master_supporting_docs/**)",
+      "Edit(.github/**)",
+      "Write(.github/**)",
+      "Edit(.gitignore)",
+      "Write(.gitignore)"
     ]
   },
   "hooks": {
@@ -77,18 +112,6 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh",
             "timeout": 5
           }
         ]

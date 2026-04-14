@@ -17,8 +17,11 @@ RED='\033[0;31m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-LATEX_FILE="Preambles/header.tex"
-SCSS_FILE="Quarto/theme-template.scss"
+# Resolve paths relative to this script so it works from any cwd.
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
+LATEX_FILE="$REPO_ROOT/Preambles/header.tex"
+SCSS_FILE="$REPO_ROOT/Quarto/theme-template.scss"
 
 if [ ! -f "$LATEX_FILE" ]; then
   echo -e "${RED}✗${RESET} Missing $LATEX_FILE"
@@ -29,10 +32,9 @@ if [ ! -f "$SCSS_FILE" ]; then
   exit 1
 fi
 
-# Extract color names from LaTeX: \definecolor{NAME}{...}{HEX}
-# and \colorlet{NAME}{...}
-latex_names=$(grep -E '\\definecolor\{[a-zA-Z0-9_-]+\}' "$LATEX_FILE" \
-              | sed -E 's/.*\\definecolor\{([a-zA-Z0-9_-]+)\}.*/\1/' \
+# Extract color names from LaTeX: \definecolor{NAME}{...}{HEX} OR \colorlet{NAME}{...}
+latex_names=$(grep -E '\\(definecolor|colorlet)\{[a-zA-Z0-9_-]+\}' "$LATEX_FILE" \
+              | sed -E 's/.*\\(definecolor|colorlet)\{([a-zA-Z0-9_-]+)\}.*/\2/' \
               | sort -u)
 
 # Extract color-like SCSS variables: $name: #HEX (or $name: <literal color value>)
@@ -81,6 +83,10 @@ for name in "${core_names[@]}"; do
 done
 
 echo ""
+# Exit code is the machine-readable contract for validate-setup.sh and CI:
+#   0 = in sync (core palette names present on both sides)
+#   1 = divergence(s) detected (core names missing from one or both files)
+# The warnings above are human-readable; the exit code is what automation uses.
 if [ "$warn" -eq 0 ]; then
   echo -e "${GREEN}Core palette in sync.${RESET}"
   echo ""
@@ -97,6 +103,4 @@ if [ "${#missing_scss[@]}" -gt 0 ]; then
   printf '    - %s\n' "${missing_scss[@]}"
 fi
 echo ""
-# Non-blocking: divergences are warnings, not failures, so validate-setup.sh
-# stays green on healthy setups even if users choose to customize asymmetrically.
-exit 0
+exit 1

@@ -48,9 +48,10 @@ Embed in Beamer by copying the contents of `\begin{tikzpicture} ... \end{tikzpic
 
 Adding a new snippet? The bar:
 
-- Works for at least two academic domains (tag both in the README row).
-- Renders cleanly at Beamer's default frame size (12.8 × 9.6 cm for 4:3, 16 × 9 cm for widescreen).
-- Passes the prevention rules by construction.
-- Has a coordinate-map comment.
+- Generalizes across fields. A new DAG snippet is domain-neutral; a snippet that only makes sense in a single subfield should live in that project's fork, not here.
+- Compiles standalone with `xelatex` (the snippets ship as `\documentclass[border=4pt]{standalone}`).
+- Passes the P3 and P4 grep pre-checks in [`tikz-prevention.md`](../../.claude/rules/tikz-prevention.md) by construction.
+- Has a coordinate-map comment showing every named coordinate and a one-line intent sentence.
+- Renders cleanly at Beamer's default frame size (12.8 × 9.6 cm for 4:3, 16 × 9 cm for widescreen) when copied into a `frame`.
 
 Open a PR using the standard workflow (see `.github/CONTRIBUTING.md`).

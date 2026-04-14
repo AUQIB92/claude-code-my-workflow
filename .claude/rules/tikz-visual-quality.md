@@ -32,7 +32,7 @@ paths:
 
 ## Spacing and Proportions
 
-- Standard scale: `[scale=1.1]` for full-width diagrams
+- Standard scale: `[scale=1.1, every node/.style={scale=1.1}]` for full-width diagrams — always scale nodes together with coordinates (bare `[scale=X]` is banned by [`tikz-prevention.md` P3](tikz-prevention.md) because it shrinks coordinates but not text)
 - Dot radius: `4pt` for data points
 - Minimum 0.2 units between any label and nearest graphical element
 - Axes extend beyond all data points

@@ -15,21 +15,27 @@
 % =============================================================================
 
 % -----------------------------------------------------------------------------
-% Core packages
+% Engine detection + encoding
+%
+% Our /compile-latex skill uses XeLaTeX, where inputenc is unnecessary and
+% can produce encoding warnings. Only load inputenc under pdfTeX.
 % -----------------------------------------------------------------------------
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath, amssymb, amsthm}
-\usepackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=primary-blue, urlcolor=primary-blue,
-            citecolor=primary-blue, pdfborder={0 0 0}}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+\fi
 
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
-\usepackage{xcolor}
 
 % -----------------------------------------------------------------------------
-% PALETTE — mirrors Quarto/theme-template.scss variable names
+% PALETTE — mirrors Quarto/theme-template.scss variable names.
+% Load xcolor and define colors BEFORE anything that references them
+% (notably hyperref, hypersetup, and the Beamer color assignments).
 % -----------------------------------------------------------------------------
+\usepackage{xcolor}
+
 \definecolor{primary-blue}{HTML}{012169}      % headings, accents
 \definecolor{primary-gold}{HTML}{B9975B}      % emphasis, borders
 \definecolor{highlight-yellow}{HTML}{F2A900}  % markers, alerts
@@ -52,9 +58,21 @@
 \colorlet{accent2}{primary-gold}
 
 % -----------------------------------------------------------------------------
-% Beamer theme assignments (only apply under beamer)
+% Hyperref — loaded AFTER xcolor + palette so link colors resolve.
 % -----------------------------------------------------------------------------
-\@ifundefined{beamertemplate}{}{%
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=primary-blue, urlcolor=primary-blue,
+            citecolor=primary-blue, pdfborder={0 0 0}}
+
+% -----------------------------------------------------------------------------
+% Beamer theme assignments (only apply under Beamer).
+%
+% We detect Beamer via \@ifclassloaded{beamer}, which is the documented,
+% non-internal way. This must be wrapped in \makeatletter/\makeatother
+% because \@ifclassloaded contains an @-catcode character.
+% -----------------------------------------------------------------------------
+\makeatletter
+\@ifclassloaded{beamer}{%
   \usefonttheme{professionalfonts}
   \setbeamercolor{structure}{fg=primary-blue}
   \setbeamercolor{frametitle}{fg=primary-blue}
@@ -73,7 +91,8 @@
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{footline}{%
     \hfill{\color{neutral}\footnotesize\insertframenumber/\inserttotalframenumber}\hspace{0.7em}\vspace{0.3em}}
-}
+}{}
+\makeatother
 
 % -----------------------------------------------------------------------------
 % TikZ setup — libraries the snippet gallery uses

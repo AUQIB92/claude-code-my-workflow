@@ -24,14 +24,28 @@ Ported the best parts of Scott Cunningham's [MixtapeTools](https://github.com/sc
 
 - **`/extract-tikz`** — mandatory Step 1 prevention pre-check (greps for bare edge labels and `scale=`) before the expensive compile + SVG cycle.
 - **`tikz-reviewer`** agent now requires citing the specific pass and formula from `tikz-measurement.md` for every CRITICAL/MAJOR finding. Vague reports are rejected.
-- **`protect-files.sh`** now recognises two explicit bypass signals: `CLAUDE_CODE_DISABLE_FILE_PROTECTION=1` env var or `permission_mode == "bypassPermissions"` in the hook input. Blocks otherwise. Enables fully-automated runs under bypass mode without weakening default protection.
-- **`settings.json`** allowlist +24 entries for commonly-used tools (read-only: grep/cat/head/tail/awk/find/tree/basename/dirname/file; file ops: cp/mv/touch/mktemp; pipeline: pandoc/docx2txt/pdftotext/npm; git/gh subcommands). Benefits non-bypass users; bypass users unaffected.
-- **Counts:** 23 → 24 skills, 18 → 20 rules. Synced across README, `docs/index.html`, guide body, guide appendix, and CLAUDE.md.
+- **`settings.json`** allowlist expanded substantially (+23 Bash tools, +36 Edit/Write path rules): read-only tools (grep/cat/head/tail/awk/find/tree/basename/dirname/file), file ops (cp/mv/touch/mktemp), pipeline tools (pandoc/docx2txt/pdftotext), missing git/gh subcommands (tag/rm/mv/remote, issue/release), and Edit/Write pre-approvals for every directory we normally edit (.claude/**, templates/**, guide/**, docs/**, scripts/**, Preambles/**, Slides/**, Quarto/**, Figures/**, quality_reports/**, explorations/**, master_supporting_docs/**, .github/**, plus CLAUDE.md, README.md, CHANGELOG.md, MEMORY.md, .gitignore).
+- **Counts:** 23 → 24 skills, 18 → 20 rules, 7 → 6 hooks. Synced across README, `docs/index.html`, guide body, guide appendix, and CLAUDE.md.
 - **Guide** Step 3 "Adapt Your Theme" rewritten to document the two-surface palette contract and the sync script.
+
+### Removed
+
+- **`.claude/hooks/protect-files.sh`** and its `PreToolUse` registration. The hook used to block `Edit`/`Write` on `Bibliography_base.bib` and `settings.json` unless bypass was signalled. With the explicit `Edit(...)` / `Write(...)` allow-rules added to `settings.json` (above), Claude Code's permission system handles this cleanly and the extra hook was redundant friction. Removing it also cuts a failure mode (earlier sessions had to work around the hook with `python3 -c` writes).
 
 ### Attribution
 
 TikZ prevention + measurement rules adapted from `tikz_rules.md` in [scunning1975/MixtapeTools](https://github.com/scunning1975/MixtapeTools). The source repo has no LICENSE file; its README says "Use freely. Attribution appreciated but not required." Both ported rule files cite Scott at the top.
+
+### Copilot review follow-up (same day)
+
+This release shipped as a sequence of small PRs (#53–#56) plus an end-of-day Copilot-review cleanup PR that fixed 15 issues Copilot caught across those four PRs, removed `protect-files.sh` per user preference, and unified cross-skill grep patterns. Summary of the biggest catches:
+
+- LaTeX load order in `Preambles/header.tex` (xcolor before hyperref; `\makeatletter` around `\@ifclassloaded`; `inputenc` gated by `\ifPDFTeX`).
+- `protect-files.sh` env-var bypass moved above `$(cat)` so it exits immediately.
+- `/extract-tikz` and `/new-diagram` grep patterns unified character-for-character.
+- P1 scoped to boxed nodes; P3 reconciled with the `scale=1.1` convention.
+- `check-palette-sync.sh` uses absolute paths (`$(dirname "$0")/..`) and a stable exit-code contract.
+- Removed `Bash(npm *)` from the allowlist (too broad — npm run executes arbitrary scripts).
 
 ---
 
@@ -96,7 +110,7 @@ TikZ prevention + measurement rules adapted from `tikz_rules.md` in [scunning197
 - 10 specialized agents: proofreader, slide-auditor, pedagogy-reviewer, r-reviewer, tikz-reviewer, beamer-translator, quarto-critic, quarto-fixer, verifier, domain-reviewer.
 - 22 skills covering LaTeX, Quarto, R, reproducibility, research, and meta-workflows.
 - 18 rules (4 always-on, 14 path-scoped) for quality gates, verification, and domain standards.
-- 7 hooks for notifications, file protection, context monitoring, session logging, and compaction state.
+- Hooks for notifications, context monitoring, session logging, and compaction state.
 - Orchestrator protocol (contractor mode) with adversarial critic-fixer loop (max 5 rounds).
 - Plan-first workflow with on-disk plan persistence across context compaction.
 - Three-tier memory system: `CLAUDE.md` (project), `MEMORY.md` (auto-memory), session logs.
