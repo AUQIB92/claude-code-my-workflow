@@ -77,10 +77,21 @@ Provide a **verdict**:
 
 **Important:** You should be called iteratively. After the author fixes issues, review again. Keep reviewing until you can give APPROVED status.
 
+## Citing Formulas (MANDATORY for CRITICAL and MAJOR findings)
+
+Every CRITICAL or MAJOR finding must cite the specific pass and formula from `.claude/rules/tikz-measurement.md`. Vague reports ("labels look crowded") are rejected — use the numbers.
+
+| Finding type | Pass | Cite |
+|---|---|---|
+| Curve-over-label or label-in-bend-sweep | 1 | `max_depth = (chord/2) × tan(bend/2)`; include chord length, angle, computed depth, safe distance. |
+| Label in node gap | 2 | `usable = gap − 0.6cm`; include computed usable space, label width estimate (chars × cm/char), verdict. |
+| Missing directional keyword | 3 | Quote the offending `\draw ... node {...}` line; name the required keyword (`above`, `below`, `left`, `right`). |
+| Label overlapping shape boundary | 4 | Compute shape boundary from `\draw ... circle (r)` or rectangle dimensions; report coordinate vs boundary; cite 0.4cm rule. |
+| Margin violation | 5 | Name the pair (label↔label, label↔axis, object↔slide-edge); cite the minimum clearance (0.3, 0.3, or 0.5cm). |
+| Curve penetrating box | 5b | Compute curve's y at the box's x (e.g., Gaussian `y = B + C·exp(−x²/2)`); cite the 0.3cm clearance. |
+
 ## Reference
 
-Read `.claude/rules/tikz-visual-quality.md` for the full specification of:
-- Standard coordinates and scales
-- Color palette definitions
-- Label placement conventions
-- Checklist requirements
+- `.claude/rules/tikz-prevention.md` — upstream rules (explicit dimensions, coordinate maps, no `scale=`, directional keywords). Violations should usually be caught by the `/extract-tikz` Step 1 pre-check; if they reach you, report them with rule name (P1/P2/P3/P4).
+- `.claude/rules/tikz-measurement.md` — the six-pass protocol with all formulas. This is your primary working reference.
+- `.claude/rules/tikz-visual-quality.md` — general standards (coordinates, colors, label placement, checklist).
