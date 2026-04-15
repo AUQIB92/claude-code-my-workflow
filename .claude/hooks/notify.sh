@@ -1,9 +1,17 @@
 #!/bin/bash
 # Cross-platform desktop notification when Claude needs attention
 # Triggers on: permission prompts, idle prompts, auth events
-INPUT=$(cat)
-MESSAGE=$(echo "$INPUT" | jq -r '.message // "Claude needs attention"')
-TITLE=$(echo "$INPUT" | jq -r '.title // "Claude Code"')
+set -uo pipefail
+
+INPUT="$(cat)"
+
+# Fail open if jq is missing — notification is best-effort.
+if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+fi
+
+MESSAGE="$(printf '%s' "$INPUT" | jq -r '.message // "Claude needs attention"')"
+TITLE="$(printf '%s' "$INPUT" | jq -r '.title // "Claude Code"')"
 
 case "$(uname -s)" in
   Darwin)

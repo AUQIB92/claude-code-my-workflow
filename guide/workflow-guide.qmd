@@ -653,7 +653,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 22: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 27: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -1861,7 +1861,7 @@ Here is what each project does and when you should use it.
 
 ## clo-author: Paper-Centric Research Workflows
 
-**Repository:** [hsantanna88/clo-author](https://github.com/hsantanna88/clo-author)
+**Repository:** [hugosantanna/clo-author](https://github.com/hugosantanna/clo-author)
 **Author:** Hugo Sant'Anna (UAB)
 **Built on:** Fork of this repository
 
@@ -2481,7 +2481,7 @@ This guide builds on the work of many. We are grateful to these projects and the
 
 **Research Workflows:**
 
-- [clo-author](https://github.com/hsantanna88/clo-author) by Hugo Sant'Anna (UAB) --- paper-centric research workflows with adversarial agent pairs, simulated peer review, and full research lifecycle management
+- [clo-author](https://github.com/hugosantanna/clo-author) by Hugo Sant'Anna (UAB) --- paper-centric research workflows with adversarial agent pairs, simulated peer review, and full research lifecycle management
 - [claudeblattman](https://github.com/chrisblattman/claudeblattman) by Chris Blattman (University of Chicago) --- comprehensive workflows for non-technical academics: executive assistant, proposal writing, project management, and the fresh-context critique pattern
 
 **Reproducibility & Data Management:**
