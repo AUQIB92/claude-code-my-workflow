@@ -12,9 +12,25 @@ set -euo pipefail
 
 INPUT="$(cat)"
 
-mode="$(printf '%s' "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('permission_mode','?'))" 2>/dev/null || echo "?")"
-model="$(printf '%s' "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('model',{}).get('display_name','?'))" 2>/dev/null || echo "?")"
-cwd="$(printf '%s' "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('workspace',{}).get('current_dir','.'))" 2>/dev/null || pwd)"
+# Parse all three fields in a single python3 invocation. Status line renders
+# on every turn; avoid three forks when one suffices.
+parsed="$(printf '%s' "$INPUT" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+except Exception:
+    d = {}
+print(d.get('permission_mode', '?'))
+print((d.get('model') or {}).get('display_name', '?'))
+print((d.get('workspace') or {}).get('current_dir', '.'))
+" 2>/dev/null || printf '?\n?\n.\n')"
+
+mode="$(printf '%s' "$parsed" | sed -n '1p')"
+model="$(printf '%s' "$parsed" | sed -n '2p')"
+cwd="$(printf '%s' "$parsed" | sed -n '3p')"
+[ -n "$mode" ] || mode="?"
+[ -n "$model" ] || model="?"
+[ -n "$cwd" ] || cwd="$(pwd)"
 
 case "$mode" in
     bypassPermissions) mode_badge="[BYPASS]" ;;

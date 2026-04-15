@@ -1,6 +1,6 @@
 ---
 name: permission-check
-description: Diagnose why Claude Code is (or isn't) prompting for permission. Reads all 5 settings layers (VSCode user, VSCode workspace, CLI user, CLI project, CLI project-local), reports `defaultMode`/`allow`/`deny` per layer, flags drift and conflicts, and prints the resolved merged state. Use when user says "why is it asking me to approve?", "permission check", "why am I getting prompts?", "bypass isn't working", "check my permissions", or whenever approval prompts appear despite `bypassPermissions` being configured. Read-only diagnostic.
+description: Diagnose why Claude Code is (or isn't) prompting for permission. By default reads only repo-local layers (CLI project, CLI project-local, VSCode workspace). Host-global layers (CLI user `~/.claude/`, VSCode user settings) are read ONLY when the user explicitly confirms — those files may contain unrelated paths or secrets. Use when user says "why is it asking me to approve?", "permission check", "why am I getting prompts?", "bypass isn't working", "check my permissions". Read-only diagnostic.
 argument-hint: "(no arguments)"
 allowed-tools: ["Read", "Bash", "Glob"]
 ---
@@ -22,9 +22,46 @@ Surface the full permission-mode picture across every layer Claude Code honors, 
 
 **Key insight:** `initialPermissionMode` only fires at session start. If you toggled mid-session (or the session started before a settings change), the file-level settings are correct but the *runtime* mode differs. That's the #1 source of "bypass isn't working" confusion.
 
+## Privacy contract
+
+Host-global settings files (`~/.claude/settings.json`, VSCode user settings) may contain:
+- Paths to unrelated projects and secrets
+- API keys, tokens, or provider credentials added outside this repo
+- Permission policies set by the user's org or employer
+
+This skill is designed for defense-in-depth: **Phase A runs automatically and reads only repo-local files.** Phase B reads host-global files **only after the user explicitly confirms** — never silently. When reporting host-global layers, redact any key that is not directly relevant to `permissions.*` or `claudeCode.*`.
+
 ## Protocol
 
-### Step 1: Collect every layer
+### Phase A: Repo-local layers (auto-runs)
+
+Read these immediately — they are checked into (or gitignored inside) the repo and do not cross the trust boundary:
+
+```bash
+VSCODE_WS="${CLAUDE_PROJECT_DIR}/.vscode/settings.json"
+CLI_PROJECT="${CLAUDE_PROJECT_DIR}/.claude/settings.json"
+CLI_LOCAL="${CLAUDE_PROJECT_DIR}/.claude/settings.local.json"
+```
+
+For each file that exists, extract:
+- **VSCode workspace:** `claudeCode.initialPermissionMode`, `claudeCode.allowDangerouslySkipPermissions`
+- **CLI project / project-local:** `permissions.defaultMode`, `permissions.allow`, `permissions.deny`
+
+Missing files are fine — report "not present" rather than erroring.
+
+Print the resolved defaultMode from these three layers alone. If that already explains the prompt behavior (e.g., CLI project-local has `defaultMode: "default"` while project has `bypassPermissions`), stop here and surface the diagnosis.
+
+### Phase B: Host-global layers (requires explicit user confirmation)
+
+If Phase A is inconclusive — e.g., all repo-local layers agree on bypass but the user is still being prompted — ask the user:
+
+> "To complete the diagnosis, I need to read two files outside this repo:
+> - `~/.claude/settings.json` (CLI user-level)
+> - your VSCode user settings (`~/Library/Application Support/Code/User/settings.json` on macOS; Linux/Windows vary)
+>
+> These may contain unrelated paths or secrets. I will redact any key that isn't in `permissions.*` or `claudeCode.*`. Proceed?"
+
+Only after the user confirms, read:
 
 ```bash
 # VSCode user (platform-dependent path; try all three)
@@ -35,20 +72,14 @@ case "$(uname -s)" in
     *)       VSCODE_USER="" ;;
 esac
 
-# VSCode workspace
-VSCODE_WS="${CLAUDE_PROJECT_DIR}/.vscode/settings.json"
-
-# CLI tiers
 CLI_USER="${HOME}/.claude/settings.json"
-CLI_PROJECT="${CLAUDE_PROJECT_DIR}/.claude/settings.json"
-CLI_LOCAL="${CLAUDE_PROJECT_DIR}/.claude/settings.local.json"
 ```
 
-For each file that exists, extract:
-- **VSCode tiers:** `claudeCode.initialPermissionMode`, `claudeCode.allowDangerouslySkipPermissions`
-- **CLI tiers:** `permissions.defaultMode`, `permissions.allow`, `permissions.deny`
+When reporting their contents, **extract only the relevant keys**:
+- CLI user: `permissions.defaultMode`, `permissions.allow`, `permissions.deny`
+- VSCode user: any key starting with `claudeCode.`
 
-Missing files are fine — report "not present" rather than erroring.
+Never print the full file. Redact everything else to `(other keys redacted)`.
 
 ### Step 2: Compute resolved state
 
