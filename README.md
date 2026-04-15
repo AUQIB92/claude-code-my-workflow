@@ -185,6 +185,11 @@ The guide covers Claude Code's latest capabilities:
 | `/learn` | Extract non-obvious discoveries into persistent skills |
 | `/context-status` | Show session health and context usage |
 | `/deep-audit` | Repository-wide consistency audit |
+| `/permission-check` | Diagnose permission layers when prompts fire unexpectedly |
+| `/audit-reproducibility` | Enforce tolerance thresholds on paper ↔ code numeric claims |
+| `/new-diagram` | Scaffold a TikZ diagram from the snippet gallery with prevention + review |
+| `/respond-to-referees` | R&R response-letter generator (maps referee comments to revisions) |
+| `/seven-pass-review` | Seven-pass adversarial manuscript review (parallel forked subagents) |
 
 ### Research Workflow
 
