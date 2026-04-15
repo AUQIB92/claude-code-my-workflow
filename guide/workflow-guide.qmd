@@ -159,7 +159,7 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 13 agents, 26 skills, 21 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 13 agents, 27 skills, 21 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -828,7 +828,7 @@ Permission mode is not resolved from a single file. Claude Code honors **six lay
 
 This is the single most common source of confusion. Work through the checklist in order:
 
-1. **Look at the status line** at the top of the Claude Code panel. With this repo's `statusLine` configured, it prints `[BYPASS]`, `[PLAN]`, `[AUTO-EDIT]`, or `[PROMPT]`. If it doesn't say `[BYPASS]`, you have an in-session override --- press `Shift+Tab` to cycle modes until you land on bypass.
+1. **Look at the status line** at the top of the Claude Code panel. With this repo's `statusLine` configured, it prints `[BYPASS]`, `[PLAN]`, `[AUTO-EDIT]`, or `[PROMPT]` for the four standard modes. Any other mode Claude Code reports (e.g., `dontAsk`) is shown as a bracketed raw name like `[dontAsk]`. If it doesn't say `[BYPASS]`, you have an in-session override --- press `Shift+Tab` to cycle modes until you land on bypass.
 2. **Run `/permission-check`** to see every layer's value, the resolved merged state, and any drift (e.g., project says bypass but project-local says default).
 3. **Check for stale sessions.** If settings changed recently but the session predates the change, it still runs under the old mode. Reload the window (`Cmd+Shift+P` → "Developer: Reload Window") and start a new session.
 4. **Check `deny` lists.** A match in any layer's `deny` blocks the tool regardless of `allow` entries elsewhere.
@@ -836,7 +836,17 @@ This is the single most common source of confusion. Work through the checklist i
 
 ### The Plan → Bypass Handoff (Recommended Daily Driver)
 
-Plan mode and bypass permissions sound like opposites, but they chain into a single workflow that combines safety *and* prompt-free execution:
+Plan mode and bypass permissions sound like opposites, but they chain into a single workflow that gives you a **review-before-execute convenience**: you see the approach before any edits happen, then execution runs without per-tool prompts.
+
+::: {.callout-warning}
+## Plan approval is not an enforcement boundary
+
+Approving a plan via `ExitPlanMode` releases the session to your `defaultMode` — typically `bypassPermissions`. Once there, any subsequent tool call (Edit, Write, Bash) executes under the full allowlist in your `settings.json`, not a scope derived from the plan. A mistaken implementation can still edit unrelated files or run destructive shell commands with no second checkpoint.
+
+Treat this flow as a convenience pattern, not a security control. If you need a hard enforcement boundary, keep `defaultMode: "default"` and approve each high-risk tool individually, or run the whole session in `plan` mode and copy actions out manually.
+:::
+
+The flow:
 
 ```
 Start session in plan mode  (Shift+Tab at startup, or claude --permission-mode plan)
