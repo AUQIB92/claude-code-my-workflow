@@ -76,6 +76,16 @@ Common false alarms to watch for:
 - Quarto callout `## Title` inside `:::` divs — this is standard syntax, NOT a heading bug
 - `allowed-tools` linter warning — known linter bug (Claude Code issue #25380), field IS valid
 - Counts in old session logs — these are historical records, not user-facing docs
+- Counts in `CHANGELOG.md` under past version headings — those are snapshots; do NOT update
+- `log-reminder.py` outputting `{"decision": "block"}` with `sys.exit(0)` — this IS the modern Claude Code Stop-hook block protocol, NOT a bug
+
+**Count drift specifically: search for every phrasing variant.** A common failure mode is that `replace_all` on one phrasing (e.g., `"26 skills"`) misses sibling phrasings in the same repo. When checking counts, grep for ALL of:
+- `"N skills"`, `"N skill "` (with space)
+- `"N slash commands"`
+- `"N specialized"` (as in "N specialized agents")
+- `"template's N"` (informal count in prose)
+- Commas/conjunctions: `"skills,"` vs `"skills, and"` are treated as different strings by `replace_all`
+Verify zero matches for the OLD number across the whole tree before declaring clean.
 
 ### PHASE 3: Fix All Issues
 
