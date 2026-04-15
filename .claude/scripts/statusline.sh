@@ -23,14 +23,14 @@ except Exception:
 print(d.get('permission_mode', '?'))
 print((d.get('model') or {}).get('display_name', '?'))
 print((d.get('workspace') or {}).get('current_dir', '.'))
-" 2>/dev/null || printf '?\n?\n.\n')"
+" 2>/dev/null || printf '?\n?\n\n')"
 
 mode="$(printf '%s' "$parsed" | sed -n '1p')"
 model="$(printf '%s' "$parsed" | sed -n '2p')"
 cwd="$(printf '%s' "$parsed" | sed -n '3p')"
 [ -n "$mode" ] || mode="?"
 [ -n "$model" ] || model="?"
-[ -n "$cwd" ] || cwd="$(pwd)"
+[ -n "$cwd" ] && [ "$cwd" != "." ] || cwd="$(pwd)"
 
 case "$mode" in
     bypassPermissions) mode_badge="[BYPASS]" ;;
