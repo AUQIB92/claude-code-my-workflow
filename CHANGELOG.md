@@ -6,9 +6,29 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## Unreleased
+
+### Added — anti–whack-a-mole rule
+
+- **`.claude/rules/summary-parity.md`** — new path-scoped rule (rule count 22 → 23). Triggers when Claude edits a summary paragraph (CHANGELOG ledes, README taglines, PR `## Summary` blocks, skill/rule/agent frontmatter `description` fields, guide section abstracts, MEMORY.md `[LEARN]` headlines). Enforces a summary-body parity protocol: read the full body before editing the summary; enumerate every substantive claim; re-verify against the body; edit the whole paragraph, not just the flagged phrase. After **two review-bot flags on the same paragraph, rewrite structurally rather than patching word-by-word.** Motivated by 3 consecutive Copilot findings on the v1.6.1 CHANGELOG opening (PRs #88–#90), each surgical fix introducing a new drift elsewhere in the paragraph.
+
+### Added — audit learning
+
+- **`MEMORY.md`** `[LEARN:audit]` entry capturing the whack-a-mole anti-pattern and pointing to the new rule, so future sessions inherit the lesson.
+
+### Changed — drift-proofing the v1.6.1 CHANGELOG lede
+
+- Rewrote the v1.6.1 opening paragraph to remove enumerative claims ("no new skills, rules, or hooks") that drift when the body is edited. New form is abstraction-first: "No breaking changes. No new directories were added to `.claude/`; existing infrastructure was revised …" This opens with one unambiguous claim and lets the body speak. Release notes for v1.6.1 on GitHub synced to match.
+
+### Changed — guide rule inventory
+
+- **`guide/workflow-guide.qmd`** "All Rules" table previously listed 16 path-scoped rules but 18 existed on disk (`content-invariants.md` and `cross-artifact-review.md` were missing from the table). Added those two rows plus the new `summary-parity.md`. Path-scoped count callout updated from "16 path-scoped rules total" to "19 path-scoped rules total." Surface-sync count assertions across README / CLAUDE.md / guide / docs (landing + guide HTML) / skill-template updated 22 → 23.
+
+---
+
 ## v1.6.1 — 2026-04-16
 
-A **framing honesty + hook friction** patch release. No new skill or rule directories, no new hooks, and no breaking changes (on-disk counts unchanged at 27 skills / 13 agents / 22 rules / 6 hooks); existing skills, rules, docs, and hooks are revised to address two classes of issue surfaced by a multi-round audit:
+A **framing honesty + hook friction** patch release. No breaking changes. No new directories were added to `.claude/`; existing infrastructure was revised to address two classes of issue surfaced by a multi-round audit:
 
 1. **Claim-vs-reality drift:** v1.6.0 docs and rules described the "orchestrator" as if it were a repo-wide daemon that activates automatically after plan approval. In reality, the 6-step loop (IMPLEMENT → VERIFY → REVIEW → FIX → RE-VERIFY → SCORE) is a **pattern** implemented by specific skills (`/commit`, `/qa-quarto`, `/review-paper --adversarial`, `/slide-excellence`, `/create-lecture`, `/data-analysis`, `/review-paper --peer`). Plan approval does NOT trigger an auto-loop. Similarly, quality thresholds are **advisory inside `/commit`**, not enforced by a repo-wide git pre-commit hook.
 
