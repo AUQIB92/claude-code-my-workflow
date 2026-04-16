@@ -36,7 +36,7 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 ├── Quarto/                      # RevealJS .qmd files + theme
 ├── docs/                        # GitHub Pages (auto-generated)
 ├── scripts/                     # Utility scripts + R code
-├── quality_reports/             # Plans, session logs, merge reports
+├── quality_reports/             # Plans, session logs, merge reports, decision records
 ├── explorations/                # Research sandbox (see rules)
 ├── templates/                   # Session log, quality report templates
 └── master_supporting_docs/      # Papers and existing slides

@@ -222,7 +222,7 @@ Peeves are drawn at referee-selection time and injected into referee prompts. Ke
 
 ### Critical peeves (sample 1 per referee in default, 2 per referee in stress)
 
-Seed pool — expand as you use the system and encounter recurring patterns. Target: ~25 entries.
+Seed pool — 29 entries. Expand as you use the system and encounter recurring patterns.
 
 - Suspicious of too-clean results (point estimates on round numbers, p-values exactly at 0.01).
 - Wants at least 5 robustness specifications, each addressing a different threat.
@@ -249,10 +249,14 @@ Seed pool — expand as you use the system and encounter recurring patterns. Tar
 - Null results must be interpreted, not buried.
 - Any claim about "policy implications" must be supported by the data's support range.
 - Identification assumption must be stated in one testable sentence.
+- Notation drift — a symbol defined as X in §2 but used with a different meaning in §4 or §5.
+- Seed-dependent results — any bootstrap, simulation, or stochastic procedure without a `set.seed` (or equivalent) stated near the top of the script.
+- Covariate balance absent — DiD, matching, or IV papers without a balance table for pre-treatment covariates across treatment status.
+- Overlap / common support — matching, RD, or propensity-score work without density overlap / bandwidth-robustness evidence at the treatment boundary.
 
 ### Constructive peeves (sample 1 per referee)
 
-Seed pool — target: ~20 entries.
+Seed pool — 25 entries.
 
 - Rewards honest acknowledgment of limitations.
 - Values clever natural experiments over technical machinery.
@@ -274,6 +278,11 @@ Seed pool — target: ~20 entries.
 - Rewards rigorous definition of key terms up front.
 - Values papers that generalize their findings carefully.
 - Appreciates when robustness checks are motivated by specific threats.
+- Rewards a clear "what this paper does not show" paragraph that honestly bounds the claims.
+- Values raw-data figures before any model (scatter plots, histograms, time series) to build intuition.
+- Appreciates when the author shows alternative model specifications even when the preferred one works — signals robustness, not insecurity.
+- Rewards clear notation tables (symbol → definition → first use) when the paper has heavy math.
+- Values careful attribution — when the paper distinguishes "our contribution" from "we extend X" honestly.
 
 ## Important rules (7)
 
