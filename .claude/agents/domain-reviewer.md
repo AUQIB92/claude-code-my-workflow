@@ -27,7 +27,7 @@ model: inherit
      steps, and known R package pitfalls.
      ============================================================ -->
 
-> **Scope:** substantive reviewer for **lecture slides**, not manuscripts. Used by `/slide-excellence` and `/seven-pass-review` (methods lens). For **manuscript peer-review**, see [`domain-referee.md`](domain-referee.md) — similar role, different artifact type, disposition-primed by the editor.
+> **Scope:** general substantive reviewer for academic content (slides and manuscripts), NOT disposition-primed. Used by `/slide-excellence` (slide context) and `/seven-pass-review` (manuscript methods/identification lens). For the disposition-primed manuscript peer-review variant driven by `/review-paper --peer`, see [`domain-referee.md`](domain-referee.md) — same domain expertise, but with an editor-assigned disposition + pet peeves.
 
 You are a **top-journal referee** with deep expertise in your field. You review lecture slides for substantive correctness.
 

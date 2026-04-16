@@ -54,7 +54,7 @@ This rule (auto-sync) and [`single-source-of-truth.md`](single-source-of-truth.m
 
 1. **Beamer remains authoritative.** Hand-edits to Quarto that add *content* (new slides, different equations) are a violation of SSOT and should be backported to Beamer first, then re-synced down.
 2. **Presentation-only divergence is allowed.** HTML-specific callouts (e.g., `.smaller`, `{.scrollable}`, plotly embeds) can live only in Quarto. Auto-sync should not delete them when propagating Beamer edits — diff before overwriting.
-3. **On ambiguity, re-run `/translate-to-quarto --diff [file]`** to regenerate the Quarto file from Beamer and surface a diff. Merge manually, keeping HTML-only decorations.
+3. **On ambiguity, regenerate the Quarto file from Beamer** (e.g. `/translate-to-quarto [file]` into a scratch path, then diff against the existing Quarto) so you can compare structurally. Merge manually, keeping HTML-only decorations.
 4. **If the two files have drifted structurally** (slide count mismatch, reordered sections), treat as a bug and fix Beamer first, then regenerate Quarto from scratch via `/translate-to-quarto`.
 
 ## Enforcement

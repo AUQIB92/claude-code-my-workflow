@@ -94,7 +94,7 @@ saveRDS(result, file.path(out_dir, "descriptive_name.rds"))
 
 ## 8. Numerical Discipline
 
-See [`r-reviewer.md` Category 11](../agents/r-reviewer.md#category-11-numerical-discipline) for the full checklist. Headline rules:
+See [`r-reviewer.md`](../agents/r-reviewer.md) Category 11 ("Numerical Discipline") for the full checklist. Headline rules:
 
 - **No float equality.** Never use `==` on doubles. Use `all.equal()` or `abs(a - b) < tol`.
 - **CDF clamping** to an OPEN interval. Exact 0 or 1 passed to `qnorm()` / `pbinom()` etc. produces `±Inf`. Project-wide epsilon:

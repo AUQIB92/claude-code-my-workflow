@@ -3,8 +3,17 @@
 Session Log Reminder Hook for Claude Code
 
 A Stop hook that tracks how many responses have passed since the session
-log was last updated. After a threshold, it blocks Claude from stopping
-and reminds it to update the session log.
+log was last updated, and nudges Claude to update the log via stderr
+advisories. **Never blocks** — always exits 0 without writing a decision
+to stdout. Two advisory triggers (fired at most once per session each):
+  1. No session log exists under quality_reports/session_logs/ at all.
+  2. THRESHOLD responses have passed without the most-recent log being
+     touched.
+
+Design rationale: a previous version of this hook emitted
+{"decision": "block"} to stop Claude mid-turn. That was effective but
+disrupted autonomous flows. Reminders are now advisory only — the user
+remains responsible for deciding when to write the log.
 
 Adapted from: https://gist.github.com/michaelewens/9a1bc5a97f3f9bbb79453e5b682df462
 

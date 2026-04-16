@@ -55,11 +55,11 @@ To get the full loop on a non-trivial task: start in plan mode, write the plan, 
 
 ## "Just Do It" Mode
 
-When user says "just do it" / "handle it":
-- Skip final approval pause
-- Auto-commit if score >= 80
-- Still run the full verify-review-fix loop (within the invoked skill)
+When user says "just do it" / "handle it" (within an already-invoked skill):
+- Skip the final approval pause for the currently invoked skill
+- Still run the full verify-review-fix loop (within that skill)
 - Still present the summary
+- **Do NOT treat this phrase alone as commit authorization.** Commits still require an explicit `/commit` invocation or an unambiguous user request to commit — see [`.claude/skills/commit/SKILL.md`](../skills/commit/SKILL.md) for the allowed trigger phrases.
 
 ## Cross-references
 

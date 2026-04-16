@@ -83,7 +83,7 @@ The palette contract broke. Run `./scripts/check-palette-sync.sh` — it reports
 
 ### `sessionInfo.txt` not updated after analysis changes
 
-You ran `03_analyze.R` directly instead of `00_run_all.R`. Always go through the orchestrator — it writes the session snapshot as its last step.
+You ran `03_analyze.R` directly instead of `00_run_all.R`. Re-run `00_run_all.R` (e.g. via the `/data-analysis` skill or your usual pipeline runner) — that entrypoint writes the session snapshot as its last step.
 
 ## Permissions / bypass / statusline (v1.6.0)
 
