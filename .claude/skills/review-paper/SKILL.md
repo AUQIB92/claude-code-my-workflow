@@ -9,6 +9,13 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 
 Produce a thorough, constructive review of an academic manuscript — the kind of report a top-journal referee would write.
 
+> **Which review skill do I want?**
+>
+> - **`/review-paper`** (this skill) — single comprehensive report, optional `--adversarial` critic-fixer loop, or `--peer <journal>` simulated peer-review pipeline. Best for **most drafts**.
+> - **`/seven-pass-review`** — seven independent lenses in parallel (abstract, intro, methods, results, robustness, prose, citations) then synthesized. Heavier (7× token cost). Best for **submission-ready drafts** or **R&R stage** where you need maximum coverage.
+> - **`/respond-to-referees`** — if you already have referee comments and need a response document, not another review.
+> - **`/slide-excellence`** — for lecture slides, not papers.
+
 **Input:** `$ARGUMENTS` — path to a paper (`.tex`, `.pdf`, or `.qmd`), or a filename in `master_supporting_docs/`. Optional flags:
 
 - `--adversarial` — critic-fixer loop (max 5 rounds).

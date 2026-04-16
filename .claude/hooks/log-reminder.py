@@ -20,7 +20,7 @@ import hashlib
 from pathlib import Path
 from datetime import datetime
 
-THRESHOLD = 15
+THRESHOLD = 50
 
 
 def get_state_dir() -> Path:
@@ -95,21 +95,16 @@ def main():
     latest_log, current_mtime = find_latest_log(project_dir)
     today = datetime.now().strftime("%Y-%m-%d")
 
-    # Case 1: No session log exists at all — remind once, then let Claude work
+    # Case 1: No session log exists — advisory reminder to stderr, never blocks.
     if latest_log is None:
         if not state.get("no_log_reminded", False):
             state["no_log_reminded"] = True
             save_state(state_path, state)
-            output = {
-                "decision": "block",
-                "reason": (
-                    f"No session log exists yet. Create one at "
-                    f"quality_reports/session_logs/{today}_description.md "
-                    f"before continuing. Include the current goal and key context."
-                ),
-            }
-            json.dump(output, sys.stdout)
-        # Already reminded — let Claude proceed (it will create the log)
+            sys.stderr.write(
+                f"\n[session-log] No session log yet. Consider creating "
+                f"quality_reports/session_logs/{today}_description.md "
+                f"to capture goal + key context.\n"
+            )
         sys.exit(0)
 
     # Case 2: Log was updated since last check — reset everything
@@ -124,15 +119,10 @@ def main():
     if state["counter"] >= THRESHOLD and not state["reminded"]:
         state["reminded"] = True
         save_state(state_path, state)
-        output = {
-            "decision": "block",
-            "reason": (
-                f"SESSION LOG REMINDER: {state['counter']} responses without "
-                f"updating the session log. Append your recent progress to "
-                f"{latest_log.name}."
-            ),
-        }
-        json.dump(output, sys.stdout)
+        sys.stderr.write(
+            f"\n[session-log] {state['counter']} responses without updating "
+            f"{latest_log.name}. Consider appending recent progress.\n"
+        )
         sys.exit(0)
 
     save_state(state_path, state)

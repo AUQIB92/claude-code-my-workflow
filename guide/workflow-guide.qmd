@@ -2,7 +2,7 @@
 title: "My Claude Code Setup"
 subtitle: "A Comprehensive Guide to AI-Assisted Academic Workflows: Slides, Papers, Analysis, and Beyond"
 author: "Pedro H. C. Sant'Anna"
-date: "2026-03-20"
+date: "2026-04-15"
 date-modified: last-modified
 format:
   html:
@@ -53,9 +53,9 @@ Claude Code runs on your computer with full access to your file system, terminal
 | Run shell commands | Compile LaTeX, run R scripts, render Quarto --- directly |
 | Access git history | Commits, PRs, branches --- all from the conversation |
 | Persistent memory | CLAUDE.md + MEMORY.md survive across sessions |
-| Orchestrator mode | Claude autonomously plans, implements, reviews, fixes, and verifies |
+| Orchestrator pattern | Specific skills (`/qa-quarto`, `/review-paper --adversarial`, `/create-lecture`, …) run a 6-step verify-review-fix-score loop internally |
 | Multi-agent workflows | 13 specialized agents for proofreading, layout, pedagogy, code review |
-| Quality gates | Automated scoring --- nothing ships below 80/100 |
+| Quality review | Advisory scoring inside `/commit` (halt + ask to override); targets: 80 commit, 90 PR, 95 excellence |
 | CLI/headless mode | Run from scripts: `claude -p "compile all lectures"` |
 | Browser bridge | Continue sessions on your phone via `/remote-control` |
 
@@ -69,14 +69,14 @@ While this case study centers on slides, every component --- agents, orchestrato
 
 ## How It All Works Together
 
-Before diving into setup, here is the key insight: **most of this workflow is automatic**. You describe what you want in plain English, and Claude figures out which tools to use.
+Before diving into setup, here is the key insight: **skills hide most of the mechanics**. You describe what you want in plain English, Claude figures out which skill fits, and the skill runs the right agents and checks. There is no repo-wide daemon watching for plan approvals — the work happens *inside* the skill you invoke.
 
-### What You Do vs What Happens Automatically
+### What You Do vs What the Skill Does
 
-| You Do | Happens Automatically |
-|--------|----------------------|
-| Describe what you want | Claude selects and runs the right skills |
-| Approve plans | Orchestrator coordinates agents |
+| You Do | The Skill Does (once invoked) |
+|--------|-------------------------------|
+| Describe what you want | Claude selects and runs the right skill |
+| Approve plans | The skill runs the orchestrator pattern internally |
 | Review final output | Hooks fire on events (edit, save, compact) |
 | Say "commit" when ready | Rules load based on files you touch |
 
@@ -421,17 +421,17 @@ APPROVED   NEEDS WORK
 In Econ 730 Lecture 6, the critic caught that the Quarto version used `\cdots` (a placeholder) where the Beamer version had the full Hajek weight formula. The fixer replaced it. On re-audit, the critic found 8 more instances of missing `(X)` arguments on outcome models. After 4 rounds, the Quarto slides matched the Beamer source exactly.
 :::
 
-## The Orchestrator: Coordinating Agents Automatically
+## The Orchestrator: A Pattern, Not a Daemon
 
-Individual agents are specialists. Skills like `/slide-excellence` and `/qa-quarto` coordinate a few agents for specific tasks. But in day-to-day work, you should not have to think about which agents to run. That is the orchestrator's job.
+Individual agents are specialists. Skills like `/slide-excellence` and `/qa-quarto` coordinate a few agents for specific tasks. In day-to-day work, you don't have to think about which agents to run — the right skill runs the right agents for you.
 
-The **orchestrator protocol** (`.claude/rules/orchestrator-protocol.md`) is an auto-loaded rule that activates after any plan is approved. It implements the plan, runs the verifier, selects review agents based on file types, applies fixes, re-verifies, and scores against quality gates. It loops until the score meets threshold or max rounds are exhausted.
+The **orchestrator protocol** (`.claude/rules/orchestrator-protocol.md`) defines the 6-step loop (IMPLEMENT → VERIFY → REVIEW → FIX → RE-VERIFY → SCORE) that skills implement internally. It is **not** a runtime daemon: plan approval does NOT auto-trigger this loop. You invoke a skill (e.g., `/create-lecture`, `/qa-quarto`, `/review-paper --adversarial`) and the skill runs the pattern within its own scope.
 
-You never invoke the orchestrator manually --- it is the default mode of operation for any non-trivial task. Skills remain available for standalone use (e.g., `/proofread` for a quick grammar check), but the orchestrator handles the full lifecycle automatically. See [Pattern 2](#pattern-2-contractor-mode-orchestrator) for the complete workflow.
+What's mechanically implemented today: `/commit` (verifier + quality_score), `/qa-quarto` (critic-fixer loop), `/review-paper --adversarial` (critic-fixer loop), `/slide-excellence` (multi-agent fanout), `/review-paper --peer` (editor + 2 referees + cross-artifact). See [Pattern 2](#pattern-2-contractor-mode-orchestrator) for the complete workflow.
 
-## Quality Scoring: The 80/90/95 System {#sec-quality}
+## Quality Review: The 80/90/95 System {#sec-quality}
 
-The [quality-gates rule](#sec-blocks) (`quality-gates.md`) defines scoring thresholds that the orchestrator enforces automatically. Every file gets a quality score from 0 to 100:
+The [quality-gates rule](#sec-blocks) (`quality-gates.md`) defines scoring thresholds that `/commit` and review skills apply. Thresholds are **advisory** — enforced inside specific skills, not by a repo-wide git pre-commit hook. A direct `git commit` bypasses the review. Every file gets a quality score from 0 to 100:
 
 | Score | Threshold | Meaning | Action |
 |-------|-----------|---------|--------|
@@ -455,7 +455,7 @@ Points are deducted for issues:
 
 ### Mandatory Verification
 
-The verification protocol (`.claude/rules/verification-protocol.md`) requires that Claude compile, render, or otherwise verify every output before reporting a task as complete. The orchestrator enforces this as an explicit step in its loop (Step 2: VERIFY). This means Claude **cannot** say "done" without actually checking the output.
+The verification protocol (`.claude/rules/verification-protocol.md`) requires that Claude compile, render, or otherwise verify every output before reporting a task as complete. Skills that implement the orchestrator pattern enforce this as Step 2: VERIFY. This means Claude **cannot** say "done" from within those skills without actually checking the output.
 
 ::: {.callout-warning}
 ## Don't Skip Verification
@@ -1226,11 +1226,11 @@ The difference: when you invoke a skill directly, it runs its specific workflow.
 ::: {.callout-tip collapse="true"}
 ## When to Use Skills vs. the Orchestrator
 
-**Orchestrator** (automatic): "Translate Lecture 5 to Quarto" --- the orchestrator figures out the agents.
+**Natural-language task** → Claude picks a skill: "Translate Lecture 5 to Quarto" → Claude invokes `/translate-to-quarto`, and that skill runs the orchestrator pattern (translate → verify → review → fix → score) internally.
 
-**Skill** (explicit): "/qa-quarto Lecture5" --- you specifically want the adversarial critic-fixer loop, nothing else.
+**Explicit skill call:** `/qa-quarto Lecture5` — you specifically want the adversarial critic-fixer loop, nothing else.
 
-Both are valid. The orchestrator is the "I trust you, handle it" path. Skills are the "I know exactly what I want" path.
+Both are valid. The natural-language path is the "I trust you, pick the skill" path. Explicit skill calls are the "I know exactly which loop I want" path. Either way, the orchestrator pattern runs *inside* the invoked skill — there is no auto-trigger outside a skill.
 :::
 
 ## Pattern 3: Creating a New Lecture {#pattern-3-creating-a-new-lecture}
@@ -1445,7 +1445,7 @@ Claude Code can spawn **multiple agents simultaneously** using the Task tool. Th
 
 #### How It Works
 
-You do not need to manage this manually. The orchestrator recognizes independent subtasks in a plan and spawns parallel agents automatically --- both during implementation (Step 1) and review (Step 3). For example, if your plan says "read three papers and extract key results," the orchestrator will spawn 3 agents, one per paper, without you asking.
+You do not need to manage this manually. Skills that implement the orchestrator pattern (`/create-lecture`, `/review-paper --peer`, `/slide-excellence`, etc.) can recognize independent subtasks within their scope and spawn parallel subagents via `context: fork` --- both during implementation (Step 1) and review (Step 3). For example, when `/slide-excellence` runs on a deck, it spawns the visual / pedagogy / proofread agents in parallel; when `/review-paper --peer` runs, it spawns the two referees in parallel. The parallelism is built into the skill's logic, not into a repo-wide daemon.
 
 You can also request parallelism explicitly:
 
@@ -1730,7 +1730,7 @@ project/
 └── results/                # Output tables, figures
 ```
 
-The orchestrator applies these standards automatically: ask Claude to *"prepare a replication package"* and the `replication-protocol` rule activates, enforcing the directory structure and checklist above. No manual invocation needed --- the path-scoped rule fires whenever Claude works on replication-related files.
+These standards load automatically via the path-scoped rule mechanism: when Claude edits files matching `replication-protocol.md`'s path globs, the rule is injected into context without any manual invocation. Ask Claude to *"prepare a replication package"* and the rule's directory structure and checklist above guide the work from the first file touched.
 
 ::: {.callout-tip collapse="true"}
 ## Reproducibility as Architecture
@@ -2329,6 +2329,8 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/learn` | `.claude/skills/learn/` | Extract discoveries into persistent skills |
 | `/context-status` | `.claude/skills/context-status/` | Show session health and context usage |
 | `/deep-audit` | `.claude/skills/deep-audit/` | Repository-wide consistency audit |
+| `/seven-pass-review` | `.claude/skills/seven-pass-review/` | Seven-pass adversarial manuscript review (parallel forked subagents) |
+| `/permission-check` | `.claude/skills/permission-check/` | Diagnose permission layers (6-tier stack) |
 
 ## All Rules
 

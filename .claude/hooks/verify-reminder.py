@@ -127,8 +127,8 @@ def was_recently_reminded(file_path: str) -> bool:
     except IOError:
         pass
 
-    # Was reminded in last 60 seconds?
-    return (now - last_reminder) < 60
+    # Was reminded in last 5 minutes? (was 60s — too noisy during iterative edits)
+    return (now - last_reminder) < 300
 
 
 def format_reminder(file_path: str, action: str) -> str:

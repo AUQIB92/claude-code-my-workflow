@@ -12,6 +12,8 @@ Runs seven independent reviewers, each focused on a single lens, then synthesize
 
 **Why seven passes?** A single-agent review blends lenses and softens each one. Seven forked agents each approach the paper with full context budget for their own lens, then a synthesizer resolves conflicts and de-duplicates.
 
+> **When to pick this over `/review-paper`:** This skill costs roughly 7× more tokens than `/review-paper` (default) and ~2× more than `/review-paper --adversarial`. Use it when the paper is submission-ready or at R&R stage and you need maximum lens coverage. For early drafts or iterative work, `/review-paper` is the right tool. For journal-simulation pressure test, use `/review-paper --peer <journal>` instead.
+
 ## Inputs
 
 - `$0` — manuscript path (`.tex`, `.qmd`, `.md`, or `.pdf`). Required.

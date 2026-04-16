@@ -10,6 +10,15 @@ context: fork
 
 Run a comprehensive multi-dimensional review of lecture slides. Multiple agents analyze the file independently, then results are synthesized.
 
+> **Which slide-review skill do I want?**
+>
+> - **`/slide-excellence`** (this skill) — multi-agent fanout (visual + pedagogy + proofread, plus TikZ / parity / substance conditionally). Best for **pre-teaching** or **pre-release** checks.
+> - **`/visual-audit`** — single lens, layout/overflow/font/spacing only. Fast.
+> - **`/pedagogy-review`** — single lens, narrative/prerequisites/worked-examples/notation.
+> - **`/proofread`** — single lens, grammar/typos/overflow/terminology.
+> - **`/qa-quarto`** — adversarial Beamer ↔ Quarto parity (critic-fixer loop).
+> - **`/devils-advocate`** — 5-7 pointed challenges, not a full review.
+
 **Important:** this orchestrator does **conditional** dispatch — it only spawns the subagents that can actually produce useful output for the given file. No more running `tikz-reviewer` on a file with zero TikZ, or `quarto-critic` on a deck without a counterpart.
 
 ## Step 1: Identify the File

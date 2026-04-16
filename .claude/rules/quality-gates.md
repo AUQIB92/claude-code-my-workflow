@@ -5,7 +5,9 @@ paths:
   - "scripts/**/*.R"
 ---
 
-# Quality Gates & Scoring Rubrics
+# Quality Review & Scoring Rubrics
+
+> **Framing:** Thresholds are **advisory at the harness level**. The `/commit` skill runs `quality_score.py` and halts on failure until the user fixes or explicitly overrides. There is no git pre-commit hook that blocks a direct `git commit` — if you bypass the skill, you bypass the review. "Gate" in this file means "checkpoint enforced by a specific skill," not "repo-wide block."
 
 ## Thresholds
 
@@ -45,11 +47,11 @@ paths:
 | Critical | Undefined citation | -15 |
 | Critical | Overfull hbox > 10pt | -10 |
 
-## Enforcement
+## Enforcement (by the /commit skill only)
 
-- **Score < 80:** Block commit. List blocking issues.
-- **Score < 90:** Allow commit, warn. List recommendations.
-- User can override with justification.
+- **Score < 80:** Halt within `/commit`. List blocking issues. User may override with an explicit natural-language signal ("commit anyway" / "skip quality gate") and a reason — the override is logged in the commit body.
+- **Score < 90:** Allow commit within `/commit`, warn. List recommendations.
+- **Direct `git commit`** (bypassing the skill): no enforcement. For hard enforcement, install a git pre-commit hook that wraps `quality_score.py`.
 
 ## Quality Reports
 
