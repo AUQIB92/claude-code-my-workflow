@@ -1,8 +1,8 @@
 ---
 name: respond-to-referees
 description: Generate a structured response-to-referees document from a referee report and the revised manuscript. Maps each referee comment to the specific revision, classifies coverage (addressed / partially / deferred / disagreement), and drafts polite but firm responses. Use during the R&R (revise-and-resubmit) stage of paper revision.
-argument-hint: "[referee-report-path] [revised-manuscript-path]"
-allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash"]
+argument-hint: "[referee-report-path] [revised-manuscript-path] [--no-verify]"
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 effort: high
 ---
 
