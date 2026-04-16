@@ -125,7 +125,7 @@ library(tidyverse)
 library(fixest)
 library(modelsummary)
 
-set.seed(42)
+set.seed(20260415)  # YYYYMMDD per r-code-conventions.md (INV-9)
 
 dir.create("output/analysis", recursive = TRUE, showWarnings = FALSE)
 

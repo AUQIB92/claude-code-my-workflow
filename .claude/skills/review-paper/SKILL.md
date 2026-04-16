@@ -313,14 +313,14 @@ Reports: `quality_reports/cross_artifact_[paper]/reproducibility.md`.
 ## Pre-Flight Report — /review-paper --peer
 
 **Manuscript:** [path] — [page count, last modified]
-**Target journal:** [JOURNAL_SHORT] → [full name from journal-profiles.md]
+**Target journal:** [JOURNAL_SHORT] → [full name from `.claude/references/journal-profiles.md`]
 **Journal profile loaded:** [yes/no; resolved from `.claude/references/journal-profiles.md`; key adjustments: e.g., "Identification 35 → 40"]
 **Cross-artifact scripts found:** [list referenced .R / .py / .do files]
 **Reproducibility status:** [PASS / FAIL from Phase 0] — [N of M claims within tolerance]
 **Round:** [fresh / r2 / r3 / stress]
 ```
 
-If the manuscript path doesn't exist, the target journal isn't in `journal-profiles.md`, or a cross-artifact script is missing, stop and surface the issue before proceeding.
+If the manuscript path doesn't exist, the target journal isn't in `.claude/references/journal-profiles.md`, or a cross-artifact script is missing, stop and surface the issue before proceeding.
 
 ### Phase 1: Editor desk review
 
