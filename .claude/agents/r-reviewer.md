@@ -113,6 +113,17 @@ Produce a thorough, actionable code review report. You do NOT edit files — you
 
 **Flag:** Inconsistent style, legacy patterns, mixed pipe styles.
 
+### 11. NUMERICAL DISCIPLINE
+- [ ] **No float equality.** Never `==` on doubles. Use `abs(x - y) < tol` or `all.equal()`.
+- [ ] **CDF clamping.** Any computed probability passed to `qnorm()` / `pbinom()` etc. must be clamped: `pmin(1, pmax(0, p))`.
+- [ ] **Integer literals for counts.** Use `1L`, `0L`, `nrow(df)` — not bare `1`, `0` — when the value is conceptually an integer (loop counters, indices, sample sizes).
+- [ ] **Pre-allocate, don't grow.** Vectors/lists inside loops must be pre-allocated (`vector("numeric", n)` or `numeric(n)`), never grown via `c(vec, new_val)` or `append()`.
+- [ ] **Bootstrap seed handling.** `set.seed()` once before the bootstrap loop, never inside. If parallel bootstrapping, each worker must get a deterministic sub-seed (`RNGkind("L'Ecuyer-CMRG")`).
+- [ ] **No `T`/`F` as logicals.** Use `TRUE`/`FALSE` — `T` and `F` can be overwritten by assignment.
+- [ ] **Explicit `na.rm`.** Any `mean()`, `sum()`, `var()`, `sd()` call on empirical data must explicitly set `na.rm = TRUE` or `na.rm = FALSE` — never rely on the default.
+
+**Flag:** Float `==`, unguarded CDF, growing vectors, implicit `na.rm`, bare `T`/`F`.
+
 ---
 
 ## Report Format
@@ -162,6 +173,7 @@ Save report to `quality_reports/[script_name]_r_review.md`:
 | Comments | Yes/No | N |
 | Error Handling | Yes/No | N |
 | Polish | Yes/No | N |
+| Numerical Discipline | Yes/No | N |
 ```
 
 ## Important Rules

@@ -26,13 +26,38 @@ Run an end-to-end data analysis in R: load, explore, analyze, and produce public
 
 ## Workflow Phases
 
+### Phase 0: Pre-Flight Report
+
+**Before writing any analysis code, produce a Pre-Flight Report** showing you read the inputs. This prevents the common failure mode where the agent hallucinates variable names or skips project conventions.
+
+Output block (in your response to the user, before Phase 1):
+
+```markdown
+## Pre-Flight Report
+
+**Dataset:** [path]
+- Variables found: [list from head()/names()]
+- Rows: [count]
+- Key types: [e.g., "outcome=numeric, treatment=binary, state=factor"]
+- Missing-data summary: [% missing per key var]
+
+**Project conventions read:**
+- `.claude/rules/r-code-conventions.md` — [one-line summary of most relevant rule]
+- `.claude/rules/content-invariants.md` — [INV-9, INV-10, INV-11 applicable]
+
+**Task interpretation:** [one sentence restating what the user asked for]
+
+**Plan:** [3-5 bullet outline of the R script structure]
+```
+
+If any input cannot be read (missing file, unreadable format), stop and ask the user before proceeding.
+
 ### Phase 1: Setup and Data Loading
 
-1. Read `.claude/rules/r-code-conventions.md` for project standards
-2. Create R script with proper header (title, author, purpose, inputs, outputs)
-3. Load required packages at top (`library()`, never `require()`)
-4. Set seed once at top: `set.seed(42)`
-5. Load and inspect the dataset
+1. Create R script with proper header (title, author, purpose, inputs, outputs)
+2. Load required packages at top (`library()`, never `require()`)
+3. Set seed once at top: `set.seed(42)` (INV-9)
+4. Load and inspect the dataset
 
 ### Phase 2: Exploratory Data Analysis
 

@@ -307,6 +307,21 @@ Unless `--no-cross-artifact` is set, auto-invoke `/audit-reproducibility` on the
 
 Reports: `quality_reports/cross_artifact_[paper]/reproducibility.md`.
 
+**Pre-Flight Report (required before Phase 1).** Before spawning the editor, output a Pre-Flight Report so the user can verify the inputs are read correctly:
+
+```markdown
+## Pre-Flight Report — /review-paper --peer
+
+**Manuscript:** [path] — [page count, last modified]
+**Target journal:** [JOURNAL_SHORT] → [full name from journal-profiles.md]
+**Journal profile loaded:** [yes/no; key adjustments: e.g., "Identification 35 → 40"]
+**Cross-artifact scripts found:** [list referenced .R / .py / .do files]
+**Reproducibility status:** [PASS / FAIL from Phase 0] — [N of M claims within tolerance]
+**Round:** [fresh / r2 / r3 / stress]
+```
+
+If the manuscript path doesn't exist, the target journal isn't in `journal-profiles.md`, or a cross-artifact script is missing, stop and surface the issue before proceeding.
+
 ### Phase 1: Editor desk review
 
 Spawn forked subagent `editor` with the manuscript path and `--peer <JOURNAL>` context. Editor:
