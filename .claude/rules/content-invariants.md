@@ -1,10 +1,10 @@
 ---
 paths:
-  - Slides/**/*.tex
-  - Quarto/**/*.qmd
-  - Quarto/**/*.scss
-  - Preambles/header.tex
-  - scripts/R/**/*.R
+  - "Slides/**/*.tex"
+  - "Quarto/**/*.qmd"
+  - "Quarto/**/*.scss"
+  - "Preambles/header.tex"
+  - "scripts/R/**/*.R"
 ---
 
 # Content Invariants (INV-1 through INV-12)
