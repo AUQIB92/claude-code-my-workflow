@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Pedro H. C. Sant’Anna">
-<meta name="dcterms.date" content="2026-03-20">
+<meta name="dcterms.date" content="2026-04-15">
 
 <title>My Claude Code Setup</title>
 <style>
@@ -2362,7 +2362,7 @@ window.Quarto = {
   <li><a href="#what-makes-claude-code-different" id="toc-what-makes-claude-code-different" class="nav-link" data-scroll-target="#what-makes-claude-code-different"><span class="header-section-number">1.2</span> What Makes Claude Code Different</a></li>
   <li><a href="#how-it-all-works-together" id="toc-how-it-all-works-together" class="nav-link" data-scroll-target="#how-it-all-works-together"><span class="header-section-number">1.3</span> How It All Works Together</a>
   <ul class="collapse">
-  <li><a href="#what-you-do-vs-what-happens-automatically" id="toc-what-you-do-vs-what-happens-automatically" class="nav-link" data-scroll-target="#what-you-do-vs-what-happens-automatically"><span class="header-section-number">1.3.1</span> What You Do vs What Happens Automatically</a></li>
+  <li><a href="#what-you-do-vs-what-the-skill-does" id="toc-what-you-do-vs-what-the-skill-does" class="nav-link" data-scroll-target="#what-you-do-vs-what-the-skill-does"><span class="header-section-number">1.3.1</span> What You Do vs What the Skill Does</a></li>
   <li><a href="#example-fix-my-slides-before-tomorrow" id="toc-example-fix-my-slides-before-tomorrow" class="nav-link" data-scroll-target="#example-fix-my-slides-before-tomorrow"><span class="header-section-number">1.3.2</span> Example: “Fix my slides before tomorrow”</a></li>
   <li><a href="#what-you-never-touch-directly" id="toc-what-you-never-touch-directly" class="nav-link" data-scroll-target="#what-you-never-touch-directly"><span class="header-section-number">1.3.3</span> What You Never Touch Directly</a></li>
   <li><a href="#skills-the-only-commands-you-might-type" id="toc-skills-the-only-commands-you-might-type" class="nav-link" data-scroll-target="#skills-the-only-commands-you-might-type"><span class="header-section-number">1.3.4</span> Skills: The Only Commands You Might Type</a></li>
@@ -2380,8 +2380,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#why-specialized-agents-beat-one-size-fits-all" id="toc-why-specialized-agents-beat-one-size-fits-all" class="nav-link" data-scroll-target="#why-specialized-agents-beat-one-size-fits-all"><span class="header-section-number">3.1</span> Why Specialized Agents Beat One-Size-Fits-All</a></li>
   <li><a href="#the-adversarial-pattern-critic-fixer" id="toc-the-adversarial-pattern-critic-fixer" class="nav-link" data-scroll-target="#the-adversarial-pattern-critic-fixer"><span class="header-section-number">3.2</span> The Adversarial Pattern: Critic + Fixer</a></li>
-  <li><a href="#the-orchestrator-coordinating-agents-automatically" id="toc-the-orchestrator-coordinating-agents-automatically" class="nav-link" data-scroll-target="#the-orchestrator-coordinating-agents-automatically"><span class="header-section-number">3.3</span> The Orchestrator: Coordinating Agents Automatically</a></li>
-  <li><a href="#sec-quality" id="toc-sec-quality" class="nav-link" data-scroll-target="#sec-quality"><span class="header-section-number">3.4</span> Quality Scoring: The 80/90/95 System</a>
+  <li><a href="#the-orchestrator-a-pattern-not-a-daemon" id="toc-the-orchestrator-a-pattern-not-a-daemon" class="nav-link" data-scroll-target="#the-orchestrator-a-pattern-not-a-daemon"><span class="header-section-number">3.3</span> The Orchestrator: A Pattern, Not a Daemon</a></li>
+  <li><a href="#sec-quality" id="toc-sec-quality" class="nav-link" data-scroll-target="#sec-quality"><span class="header-section-number">3.4</span> Quality Review: The 80/90/95 System</a>
   <ul class="collapse">
   <li><a href="#how-scores-are-calculated" id="toc-how-scores-are-calculated" class="nav-link" data-scroll-target="#how-scores-are-calculated"><span class="header-section-number">3.4.1</span> How Scores Are Calculated</a></li>
   <li><a href="#mandatory-verification" id="toc-mandatory-verification" class="nav-link" data-scroll-target="#mandatory-verification"><span class="header-section-number">3.4.2</span> Mandatory Verification</a></li>
@@ -2545,14 +2545,14 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 20, 2026</p>
+      <p class="date">April 15, 2026</p>
     </div>
   </div>
   
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 15, 2026</p>
+      <p class="date-modified">April 16, 2026</p>
     </div>
   </div>
     
@@ -2608,16 +2608,16 @@ window.Quarto = {
 <td>CLAUDE.md + MEMORY.md survive across sessions</td>
 </tr>
 <tr class="odd">
-<td>Orchestrator mode</td>
-<td>Claude autonomously plans, implements, reviews, fixes, and verifies</td>
+<td>Orchestrator pattern</td>
+<td>Specific skills (<code>/qa-quarto</code>, <code>/review-paper --adversarial</code>, <code>/create-lecture</code>, …) run a 6-step verify-review-fix-score loop internally</td>
 </tr>
 <tr class="even">
 <td>Multi-agent workflows</td>
 <td>13 specialized agents for proofreading, layout, pedagogy, code review</td>
 </tr>
 <tr class="odd">
-<td>Quality gates</td>
-<td>Automated scoring — nothing ships below 80/100</td>
+<td>Quality review</td>
+<td>Advisory scoring inside <code>/commit</code> (halt + ask to override); targets: 80 commit, 90 PR, 95 excellence</td>
 </tr>
 <tr class="even">
 <td>CLI/headless mode</td>
@@ -2646,24 +2646,24 @@ window.Quarto = {
 </section>
 <section id="how-it-all-works-together" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="how-it-all-works-together"><span class="header-section-number">1.3</span> How It All Works Together</h2>
-<p>Before diving into setup, here is the key insight: <strong>most of this workflow is automatic</strong>. You describe what you want in plain English, and Claude figures out which tools to use.</p>
-<section id="what-you-do-vs-what-happens-automatically" class="level3" data-number="1.3.1">
-<h3 data-number="1.3.1" class="anchored" data-anchor-id="what-you-do-vs-what-happens-automatically"><span class="header-section-number">1.3.1</span> What You Do vs What Happens Automatically</h3>
+<p>Before diving into setup, here is the key insight: <strong>skills hide most of the mechanics</strong>. You describe what you want in plain English, Claude figures out which skill fits, and the skill runs the right agents and checks. There is no repo-wide daemon watching for plan approvals — the work happens <em>inside</em> the skill you invoke.</p>
+<section id="what-you-do-vs-what-the-skill-does" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="what-you-do-vs-what-the-skill-does"><span class="header-section-number">1.3.1</span> What You Do vs What the Skill Does</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>You Do</th>
-<th>Happens Automatically</th>
+<th>The Skill Does (once invoked)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Describe what you want</td>
-<td>Claude selects and runs the right skills</td>
+<td>Claude selects and runs the right skill</td>
 </tr>
 <tr class="even">
 <td>Approve plans</td>
-<td>Orchestrator coordinates agents</td>
+<td>The skill runs the orchestrator pattern internally</td>
 </tr>
 <tr class="odd">
 <td>Review final output</td>
@@ -3133,15 +3133,15 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 </section>
-<section id="the-orchestrator-coordinating-agents-automatically" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="the-orchestrator-coordinating-agents-automatically"><span class="header-section-number">3.3</span> The Orchestrator: Coordinating Agents Automatically</h2>
-<p>Individual agents are specialists. Skills like <code>/slide-excellence</code> and <code>/qa-quarto</code> coordinate a few agents for specific tasks. But in day-to-day work, you should not have to think about which agents to run. That is the orchestrator’s job.</p>
-<p>The <strong>orchestrator protocol</strong> (<code>.claude/rules/orchestrator-protocol.md</code>) is an auto-loaded rule that activates after any plan is approved. It implements the plan, runs the verifier, selects review agents based on file types, applies fixes, re-verifies, and scores against quality gates. It loops until the score meets threshold or max rounds are exhausted.</p>
-<p>You never invoke the orchestrator manually — it is the default mode of operation for any non-trivial task. Skills remain available for standalone use (e.g., <code>/proofread</code> for a quick grammar check), but the orchestrator handles the full lifecycle automatically. See <a href="#pattern-2-contractor-mode-orchestrator">Pattern 2</a> for the complete workflow.</p>
+<section id="the-orchestrator-a-pattern-not-a-daemon" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="the-orchestrator-a-pattern-not-a-daemon"><span class="header-section-number">3.3</span> The Orchestrator: A Pattern, Not a Daemon</h2>
+<p>Individual agents are specialists. Skills like <code>/slide-excellence</code> and <code>/qa-quarto</code> coordinate a few agents for specific tasks. In day-to-day work, you don’t have to think about which agents to run — the right skill runs the right agents for you.</p>
+<p>The <strong>orchestrator protocol</strong> (<code>.claude/rules/orchestrator-protocol.md</code>) defines the 6-step loop (IMPLEMENT → VERIFY → REVIEW → FIX → RE-VERIFY → SCORE) that skills implement internally. It is <strong>not</strong> a runtime daemon: plan approval does NOT auto-trigger this loop. You invoke a skill (e.g., <code>/create-lecture</code>, <code>/qa-quarto</code>, <code>/review-paper --adversarial</code>) and the skill runs the pattern within its own scope.</p>
+<p>What’s mechanically implemented today: <code>/commit</code> (verifier + quality_score), <code>/qa-quarto</code> (critic-fixer loop), <code>/review-paper --adversarial</code> (critic-fixer loop), <code>/slide-excellence</code> (multi-agent fanout), <code>/review-paper --peer</code> (editor + 2 referees + cross-artifact). See <a href="#pattern-2-contractor-mode-orchestrator">Pattern 2</a> for the complete workflow.</p>
 </section>
 <section id="sec-quality" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="sec-quality"><span class="header-section-number">3.4</span> Quality Scoring: The 80/90/95 System</h2>
-<p>The <a href="#sec-blocks">quality-gates rule</a> (<code>quality-gates.md</code>) defines scoring thresholds that the orchestrator enforces automatically. Every file gets a quality score from 0 to 100:</p>
+<h2 data-number="3.4" class="anchored" data-anchor-id="sec-quality"><span class="header-section-number">3.4</span> Quality Review: The 80/90/95 System</h2>
+<p>The <a href="#sec-blocks">quality-gates rule</a> (<code>quality-gates.md</code>) defines scoring thresholds that <code>/commit</code> and review skills apply. Thresholds are <strong>advisory</strong> — enforced inside specific skills, not by a repo-wide git pre-commit hook. A direct <code>git commit</code> bypasses the review. Every file gets a quality score from 0 to 100:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 20%">
@@ -3231,7 +3231,7 @@ APPROVED   NEEDS WORK
 </section>
 <section id="mandatory-verification" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="mandatory-verification"><span class="header-section-number">3.4.2</span> Mandatory Verification</h3>
-<p>The verification protocol (<code>.claude/rules/verification-protocol.md</code>) requires that Claude compile, render, or otherwise verify every output before reporting a task as complete. The orchestrator enforces this as an explicit step in its loop (Step 2: VERIFY). This means Claude <strong>cannot</strong> say “done” without actually checking the output.</p>
+<p>The verification protocol (<code>.claude/rules/verification-protocol.md</code>) requires that Claude compile, render, or otherwise verify every output before reporting a task as complete. Skills that implement the orchestrator pattern enforce this as Step 2: VERIFY. This means Claude <strong>cannot</strong> say “done” from within those skills without actually checking the output.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -4478,9 +4478,9 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </div>
 <div id="callout-23" class="callout-23-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Orchestrator</strong> (automatic): “Translate Lecture 5 to Quarto” — the orchestrator figures out the agents.</p>
-<p><strong>Skill</strong> (explicit): “/qa-quarto Lecture5” — you specifically want the adversarial critic-fixer loop, nothing else.</p>
-<p>Both are valid. The orchestrator is the “I trust you, handle it” path. Skills are the “I know exactly what I want” path.</p>
+<p><strong>Natural-language task</strong> → Claude picks a skill: “Translate Lecture 5 to Quarto” → Claude invokes <code>/translate-to-quarto</code>, and that skill runs the orchestrator pattern (translate → verify → review → fix → score) internally.</p>
+<p><strong>Explicit skill call:</strong> <code>/qa-quarto Lecture5</code> — you specifically want the adversarial critic-fixer loop, nothing else.</p>
+<p>Both are valid. The natural-language path is the “I trust you, pick the skill” path. Explicit skill calls are the “I know exactly which loop I want” path. Either way, the orchestrator pattern runs <em>inside</em> the invoked skill — there is no auto-trigger outside a skill.</p>
 </div>
 </div>
 </div>
@@ -4780,7 +4780,7 @@ Phase 4: QUALITY GATE
 </section>
 <section id="how-it-works-1" class="level4" data-number="5.9.1.2">
 <h4 data-number="5.9.1.2" class="anchored" data-anchor-id="how-it-works-1"><span class="header-section-number">5.9.1.2</span> How It Works</h4>
-<p>You do not need to manage this manually. The orchestrator recognizes independent subtasks in a plan and spawns parallel agents automatically — both during implementation (Step 1) and review (Step 3). For example, if your plan says “read three papers and extract key results,” the orchestrator will spawn 3 agents, one per paper, without you asking.</p>
+<p>You do not need to manage this manually. Skills that implement the orchestrator pattern (<code>/create-lecture</code>, <code>/review-paper --peer</code>, <code>/slide-excellence</code>, etc.) can recognize independent subtasks within their scope and spawn parallel subagents via <code>context: fork</code> — both during implementation (Step 1) and review (Step 3). For example, when <code>/slide-excellence</code> runs on a deck, it spawns the visual / pedagogy / proofread agents in parallel; when <code>/review-paper --peer</code> runs, it spawns the two referees in parallel. The parallelism is built into the skill’s logic, not into a repo-wide daemon.</p>
 <p>You can also request parallelism explicitly:</p>
 <blockquote class="blockquote">
 <p>“Read these three papers in parallel. For each, extract the key identification assumption, the main estimator, and whether they have a replication package. Summarize in a table.”</p>
@@ -5219,7 +5219,7 @@ Decision point (1-2 hours):
 │   ├── 02_analysis/        # Main results
 │   └── 03_appendix/        # Appendix results
 └── results/                # Output tables, figures</code></pre>
-<p>The orchestrator applies these standards automatically: ask Claude to <em>“prepare a replication package”</em> and the <code>replication-protocol</code> rule activates, enforcing the directory structure and checklist above. No manual invocation needed — the path-scoped rule fires whenever Claude works on replication-related files.</p>
+<p>These standards load automatically via the path-scoped rule mechanism: when Claude edits files matching <code>replication-protocol.md</code>’s path globs, the rule is injected into context without any manual invocation. Ask Claude to <em>“prepare a replication package”</em> and the rule’s directory structure and checklist above guide the work from the first file touched.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -6131,6 +6131,16 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <td><code>/deep-audit</code></td>
 <td><code>.claude/skills/deep-audit/</code></td>
 <td>Repository-wide consistency audit</td>
+</tr>
+<tr class="even">
+<td><code>/seven-pass-review</code></td>
+<td><code>.claude/skills/seven-pass-review/</code></td>
+<td>Seven-pass adversarial manuscript review (parallel forked subagents)</td>
+</tr>
+<tr class="odd">
+<td><code>/permission-check</code></td>
+<td><code>.claude/skills/permission-check/</code></td>
+<td>Diagnose permission layers (6-tier stack)</td>
 </tr>
 </tbody>
 </table>

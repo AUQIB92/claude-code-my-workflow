@@ -83,7 +83,61 @@ The palette contract broke. Run `./scripts/check-palette-sync.sh` — it reports
 
 ### `sessionInfo.txt` not updated after analysis changes
 
-You ran `03_analyze.R` directly instead of `00_run_all.R`. Always go through the orchestrator — it writes the session snapshot as its last step.
+You ran `03_analyze.R` directly instead of `00_run_all.R`. Re-run `00_run_all.R` (e.g. via the `/data-analysis` skill or your usual pipeline runner) — that entrypoint writes the session snapshot as its last step.
+
+## Permissions / bypass / statusline (v1.6.0)
+
+### "Prompts fire despite `bypassPermissions`"
+
+Mid-session permission-mode toggles override file settings until session end. The 6-tier stack (VSCode user → VSCode workspace → CLI user `~/.claude/settings.json` → project `.claude/settings.json` → project-local `.claude/settings.local.json` → in-session runtime) is **last-wins**. Run `/permission-check` — it diffs every layer and reports which wins. Then either exit and restart the session, or `/permission-mode bypassPermissions` to set it for the current session.
+
+### `/permission-check` asks before reading `~/.claude/`
+
+That's intentional. Host-global config can contain unrelated paths and secrets. Phase A (repo-local) is automatic; Phase B (host-global, with key redaction) requires explicit confirmation. See [CHANGELOG v1.6.0 — privacy boundary](CHANGELOG.md) for context.
+
+### Statusline shows `[UNKNOWN]` or blank
+
+Session JSON parse failure. Check `.claude/scripts/statusline.sh` is executable (`chmod +x`) and that `python3` is on `PATH`. Fallback output is `[?] <model> @ <pwd>` — if you see that, the hook caught a malformed session file. Restart Claude Code.
+
+## Peer-review pipeline (v1.5.0)
+
+### `/review-paper --peer AER` fails with "journal not found"
+
+The target must be in [`.claude/references/journal-profiles.md`](.claude/references/journal-profiles.md). Ships with AER / QJE / JPE / ECMA / ReStud. To add your field's journal, copy [`templates/journal-profile-template.md`](templates/journal-profile-template.md) into `journal-profiles.md` and fill in the 7 schema sections (focus, bar, domain adjustments, methods adjustments, typical concerns, referee-pool weights, optional table format).
+
+### Referees return near-identical reports
+
+They weren't dispositioned. The editor agent should select **two different** dispositions from the 6-way taxonomy (STRUCTURAL / CREDIBILITY / MEASUREMENT / POLICY / THEORY / SKEPTIC). If reports are clones, the editor collapsed selection — usually because the paper is narrow enough that only one taxonomy applies. Try `--peer <journal> --stress` to force adversarial disposition pairing.
+
+### R&R follow-up loses prior round context
+
+Use `--r2` / `--r3` to continue a prior review. The editor agent reloads the previous `quality_reports/peer_review_*/decision.md` and classifies each revision (addressed / partially / deferred / disagreement). If the prior decision file is missing or renamed, the chain breaks — start fresh with `--peer`.
+
+## Surface-sync gate (v1.6.0)
+
+### `/commit` fails at Step 0b with "count drift detected"
+
+`scripts/check-surface-sync.sh` detected a count mismatch (skills / agents / rules / hooks) across docs. The script reports which surface has the stale number. Fix every surface the script flags, then re-run. **Do not bypass** — the gate exists because manual `replace_all` has missed sibling phrasings three times (PRs #70/#76/#78 in v1.5.x).
+
+### Adding a new skill / agent / rule breaks the gate
+
+Expected. The gate counts `.claude/skills/` on disk vs prose assertions. After adding a skill, update the counts in README.md, CLAUDE.md (if mentioned), `guide/workflow-guide.qmd`, `docs/index.html` og:description, and `templates/skill-template.md`. The script tells you which are stale.
+
+## Pre-Flight Reports (v1.6.0)
+
+### Skill halts at "Pre-Flight Report failed — inputs not readable"
+
+The skill couldn't read one of its required inputs (dataset, journal profile, notation registry, `r-code-conventions.md`, etc.). Check the file path in the error, confirm permissions, and confirm that fresh forks have the expected file (e.g., `/create-lecture` has a fresh-fork fallback for the notation registry; other skills do not). Do NOT edit the skill to skip Pre-Flight — the point is to catch hallucinated variable names and missing conventions before real work starts.
+
+### Pre-Flight passes but the agent hallucinates anyway
+
+Open an issue with the Pre-Flight Report attached. Either the input schema was incomplete, or the agent ignored the report. Both are bugs worth filing.
+
+## Decision records (v1.6.0)
+
+### Where do I save an ADR?
+
+`quality_reports/decisions/YYYY-MM-DD_short-description.md` using [`templates/decision-record.md`](templates/decision-record.md). The directory is gitignored like `plans/` and `specs/` — commit only if you want the record visible to others. (Most forkers keep decisions local.)
 
 ## Still stuck?
 

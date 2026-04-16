@@ -70,13 +70,15 @@ python scripts/quality_score.py Quarto/file.qmd
 
 ---
 
-## Quality Thresholds
+## Quality Thresholds (advisory)
 
-| Score | Gate | Meaning |
+| Score | Checkpoint | Meaning |
 |-------|------|---------|
 | 80 | Commit | Good enough to save |
 | 90 | PR | Ready for deployment |
 | 95 | Excellence | Aspirational |
+
+Enforced by `/commit` (halts + asks for override); not enforced by a git pre-commit hook.
 
 ---
 

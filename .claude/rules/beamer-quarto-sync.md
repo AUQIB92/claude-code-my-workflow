@@ -48,6 +48,15 @@ When you modify a Beamer `.tex` file, you MUST also apply the equivalent change 
 - Change is LaTeX-only infrastructure (preamble, theme files)
 - Explicitly told to skip Quarto sync
 
+## Precedence when the Quarto file has manual post-translation edits
+
+This rule (auto-sync) and [`single-source-of-truth.md`](single-source-of-truth.md) (Beamer is authoritative) can conflict after a human has hand-edited the Quarto file. Resolution:
+
+1. **Beamer remains authoritative.** Hand-edits to Quarto that add *content* (new slides, different equations) are a violation of SSOT and should be backported to Beamer first, then re-synced down.
+2. **Presentation-only divergence is allowed.** HTML-specific callouts (e.g., `.smaller`, `{.scrollable}`, plotly embeds) can live only in Quarto. Auto-sync should not delete them when propagating Beamer edits — diff before overwriting.
+3. **On ambiguity, regenerate the Quarto file from Beamer** (e.g. `/translate-to-quarto [file]` into a scratch path, then diff against the existing Quarto) so you can compare structurally. Merge manually, keeping HTML-only decorations.
+4. **If the two files have drifted structurally** (slide count mismatch, reordered sections), treat as a bug and fix Beamer first, then regenerate Quarto from scratch via `/translate-to-quarto`.
+
 ## Enforcement
 
 Before marking any Beamer editing task as complete, check:

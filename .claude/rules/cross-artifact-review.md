@@ -23,12 +23,16 @@ A bug in `02_clean.R` invalidates Table 2. Reviewing `manuscript.tex` without to
 
 ## When to apply
 
-Applies when `/review-paper` runs on a manuscript that references analysis scripts. Detection signals:
+Applies when `/review-paper` runs on a manuscript that references analysis scripts. Detection is **pattern-based** — if the manuscript has none of the signals below, no cross-artifact work happens (and `--no-cross-artifact` is a no-op). To force invocation on a paper without these detection signals, point `/review-paper` at a manuscript that `\input{}`s the script outputs, or invoke `/review-r` and `/audit-reproducibility` directly alongside `/review-paper`.
+
+Detection signals:
 
 - `\input{scripts/R/...}` or `\input{tables/...}`
 - `%% source: scripts/R/03_analyze.R` comments
-- Numeric claims in text (ATT, coefficients, N, p-values)
-- Paper lives in a repo that has `scripts/R/` or `scripts/stata/` or `scripts/python/`
+- Numeric claims in text (ATT, coefficients, N, p-values) **combined with** a sibling `scripts/R/` / `scripts/stata/` / `scripts/python/` directory
+- Table labels in the paper that match filenames under `scripts/*/\_outputs/`
+
+Detection is intentionally conservative — a theory paper with no code should not trigger the protocol, even if it lives in a repo that has scripts for other work.
 
 ## The protocol
 

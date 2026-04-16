@@ -102,7 +102,7 @@ def needs_verification(file_path: str) -> tuple[bool, str]:
 
 
 def was_recently_reminded(file_path: str) -> bool:
-    """Check if we already reminded about this file recently (within 60s)."""
+    """Check if we already reminded about this file recently (within 5 minutes)."""
     cache_file = get_session_dir() / "verify-reminder-cache.json"
 
     try:
@@ -127,8 +127,8 @@ def was_recently_reminded(file_path: str) -> bool:
     except IOError:
         pass
 
-    # Was reminded in last 60 seconds?
-    return (now - last_reminder) < 60
+    # Was reminded in last 5 minutes? (was 60s — too noisy during iterative edits)
+    return (now - last_reminder) < 300
 
 
 def format_reminder(file_path: str, action: str) -> str:
