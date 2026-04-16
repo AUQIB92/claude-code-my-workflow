@@ -58,10 +58,12 @@ quality_reports/plans/*
 quality_reports/specs/*
 quality_reports/session_logs/*
 quality_reports/merges/*
+quality_reports/decisions/*
 !quality_reports/plans/.gitkeep
 !quality_reports/specs/.gitkeep
 !quality_reports/session_logs/.gitkeep
 !quality_reports/merges/.gitkeep
+!quality_reports/decisions/.gitkeep
 
 # R analysis outputs (generated artifacts; keep scripts, ignore outputs)
 scripts/R/_outputs/
