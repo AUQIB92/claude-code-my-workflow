@@ -142,7 +142,7 @@ The guide covers Claude Code's latest capabilities:
 ## What's Included
 
 <details>
-<summary><strong>13 agents, 27 skills, 21 rules, 6 hooks</strong> (click to expand)</summary>
+<summary><strong>13 agents, 27 skills, 22 rules, 6 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 

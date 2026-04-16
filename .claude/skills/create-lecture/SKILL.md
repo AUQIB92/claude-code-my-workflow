@@ -31,11 +31,38 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 
 ## WORKFLOW
 
-### Phase 0: Intake & Context
-- Read knowledge base and creation guide
-- Inventory provided materials (papers, slides, code)
-- Read previous lecture's structure and ending
-- State pedagogical goal, get user confirmation
+### Phase 0: Intake & Context (Pre-Flight Report required)
+
+Read the inputs, then produce a Pre-Flight Report in your response before Phase 1 starts.
+
+Inputs to read:
+- `.claude/rules/knowledge-base-template.md` — notation registry, narrative arc, applications
+- `.claude/rules/content-invariants.md` — INV-1..INV-8 govern slide content
+- Any source papers / existing slides the user provided
+- The previous lecture's `.tex` (last section + ending slide) if one exists
+
+Required Pre-Flight Report block:
+
+```markdown
+## Pre-Flight Report
+
+**Sources read:**
+- [source 1]: [one-line takeaway — what notation, what result, what diagram]
+- [source 2]: ...
+
+**Notation registry check:**
+- New symbols this lecture will introduce: [list]
+- Symbols reused from prior lectures: [list, with the lecture each was introduced in]
+- Conflicts detected: [none / specific clashes]
+
+**Narrative position:** [Where does this lecture sit in the course arc? What did the previous lecture end on? What does the next lecture need you to set up?]
+
+**Pedagogical goal:** [one sentence]
+
+**Running application:** [which real-world example threads through this deck]
+```
+
+State the pedagogical goal, get user confirmation, then proceed.
 
 **First-lecture fallback (fresh fork, empty knowledge base).** If `.claude/rules/knowledge-base-template.md` still has unfilled placeholder tables (no notation registry entries, no applications, no prior lectures in `Slides/`), do NOT halt waiting for it. Instead:
 
