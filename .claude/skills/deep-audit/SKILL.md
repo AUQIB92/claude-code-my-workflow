@@ -24,9 +24,26 @@ Run a comprehensive consistency audit across the entire repository, fix all issu
 
 ## Workflow
 
+### PHASE 0: Mechanical checks (run FIRST, cheap, deterministic)
+
+Before spawning agents, run the mechanical parity checks:
+
+```bash
+python3 scripts/check-skill-integrity.py --verbose
+```
+
+This catches four classes of bug that agent-based audits have historically missed:
+
+1. Frontmatter `allowed-tools` ↔ body tool-invocation parity (e.g. body spawns `Task` but `Task` not in `allowed-tools` — the v1.7.0 PR #92 miss).
+2. `argument-hint` ↔ body flag parity (flags documented but not advertised, or vice versa).
+3. Internal markdown anchors resolve (no broken `[text](path#anchor)` links — the `#category-11-numerical-discipline` miss on PR #87).
+4. Rule `paths:` ↔ skill implementation parity (rule claims skill follows protocol but skill body has none of the protocol keywords — the `/interview-me` miss on PR #92).
+
+If Phase 0 reports P0 or P1 findings, fix them (or tune the regex if they are false positives) **before** launching the 4 agents. The mechanical layer is cheaper and more precise than agent prompts for these classes.
+
 ### PHASE 1: Launch 4 Parallel Audit Agents
 
-Launch these 4 agents simultaneously using `Task` with `subagent_type=general-purpose`:
+Launch these 4 agents simultaneously using `Task` with `subagent_type=general-purpose`. Each agent's prompt **must** tell it to read `.claude/references/audit-pet-peeves.md` and explicitly check for each class of bug before reporting clean. The pet-peeves file is a living catalogue of drift patterns review bots have caught; it grows with each PR.
 
 #### Agent 1: Guide Content Accuracy
 Focus: `guide/workflow-guide.qmd`
