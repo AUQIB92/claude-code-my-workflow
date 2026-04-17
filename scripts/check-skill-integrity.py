@@ -8,17 +8,21 @@ Checks:
   1. Frontmatter ↔ body tool parity — allowed-tools in SKILL.md frontmatter
      must cover every tool the body actually invokes.
   2. argument-hint ↔ body flag parity — flags documented in the body
-     (e.g. `--no-verify`) must appear in argument-hint, and vice versa.
+     (e.g. `--no-verify`) must appear in argument-hint, AND flags in
+     argument-hint must be documented somewhere in the body. Both
+     directions: stale hint flags mislead users as much as missing ones.
   3. Internal markdown anchor resolution — every `[text](path#anchor)`
      link must resolve to an actual heading in the target file.
-  4. Rule paths ↔ skill implementation parity — if a rule lists a skill
-     in its `paths:`, that skill must reference the rule's protocol
-     keywords in its body.
+  4. Rule paths/globs ↔ skill implementation parity — if a rule lists a
+     skill in its `paths:` or `globs:` frontmatter, that skill must
+     reference the rule's protocol keywords in its body.
 
 Exit codes:
-  0 = all checks pass
-  1 = one or more P0 failures (skill will misbehave at runtime)
-  2 = script error (read a file, couldn't parse, etc.)
+  0 = all checks pass, or only P2 advisories
+  1 = one or more P0 or P1 findings (skill will misbehave at runtime,
+      broken link, or documented claim doesn't match implementation)
+  2 = script error (e.g. script itself crashed; individual-file read
+      errors are converted to P2 findings and do NOT exit 2)
 
 Usage:
   python3 scripts/check-skill-integrity.py [--verbose]
@@ -155,9 +159,13 @@ def check_tool_parity() -> list[tuple[str, str, str]]:
     findings: list[tuple[str, str, str]] = []
     for skill_md in sorted(REPO.glob(".claude/skills/*/SKILL.md")):
         try:
-            text = skill_md.read_text()
-        except OSError as e:
-            findings.append(("P2", str(skill_md), f"unreadable: {e}"))
+            text = skill_md.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as e:
+            findings.append((
+                "P2",
+                skill_md.relative_to(REPO).as_posix(),
+                f"unreadable: {e}",
+            ))
             continue
         fm, body = parse_frontmatter(text)
         allowed = set(fm.get("allowed-tools") or [])
@@ -183,14 +191,19 @@ FLAG_RE = re.compile(r"--[a-z][a-z0-9-]*\b(?!=)")
 
 
 def check_flag_parity() -> list[tuple[str, str, str]]:
-    """Count a flag as a real skill option only when it appears in a
-    clear option-documentation context:
+    """Bidirectional argument-hint ↔ body flag parity.
+
+    Forward (body → hint): count a flag as documented only when it appears
+    in a clear option-documentation context:
       (a) first code-span in a markdown table row: `| `--flag` | ...`
       (b) explicit opt-out language: "`--flag` opts out", "skip with `--flag`"
       (c) a bullet/number list item starting with the flag: `- `--flag`` or
           `1. `--flag``
-    Anything else (prose mention, flag inside a shell example, reference to
-    another skill's flag) is ignored.
+    Prose mentions, shell-example flags, and other skills' flags are ignored.
+
+    Reverse (hint → body): a flag advertised in argument-hint must appear
+    somewhere in the body as a code-span (more permissive than forward —
+    a flag listed in a reference table without option-verbs still counts).
     """
     findings: list[tuple[str, str, str]] = []
     # Pattern: another skill's name followed by its flag (e.g. "/review-paper
@@ -212,10 +225,20 @@ def check_flag_parity() -> list[tuple[str, str, str]]:
         re.IGNORECASE,
     )
     code_flag_re = re.compile(r"`(--[a-z][a-z0-9-]*)`")
+    # For the reverse direction: a flag in argument-hint is "documented in
+    # body" if it appears ANYWHERE in the body as a code-span. Strict
+    # documentation context (option-keywords) would double-fail many legit
+    # skills that list flags only in a reference table without option verbs.
+    any_code_flag_re = re.compile(r"`(--[a-z][a-z0-9-]*)`")
     for skill_md in sorted(REPO.glob(".claude/skills/*/SKILL.md")):
         try:
-            text = skill_md.read_text()
-        except OSError:
+            text = skill_md.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as e:
+            findings.append((
+                "P2",
+                skill_md.relative_to(REPO).as_posix(),
+                f"unreadable: {e}",
+            ))
             continue
         fm, body = parse_frontmatter(text)
         hint = fm.get("argument-hint") or ""
@@ -237,14 +260,28 @@ def check_flag_parity() -> list[tuple[str, str, str]]:
             elif opt_context_re.search(cleaned):
                 for cf in code_flag_re.findall(cleaned):
                     documented_flags.add(cf)
-        missing_from_hint = documented_flags - hint_flags
-        missing_from_hint = {f for f in missing_from_hint if len(f) > 3}
+        # Forward: flags documented in body but missing from argument-hint
+        missing_from_hint = {f for f in documented_flags - hint_flags if len(f) > 3}
         if missing_from_hint:
             findings.append((
                 "P2",
                 skill_md.relative_to(REPO).as_posix(),
                 f"body documents {sorted(missing_from_hint)} as option flags "
                 f"but argument-hint is {hint!r}",
+            ))
+        # Reverse: flags in argument-hint that appear nowhere in the body.
+        # Uses a more permissive "any code-spanned flag" check — flag tables
+        # without option verbs (e.g. `| --fast | description |`) still count
+        # as documented. Prevents false positives where a legit documented
+        # flag wasn't picked up by the stricter forward-direction detector.
+        body_mentioned_flags = set(any_code_flag_re.findall(body))
+        stale_in_hint = {f for f in hint_flags - body_mentioned_flags if len(f) > 3}
+        if stale_in_hint:
+            findings.append((
+                "P2",
+                skill_md.relative_to(REPO).as_posix(),
+                f"argument-hint advertises {sorted(stale_in_hint)} but the "
+                f"body never mentions those flags — stale or unimplemented",
             ))
     return findings
 
@@ -267,8 +304,8 @@ def anchorize(title: str) -> str:
 
 def collect_anchors(md: Path) -> set[str]:
     try:
-        text = md.read_text()
-    except OSError:
+        text = md.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
         return set()
     anchors: set[str] = set()
     for m in HEADING_RE.finditer(text):
@@ -315,8 +352,13 @@ def check_anchor_resolution() -> list[tuple[str, str, str]]:
             mds.extend(root.rglob("*.md"))
     for md in sorted(mds):
         try:
-            raw = md.read_text()
-        except OSError:
+            raw = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as e:
+            findings.append((
+                "P2",
+                md.relative_to(REPO).as_posix(),
+                f"unreadable: {e}",
+            ))
             continue
         # Strip code spans / fenced code blocks so example `[text](path#a)`
         # inside backticks isn't treated as a real link.
@@ -353,15 +395,25 @@ def check_anchor_resolution() -> list[tuple[str, str, str]]:
 # ---- Check 4: Rule paths ↔ skill implementation parity -----------------------
 
 RULE_KEYWORDS: dict[str, list[str]] = {
+    # Only entries for rules whose scope actually targets skill files live
+    # here. A rule targeting `.tex`/`.qmd`/`.R` content files (e.g.
+    # content-invariants.md, cross-artifact-review.md) is not checkable with
+    # this protocol — those rules apply to content authors, not skill
+    # authors — and a dead entry here misleads future maintainers.
     "post-flight-verification.md": ["claim-verifier", "Post-Flight"],
-    "cross-artifact-review.md": ["/review-r", "/audit-reproducibility", "cross-artifact"],
-    "content-invariants.md": ["INV-", "content invariant"],
-    "summary-parity.md": [],  # applies to edits, not implementations
-    # Add more as new rules ship.
+    "summary-parity.md": [],  # empty = explicitly skipped; applies to edits
+    # Add more as new rules ship that include `.claude/skills/*/SKILL.md`
+    # in their paths: or globs: frontmatter.
 }
 
 
 def check_rule_skill_parity() -> list[tuple[str, str, str]]:
+    """For each rule with a non-empty keyword list, iterate its scope
+    frontmatter (either `paths:` or `globs:` — both are valid and some
+    rules use `globs:`). For each scope pattern that targets skill files,
+    verify the matching skills reference at least one of the rule's
+    keywords. Dead entries (scope targets non-skill files) yield nothing.
+    """
     findings: list[tuple[str, str, str]] = []
     for rule_md in sorted(REPO.glob(".claude/rules/*.md")):
         rule_name = rule_md.name
@@ -369,30 +421,30 @@ def check_rule_skill_parity() -> list[tuple[str, str, str]]:
         if keywords is None or not keywords:
             continue  # no keyword map yet, or intentionally skipped
         try:
-            rule_text = rule_md.read_text()
-        except OSError:
+            rule_text = rule_md.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
             continue
         fm, _ = parse_frontmatter(rule_text)
-        paths = fm.get("paths") or []
-        if not isinstance(paths, list):
+        # Rules in this repo use either `paths:` or `globs:` — accept both.
+        scope = (fm.get("paths") or []) + (fm.get("globs") or [])
+        if not isinstance(scope, list):
             continue
-        for pattern in paths:
+        for pattern in scope:
             if not isinstance(pattern, str):
                 continue
             if ".claude/skills/" not in pattern:
                 continue
-            # Expand simple globs
             for skill_md in REPO.glob(pattern):
                 try:
-                    skill_text = skill_md.read_text()
-                except OSError:
+                    skill_text = skill_md.read_text(encoding="utf-8")
+                except (OSError, UnicodeError):
                     continue
                 if not any(kw in skill_text for kw in keywords):
                     findings.append((
                         "P0",
                         skill_md.relative_to(REPO).as_posix(),
-                        f"rule {rule_name} lists this skill in paths: but the "
-                        f"skill body contains none of {keywords}",
+                        f"rule {rule_name} lists this skill in paths:/globs: "
+                        f"but the skill body contains none of {keywords}",
                     ))
     return findings
 
