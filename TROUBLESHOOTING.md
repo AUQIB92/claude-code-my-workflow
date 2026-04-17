@@ -183,6 +183,30 @@ Do **not** opt out when:
 - The draft contains >5 citations you haven't personally verified.
 - `/lit-review` just returned results — the most common hallucination vector in the whole template.
 
+## `check-skill-integrity` failures
+
+The surface-sync gate now chains `check-skill-integrity.py` after the count-sync check. It runs four mechanical parity checks (frontmatter↔body tools, argument-hint↔body flags, internal anchor resolution, rule↔skill keyword parity) and reports P0/P1/P2 findings per file.
+
+### P0: body invokes tool X but frontmatter allowed-tools is [...]
+
+The skill's Steps/Workflow section says to use a tool (typically `Task` to spawn an agent, or `Edit`/`Write`/`MultiEdit`/`NotebookEdit`) but the frontmatter `allowed-tools` array doesn't list it. Runtime behavior: the skill will hit a tool-permission error or silently skip the step. Fix: add the missing tool to `allowed-tools`.
+
+### P1: anchor `#foo` not found in path/to/file.md
+
+An internal markdown link `[text](path#anchor)` targets a heading that doesn't exist. Either the heading was renamed, the anchor slug was hand-typed and doesn't match the GitHub-flavored-markdown transform of the heading, or the link target file is wrong. Fix: either update the anchor to match an existing heading, or add the missing heading.
+
+### P2: body documents `--foo` as option flag but argument-hint is '...'
+
+A flag is described in the skill's body (in a table, a list, or with opt-out language) but doesn't appear in the one-line `argument-hint`. Users won't discover the flag from the hint. Fix: append the flag to `argument-hint` (or remove it from the body if it's not a real option).
+
+### P0: rule foo.md lists this skill in paths: but the skill body contains none of [...]
+
+A rule's `paths:` claims the skill follows the rule's protocol, but the skill body doesn't mention the protocol's keywords. Either add the protocol to the skill (preferred) or remove the skill from the rule's `paths:`. The keyword map lives in `scripts/check-skill-integrity.py` under `RULE_KEYWORDS` — new rules need an entry there.
+
+### False positives and regex tuning
+
+If a finding looks wrong (e.g., a shell command flag being treated as a skill flag, or an example link being treated as a real link), the regex in `scripts/check-skill-integrity.py` needs tuning. Shared helper: `strip_code()` blanks out inline code spans and fenced code blocks. For new classes of false positive, add an exclusion to the relevant check and document it inline.
+
 ## Still stuck?
 
 - Read the [guide's troubleshooting section](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#troubleshooting) for longer-form recovery scenarios.

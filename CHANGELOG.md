@@ -6,6 +6,32 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## Unreleased
+
+Audit-hardening. Mechanical parity checks that close classes of bug the agent-based `/deep-audit` was missing; a living pet-peeves catalogue that grows with each bot review. No new skills or rules for users to learn — infrastructure only.
+
+### Added — mechanical integrity checks
+
+- **`scripts/check-skill-integrity.py`** — deterministic parity checks that run in under a second. Four checks: (1) frontmatter `allowed-tools` ↔ body tool-invocation parity — catches the v1.7.0 PR #92 class of bug where 4 skills promised `Task` in their body but had no `Task` permission; (2) `argument-hint` ↔ body flag parity — documented flags advertised in the one-line hint; (3) internal markdown anchor resolution — no broken `[text](path#anchor)` links (the `#category-11-numerical-discipline` miss on PR #87); (4) rule `paths:` ↔ skill implementation parity — rule claims skill follows protocol, so skill body must reference the protocol's keywords (the `/interview-me` miss on PR #92).
+- **`scripts/check-surface-sync.sh`** now runs both `check-surface-sync.py` (count assertions) and `check-skill-integrity.py` (parity). Either gate failing blocks `/commit` Step 0b.
+- **`.claude/skills/slide-excellence/SKILL.md`** `argument-hint` updated to advertise `--fast`, `--skip-substance`, `--acknowledge-template-domain-reviewer` — the first real P2 the new check caught on baseline.
+
+### Added — living pet-peeves catalogue
+
+- **`.claude/references/audit-pet-peeves.md`** — 12-entry seed document cataloguing classes of bug review bots (Copilot / Codex) have caught on recent PRs that `/deep-audit` missed. Each entry: example + how to catch + why deep-audit missed it + when to apply. Grows with each PR — the meta-fix for the "audit agents keep missing this one thing" pattern.
+- **`.claude/skills/deep-audit/SKILL.md`** now has a Phase 0 that runs the mechanical checks first (cheapest, most precise), and every agent in Phase 1 is instructed to read the pet-peeves file before reporting clean.
+
+### Changed — documentation
+
+- MEMORY.md `[LEARN:audit]` entry on the mechanical-vs-agent tradeoff (catch classes of bug where precision matters with deterministic checks; use agents for judgment calls).
+- TROUBLESHOOTING.md section for `check-skill-integrity` failures — what each P0/P1/P2 means, how to resolve or tune.
+
+### Fixed
+
+- Self-referential false positive in the pet-peeves doc: example `[text](path#anchor)` markdown inside prose was matched by the anchor-resolution check. Script now strips inline code spans and fenced code blocks before scanning, so illustrative examples don't trigger the check.
+
+---
+
 ## v1.7.0 — 2026-04-16
 
 A **discipline-patterns** minor release. Additive infrastructure for anti-drift (summary-parity) and anti-hallucination (Post-Flight Verification / Chain-of-Verification). Full details below; no breaking changes for forks.
