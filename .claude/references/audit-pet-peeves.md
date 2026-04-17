@@ -152,6 +152,56 @@
 
 ---
 
+---
+
+## 13. Docstring contract ↔ implementation drift
+
+**Example:** PR #93 (Copilot + Codex). `check-skill-integrity.py` docstring described flag parity as "argument-hint ↔ body flag parity … and vice versa" but the implementation only reported the body→hint direction. Independently flagged by both bots. Separate instance: exit-code docstring said "1 = P0 failures" but code returned 1 for P0 OR P1.
+
+**How to catch.** When reading a function's docstring, extract every behavioral claim (bidirectional, fail-open, exits 1 on X, returns Y when Z) and verify the implementation matches. Contracts lie by omission: if the docstring says "X … and vice versa", the code must actually do both.
+
+**Why deep-audit missed it.** Agent 2's original scope was `.claude/hooks/` only. New code in `scripts/` bypassed the audit entirely. Even with correct scope, "docstring claims X but code does Y" is a class that requires reading both carefully — easy to miss on a skim.
+
+**When to apply.** Any function or script whose docstring makes a behavioral claim. Especially critical for code that's about to be shipped as part of audit infrastructure itself — a bug here undermines everything the code is meant to check.
+
+---
+
+## 14. Python fail-open promise broken by narrow `except`
+
+**Example:** PR #93 (Copilot). `check-skill-integrity.py` promised "fail-open on parser errors: a corrupt/unparseable file prints a P2 warning but does not fail the build." Implementation caught only `OSError` on `read_text()` — `UnicodeDecodeError` would bubble to the top-level `except Exception` in `main()` and exit 2, failing the gate contrary to the docstring.
+
+**How to catch.** When a Python script documents fail-open behavior, check that every `read_text()` / `open()` / `json.loads()` catches the realistic failure modes (`OSError`, `UnicodeError`, `json.JSONDecodeError`). Better: use explicit `encoding="utf-8"` and catch `(OSError, UnicodeError)` together.
+
+**Why deep-audit missed it.** Scope gap (scripts/) plus no explicit check for encoding-error handling.
+
+**When to apply.** Any Python script that reads files and claims fail-open behavior. Especially audit/gate scripts where a false hard-fail blocks commits.
+
+---
+
+## 15. Bash `set -u` does not catch command failures
+
+**Example:** PR #93 (Copilot). `check-surface-sync.sh` used `set -u` (treat unset variables as errors) but not `set -e` (exit on command failure). If the `SCRIPT_DIR="$(cd ... && pwd)"` command had failed (e.g. the script was moved, `cd` errored), `SCRIPT_DIR` would have been empty and subsequent `python3 "$SCRIPT_DIR/..."` invocations would have run with a bogus path.
+
+**How to catch.** In bash scripts, `set -u` only guards against unset variables, NOT command failures. If you can't use `set -e` (because you want subsequent commands to run even if earlier ones fail — e.g. running two gates sequentially and wanting both outputs), you must explicitly check return codes or use `|| { ...; exit 2; }` after each critical command.
+
+**Why deep-audit missed it.** Scope gap (scripts/) plus Agent 2's hook-focused checks don't cover bash safety idioms beyond exit-code protocols.
+
+**When to apply.** Any bash script that does path resolution, variable derivation, or sequential command dispatch. Especially when the script runs as a git hook or commit gate.
+
+---
+
+## 16. Dead config-map entries that mislead maintainers
+
+**Example:** PR #93 (Copilot). `check-skill-integrity.py` had `RULE_KEYWORDS` entries for `cross-artifact-review.md` and `content-invariants.md`, but neither rule's scope frontmatter (one uses `globs:`, both target `.tex`/`.qmd` files not `.claude/skills/*`) actually fires the check. The entries were no-ops. A future maintainer reading the code would reasonably assume the check was exercising those rules.
+
+**How to catch.** When adding an entry to a config map, keyword dict, or registry, verify at least one execution path actually reaches the entry. Dead entries rot in place — they're worse than omitting them because they imply coverage that doesn't exist.
+
+**Why deep-audit missed it.** No check for "config entries reach their referents." Scope gap compounded it.
+
+**When to apply.** When editing any file that has a `{key: config}` map, path-pattern list, or rule-reference registry. Run a quick trace: given this input, does the entry get used? If not, remove or document why it's parked.
+
+---
+
 ## Meta — how this file is maintained
 
 - After any PR where a review bot catches something deep-audit missed, append a new entry (or extend an existing one with new evidence).

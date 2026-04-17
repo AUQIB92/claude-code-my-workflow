@@ -54,12 +54,17 @@ Focus: `guide/workflow-guide.qmd`
 - Cross-references and anchors resolve
 - No stale counts from previous versions
 
-#### Agent 2: Hook Code Quality
-Focus: `.claude/hooks/*.py` and `.claude/hooks/*.sh`
-- No remaining `/tmp/` usage (should use `~/.claude/sessions/`)
-- Hash length consistency (`[:8]` across all hooks)
-- Proper error handling (fail-open pattern: top-level `try/except` with `sys.exit(0)`)
-- JSON input/output correctness (stdin for input, stdout/stderr for output)
+#### Agent 2: Executable Code Quality
+Focus: **all** executable code in the repo — `.claude/hooks/*.py`, `.claude/hooks/*.sh`, `scripts/*.py`, `scripts/*.sh`, `.claude/scripts/*.sh`. Not just `.claude/hooks/` — when PR #93 added new code under `scripts/`, the original narrow scope meant Copilot + Codex caught 5 bugs the audit missed.
+
+Hook-specific checks (Stop/PreToolUse/SessionStart protocols, `CLAUDE_PROJECT_DIR` usage, hash-length consistency) apply only to `.claude/hooks/`. Everything below applies to ALL executable code:
+
+- No remaining `/tmp/` usage in anything that manages state (should use `~/.claude/sessions/`)
+- Hash length consistency (`[:8]` across all hooks) [hooks only]
+- Proper error handling — **fail-open pattern** where the docstring promises it (top-level `try/except` with `sys.exit(0)`). Python `read_text()` must catch `UnicodeError` (not just `OSError`) if the script is promised fail-open for corrupt files. Bash `set -u` without `set -e` or explicit post-command checks does NOT catch command failures — verify.
+- **Docstring-claim ↔ implementation parity.** If a function's docstring describes "bidirectional parity" / "fail-open" / "exits 1 on X", the implementation must match. Common drift: one-directional implementation of a claimed-bidirectional contract; exit codes documented as one thing but returning another.
+- **Config-map entries point at live targets.** Keyword dicts, path maps, and rule registries should not contain dead entries (e.g. rule files that don't exist, fields the script doesn't actually read). Dead entries mislead maintainers.
+- JSON input/output correctness (stdin for input, stdout/stderr for output) [hooks only]
 - Exit code correctness. Two valid blocking protocols for Stop/PreToolUse hooks:
   (a) **exit 2 + reason on stderr** — legacy, still supported
   (b) **exit 0 + JSON `{"decision": "block", "reason": "..."}` on stdout** — modern; this is what `log-reminder.py` uses and it works correctly
