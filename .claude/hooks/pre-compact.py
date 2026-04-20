@@ -121,21 +121,9 @@ def extract_recent_decisions(project_dir: str, limit: int = 3) -> list[str]:
 
 
 def save_state(state: dict) -> None:
-    """Save state to the session directory, preserving any existing
-    fields we don't explicitly overwrite (e.g. last_blocked_plan)."""
+    """Save state to the session directory."""
     state_file = get_session_dir() / "pre-compact-state.json"
     state["timestamp"] = datetime.now().isoformat()
-
-    # Merge with existing state so we don't clobber the block-tracking
-    # field written by the DRAFT-plan guard below.
-    try:
-        if state_file.exists():
-            existing = json.loads(state_file.read_text())
-            for key in ("last_blocked_plan",):
-                if key in existing and key not in state:
-                    state[key] = existing[key]
-    except (OSError, json.JSONDecodeError):
-        pass
 
     try:
         state_file.write_text(json.dumps(state, indent=2))
@@ -145,43 +133,64 @@ def save_state(state: dict) -> None:
 
 def should_block_draft(plan_info: dict | None) -> tuple[bool, str]:
     """Return (should_block, reason). Opt-in via env var. Blocks at most
-    once per DRAFT plan so the user can't get stuck in a loop."""
+    once per DRAFT plan so the user can't get stuck in a loop.
+
+    Failure modes (all fail-open — return (False, "")):
+    - env var not set to "1"
+    - no DRAFT plan active
+    - sentinel file unreadable (corrupt JSON, OSError)
+    - sentinel write fails (readonly filesystem, etc.)
+    Rationale: a user who can't dismiss a block is worse off than one
+    who loses a single compaction-blocking opportunity.
+
+    The sentinel lives in its own file (`precompact-block-sentinel.json`)
+    which is NOT touched by `post-compact-restore.py`. This is
+    deliberate — `pre-compact-state.json` is wiped after each restore,
+    which would make this guard fire again on every subsequent
+    compaction of the same DRAFT plan.
+    """
     if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "0") != "1":
         return False, ""
     if not plan_info or plan_info.get("status") != "draft":
         return False, ""
 
-    state_file = get_session_dir() / "pre-compact-state.json"
-    last_blocked = None
-    try:
-        if state_file.exists():
-            existing = json.loads(state_file.read_text())
-            last_blocked = existing.get("last_blocked_plan")
-    except (OSError, json.JSONDecodeError):
-        pass
-
     plan_path = plan_info.get("plan_path")
-    if last_blocked == plan_path:
-        # Already blocked once for this plan — let it through.
+    if not plan_path:
         return False, ""
 
-    # Mark this plan as blocked so the next compaction proceeds.
+    sentinel_file = get_session_dir() / "precompact-block-sentinel.json"
+
+    # Fail-open on read errors: if we can't tell whether this plan was
+    # already blocked, don't block again. The guard's purpose is to warn
+    # once, not to guarantee blocking under adverse conditions.
     try:
-        merged: dict = {"last_blocked_plan": plan_path}
-        if state_file.exists():
-            existing = json.loads(state_file.read_text())
-            merged = {**existing, **merged}
-        state_file.write_text(json.dumps(merged, indent=2))
-    except (OSError, json.JSONDecodeError) as e:
-        print(f"Warning: could not update block state: {e}", file=sys.stderr)
+        if sentinel_file.exists():
+            existing = json.loads(sentinel_file.read_text())
+            if existing.get("last_blocked_plan") == plan_path:
+                return False, ""
+    except (OSError, json.JSONDecodeError):
+        return False, ""
+
+    # Only block if we successfully persist the sentinel. If the write
+    # fails, fall through — blocking without a persisted sentinel would
+    # cause repeat blocks on every subsequent compaction.
+    try:
+        sentinel_file.write_text(
+            json.dumps({"last_blocked_plan": plan_path, "when": datetime.now().isoformat()})
+        )
+    except OSError as e:
+        print(f"Warning: could not persist block sentinel; not blocking: {e}",
+              file=sys.stderr)
+        return False, ""
 
     reason = (
         f"Compaction blocked once: active plan "
         f"{plan_info.get('plan_name', '?')} is still DRAFT. "
-        f"Either approve the plan (change status to APPROVED) or, if you "
-        f"want to proceed without approval, re-run compaction — this hook "
-        f"blocks at most once per DRAFT plan. Unset "
-        f"CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=0 to disable this guard entirely."
+        f"Either approve the plan (change its status line to APPROVED) "
+        f"or, if you want to proceed without approval, re-run compaction "
+        f"— this hook blocks at most once per DRAFT plan. To disable the "
+        f"guard entirely, unset CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT (or set "
+        f"it to 0)."
     )
     return True, reason
 
