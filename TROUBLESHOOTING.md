@@ -95,6 +95,10 @@ Mid-session permission-mode toggles override file settings until session end. Th
 
 That's intentional. Host-global config can contain unrelated paths and secrets. Phase A (repo-local) is automatic; Phase B (host-global, with key redaction) requires explicit confirmation. See [CHANGELOG v1.6.0 — privacy boundary](CHANGELOG.md) for context.
 
+### Seeing too many permission prompts?
+
+If `/permission-check` confirms your config is permissive but you're still being prompted, the built-in Claude Code skill **`/less-permission-prompts`** (Apr 2026) scans your transcripts for common read-only Bash and MCP tool calls and proposes a prioritized allowlist for `.claude/settings.json`. Pairs with our `/permission-check`: `permission-check` diagnoses; `less-permission-prompts` remediates.
+
 ### Statusline shows `[UNKNOWN]` or blank
 
 Session JSON parse failure. Check `.claude/scripts/statusline.sh` is executable (`chmod +x`) and that `python3` is on `PATH`. Fallback output is `[?] <model> @ <pwd>` — if you see that, the hook caught a malformed session file. Restart Claude Code.
@@ -206,6 +210,18 @@ A rule's `paths:` claims the skill follows the rule's protocol, but the skill bo
 ### False positives and regex tuning
 
 If a finding looks wrong (e.g., a shell command flag being treated as a skill flag, or an example link being treated as a real link), the regex in `scripts/check-skill-integrity.py` needs tuning. Shared helper: `strip_code()` blanks out inline code spans and fenced code blocks. For new classes of false positive, add an exclusion to the relevant check and document it inline.
+
+## Scheduling autonomous work
+
+### `CronCreate` dies when my session closes
+
+By design. `CronCreate` schedules in the Claude Code REPL's own event loop — when the REPL exits (you close the window, Claude Code crashes, your usage hits a rate limit and the session terminates), the cron goes with it. Even `durable: true` doesn't save you if no REPL is running at fire time.
+
+For **short-delay polling within an active session** (e.g. "check the build every 5 minutes while I work"), `CronCreate` is fine. For anything that must **survive session termination**, use **Claude Code Routines** (Apr 2026) instead. Routines run on Anthropic's web infrastructure — your Mac does not need to be online for each fire. Use Routines for: scheduled audits, overnight batch work, autonomous execution while you're away. See `.claude/references/audit-pet-peeves.md` entry 17 for the full comparison.
+
+### PreCompact keeps blocking even after I approved the plan
+
+You probably have `CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1` set in your environment. The hook blocks compaction at most **once** per DRAFT plan — subsequent compactions of the same plan proceed normally. If it's blocking repeatedly, either the plan's status line hasn't been updated from DRAFT to APPROVED/IN_PROGRESS (check the plan file header), or you've got a different DRAFT plan every time (the hook tracks by plan path). Unset the env var to disable the guard entirely: `unset CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT`.
 
 ## Still stuck?
 

@@ -2,15 +2,21 @@
 """
 Pre-Compact State Capture Hook
 
-Fires before context compaction to capture the current state:
-- Active plan path and status
-- Current task description
-- Recent decisions from session log
+Fires before context compaction to:
+1. Capture current state (active plan, current task, recent decisions)
+   so post-compact-restore.py can surface it afterwards.
+2. OPTIONALLY block compaction when an active plan is still DRAFT, to
+   avoid losing mid-plan context before the user has approved it.
+   Opt-in via CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1 (default: off).
 
-This state is read by post-compact-restore.py after compaction.
+The blocking protocol follows modern Claude Code semantics:
+  exit 0 + JSON {"decision": "block", "reason": "..."} on stdout.
+Block fires at most once per DRAFT plan — the plan path is recorded in
+state, and a subsequent compaction for the same plan proceeds normally.
+Fail-open on any internal error.
 
 Hook Event: PreCompact
-Returns: Exit code 0 (message printed to stderr for visibility)
+Returns: exit 0 in all cases; stdout is block JSON or empty.
 """
 
 from __future__ import annotations
@@ -125,6 +131,70 @@ def save_state(state: dict) -> None:
         print(f"Warning: Could not save pre-compact state: {e}", file=sys.stderr)
 
 
+def should_block_draft(plan_info: dict | None) -> tuple[bool, str]:
+    """Return (should_block, reason). Opt-in via env var. Blocks at most
+    once per DRAFT plan so the user can't get stuck in a loop.
+
+    Failure modes (all fail-open — return (False, "")):
+    - env var not set to "1"
+    - no DRAFT plan active
+    - sentinel file unreadable (corrupt JSON, OSError)
+    - sentinel write fails (readonly filesystem, etc.)
+    Rationale: a user who can't dismiss a block is worse off than one
+    who loses a single compaction-blocking opportunity.
+
+    The sentinel lives in its own file (`precompact-block-sentinel.json`)
+    which is NOT touched by `post-compact-restore.py`. This is
+    deliberate — `pre-compact-state.json` is wiped after each restore,
+    which would make this guard fire again on every subsequent
+    compaction of the same DRAFT plan.
+    """
+    if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "0") != "1":
+        return False, ""
+    if not plan_info or plan_info.get("status") != "draft":
+        return False, ""
+
+    plan_path = plan_info.get("plan_path")
+    if not plan_path:
+        return False, ""
+
+    sentinel_file = get_session_dir() / "precompact-block-sentinel.json"
+
+    # Fail-open on read errors: if we can't tell whether this plan was
+    # already blocked, don't block again. The guard's purpose is to warn
+    # once, not to guarantee blocking under adverse conditions.
+    try:
+        if sentinel_file.exists():
+            existing = json.loads(sentinel_file.read_text())
+            if existing.get("last_blocked_plan") == plan_path:
+                return False, ""
+    except (OSError, json.JSONDecodeError):
+        return False, ""
+
+    # Only block if we successfully persist the sentinel. If the write
+    # fails, fall through — blocking without a persisted sentinel would
+    # cause repeat blocks on every subsequent compaction.
+    try:
+        sentinel_file.write_text(
+            json.dumps({"last_blocked_plan": plan_path, "when": datetime.now().isoformat()})
+        )
+    except OSError as e:
+        print(f"Warning: could not persist block sentinel; not blocking: {e}",
+              file=sys.stderr)
+        return False, ""
+
+    reason = (
+        f"Compaction blocked once: active plan "
+        f"{plan_info.get('plan_name', '?')} is still DRAFT. "
+        f"Either approve the plan (change its status line to APPROVED) "
+        f"or, if you want to proceed without approval, re-run compaction "
+        f"— this hook blocks at most once per DRAFT plan. To disable the "
+        f"guard entirely, unset CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT (or set "
+        f"it to 0)."
+    )
+    return True, reason
+
+
 def append_to_session_log(project_dir: str, trigger: str) -> None:
     """Append compaction note to session log."""
     logs_dir = Path(project_dir) / "quality_reports" / "session_logs"
@@ -196,13 +266,26 @@ def main() -> int:
         "decisions": decisions
     }
 
+    # DRAFT-plan guard: opt-in block to avoid losing mid-plan context
+    # before the user has approved. Fires at most once per plan.
+    block, reason = should_block_draft(plan_info)
+    if block:
+        # PreCompact accepts the modern block protocol: exit 0 with JSON
+        # {"decision":"block","reason":"..."} on stdout. stderr is visible.
+        print(f"\n{YELLOW}⚡ Compaction blocked{NC} (DRAFT plan detected)",
+              file=sys.stderr)
+        print(f"   {reason}\n", file=sys.stderr)
+        json.dump({"decision": "block", "reason": reason}, sys.stdout)
+        return 0
+
     # Save state for restoration
     save_state(state)
 
     # Append note to session log
     append_to_session_log(project_dir, trigger)
 
-    # Print to stderr (PreCompact ignores stdout; stderr is shown to user)
+    # Print to stderr (PreCompact normally ignores stdout; stderr is
+    # shown to user)
     print(format_compaction_message(plan_info, decisions), file=sys.stderr)
 
     return 0
