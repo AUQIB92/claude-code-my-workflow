@@ -202,6 +202,18 @@
 
 ---
 
+## 17. `CronCreate` for long-delay autonomous work
+
+**Example:** 2026-04-16. The user's usage was about to be rate-limited and they needed autonomous work to fire ~1 hour later. We used `CronCreate` with `durable: true`, but the cron is tied to the Claude Code REPL's own event loop — when the session died (rate limit + user walked away + VSCode closed the panel), the cron went with it. Plan survived on disk; the scheduled trigger did not. User had to invoke manually on return.
+
+**How to catch.** Any time you use `CronCreate` with a delay > 10 minutes, ask: "will the Claude Code session definitely be running at fire time?" If not, switch to **Claude Code Routines** (released Apr 14, 2026) — they run on Anthropic's web infrastructure and don't depend on the local REPL. Routines are the right primitive for overnight work, scheduled audits, and autonomous runs while the user is away. `CronCreate` is for short-delay polling within an active session.
+
+**Why deep-audit missed it.** Not a code-quality issue — it's a primitive-selection issue. Add to pet-peeves because it's the kind of subtle gotcha that bites you exactly when you can't afford it (user away, session dying).
+
+**When to apply.** Any scheduling decision. Rule of thumb: `CronCreate` for minutes, Routines for hours. If the user is actively watching, either works; if they're AFK, use Routines.
+
+---
+
 ## Meta — how this file is maintained
 
 - After any PR where a review bot catches something deep-audit missed, append a new entry (or extend an existing one with new evidence).

@@ -2,15 +2,21 @@
 """
 Pre-Compact State Capture Hook
 
-Fires before context compaction to capture the current state:
-- Active plan path and status
-- Current task description
-- Recent decisions from session log
+Fires before context compaction to:
+1. Capture current state (active plan, current task, recent decisions)
+   so post-compact-restore.py can surface it afterwards.
+2. OPTIONALLY block compaction when an active plan is still DRAFT, to
+   avoid losing mid-plan context before the user has approved it.
+   Opt-in via CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1 (default: off).
 
-This state is read by post-compact-restore.py after compaction.
+The blocking protocol follows modern Claude Code semantics:
+  exit 0 + JSON {"decision": "block", "reason": "..."} on stdout.
+Block fires at most once per DRAFT plan — the plan path is recorded in
+state, and a subsequent compaction for the same plan proceeds normally.
+Fail-open on any internal error.
 
 Hook Event: PreCompact
-Returns: Exit code 0 (message printed to stderr for visibility)
+Returns: exit 0 in all cases; stdout is block JSON or empty.
 """
 
 from __future__ import annotations
@@ -115,14 +121,69 @@ def extract_recent_decisions(project_dir: str, limit: int = 3) -> list[str]:
 
 
 def save_state(state: dict) -> None:
-    """Save state to the session directory."""
+    """Save state to the session directory, preserving any existing
+    fields we don't explicitly overwrite (e.g. last_blocked_plan)."""
     state_file = get_session_dir() / "pre-compact-state.json"
     state["timestamp"] = datetime.now().isoformat()
+
+    # Merge with existing state so we don't clobber the block-tracking
+    # field written by the DRAFT-plan guard below.
+    try:
+        if state_file.exists():
+            existing = json.loads(state_file.read_text())
+            for key in ("last_blocked_plan",):
+                if key in existing and key not in state:
+                    state[key] = existing[key]
+    except (OSError, json.JSONDecodeError):
+        pass
 
     try:
         state_file.write_text(json.dumps(state, indent=2))
     except IOError as e:
         print(f"Warning: Could not save pre-compact state: {e}", file=sys.stderr)
+
+
+def should_block_draft(plan_info: dict | None) -> tuple[bool, str]:
+    """Return (should_block, reason). Opt-in via env var. Blocks at most
+    once per DRAFT plan so the user can't get stuck in a loop."""
+    if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "0") != "1":
+        return False, ""
+    if not plan_info or plan_info.get("status") != "draft":
+        return False, ""
+
+    state_file = get_session_dir() / "pre-compact-state.json"
+    last_blocked = None
+    try:
+        if state_file.exists():
+            existing = json.loads(state_file.read_text())
+            last_blocked = existing.get("last_blocked_plan")
+    except (OSError, json.JSONDecodeError):
+        pass
+
+    plan_path = plan_info.get("plan_path")
+    if last_blocked == plan_path:
+        # Already blocked once for this plan — let it through.
+        return False, ""
+
+    # Mark this plan as blocked so the next compaction proceeds.
+    try:
+        merged: dict = {"last_blocked_plan": plan_path}
+        if state_file.exists():
+            existing = json.loads(state_file.read_text())
+            merged = {**existing, **merged}
+        state_file.write_text(json.dumps(merged, indent=2))
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"Warning: could not update block state: {e}", file=sys.stderr)
+
+    reason = (
+        f"Compaction blocked once: active plan "
+        f"{plan_info.get('plan_name', '?')} is still DRAFT. "
+        f"Either approve the plan (change status to APPROVED) or, if you "
+        f"want to proceed without approval, re-run compaction — this hook "
+        f"blocks at most once per DRAFT plan. Unset "
+        f"CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=0 to disable this guard entirely."
+    )
+    return True, reason
 
 
 def append_to_session_log(project_dir: str, trigger: str) -> None:
@@ -196,13 +257,26 @@ def main() -> int:
         "decisions": decisions
     }
 
+    # DRAFT-plan guard: opt-in block to avoid losing mid-plan context
+    # before the user has approved. Fires at most once per plan.
+    block, reason = should_block_draft(plan_info)
+    if block:
+        # PreCompact accepts the modern block protocol: exit 0 with JSON
+        # {"decision":"block","reason":"..."} on stdout. stderr is visible.
+        print(f"\n{YELLOW}⚡ Compaction blocked{NC} (DRAFT plan detected)",
+              file=sys.stderr)
+        print(f"   {reason}\n", file=sys.stderr)
+        json.dump({"decision": "block", "reason": reason}, sys.stdout)
+        return 0
+
     # Save state for restoration
     save_state(state)
 
     # Append note to session log
     append_to_session_log(project_dir, trigger)
 
-    # Print to stderr (PreCompact ignores stdout; stderr is shown to user)
+    # Print to stderr (PreCompact normally ignores stdout; stderr is
+    # shown to user)
     print(format_compaction_message(plan_info, decisions), file=sys.stderr)
 
     return 0

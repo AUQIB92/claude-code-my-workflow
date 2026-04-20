@@ -8,7 +8,7 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ## Unreleased
 
-Audit-hardening. Mechanical parity checks that close classes of bug the agent-based `/deep-audit` was missing; a living pet-peeves catalogue that grows with each bot review. No new skills or rules for users to learn — infrastructure only.
+Infrastructure-only. Two themes: audit-hardening (mechanical parity checks + living pet-peeves catalogue that close classes of bug the agent-based `/deep-audit` was missing) and selective incorporation of Claude Code Apr 2026 features (Routines for AFK scheduling, PreCompact blocking, `/less-permission-prompts` as a sibling to our `/permission-check`). No new user-facing skills, no new rules, no breaking changes.
 
 ### Added — mechanical integrity checks
 
@@ -29,6 +29,15 @@ Audit-hardening. Mechanical parity checks that close classes of bug the agent-ba
 ### Fixed
 
 - Self-referential false positive in the pet-peeves doc: example `[text](path#anchor)` markdown inside prose was matched by the anchor-resolution check. Script now strips inline code spans and fenced code blocks before scanning, so illustrative examples don't trigger the check.
+
+### Added — Apr 2026 Claude Code incorporation
+
+- **PreCompact hook can now block compaction** (`.claude/hooks/pre-compact.py`). Opt-in via env var `CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1`: blocks once per DRAFT plan so the user can approve before losing mid-plan context. Uses the modern Claude Code block protocol (exit 0 + JSON `{"decision":"block","reason":"..."}` on stdout). Fires at most once per plan path — no lock-out loops. Default off; existing users get no change.
+- **MEMORY.md `[LEARN:scheduling]` + `[LEARN:hooks]`** capturing two lessons from Apr 2026: (a) `CronCreate` is session-only in practice — use Claude Code Routines (launched Apr 14) for any autonomous work that must survive session termination; (b) PreCompact hooks can now block, which is the right primitive for "don't lose this context."
+- **`.claude/references/audit-pet-peeves.md` entry 17** — don't use `CronCreate` for long-delay autonomous work; Routines is the right primitive.
+- **TROUBLESHOOTING.md scheduling section** — explains `CronCreate` vs Routines tradeoff (short-delay in-session vs AFK work on web infra) and documents the PreCompact blocking guard. Plus a pointer to the built-in `/less-permission-prompts` skill as a sibling to our `/permission-check` (diagnose with `/permission-check`, remediate with `/less-permission-prompts`).
+
+No stale model references audited — all 14 agents already use `model: inherit`, so they auto-adapt to Opus 4.7 / Sonnet 4.6 / Haiku 4.5 without changes.
 
 ---
 
