@@ -6,9 +6,62 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
-## Unreleased
+## v1.8.0 — 2026-04-27
 
-Infrastructure-only. Two themes: audit-hardening (mechanical parity checks + living pet-peeves catalogue that close classes of bug the agent-based `/deep-audit` was missing) and selective incorporation of Claude Code Apr 2026 features (Routines for AFK scheduling, PreCompact blocking, `/less-permission-prompts` as a sibling to our `/permission-check`). No new user-facing skills, no new rules, no breaking changes.
+A **disciplinary breadth + audit-hardening + Apr 2026 incorporation** minor release. The cycle landed in two passes: (1) infrastructure-only audit-hardening (mechanical parity checks via `check-skill-integrity.py`, living pet-peeves catalogue, PreCompact blocking, Routines awareness) and (2) capability work (two new skills `/checkpoint` and `/preregister`, political-science breadth via three journal profiles + two paper types + a discipline-cards reference, and Apr 2026 documentation: auto mode promotion, protected-paths gate explainer, session-management commands, Computer Use sidebar, Monitor tool integration, `disable-model-invocation` discipline). No breaking changes; counts updated across all monitored surfaces.
+
+### Added — new skills
+
+- **`.claude/skills/checkpoint/`** — `/checkpoint` produces a structured state snapshot (active plan, recent decisions, file pointers with line numbers, open questions, next 1–3 actions) into `quality_reports/checkpoints/YYYY-MM-DD_<slug>.md`. Companion to (NOT replacement for) the narrative session-log workflow under `quality_reports/session_logs/`. Carries `disable-model-invocation: true` (writes to a persistent state file — must be user-intent). Pattern adapted from Hugo Sant'Anna's [clo-author v4.2.0](https://github.com/hugosantanna/clo-author) with permission; reimplemented in original prose against this template's narrative-session-log + plan-on-disk + auto-memory architecture. Attribution header on the SKILL.md.
+- **`.claude/skills/preregister/`** + **`templates/preregistration-template.md`** — `/preregister` drafts a registry-ready preregistration document in OSF, AsPredicted, or AEA RCT Registry style. Extracts hypotheses, design, sampling plan, exclusions, and analysis plan from a research spec (`/interview-me` output) or free-form description. MUST/SHOULD/MAY clarity annotation per section. Pre-flight cross-checks: directional hypothesis, named estimator, ex-ante exclusion rules, sample-size stopping rule. Post-flight CoVe verification of any cited literature (re-uses `/verify-claims`). Output: `quality_reports/preregistrations/YYYY-MM-DD_<slug>.md` (gitignored). Refuses retrospective preregistration (description containing realised results). Greenfield — not ported.
+
+### Added — political-science breadth
+
+- **`.claude/references/journal-profiles.md`** +3 profiles: **APSR** (highest theoretical bar; THEORY-disposition pool weight 0.30; methods-referee tilts toward formal-theory comparative-static sharpness), **AJPS** (methods-emphasis; CREDIBILITY 0.30, replication policy enforced), **JOP** (clarity-of-contribution bar; SKEPTIC 0.25). Each profile is ~40–45 lines following the existing schema.
+- **`.claude/agents/methods-referee.md`** +2 paper types: **`formal-theory`** (pure theory; weights tilt toward model originality and comparative-static sharpness; sanity checks include equilibrium existence, assumption tractability, robustness to assumption relaxation) and **`survey-experiment`** (vignette/conjoint/list/factorial; weights tilt toward design, sampling, and attrition+manipulation checks; sanity checks include balance, manipulation-check pass rate, attrition asymmetry, sampling-frame validity). The 4 prior paper types (reduced-form / structural / theory+empirics / descriptive) are unchanged — additions are purely additive.
+- **`.claude/agents/domain-reviewer.md`** template-marker comment now ships **two** customization examples (econ + poli-sci) to illustrate that the 5-lens structure is field-agnostic. Lens content under each example reflects field-specific norms (poli-sci: ignorability, conjoint AMCE algebra, Hainmueller-Hopkins-Yamamoto for cross-reference, `cjoint`/`survey::svyglm` package defaults).
+- **`.claude/references/discipline-cards.md`** — new reference. Two cards: `econ` and `poli-sci`. Each card: paper-type frequency table, dominant journals (cross-referenced to `journal-profiles.md`), preregistration norms (cross-referenced to `/preregister --style`), method conventions (significance-stars conventions, SE conventions, dominant code language). Read by `/research-ideation`, `/interview-me`, `/preregister`, and the `editor` agent when paper-type or discipline is given without a target journal. Forkers extend for psych / sociology / public-health / etc.
+
+### Changed — research-side skill paper-type awareness
+
+- **`.claude/skills/research-ideation/SKILL.md`** — new Step 3 tags each generated RQ with a likely paper type from the 6-type taxonomy. Output format adds a `**Paper type:**` field per RQ. `discipline-cards.md` informs the default distribution.
+- **`.claude/skills/interview-me/SKILL.md`** — Phase 1 ("Big Picture") now optionally asks the researcher what kind of paper they envision (same 6-type taxonomy). Saved to spec frontmatter as `paper_type:` so downstream skills (`/preregister`, `/data-analysis`, `/review-paper --peer`) can read it.
+
+### Added — Apr 2026 feature documentation
+
+- **`TROUBLESHOOTING.md`** +2 sections under Permissions:
+  - **Bypass mode still prompts on protected paths** — explains the protected-path list (`.git`, `.vscode`, `.idea`, `.husky`, `.claude` with carve-outs for `commands/agents/skills/worktrees`) and that **auto mode** is the only mode that routes protected paths through the classifier instead of prompting. Documents the auto-mode requirements (Max/Team/Enterprise/API + Sonnet 4.6 / Opus 4.6 / Opus 4.7 + Anthropic API). Includes two workarounds for users without auto-mode access: edit through Bash (`python3` heredoc) or move edits out of `.claude/`.
+  - **`.vscode/settings.json` key typo** — `claudeCode.allowDangerouslySkipPermissions` is silently ignored; the canonical key is `allowDangerouslySkipPermissions` (no `claudeCode.` prefix). The typo leaves the protected-paths gate active even with broad CLI bypass. Reload window after fixing.
+- **`.vscode/settings.json`** — fixed the typo: `allowDangerouslySkipPermissions: true` (was incorrectly prefixed). Takes effect on next VSCode window reload.
+
+### Changed — `disable-model-invocation` audit
+
+- **`.claude/skills/create-lecture/`**, **`.claude/skills/new-diagram/`**, **`.claude/skills/learn/`** — added `disable-model-invocation: true` to frontmatter. Rationale: each writes a load-bearing persistent file (a new lecture `.tex`, a new TikZ source, a new SKILL.md respectively) that should only be created on explicit user intent. `/deep-audit` also gains the flag in this release (its body writes audit reports + applies fixes). The new `/checkpoint` and `/preregister` skills carry the flag too.
+
+### Added — Apr 2026 doc additions (guide + onboarding)
+
+- **`guide/workflow-guide.qmd`** — new `### Session Management` subsection under "Settings — Permissions and Hooks": `/btw` for side questions outside conversation history, `/rewind` and `Esc+Esc` for checkpoint navigation, `/clear` and `/compact <instruction>` for context resets, `Ctrl+G` for in-editor plan editing, `claude --continue` / `--resume` / `/rename` for cross-session continuity, plus `/checkpoint <slug>` (this template). Three composition patterns documented.
+- **`guide/workflow-guide.qmd`** — added `auto` mode row to the permission-modes table; documented bypass mode's protected-path gate inline (`.git`, `.vscode`, `.idea`, `.husky`, `.claude` minus `commands/agents/skills/worktrees` carve-outs).
+- **`guide/workflow-guide.qmd`** — Computer Use callout in the Adversarial Pattern section (Apr 2026 Week 14, research preview, optional). Frames Computer Use as the *visual loop* extension when text-level `/qa-quarto` and `/visual-audit` aren't enough.
+- **`guide/workflow-guide.qmd`** — Monitor-tool subsection in "Cost-Conscious Parallelism" (Apr 2026 Week 15). Replaces polling-loop anti-pattern for long-running R fits, replication batch reruns, etc.
+- **`guide/workflow-guide.qmd`** — new "Anthropic-Shipped Apr 2026 Utilities" section in the ecosystem area: `/team-onboarding`, `/autofix-pr`, `/powerup`, Ultraplan, `/less-permission-prompts`. Framed as off-ramps when this template's scope doesn't fit.
+- **`README.md`** — Quick Start callout pointing forkers heavily diverging from academic content at Anthropic's `/init` to re-derive `CLAUDE.md`.
+- **`templates/skill-template.md`** — new "When to set `disable-model-invocation: true`" subsection codifying the rule (write-load-bearing-persistent-file → set the flag) and the new "CLAUDE.md `@import` syntax" subsection documenting the Anthropic Apr 2026 import feature, with explicit guidance that this template's CLAUDE.md deliberately does NOT use it (under-150-line CLAUDE.md is better monolithic).
+- **`.claude/skills/data-analysis/SKILL.md`**, **`.claude/skills/audit-reproducibility/SKILL.md`** — new "Long-running fits / batch reruns: use the Monitor tool" subsections. Document the background-launch + Monitor pattern for jobs that take more than a couple of minutes.
+
+### Surface-sync
+
+- Skills 28 → 30 (`/checkpoint`, `/preregister`). Agents unchanged at 14. Rules unchanged at 24. Hooks unchanged at 6. Counts updated across all 6 monitored surfaces (README, CLAUDE.md, guide `.qmd` + rendered `.html`, `docs/index.html`, `docs/workflow-guide.html`, `templates/skill-template.md`). `scripts/check-surface-sync.sh` clean; `scripts/check-skill-integrity.py` clean. Guide re-rendered with Quarto 1.8.x; `docs/workflow-guide.html` synced.
+
+### Attribution
+
+`/checkpoint` shape: adapted from Hugo Sant'Anna's [clo-author v4.2.0](https://github.com/hugosantanna/clo-author) with permission. Attribution header on `.claude/skills/checkpoint/SKILL.md`.
+
+---
+
+### Pre-v1.8.0 infrastructure (folded into this release)
+
+Two themes that landed in the working tree before the v1.8.0 capability work: audit-hardening (mechanical parity checks + living pet-peeves catalogue that close classes of bug the agent-based `/deep-audit` was missing) and selective incorporation of Claude Code Apr 2026 features (Routines for AFK scheduling, PreCompact blocking, `/less-permission-prompts` as a sibling to our `/permission-check`).
 
 ### Added — mechanical integrity checks
 
@@ -414,4 +467,4 @@ git merge upstream/main           # or: git rebase upstream/main
 
 Files you almost certainly customized — `CLAUDE.md`, `Bibliography_base.bib`, `Quarto/theme-template.scss`, your lecture files in `Slides/` and `Quarto/`, `.claude/agents/domain-reviewer.md` — may produce merge conflicts. Resolve in favor of your customizations; pull only the infrastructure improvements.
 
-To pin to a specific version: `git checkout v1.6.0` (latest as of 2026-04-15).
+To pin to a specific version: `git checkout v1.8.0` (latest as of 2026-04-27).

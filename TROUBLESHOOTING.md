@@ -85,7 +85,7 @@ The palette contract broke. Run `./scripts/check-palette-sync.sh` — it reports
 
 You ran `03_analyze.R` directly instead of `00_run_all.R`. Re-run `00_run_all.R` (e.g. via the `/data-analysis` skill or your usual pipeline runner) — that entrypoint writes the session snapshot as its last step.
 
-## Permissions / bypass / statusline (v1.6.0)
+## Permissions / bypass / statusline (v1.6.0 / v1.8.0)
 
 ### "Prompts fire despite `bypassPermissions`"
 
@@ -102,6 +102,24 @@ If `/permission-check` confirms your config is permissive but you're still being
 ### Statusline shows `[UNKNOWN]` or blank
 
 Session JSON parse failure. Check `.claude/scripts/statusline.sh` is executable (`chmod +x`) and that `python3` is on `PATH`. Fallback output is `[?] <model> @ <pwd>` — if you see that, the hook caught a malformed session file. Restart Claude Code.
+
+### Bypass mode still prompts on edits to `.claude/`, `.git/`, `.vscode/` (v1.8.0)
+
+This is **not a bug.** Per Anthropic's [permission-modes docs](https://code.claude.com/docs/en/permission-modes), a small set of paths are *protected* and never auto-approved in any mode except `auto`. The protected list as of Apr 2026:
+
+- Directories: `.git`, `.vscode`, `.idea`, `.husky`, `.claude` (carve-outs: `.claude/commands`, `.claude/agents`, `.claude/skills`, `.claude/worktrees` — these *do* auto-approve under bypass).
+- Files: `.gitconfig`, `.gitmodules`, `.bashrc`, `.bash_profile`, `.zshrc`, `.zprofile`, `.profile`, `.ripgreprc`, `.mcp.json`, `.claude.json`.
+
+So edits to `.claude/references/`, `.claude/rules/`, `.claude/hooks/`, `.claude/scripts/` will always prompt under bypass. The only mode that doesn't fire an interactive prompt on protected paths is **auto mode** (Anthropic's Mar 2026 Week 13 release) — protected-path writes route through a classifier model instead. The classifier is still a gate (it can block) — it's just not human-in-the-loop, so you don't get the click-through interruption. Auto mode requires Max / Team / Enterprise / API plan + Sonnet 4.6, Opus 4.6, or Opus 4.7 + Anthropic API provider; toggle visibility in the VSCode mode dropdown by setting `allowDangerouslySkipPermissions: true` in `.vscode/settings.json` and reloading the window.
+
+If you're stuck on bypass and don't qualify for auto mode, two workarounds:
+
+1. **Edit through the Bash tool** — `python3 -c '...'` or `python3 << EOF ... EOF` heredoc patterns can write to `.claude/references/` etc. without firing the protected-paths gate, because Bash isn't subject to it the same way Edit is. Useful for batch refactors.
+2. **Move the edit out of `.claude/`** when possible — keep field-customization content under `templates/` or root-level documentation that's not protected.
+
+### `.vscode/settings.json` — `claudeCode.allowDangerouslySkipPermissions` is the wrong key (v1.8.0)
+
+The Claude Code VSCode extension expects **`allowDangerouslySkipPermissions: true`** (no `claudeCode.` prefix). The prefixed form `claudeCode.allowDangerouslySkipPermissions` is silently ignored, leaving the protected-paths gate active even with broad CLI bypass. Fix: drop the `claudeCode.` prefix on that one key (`claudeCode.initialPermissionMode` keeps its prefix). Reload the VSCode window after editing `.vscode/settings.json` for the change to register.
 
 ## Peer-review pipeline (v1.5.0)
 

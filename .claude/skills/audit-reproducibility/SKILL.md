@@ -2,7 +2,7 @@
 name: audit-reproducibility
 description: Enforce the replication-protocol.md rule by cross-checking numeric claims in a manuscript against the actual R / Stata / Python outputs. Report PASS/FAIL per claim against tolerance thresholds. Use before submission and before releasing a replication package.
 argument-hint: "[manuscript path] [outputs-dir] (outputs-dir defaults to scripts/R/_outputs/)"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash", "Task"]
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash", "Task", "Monitor"]
 effort: high
 ---
 
@@ -164,3 +164,7 @@ Write `quality_reports/reproducibility_audit_[manuscript-name].md`:
 - **Re-run your analysis.** The skill compares CURRENT outputs against manuscript claims. If the outputs are stale, re-run your pipeline first (the pre-flight phase will warn).
 - **Catch wrong specifications.** A regression that compiles cleanly and produces a reproducible `-1.632` is reproducible. Whether `-1.632` is the RIGHT estimand is a `review-paper` / domain-reviewer question.
 - **Check external package versions.** The `sessionInfo.txt` capture lets a reviewer see the env; pinning versions is on the user (via `renv.lock` or a `DESCRIPTION` file).
+
+## Long batch reruns: use the Monitor tool (Apr 2026)
+
+When `/audit-reproducibility` is asked to verify *all* numeric claims in a paper, the safest approach is to re-run the full pipeline (`00_run_all.R` or equivalent) and compare the regenerated outputs to the manuscript values. For pipelines that take more than a couple of minutes, background-launch the rerun and use Anthropic's **Monitor tool** (Apr 2026 Week 15) to stream stdout. The audit can react to errors mid-stream rather than waiting for the entire pipeline to finish before noticing a failed step.
