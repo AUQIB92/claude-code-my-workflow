@@ -49,6 +49,8 @@ The [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.ht
 
 **What this does:** Claude reads all the configuration files, fills in your project name, institution, and preferences, then enters contractor mode — planning, implementing, and (within the skill you invoke) running the review + verify loop. You approve the plan, invoke a skill, and the skill handles the rest within its scope.
 
+> **Heavily adapting CLAUDE.md for a non-academic project?** Anthropic's built-in `/init` command will re-derive a `CLAUDE.md` from your codebase as a starting point. The pre-shipped CLAUDE.md in this template already covers the academic setup — you only need `/init` if your fork diverges substantially (e.g., a Python/ML project that doesn't use LaTeX or Quarto).
+
 ### 3. Verify Your Setup
 
 Before building real lectures, confirm your environment works:
@@ -150,7 +152,7 @@ The guide covers Claude Code's latest capabilities:
 ## What's Included
 
 <details>
-<summary><strong>14 agents, 28 skills, 24 rules, 6 hooks</strong> (click to expand)</summary>
+<summary><strong>14 agents, 30 skills, 24 rules, 6 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -198,6 +200,8 @@ The guide covers Claude Code's latest capabilities:
 | `/new-diagram` | Scaffold a TikZ diagram from the snippet gallery with prevention + review |
 | `/respond-to-referees` | R&R response-letter generator (maps referee comments to revisions) |
 | `/seven-pass-review` | Seven-pass adversarial manuscript review (parallel forked subagents) |
+| `/checkpoint` | Structured session-handoff snapshot (state + plan pointers + next actions). Companion to narrative session logs. |
+| `/preregister` | Generate a preregistration document (OSF / AsPredicted / AEA RCT Registry style) from a research spec |
 
 ### Research Workflow
 
@@ -325,7 +329,7 @@ See the [guide's ecosystem section](https://psantanna.com/claude-code-my-workflo
 
 - **What's new:** see [CHANGELOG.md](CHANGELOG.md). We follow loose semver — breaking changes get major bumps so you can decide when to pull updates.
 - **How to contribute:** see [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md). PRs welcome for generalizable improvements; fork-specific work stays in your fork.
-- **Pin to a version:** `git checkout v1.3.0` (current as of 2026-04-13).
+- **Pin to a version:** `git checkout v1.8.0` (current as of 2026-04-27).
 
 ---
 

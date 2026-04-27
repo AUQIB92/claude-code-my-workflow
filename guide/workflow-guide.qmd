@@ -2,7 +2,7 @@
 title: "My Claude Code Setup"
 subtitle: "A Comprehensive Guide to AI-Assisted Academic Workflows: Slides, Papers, Analysis, and Beyond"
 author: "Pedro H. C. Sant'Anna"
-date: "2026-04-15"
+date: "2026-04-27"
 date-modified: last-modified
 format:
   html:
@@ -153,13 +153,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 14 agents, 28 skills, and 24 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 14 agents, 30 skills, and 24 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 14 agents, 28 skills, 24 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 14 agents, 30 skills, 24 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -421,6 +421,14 @@ APPROVED   NEEDS WORK
 In Econ 730 Lecture 6, the critic caught that the Quarto version used `\cdots` (a placeholder) where the Beamer version had the full Hajek weight formula. The fixer replaced it. On re-audit, the critic found 8 more instances of missing `(X)` arguments on outcome models. After 4 rounds, the Quarto slides matched the Beamer source exactly.
 :::
 
+::: {.callout-note}
+## Closing the visual loop with Computer Use (research preview, Apr 2026)
+
+The critic-fixer loop above is text-only — it compares LaTeX source to Quarto source. It can't see the *rendered* slides. Anthropic's **Computer Use** (research preview, Mar/Apr 2026 Week 14) lets Claude open a PDF/HTML in a real viewer, click through, and verify visually. If you want closed-loop visual QA — "does the rendered slide actually look right?" — Computer Use closes the gap.
+
+Optional, not required: `/qa-quarto` and `/visual-audit` already catch most issues without it. Treat Computer Use as an extra rung when text-level audits aren't enough (e.g., suspecting a TikZ render glitch that the source code looks fine for).
+:::
+
 ## The Orchestrator: A Pattern, Not a Daemon
 
 Individual agents are specialists. Skills like `/slide-excellence` and `/qa-quarto` coordinate a few agents for specific tasks. In day-to-day work, you don't have to think about which agents to run — the right skill runs the right agents for you.
@@ -653,7 +661,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 28: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 30: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -805,7 +813,8 @@ Use `maxTurns` to prevent review agents from looping indefinitely, and `tools` t
 | **Auto-accept edits** | `acceptEdits` | Auto-approves file edits | Trusted batch operations (rename across 20 files) |
 | **Don't ask** | `dontAsk` | Auto-denies tools unless pre-approved in allowlist | Restricted environments where only allowlisted tools run |
 | **Plan** | `plan` | Read-only --- no edits allowed | Exploring code, reviewing before acting |
-| **Bypass** | `bypassPermissions` | Skips all permission prompts | CI/CD pipelines, headless scripts (still blocks `.git/`) |
+| **Auto** | `auto` | Classifier-gated; everything runs unless flagged risky (Mar 2026 Week 13) | Long autonomous tasks with safety net --- the recommended mode for trusted repos when bypass is too permissive |
+| **Bypass** | `bypassPermissions` | Skips all permission prompts | CI/CD pipelines, headless scripts (still prompts on protected paths: `.git`, `.vscode`, `.idea`, `.husky`, `.claude` minus carve-outs `commands`/`agents`/`skills`/`worktrees`) |
 
 Set via CLI flag (`claude --permission-mode plan`), the `/config` command, or `permissions.defaultMode` in `settings.json`.
 
@@ -876,6 +885,26 @@ Orchestrator executes the plan end-to-end --- no prompts.
 - Fits cleanly with the plan-first rule enforced by this repo.
 
 **Prerequisite:** your `defaultMode` must be `bypassPermissions` in at least one CLI layer (typically the project or project-local layer). Without that, exiting plan mode returns you to `default` and you're back to per-tool prompts.
+
+### Session Management {#sec-session-management}
+
+A handful of recent Mar–Apr 2026 commands cut friction in the actual editing loop. Worth knowing before you reach for them in a panic:
+
+| Command / shortcut | What it does | When to reach for it |
+|---|---|---|
+| `/btw <question>` | Asks a side question whose answer appears in a dismissible overlay --- never enters conversation history | Quick "what does X do?" / "is this version compatible?" questions you don't want bloating context |
+| `Esc Esc` or `/rewind` | Opens the rewind menu --- restore conversation, code, or both to a prior checkpoint | Tried something risky, want to undo cleanly without `git reset` (checkpoints are NOT git --- only Claude-made changes are tracked) |
+| `/clear` | Resets the conversation context entirely | Switching to an unrelated task; long session with cluttered context |
+| `/compact <instruction>` | Guided summarization of the current conversation | "Compact, focusing on the API changes" --- selective preservation before continuing on the same task |
+| `Ctrl+G` (in plan mode) | Opens the in-progress plan file in `$EDITOR` for direct editing before approval | You want to surgically tweak the plan without typing instructions back to Claude |
+| `claude --continue` / `claude --resume` | Resume the most recent conversation (`--continue`) or pick from recent (`--resume`); rename with `/rename` | Picking up a multi-day project --- treat sessions like branches |
+| `/checkpoint <slug>` | Writes a structured state snapshot to `quality_reports/checkpoints/` (this template, not Anthropic's) | Before stopping or handing off --- companion to the narrative session log |
+
+**Three patterns that compose well:**
+
+- **Side question without polluting context:** `` /btw why does Quarto need ::: for callouts? `` --- get the answer, dismiss, keep working.
+- **Long session, want to switch tasks:** `/checkpoint current-work` then `/clear` then start the new task. Resume the first with `claude --resume`.
+- **Plan mid-edit:** During plan mode, `Ctrl+G` to edit the plan file directly --- faster than dictating revisions back to Claude.
 
 ::: {.callout-warning}
 ## Plans Directory
@@ -1453,6 +1482,10 @@ You can also request parallelism explicitly:
 
 Either way, Claude spawns up to 3 Task agents, each processing one paper simultaneously, then synthesizes the results.
 
+#### Long-running tasks: the Monitor tool (Apr 2026)
+
+For genuinely long jobs --- a 30-minute R fit, a `/audit-reproducibility` batch over many tables, a Quarto render of a 200-slide deck --- the **Monitor tool** (Apr 2026 Week 15) lets Claude tail a background process's stdout in real time and react when something interesting happens. The pattern: launch the long job in the background (Bash with `run_in_background: true`), then ask Claude to monitor until a condition fires (error, milestone, finish). No polling loop, no sleep cycles. Useful inside `/data-analysis` for the regression step and inside `/audit-reproducibility` when re-running the whole script suite.
+
 #### Agent Debates
 
 A powerful variant: give each parallel agent a **distinct methodological perspective** and have them argue. Instead of asking "which estimator should I use?", spawn 3 agents --- one advocates for DiD, one for synthetic control, one for RDD --- each arguing why their approach fits your research question best and critiquing the others. Synthesize the debate into a decision matrix. This produces genuinely diverse perspectives that a single conversation cannot, because each agent commits fully to its position.
@@ -1984,6 +2017,19 @@ A collection of Claude Code personas, including "The Editor" --- a deeply struct
 
 **When to use it:** You want a structured pre-submission paper review, or you're responding to referee reports and need systematic tracking of which concerns have been addressed.
 
+## Anthropic-Shipped Apr 2026 Utilities
+
+These are first-party Claude Code commands you can invoke directly without forking anything. Worth knowing because they fill gaps this template intentionally doesn't try to fill:
+
+- **`/team-onboarding`** (Week 15) --- packages your local Claude Code setup (CLAUDE.md, skills, agents, hooks, settings) into a replayable guide. Useful for lab groups: a PI configures the workflow once, the rest of the lab runs `/team-onboarding` and inherits a working copy. Complements but doesn't replace this template's "fork + customize" model.
+- **`/autofix-pr`** (Week 15) --- runs Claude Code on a GitHub PR, applying typical CI-style fixes (lint, types, simple test failures). Pairs well with our `/commit` flow if you push a PR and want a follow-up auto-cleanup pass before review.
+- **`/powerup`** (Mar/Apr 2026 Week 14) --- interactive lessons that teach Claude Code features (hooks, skills, MCP, plugins) with animated demos. Recommend this to new forkers who want to understand the *primitives* underneath the template's customizations.
+- **Ultraplan** (Week 15) --- draft a plan in the cloud from your CLI, review and comment on it in a web editor, then run it remotely or pull it back local. Useful for plans that need stakeholder review (e.g., a co-author signing off on an analysis approach before the actual run).
+- **`/loop` self-pacing** (Apr 2026 Week 15) --- run a prompt or slash command on a recurring interval, or omit the interval to let the model self-pace until a stopping condition is met. Useful for status-polling tasks ("check the deploy every 5 minutes") that pair with the Monitor tool above.
+- **`/less-permission-prompts`** (Mar 2026) --- scans recent transcripts for read-only Bash and MCP calls and proposes a project-local allowlist. Sibling to our `/permission-check`: `/permission-check` *diagnoses* the prompt-fatigue source, `/less-permission-prompts` *remediates* it.
+
+These are external to this template --- invoke directly, no installation needed. Mention them as off-ramps when this template's scope doesn't fit.
+
 ## Community Adoption {#sec-community}
 
 As of March 2026, **15+ research groups** across multiple disciplines have forked and adapted this workflow for their own projects:
@@ -2300,6 +2346,9 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Verifier | `.claude/agents/verifier.md` | Task completion verification |
 | Domain Reviewer | `.claude/agents/domain-reviewer.md` | Your domain-specific review |
 | Claim Verifier | `.claude/agents/claim-verifier.md` | Chain-of-Verification (fresh-context) fact-checker (v1.7.0) |
+| Editor | `.claude/agents/editor.md` | Journal editor for `/review-paper --peer` (desk review + referee selection + editorial synthesis, v1.5.0) |
+| Domain Referee | `.claude/agents/domain-referee.md` | Disposition-primed substance referee for `/review-paper --peer` (v1.5.0) |
+| Methods Referee | `.claude/agents/methods-referee.md` | Paper-type-aware methodology referee for `/review-paper --peer` (v1.5.0; +formal-theory + survey-experiment in v1.8.0) |
 
 ## All Skills
 
@@ -2333,6 +2382,8 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/seven-pass-review` | `.claude/skills/seven-pass-review/` | Seven-pass adversarial manuscript review (parallel forked subagents) |
 | `/permission-check` | `.claude/skills/permission-check/` | Diagnose permission layers (6-tier stack) |
 | `/verify-claims` | `.claude/skills/verify-claims/` | Chain-of-Verification fact-check on any draft (v1.7.0) |
+| `/checkpoint` | `.claude/skills/checkpoint/` | Structured session-handoff snapshot — companion to narrative session logs (v1.8.0) |
+| `/preregister` | `.claude/skills/preregister/` | Generate a preregistration document (OSF / AsPredicted / AEA RCT Registry) from a research spec (v1.8.0) |
 
 ## All Rules
 
