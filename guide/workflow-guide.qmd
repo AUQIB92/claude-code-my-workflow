@@ -54,7 +54,7 @@ Claude Code runs on your computer with full access to your file system, terminal
 | Access git history | Commits, PRs, branches --- all from the conversation |
 | Persistent memory | CLAUDE.md + MEMORY.md survive across sessions |
 | Orchestrator pattern | Specific skills (`/qa-quarto`, `/review-paper --adversarial`, `/create-lecture`, …) run a 6-step verify-review-fix-score loop internally |
-| Multi-agent workflows | 14 specialized agents for proofreading, layout, pedagogy, code review, fact-checking |
+| Multi-agent workflows | 15 specialized agents for proofreading, layout, pedagogy, code review, fact-checking, AI-voice auditing |
 | Quality review | Advisory scoring inside `/commit` (halt + ask to override); targets: 80 commit, 90 PR, 95 excellence |
 | CLI/headless mode | Run from scripts: `claude -p "compile all lectures"` |
 | Browser bridge | Continue sessions on your phone via `/remote-control` |
@@ -155,13 +155,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 14 agents, 30 skills, and 24 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 15 agents, 31 skills, and 24 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 14 agents, 30 skills, 24 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 15 agents, 31 skills, 24 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -665,7 +665,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 30: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 31: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -2548,6 +2548,7 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Editor | `.claude/agents/editor.md` | Journal editor for `/review-paper --peer` (desk review + referee selection + editorial synthesis, v1.5.0) |
 | Domain Referee | `.claude/agents/domain-referee.md` | Disposition-primed substance referee for `/review-paper --peer` (v1.5.0) |
 | Methods Referee | `.claude/agents/methods-referee.md` | Paper-type-aware methodology referee for `/review-paper --peer` (v1.5.0; +formal-theory + survey-experiment in v1.8.0) |
+| Humanize Auditor | `.claude/agents/humanize-auditor.md` | Read-only auditor for AI-voice tells in academic prose; invoked by `/humanize` (v1.9.0) |
 
 ## All Skills
 
@@ -2583,6 +2584,7 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/verify-claims` | `.claude/skills/verify-claims/` | Chain-of-Verification fact-check on any draft (v1.7.0) |
 | `/checkpoint` | `.claude/skills/checkpoint/` | Structured session-handoff snapshot — companion to narrative session logs (v1.8.0) |
 | `/preregister` | `.claude/skills/preregister/` | Generate a preregistration document (OSF / AsPredicted / AEA RCT Registry) from a research spec (v1.8.0) |
+| `/humanize` | `.claude/skills/humanize/` | Detect AI-voice tells in academic prose (read-only audit; no rewrite) (v1.9.0) |
 
 ## All Rules
 
