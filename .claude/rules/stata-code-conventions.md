@@ -170,7 +170,7 @@ The [AEA Data Editor checklist](https://aeadataeditor.github.io/) requires:
 
 - [`/stata-replication`](../skills/stata-replication/SKILL.md) is the analogue of `/data-analysis` for Stata. It emits .do files conforming to this convention.
 - [`/audit-reproducibility`](../skills/audit-reproducibility/SKILL.md) handles Stata `.dta` outputs alongside R `.rds` (via `haven` or `pyreadstat`).
-- [`/review-r`](../skills/review-r/SKILL.md) is R-specific; a Stata-equivalent is on the v1.9-backlog.
+- [`/review-r`](../skills/review-r/SKILL.md) is R-specific; a Stata-equivalent is on the v2.0-backlog.
 
 ## Cross-references
 
