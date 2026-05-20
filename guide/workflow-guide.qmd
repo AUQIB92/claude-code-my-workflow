@@ -481,13 +481,15 @@ The template includes `domain-reviewer.md` --- a skeleton for building a substan
 
 Every domain can benefit from these five review lenses:
 
-| Lens | What It Checks | Example (Economics) | Example (Physics) |
-|------|---------------|--------------------|--------------------|
-| **Assumption Audit** | Are stated assumptions sufficient? | Is overlap required for ATT? | Is the adiabatic approximation valid here? |
-| **Derivation Check** | Does the math check out? | Do decomposition terms sum? | Do the units balance? |
-| **Citation Fidelity** | Do slides match cited papers? | Is the theorem from the right paper? | Is the experimental setup correctly described? |
-| **Code-Theory Alignment** | Does code implement the formula? | R script matches the slide equation? | Simulation parameters match theory? |
-| **Logic Chain** | Does the reasoning flow? | Can a PhD student follow backwards? | Are prerequisites established? |
+| Lens | What It Checks | Example (Economics) | Example (Political Science) | Example (Physics) |
+|------|---------------|--------------------|--------------------|--------------------|
+| **Assumption Audit** | Are stated assumptions sufficient? | Is overlap required for ATT? | Is ignorability defensible given the observed covariates? | Is the adiabatic approximation valid here? |
+| **Derivation Check** | Does the math check out? | Do decomposition terms sum? | Do conjoint AMCEs identify under Hainmueller–Hopkins–Yamamoto assumptions? | Do the units balance? |
+| **Citation Fidelity** | Do slides match cited papers? | Is the theorem from the right paper? | Is the manipulation-check threshold cited from the original validation study? | Is the experimental setup correctly described? |
+| **Code-Theory Alignment** | Does code implement the formula? | R script matches the slide equation? | `cjoint`/`survey::svyglm` weights match the design? | Simulation parameters match theory? |
+| **Logic Chain** | Does the reasoning flow? | Can a PhD student follow backwards? | Does the causal claim survive the standard counterfactual challenge? | Are prerequisites established? |
+
+The template ships **two concrete domain-reviewer customizations** in `.claude/agents/domain-reviewer.md`: an econometrics example (assumptions, identification, R/Stata code-theory alignment) and a political-science example (ignorability, conjoint AMCEs, `cjoint`/`survey` package defaults). Both follow the 5-lens structure; either is a viable starting point for your own field.
 
 To customize, open `.claude/agents/domain-reviewer.md` and fill in:
 
@@ -785,6 +787,44 @@ tools: ["Read", "Grep", "Glob"]
 ```
 
 Use `maxTurns` to prevent review agents from looping indefinitely, and `tools` to enforce read-only behavior for agents that should only produce reports.
+
+### Cost-Conscious Composition: Caching, Routing, and Diagnostics {#sec-cost}
+
+Cost is invisible until you look at the monthly invoice. Three levers, in order of impact:
+
+**1. Prompt caching.** Anthropic's prompt cache lets repeated prefix tokens (system prompt, CLAUDE.md, large context blobs) hit a cached path at a fraction of the input price. Two things forkers should know:
+
+- **The default TTL dropped from 60 min to 5 min** in early 2026. A long `/review-paper --peer` pipeline that took 12 minutes between turns now starts the second turn with a cold cache. For long pipelines on API / Bedrock / Vertex / Foundry plans, the opt-in `ENABLE_PROMPT_CACHING_1H` environment variable restores 1-hour TTL.
+- **`cache_miss_reason`** (Anthropic public beta, 2026-05-13) is now exposed on Messages requests. Use it to diagnose why a long-running pipeline isn't getting cache hits (most often: a hook injected a timestamp that broke the prefix; or system-prompt drift between turns).
+
+The Apr 2026 [TTL change cost analysis](https://dev.to/whoffagents/claude-prompt-caching-in-2026-the-5-minute-ttl-change-thats-costing-you-money-4363) estimates a 30–60% effective cost increase for long-running pipelines that don't opt into the 1-hour TTL. Worth a Saturday hour to instrument your most expensive skill (`/review-paper --peer` is typically the worst offender).
+
+**2. Per-agent model routing.** The Multi-Model Strategy table above lists the principle; the **70/20/10 pattern** is the operational form:
+
+| Model | Share of subagent calls | Use for |
+|---|---|---|
+| **Haiku 4.5** | ~70% | Mechanical work: TikZ extraction, citation reformatting, bib validation, proofread fixes, simple file lookups |
+| **Sonnet 4.6** | ~20% | Review and critique: r-reviewer, slide-auditor, proofreader, quarto-fixer |
+| **Opus 4.7** | ~10% | High-judgment work: editor, domain-referee, methods-referee, claim-verifier, manuscript review |
+
+Set per-agent via `model:` in `.claude/agents/<name>.md` frontmatter. Typical savings vs. all-Opus: **50–80% on routed skills**, no quality loss on the mechanical tier. The community-converged ratio is documented in [Augment Code's routing data](https://augmentcode.com) and aligns with Aider's architect/editor split; we cite Anthropic's [Apr 8 2026 "Decoupling brain from hands"](https://www.anthropic.com/engineering) as the primary-source endorsement of the pattern.
+
+**3. Effort budgeting.** The Effort Levels section earlier covered the `low | medium | high | xhigh | max` ladder. The cost-conscious rule: **reach for `xhigh` on Opus 4.7 coding only when you've already verified the cheaper tier failed**. Default to `medium`; bump to `high` for paper-level judgment; `xhigh` for the hard `/review-paper` runs or substantial refactors.
+
+::: {.callout-tip}
+## Monitoring: `/cost` and `/usage`
+
+- **`/cost`** (Apr 2026 Week 15) — current session breakdown by model and cache hit-rate.
+- **`/usage`** (Apr 2026 Week 16) — month-to-date totals + per-plan-tier remaining quota.
+
+Run `/cost` after any `/review-paper --peer` pipeline. If your cache hit-rate is under 60% for the second/third turn, you're almost certainly being bitten by the 5-min TTL.
+:::
+
+::: {.callout-warning}
+## Agent SDK credit-pool split — 2026-06-15
+
+Starting 2026-06-15, `claude -p` headless subprocess calls (used by `/coarse-review` and any script that calls Claude Code in `-p` mode) draw from a **separate monthly Agent SDK credit pool**, decoupled from interactive credits. If `/coarse-review` starts failing after the cutover with credit-exhaustion errors even though your interactive session works, the Agent SDK pool is what's empty. See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for the migration details.
+:::
 
 ## Settings --- Permissions and Hooks {#settings---permissions-and-hooks}
 
@@ -1594,6 +1634,25 @@ Five skills support the research workflow beyond slide development:
 
 These skills produce structured reports saved to `quality_reports/`. The `/data-analysis` skill also generates R scripts (saved to `scripts/R/`) and runs the r-reviewer agent automatically.
 
+::: {.callout-note}
+## `/review-paper --peer [journal]` — simulated peer review pipeline
+
+For submission-ready manuscripts, `/review-paper --peer <journal>` runs an **editor + two dispositioned referees + editorial decision**, calibrated to the target journal. Editor calibration reads `.claude/references/journal-profiles.md`; the template ships profiles for **AER, QJE, JPE, ECMA, JoE** (econ) and **APSR, AJPS, JOP** (poli-sci). Other fields: add a profile, ~40 lines each.
+
+The methods-referee is **paper-type-aware** — the same skill picks different sanity checks based on what kind of paper this is:
+
+| Paper type | Methods-referee tilts toward | Sanity checks include |
+|---|---|---|
+| `reduced-form` | identification credibility, parallel-trends defence, robustness range | DiD pre-trends, IV first-stage, overlap, balance |
+| `structural` | model identification, counterfactual credibility, fit | moment-matching, sensitivity to functional form, out-of-sample |
+| `theory+empirics` | model-data correspondence | does the empirical estimand identify the theoretical object? |
+| `descriptive` | measurement validity, generalisability | sampling frame, missingness, comparator choice |
+| `formal-theory` (v1.8.0) | model originality, comparative-static sharpness | equilibrium existence, assumption tractability, robustness to relaxation |
+| `survey-experiment` (v1.8.0) | design, sampling, attrition + manipulation checks | balance, manipulation-check pass rate, attrition asymmetry, sampling-frame validity |
+
+R&R continuation is built in: `--r2` / `--r3` for response-to-referees rounds; `--stress` for a hostile-editor stress test. See `.claude/references/discipline-cards.md` for econ + poli-sci defaults (paper-type frequency, dominant journals, preregistration norms, code conventions). Forkers extend for psych / sociology / public-health.
+:::
+
 #### The Research Lifecycle as a Dependency Graph
 
 A research project is not a waterfall --- it is a **dependency graph**. Some phases run in parallel; others are strictly sequential:
@@ -2085,6 +2144,19 @@ Each adaptation follows the same pattern: fork the template, fill in `CLAUDE.md`
 ---
 
 # Customizing for Your Domain {#sec-customize}
+
+::: {.callout-tip}
+## What ships preloaded vs. what you customize
+
+Two disciplines are already concrete in this template:
+
+- **Economics** --- top-4 + top-field journal profiles (AER, QJE, JPE, ECMA, JoE), R-centric `r-code-conventions.md`, econometrics example in domain-reviewer.md.
+- **Political Science** --- APSR, AJPS, JOP journal profiles (v1.8.0), `formal-theory` + `survey-experiment` paper types in methods-referee, poli-sci example in domain-reviewer.md.
+
+Both fields are wired into `.claude/references/discipline-cards.md`, which `/research-ideation`, `/interview-me`, `/preregister`, and the editor agent read when you give them a discipline without a target journal. Cards document paper-type frequency, dominant journals, preregistration norms (OSF / AsPredicted / AEA RCT / ClinicalTrials.gov), significance-stars conventions, SE conventions, and dominant code language (R / Stata / Python).
+
+**Forking for psych, sociology, public health, or other fields:** add ~3 journal profiles, 2–3 paper types, 1 discipline card. The infrastructure (orchestrator, hooks, quality gates, peer-review pipeline) is field-agnostic and transfers without modification. The v1.9 backlog (`.claude/references/v1.9-backlog.md`) lists psychology, sociology, and public-health as candidate next breadth additions.
+:::
 
 ## Step 1: Build Your Knowledge Base
 
