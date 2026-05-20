@@ -6,6 +6,48 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## v1.9.0 (in progress) — 2026-05-20
+
+A **guide-refresh + ecosystem catch-up** minor release. Pass 1 of five lands in this commit: eight mechanical corrections that bring the guide in line with Anthropic shipments through May 2026 (Weeks 17–20), reframe three lingering "automatic orchestrator" mentions, refresh the clo-author citation to its current MAS v2 architecture, and add a Models / API section to TROUBLESHOOTING covering the 2026-06-15 Sonnet 4 + Opus 4 retirement and the Agent SDK credit-pool split that ships the same day. No new skills, agents, rules, or hooks. No breaking changes. On-disk inventory unchanged.
+
+Full plan with all five passes (B/C/D/E/F/G/H/I/J/K/L/M/N + Stata expansion) at `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only; not tracked in git per the standard `quality_reports/plans/*` ignore rule).
+
+### Fixed
+
+- **`guide/workflow-guide.qmd` + `TROUBLESHOOTING.md` + `CHANGELOG.md`** — `/less-permission-prompts` → `/fewer-permission-prompts`. Verified against Anthropic's [Week 16 changelog](https://code.claude.com/docs/en/whats-new/2026-w16) and Boris Cherny's launch announcement: the skill shipped under `/fewer-permission-prompts` from day one. The previous template name was a typo, not a rename — historical-changelog wording rewritten for accuracy.
+- **`guide/workflow-guide.qmd:46–157`** — three lingering framings of orchestration as automatic ("Claude automatically: → Runs X, → Runs Y...") rewritten to name the invoked skill explicitly ("Claude invokes `/slide-excellence`, which internally..."). Reinforces the [orchestrator-protocol rule](.claude/rules/orchestrator-protocol.md) — there is no repo-wide daemon; orchestration lives inside the invoked skill.
+
+### Added — Anthropic shipments since 2026-04-27
+
+- **Model lineup callout** (Multi-Model Strategy section) — documents Opus 4.7 as the Max/Team Premium default (GA 2026-04-16, same pricing as 4.6: \$5/\$25 per MTok), Sonnet 4.6 as workhorse (1M context still available; the 4.5 1M beta retired 2026-04-30), Haiku 4.5 as the fast tier. Sources: [Opus 4.7 announcement](https://www.anthropic.com/news/claude-opus-4-7), [Platform release notes](https://platform.claude.com/docs/en/release-notes/overview).
+- **`xhigh` effort level** (Effort Levels table + How-to-set list) — introduced Week 16 (Apr 13–17, v2.1.105–113); recommended for Opus 4.7 coding work. Bare `/effort` now opens an interactive slider. Hooks see `effort.level` and `$CLAUDE_EFFORT` is set in Bash subprocess env (Week 19).
+- **Auto mode flag retirement** (Permission Modes table) — `--enable-auto-mode` no longer required for Max + Opus 4.7 users as of Week 16.
+- **`/goal <verifiable condition>`** (Session Management + Anthropic Utilities) — shipped Week 20, v2.1.139 (May 11). "Keep working until X holds" command, distinct from `/loop` (interval) and plan mode (strategy approval). Pairs with `/commit` quality gates. Source: [`docs.claude.com/en/goal`](https://code.claude.com/docs/en/goal).
+- **`claude agents` dashboard** (Cost-Conscious Parallelism + Anthropic Utilities) — also Week 20, v2.1.139. Single screen for all background sessions; aligned with the `/review-paper --peer` parallel-referee pattern.
+- **`/loop` alias `/proactive`** noted (Week 16).
+- **`worktree.baseRef` setting** (Pattern 12) — Week 19. New callout explains `fresh` (default; branch from remote default) vs `head` (branch from local HEAD). Surprises users with uncommitted in-flight edits — documented inline.
+
+### Added — TROUBLESHOOTING entries (Models and API section)
+
+- **Sonnet 4 / original Opus 4 retire 2026-06-15** — migration checklist covering `ANTHROPIC_MODEL` env, `.claude/settings.json` model overrides, agent frontmatter pins, and CI `claude -p --model` calls. Recommended replacements: Sonnet 4.6 and Opus 4.7 respectively.
+- **Agent SDK credit-pool split (2026-06-15)** — heads-up that `claude -p` headless subprocess calls (used by `/coarse-review` and any other `claude -p`-based skill) draw from a separate monthly Agent SDK credit pool after the cutover. Anthropic posts cited: [Apr 8 "Decoupling Brain from Hands"](https://www.anthropic.com/engineering), [Platform release notes](https://platform.claude.com/docs/en/release-notes/overview).
+
+### Changed — ecosystem references
+
+- **clo-author** (Ecosystem section) — new callout documenting v26.05 (2026-05-10): MAS v2 (second-generation multi-agent system), Skill-Centric Restructure (13 skills + 18 agents, up from 17), HTML Dashboard. The `/checkpoint` attribution to v4.2.0 remains accurate as historical record (that's where the pattern was adapted from); the callout makes clear that current forkers of clo-author get the MAS v2 / skill-centric layout.
+
+### Provenance
+
+This pass is the first slice of a research-grounded refresh. Four parallel research agents (Anthropic ecosystem, community repos, cross-vendor coding agents, internal guide audit) plus two verification agents (Anthropic claim verification, ARS source-code audit) ran on 2026-05-20. Findings, ranked recommendations, and source URLs are in `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only; not tracked in git per the standard `quality_reports/plans/*` ignore rule). Passes 2–5 add capability (B Cost & Caching section, C poli-sci breadth woven into guide body, D `/preregister` + `/checkpoint` patterns, E `/review-paper --variance N`, F `passport.yaml` claims provenance, G architect/editor cost-routing, H `/promote-memory` five-critic council, I HIGH-WARN claim-faithfulness blocking, J `/compress-session`, K SDK credit awareness, L Anthropic engineering-post citations, M `/prompt` port from Blattman, N `/humanize` detect-and-flag skill, plus Stata-MCP integration). All deferred to follow-up commits; nothing in this commit adds new on-disk infrastructure.
+
+### Verification
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts unchanged (30 skills / 14 agents / 24 rules / 6 hooks)
+- `./scripts/check-palette-sync.sh` — palette in sync
+- `./scripts/check-skill-integrity.py` — all checks pass
+
+---
+
 ## v1.8.0 — 2026-04-27
 
 A **disciplinary breadth + audit-hardening + Apr 2026 incorporation** minor release. The cycle landed in two passes: (1) infrastructure-only audit-hardening (mechanical parity checks via `check-skill-integrity.py`, living pet-peeves catalogue, PreCompact blocking, Routines awareness) and (2) capability work (two new skills `/checkpoint` and `/preregister`, political-science breadth via three journal profiles + two paper types + a discipline-cards reference, and Apr 2026 documentation: auto mode promotion, protected-paths gate explainer, session-management commands, Computer Use sidebar, Monitor tool integration, `disable-model-invocation` discipline). No breaking changes; counts updated across all monitored surfaces.
@@ -44,7 +86,7 @@ A **disciplinary breadth + audit-hardening + Apr 2026 incorporation** minor rele
 - **`guide/workflow-guide.qmd`** — added `auto` mode row to the permission-modes table; documented bypass mode's protected-path gate inline (`.git`, `.vscode`, `.idea`, `.husky`, `.claude` minus `commands/agents/skills/worktrees` carve-outs).
 - **`guide/workflow-guide.qmd`** — Computer Use callout in the Adversarial Pattern section (Apr 2026 Week 14, research preview, optional). Frames Computer Use as the *visual loop* extension when text-level `/qa-quarto` and `/visual-audit` aren't enough.
 - **`guide/workflow-guide.qmd`** — Monitor-tool subsection in "Cost-Conscious Parallelism" (Apr 2026 Week 15). Replaces polling-loop anti-pattern for long-running R fits, replication batch reruns, etc.
-- **`guide/workflow-guide.qmd`** — new "Anthropic-Shipped Apr 2026 Utilities" section in the ecosystem area: `/team-onboarding`, `/autofix-pr`, `/powerup`, Ultraplan, `/less-permission-prompts`. Framed as off-ramps when this template's scope doesn't fit.
+- **`guide/workflow-guide.qmd`** — new "Anthropic-Shipped Apr 2026 Utilities" section in the ecosystem area: `/team-onboarding`, `/autofix-pr`, `/powerup`, Ultraplan, `/fewer-permission-prompts`. Framed as off-ramps when this template's scope doesn't fit.
 - **`README.md`** — Quick Start callout pointing forkers heavily diverging from academic content at Anthropic's `/init` to re-derive `CLAUDE.md`.
 - **`templates/skill-template.md`** — new "When to set `disable-model-invocation: true`" subsection codifying the rule (write-load-bearing-persistent-file → set the flag) and the new "CLAUDE.md `@import` syntax" subsection documenting the Anthropic Apr 2026 import feature, with explicit guidance that this template's CLAUDE.md deliberately does NOT use it (under-150-line CLAUDE.md is better monolithic).
 - **`.claude/skills/data-analysis/SKILL.md`**, **`.claude/skills/audit-reproducibility/SKILL.md`** — new "Long-running fits / batch reruns: use the Monitor tool" subsections. Document the background-launch + Monitor pattern for jobs that take more than a couple of minutes.
@@ -61,7 +103,7 @@ A **disciplinary breadth + audit-hardening + Apr 2026 incorporation** minor rele
 
 ### Pre-v1.8.0 infrastructure (folded into this release)
 
-Two themes that landed in the working tree before the v1.8.0 capability work: audit-hardening (mechanical parity checks + living pet-peeves catalogue that close classes of bug the agent-based `/deep-audit` was missing) and selective incorporation of Claude Code Apr 2026 features (Routines for AFK scheduling, PreCompact blocking, `/less-permission-prompts` as a sibling to our `/permission-check`).
+Two themes that landed in the working tree before the v1.8.0 capability work: audit-hardening (mechanical parity checks + living pet-peeves catalogue that close classes of bug the agent-based `/deep-audit` was missing) and selective incorporation of Claude Code Apr 2026 features (Routines for AFK scheduling, PreCompact blocking, `/fewer-permission-prompts` as a sibling to our `/permission-check`).
 
 ### Added — mechanical integrity checks
 
@@ -88,7 +130,7 @@ Two themes that landed in the working tree before the v1.8.0 capability work: au
 - **PreCompact hook can now block compaction** (`.claude/hooks/pre-compact.py`). Opt-in via env var `CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1`: blocks once per DRAFT plan so the user can approve before losing mid-plan context. Uses the modern Claude Code block protocol (exit 0 + JSON `{"decision":"block","reason":"..."}` on stdout). Fires at most once per plan path — no lock-out loops. Default off; existing users get no change.
 - **MEMORY.md `[LEARN:scheduling]` + `[LEARN:hooks]`** capturing two lessons from Apr 2026: (a) `CronCreate` is session-only in practice — use Claude Code Routines (launched Apr 14) for any autonomous work that must survive session termination; (b) PreCompact hooks can now block, which is the right primitive for "don't lose this context."
 - **`.claude/references/audit-pet-peeves.md` entry 17** — don't use `CronCreate` for long-delay autonomous work; Routines is the right primitive.
-- **TROUBLESHOOTING.md scheduling section** — explains `CronCreate` vs Routines tradeoff (short-delay in-session vs AFK work on web infra) and documents the PreCompact blocking guard. Plus a pointer to the built-in `/less-permission-prompts` skill as a sibling to our `/permission-check` (diagnose with `/permission-check`, remediate with `/less-permission-prompts`).
+- **TROUBLESHOOTING.md scheduling section** — explains `CronCreate` vs Routines tradeoff (short-delay in-session vs AFK work on web infra) and documents the PreCompact blocking guard. Plus a pointer to the built-in `/fewer-permission-prompts` skill as a sibling to our `/permission-check` (diagnose with `/permission-check`, remediate with `/fewer-permission-prompts`).
 
 No stale model references audited — all 14 agents already use `model: inherit`, so they auto-adapt to Opus 4.7 / Sonnet 4.6 / Haiku 4.5 without changes.
 
