@@ -2385,6 +2385,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#how-scores-are-calculated" id="toc-how-scores-are-calculated" class="nav-link" data-scroll-target="#how-scores-are-calculated"><span class="header-section-number">3.4.1</span> How Scores Are Calculated</a></li>
   <li><a href="#mandatory-verification" id="toc-mandatory-verification" class="nav-link" data-scroll-target="#mandatory-verification"><span class="header-section-number">3.4.2</span> Mandatory Verification</a></li>
+  <li><a href="#submission-readiness-stacking-the-verification-lenses" id="toc-submission-readiness-stacking-the-verification-lenses" class="nav-link" data-scroll-target="#submission-readiness-stacking-the-verification-lenses"><span class="header-section-number">3.4.3</span> Submission-readiness: stacking the verification lenses</a></li>
   </ul></li>
   <li><a href="#sec-domain-reviewer" id="toc-sec-domain-reviewer" class="nav-link" data-scroll-target="#sec-domain-reviewer"><span class="header-section-number">3.5</span> Creating Your Own Domain Reviewer</a>
   <ul class="collapse">
@@ -3287,6 +3288,48 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 </section>
+<section id="submission-readiness-stacking-the-verification-lenses" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="submission-readiness-stacking-the-verification-lenses"><span class="header-section-number">3.4.3</span> Submission-readiness: stacking the verification lenses</h3>
+<p>For a paper headed to a journal, three orthogonal lenses run together — each catches a different class of failure:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Lens</th>
+<th>Skill</th>
+<th>What it catches</th>
+<th>Block-<code>/commit</code> on failure?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Grammar / overflow</strong></td>
+<td><a href="#all-skills"><code>/proofread</code></a></td>
+<td>typos, search-and-replace artifacts, overfull <code>\hbox</code>, citation-format inconsistency</td>
+<td>No (advisory)</td>
+</tr>
+<tr class="even">
+<td><strong>AI-voice tells</strong> (v1.9.0)</td>
+<td><a href="#all-skills"><code>/humanize</code></a></td>
+<td>boilerplate transitions (“Moreover”, “It is important to note”), AI-cliché lexicon (“delve”, “navigate the complexities”), hedging stacking, sycophancy</td>
+<td>No (advisory; author edits manually)</td>
+</tr>
+<tr class="odd">
+<td><strong>Factual claims</strong></td>
+<td><a href="#all-skills"><code>/verify-claims</code></a></td>
+<td>fabricated citations, numerical contradictions, directional contradictions</td>
+<td><strong>Yes — HIGH-WARN gate-refuses</strong> (v1.9.0)</td>
+</tr>
+<tr class="even">
+<td><strong>Numeric provenance</strong></td>
+<td><a href="#all-skills"><code>/audit-reproducibility</code></a></td>
+<td>manuscript value ≠ script output value within tolerance</td>
+<td>Yes via <code>passport.yaml</code> (v1.9.0)</td>
+</tr>
+</tbody>
+</table>
+<p>These are <em>complementary</em>, not redundant. A paper can pass <code>/proofread</code> (clean grammar) and fail <code>/humanize</code> (the prose reads as AI-drafted). It can pass <code>/humanize</code> (your own voice) and fail <code>/verify-claims</code> (citation fabricated). It can pass <code>/verify-claims</code> (citations real) and fail <code>/audit-reproducibility</code> (Table 2 doesn’t match the code). Run all four before submission; reach for <code>/review-paper --variance N</code> for the simulated peer-review verdict on top.</p>
+<p><strong><code>/humanize</code> design choice</strong>: detect-only, no <code>--rewrite</code> mode. Auto-rewriting AI tells degrades prose quality (cross-vendor research finding) and introduces new tells. The author reads the report and edits — that manual step is the price of preserving voice. If the report flags 8+ HIGH-severity tells per 1000 words, rewrite the affected paragraph from scratch rather than patching tell-by-tell.</p>
+</section>
 </section>
 <section id="sec-domain-reviewer" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="sec-domain-reviewer"><span class="header-section-number">3.5</span> Creating Your Own Domain Reviewer</h2>
@@ -4185,6 +4228,29 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">LEARN:r-code</span><span class="co">]</span> Package X drops obs silently when covariate is missing</span>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">LEARN:citation</span><span class="co">]</span> Post-LASSO is Belloni (2013), NOT Belloni (2014)</span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">LEARN:workflow</span><span class="co">]</span> Every Beamer edit must auto-sync to Quarto</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="two-tier-memory-architecture-memory.md-vs-personal-memory.md" class="level4" data-number="4.8.0.1">
+<h4 data-number="4.8.0.1" class="anchored" data-anchor-id="two-tier-memory-architecture-memory.md-vs-personal-memory.md"><span class="header-section-number">4.8.0.1</span> Two-tier memory architecture (<code>MEMORY.md</code> vs <code>personal-memory.md</code>)</h4>
+<p>The template splits memory into two tiers (see <a href=".claude/rules/meta-governance.md"><code>meta-governance.md</code></a>):</p>
+<ul>
+<li><strong><code>MEMORY.md</code></strong> (committed, ≤ 200 lines) — generic learnings that help all forkers: workflow patterns, design principles, documentation standards, quality thresholds that transfer across domains.</li>
+<li><strong><code>.claude/state/personal-memory.md</code></strong> (gitignored, no size cap) — machine-specific and user-specific learnings: TeX install quirks, file paths, personal effort preferences, tool-version workarounds.</li>
+</ul>
+<p>When a fork user does <code>git clone</code>, they get the generic <code>MEMORY.md</code>. Their own <code>personal-memory.md</code> builds up locally as they work.</p>
+</section>
+<section id="promote-memory-graduating-learnings-v1.9.0" class="level4" data-number="4.8.0.2">
+<h4 data-number="4.8.0.2" class="anchored" data-anchor-id="promote-memory-graduating-learnings-v1.9.0"><span class="header-section-number">4.8.0.2</span> <code>/promote-memory</code> — graduating learnings (v1.9.0)</h4>
+<p>The two-tier split poses one question: <em>who decides which <code>[LEARN]</code> entries graduate from <code>personal-memory.md</code> to <code>MEMORY.md</code>?</em> The answer is a <strong>five-critic council</strong>.</p>
+<p><code>/promote-memory [filter]</code> runs five critics in parallel, each reviewing one dimension:</p>
+<ol type="1">
+<li><strong>Generality</strong> — would a non-econ forker benefit?</li>
+<li><strong>Staleness</strong> — does this contradict current code (<code>grep</code> the referenced files)?</li>
+<li><strong>Redundancy</strong> — is it already in MEMORY.md, CLAUDE.md, or a rule?</li>
+<li><strong>Evidence</strong> — does it cite the originating incident / file / why?</li>
+<li><strong>Format</strong> — does it follow <code>[LEARN:category] wrong → right</code>?</li>
+</ol>
+<p>Majority (3+ of 5 YES) recommends promotion; the user approves the final move. Critics run in <em>isolated forked contexts</em> — they cannot see each other’s votes — so dimensions are reviewed independently, no groupthink. Critics use Haiku (per <a href=".claude/rules/model-routing.md">model-routing.md</a>) since the review is mechanical-ish.</p>
+<p>When to run: monthly as memory-maintenance, before sharing a fork, after a paper or course cycle ships, or wired as a <code>/loop</code> task.</p>
+</section>
 <section id="plans-compression-resistant-task-memory" class="level3" data-number="4.8.1">
 <h3 data-number="4.8.1" class="anchored" data-anchor-id="plans-compression-resistant-task-memory"><span class="header-section-number">4.8.1</span> Plans — Compression-Resistant Task Memory</h3>
 <p>While MEMORY.md stores long-lived project facts, <strong>plans</strong> store task-specific strategy. Every non-trivial plan is saved to <code>quality_reports/plans/</code> with a timestamp. This means:</p>
@@ -4473,6 +4539,48 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <blockquote class="blockquote">
 <p>“We just had compaction. Read <code>quality_reports/plans/2026-02-06_translate-lecture5.md</code> and continue from where we left off.”</p>
 </blockquote>
+</section>
+<section id="distil-before-compaction-compress-session-v1.9.0" class="level4" data-number="4.8.5.5">
+<h4 data-number="4.8.5.5" class="anchored" data-anchor-id="distil-before-compaction-compress-session-v1.9.0"><span class="header-section-number">4.8.5.5</span> Distil before compaction: <code>/compress-session</code> (v1.9.0)</h4>
+<p>Auto-compaction is <em>lossy</em> — it keeps recent turns and drops earlier ones, with no preservation of <em>what was decided</em> mid-session. For long pipelines (long debug sessions, multi-decision refactors, end-of-working-day handoffs), <code>/compress-session</code> is the <strong>distil-not-truncate</strong> alternative: structured note with Active state, Decisions made, Files touched, Open questions, Next actions, and explicitly <strong>Discarded as noise</strong> (failed hypotheses that should NOT carry forward).</p>
+<p><code>/compress-session</code> and <code>/checkpoint</code> are companions, not substitutes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>/checkpoint</code></th>
+<th><code>/compress-session</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>When</strong></td>
+<td>Natural stop-points (end of day, model switch, collaborator handoff)</td>
+<td>Forced compression (long pipeline, accumulated noise, approaching auto-compact)</td>
+</tr>
+<tr class="even">
+<td><strong>What’s preserved</strong></td>
+<td>Active plan, decisions, file pointers, next actions</td>
+<td>Same, plus explicit “discarded as noise” line</td>
+</tr>
+<tr class="odd">
+<td><strong>Output</strong></td>
+<td><code>quality_reports/checkpoints/</code></td>
+<td><code>quality_reports/session_logs/YYYY-MM-DD_compression_&lt;slug&gt;.md</code></td>
+</tr>
+<tr class="even">
+<td><strong><code>[LEARN]</code> proposals</strong></td>
+<td>Optional</td>
+<td>Always proposes (distillation is when lessons surface)</td>
+</tr>
+</tbody>
+</table>
+<p>The “Discarded as noise” section is the novel contribution: failed hypotheses and dead-end debugging paths are listed explicitly so they do NOT ghost-haunt future sessions. This defends against <a href="https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html">Drew Breunig’s “context poisoning”</a> failure mode — hallucinated or wrong content from early turns getting quoted by later turns.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -4777,6 +4885,22 @@ Phase 4: Only then extend
 <p>In one course, we discovered that a widely-used R package silently produced <strong>incorrect estimates</strong> due to a subtle specification issue. This bug was caught 3 times in different scripts. Without the replication-first protocol, these wrong numbers would have been taught to PhD students.</p>
 </div>
 </div>
+<p><strong>Source-language coverage:</strong> The pattern is language-agnostic. The template ships <a href="#all-skills"><code>/data-analysis</code></a> for R-first projects and <a href="#all-skills"><code>/stata-replication</code></a> (v1.9.0) for Stata-first projects (mirrors <code>/data-analysis</code> exactly; same numbered-pipeline shape, different language; executes via the <code>stata-mcp</code> MCP server). Python-first projects follow the same convention with the path <code>scripts/python/_outputs/</code>. For Stata users, <a href=".claude/rules/stata-code-conventions.md"><code>stata-code-conventions.md</code></a> (v1.9.0) codifies the header (<code>version 18</code>, <code>clear all</code>, <code>set seed</code>/<code>set sortseed</code>), numbered pipeline (00–99), <code>esttab</code> for <code>\input{}</code> tables, clustering discipline (<code>reghdfe</code>), balance via <code>iebaltab</code>, and AEA Data Editor compliance.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Claims provenance via <code>passport.yaml</code> (v1.9.0)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Replication-first verifies the <em>current</em> state. A separate question: how do we keep manuscript and code in sync over the lifetime of a paper, especially during R&amp;R?</p>
+<p>The answer is a per-paper <code>quality_reports/passports/&lt;paper-slug&gt;.yaml</code> that records, for each numeric claim in the manuscript, the script + line + output that produced it. Schema includes <code>tolerance</code>, <code>last_verified_on</code>, <code>status</code> (PASS / FAIL / STALE / UNVERIFIED). <a href="#all-skills"><code>/audit-reproducibility</code></a> reads and rewrites the passport in place; <a href="#all-skills"><code>/commit</code></a> reads it to block commits when a load-bearing claim is FAIL or STALE.</p>
+<p>Starter file: <a href="templates/passport-template.yaml"><code>templates/passport-template.yaml</code></a>. Copy once per paper. Pattern attributed to <a href="https://github.com/Imbad0202/academic-research-skills">Imbad0202/academic-research-skills</a> “Material Passport” concept (scope-reduced for this template: numeric claims only).</p>
+</div>
+</div>
 </section>
 <section id="pattern-6-multi-agent-review" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="pattern-6-multi-agent-review"><span class="header-section-number">5.6</span> Pattern 6: Multi-Agent Review</h2>
@@ -4919,7 +5043,7 @@ Phase 4: QUALITY GATE
 <li>Cognitive load issues</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -4928,7 +5052,7 @@ Phase 4: QUALITY GATE
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>A stronger variant: when Claude reviews its own work in the same conversation, it suffers <strong>confirmation bias</strong> — it has internalized its own reasoning and will systematically find the work acceptable. The fix: spawn a new agent via the Task tool with NO access to the original conversation. Give it only the artifact and a critique prompt. The fresh agent has no sunk cost in the work and will be ruthless.</p>
 <blockquote class="blockquote">
@@ -5226,7 +5350,7 @@ Decision point (1-2 hours):
                            work backwards)</code></pre>
 <p><strong>Enter mid-pipeline.</strong> You do not have to start from ideation. If you already have data, start with <code>/data-analysis</code> and work backwards to the research question. If you already have a draft, start with <code>/review-paper</code>. The skills are modular — use what you need, skip what you don’t.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5235,7 +5359,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For a production-grade paper pipeline, a dedicated fork takes these same skills and wraps them in full research infrastructure: 6 worker-critic agent pairs plus specialized agents (data-engineer, referees, verifier), simulated blind peer review, weighted aggregate scoring, journal targeting, and R&amp;R response routing. If your primary output is research papers, see <a href="#sec-ecosystem">The Ecosystem</a> for details.</p>
 </div>
@@ -5457,11 +5581,12 @@ Decision point (1-2 hours):
 </tr>
 </tbody>
 </table>
+<p>The <strong>Table/Figure Mapping</strong> row is exactly what <code>passport.yaml</code> (v1.9.0) machine-encodes: each numeric claim → script + line + output file + tolerance + verified-on timestamp. The AEA requires the <em>spreadsheet-style</em> version; the passport is the <em>programmatic</em> version. They’re complementary — generate the AEA spreadsheet from the passport when you submit.</p>
 </section>
 <section id="pre-submission-checklist" class="level4" data-number="5.10.1.2">
 <h4 data-number="5.10.1.2" class="anchored" data-anchor-id="pre-submission-checklist"><span class="header-section-number">5.10.1.2</span> Pre-Submission Checklist</h4>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5470,7 +5595,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Documentation:</strong></p>
 <ul class="task-list">
@@ -5519,7 +5644,7 @@ Decision point (1-2 hours):
 └── results/                # Output tables, figures</code></pre>
 <p>These standards load automatically via the path-scoped rule mechanism: when Claude edits files matching <code>replication-protocol.md</code>’s path globs, the rule is injected into context without any manual invocation. Ask Claude to <em>“prepare a replication package”</em> and the rule’s directory structure and checklist above guide the work from the first file touched.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5528,7 +5653,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>A key principle that maps directly to this workflow: <strong>separate scientific reasoning from computational execution.</strong> Humans design diagnostic templates (what to measure); AI handles execution (how to run it).</p>
 <p>This is the template-executor architecture — and you are already using it:</p>
@@ -5624,7 +5749,7 @@ Decision point (1-2 hours):
 <h4 data-number="5.10.2.4" class="anchored" data-anchor-id="how-existing-agents-support-this"><span class="header-section-number">5.10.2.4</span> How Existing Agents Support This</h4>
 <p>The <code>/slide-excellence</code> skill already invokes the pedagogy-reviewer and slide-auditor, which enforce many of these principles automatically. To enforce <em>all</em> of them — including title-as-assertion and MB/MC smoothness — customize the <strong>domain-reviewer</strong> agent (<code>.claude/agents/domain-reviewer.md</code>) with rhetoric-of-decks lenses. The orchestrator will then apply them during every review cycle without manual invocation.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5633,7 +5758,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For the complete philosophical treatment — from Aristotle’s three modes of persuasion through neuroaesthetics and the Netflix analogy — see <a href="https://github.com/scunning1975/MixtapeTools/tree/main/presentations">The Rhetoric of Decks</a>. The repository includes a full essay, example Beamer decks with professional color palettes, a <code>theme_rhetoric()</code> ggplot2 theme, and a tested deck generation prompt for Claude Code.</p>
 </div>
@@ -5718,7 +5843,7 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 </tr>
 </tbody>
 </table>
-<p>For <strong>public health / clinical trials</strong>, use ClinicalTrials.gov or ISRCTN directly — this template’s <code>/preregister</code> doesn’t cover those formats. They’re on the v1.9-backlog.</p>
+<p>For <strong>public health / clinical trials</strong>, use ClinicalTrials.gov or ISRCTN directly — this template’s <code>/preregister</code> doesn’t cover those formats. They’re on the v2.0-backlog.</p>
 </section>
 <section id="the-workflow-1" class="level4" data-number="5.10.4.3">
 <h4 data-number="5.10.4.3" class="anchored" data-anchor-id="the-workflow-1"><span class="header-section-number">5.10.4.3</span> The workflow</h4>
@@ -6093,7 +6218,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <li><strong>Political Science</strong> — APSR, AJPS, JOP journal profiles (v1.8.0), <code>formal-theory</code> + <code>survey-experiment</code> paper types in methods-referee, poli-sci example in domain-reviewer.md.</li>
 </ul>
 <p>Both fields are wired into <code>.claude/references/discipline-cards.md</code>, which <code>/research-ideation</code>, <code>/interview-me</code>, <code>/preregister</code>, and the editor agent read when you give them a discipline without a target journal. Cards document paper-type frequency, dominant journals, preregistration norms (OSF / AsPredicted / AEA RCT / ClinicalTrials.gov), significance-stars conventions, SE conventions, and dominant code language (R / Stata / Python).</p>
-<p><strong>Forking for psych, sociology, public health, or other fields:</strong> add ~3 journal profiles, 2–3 paper types, 1 discipline card. The infrastructure (orchestrator, hooks, quality gates, peer-review pipeline) is field-agnostic and transfers without modification. The v1.9 backlog (<code>.claude/references/v1.9-backlog.md</code>) lists psychology, sociology, and public-health as candidate next breadth additions.</p>
+<p><strong>Forking for psych, sociology, public health, or other fields:</strong> add ~3 journal profiles, 2–3 paper types, 1 discipline card. The infrastructure (orchestrator, hooks, quality gates, peer-review pipeline) is field-agnostic and transfers without modification. The v2.0 backlog (<code>.claude/references/v2.0-backlog.md</code>) lists psychology, sociology, and public-health as candidate next breadth additions.</p>
 </div>
 </div>
 <section id="step-1-build-your-knowledge-base" class="level2" data-number="7.1">
@@ -6426,7 +6551,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <li><strong>Use <code>CLAUDE.local.md</code> for personal overrides.</strong> This file is automatically gitignored and loaded alongside <code>CLAUDE.md</code>. Put machine-specific paths, personal preferences, and local tool versions here — they won’t pollute the shared repo.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -6435,7 +6560,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For capabilities beyond file editing and shell commands — web search during literature review, database queries for replication, or reference manager integration (Zotero, Mendeley) — Claude Code supports <a href="https://modelcontextprotocol.io">MCP servers</a>. Configure them in <code>.claude/settings.json</code> under <code>&quot;mcpServers&quot;</code>. Start with skills and agents first; add MCP when you need external integrations.</p>
 <section id="extending-with-plugins" class="level2" data-number="7.6">
