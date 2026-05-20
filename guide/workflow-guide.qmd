@@ -1952,6 +1952,91 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 
 **For the R&R stage (after referee comments arrive):** Use `/respond-to-referees [report] [revised-manuscript]`. It parses each concern, classifies coverage (addressed / partially / deferred / disagreement), points to specific revisions, and drafts the response document using `templates/response-to-referees.md`.
 
+### Pattern 16: Preregistration and Submission Discipline {#pattern-16-preregistration}
+
+**Principle:** Lock in your hypotheses, design, and analysis plan **before** you see the realised data. Preregistration is the strongest defence against p-hacking, HARKing, and forking-paths, and it's increasingly mandatory for credibility in social-science venues. Pair it with `/checkpoint` for a verifiable trail of what you committed to and when.
+
+#### When preregistration matters
+
+- **Before launching an experiment** (lab, field, or survey) — the canonical case.
+- **Before analysing observational data** on a target population for a specific RQ. "I have the data but haven't looked at the outcome variable yet" is the right moment.
+- **During R&R** when a referee asks for a written preanalysis plan covering robustness specifications.
+- **Funding** — NSF, NIH, OSF, AEA grants increasingly require a PAP at submission.
+
+#### Choosing a registry
+
+The template ships three styles via `/preregister --style`:
+
+| Registry | Style flag | Field | Length | Editable later? |
+|---|---|---|---|---|
+| **OSF** ([osf.io/registries](https://osf.io/registries)) | `osf` | Broad social science (default for psych, poli-sci, sociology) | Long-form, ~10–20 pages | Yes, with versioning |
+| **AsPredicted** ([aspredicted.org](https://aspredicted.org)) | `aspredicted` | Behavioural / experimental short-form | 9 questions, ~2 pages | Locked once submitted |
+| **AEA RCT Registry** ([socialscienceregistry.org](https://socialscienceregistry.org)) | `aea-rct` | Economics field experiments (mandatory for AEA journals since 2018) | Structured fields, ~3–5 pages | Limited fields editable |
+
+For **public health / clinical trials**, use ClinicalTrials.gov or ISRCTN directly — this template's `/preregister` doesn't cover those formats. They're on the v1.9-backlog.
+
+#### The workflow
+
+```
+/interview-me                       /preregister --style osf
+   ↓                                   ↓
+research-spec.md  ─────────────→  preregistration-draft.md
+   ↓                                   ↓
+(quality_reports/specs/)         (quality_reports/preregistrations/)
+                                       ↓
+                                  user reviews,
+                                  uploads to OSF,
+                                  receives registration ID
+                                       ↓
+                                  /checkpoint preregistration-submitted
+                                       ↓
+                                  data collection begins
+```
+
+`/preregister` reads your `/interview-me` spec frontmatter (the `paper_type:` field flows in from there if you set it) and produces a registry-formatted draft with **MUST / SHOULD / MAY** annotations on every section. Pre-flight checks: directional hypothesis declared, named estimator, ex-ante exclusion rules, sample-size stopping rule.
+
+#### Mandatory fields per registry style
+
+The `--style` flag determines the mandatory section list. The template enforces these via the pre-flight check:
+
+| Field | OSF | AsPredicted | AEA RCT |
+|---|:---:|:---:|:---:|
+| Directional hypothesis (with sign) | MUST | MUST | MUST |
+| Sampling frame + recruitment | MUST | SHOULD | MUST |
+| Sample-size / stopping rule | MUST | MUST | MUST |
+| Named primary estimator | MUST | MUST | MUST |
+| Pre-specified covariate set | SHOULD | MAY | MUST |
+| Multiple-comparison adjustment plan | SHOULD | SHOULD | MUST |
+| Ex-ante exclusion rules | MUST | MUST | MUST |
+| Robustness specifications (named in advance) | SHOULD | MAY | SHOULD |
+| Data-sharing plan | SHOULD | MAY | MUST |
+| Intervention description (RCTs) | --- | --- | MUST |
+
+`/preregister` refuses to draft a "retrospective preregistration" — if your description contains realised results or post-hoc reasoning, the skill halts and explains why. That refusal is the point.
+
+#### Pairing with `/checkpoint`
+
+`/checkpoint` is the structured companion to the narrative session-log workflow. For preregistration specifically:
+
+- **Before submitting** to the registry: `/checkpoint preregistration-pre-submit` snapshots the draft state, the spec it derives from, and the next-action ("upload to OSF and record registration ID").
+- **After submission**: `/checkpoint preregistration-submitted [registration-id]` records the registry ID and the date in the structured snapshot. The plan and session log link to it.
+- **On data arrival**: `/checkpoint data-arrived` marks the boundary between "things I could legitimately commit to" and "things I learned from looking." Anything that follows is exploratory unless explicitly anchored in the preregistered plan.
+
+`/checkpoint` files live at `quality_reports/checkpoints/YYYY-MM-DD_<slug>.md` (gitignored — they're session-state, not version-controlled artifacts). Optional `--no-memory` flag suppresses the auto-proposal of `[LEARN]` entries to MEMORY.md.
+
+#### Post-flight verification
+
+Any cited literature in the preregistration runs through `/verify-claims` (Chain-of-Verification, forked-verifier context, fresh) before the draft is considered ready. Hallucinated citations are the most common preregistration failure mode and the hardest to fix after submission — gate-refusing them at draft time pays back many-fold.
+
+#### What this pattern protects against
+
+- **HARKing** (Hypothesising After Results are Known) — the preregistered hypothesis pins the directional claim before observation.
+- **p-hacking** — the named estimator + named multiple-comparison plan removes the discretion that produces inflated false-positive rates.
+- **Forking paths** — every data-dependent choice is either declared MUST or disclosed as exploratory.
+- **Selective reporting** — the data-sharing plan + named robustness specifications make selective reporting visible to referees.
+
+For econometrics, see Christensen & Miguel (2018) on transparency in development economics. For political science, see [Monogan (2015)](https://www.cambridge.org/core/journals/ps-political-science-and-politics/article/research-preregistration-in-political-science/) on the political-science case. For psychology, see the OSF Preregistration Guide.
+
 ---
 
 # The Ecosystem: What Others Have Built {#sec-ecosystem}
