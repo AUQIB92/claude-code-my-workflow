@@ -473,6 +473,21 @@ The verification protocol (`.claude/rules/verification-protocol.md`) requires th
 In Econ 730, verification caught unverified TikZ diagrams that would have deployed with overlapping labels, broken SVGs in Quarto slides that wouldn't display, and R scripts with missing intercept terms that produced silently wrong estimates.
 :::
 
+::: {.callout-note}
+## Model quality can regress — verification is the only durable defence
+
+Anthropic publicly acknowledged a model-quality regression in [their Apr 23, 2026 engineering post "An update on recent Claude Code quality reports"](https://www.anthropic.com/engineering). The post identifies three contributing changes and is unusually candid about the limits of internal evals. Implication for our workflow: do not treat any given model checkpoint as a stable baseline.
+
+The defences in this template all assume **model quality drifts**:
+
+- **`/verify-claims`** with the Chain-of-Verification forked-verifier (the verifier cannot self-confirm even if the orchestrator's checkpoint regressed).
+- **`/audit-reproducibility`** with `passport.yaml` (numeric claims are anchored to specific script output values, not to the model's recall of the values).
+- **The cross-artifact review rule** (a paper's claims are checked against the code that produced them, not against the model's intuition about whether they're "plausible").
+- **HIGH-WARN gate-refuse on `/commit`** (Pass 3A I) — a fabricated citation or numerical contradiction blocks the commit even if the model "feels confident."
+
+Anthropic's post is also a useful reminder that running `/review-paper --variance N` (Pass 2C E) is the empirical answer to "should I trust this output?" — a single point estimate of model quality on a single task hides variance that the template's adversarial-review patterns surface.
+:::
+
 ## Creating Your Own Domain Reviewer {#sec-domain-reviewer}
 
 The template includes `domain-reviewer.md` --- a skeleton for building a substance reviewer specific to your field. For example, in Econ 730, the domain reviewer caught that a slide claimed "$\hat{\beta}$ is consistent under parallel trends" while the cited paper (Callaway and Sant'Anna, 2021) actually requires a *conditional* parallel trends assumption --- a subtle but critical distinction that no grammar or layout checker would flag.
