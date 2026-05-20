@@ -85,7 +85,7 @@ Before diving into setup, here is the key insight: **skills hide most of the mec
 ```
 You: "Review my lecture slides and fix all issues before tomorrow's class"
      ↓
-Claude automatically:
+Claude invokes /slide-excellence, which internally:
   → Runs /proofread (grammar, typos, consistency)
   → Runs /visual-audit (overflow, layout, spacing)
   → Runs /pedagogy-review (narrative flow, notation clarity)
@@ -100,6 +100,8 @@ You: "Yes"
 Claude runs /commit (only because you explicitly approved)
 ```
 
+*One skill (`/slide-excellence`) runs the loop. There is no repo-wide orchestrator picking sub-skills à la carte; the orchestration lives inside the invoked skill.*
+
 ::: {.panel-tabset}
 
 ### Paper Review
@@ -107,10 +109,10 @@ Claude runs /commit (only because you explicitly approved)
 ```
 You: "Review my paper draft and prepare it for submission"
      ↓
-Claude automatically:
-  → Runs /review-paper (argument structure, methods, citations)
-  → Runs /proofread (grammar, consistency, formatting)
-  → Runs /validate-bib (cross-reference citations)
+Claude invokes /review-paper, which internally:
+  → Runs the substantive review (argument structure, methods, citations)
+  → Spawns /proofread (grammar, consistency, formatting)
+  → Spawns /validate-bib (cross-reference citations)
   → Synthesizes findings into prioritized fix list
   → Applies fixes (critical → major → minor)
   → Re-verifies everything compiles
@@ -124,9 +126,9 @@ You see: "Done. Fixed 18 issues. Score: 91/100. Ready to commit?"
 ```
 You: "Analyze this dataset and produce publication-ready output"
      ↓
-Claude automatically:
-  → Runs /data-analysis (explore, model, tables, figures)
-  → Runs /review-r (code quality, reproducibility)
+Claude invokes /data-analysis, which internally:
+  → Explores, models, builds tables and figures
+  → Spawns /review-r (code quality, reproducibility)
   → Produces R script, tables, and figures
   → Scores against quality gates
      ↓
@@ -722,6 +724,14 @@ Claude Code also offers experimental **Agent Teams** --- multiple independent se
 
 ### Multi-Model Strategy: Cost vs. Quality {#multi-model-strategy-cost-vs-quality}
 
+::: {.callout-note}
+## Current Anthropic lineup (May 2026)
+
+**Opus 4.7** is the Max / Team Premium default (GA 2026-04-16, same pricing as 4.6: \$5/\$25 per MTok input/output). Pairs with the new `xhigh` effort level (see below) for coding. **Sonnet 4.6** is the workhorse mid-tier (1M context still available; the 4.5 1M beta retired 2026-04-30). **Haiku 4.5** is the cost-efficient fast model.
+
+**Retirement notice:** Sonnet 4 and the original Opus 4 retire on **2026-06-15**. If your environment pins one of these (`ANTHROPIC_MODEL` env, hard-coded model IDs in CI, etc.), migrate before then. See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for the migration checklist.
+:::
+
 Not all agents need the same model. Each agent file has a `model:` field in its YAML frontmatter. By default, all agents use `model: inherit` (they use whatever model your main session runs). But you can customize this to optimize cost:
 
 | Task Type | Recommended Model | Why | Examples |
@@ -813,7 +823,7 @@ Use `maxTurns` to prevent review agents from looping indefinitely, and `tools` t
 | **Auto-accept edits** | `acceptEdits` | Auto-approves file edits | Trusted batch operations (rename across 20 files) |
 | **Don't ask** | `dontAsk` | Auto-denies tools unless pre-approved in allowlist | Restricted environments where only allowlisted tools run |
 | **Plan** | `plan` | Read-only --- no edits allowed | Exploring code, reviewing before acting |
-| **Auto** | `auto` | Classifier-gated; everything runs unless flagged risky (Mar 2026 Week 13) | Long autonomous tasks with safety net --- the recommended mode for trusted repos when bypass is too permissive |
+| **Auto** | `auto` | Classifier-gated; everything runs unless flagged risky (Mar 2026 Week 13; the `--enable-auto-mode` flag is no longer required for Max + Opus 4.7 users as of Apr 2026 Week 16) | Long autonomous tasks with safety net --- the recommended mode for trusted repos when bypass is too permissive |
 | **Bypass** | `bypassPermissions` | Skips all permission prompts | CI/CD pipelines, headless scripts (still prompts on protected paths: `.git`, `.vscode`, `.idea`, `.husky`, `.claude` minus carve-outs `commands`/`agents`/`skills`/`worktrees`) |
 
 Set via CLI flag (`claude --permission-mode plan`), the `/config` command, or `permissions.defaultMode` in `settings.json`.
@@ -899,6 +909,7 @@ A handful of recent Mar–Apr 2026 commands cut friction in the actual editing l
 | `Ctrl+G` (in plan mode) | Opens the in-progress plan file in `$EDITOR` for direct editing before approval | You want to surgically tweak the plan without typing instructions back to Claude |
 | `claude --continue` / `claude --resume` | Resume the most recent conversation (`--continue`) or pick from recent (`--resume`); rename with `/rename` | Picking up a multi-day project --- treat sessions like branches |
 | `/checkpoint <slug>` | Writes a structured state snapshot to `quality_reports/checkpoints/` (this template, not Anthropic's) | Before stopping or handing off --- companion to the narrative session log |
+| `/goal <verifiable condition>` | Sets an end-state condition; Claude keeps working across turns until a fast model confirms it holds (Apr 2026 Week 20, v2.1.139) | "All R scripts pass without errors", "Figure 3 renders to PDF without overflow" --- pair with `/commit` quality gates for verified-end-state runs |
 
 **Three patterns that compose well:**
 
@@ -929,15 +940,17 @@ Claude Code lets you control how deeply it reasons about each task. Higher effor
 | `low` | Minimal | Quick formatting, grep, file renames | $ |
 | `medium` | Standard | Most tasks (default for Opus) | $$ |
 | `high` | ~10k tokens | Complex derivations, paper reviews | $$$ |
-| `max` / ultrathink | ~32k tokens | Deep proofs, multi-step analysis | $$$$ |
+| `xhigh` | ~20k tokens | **Recommended for Opus 4.7 coding** (introduced Apr 2026 Week 16) | $$$$ |
+| `max` / ultrathink | ~32k tokens | Deep proofs, multi-step analysis | $$$$$ |
 
 **How to set effort:**
 
-- **Per-session:** Type `/effort high` in the chat
+- **Per-session:** Type `/effort high` (or `/effort xhigh` for Opus 4.7 coding work). Typing `/effort` on its own opens an **interactive slider** (Apr 2026 Week 16).
 - **Per-skill:** Add `effort: high` to skill frontmatter (see [Skill Frontmatter Reference](#skill-frontmatter))
 - **Keyboard toggle:** `Option+T` (Mac) / `Alt+T` (Windows/Linux) toggles extended thinking
 - **In prompts:** Include "ultrathink" in your prompt to enable extended thinking for that turn. Note: phrases like "think hard" are treated as regular instructions and do *not* allocate extra thinking tokens
 - **Environment variable:** `CLAUDE_CODE_EFFORT_LEVEL=high` for all sessions
+- **Hooks can read it:** As of Apr 2026 Week 19, hook input includes `effort.level` and `$CLAUDE_EFFORT` is set in Bash subprocess env --- useful for skipping expensive verification on low-effort runs
 
 ::: {.callout-tip}
 ## Composing Effort with Model Choice
@@ -1486,6 +1499,10 @@ Either way, Claude spawns up to 3 Task agents, each processing one paper simulta
 
 For genuinely long jobs --- a 30-minute R fit, a `/audit-reproducibility` batch over many tables, a Quarto render of a 200-slide deck --- the **Monitor tool** (Apr 2026 Week 15) lets Claude tail a background process's stdout in real time and react when something interesting happens. The pattern: launch the long job in the background (Bash with `run_in_background: true`), then ask Claude to monitor until a condition fires (error, milestone, finish). No polling loop, no sleep cycles. Useful inside `/data-analysis` for the regression step and inside `/audit-reproducibility` when re-running the whole script suite.
 
+#### Watching parallel agents: `claude agents` (May 2026)
+
+When several review agents run in parallel (the `/review-paper --peer` editor + 2 referees, or `/slide-excellence`'s visual + pedagogy + proofread fan-out), use **`claude agents`** (Week 20, v2.1.139) to watch them on a single screen. Replaces the old workflow of opening one terminal per agent. See the Anthropic Utilities section below for the full description.
+
 #### Agent Debates
 
 A powerful variant: give each parallel agent a **distinct methodological perspective** and have them argue. Instead of asking "which estimator should I use?", spawn 3 agents --- one advocates for DiD, one for synthetic control, one for RDD --- each arguing why their approach fits your research question best and critiquing the others. Synthesize the debate into a decision matrix. This produces genuinely diverse perspectives that a single conversation cannot, because each agent commits fully to its position.
@@ -1669,6 +1686,17 @@ git checkout main
 git merge --squash [branch-name]
 git commit -m "feat: description of changes"
 ```
+
+::: {.callout-note}
+## `worktree.baseRef` (Apr 2026 Week 19)
+
+Claude Code's `EnterWorktree` tool branches fresh worktrees from a configurable base ref via the `worktree.baseRef` setting in `.claude/settings.json`:
+
+- `fresh` (default) --- branch from the **remote default branch** (typically `origin/main`). Safest for clean experimentation.
+- `head` --- branch from local `HEAD`. Use when you have uncommitted local work the worktree should inherit.
+
+The default surprises users with uncommitted in-flight edits: a `fresh` worktree won't see those changes. If your workflow assumes "branch off whatever I'm looking at now," set `"worktree.baseRef": "head"`.
+:::
 
 #### When to Use
 
@@ -1912,6 +1940,18 @@ clo-author reorients the entire workflow from slides to **research papers**. The
 
 **When to use it:** Your primary output is research papers and you want production-grade infrastructure for the full lifecycle --- from literature review through journal submission and revise-and-resubmit.
 
+::: {.callout-note}
+## clo-author v26.05 (May 2026)
+
+clo-author has shipped substantial post-v4 architecture. The current release (v26.05, 2026-05-10) adds:
+
+- **MAS v2** --- second-generation multi-agent system with clearer worker/critic boundaries and phase-aware severity gradients
+- **Skill-Centric Restructure** --- repository reorganised around 13 skills + 18 agents (up from 17 in the v4.x line)
+- **HTML Dashboard** --- self-contained visual interface for tracking pipeline state across phases (no server required)
+
+Patterns like `/checkpoint` (originally adapted with permission from clo-author v4.2.0) trace to the earlier line; if you're forking clo-author directly today, you get the MAS v2 / skill-centric layout.
+:::
+
 ## claudeblattman: Workflows for Non-Technical Academics
 
 **Website:** [claudeblattman.com](https://claudeblattman.com)
@@ -2025,8 +2065,10 @@ These are first-party Claude Code commands you can invoke directly without forki
 - **`/autofix-pr`** (Week 15) --- runs Claude Code on a GitHub PR, applying typical CI-style fixes (lint, types, simple test failures). Pairs well with our `/commit` flow if you push a PR and want a follow-up auto-cleanup pass before review.
 - **`/powerup`** (Mar/Apr 2026 Week 14) --- interactive lessons that teach Claude Code features (hooks, skills, MCP, plugins) with animated demos. Recommend this to new forkers who want to understand the *primitives* underneath the template's customizations.
 - **Ultraplan** (Week 15) --- draft a plan in the cloud from your CLI, review and comment on it in a web editor, then run it remotely or pull it back local. Useful for plans that need stakeholder review (e.g., a co-author signing off on an analysis approach before the actual run).
-- **`/loop` self-pacing** (Apr 2026 Week 15) --- run a prompt or slash command on a recurring interval, or omit the interval to let the model self-pace until a stopping condition is met. Useful for status-polling tasks ("check the deploy every 5 minutes") that pair with the Monitor tool above.
-- **`/less-permission-prompts`** (Mar 2026) --- scans recent transcripts for read-only Bash and MCP calls and proposes a project-local allowlist. Sibling to our `/permission-check`: `/permission-check` *diagnoses* the prompt-fatigue source, `/less-permission-prompts` *remediates* it.
+- **`/loop` self-pacing** (Apr 2026 Week 15) --- run a prompt or slash command on a recurring interval, or omit the interval to let the model self-pace until a stopping condition is met. Useful for status-polling tasks ("check the deploy every 5 minutes") that pair with the Monitor tool above. The alias `/proactive` was added in Week 16.
+- **`/goal <verifiable condition>`** (May 2026 Week 20, v2.1.139) --- the "keep working until X holds" command. Claude continues across turns until a fast model confirms the condition is satisfied. Distinct from `/loop` (which is interval-based) and from plan mode (which approves a strategy rather than enforcing an outcome). Pairs naturally with `/commit`'s quality gates: `/goal "all sections pass /verify-claims with no HIGH-WARN findings"` then commit. Works in interactive, `claude -p`, and Remote Control.
+- **`claude agents`** (May 2026 Week 20, v2.1.139) --- one-screen dashboard for all background sessions. Replaces the multi-terminal pattern for parallel review work. Directly aligned with our `/review-paper --peer` and `/qa-quarto` parallel-reviewer setup; you can launch the referees and watch their progress from a single view.
+- **`/fewer-permission-prompts`** (Apr 2026 Week 16) --- scans recent transcripts for read-only Bash and MCP calls and proposes a project-local allowlist. Sibling to our `/permission-check`: `/permission-check` *diagnoses* the prompt-fatigue source, `/fewer-permission-prompts` *remediates* it.
 
 These are external to this template --- invoke directly, no installation needed. Mention them as off-ramps when this template's scope doesn't fit.
 
