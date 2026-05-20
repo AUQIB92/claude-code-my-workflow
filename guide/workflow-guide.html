@@ -2408,6 +2408,7 @@ window.Quarto = {
   <li><a href="#agent-anatomy" id="toc-agent-anatomy" class="nav-link" data-scroll-target="#agent-anatomy"><span class="header-section-number">4.5.1</span> Agent Anatomy</a></li>
   <li><a href="#multi-model-strategy-cost-vs-quality" id="toc-multi-model-strategy-cost-vs-quality" class="nav-link" data-scroll-target="#multi-model-strategy-cost-vs-quality"><span class="header-section-number">4.5.2</span> Multi-Model Strategy: Cost vs. Quality</a></li>
   <li><a href="#sec-agent-config" id="toc-sec-agent-config" class="nav-link" data-scroll-target="#sec-agent-config"><span class="header-section-number">4.5.3</span> Advanced Agent Configuration</a></li>
+  <li><a href="#sec-cost" id="toc-sec-cost" class="nav-link" data-scroll-target="#sec-cost"><span class="header-section-number">4.5.4</span> Cost-Conscious Composition: Caching, Routing, and Diagnostics</a></li>
   </ul></li>
   <li><a href="#settings---permissions-and-hooks" id="toc-settings---permissions-and-hooks" class="nav-link" data-scroll-target="#settings---permissions-and-hooks"><span class="header-section-number">4.6</span> Settings — Permissions and Hooks</a>
   <ul class="collapse">
@@ -3272,16 +3273,18 @@ APPROVED   NEEDS WORK
 <p>Every domain can benefit from these five review lenses:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 18%">
 <col style="width: 24%">
-<col style="width: 32%">
-<col style="width: 32%">
+<col style="width: 24%">
+<col style="width: 24%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Lens</th>
 <th>What It Checks</th>
 <th>Example (Economics)</th>
+<th>Example (Political Science)</th>
 <th>Example (Physics)</th>
 </tr>
 </thead>
@@ -3290,34 +3293,40 @@ APPROVED   NEEDS WORK
 <td><strong>Assumption Audit</strong></td>
 <td>Are stated assumptions sufficient?</td>
 <td>Is overlap required for ATT?</td>
+<td>Is ignorability defensible given the observed covariates?</td>
 <td>Is the adiabatic approximation valid here?</td>
 </tr>
 <tr class="even">
 <td><strong>Derivation Check</strong></td>
 <td>Does the math check out?</td>
 <td>Do decomposition terms sum?</td>
+<td>Do conjoint AMCEs identify under Hainmueller–Hopkins–Yamamoto assumptions?</td>
 <td>Do the units balance?</td>
 </tr>
 <tr class="odd">
 <td><strong>Citation Fidelity</strong></td>
 <td>Do slides match cited papers?</td>
 <td>Is the theorem from the right paper?</td>
+<td>Is the manipulation-check threshold cited from the original validation study?</td>
 <td>Is the experimental setup correctly described?</td>
 </tr>
 <tr class="even">
 <td><strong>Code-Theory Alignment</strong></td>
 <td>Does code implement the formula?</td>
 <td>R script matches the slide equation?</td>
+<td><code>cjoint</code>/<code>survey::svyglm</code> weights match the design?</td>
 <td>Simulation parameters match theory?</td>
 </tr>
 <tr class="odd">
 <td><strong>Logic Chain</strong></td>
 <td>Does the reasoning flow?</td>
 <td>Can a PhD student follow backwards?</td>
+<td>Does the causal claim survive the standard counterfactual challenge?</td>
 <td>Are prerequisites established?</td>
 </tr>
 </tbody>
 </table>
+<p>The template ships <strong>two concrete domain-reviewer customizations</strong> in <code>.claude/agents/domain-reviewer.md</code>: an econometrics example (assumptions, identification, R/Stata code-theory alignment) and a political-science example (ignorability, conjoint AMCEs, <code>cjoint</code>/<code>survey</code> package defaults). Both follow the 5-lens structure; either is a viable starting point for your own field.</p>
 <p>To customize, open <code>.claude/agents/domain-reviewer.md</code> and fill in:</p>
 <ol type="1">
 <li>Your domain’s common assumption types</li>
@@ -3720,6 +3729,80 @@ APPROVED   NEEDS WORK
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tools</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;Read&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;Grep&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;Glob&quot;</span><span class="kw">]</span></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Use <code>maxTurns</code> to prevent review agents from looping indefinitely, and <code>tools</code> to enforce read-only behavior for agents that should only produce reports.</p>
+</section>
+<section id="sec-cost" class="level3" data-number="4.5.4">
+<h3 data-number="4.5.4" class="anchored" data-anchor-id="sec-cost"><span class="header-section-number">4.5.4</span> Cost-Conscious Composition: Caching, Routing, and Diagnostics</h3>
+<p>Cost is invisible until you look at the monthly invoice. Three levers, in order of impact:</p>
+<p><strong>1. Prompt caching.</strong> Anthropic’s prompt cache lets repeated prefix tokens (system prompt, CLAUDE.md, large context blobs) hit a cached path at a fraction of the input price. Two things forkers should know:</p>
+<ul>
+<li><strong>The default TTL dropped from 60 min to 5 min</strong> in early 2026. A long <code>/review-paper --peer</code> pipeline that took 12 minutes between turns now starts the second turn with a cold cache. For long pipelines on API / Bedrock / Vertex / Foundry plans, the opt-in <code>ENABLE_PROMPT_CACHING_1H</code> environment variable restores 1-hour TTL.</li>
+<li><strong><code>cache_miss_reason</code></strong> (Anthropic public beta, 2026-05-13) is now exposed on Messages requests. Use it to diagnose why a long-running pipeline isn’t getting cache hits (most often: a hook injected a timestamp that broke the prefix; or system-prompt drift between turns).</li>
+</ul>
+<p>The Apr 2026 <a href="https://dev.to/whoffagents/claude-prompt-caching-in-2026-the-5-minute-ttl-change-thats-costing-you-money-4363">TTL change cost analysis</a> estimates a 30–60% effective cost increase for long-running pipelines that don’t opt into the 1-hour TTL. Worth a Saturday hour to instrument your most expensive skill (<code>/review-paper --peer</code> is typically the worst offender).</p>
+<p><strong>2. Per-agent model routing.</strong> The Multi-Model Strategy table above lists the principle; the <strong>70/20/10 pattern</strong> is the operational form:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Share of subagent calls</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Haiku 4.5</strong></td>
+<td>~70%</td>
+<td>Mechanical work: TikZ extraction, citation reformatting, bib validation, proofread fixes, simple file lookups</td>
+</tr>
+<tr class="even">
+<td><strong>Sonnet 4.6</strong></td>
+<td>~20%</td>
+<td>Review and critique: r-reviewer, slide-auditor, proofreader, quarto-fixer</td>
+</tr>
+<tr class="odd">
+<td><strong>Opus 4.7</strong></td>
+<td>~10%</td>
+<td>High-judgment work: editor, domain-referee, methods-referee, claim-verifier, manuscript review</td>
+</tr>
+</tbody>
+</table>
+<p>Set per-agent via <code>model:</code> in <code>.claude/agents/&lt;name&gt;.md</code> frontmatter. Typical savings vs. all-Opus: <strong>50–80% on routed skills</strong>, no quality loss on the mechanical tier. The community-converged ratio is documented in <a href="https://augmentcode.com">Augment Code’s routing data</a> and aligns with Aider’s architect/editor split; we cite Anthropic’s <a href="https://www.anthropic.com/engineering">Apr 8 2026 “Decoupling brain from hands”</a> as the primary-source endorsement of the pattern.</p>
+<p><strong>3. Effort budgeting.</strong> The Effort Levels section earlier covered the <code>low | medium | high | xhigh | max</code> ladder. The cost-conscious rule: <strong>reach for <code>xhigh</code> on Opus 4.7 coding only when you’ve already verified the cheaper tier failed</strong>. Default to <code>medium</code>; bump to <code>high</code> for paper-level judgment; <code>xhigh</code> for the hard <code>/review-paper</code> runs or substantial refactors.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Monitoring: <code>/cost</code> and <code>/usage</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong><code>/cost</code></strong> (Apr 2026 Week 15) — current session breakdown by model and cache hit-rate.</li>
+<li><strong><code>/usage</code></strong> (Apr 2026 Week 16) — month-to-date totals + per-plan-tier remaining quota.</li>
+</ul>
+<p>Run <code>/cost</code> after any <code>/review-paper --peer</code> pipeline. If your cache hit-rate is under 60% for the second/third turn, you’re almost certainly being bitten by the 5-min TTL.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Agent SDK credit-pool split — 2026-06-15
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Starting 2026-06-15, <code>claude -p</code> headless subprocess calls (used by <code>/coarse-review</code> and any script that calls Claude Code in <code>-p</code> mode) draw from a <strong>separate monthly Agent SDK credit pool</strong>, decoupled from interactive credits. If <code>/coarse-review</code> starts failing after the cutover with credit-exhaustion errors even though your interactive session works, the Agent SDK pool is what’s empty. See <a href="../TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> for the migration details.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="settings---permissions-and-hooks" class="level2" data-number="4.6">
@@ -4432,7 +4515,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <p><strong>During implementation</strong> — append to the log as you work. Every time a design decision is made, a problem is discovered, or the approach deviates from the plan, write a 1-3 line entry immediately. This is the most important behavior: context gets compressed as the session progresses, and decisions that live only in the conversation will be lost.</p>
 <p><strong>At session end</strong> — add a final section with what was accomplished, open questions, and unresolved issues.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -4441,7 +4524,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Git records what; session logs record why.</strong> A commit message says “Update Lecture 5 TikZ diagrams.” A session log says “Redesigned the TWFE decomposition diagram because the DA challenge revealed students couldn’t trace the path from weights to bias. Considered a table format but chose a flow diagram because it shows directionality.”</p>
 <p><strong>Incremental logging is the key.</strong> A 4-hour session that only logs at the start and end loses everything in the middle. Appending decisions as they happen means auto-compression can never erase them — they are already on disk.</p>
@@ -4450,7 +4533,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </div>
 <p>Claude writes all three log entries automatically — no need to ask.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -4459,7 +4542,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For multi-project academics, start each week by asking Claude to read all session logs from the past week and synthesize a status report with priorities and open questions. The session log infrastructure already captures what you need — the weekly review is just a synthesis prompt: <em>“Read all session logs from this week. Summarize: what was accomplished, what’s blocked, what should I prioritize next?”</em></p>
 </div>
@@ -4572,7 +4655,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </ul>
 <p>The difference: when you invoke a skill directly, it runs its specific workflow. When the orchestrator is active, it decides which agents to invoke based on context. The orchestrator is the default; skills are for targeted use.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -4581,7 +4664,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Natural-language task</strong> → Claude picks a skill: “Translate Lecture 5 to Quarto” → Claude invokes <code>/translate-to-quarto</code>, and that skill runs the orchestrator pattern (translate → verify → review → fix → score) internally.</p>
 <p><strong>Explicit skill call:</strong> <code>/qa-quarto Lecture5</code> — you specifically want the adversarial critic-fixer loop, nothing else.</p>
@@ -4813,7 +4896,7 @@ Phase 4: QUALITY GATE
 <li>Cognitive load issues</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -4822,7 +4905,7 @@ Phase 4: QUALITY GATE
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>A stronger variant: when Claude reviews its own work in the same conversation, it suffers <strong>confirmation bias</strong> — it has internalized its own reasoning and will systematically find the work acceptable. The fix: spawn a new agent via the Task tool with NO access to the original conversation. Give it only the artifact and a critique prompt. The fresh agent has no sunk cost in the work and will be ruthless.</p>
 <blockquote class="blockquote">
@@ -5045,6 +5128,67 @@ Decision point (1-2 hours):
 </tbody>
 </table>
 <p>These skills produce structured reports saved to <code>quality_reports/</code>. The <code>/data-analysis</code> skill also generates R scripts (saved to <code>scripts/R/</code>) and runs the r-reviewer agent automatically.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>/review-paper --peer [journal]</code> — simulated peer review pipeline
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For submission-ready manuscripts, <code>/review-paper --peer &lt;journal&gt;</code> runs an <strong>editor + two dispositioned referees + editorial decision</strong>, calibrated to the target journal. Editor calibration reads <code>.claude/references/journal-profiles.md</code>; the template ships profiles for <strong>AER, QJE, JPE, ECMA, JoE</strong> (econ) and <strong>APSR, AJPS, JOP</strong> (poli-sci). Other fields: add a profile, ~40 lines each.</p>
+<p>The methods-referee is <strong>paper-type-aware</strong> — the same skill picks different sanity checks based on what kind of paper this is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Paper type</th>
+<th>Methods-referee tilts toward</th>
+<th>Sanity checks include</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>reduced-form</code></td>
+<td>identification credibility, parallel-trends defence, robustness range</td>
+<td>DiD pre-trends, IV first-stage, overlap, balance</td>
+</tr>
+<tr class="even">
+<td><code>structural</code></td>
+<td>model identification, counterfactual credibility, fit</td>
+<td>moment-matching, sensitivity to functional form, out-of-sample</td>
+</tr>
+<tr class="odd">
+<td><code>theory+empirics</code></td>
+<td>model-data correspondence</td>
+<td>does the empirical estimand identify the theoretical object?</td>
+</tr>
+<tr class="even">
+<td><code>descriptive</code></td>
+<td>measurement validity, generalisability</td>
+<td>sampling frame, missingness, comparator choice</td>
+</tr>
+<tr class="odd">
+<td><code>formal-theory</code> (v1.8.0)</td>
+<td>model originality, comparative-static sharpness</td>
+<td>equilibrium existence, assumption tractability, robustness to relaxation</td>
+</tr>
+<tr class="even">
+<td><code>survey-experiment</code> (v1.8.0)</td>
+<td>design, sampling, attrition + manipulation checks</td>
+<td>balance, manipulation-check pass rate, attrition asymmetry, sampling-frame validity</td>
+</tr>
+</tbody>
+</table>
+<p>R&amp;R continuation is built in: <code>--r2</code> / <code>--r3</code> for response-to-referees rounds; <code>--stress</code> for a hostile-editor stress test. See <code>.claude/references/discipline-cards.md</code> for econ + poli-sci defaults (paper-type frequency, dominant journals, preregistration norms, code conventions). Forkers extend for psych / sociology / public-health.</p>
+</div>
+</div>
 <section id="the-research-lifecycle-as-a-dependency-graph" class="level4" data-number="5.9.3.1">
 <h4 data-number="5.9.3.1" class="anchored" data-anchor-id="the-research-lifecycle-as-a-dependency-graph"><span class="header-section-number">5.9.3.1</span> The Research Lifecycle as a Dependency Graph</h4>
 <p>A research project is not a waterfall — it is a <strong>dependency graph</strong>. Some phases run in parallel; others are strictly sequential:</p>
@@ -5059,7 +5203,7 @@ Decision point (1-2 hours):
                            work backwards)</code></pre>
 <p><strong>Enter mid-pipeline.</strong> You do not have to start from ideation. If you already have data, start with <code>/data-analysis</code> and work backwards to the research question. If you already have a draft, start with <code>/review-paper</code>. The skills are modular — use what you need, skip what you don’t.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5068,7 +5212,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For a production-grade paper pipeline, a dedicated fork takes these same skills and wraps them in full research infrastructure: 6 worker-critic agent pairs plus specialized agents (data-engineer, referees, verifier), simulated blind peer review, weighted aggregate scoring, journal targeting, and R&amp;R response routing. If your primary output is research papers, see <a href="#sec-ecosystem">The Ecosystem</a> for details.</p>
 </div>
@@ -5294,7 +5438,7 @@ Decision point (1-2 hours):
 <section id="pre-submission-checklist" class="level4" data-number="5.10.1.2">
 <h4 data-number="5.10.1.2" class="anchored" data-anchor-id="pre-submission-checklist"><span class="header-section-number">5.10.1.2</span> Pre-Submission Checklist</h4>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5303,7 +5447,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Documentation:</strong></p>
 <ul class="task-list">
@@ -5352,7 +5496,7 @@ Decision point (1-2 hours):
 └── results/                # Output tables, figures</code></pre>
 <p>These standards load automatically via the path-scoped rule mechanism: when Claude edits files matching <code>replication-protocol.md</code>’s path globs, the rule is injected into context without any manual invocation. Ask Claude to <em>“prepare a replication package”</em> and the rule’s directory structure and checklist above guide the work from the first file touched.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5361,7 +5505,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>A key principle that maps directly to this workflow: <strong>separate scientific reasoning from computational execution.</strong> Humans design diagnostic templates (what to measure); AI handles execution (how to run it).</p>
 <p>This is the template-executor architecture — and you are already using it:</p>
@@ -5457,7 +5601,7 @@ Decision point (1-2 hours):
 <h4 data-number="5.10.2.4" class="anchored" data-anchor-id="how-existing-agents-support-this"><span class="header-section-number">5.10.2.4</span> How Existing Agents Support This</h4>
 <p>The <code>/slide-excellence</code> skill already invokes the pedagogy-reviewer and slide-auditor, which enforce many of these principles automatically. To enforce <em>all</em> of them — including title-as-assertion and MB/MC smoothness — customize the <strong>domain-reviewer</strong> agent (<code>.claude/agents/domain-reviewer.md</code>) with rhetoric-of-decks lenses. The orchestrator will then apply them during every review cycle without manual invocation.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5466,7 +5610,7 @@ Decision point (1-2 hours):
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For the complete philosophical treatment — from Aristotle’s three modes of persuasion through neuroaesthetics and the Netflix analogy — see <a href="https://github.com/scunning1975/MixtapeTools/tree/main/presentations">The Rhetoric of Decks</a>. The repository includes a full essay, example Beamer decks with professional color palettes, a <code>theme_rhetoric()</code> ggplot2 theme, and a tested deck generation prompt for Claude Code.</p>
 </div>
@@ -5733,6 +5877,25 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 </section>
 <section id="sec-customize" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Customizing for Your Domain</h1>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>What ships preloaded vs. what you customize
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two disciplines are already concrete in this template:</p>
+<ul>
+<li><strong>Economics</strong> — top-4 + top-field journal profiles (AER, QJE, JPE, ECMA, JoE), R-centric <code>r-code-conventions.md</code>, econometrics example in domain-reviewer.md.</li>
+<li><strong>Political Science</strong> — APSR, AJPS, JOP journal profiles (v1.8.0), <code>formal-theory</code> + <code>survey-experiment</code> paper types in methods-referee, poli-sci example in domain-reviewer.md.</li>
+</ul>
+<p>Both fields are wired into <code>.claude/references/discipline-cards.md</code>, which <code>/research-ideation</code>, <code>/interview-me</code>, <code>/preregister</code>, and the editor agent read when you give them a discipline without a target journal. Cards document paper-type frequency, dominant journals, preregistration norms (OSF / AsPredicted / AEA RCT / ClinicalTrials.gov), significance-stars conventions, SE conventions, and dominant code language (R / Stata / Python).</p>
+<p><strong>Forking for psych, sociology, public health, or other fields:</strong> add ~3 journal profiles, 2–3 paper types, 1 discipline card. The infrastructure (orchestrator, hooks, quality gates, peer-review pipeline) is field-agnostic and transfers without modification. The v1.9 backlog (<code>.claude/references/v1.9-backlog.md</code>) lists psychology, sociology, and public-health as candidate next breadth additions.</p>
+</div>
+</div>
 <section id="step-1-build-your-knowledge-base" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="step-1-build-your-knowledge-base"><span class="header-section-number">7.1</span> Step 1: Build Your Knowledge Base</h2>
 <p>The knowledge base (<code>.claude/rules/knowledge-base-template.md</code>) is the most domain-specific component — it’s a <a href="#rules---domain-knowledge-that-auto-loads">path-scoped rule</a> that loads automatically when Claude works on your content files. It provides skeleton tables for notation conventions, lecture progression, applications, design principles, anti-patterns, and R code pitfalls. Fill them in as you develop your project — you don’t need everything upfront.</p>
@@ -6063,7 +6226,7 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 <li><strong>Use <code>CLAUDE.local.md</code> for personal overrides.</strong> This file is automatically gitignored and loaded alongside <code>CLAUDE.md</code>. Put machine-specific paths, personal preferences, and local tool versions here — they won’t pollute the shared repo.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -6072,7 +6235,7 @@ Claude: [Runs 7 sequential forked reviews, each blind to the others]
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For capabilities beyond file editing and shell commands — web search during literature review, database queries for replication, or reference manager integration (Zotero, Mendeley) — Claude Code supports <a href="https://modelcontextprotocol.io">MCP servers</a>. Configure them in <code>.claude/settings.json</code> under <code>&quot;mcpServers&quot;</code>. Start with skills and agents first; add MCP when you need external integrations.</p>
 <section id="extending-with-plugins" class="level2" data-number="7.6">

@@ -8,9 +8,11 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ## v1.9.0 (in progress) — 2026-05-20
 
-A **guide-refresh + ecosystem catch-up** minor release. Pass 1 of five lands in this commit: eight mechanical corrections that bring the guide in line with Anthropic shipments through May 2026 (Weeks 17–20), reframe three lingering "automatic orchestrator" mentions, refresh the clo-author citation to its current MAS v2 architecture, and add a Models / API section to TROUBLESHOOTING covering the 2026-06-15 Sonnet 4 + Opus 4 retirement and the Agent SDK credit-pool split that ships the same day. No new skills, agents, rules, or hooks. No breaking changes. On-disk inventory unchanged.
+A **guide-refresh + ecosystem catch-up** minor release shipped in five passes against the plan at `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only; not tracked in git per the standard `quality_reports/plans/*` ignore rule). No breaking changes.
 
-Full plan with all five passes (B/C/D/E/F/G/H/I/J/K/L/M/N + Stata expansion) at `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only; not tracked in git per the standard `quality_reports/plans/*` ignore rule).
+### Pass 1 (PR #114, merged 2026-05-20) — guide refresh mechanical corrections
+
+Eight mechanical corrections that bring the guide in line with Anthropic shipments through May 2026 (Weeks 17–20), reframe three lingering "automatic orchestrator" mentions, refresh the clo-author citation to its current MAS v2 architecture, and add a Models / API section to TROUBLESHOOTING covering the 2026-06-15 Sonnet 4 + Opus 4 retirement and the Agent SDK credit-pool split. No new skills, agents, rules, or hooks. On-disk inventory unchanged.
 
 ### Fixed
 
@@ -45,6 +47,32 @@ This pass is the first slice of a research-grounded refresh. Four parallel resea
 - `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts unchanged (30 skills / 14 agents / 24 rules / 6 hooks)
 - `./scripts/check-palette-sync.sh` — palette in sync
 - `./scripts/check-skill-integrity.py` — all checks pass
+
+### Pass 2A — guide-only capability adds (2026-05-20)
+
+Two guide-body additions: weaves the v1.8.0 political-science breadth into the user-facing guide body (previously documented only in the v1.8.0 CHANGELOG entry), and introduces a new "Cost-Conscious Composition" subsection that documents prompt-cache TTL behaviour, per-agent model routing (70/20/10 pattern), and `/cost` / `/usage` monitoring. No new skills, agents, rules, or hooks. On-disk inventory still unchanged.
+
+#### Added — political-science breadth surfaced in guide body
+
+- **5-Lens Framework table** — added Political Science as a third worked example column alongside Economics and Physics. Lens entries reflect poli-sci norms (ignorability, conjoint AMCEs under Hainmueller–Hopkins–Yamamoto, `cjoint`/`survey::svyglm` defaults, manipulation-check fidelity).
+- **Domain-reviewer ship status callout** — documents that the template ships *two* concrete customizations of `.claude/agents/domain-reviewer.md` (econ + poli-sci), both viable starting points for forkers' own fields.
+- **`/review-paper --peer [journal]` callout** (Research Skills section) — new explainer covering the editor + 2-referee + editorial-decision pipeline, the journal-profiles starter set (AER, QJE, JPE, ECMA, JoE, APSR, AJPS, JOP), and the full 6-paper-type methods-referee taxonomy with sanity checks per type (reduced-form, structural, theory+empirics, descriptive, formal-theory, survey-experiment). The v1.8.0 formal-theory + survey-experiment additions are now discoverable from the main guide, not just from the CHANGELOG.
+- **"What ships preloaded vs. what you customize" callout** (§7 Customizing for Your Domain) — explains what already ships for econ + poli-sci (journal profiles, paper types, discipline cards) and what forkers add for psych / sociology / public-health (~3 profiles + 2–3 paper types + 1 card per discipline). Points at `.claude/references/v1.9-backlog.md` as the candidate-next-breadth roadmap.
+
+#### Added — Cost-Conscious Composition subsection (§ between Multi-Model Strategy and Permissions)
+
+- **Prompt-cache TTL guidance** — documents the 60 min → 5 min default-TTL change and the opt-in `ENABLE_PROMPT_CACHING_1H` environment variable on API/Bedrock/Vertex/Foundry plans. Cites Apr 2026 community cost-analysis showing 30–60% effective input-cost increase for long pipelines without the 1-hour opt-in. Documents `cache_miss_reason` (public beta 2026-05-13) as the diagnostic.
+- **70/20/10 model-routing pattern** — explicit table of Haiku (70%, mechanical work) / Sonnet (20%, review and critique) / Opus (10%, high-judgment work). Maps each tier to specific template agents (TikZ extraction → Haiku; r-reviewer → Sonnet; editor/methods-referee → Opus). Cites Anthropic's Apr 8 2026 "Decoupling brain from hands" post for primary-source endorsement.
+- **Effort-budgeting guidance** — reach for `xhigh` (Opus 4.7) only when verified that the cheaper tier failed.
+- **`/cost` and `/usage` monitoring callout** — when to run each and how to read cache hit-rate as a TTL-misconfiguration signal.
+- **Agent SDK credit-pool 2026-06-15 callout** — links to the TROUBLESHOOTING Models / API section landed in Pass 1.
+
+#### Verification — Pass 2A
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts still unchanged (30/14/24/6)
+- `./scripts/check-skill-integrity.py` — all checks pass
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
 
 ---
 
