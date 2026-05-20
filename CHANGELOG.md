@@ -183,6 +183,43 @@ Both ported with attribution from [`chrisblattman/claudeblattman`](https://githu
 - `quarto render guide/workflow-guide.qmd` — clean render
 - `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
 
+### Pass 3B — per-agent model routing + `/compress-session` + `/promote-memory` (2026-05-20)
+
+Three additions to the cost-discipline and memory-management lenses:
+
+- **G** — new `.claude/rules/model-routing.md` codifying the 70/20/10 architect/editor split (Haiku for mechanical work; Sonnet for review/critique; Opus for high-judgment work). Cites the Anthropic Apr 8 "Decoupling brain from hands" post for primary-source endorsement.
+- **J** — new `/compress-session` skill that distils a long-session into a structured note before auto-compaction (motivated by Drew Breunig's "How Long Contexts Fail" four-mode taxonomy). Distinct from `/checkpoint` (explicit stop-point) and from auto-compaction (lossy truncation).
+- **H** — new `/promote-memory` skill that runs a five-critic council (generality / staleness / redundancy / evidence / format) on candidate `[LEARN]` entries in `.claude/state/personal-memory.md` to decide what graduates to MEMORY.md. Pattern adapted from Chris Blattman's claudeblattman v2.1 five-critic council with attribution.
+
+#### Added — new rule
+
+- **`.claude/rules/model-routing.md`** — path-scoped on `.claude/agents/**/*.md` and `.claude/skills/**/SKILL.md`. Documents the 70/20/10 pattern with per-tier recipe (mechanical → Haiku 4.5; review/critique → Sonnet 4.6; high-judgment → Opus 4.7). Tags agents per tier (e.g., editor / methods-referee / claim-verifier / quarto-critic → Opus; r-reviewer / slide-auditor / proofreader / humanize-auditor → Sonnet; quarto-fixer / mechanical TikZ extraction → Haiku). Documents two anti-patterns: pushing Opus down a tier (defeats hallucination defence) and the self-as-architect-and-editor pairing (same-model self-pairings produce correlated errors).
+
+#### Added — new skills (2)
+
+- **`.claude/skills/compress-session/`** — `/compress-session [slug]` distils the current session into a structured note (Active state, Decisions made, Files touched, Open questions, Next actions, **Discarded as noise**, Proposed `[LEARN]` entries) and writes to `quality_reports/session_logs/YYYY-MM-DD_compression_<slug>.md`. Defends against [Drew Breunig's four failure modes](https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html): poisoning, distraction, confusion, clash. Explicit "Discarded as noise" section is the novel contribution — failed hypotheses don't carry forward as ghost context. Optional PreCompact-hook integration that surfaces a reminder (does NOT auto-invoke — preserves the user's review step).
+- **`.claude/skills/promote-memory/`** — `/promote-memory [filter]` runs a five-critic council in parallel (forked contexts via `Task`) on candidate `[LEARN]` entries. Each critic votes YES/NO on one dimension; majority (3+ of 5) promotes. Critics run on Haiku by default (per `model-routing.md`); the user is the final gate even on 5-of-5 unanimous votes. Saves an audit file at `quality_reports/memory_promotion_<date>.md` for forensics. Pattern adapted from Chris Blattman's claudeblattman v2.1 with attribution.
+
+#### Added — new agent
+
+- **`.claude/agents/promote-memory-council.md`** — implements the five-critic protocol. One agent file, five role specs (Generality / Staleness / Redundancy / Evidence / Format), dispatched in parallel via `Task` with `context: fork`. Each critic returns a strict `**Vote:** YES | NO` + one-sentence rationale; the calling skill aggregates. Architectural isolation: each critic sees only its dimension's relevant context (no cross-pollination, no groupthink).
+
+#### Changed — count-bearing surfaces
+
+- **Inventory:** **35 skills, 16 agents, 25 rules, 6 hooks** (was 33 / 15 / 24 / 6 after Pass 3A). All 6 count-bearing surfaces updated: README.md, CLAUDE.md, guide capability table, You-Don't-Need-All-Of-This callout, Customizing-Skills section, docs/index.html, templates/skill-template.md, guide appendix tables.
+- **CLAUDE.md Skills Quick Reference** — added `/compress-session` and `/promote-memory` rows.
+- **Guide Appendix** — added `Promote-Memory Council` row to All Agents, `/compress-session` + `/promote-memory` rows to All Skills, `Model Routing` row to path-scoped All Rules.
+
+#### Verification — Pass 3B
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts now **35 / 16 / 25 / 6**
+- `./scripts/check-skill-integrity.py` — all checks pass on both new SKILL.md files
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+- `./scripts/check-skill-integrity.py` — all checks pass on both new SKILL.md files
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+
 ---
 
 ## v1.8.0 — 2026-04-27
