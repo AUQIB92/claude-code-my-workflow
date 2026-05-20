@@ -6,9 +6,11 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
-## v1.9.0 (in progress) — 2026-05-20
+## v1.9.0 — 2026-05-20
 
 A **guide-refresh + ecosystem catch-up** minor release shipped in five passes against the plan at `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only; not tracked in git per the standard `quality_reports/plans/*` ignore rule). No breaking changes.
+
+**Inventory at release: 36 skills, 16 agents, 26 rules, 6 hooks** (was 30 / 14 / 24 / 6 at v1.8.0). The release adds 6 skills (`/humanize`, `/prompt`, `/prompt-only`, `/compress-session`, `/promote-memory`, `/stata-replication`), 2 agents (`humanize-auditor`, `promote-memory-council`), and 2 rules (`model-routing.md`, `stata-code-conventions.md`).
 
 ### Pass 1 (PR #114, merged 2026-05-20) — guide refresh mechanical corrections
 
@@ -256,6 +258,42 @@ User-driven expansion of the template to support Stata-first projects (correctio
 - `./scripts/check-skill-integrity.py` — all checks pass on the new SKILL.md
 - `quarto render guide/workflow-guide.qmd` — clean render
 - `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+
+### Pass 5 — verification follow-ups: SDK credit awareness + Anthropic engineering-post citations (2026-05-20)
+
+Closes the v1.9.0 cycle with two small but load-bearing additions:
+
+#### K — Agent SDK credit-pool split (2026-06-15)
+
+Already partially shipped in **Pass 1** (TROUBLESHOOTING "Models and API" section) and **Pass 2A** (Cost-Conscious Composition callout in the guide). Pass 5 confirms the coverage is complete — the `/coarse-review` skill is a Claude Code plugin (not in this template's `.claude/skills/`), so no SKILL.md callout was needed; the TROUBLESHOOTING entry and the guide callout already document the cutover, the affected pattern (`claude -p` headless subprocesses), and the diagnostic ("check the Agent SDK credit balance separately if `/coarse-review` fails with credit-exhaustion errors even though your interactive session works"). **K is closed.**
+
+#### L — Anthropic engineering-post citations
+
+- **Apr 8, 2026 — "Scaling Managed Agents: Decoupling the brain from the hands."** Already cited as primary-source endorsement of the architect/editor split in `.claude/rules/model-routing.md` (Pass 3B) and in the guide's Cost-Conscious Composition section (Pass 2A). No additional citation needed.
+- **Apr 23, 2026 — "An update on recent Claude Code quality reports."** New callout added to the guide between the "Mandatory Verification" / "Don't Skip Verification" section and "Creating Your Own Domain Reviewer." Frames the post as a reminder that **model quality can regress** and that the template's verification patterns (`/verify-claims` with forked verifier, `/audit-reproducibility` with `passport.yaml`, cross-artifact review, HIGH-WARN gate-refuse, `/review-paper --variance N`) all assume drift rather than treating any specific checkpoint as a stable baseline.
+
+#### Verification — Pass 5 (and final v1.9.0)
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts at release: **36 skills / 16 agents / 26 rules / 6 hooks**
+- `./scripts/check-skill-integrity.py` — all checks pass
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+
+### Release summary
+
+| Pass | PR | Net additions to disk | What it shipped |
+|---:|---:|---|---|
+| 1 | #114 | 0 | Mechanical guide refresh, Anthropic Apr–May 2026 catch-up, clo-author v26.05 citation, Models / API TROUBLESHOOTING section |
+| 2A | #115 | 0 | Poli-sci breadth woven into guide body, Cost-Conscious Composition subsection |
+| 2B | #116 | 0 | Pattern 16: Preregistration and Submission Discipline |
+| 2C | #117 | 0 | `/review-paper --variance N` reviewer-disposition variance mode |
+| 2D | #118 | +1 skill, +1 agent | `/humanize` detect-and-flag for AI-voice tells |
+| 3A | #119 | +2 skills, +1 template | `passport.yaml` claims provenance, HIGH-WARN claim-faithfulness gate, `/prompt` + `/prompt-only` port from Blattman |
+| 3B | #120 | +2 skills, +1 agent, +1 rule | Model-routing rule (70/20/10), `/compress-session`, `/promote-memory` five-critic council |
+| 4 | #121 | +1 skill, +1 rule | Stata expansion: `/stata-replication`, `stata-code-conventions.md`, `audit-reproducibility` source-language coverage, stata-mcp ecosystem entry |
+| 5 | (this PR) | 0 | Apr 23 Anthropic post citation in verification section; closes SDK-credit awareness loop |
+
+**Total v1.9.0 additions:** 6 skills, 2 agents, 2 rules, 1 reference, 1 template. No breaking changes. All count-bearing surfaces verified in sync. Provenance: every addition traceable to the research-grounded plan at `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only).
 
 ---
 
