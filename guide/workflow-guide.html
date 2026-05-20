@@ -2477,9 +2477,10 @@ window.Quarto = {
   <li><a href="#mixtapetools-the-rhetoric-of-decks" id="toc-mixtapetools-the-rhetoric-of-decks" class="nav-link" data-scroll-target="#mixtapetools-the-rhetoric-of-decks"><span class="header-section-number">6.4</span> MixtapeTools: The Rhetoric of Decks</a></li>
   <li><a href="#aea-data-editor-template" id="toc-aea-data-editor-template" class="nav-link" data-scroll-target="#aea-data-editor-template"><span class="header-section-number">6.5</span> AEA Data Editor Template</a></li>
   <li><a href="#autoresearch-constraint-based-autonomous-research" id="toc-autoresearch-constraint-based-autonomous-research" class="nav-link" data-scroll-target="#autoresearch-constraint-based-autonomous-research"><span class="header-section-number">6.6</span> autoresearch: Constraint-Based Autonomous Research</a></li>
-  <li><a href="#claudecodetools-the-editor-persona" id="toc-claudecodetools-the-editor-persona" class="nav-link" data-scroll-target="#claudecodetools-the-editor-persona"><span class="header-section-number">6.7</span> ClaudeCodeTools: The Editor Persona</a></li>
-  <li><a href="#anthropic-shipped-apr-2026-utilities" id="toc-anthropic-shipped-apr-2026-utilities" class="nav-link" data-scroll-target="#anthropic-shipped-apr-2026-utilities"><span class="header-section-number">6.8</span> Anthropic-Shipped Apr 2026 Utilities</a></li>
-  <li><a href="#sec-community" id="toc-sec-community" class="nav-link" data-scroll-target="#sec-community"><span class="header-section-number">6.9</span> Community Adoption</a></li>
+  <li><a href="#stata-mcp-mcp-server-for-stata-execution" id="toc-stata-mcp-mcp-server-for-stata-execution" class="nav-link" data-scroll-target="#stata-mcp-mcp-server-for-stata-execution"><span class="header-section-number">6.7</span> stata-mcp: MCP server for Stata execution</a></li>
+  <li><a href="#claudecodetools-the-editor-persona" id="toc-claudecodetools-the-editor-persona" class="nav-link" data-scroll-target="#claudecodetools-the-editor-persona"><span class="header-section-number">6.8</span> ClaudeCodeTools: The Editor Persona</a></li>
+  <li><a href="#anthropic-shipped-apr-2026-utilities" id="toc-anthropic-shipped-apr-2026-utilities" class="nav-link" data-scroll-target="#anthropic-shipped-apr-2026-utilities"><span class="header-section-number">6.9</span> Anthropic-Shipped Apr 2026 Utilities</a></li>
+  <li><a href="#sec-community" id="toc-sec-community" class="nav-link" data-scroll-target="#sec-community"><span class="header-section-number">6.10</span> Community Adoption</a></li>
   </ul></li>
   <li><a href="#sec-customize" id="toc-sec-customize" class="nav-link" data-scroll-target="#sec-customize"><span class="header-section-number">7</span> Customizing for Your Domain</a>
   <ul class="collapse">
@@ -2755,7 +2756,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>You talk, Claude orchestrates.</strong> The 16 agents, 35 skills, and 25 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
+<p><strong>You talk, Claude orchestrates.</strong> The 16 agents, 36 skills, and 26 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2768,7 +2769,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This guide describes the full system — 16 agents, 35 skills, 25 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
+<p>This guide describes the full system — 16 agents, 36 skills, 26 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
 </div>
 </div>
 <hr>
@@ -3531,7 +3532,7 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Claude Code ships with built-in skills beyond this template’s 35: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
+<p>Claude Code ships with built-in skills beyond this template’s 36: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
 </div>
 </div>
 </section>
@@ -6008,8 +6009,15 @@ research-spec.md  ─────────────→  preregistration-dr
 <span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Success Metric</span></span>
 <span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>RMSE of ATT estimate. Lower is better. Report coverage rate alongside.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="claudecodetools-the-editor-persona" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="claudecodetools-the-editor-persona"><span class="header-section-number">6.7</span> ClaudeCodeTools: The Editor Persona</h2>
+<section id="stata-mcp-mcp-server-for-stata-execution" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="stata-mcp-mcp-server-for-stata-execution"><span class="header-section-number">6.7</span> stata-mcp: MCP server for Stata execution</h2>
+<p><strong>Repository:</strong> <a href="https://github.com/SepineTam/stata-mcp">SepineTam/stata-mcp</a> <strong>Author:</strong> SepineTam (171+ stars, 91 releases, v1.17.3 as of May 2026)</p>
+<p>A mature MCP server that lets Claude Code execute Stata <code>.do</code> files via a command-guarded interface — refuses destructive shell ops (<code>!/shell/erase</code> etc.), monitors RAM, and pairs with the Stata Language Server. <strong>Install once per user:</strong> <code>claude mcp add stata-mcp --scope user -- uvx stata-mcp</code> (requires <code>uv</code> and a local Stata install).</p>
+<p><strong>Why it matters for this template:</strong> v1.9.0 added <a href="#sec-appendix"><code>/stata-replication</code></a> for Stata-first projects, which depends on this MCP server. R-first projects (the original template focus) continue to use <a href="#sec-appendix"><code>/data-analysis</code></a>; the two skills are parallel — same pipeline shape, different source language. AEA submissions where the original replication package is in Stata are the canonical use case.</p>
+<p>For end-to-end Stata workflows, see <a href=".claude/rules/stata-code-conventions.md"><code>.claude/rules/stata-code-conventions.md</code></a> (header scaffold, numbered pipeline, esttab tables, clustering discipline, AEA Data Editor compliance).</p>
+</section>
+<section id="claudecodetools-the-editor-persona" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="claudecodetools-the-editor-persona"><span class="header-section-number">6.8</span> ClaudeCodeTools: The Editor Persona</h2>
 <p><strong>Repository:</strong> <a href="https://github.com/aspi6246/ClaudeCodeTools">aspi6246/ClaudeCodeTools</a></p>
 <p>A collection of Claude Code personas, including “The Editor” — a deeply structured academic paper reviewer that runs seven sequential audit passes (see <a href="#pattern-15-sequential-audits">Pattern 15</a>). Notable features:</p>
 <ul>
@@ -6019,8 +6027,8 @@ research-spec.md  ─────────────→  preregistration-dr
 </ul>
 <p><strong>When to use it:</strong> You want a structured pre-submission paper review, or you’re responding to referee reports and need systematic tracking of which concerns have been addressed.</p>
 </section>
-<section id="anthropic-shipped-apr-2026-utilities" class="level2" data-number="6.8">
-<h2 data-number="6.8" class="anchored" data-anchor-id="anthropic-shipped-apr-2026-utilities"><span class="header-section-number">6.8</span> Anthropic-Shipped Apr 2026 Utilities</h2>
+<section id="anthropic-shipped-apr-2026-utilities" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="anthropic-shipped-apr-2026-utilities"><span class="header-section-number">6.9</span> Anthropic-Shipped Apr 2026 Utilities</h2>
 <p>These are first-party Claude Code commands you can invoke directly without forking anything. Worth knowing because they fill gaps this template intentionally doesn’t try to fill:</p>
 <ul>
 <li><strong><code>/team-onboarding</code></strong> (Week 15) — packages your local Claude Code setup (CLAUDE.md, skills, agents, hooks, settings) into a replayable guide. Useful for lab groups: a PI configures the workflow once, the rest of the lab runs <code>/team-onboarding</code> and inherits a working copy. Complements but doesn’t replace this template’s “fork + customize” model.</li>
@@ -6034,8 +6042,8 @@ research-spec.md  ─────────────→  preregistration-dr
 </ul>
 <p>These are external to this template — invoke directly, no installation needed. Mention them as off-ramps when this template’s scope doesn’t fit.</p>
 </section>
-<section id="sec-community" class="level2" data-number="6.9">
-<h2 data-number="6.9" class="anchored" data-anchor-id="sec-community"><span class="header-section-number">6.9</span> Community Adoption</h2>
+<section id="sec-community" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="sec-community"><span class="header-section-number">6.10</span> Community Adoption</h2>
 <p>As of March 2026, <strong>15+ research groups</strong> across multiple disciplines have forked and adapted this workflow for their own projects:</p>
 <ul>
 <li><strong>Economics</strong> — China innovation policy, mental health and layoffs, AIGC and stock prices, capital/labor shares in healthcare</li>
@@ -6711,6 +6719,11 @@ research-spec.md  ─────────────→  preregistration-dr
 <td><code>.claude/skills/promote-memory/</code></td>
 <td>Five-critic council that votes on whether candidate <code>[LEARN]</code> entries should be promoted from personal-memory.md to MEMORY.md (v1.9.0)</td>
 </tr>
+<tr class="even">
+<td><code>/stata-replication</code></td>
+<td><code>.claude/skills/stata-replication/</code></td>
+<td>End-to-end Stata pipeline scaffold + execution via the <code>stata-mcp</code> MCP server (mirrors <code>/data-analysis</code> for R-first projects; v1.9.0)</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -6872,6 +6885,11 @@ research-spec.md  ─────────────→  preregistration-dr
 <td>Model Routing</td>
 <td><code>model-routing.md</code></td>
 <td><code>.claude/agents/**/*.md</code>, <code>.claude/skills/**/SKILL.md</code> — 70/20/10 architect/editor split, per-agent <code>model:</code> field guidance (v1.9.0)</td>
+</tr>
+<tr class="even">
+<td>Stata Code Conventions</td>
+<td><code>stata-code-conventions.md</code></td>
+<td><code>**/*.do</code>, <code>scripts/stata/**</code> — header scaffold, numbered pipeline, esttab tables, clustering discipline, AEA compliance (v1.9.0)</td>
 </tr>
 </tbody>
 </table>

@@ -121,6 +121,7 @@ Enforced by `/commit` (halts + asks for override); not enforced by a git pre-com
 | `/prompt-only [text] [depth] [--save path]` | Same formatting as `/prompt`, but emits the prompt as a reusable artifact (no execution) |
 | `/compress-session [slug]` | Distil current session into structured notes before auto-compaction (vs `/checkpoint` for natural stops) |
 | `/promote-memory [filter]` | Five-critic council that votes on which `[LEARN]` entries graduate from personal-memory.md to MEMORY.md |
+| `/stata-replication [paper-or-data]` | End-to-end Stata pipeline scaffold + execution via `stata-mcp` (mirrors `/data-analysis` for R) |
 
 ---
 

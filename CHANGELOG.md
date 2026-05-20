@@ -220,6 +220,43 @@ Three additions to the cost-discipline and memory-management lenses:
 - `quarto render guide/workflow-guide.qmd` — clean render
 - `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
 
+### Pass 4 — Stata expansion: stata-mcp + `/stata-replication` + audit-reproducibility extension (2026-05-20)
+
+User-driven expansion of the template to support Stata-first projects (correction to the original v1.9.0 plan: AEA does not *mandate* Stata; the expansion targets users whose pipelines are Stata-first for reasons of audience reach or original-replication-package fidelity). Three sub-items:
+
+#### Added — new skill
+
+- **`.claude/skills/stata-replication/`** — `/stata-replication [paper-or-data]` scaffolds a numbered Stata pipeline (`00_install.do` through `99_run_all.do`) in `scripts/stata/` and executes via the [`stata-mcp`](https://github.com/SepineTam/stata-mcp) MCP server. Mirrors `/data-analysis` for R-first projects. `--from-r` flag ports an existing R pipeline. `--no-execute` produces scaffolding only. Phase 0 pre-flight halts if `stata-mcp` is not registered (with install instructions); Phase 4 (optional) runs R cross-check on `--from-r` translations to surface clustering-df / default-option drift.
+
+#### Added — new rule
+
+- **`.claude/rules/stata-code-conventions.md`** — path-scoped on `**/*.do` and `scripts/stata/**`. Codifies: standard header (`version 18`, `clear all`, `set seed`, `set sortseed`, `cap log close`, log capture); numbered pipeline (00–99); outputs convention (`scripts/stata/_outputs/` with `sessionInfo.txt`); `esttab` for publication-ready tables with `\input{}` mechanical-update pattern; significance-stars convention (`* 0.10 ** 0.05 *** 0.01`); clustering / SE discipline (`reghdfe`, cluster bootstrap for < 50 groups); balance + attrition via `iebaltab`; graph export to vector + raster; AEA Data Editor compliance checklist. Common Stata-to-R-or-AEA traps table.
+
+#### Changed — `/audit-reproducibility` source-language coverage
+
+- **`.claude/skills/audit-reproducibility/SKILL.md`** — new "Source-language coverage" section documents the three supported ecosystems (R / Stata / Python) with default outputs directories and read-output method per language. Stata-specific notes added: `.dta` outputs read via `haven::read_dta()` (R) or `pyreadstat.read_dta()` (Python); `esttab` `.tex` table-cell values as strongest provenance signal when manuscript uses `\input{}`; clustering-df discrepancy diagnosis (`reghdfe` vs `reg, cluster()`).
+
+#### Added — TROUBLESHOOTING entry
+
+- **`TROUBLESHOOTING.md`** — new "/stata-replication halts at 'stata-mcp not registered'" section. Documents the one-command install (`claude mcp add stata-mcp --scope user -- uvx stata-mcp`), the `uv` prerequisite, and the verify step (`claude mcp list`).
+
+#### Added — Ecosystem entry
+
+- **`guide/workflow-guide.qmd` Ecosystem section** — new "stata-mcp: MCP server for Stata execution" subsection (before ClaudeCodeTools). Documents SepineTam's project, install command, why it matters for v1.9.0's Stata expansion, and the parallel-skill relationship between `/data-analysis` (R) and `/stata-replication` (Stata).
+
+#### Changed — count-bearing surfaces
+
+- **Inventory:** **36 skills, 16 agents, 26 rules, 6 hooks** (was 35 / 16 / 25 / 6 after Pass 3B). All 6 count-bearing surfaces updated. Note: rules count rises only by 1 (the Stata convention rule); skills count rises only by 1 (`/stata-replication` itself); agents unchanged.
+- **`CLAUDE.md` Skills Quick Reference** — added `/stata-replication` row.
+- **Guide Appendix** — added `/stata-replication` row to All Skills, `Stata Code Conventions` row to path-scoped All Rules.
+
+#### Verification — Pass 4
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts now **36 / 16 / 26 / 6**
+- `./scripts/check-skill-integrity.py` — all checks pass on the new SKILL.md
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+
 ---
 
 ## v1.8.0 — 2026-04-27
