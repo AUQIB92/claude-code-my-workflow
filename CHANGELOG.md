@@ -117,6 +117,30 @@ Adds a fourth `--peer` mode to `/review-paper`: **`--variance` (with integer N, 
 - `./scripts/check-skill-integrity.py` — all checks pass (forward + reverse flag-parity OK after one cycle of integrity feedback — original `` `--variance N` `` single code-span fixed to ``--variance`` standalone code-span with `N` documented in prose)
 - No on-disk inventory change
 
+### Pass 2D — `/humanize` detect-and-flag skill (2026-05-20)
+
+Ships a new skill and a new agent to audit academic prose for AI-voice tells. **Detect-only by design** — there is no `--rewrite` mode. The author edits manually after reading the report; auto-rewriting prose to strip AI tells degrades quality (cross-vendor research finding) and introduces *new* AI tells.
+
+#### Added — new skill
+
+- **`.claude/skills/humanize/`** — `/humanize [file] [--severity low|med|high]` runs a read-only audit on `.tex`, `.qmd`, or `.md` prose against 10 detection categories: (1) boilerplate transitions, (2) AI-cliché lexicon, (3) em-dash/punctuation overuse, (4) symmetric paragraph shapes, (5) tricolon abuse, (6) hedging stacking, (7) "Not only X, but also Y" frames, (8) formulaic openers, (9) hyphenation excess, (10) sycophancy/self-important framing. Output: `quality_reports/humanize_<filename>_report.md` (gitignored) with per-finding line numbers, severity (LOW / MED / HIGH), and suggested rewrites. Carries `disable-model-invocation: true`. Documents the no-`--rewrite` anti-pattern explicitly in the SKILL body.
+
+#### Added — new agent
+
+- **`.claude/agents/humanize-auditor.md`** — read-only auditor that runs the 10-category protocol and returns a structured report (per-category counts, per-finding table, concentration analysis identifying the top-3 most-affected paragraphs, recommendation thresholds for "rewrite" vs "strip" vs "cosmetic"). Calibration heuristics built in (~1000 words: 0 HIGH clean; 3 HIGH manageable; 8+ HIGH recommend rewrite). Reads `style-profile.md` if present to respect documented author preferences. Will not auto-flag single-mention idioms or discipline-legitimate constructions.
+
+#### Changed — count-bearing surfaces
+
+- **Inventory:** **31 skills, 15 agents, 24 rules, 6 hooks** (was 30 / 14 / 24 / 6). All count-bearing surfaces updated: `README.md`, `CLAUDE.md`, `guide/workflow-guide.qmd` (×3 places: capability table, You-Don't-Need-All-Of-This callout, Customizing-Skills section), `docs/index.html` (landing page), `templates/skill-template.md`. Verified via `./scripts/check-surface-sync.sh`.
+- **`CLAUDE.md` Skills Quick Reference** — added `/humanize` row.
+- **`guide/workflow-guide.qmd` Appendix** — added `Humanize Auditor` row to All Agents; added `/humanize` row to All Skills.
+
+#### Verification — Pass 2D
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts now **31 / 15 / 24 / 6**
+- `./scripts/check-skill-integrity.py` — all checks pass on the new SKILL.md
+- `quarto render guide/workflow-guide.qmd` — clean render
+
 ---
 
 ## v1.8.0 — 2026-04-27
