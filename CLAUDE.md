@@ -119,6 +119,8 @@ Enforced by `/commit` (halts + asks for override); not enforced by a git pre-com
 | `/humanize [file]` | Detect AI-voice tells in academic prose (read-only audit; no rewrite) |
 | `/prompt [text] [depth:light|standard|deep]` | Reformat informal input into a structured six-section prompt, then execute |
 | `/prompt-only [text] [depth] [--save path]` | Same formatting as `/prompt`, but emits the prompt as a reusable artifact (no execution) |
+| `/compress-session [slug]` | Distil current session into structured notes before auto-compaction (vs `/checkpoint` for natural stops) |
+| `/promote-memory [filter]` | Five-critic council that votes on which `[LEARN]` entries graduate from personal-memory.md to MEMORY.md |
 
 ---
 
