@@ -117,6 +117,8 @@ Enforced by `/commit` (halts + asks for override); not enforced by a git pre-com
 | `/checkpoint [topic]` | Save a structured state snapshot (active plan, decisions, file pointers, next actions) before stopping or handing off |
 | `/preregister [--style osf|aspredicted|aea-rct]` | Draft a preregistration document (OSF / AsPredicted / AEA RCT Registry) from a research spec |
 | `/humanize [file]` | Detect AI-voice tells in academic prose (read-only audit; no rewrite) |
+| `/prompt [text] [depth:light|standard|deep]` | Reformat informal input into a structured six-section prompt, then execute |
+| `/prompt-only [text] [depth] [--save path]` | Same formatting as `/prompt`, but emits the prompt as a reusable artifact (no execution) |
 
 ---
 

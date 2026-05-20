@@ -141,6 +141,48 @@ Ships a new skill and a new agent to audit academic prose for AI-voice tells. **
 - `./scripts/check-skill-integrity.py` — all checks pass on the new SKILL.md
 - `quarto render guide/workflow-guide.qmd` — clean render
 
+### Pass 3A — claims provenance + HIGH-WARN gate + `/prompt` port (2026-05-20)
+
+Strategic additions to the paper-pipeline lens: (a) machine-readable claims provenance via a new `passport.yaml` contract, (b) HIGH/MED/LOW-WARN severity tiers on `/verify-claims` with HIGH-WARN gate-refusing `/commit`, and (c) two new skills (`/prompt`, `/prompt-only`) ported from Chris Blattman's claudeblattman v2.1 with the Blattman-specific tool-routing and council elements stripped.
+
+#### Added — new template
+
+- **`templates/passport-template.yaml`** — starter passport file for per-paper claims provenance. Forkers copy once per paper to `quality_reports/passports/<paper-slug>.yaml`. Schema records claim text, manuscript location, source script + line, output file + field, tolerance overrides, last-verified timestamp, and PASS / FAIL / STALE / UNVERIFIED status per claim.
+
+#### Added — new skills (2)
+
+- **`.claude/skills/prompt/`** — `/prompt [text] [depth:light|standard|deep]` reformats an informal or dictated request into a structured six-section prompt (Role / Task / Context / Constraints / Output format / Bookend) then **executes** it immediately. Depth heuristic: Light (< 40 words, no jargon) emits Role + Task + Output + Bookend; Standard (40–200 words, 1+ domain term) adds Context + Constraints + Assumptions block; Deep (> 200 words, specific paper/dataset/submission target) adds Investigation pre-step. Always shows the formatted prompt to the user before executing.
+- **`.claude/skills/prompt-only/`** — `/prompt-only [text] [depth] [--save path]` is the same skill **without execution**. Emits the formatted prompt as a reusable artifact. Optional `--save` writes to disk. Use for prompts you'll run later (different conversation, different model, recurring task).
+
+Both ported with attribution from [`chrisblattman/claudeblattman`](https://github.com/chrisblattman/claudeblattman) v2.1. **Deliberately stripped:** Blattman's tool-routing table (ChatGPT / Perplexity / Gemini dispatch) and his `council` token (his `/council` skill is not in this template). Documented in [`.claude/references/prompt-formatting-core.md`](.claude/references/prompt-formatting-core.md) "What we don't ship" section.
+
+#### Added — new reference
+
+- **`.claude/references/prompt-formatting-core.md`** — shared reference used by `/prompt` and `/prompt-only`. Defines the six-section skeleton (Role / Task / Context / Constraints / Output format / Bookend), the depth-calibration heuristic, a worked example, and the explicit boundary with `/interview-me` (single-shot input shaping vs. multi-turn project specification).
+
+#### Changed — claims provenance integration
+
+- **`.claude/rules/replication-protocol.md`** — new "Claims Provenance: `passport.yaml`" section. Documents the YAML schema (paper metadata + per-claim entries with `id`, `claim`, `location`, `source_file`, `source_line`, `output_file`, `output_field`, `tolerance`, `last_verified_on`, `status`, `notes`), the `status` semantics (PASS / FAIL / STALE / UNVERIFIED), integration with `/audit-reproducibility` (passport-mode), `/commit` (advisory by default, gate-refuse on `--strict-passport`), and `/review-paper` (summary section). Attributes the pattern to [Imbad0202/academic-research-skills](https://github.com/Imbad0202/academic-research-skills) "Material Passport" while scoping our schema to numeric-claim provenance only (theirs threads ~13 contracts through ~6 agents; ours stays narrow).
+- **`.claude/skills/audit-reproducibility/SKILL.md`** — new "Passport-mode (v1.9.0)" section. When a passport file exists, the skill reads + updates + rewrites it in place rather than emitting a one-shot report. Updates `status` per claim (PASS / FAIL / STALE), records discrepancies in `notes`, refreshes timestamps, refuses to auto-populate (passport scope is author-curated to avoid bad inferences).
+
+#### Changed — HIGH-WARN claim-faithfulness tier
+
+- **`.claude/skills/verify-claims/SKILL.md`** Phase 4 — three severity tiers introduced (HIGH-WARN: fabricated reference / direct contradiction / not-found retrieval interpreted as hallucination; MED-WARN: transient retrieval failure; LOW-WARN: source genuinely inaccessible). Tier aggregation table maps to PASS / PARTIAL / FAIL outcomes. **HIGH-WARN gate-refuses `/commit`** for files the skill was just run against unless `--no-fail-closed` or `verifyClaims.allowHighWarn: true` in settings.
+- **`.claude/agents/claim-verifier.md`** — output schema extended to include a per-claim `Tier` column (HIGH / MED / LOW / —). New "Tier-assignment rules" section codifies the assignment logic: fabricated citation → HIGH; numerical contradiction → HIGH; directional contradiction → HIGH; transient retrieval failure → MED; genuine inaccessibility → LOW; reasonable paraphrase → no tier. "Be conservative on HIGH-WARN" — false positives erode the gate's authority.
+
+#### Changed — count-bearing surfaces
+
+- **Inventory:** **33 skills, 15 agents, 24 rules, 6 hooks** (was 31 / 15 / 24 / 6 after Pass 2D). Both new skills (`/prompt`, `/prompt-only`) propagated through README.md, CLAUDE.md, guide capability table, You-Don't-Need-All-Of-This callout, Customizing-Skills section, docs/index.html, templates/skill-template.md, guide appendix tables.
+- **CLAUDE.md Skills Quick Reference** — added `/prompt` and `/prompt-only` rows.
+- **Guide Appendix** — added `/prompt` and `/prompt-only` rows to All Skills table.
+
+#### Verification — Pass 3A
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts now **33 / 15 / 24 / 6**
+- `./scripts/check-skill-integrity.py` — all checks pass on both new SKILL.md files
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+
 ---
 
 ## v1.8.0 — 2026-04-27
