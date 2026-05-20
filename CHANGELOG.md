@@ -74,6 +74,28 @@ Two guide-body additions: weaves the v1.8.0 political-science breadth into the u
 - `quarto render guide/workflow-guide.qmd` — clean render
 - `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
 
+### Pass 2B — `/preregister` + `/checkpoint` promoted to Pattern entry (2026-05-20)
+
+Promotes the v1.8.0 `/preregister` and `/checkpoint` skills from appendix entries to a first-class **Pattern 16: Preregistration and Submission Discipline** in the Workflow Patterns section. ~85 lines of new prose. Still no new skills, agents, rules, or hooks — Pattern 16 documents what already ships.
+
+#### Added — Pattern 16: Preregistration and Submission Discipline
+
+- **When-preregistration-matters checklist** — launch of experiment, observational analysis before outcome inspection, R&R PAP request, funding pre-submission.
+- **Registry-comparison table** — OSF / AsPredicted / AEA RCT side-by-side (field, length, editability). Public-health / clinical-trial registries explicitly out of scope (on v1.9-backlog).
+- **End-to-end workflow diagram** — `/interview-me` spec → `/preregister --style` → user uploads → `/checkpoint preregistration-submitted` → data collection begins.
+- **Per-registry mandatory-field matrix** — 10 rows × 3 styles, showing MUST / SHOULD / MAY for each field. Captures registry-specific differences (e.g., AEA mandates intervention description and data-sharing plan; AsPredicted allows looser covariate specification).
+- **`/checkpoint` pairing protocol** — explicit `pre-submit` → `submitted [registration-id]` → `data-arrived` snapshot sequence so the boundary between confirmatory and exploratory is structurally visible.
+- **Post-flight `/verify-claims` integration** — every cited reference in the preregistration runs through Chain-of-Verification before submission. Hallucinated citations are the most common preregistration failure mode.
+- **Anti-pattern protections enumerated** — HARKing, p-hacking, forking paths, selective reporting — and which fields of the preregistered document defend against each.
+- **Field-specific guidance** — pointers to Christensen & Miguel (2018) for development economics, Monogan (2015) for political science, OSF Preregistration Guide for psychology.
+
+#### Verification — Pass 2B
+
+- `./scripts/check-surface-sync.sh` — 26/26 assertions pass; counts unchanged (30/14/24/6)
+- `./scripts/check-skill-integrity.py` — all checks pass
+- `quarto render guide/workflow-guide.qmd` — clean render
+- `python3 scripts/quality_score.py guide/workflow-guide.qmd` — 100/100 [EXCELLENCE]
+
 ---
 
 ## v1.8.0 — 2026-04-27
