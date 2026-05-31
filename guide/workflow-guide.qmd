@@ -2,7 +2,7 @@
 title: "My Claude Code Setup"
 subtitle: "A Comprehensive Guide to AI-Assisted Academic Workflows: Slides, Papers, Analysis, and Beyond"
 author: "Pedro H. C. Sant'Anna"
-date: "2026-04-27"
+date: "2026-05-31"
 date-modified: last-modified
 format:
   html:
@@ -54,7 +54,7 @@ Claude Code runs on your computer with full access to your file system, terminal
 | Access git history | Commits, PRs, branches --- all from the conversation |
 | Persistent memory | CLAUDE.md + MEMORY.md survive across sessions |
 | Orchestrator pattern | Specific skills (`/qa-quarto`, `/review-paper --adversarial`, `/create-lecture`, …) run a 6-step verify-review-fix-score loop internally |
-| Multi-agent workflows | 15 specialized agents for proofreading, layout, pedagogy, code review, fact-checking, AI-voice auditing |
+| Multi-agent workflows | 18 specialized agents for proofreading, layout, pedagogy, code review, fact-checking, AI-voice auditing, simulation + R-package review |
 | Quality review | Advisory scoring inside `/commit` (halt + ask to override); targets: 80 commit, 90 PR, 95 excellence |
 | CLI/headless mode | Run from scripts: `claude -p "compile all lectures"` |
 | Browser bridge | Continue sessions on your phone via `/remote-control` |
@@ -62,7 +62,7 @@ Claude Code runs on your computer with full access to your file system, terminal
 ::: {.callout-tip}
 ## Case Study: Econ 730 at Emory
 
-This workflow was developed over 6+ sessions building a PhD course on Causal Panel Data. The result: 6 complete lectures (140+ slides each), with Beamer + Quarto versions, interactive Plotly charts, TikZ diagrams, and R replication scripts --- all managed by the orchestrator and reviewed by 14 specialized agents across 5 quality dimensions.
+This workflow was developed over 6+ sessions building a PhD course on Causal Panel Data. The result: 6 complete lectures (140+ slides each), with Beamer + Quarto versions, interactive Plotly charts, TikZ diagrams, and R replication scripts --- all managed by the orchestrator and reviewed by a suite of specialized agents across 5 quality dimensions.
 
 While this case study centers on slides, every component --- agents, orchestrator, quality gates --- works identically for research papers, data analysis, and proposals.
 :::
@@ -155,13 +155,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 16 agents, 36 skills, and 26 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 18 agents, 38 skills, and 28 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 16 agents, 36 skills, 26 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 18 agents, 38 skills, 28 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -695,7 +695,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 36: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 38: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -757,9 +757,9 @@ Claude Code also offers experimental **Agent Teams** --- multiple independent se
 ### Multi-Model Strategy: Cost vs. Quality {#multi-model-strategy-cost-vs-quality}
 
 ::: {.callout-note}
-## Current Anthropic lineup (May 2026)
+## Current Anthropic lineup (verified 2026-05-31)
 
-**Opus 4.7** is the Max / Team Premium default (GA 2026-04-16, same pricing as 4.6: \$5/\$25 per MTok input/output). Pairs with the new `xhigh` effort level (see below) for coding. **Sonnet 4.6** is the workhorse mid-tier (1M context still available; the 4.5 1M beta retired 2026-04-30). **Haiku 4.5** is the cost-efficient fast model.
+**Opus 4.8** (`claude-opus-4-8`) is the newest model and the API default (GA 2026-05-28, \$5/\$25 per MTok input/output, 1M context); it defaults to `high` effort. **Opus 4.7** is the prior generation. **Sonnet 4.6** is the workhorse mid-tier (1M context). **Haiku 4.5** is the cost-efficient fast model. *Verified against Anthropic docs 2026-05-31.*
 
 **Retirement notice:** Sonnet 4 and the original Opus 4 retire on **2026-06-15**. If your environment pins one of these (`ANTHROPIC_MODEL` env, hard-coded model IDs in CI, etc.), migrate before then. See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for the migration checklist.
 :::
@@ -824,7 +824,7 @@ Cost is invisible until you look at the monthly invoice. Three levers, in order 
 
 **1. Prompt caching.** Anthropic's prompt cache lets repeated prefix tokens (system prompt, CLAUDE.md, large context blobs) hit a cached path at a fraction of the input price. Two things forkers should know:
 
-- **The default TTL dropped from 60 min to 5 min** in early 2026. A long `/review-paper --peer` pipeline that took 12 minutes between turns now starts the second turn with a cold cache. For long pipelines on API / Bedrock / Vertex / Foundry plans, the opt-in `ENABLE_PROMPT_CACHING_1H` environment variable restores 1-hour TTL.
+- **The default TTL dropped from 60 min to 5 min** in early 2026. A long `/review-paper --peer` pipeline that took 12 minutes between turns now starts the second turn with a cold cache. For long pipelines on API / Bedrock / Vertex / Foundry plans, the opt-in `ENABLE_PROMPT_CACHING_1H` environment variable restores 1-hour TTL. On Claude Pro / Max subscriptions, Claude Code requests the 1-hour TTL automatically at no extra cost.
 - **`cache_miss_reason`** (Anthropic public beta, 2026-05-13) is now exposed on Messages requests. Use it to diagnose why a long-running pipeline isn't getting cache hits (most often: a hook injected a timestamp that broke the prefix; or system-prompt drift between turns).
 
 The Apr 2026 [TTL change cost analysis](https://dev.to/whoffagents/claude-prompt-caching-in-2026-the-5-minute-ttl-change-thats-costing-you-money-4363) estimates a 30–60% effective cost increase for long-running pipelines that don't opt into the 1-hour TTL. Worth a Saturday hour to instrument your most expensive skill (`/review-paper --peer` is typically the worst offender).
@@ -835,11 +835,11 @@ The Apr 2026 [TTL change cost analysis](https://dev.to/whoffagents/claude-prompt
 |---|---|---|
 | **Haiku 4.5** | ~70% | Mechanical work: TikZ extraction, citation reformatting, bib validation, proofread fixes, simple file lookups |
 | **Sonnet 4.6** | ~20% | Review and critique: r-reviewer, slide-auditor, proofreader, quarto-fixer |
-| **Opus 4.7** | ~10% | High-judgment work: editor, domain-referee, methods-referee, claim-verifier, manuscript review |
+| **Opus 4.8** | ~10% | High-judgment work: editor, domain-referee, methods-referee, claim-verifier, manuscript review |
 
 Set per-agent via `model:` in `.claude/agents/<name>.md` frontmatter. Typical savings vs. all-Opus: **50–80% on routed skills**, no quality loss on the mechanical tier. The community-converged ratio is documented in [Augment Code's routing data](https://augmentcode.com) and aligns with Aider's architect/editor split; we cite Anthropic's [Apr 8 2026 "Decoupling brain from hands"](https://www.anthropic.com/engineering) as the primary-source endorsement of the pattern.
 
-**3. Effort budgeting.** The Effort Levels section earlier covered the `low | medium | high | xhigh | max` ladder. The cost-conscious rule: **reach for `xhigh` on Opus 4.7 coding only when you've already verified the cheaper tier failed**. Default to `medium`; bump to `high` for paper-level judgment; `xhigh` for the hard `/review-paper` runs or substantial refactors.
+**3. Effort budgeting.** The Effort Levels section earlier covered the `low | medium | high | xhigh | max` ladder. **Opus 4.8 defaults to `high`** — and its `high` does roughly what 4.7's `xhigh` did, for fewer tokens. So: let `high` be the default; drop to `medium`/`low` to save cost on mechanical work; reach for `xhigh` only for extended exploration (deep search, big refactors, the hardest `/review-paper` runs); `ultracode` (xhigh + dynamic workflows) for repo-scale autonomous tasks.
 
 ::: {.callout-tip}
 ## Monitoring: `/cost` and `/usage`
@@ -893,7 +893,7 @@ Starting 2026-06-15, `claude -p` headless subprocess calls (used by `/coarse-rev
 | **Auto-accept edits** | `acceptEdits` | Auto-approves file edits | Trusted batch operations (rename across 20 files) |
 | **Don't ask** | `dontAsk` | Auto-denies tools unless pre-approved in allowlist | Restricted environments where only allowlisted tools run |
 | **Plan** | `plan` | Read-only --- no edits allowed | Exploring code, reviewing before acting |
-| **Auto** | `auto` | Classifier-gated; everything runs unless flagged risky (Mar 2026 Week 13; the `--enable-auto-mode` flag is no longer required for Max + Opus 4.7 users as of Apr 2026 Week 16) | Long autonomous tasks with safety net --- the recommended mode for trusted repos when bypass is too permissive |
+| **Auto** | `auto` | Classifier-gated; everything runs unless flagged risky. On Team / Enterprise / API and rolling out to Max; needs Opus 4.6+ or Sonnet 4.6 (Mar 2026 Week 13; `--enable-auto-mode` flag retired Apr 2026 Week 16) | Long autonomous tasks with safety net --- the recommended mode for trusted repos when bypass is too permissive |
 | **Bypass** | `bypassPermissions` | Skips all permission prompts | CI/CD pipelines, headless scripts (still prompts on protected paths: `.git`, `.vscode`, `.idea`, `.husky`, `.claude` minus carve-outs `commands`/`agents`/`skills`/`worktrees`) |
 
 Set via CLI flag (`claude --permission-mode plan`), the `/config` command, or `permissions.defaultMode` in `settings.json`.
@@ -1003,19 +1003,19 @@ The **Stop hook** runs a fast Python script after every response. No LLM call, n
 
 ## Effort Levels --- Cost vs. Thoroughness {#sec-effort}
 
-Claude Code lets you control how deeply it reasons about each task. Higher effort means more "thinking tokens" and better results --- but higher cost.
+Claude Code lets you control how deeply it reasons about each task. Higher effort means more "thinking tokens" and better results --- but higher cost. On **Opus 4.8 the default is `high`** --- its `high` reasoning now delivers what 4.7's `xhigh` did, so you rarely need to bump up (see [Cost-Conscious Composition](#sec-cost)).
 
 | Level | Thinking Budget | Academic Use Case | Relative Cost |
 |-------|----------------|-------------------|---------------|
 | `low` | Minimal | Quick formatting, grep, file renames | $ |
-| `medium` | Standard | Most tasks (default for Opus) | $$ |
-| `high` | ~10k tokens | Complex derivations, paper reviews | $$$ |
-| `xhigh` | ~20k tokens | **Recommended for Opus 4.7 coding** (introduced Apr 2026 Week 16) | $$$$ |
+| `medium` | Standard | Mechanical work; drop here from `high` to save cost | $$ |
+| `high` | ~10k tokens | Complex derivations, paper reviews (**Opus 4.8 default**) | $$$ |
+| `xhigh` | ~20k tokens | Extended exploration / hardest runs; **Opus 4.8 defaults to `high`**, so reserve `xhigh` for genuinely hard work (introduced Apr 2026 Week 16) | $$$$ |
 | `max` / ultrathink | ~32k tokens | Deep proofs, multi-step analysis | $$$$$ |
 
 **How to set effort:**
 
-- **Per-session:** Type `/effort high` (or `/effort xhigh` for Opus 4.7 coding work). Typing `/effort` on its own opens an **interactive slider** (Apr 2026 Week 16).
+- **Per-session:** Type `/effort high` (the Opus 4.8 default) or `/effort xhigh` for the hardest runs. Typing `/effort` on its own opens an **interactive slider** (Apr 2026 Week 16).
 - **Per-skill:** Add `effort: high` to skill frontmatter (see [Skill Frontmatter Reference](#skill-frontmatter))
 - **Keyboard toggle:** `Option+T` (Mac) / `Alt+T` (Windows/Linux) toggles extended thinking
 - **In prompts:** Include "ultrathink" in your prompt to enable extended thinking for that turn. Note: phrases like "think hard" are treated as regular instructions and do *not* allocate extra thinking tokens
@@ -2645,6 +2645,8 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Methods Referee | `.claude/agents/methods-referee.md` | Paper-type-aware methodology referee for `/review-paper --peer` (v1.5.0; +formal-theory + survey-experiment in v1.8.0) |
 | Humanize Auditor | `.claude/agents/humanize-auditor.md` | Read-only auditor for AI-voice tells in academic prose; invoked by `/humanize` (v1.9.0) |
 | Promote-Memory Council | `.claude/agents/promote-memory-council.md` | Five-critic council (generality / staleness / redundancy / evidence / format) for `[LEARN]` promotion from personal-memory.md to MEMORY.md; invoked by `/promote-memory` (v1.9.0) |
+| Sim Reviewer | `.claude/agents/sim-reviewer.md` | Monte Carlo reviewer — DGP/estimand match, Monte Carlo SE, coverage-vs-truth, claims↔tables parity (v1.10.0) |
+| R Package Reviewer | `.claude/agents/r-package-reviewer.md` | R package-source reviewer — DESCRIPTION/NAMESPACE hygiene, roxygen, testthat, CRAN-policy red flags (v1.10.0) |
 
 ## All Skills
 
@@ -2686,6 +2688,8 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/compress-session` | `.claude/skills/compress-session/` | Distil the current session into a structured note (decisions, files, open questions, next actions, discarded-as-noise) before auto-compaction (v1.9.0) |
 | `/promote-memory` | `.claude/skills/promote-memory/` | Five-critic council that votes on whether candidate `[LEARN]` entries should be promoted from personal-memory.md to MEMORY.md (v1.9.0) |
 | `/stata-replication` | `.claude/skills/stata-replication/` | End-to-end Stata pipeline scaffold + execution via the `stata-mcp` MCP server (mirrors `/data-analysis` for R-first projects; v1.9.0) |
+| `/simulation-study` | `.claude/skills/simulation-study/` | Reproducible Monte Carlo study — DGP, estimator grid, seeded reps, bias/RMSE/coverage/size/power with Monte Carlo SEs (v1.10.0) |
+| `/r-package-check` | `.claude/skills/r-package-check/` | R package release gate — `devtools::document()` + tests + `R CMD check --as-cran` + CRAN-policy triage (v1.10.0) |
 
 ## All Rules
 
@@ -2705,7 +2709,7 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Verification Protocol | `verification-protocol.md` | `.tex`, `.qmd`, `docs/` |
 | Single Source of Truth | `single-source-of-truth.md` | `Figures/`, `.tex`, `.qmd` |
 | Quality Gates | `quality-gates.md` | `.tex`, `.qmd`, `*.R` |
-| R Code Conventions | `r-code-conventions.md` | `*.R` |
+| R Code Conventions | `r-code-conventions.md` | `Figures/**`, `scripts/**`, `explorations/**` (analysis scripts) |
 | TikZ Quality | `tikz-visual-quality.md` | `.tex` |
 | TikZ Prevention | `tikz-prevention.md` | `Slides/**`, `Figures/**`, `Preambles/**` |
 | TikZ Measurement | `tikz-measurement.md` | `Slides/**`, `Figures/**`, `Preambles/**`, `scripts/**` |
@@ -2724,6 +2728,8 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Post-Flight Verification | `post-flight-verification.md` | skills that generate factual claims (`/lit-review`, `/research-ideation`, `/respond-to-referees`, `/review-paper`, `/interview-me`) |
 | Model Routing | `model-routing.md` | `.claude/agents/**/*.md`, `.claude/skills/**/SKILL.md` — 70/20/10 architect/editor split, per-agent `model:` field guidance (v1.9.0) |
 | Stata Code Conventions | `stata-code-conventions.md` | `**/*.do`, `scripts/stata/**` — header scaffold, numbered pipeline, esttab tables, clustering discipline, AEA compliance (v1.9.0) |
+| Simulation Conventions | `simulation-conventions.md` | `**/*simulation*.R`, `**/*_sim.R`, `explorations/**` — Monte Carlo discipline: DGP/estimand, L'Ecuyer seeding, Monte Carlo SE, coverage-vs-truth, raw-result storage (v1.10.0) |
+| R Package Conventions | `r-package-conventions.md` | `R/**`, `tests/**`, `DESCRIPTION`, `NAMESPACE`, `man/**` — package-source standards: no `library()` in `R/`, roxygen NAMESPACE, Imports/Suggests, testthat 3e, CRAN policy (v1.10.0) |
 
 ## Hooks
 

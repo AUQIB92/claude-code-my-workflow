@@ -14,12 +14,22 @@ Usage:
 """
 
 import sys
+import os
 import argparse
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 import re
 import json
+
+
+def _timeout(env_name: str, default: int) -> int:
+    """Read a positive int timeout (seconds) from the environment, else `default`."""
+    try:
+        value = int(os.environ.get(env_name, "") or default)
+        return value if value > 0 else default
+    except ValueError:
+        return default
 
 # ==============================================================================
 # SCORING RUBRIC (from .claude/rules/quality-gates.md)
@@ -93,8 +103,10 @@ class IssueDetector:
     """Detect common issues for quality scoring."""
 
     @staticmethod
-    def check_quarto_compilation(filepath: Path) -> Tuple[bool, str]:
-        """Check if Quarto file compiles successfully."""
+    def check_quarto_compilation(filepath: Path) -> Tuple[Optional[bool], str]:
+        """Render the Quarto file. Returns True (ok), False (real failure), or
+        None (could-not-verify: timed out or tool missing — NOT a quality failure)."""
+        limit = _timeout("QUALITY_QUARTO_TIMEOUT", 120)
         try:
             # Run from the file's parent directory with just the filename,
             # so relative paths inside the .qmd (themes, includes) resolve.
@@ -102,16 +114,16 @@ class IssueDetector:
                 ['quarto', 'render', filepath.name, '--to', 'html'],
                 capture_output=True,
                 text=True,
-                timeout=120,
+                timeout=limit,
                 cwd=filepath.parent
             )
             if result.returncode != 0:
                 return False, result.stderr
             return True, ""
         except subprocess.TimeoutExpired:
-            return False, "Compilation timeout (>2min)"
+            return None, f"compilation not verified — render exceeded {limit}s (raise QUALITY_QUARTO_TIMEOUT for large decks)"
         except FileNotFoundError:
-            return False, "Quarto not installed"
+            return None, "compilation not verified — Quarto not installed"
 
     @staticmethod
     def check_equation_overflow(content: str) -> List[int]:
@@ -216,22 +228,24 @@ class IssueDetector:
         return actual_count, (actual_count >= expected)
 
     @staticmethod
-    def check_r_syntax(filepath: Path) -> Tuple[bool, str]:
-        """Check R script for syntax errors."""
+    def check_r_syntax(filepath: Path) -> Tuple[Optional[bool], str]:
+        """Parse the R script. Returns True (ok), False (syntax error), or
+        None (could-not-verify: timed out or Rscript missing — NOT a failure)."""
+        limit = _timeout("QUALITY_RSCRIPT_TIMEOUT", 10)
         try:
             result = subprocess.run(
                 ['Rscript', '-e', f'parse("{filepath}")'],
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=limit
             )
             if result.returncode != 0:
                 return False, result.stderr
             return True, ""
         except subprocess.TimeoutExpired:
-            return False, "Syntax check timeout"
+            return None, f"syntax not verified — parse exceeded {limit}s (raise QUALITY_RSCRIPT_TIMEOUT)"
         except FileNotFoundError:
-            return False, "Rscript not installed"
+            return None, "syntax not verified — Rscript not installed"
 
     @staticmethod
     def check_hardcoded_paths(content: str) -> List[int]:
@@ -384,14 +398,16 @@ class QualityScorer:
             'minor': []
         }
         self.auto_fail = False
+        self.unverified = []  # could-not-verify notes (timeouts, missing tools)
 
     def score_quarto(self) -> Dict:
         """Score Quarto lecture slides."""
         content = self.filepath.read_text(encoding='utf-8')
 
-        # Check compilation
+        # Check compilation. None = could-not-verify (timeout / tool missing):
+        # record a note and continue with static checks rather than scoring 0.
         compiles, error = IssueDetector.check_quarto_compilation(self.filepath)
-        if not compiles:
+        if compiles is False:
             self.auto_fail = True
             self.issues['critical'].append({
                 'type': 'compilation_failure',
@@ -401,6 +417,8 @@ class QualityScorer:
             })
             self.score = 0
             return self._generate_report()
+        if compiles is None:
+            self.unverified.append(error)
 
         # Check equation overflow (heuristic)
         equation_overflows = IssueDetector.check_equation_overflow(content)
@@ -452,9 +470,10 @@ class QualityScorer:
         """Score R script quality."""
         content = self.filepath.read_text(encoding='utf-8')
 
-        # Check syntax
+        # Check syntax. None = could-not-verify (timeout / Rscript missing):
+        # record a note and continue rather than scoring 0.
         is_valid, error = IssueDetector.check_r_syntax(self.filepath)
-        if not is_valid:
+        if is_valid is False:
             self.auto_fail = True
             self.issues['critical'].append({
                 'type': 'syntax_error',
@@ -464,6 +483,8 @@ class QualityScorer:
             })
             self.score = 0
             return self._generate_report()
+        if is_valid is None:
+            self.unverified.append(error)
 
         # Check hardcoded paths
         path_issues = IssueDetector.check_hardcoded_paths(content)
@@ -579,6 +600,7 @@ class QualityScorer:
             'status': status,
             'threshold': threshold,
             'auto_fail': self.auto_fail,
+            'unverified': self.unverified,
             'issues': {
                 'critical': self.issues['critical'],
                 'major': self.issues['major'],
@@ -626,6 +648,11 @@ class QualityScorer:
             print(f"\n**Status:** Excellence achieved! (score >= {THRESHOLDS['excellence']})")
         elif report['status'] == 'FAIL':
             print(f"\n**Status:** Auto-fail (compilation/syntax error)")
+
+        if report.get('unverified'):
+            print("\n**Unverified checks** (could not run — score reflects static checks only):")
+            for note in report['unverified']:
+                print(f"  - {note}")
 
         if summary_only:
             print(f"\n**Total issues:** {report['issues']['counts']['total']} "

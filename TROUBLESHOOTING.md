@@ -30,7 +30,7 @@ claude mcp add stata-mcp --scope user -- uvx stata-mcp
 
 `uvx` is the `uv` package runner (`brew install uv` if missing). The MCP server requires a local Stata installation — it's a bridge, not a replacement. Once installed, restart your Claude Code session so the MCP server registers.
 
-Verify with `claude mcp list` — `stata-mcp` should appear with status `connected`. The skill also halts if Stata itself is not on `PATH`; the install instructions documented in [`/stata-replication`](/.claude/skills/stata-replication/SKILL.md) Phase 0 cover both pre-flight checks.
+Verify with `claude mcp list` — `stata-mcp` should appear with status `connected`. The skill also halts if Stata itself is not on `PATH`; the install instructions documented in [`/stata-replication`](.claude/skills/stata-replication/SKILL.md) Phase 0 cover both pre-flight checks.
 
 ### Claude keeps asking permission for every tool
 
@@ -54,7 +54,7 @@ Migration checklist:
 - **Check agent frontmatter:** `grep -rn "claude-sonnet-4\b\|claude-opus-4\b" .claude/agents/` — agents that pin to retired models will fall through to inherit, which is usually fine, but worth knowing.
 - **Check CI:** any GitHub Actions or other CI that calls `claude -p` with `--model`.
 
-Recommended replacements: `claude-sonnet-4-6` for Sonnet 4, `claude-opus-4-7` for original Opus 4 (Max/Team Premium default as of 2026-04-16, same pricing as 4.6). The 1M-context beta for Sonnet 4.5 / Sonnet 4 retired 2026-04-30 — migrate to Sonnet 4.6 for long-context workflows.
+Recommended replacements: `claude-sonnet-4-6` for Sonnet 4, `claude-opus-4-8` for original Opus 4 (the newest Opus, GA 2026-05-28, same $5/$25 pricing as 4.6/4.7). The 1M-context beta for Sonnet 4.5 / Sonnet 4 retired 2026-04-30 — migrate to Sonnet 4.6 for long-context workflows.
 
 ### `/coarse-review` and other `claude -p` skills may bill differently after 2026-06-15
 
@@ -141,7 +141,7 @@ This is **not a bug.** Per Anthropic's [permission-modes docs](https://code.clau
 - Directories: `.git`, `.vscode`, `.idea`, `.husky`, `.claude` (carve-outs: `.claude/commands`, `.claude/agents`, `.claude/skills`, `.claude/worktrees` — these *do* auto-approve under bypass).
 - Files: `.gitconfig`, `.gitmodules`, `.bashrc`, `.bash_profile`, `.zshrc`, `.zprofile`, `.profile`, `.ripgreprc`, `.mcp.json`, `.claude.json`.
 
-So edits to `.claude/references/`, `.claude/rules/`, `.claude/hooks/`, `.claude/scripts/` will always prompt under bypass. The only mode that doesn't fire an interactive prompt on protected paths is **auto mode** (Anthropic's Mar 2026 Week 13 release) — protected-path writes route through a classifier model instead. The classifier is still a gate (it can block) — it's just not human-in-the-loop, so you don't get the click-through interruption. Auto mode requires Max / Team / Enterprise / API plan + Sonnet 4.6, Opus 4.6, or Opus 4.7 + Anthropic API provider; toggle visibility in the VSCode mode dropdown by setting `allowDangerouslySkipPermissions: true` in `.vscode/settings.json` and reloading the window.
+So edits to `.claude/references/`, `.claude/rules/`, `.claude/hooks/`, `.claude/scripts/` will always prompt under bypass. The only mode that doesn't fire an interactive prompt on protected paths is **auto mode** (Anthropic's Mar 2026 Week 13 release) — protected-path writes route through a classifier model instead. The classifier is still a gate (it can block) — it's just not human-in-the-loop, so you don't get the click-through interruption. Auto mode requires Team / Enterprise / API plan (rolling out to Max) + Opus 4.6 or later (incl. 4.8) or Sonnet 4.6 + Anthropic API provider; toggle visibility in the VSCode mode dropdown by setting `allowDangerouslySkipPermissions: true` in `.vscode/settings.json` and reloading the window.
 
 If you're stuck on bypass and don't qualify for auto mode, two workarounds:
 

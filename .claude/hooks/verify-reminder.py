@@ -6,7 +6,13 @@ Non-blocking reminder that fires on Write/Edit to academic files (.tex, .qmd, .R
 to remind about compiling/rendering before marking a task as done.
 
 Hook Event: PostToolUse (matcher: "Write|Edit")
-Returns: Exit code 0 (non-blocking, reminder visible but doesn't stop work)
+Returns: Exit code 0 (non-blocking, reminder doesn't stop work)
+
+Output contract (PostToolUse, exit 0): we emit JSON on stdout with both a
+`systemMessage` (shown to the user) and `hookSpecificOutput.additionalContext`
+(injected into Claude's context). Plain stdout would reach Claude's context but
+NOT the user, and would carry literal ANSI escape codes as noise — so we emit
+clean, structured JSON instead. See https://code.claude.com/docs/en/hooks.
 
 Skips:
 - Configuration files (.json, .yaml, .toml, etc.)
@@ -21,12 +27,6 @@ import os
 import sys
 import time
 from pathlib import Path
-
-# Colors for terminal output
-CYAN = "\033[0;36m"
-GREEN = "\033[0;32m"
-YELLOW = "\033[0;33m"
-NC = "\033[0m"  # No color
 
 # Files that need verification
 VERIFY_EXTENSIONS = {
@@ -132,12 +132,20 @@ def was_recently_reminded(file_path: str) -> bool:
 
 
 def format_reminder(file_path: str, action: str) -> str:
-    """Format the verification reminder."""
+    """Format the verification reminder as plain text (no ANSI)."""
     filename = Path(file_path).name
-    return f"""
-{CYAN}📋 Verification reminder:{NC} {filename}
-   → {GREEN}{action}{NC} before marking task complete
-"""
+    return f"Verification reminder: {filename} — {action} before marking the task complete."
+
+
+def emit(message: str) -> None:
+    """Surface a reminder to BOTH the user and Claude via the PostToolUse JSON contract."""
+    print(json.dumps({
+        "systemMessage": f"📋 {message}",
+        "hookSpecificOutput": {
+            "hookEventName": "PostToolUse",
+            "additionalContext": message,
+        },
+    }))
 
 
 def main() -> int:
@@ -168,8 +176,8 @@ def main() -> int:
     if was_recently_reminded(file_path):
         return 0
 
-    # Show the reminder
-    print(format_reminder(file_path, action))
+    # Surface the reminder to the user + Claude
+    emit(format_reminder(file_path, action))
 
     return 0  # Non-blocking
 
