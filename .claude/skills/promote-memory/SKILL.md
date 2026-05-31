@@ -85,7 +85,7 @@ Five `Task` invocations in parallel, one per critic, each with `context: fork`:
 - **Evidence critic** — context: the candidate entry only. Vote based on whether the entry self-describes its motivation.
 - **Format critic** — context: the candidate entry + [`.claude/rules/meta-governance.md`](.claude/rules/meta-governance.md) for the schema reference.
 
-Use **Haiku 4.5** for all five critics (per [`.claude/rules/model-routing.md`](../../rules/model-routing.md): mechanical-ish review work). The user can override via the agent's `model:` field if they want Sonnet for the harder calls.
+Use the **Haiku tier** for all five critics (per [`.claude/rules/model-routing.md`](../../rules/model-routing.md): mechanical-ish review work). The user can override via the agent's `model:` field if they want Sonnet for the harder calls.
 
 ### Step 3: Aggregate votes
 

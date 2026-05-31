@@ -18,11 +18,10 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Colors for terminal output
-CYAN = "\033[0;36m"
-GREEN = "\033[0;32m"
-YELLOW = "\033[0;33m"
-NC = "\033[0m"  # No color
+# SessionStart stdout is injected into Claude's context, so this hook emits a
+# clean, ANSI-free message via the hookSpecificOutput.additionalContext contract
+# (raw ANSI escape codes here would be literal noise + wasted tokens in context).
+# See https://code.claude.com/docs/en/hooks.
 
 
 def get_session_dir() -> Path:
@@ -114,13 +113,11 @@ def format_restoration_message(
     plan_info: dict | None,
     session_log: dict | None
 ) -> str:
-    """Format the context restoration message for Claude."""
-    lines = []
-    lines.append(f"\n{CYAN}[Context Restored After Compaction]{NC}")
-    lines.append("")
+    """Format the (ANSI-free) context restoration message for Claude."""
+    lines = ["[Context Restored After Compaction]", ""]
 
     if pre_compact_state:
-        lines.append(f"{GREEN}Pre-Compaction State:{NC}")
+        lines.append("Pre-Compaction State:")
         if pre_compact_state.get("plan_path"):
             lines.append(f"  Plan: {pre_compact_state['plan_path']}")
         if pre_compact_state.get("current_task"):
@@ -132,7 +129,7 @@ def format_restoration_message(
         lines.append("")
 
     if plan_info:
-        lines.append(f"{GREEN}Active Plan:{NC}")
+        lines.append("Active Plan:")
         lines.append(f"  File: {plan_info['plan_name']}")
         lines.append(f"  Status: {plan_info['status']}")
         if plan_info.get("current_task"):
@@ -140,15 +137,14 @@ def format_restoration_message(
         lines.append("")
 
     if session_log:
-        lines.append(f"{GREEN}Session Log:{NC}")
+        lines.append("Session Log:")
         lines.append(f"  {session_log['log_name']}")
         lines.append("")
 
-    lines.append(f"{YELLOW}Recovery Actions:{NC}")
+    lines.append("Recovery Actions:")
     lines.append("  1. Read the active plan to understand current objectives")
     lines.append("  2. Check git status/diff for uncommitted changes")
     lines.append("  3. Continue from where you left off")
-    lines.append("")
 
     return "\n".join(lines)
 
@@ -175,10 +171,16 @@ def main() -> int:
     plan_info = find_active_plan(project_dir)
     session_log = find_recent_session_log(project_dir)
 
-    # If we have any context to restore, print it
+    # If we have any context to restore, inject it via the SessionStart contract
+    # (clean additionalContext — not raw stdout carrying ANSI escape noise).
     if pre_compact_state or plan_info or session_log:
         message = format_restoration_message(pre_compact_state, plan_info, session_log)
-        print(message)
+        print(json.dumps({
+            "hookSpecificOutput": {
+                "hookEventName": "SessionStart",
+                "additionalContext": message,
+            }
+        }))
 
     return 0
 

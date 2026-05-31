@@ -14,7 +14,7 @@ paths:
 |---:|---|---|
 | ~70% | **Haiku 4.5** | Mechanical work — file renames, citation-format conversion, TikZ extraction, bib validation, proofread-fix application, simple grep / file lookups |
 | ~20% | **Sonnet 4.6** | Review and critique — `r-reviewer`, `slide-auditor`, `proofreader`, `quarto-fixer`, `humanize-auditor` |
-| ~10% | **Opus 4.7** | High-judgment work — `editor`, `methods-referee`, `domain-referee`, `claim-verifier`, `quarto-critic`, `tikz-reviewer`, `domain-reviewer`, `verifier` for non-trivial gates |
+| ~10% | **Opus 4.8** | High-judgment work — `editor`, `methods-referee`, `domain-referee`, `claim-verifier`, `quarto-critic`, `tikz-reviewer`, `domain-reviewer`, `verifier` for non-trivial gates |
 
 Set per-agent via `model:` in the agent's YAML frontmatter:
 
@@ -27,9 +27,21 @@ model: sonnet      # was: inherit
 
 Set per-skill via the same field in `SKILL.md` frontmatter. Inheritance is fine for skills whose work spans tiers (e.g., `/review-paper --peer` dispatches a mix).
 
+## The effort axis (the first cost lever)
+
+Model tier is the second cost lever; **effort is the first.** Every model runs at an effort level (`low / medium / high / xhigh / max`), and lowering effort is cheaper than dropping a tier — reach for it first.
+
+- **Opus 4.8 defaults to `high`**, and its `high` does roughly what Opus 4.7's `xhigh` did, for fewer tokens. Do **not** reflexively set `xhigh`.
+- **Mechanical work** (Haiku tier) → `low` / `medium`.
+- **Review and judgment** (Sonnet / Opus) → `high` (the default).
+- **The hardest runs** (deep refactors, the toughest `/review-paper --peer`) → `xhigh`; `ultracode` (xhigh + dynamic workflows) for repo-scale autonomous tasks.
+- Reserve `max` for the rare case where you've verified `xhigh` was insufficient.
+
+Set per skill/agent with the `effort:` frontmatter field. Several skills ship at `effort: high` for genuinely hard gates (e.g. `/seven-pass-review`, `/simulation-study`, `/r-package-check`). Match effort to the cognitive demand the same way you match model tier — and tune effort before you swap models.
+
 ## Why this matters
 
-Cost reduction on routed skills is typically **50–80%** with no quality loss on the mechanical tier. The cache-TTL change (60min → 5min in 2026) made multi-turn pipelines materially more expensive; per-agent routing recovers that lost ground without sacrificing the high-judgment lens where it matters.
+Cost reduction on routed skills is typically **50–80%** with no quality loss on the mechanical tier. The cache-TTL change (5-min default in 2026; Claude subscriptions get 1-hour automatically, API keys opt in) made multi-turn pipelines on API keys materially more expensive; per-agent routing recovers that lost ground without sacrificing the high-judgment lens where it matters.
 
 ## Routing recipe per task type
 
@@ -50,7 +62,7 @@ Cost reduction on routed skills is typically **50–80%** with no quality loss o
 - **AI-voice audit** (`humanize-auditor`).
 - **Beamer ↔ Quarto translation** (`beamer-translator`) — translation is bounded enough to live here unless the source TeX has unusual TikZ.
 
-### High-judgment (Opus 4.7)
+### High-judgment (Opus 4.8)
 
 - **Editor for `/review-paper --peer`** (`editor`).
 - **Both referee agents** (`domain-referee`, `methods-referee`).

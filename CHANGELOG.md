@@ -6,6 +6,47 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## v1.10.0 — 2026-05-31
+
+A **hub-expansion + currency-refresh** minor release. The template gains a Monte Carlo simulation capability and an R package-development release gate, refreshes the model / effort / cost guidance for **Opus 4.8**, and reframes itself as a hub for an entire research program — not just slides and papers. Shipped against the plan at `quality_reports/plans/2026-05-31_v1.10.0-simulation-and-hub.md` (local-only per the `quality_reports/plans/*` ignore rule). No breaking changes.
+
+**Inventory at release: 38 skills, 18 agents, 28 rules, 6 hooks** (was 36 / 16 / 26 / 6 at v1.9.0). Adds 2 skills (`/simulation-study`, `/r-package-check`), 2 agents (`sim-reviewer`, `r-package-reviewer`), and 2 rules (`simulation-conventions`, `r-package-conventions`).
+
+### Added
+
+- **`/simulation-study` skill** (`.claude/skills/simulation-study/`) — scaffolds and runs a reproducible Monte Carlo study: a parameterized DGP, an estimator grid, a seeded replication loop (L'Ecuyer-CMRG streams for parallel reps), and a summary of bias, RMSE, empirical SE, coverage, and size/power — each reported with its Monte Carlo standard error. Mirrors `/data-analysis`; saves per-replication raw results + a summary table to `scripts/R/_outputs/`.
+- **`sim-reviewer` agent** (`.claude/agents/sim-reviewer.md`) — a read-only reviewer for the simulation-specific layer that general R review misses: DGP↔estimand alignment, replication budget + Monte Carlo SE, coverage computed against the *truth* (not the point estimate), parallel-seed discipline, and claims↔tables parity. Builds on `r-reviewer` (Cat 9 error handling, Cat 11 numerical discipline) instead of duplicating it.
+- **`simulation-conventions` rule** (`.claude/rules/simulation-conventions.md`) — path-scoped Monte Carlo discipline (the DGP/estimand contract, L'Ecuyer seeding, MCSE reporting, coverage-vs-truth, raw-result storage). Sibling to `r-code-conventions.md`; auto-loads only on simulation files.
+- **`/r-package-check` skill** (`.claude/skills/r-package-check/`) — the R package release gate: regenerates docs (`devtools::document()`), runs the test suite, runs `R CMD check --as-cran`, triages every ERROR / WARNING / NOTE against CRAN policy, then runs `r-package-reviewer`. Produces a CRAN-submission checklist. Does not bump versions or submit.
+- **`r-package-reviewer` agent** (`.claude/agents/r-package-reviewer.md`) — reviews package *source* (DESCRIPTION / dependency hygiene, NAMESPACE & imports, roxygen completeness, testthat coverage, CRAN-policy red flags). Builds on `r-reviewer` (general numerical discipline) instead of duplicating it.
+- **`r-package-conventions` rule** (`.claude/rules/r-package-conventions.md`) — path-scoped package-source standards (no `library()` in `R/`, roxygen-generated `NAMESPACE`, Imports vs Suggests, testthat 3e, CRAN-policy red flags, semver + NEWS). `r-code-conventions.md` now carries an explicit "analysis scripts, not package source" scope banner pointing here.
+- **"One repo, many project types" framing** (README + landing page) — positions the template as a hub for courses, papers, replication, simulation studies, and the R package gate, with Stata/Python package checks and personal-productivity workflows on the roadmap (`.claude/references/v2.0-backlog.md`).
+
+### Changed — Opus 4.8 currency refresh
+
+Brings the model / effort / cost guidance up to date — every claim re-verified against official Anthropic docs on 2026-05-31:
+
+- **Model lineup → Opus 4.8.** README, the guide (lineup callout + routing table + rendered HTML), `model-routing.md`, `TROUBLESHOOTING.md` (retirement migration target), `statusline.sh`, and the v2.0 backlog now lead with **Opus 4.8** (`claude-opus-4-8`, GA 2026-05-28, API default, $5/$25, 1M context) as the newest model; Opus 4.7 is named as the prior generation. Historical CHANGELOG entries are left intact.
+- **Effort guidance.** **Opus 4.8 defaults to `high`** — its `high` does roughly what 4.7's `xhigh` did, for fewer tokens. The old "xhigh recommended for 4.7 / default to medium" framing is replaced with "`high` is the default; reserve `xhigh` for the hardest runs; `ultracode` (xhigh + dynamic workflows) for repo-scale autonomous tasks." `model-routing.md` gains a new **effort-axis** section (effort is the first cost lever, model tier the second).
+- **Cost / cache.** Prompt-cache TTL framed correctly: 5-min default on API keys; **1-hour automatic on Claude Pro/Max subscriptions**. The 70/20/10 routing split is unchanged (Sonnet 4.6 / Haiku 4.5 remain the current tiers).
+- **Auto mode.** Now described as on Team / Enterprise / API and rolling out to Max, gated on Opus 4.6+ or Sonnet 4.6 (was "Max + Opus 4.7").
+- **Version pin** updated to `v1.10.0` (2026-05-31).
+
+### Fixed — hook output channels, non-fatal scoring, + a model-version drift gate
+
+- **`context-monitor.py` + `verify-reminder.py` were silent on the user side.** Both fire on `PostToolUse` and `print()` plain ANSI-colored text — which reaches Claude's context as literal escape-code noise and never reaches the **user** at all. Both now emit the proper PostToolUse JSON contract: a clean `systemMessage` (shown to the user) **and** `hookSpecificOutput.additionalContext` (injected into Claude's context), ANSI-free. Verified against the [hooks reference](https://code.claude.com/docs/en/hooks).
+- **`context-monitor.py` calibration.** The old "context %" was a bare tool-call counter (`MAX_TOOL_CALLS = 150`) that cried wolf far too early against a 1M-token window. It now estimates tokens from the `transcript_path` size against `CLAUDE_CONTEXT_WINDOW_TOKENS` (default 1,000,000), falls back to a configurable counter (`CLAUDE_CONTEXT_MAX_TOOL_CALLS`, default 400), and labels the figure a coarse proxy.
+- **New model-version drift gate.** `.claude/references/model-versions.md` is now the single source of truth for current model point versions, and `scripts/check-model-versions.sh` flags any superseded version presented as current in user-facing surfaces (historical CHANGELOG + "prior generation"/comparison lines are allowed via markers). Wired into `scripts/check-surface-sync.sh` as a third pre-commit gate, so the ~6-week model-staleness class that prompted this release can't silently recur.
+- **`post-compact-restore.py` ANSI on SessionStart.** The post-compaction restore message printed ANSI color codes, which on `SessionStart` land in Claude's context as literal escape-code noise. It now emits a clean, ANSI-free message via the `SessionStart` `additionalContext` contract.
+- **`quality_score.py` timeouts were fatal.** A `quarto render` (120s) or `Rscript` (10s) timeout returned the same as a real compilation failure → `auto_fail`, score 0, commit blocked. Timeouts (and a missing tool) are now a distinct **could-not-verify** state: the score reflects the static checks and the report notes which check was skipped. Both timeouts are env-configurable (`QUALITY_QUARTO_TIMEOUT`, `QUALITY_RSCRIPT_TIMEOUT`).
+
+### Notes
+
+- Count surfaces (README, CLAUDE.md, guide source + rendered HTML, landing page, skill template) updated to 38 / 18 / 28 / 6; `check-surface-sync.sh` passes.
+- The entire audit **P0** (Opus 4.8 currency refresh, the two silent-hook fixes, the `model-versions.md` drift gate, the `post-compact-restore.py` SessionStart cleanup, and the `quality_score.py` could-not-verify fix) was folded into this release. The main remaining roadmap item is Stata/Python package dev — see `.claude/references/v2.0-backlog.md`.
+
+---
+
 ## v1.9.0 — 2026-05-20
 
 A **guide-refresh + ecosystem catch-up** minor release shipped in five passes against the plan at `quality_reports/plans/2026-05-20_v1.9.0-guide-refresh.md` (local-only; not tracked in git per the standard `quality_reports/plans/*` ignore rule). No breaking changes.
@@ -758,4 +799,4 @@ git merge upstream/main           # or: git rebase upstream/main
 
 Files you almost certainly customized — `CLAUDE.md`, `Bibliography_base.bib`, `Quarto/theme-template.scss`, your lecture files in `Slides/` and `Quarto/`, `.claude/agents/domain-reviewer.md` — may produce merge conflicts. Resolve in favor of your customizations; pull only the infrastructure improvements.
 
-To pin to a specific version: `git checkout v1.8.0` (latest as of 2026-04-27).
+To pin to a specific version: `git checkout v1.10.0` (latest as of 2026-05-31).

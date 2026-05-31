@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Pedro H. C. Sant’Anna">
-<meta name="dcterms.date" content="2026-04-27">
+<meta name="dcterms.date" content="2026-05-31">
 
 <title>My Claude Code Setup</title>
 <style>
@@ -2551,14 +2551,14 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 27, 2026</p>
+      <p class="date">May 31, 2026</p>
     </div>
   </div>
   
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 20, 2026</p>
+      <p class="date-modified">May 31, 2026</p>
     </div>
   </div>
     
@@ -2619,7 +2619,7 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>Multi-agent workflows</td>
-<td>15 specialized agents for proofreading, layout, pedagogy, code review, fact-checking, AI-voice auditing</td>
+<td>18 specialized agents for proofreading, layout, pedagogy, code review, fact-checking, AI-voice auditing, simulation + R-package review</td>
 </tr>
 <tr class="odd">
 <td>Quality review</td>
@@ -2645,7 +2645,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This workflow was developed over 6+ sessions building a PhD course on Causal Panel Data. The result: 6 complete lectures (140+ slides each), with Beamer + Quarto versions, interactive Plotly charts, TikZ diagrams, and R replication scripts — all managed by the orchestrator and reviewed by 14 specialized agents across 5 quality dimensions.</p>
+<p>This workflow was developed over 6+ sessions building a PhD course on Causal Panel Data. The result: 6 complete lectures (140+ slides each), with Beamer + Quarto versions, interactive Plotly charts, TikZ diagrams, and R replication scripts — all managed by the orchestrator and reviewed by a suite of specialized agents across 5 quality dimensions.</p>
 <p>While this case study centers on slides, every component — agents, orchestrator, quality gates — works identically for research papers, data analysis, and proposals.</p>
 </div>
 </div>
@@ -2757,7 +2757,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>You talk, Claude orchestrates.</strong> The 16 agents, 36 skills, and 26 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
+<p><strong>You talk, Claude orchestrates.</strong> The 18 agents, 38 skills, and 28 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2770,7 +2770,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This guide describes the full system — 16 agents, 36 skills, 26 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
+<p>This guide describes the full system — 18 agents, 38 skills, 28 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
 </div>
 </div>
 <hr>
@@ -3596,7 +3596,7 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Claude Code ships with built-in skills beyond this template’s 36: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
+<p>Claude Code ships with built-in skills beyond this template’s 38: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
 </div>
 </div>
 </section>
@@ -3663,11 +3663,11 @@ APPROVED   NEEDS WORK
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Current Anthropic lineup (May 2026)
+<span class="screen-reader-only">Note</span>Current Anthropic lineup (verified 2026-05-31)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Opus 4.7</strong> is the Max / Team Premium default (GA 2026-04-16, same pricing as 4.6: $5/$25 per MTok input/output). Pairs with the new <code>xhigh</code> effort level (see below) for coding. <strong>Sonnet 4.6</strong> is the workhorse mid-tier (1M context still available; the 4.5 1M beta retired 2026-04-30). <strong>Haiku 4.5</strong> is the cost-efficient fast model.</p>
+<p><strong>Opus 4.8</strong> (<code>claude-opus-4-8</code>) is the newest model and the API default (GA 2026-05-28, $5/$25 per MTok input/output, 1M context); it defaults to <code>high</code> effort. <strong>Opus 4.7</strong> is the prior generation. <strong>Sonnet 4.6</strong> is the workhorse mid-tier (1M context). <strong>Haiku 4.5</strong> is the cost-efficient fast model. <em>Verified against Anthropic docs 2026-05-31.</em></p>
 <p><strong>Retirement notice:</strong> Sonnet 4 and the original Opus 4 retire on <strong>2026-06-15</strong>. If your environment pins one of these (<code>ANTHROPIC_MODEL</code> env, hard-coded model IDs in CI, etc.), migrate before then. See <a href="../TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> for the migration checklist.</p>
 </div>
 </div>
@@ -3801,7 +3801,7 @@ APPROVED   NEEDS WORK
 <p>Cost is invisible until you look at the monthly invoice. Three levers, in order of impact:</p>
 <p><strong>1. Prompt caching.</strong> Anthropic’s prompt cache lets repeated prefix tokens (system prompt, CLAUDE.md, large context blobs) hit a cached path at a fraction of the input price. Two things forkers should know:</p>
 <ul>
-<li><strong>The default TTL dropped from 60 min to 5 min</strong> in early 2026. A long <code>/review-paper --peer</code> pipeline that took 12 minutes between turns now starts the second turn with a cold cache. For long pipelines on API / Bedrock / Vertex / Foundry plans, the opt-in <code>ENABLE_PROMPT_CACHING_1H</code> environment variable restores 1-hour TTL.</li>
+<li><strong>The default TTL dropped from 60 min to 5 min</strong> in early 2026. A long <code>/review-paper --peer</code> pipeline that took 12 minutes between turns now starts the second turn with a cold cache. For long pipelines on API / Bedrock / Vertex / Foundry plans, the opt-in <code>ENABLE_PROMPT_CACHING_1H</code> environment variable restores 1-hour TTL. On Claude Pro / Max subscriptions, Claude Code requests the 1-hour TTL automatically at no extra cost.</li>
 <li><strong><code>cache_miss_reason</code></strong> (Anthropic public beta, 2026-05-13) is now exposed on Messages requests. Use it to diagnose why a long-running pipeline isn’t getting cache hits (most often: a hook injected a timestamp that broke the prefix; or system-prompt drift between turns).</li>
 </ul>
 <p>The Apr 2026 <a href="https://dev.to/whoffagents/claude-prompt-caching-in-2026-the-5-minute-ttl-change-thats-costing-you-money-4363">TTL change cost analysis</a> estimates a 30–60% effective cost increase for long-running pipelines that don’t opt into the 1-hour TTL. Worth a Saturday hour to instrument your most expensive skill (<code>/review-paper --peer</code> is typically the worst offender).</p>
@@ -3831,14 +3831,14 @@ APPROVED   NEEDS WORK
 <td>Review and critique: r-reviewer, slide-auditor, proofreader, quarto-fixer</td>
 </tr>
 <tr class="odd">
-<td><strong>Opus 4.7</strong></td>
+<td><strong>Opus 4.8</strong></td>
 <td>~10%</td>
 <td>High-judgment work: editor, domain-referee, methods-referee, claim-verifier, manuscript review</td>
 </tr>
 </tbody>
 </table>
 <p>Set per-agent via <code>model:</code> in <code>.claude/agents/&lt;name&gt;.md</code> frontmatter. Typical savings vs. all-Opus: <strong>50–80% on routed skills</strong>, no quality loss on the mechanical tier. The community-converged ratio is documented in <a href="https://augmentcode.com">Augment Code’s routing data</a> and aligns with Aider’s architect/editor split; we cite Anthropic’s <a href="https://www.anthropic.com/engineering">Apr 8 2026 “Decoupling brain from hands”</a> as the primary-source endorsement of the pattern.</p>
-<p><strong>3. Effort budgeting.</strong> The Effort Levels section earlier covered the <code>low | medium | high | xhigh | max</code> ladder. The cost-conscious rule: <strong>reach for <code>xhigh</code> on Opus 4.7 coding only when you’ve already verified the cheaper tier failed</strong>. Default to <code>medium</code>; bump to <code>high</code> for paper-level judgment; <code>xhigh</code> for the hard <code>/review-paper</code> runs or substantial refactors.</p>
+<p><strong>3. Effort budgeting.</strong> The Effort Levels section earlier covered the <code>low | medium | high | xhigh | max</code> ladder. <strong>Opus 4.8 defaults to <code>high</code></strong> — and its <code>high</code> does roughly what 4.7’s <code>xhigh</code> did, for fewer tokens. So: let <code>high</code> be the default; drop to <code>medium</code>/<code>low</code> to save cost on mechanical work; reach for <code>xhigh</code> only for extended exploration (deep search, big refactors, the hardest <code>/review-paper</code> runs); <code>ultracode</code> (xhigh + dynamic workflows) for repo-scale autonomous tasks.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3940,7 +3940,7 @@ APPROVED   NEEDS WORK
 <tr class="odd">
 <td><strong>Auto</strong></td>
 <td><code>auto</code></td>
-<td>Classifier-gated; everything runs unless flagged risky (Mar 2026 Week 13; the <code>--enable-auto-mode</code> flag is no longer required for Max + Opus 4.7 users as of Apr 2026 Week 16)</td>
+<td>Classifier-gated; everything runs unless flagged risky. On Team / Enterprise / API and rolling out to Max; needs Opus 4.6+ or Sonnet 4.6 (Mar 2026 Week 13; <code>--enable-auto-mode</code> flag retired Apr 2026 Week 16)</td>
 <td>Long autonomous tasks with safety net — the recommended mode for trusted repos when bypass is too permissive</td>
 </tr>
 <tr class="even">
@@ -4152,7 +4152,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </section>
 <section id="sec-effort" class="level2" data-number="4.7">
 <h2 data-number="4.7" class="anchored" data-anchor-id="sec-effort"><span class="header-section-number">4.7</span> Effort Levels — Cost vs. Thoroughness</h2>
-<p>Claude Code lets you control how deeply it reasons about each task. Higher effort means more “thinking tokens” and better results — but higher cost.</p>
+<p>Claude Code lets you control how deeply it reasons about each task. Higher effort means more “thinking tokens” and better results — but higher cost. On <strong>Opus 4.8 the default is <code>high</code></strong> — its <code>high</code> reasoning now delivers what 4.7’s <code>xhigh</code> did, so you rarely need to bump up (see <a href="#sec-cost">Cost-Conscious Composition</a>).</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 12%">
@@ -4178,14 +4178,14 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <tr class="even">
 <td><code>medium</code></td>
 <td>Standard</td>
-<td>Most tasks (default for Opus)</td>
+<td>Mechanical work; drop here from <code>high</code> to save cost</td>
 <td><span class="math display">\[ |
-| `high` | ~10k tokens | Complex derivations, paper reviews | \]</span>$</td>
+| `high` | ~10k tokens | Complex derivations, paper reviews (**Opus 4.8 default**) | \]</span>$</td>
 </tr>
 <tr class="odd">
 <td><code>xhigh</code></td>
 <td>~20k tokens</td>
-<td><strong>Recommended for Opus 4.7 coding</strong> (introduced Apr 2026 Week 16)</td>
+<td>Extended exploration / hardest runs; <strong>Opus 4.8 defaults to <code>high</code></strong>, so reserve <code>xhigh</code> for genuinely hard work (introduced Apr 2026 Week 16)</td>
 <td>$<span class="math display">\[$ |
 | `max` / ultrathink | ~32k tokens | Deep proofs, multi-step analysis | \]</span>$$$</td>
 </tr>
@@ -4193,7 +4193,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </table>
 <p><strong>How to set effort:</strong></p>
 <ul>
-<li><strong>Per-session:</strong> Type <code>/effort high</code> (or <code>/effort xhigh</code> for Opus 4.7 coding work). Typing <code>/effort</code> on its own opens an <strong>interactive slider</strong> (Apr 2026 Week 16).</li>
+<li><strong>Per-session:</strong> Type <code>/effort high</code> (the Opus 4.8 default) or <code>/effort xhigh</code> for the hardest runs. Typing <code>/effort</code> on its own opens an <strong>interactive slider</strong> (Apr 2026 Week 16).</li>
 <li><strong>Per-skill:</strong> Add <code>effort: high</code> to skill frontmatter (see <a href="#skill-frontmatter">Skill Frontmatter Reference</a>)</li>
 <li><strong>Keyboard toggle:</strong> <code>Option+T</code> (Mac) / <code>Alt+T</code> (Windows/Linux) toggles extended thinking</li>
 <li><strong>In prompts:</strong> Include “ultrathink” in your prompt to enable extended thinking for that turn. Note: phrases like “think hard” are treated as regular instructions and do <em>not</em> allocate extra thinking tokens</li>
@@ -6671,6 +6671,16 @@ research-spec.md  ─────────────→  preregistration-dr
 <td><code>.claude/agents/promote-memory-council.md</code></td>
 <td>Five-critic council (generality / staleness / redundancy / evidence / format) for <code>[LEARN]</code> promotion from personal-memory.md to MEMORY.md; invoked by <code>/promote-memory</code> (v1.9.0)</td>
 </tr>
+<tr class="odd">
+<td>Sim Reviewer</td>
+<td><code>.claude/agents/sim-reviewer.md</code></td>
+<td>Monte Carlo reviewer — DGP/estimand match, Monte Carlo SE, coverage-vs-truth, claims↔︎tables parity (v1.10.0)</td>
+</tr>
+<tr class="even">
+<td>R Package Reviewer</td>
+<td><code>.claude/agents/r-package-reviewer.md</code></td>
+<td>R package-source reviewer — DESCRIPTION/NAMESPACE hygiene, roxygen, testthat, CRAN-policy red flags (v1.10.0)</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -6870,6 +6880,16 @@ research-spec.md  ─────────────→  preregistration-dr
 <td><code>.claude/skills/stata-replication/</code></td>
 <td>End-to-end Stata pipeline scaffold + execution via the <code>stata-mcp</code> MCP server (mirrors <code>/data-analysis</code> for R-first projects; v1.9.0)</td>
 </tr>
+<tr class="odd">
+<td><code>/simulation-study</code></td>
+<td><code>.claude/skills/simulation-study/</code></td>
+<td>Reproducible Monte Carlo study — DGP, estimator grid, seeded reps, bias/RMSE/coverage/size/power with Monte Carlo SEs (v1.10.0)</td>
+</tr>
+<tr class="even">
+<td><code>/r-package-check</code></td>
+<td><code>.claude/skills/r-package-check/</code></td>
+<td>R package release gate — <code>devtools::document()</code> + tests + <code>R CMD check --as-cran</code> + CRAN-policy triage (v1.10.0)</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -6945,7 +6965,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <tr class="even">
 <td>R Code Conventions</td>
 <td><code>r-code-conventions.md</code></td>
-<td><code>*.R</code></td>
+<td><code>Figures/**</code>, <code>scripts/**</code>, <code>explorations/**</code> (analysis scripts)</td>
 </tr>
 <tr class="odd">
 <td>TikZ Quality</td>
@@ -7036,6 +7056,16 @@ research-spec.md  ─────────────→  preregistration-dr
 <td>Stata Code Conventions</td>
 <td><code>stata-code-conventions.md</code></td>
 <td><code>**/*.do</code>, <code>scripts/stata/**</code> — header scaffold, numbered pipeline, esttab tables, clustering discipline, AEA compliance (v1.9.0)</td>
+</tr>
+<tr class="odd">
+<td>Simulation Conventions</td>
+<td><code>simulation-conventions.md</code></td>
+<td><code>**/*simulation*.R</code>, <code>**/*_sim.R</code>, <code>explorations/**</code> — Monte Carlo discipline: DGP/estimand, L’Ecuyer seeding, Monte Carlo SE, coverage-vs-truth, raw-result storage (v1.10.0)</td>
+</tr>
+<tr class="even">
+<td>R Package Conventions</td>
+<td><code>r-package-conventions.md</code></td>
+<td><code>R/**</code>, <code>tests/**</code>, <code>DESCRIPTION</code>, <code>NAMESPACE</code>, <code>man/**</code> — package-source standards: no <code>library()</code> in <code>R/</code>, roxygen NAMESPACE, Imports/Suggests, testthat 3e, CRAN policy (v1.10.0)</td>
 </tr>
 </tbody>
 </table>

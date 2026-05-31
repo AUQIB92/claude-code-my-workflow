@@ -2,7 +2,7 @@
 # Claude Code status line: shows permission mode, model, and git branch.
 #
 # Claude Code pipes a JSON session snapshot to stdin. Relevant keys:
-#   .model.display_name      e.g. "Opus 4.6"
+#   .model.display_name      e.g. "Opus 4.x"
 #   .permission_mode         e.g. "bypassPermissions" | "plan" | "acceptEdits" | "default"
 #   .workspace.current_dir   absolute path of the cwd
 #
