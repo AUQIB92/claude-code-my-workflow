@@ -103,7 +103,7 @@ Variance mode runs N independent referees (default N=3, max N=5 for token-cost d
    - `master_supporting_docs/supporting_papers/$ARGUMENTS`
    - Glob for partial matches
 
-2. **Read the full paper** end-to-end. For long PDFs, read in chunks (5 pages at a time).
+2. **Read the full paper** end-to-end with the Read tool — a 1M-token window holds a full paper. For long PDFs, page through with the `pages` parameter (up to 20 pages per request).
 
 3. **Evaluate across 6 dimensions** (see below).
 
@@ -292,7 +292,7 @@ Phase 3: Re-audit
 
 - **Max 5 rounds.** After round 5, halt regardless of verdict.
 - **Fix round limits:** if the same Concern label appears in rounds N and N+2, flag as "author disagreement" and let the user decide (keep-as-is with rationale vs. another fix attempt).
-- **Budget escape:** if token cost across all rounds exceeds ~200k, warn and let the user cap further rounds.
+- **Budget escape:** if cumulative token cost across all rounds exceeds a configurable spend cap (default ~500k — a spend ceiling, not a context-window limit, since each re-audit runs in fresh context), warn and let the user cap further rounds.
 
 ### Stopping criteria
 
