@@ -5,44 +5,36 @@ paths:
 
 # Robust PDF Processing
 
-## The Safe Processing Workflow
+**Default: read the PDF directly.** The Read tool reads PDFs natively — pass a `pages` range (e.g. `pages: "1-20"`) for papers longer than ~10 pages, up to 20 pages per request — and a 1M-token context window comfortably holds a full paper. You do **not** need to pre-split a normal paper into chunk files.
 
-**Step 1: Receive PDF Upload**
-- User uploads PDF to `master_supporting_docs/supporting_papers/` or `supporting_slides/`
-- Claude DOES NOT attempt to read it directly
+## The Workflow
 
-**Step 2: Check PDF Properties**
+**Step 1: Check size first**
 ```bash
 pdfinfo paper_name.pdf | grep "Pages:"
 ls -lh paper_name.pdf
 ```
 
-**Step 3: Create Subfolder and Split**
+**Step 2: Read it directly**
+- **Normal papers (up to ~100 pages):** read with the Read tool, using the `pages` parameter to page through (up to 20 pages per request). No pre-splitting needed.
+- **Selective deep reading (a cost optimization, not a capacity limit):** for a long paper you may scan section by section and read the load-bearing parts (identification, methods, results) in detail while skimming appendices/references — this saves tokens, not because the model cannot hold the document.
+
+**Step 3 (fallback): split only when a direct read fails.** Reach for Ghostscript page-range splitting ONLY when the PDF is genuinely oversized (a book or high-resolution scan, hundreds of pages), corrupt, or a direct Read errors:
 ```bash
 mkdir -p paper_name/
-
 for i in {0..9}; do
-  start=$((i*5 + 1))
-  end=$(((i+1)*5))
+  start=$((i*5 + 1)); end=$(((i+1)*5))
   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
      -dFirstPage=$start -dLastPage=$end \
      -sOutputFile="paper_name/paper_name_p$(printf '%03d' $start)-$(printf '%03d' $end).pdf" \
      paper_name.pdf 2>/dev/null
 done
 ```
-
-**Step 4: Process Chunks Intelligently**
-- Read chunks ONE AT A TIME using the Read tool
-- Extract key information from each chunk
-- Build understanding progressively
-- Don't try to hold all chunks in working memory
-
-**Step 5: Selective Deep Reading**
-- After scanning all chunks, identify the most relevant sections
-- Only read those sections in detail for slide development
-- Skip appendices, references, or less relevant sections unless needed
+Then read the page-range files one at a time, building understanding progressively.
 
 ## Error Handling Protocol
+
+**If a direct read fails** (corrupt or oversized): fall back to Step 3 page-range splitting.
 
 **If a chunk fails to process:**
 1. Note the problematic chunk (e.g., "Chunk p021-025 failed")
@@ -52,9 +44,4 @@ done
 **If splitting fails:**
 1. Check if Ghostscript is installed: `gs --version`
 2. Try alternative: `pdftk paper.pdf burst output paper_%03d.pdf`
-3. If all else fails, ask user to upload specific page ranges manually
-
-**If memory/token issues persist:**
-1. Process only 2-3 chunks per session
-2. Focus on specific sections user identifies as most important
-
+3. If all else fails, ask the user to upload specific page ranges manually
