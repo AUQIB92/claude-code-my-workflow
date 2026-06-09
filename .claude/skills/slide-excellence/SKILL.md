@@ -154,7 +154,9 @@ Spawn only the agents whose conditions hold:
 
 **De-duplication:** if the user has already run one of these skills on this file in the current session (e.g., ran `/proofread` first, now running `/slide-excellence`), ask whether to reuse the existing report or re-run. Default: reuse (saves tokens).
 
-## Step 5: Synthesize Combined Summary
+## Step 5: Synthesize Combined Summary (reduce typed findings)
+
+This is **fan-out → reduce** ([`orchestrator-protocol.md`](../../rules/orchestrator-protocol.md)): each agent returns `FINDING`s + a `SCORECARD` in the shared schema ([`orchestration-schemas.md`](../../references/orchestration-schemas.md)), and this step **stacks the typed scorecards** rather than re-reading each report by eye. The Overall Quality Score is the gate predicate over summed CRITICAL/MAJOR/MINOR counts. (Conditional dispatch means a skipped lens contributes no findings, not zeros to average.)
 
 Only include sections for agents that actually ran.
 

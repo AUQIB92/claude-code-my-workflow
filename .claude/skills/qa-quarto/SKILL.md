@@ -49,9 +49,13 @@ If not APPROVED, launch `quarto-fixer` agent to apply fixes (Critical → Major 
 
 Re-launch critic to verify fixes. Loop back to Phase 2 if needed.
 
-## Iteration Limits
+## Iteration Limits — loop-until-dry
 
-Max 5 fix rounds. After that, escalate to user with remaining issues.
+This is the **loop-until-dry** primitive from [`orchestrator-protocol.md`](../../rules/orchestrator-protocol.md): the critic returns `FINDING`s (the hard-gate table is the CRITICAL roll-up, per [`orchestration-schemas.md`](../../references/orchestration-schemas.md)); the loop **converges when a round adds 0 new CRITICAL/MAJOR** findings (deduped on `location`+`finding`), not at a fixed round count.
+
+- **Fallback cap:** 5 rounds bounds a non-converging loop, then escalate to the user with remaining issues.
+- **Two-strikes:** the same gate failing in rounds N and N+2 is flagged for the user, not patched again ([`summary-parity.md`](../../rules/summary-parity.md)).
+- APPROVED iff every hard gate passes (zero CRITICAL).
 
 ## Final Report
 

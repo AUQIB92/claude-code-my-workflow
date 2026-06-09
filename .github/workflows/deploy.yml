@@ -1,0 +1,36 @@
+name: deploy-guide
+
+# Renders the workflow guide to docs/ on every push to main that touches the
+# guide source, so GitHub Pages stays in sync without a manual `quarto render`.
+# Opt-in: enable Actions on your fork and grant Pages write. Forkers who don't
+# publish a guide can delete this file.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "guide/**"
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: quarto-dev/quarto-actions/setup@v2
+      - name: Render guide
+        run: quarto render guide/workflow-guide.qmd
+      - name: Sync to docs/
+        run: |
+          cp guide/workflow-guide.html docs/workflow-guide.html
+          if [ -n "$(git status --porcelain docs/)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add docs/workflow-guide.html
+            git commit -m "ci: re-render guide → docs/ [skip ci]"
+            git push
+          else
+            echo "docs/ already up to date."
+          fi

@@ -130,13 +130,12 @@ quarto render guide/workflow-guide.qmd
 cp guide/workflow-guide.html docs/workflow-guide.html
 ```
 
-### PHASE 5: Loop or Declare Clean
+### PHASE 5: Loop-until-dry or Declare Clean
 
-After fixing, launch a fresh set of 4 agents to verify.
-- If new issues found → fix and loop again
-- If zero genuine issues → declare clean and report summary
-
-**Max loops: 5** (to prevent infinite cycling)
+After fixing, launch a fresh set of 4 agents to verify. This is the **loop-until-dry** primitive ([`orchestrator-protocol.md`](../../rules/orchestrator-protocol.md)):
+- **Converge** when a round surfaces **0 new genuine issues** (deduped on file+issue) — declare clean and report summary.
+- If new issues found → fix and loop again.
+- **Fallback cap: 5 loops** bounds a non-converging audit (prevents infinite cycling); a finding that survives rounds N and N+2 is escalated to the user rather than re-patched ([`summary-parity.md`](../../rules/summary-parity.md)).
 
 ## Key Lessons from Past Audits
 

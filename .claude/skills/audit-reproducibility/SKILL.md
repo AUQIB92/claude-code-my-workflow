@@ -104,6 +104,38 @@ For each matched claim, apply the thresholds from `replication-protocol.md`:
 
 Respect any **tolerance overrides** the user has written into their `replication-protocol.md` fork (they may loosen for MC noise or tighten for administrative data).
 
+### Phase 4b: Disposition — PASS / FAIL / EXPLAINED / UNMATCHED
+
+A tolerance check resolves to one of four dispositions:
+
+- **PASS** — within tolerance.
+- **FAIL** — outside tolerance, with no defensible alternative recorded. **Blocks** (exit 1).
+- **EXPLAINED** — outside tolerance, **but** the author has recorded a *concrete, named alternative specification* that accounts for the gap (see the downgrade rule). Surfaced in the report and carried into a response-to-referees; does **not** block.
+- **UNMATCHED** — no computed counterpart found (Phase 3 confidence < 0.7). Never auto-downgradable.
+
+**A mismatch is not automatically a failure.** In applied work the most common out-of-tolerance result is a *defensible alternative spec*, not a bug — `reghdfe` vs `feols` clustering df, never-treated vs not-yet-treated comparison group, conditional vs unconditional parallel trends, a different MC seed/reps, or display rounding. The skill's job is to *stage the disagreement* for a human auditor, not to pronounce the code right and the paper wrong. (The df-adjustment note in "Stata-specific notes" below is the canonical example of a named alternative.)
+
+**The manuscript is not the oracle.** When the computed value disagrees with the manuscript, do not presume the code is correct and the paper stale — nor the reverse. A refactor may have broken a previously-correct table (the *on-disk output* is the buggy one), or the paper may carry an old number. The computed value is a **challenger**, not ground truth. Report a mismatch as "one of {paper, code} must change — isolate which," never "revert the code to match the paper." This prevents the trap of reverting a genuine bug-fix just to make the paper 'reproduce.'
+
+#### Downgrade rule: FAIL → EXPLAINED
+
+A FAIL may be downgraded to EXPLAINED **only** when a *specific named alternative* is recorded for that exact claim — in the passport entry's `notes:` field (passport mode) or the audit report's author-note column (default mode). Example of a valid note:
+
+> "never-treated vs not-yet-treated comparison group; under not-yet-treated the published value is −1.19, within rounding of the script's −1.187. CODE-CORRECTED pending."
+
+The author is the **auditor**: the skill stages the two-sided comparison (reported value *and* computed value, both shown); the human writes the one-line named alternative; the skill records it and thereafter respects it. Tag the resolution `PAPER-CORRECTED`, `CODE-CORRECTED`, or `DEFENSIBLE-ALTERNATIVE`.
+
+**Hard floor — never downgradable to EXPLAINED:**
+- A blank note, "unclear", "looks fine", or any note that does not *name a concrete alternative spec*.
+- An **UNMATCHED** claim (no computed counterpart to compare against).
+- A flat numerical contradiction with no alternative offered.
+
+(Citation/existence claims are out of scope here — `/verify-claims` owns those, and applies the same named-alternative softening on its side.)
+
+#### Repeated EXPLAINED is a signal (two-strikes)
+
+Reuse the two-strikes rule from `review-paper --adversarial` and [`summary-parity.md`](../../rules/summary-parity.md): if the **same** claim is downgraded to EXPLAINED in **two consecutive audits** without ever being corrected to PASS (the author keeps invoking the alternative but never updates paper or code), stop treating it as quietly resolved. Surface it prominently in Phase 5 — *"this contested number has been EXPLAINED twice but never corrected"* — so a standing disagreement can't hide behind a recorded note indefinitely. In passport mode, detect this by comparing the current `status`/`notes` against the prior audit's.
+
 ### Phase 5: Report
 
 Write `quality_reports/reproducibility_audit_[manuscript-name].md`:
@@ -121,9 +153,10 @@ Write `quality_reports/reproducibility_audit_[manuscript-name].md`:
 | Status | Count |
 |---|---|
 | PASS | N |
-| FAIL (diff > tolerance) | M |
+| FAIL (diff > tolerance, no named alternative) | M |
+| EXPLAINED (out of tolerance, named alternative recorded) | E |
 | UNMATCHED (manual review) | K |
-| **Overall verdict** | **PASS / FAIL** |
+| **Overall verdict** | **PASS / FAIL** (FAIL iff M > 0; EXPLAINED does not fail the audit) |
 
 ## PASS (all within tolerance)
 | Claim | Reported | Computed | Diff | Tolerance |
@@ -131,8 +164,13 @@ Write `quality_reports/reproducibility_audit_[manuscript-name].md`:
 | Table2_col3_ATT | -1.632 (0.584) | -1.628 (0.591) | 0.004 / 0.007 | 0.01 / 0.05 |
 
 ## FAIL (outside tolerance — BLOCKER)
-| Claim | Reported | Computed | Diff | Tolerance | Location in paper |
-|---|---|---|---|---|---|
+| Claim | Reported | Computed | Diff | Tolerance | Location in paper | Author note (name a concrete alternative to downgrade → EXPLAINED) |
+|---|---|---|---|---|---|---|
+
+## EXPLAINED (out of tolerance; defensible named alternative recorded — non-blocking, carry into response-to-referees)
+| Claim | Reported | Computed | Named alternative (why the gap is defensible) | Resolution |
+|---|---|---|---|---|
+| Table3_col2_ATT | -1.187 | -1.19 | never-treated vs not-yet-treated comparison group | DEFENSIBLE-ALTERNATIVE |
 
 ## UNMATCHED (manual review)
 | Claim | Raw context | Candidate sources |
@@ -142,15 +180,16 @@ Write `quality_reports/reproducibility_audit_[manuscript-name].md`:
 [sessionInfo excerpt]
 
 ## Next steps
-1. Fix any FAIL rows — either update the manuscript or rerun analysis.
+1. Resolve each FAIL row — either correct the manuscript, rerun the analysis, or (if the gap is a defensible alternative spec) record a concrete named alternative to downgrade it to EXPLAINED.
 2. Review UNMATCHED rows — add explicit lookup keys or widen the search scope.
-3. After zero FAILs, the paper is replication-ready.
+3. Review EXPLAINED rows before submission — each should map to a sentence in the response-to-referees.
+4. After zero FAILs (EXPLAINED rows allowed), the paper is replication-ready.
 ```
 
 ## Exit behavior
 
-- **All PASS:** exit 0, summary printed.
-- **Any FAIL:** exit 1, summary printed to stderr. This makes the skill usable as a `/commit` pre-commit gate — see `replication-protocol.md` for the enforcement pattern.
+- **All PASS (or PASS + EXPLAINED):** exit 0, summary printed.
+- **Any FAIL:** exit 1, summary printed to stderr. This makes the skill usable as a `/commit` pre-commit gate — see `replication-protocol.md` for the enforcement pattern. **EXPLAINED rows do NOT count as FAIL and never trigger exit 1** — they are surfaced, not blocking. The gate keeps its full teeth for genuine FAILs (no named alternative) and for fabricated/UNMATCHED claims.
 - **UNMATCHED > 0 (with 0 FAIL):** exit 0 with warning — user must manually review.
 
 ## Source-language coverage
@@ -176,8 +215,9 @@ When `quality_reports/passports/<paper-slug>.yaml` exists, the skill operates in
 - For each `claims:` entry in the passport, perform the same numeric audit as the default mode (extract reported value from manuscript at `location`, locate computed value at `source_file:source_line` / `output_file:output_field`, compare against `tolerance:`).
 - After each claim is audited, update `status` in place:
   - PASS → claim within tolerance.
-  - FAIL → claim outside tolerance. Record the discrepancy in the entry's `notes`.
-  - STALE → if `source_file` or `output_file` modification time is later than `last_verified_on`, mark STALE and re-run the audit logic (after the rerun, status becomes PASS or FAIL — STALE is transient).
+  - FAIL → claim outside tolerance **and** the entry's `notes` does not name a concrete alternative. Record the discrepancy (reported vs computed) in `notes`. Blocks (exit 1).
+  - EXPLAINED → claim outside tolerance **but** the entry's `notes` already records a *specific named alternative spec* (not blank, not "unclear"). The skill reads `notes` on its next run and resolves the same out-of-tolerance claim to EXPLAINED instead of FAIL — surfaced, non-blocking. The hard floor still applies: an UNMATCHED claim or a note without a named alternative stays FAIL.
+  - STALE → if `source_file` or `output_file` modification time is later than `last_verified_on`, mark STALE and re-run the audit logic (after the rerun, status becomes PASS / FAIL / EXPLAINED — STALE is transient).
 - Update `last_verified_on` and `last_verified_by: "/audit-reproducibility"` per claim.
 - Update `paper.last_audit` at the top level.
 

@@ -2,7 +2,8 @@
 name: slide-auditor
 description: Visual layout auditor for RevealJS and Beamer slides. Checks for overflow, font consistency, box fatigue, and spacing issues. Use proactively after creating or modifying slides.
 tools: Read, Grep, Glob
-model: inherit
+model: sonnet
+effort: high
 ---
 
 You are an expert slide layout auditor for academic presentations.

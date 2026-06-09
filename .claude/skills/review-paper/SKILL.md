@@ -288,11 +288,14 @@ Phase 3: Re-audit
      → Jump back to Phase 1.
 ```
 
-### Iteration limits
+### Iteration limits — loop-until-dry
 
-- **Max 5 rounds.** After round 5, halt regardless of verdict.
-- **Fix round limits:** if the same Concern label appears in rounds N and N+2, flag as "author disagreement" and let the user decide (keep-as-is with rationale vs. another fix attempt).
-- **Budget escape:** if cumulative token cost across all rounds exceeds a configurable spend cap (default ~500k — a spend ceiling, not a context-window limit, since each re-audit runs in fresh context), warn and let the user cap further rounds.
+Same **loop-until-dry** primitive as `/qa-quarto` ([`orchestrator-protocol.md`](../../rules/orchestrator-protocol.md)): the critic returns `FINDING`s in the shared schema ([`orchestration-schemas.md`](../../references/orchestration-schemas.md)) and the loop **converges when a round adds 0 new CRITICAL/MAJOR concerns** (deduped on `location`+`finding`), not at a fixed count.
+
+- **Convergence:** APPROVED when a round produces zero Major Concerns and zero fatal Referee Objections.
+- **Fallback cap:** 5 rounds bounds a non-converging loop; after round 5, halt and list remaining concerns.
+- **Two-strikes:** if the same Concern label appears in rounds N and N+2, flag as "author disagreement" and let the user decide (keep-as-is with rationale vs. another fix attempt) — see [`summary-parity.md`](../../rules/summary-parity.md).
+- **Budget escape:** if cumulative token cost exceeds the spend cap (default ~500k — a spend ceiling, not a context-window limit, since each re-audit runs in fresh context), warn and let the user cap further rounds.
 
 ### Stopping criteria
 
@@ -356,7 +359,7 @@ Reports: `quality_reports/cross_artifact_[paper]/reproducibility.md`.
 
 Opt-out: `--no-novelty-check` already skips the probe entirely. If the probe runs, Post-Flight is mandatory.
 
-**Pre-Flight Report (required before Phase 1).** Before spawning the editor, output a Pre-Flight Report so the user can verify the inputs are read correctly:
+**Pre-Flight Report (required before Phase 1).** This is the `RUN_CONFIG` echo from [`orchestrator-protocol.md`](../../rules/orchestrator-protocol.md) — every interactive choice (journal, dispositions, peeve budget, N referees, cross-artifact/novelty toggles, round) is resolved **before** the forked editor/referees spawn, because a forked subagent cannot stop to ask. Output it so the user can verify inputs, and halt here on any unresolved required field (unknown journal, missing script) rather than mid-run:
 
 ```markdown
 ## Pre-Flight Report — /review-paper --peer
@@ -393,9 +396,11 @@ Spawn in parallel:
 
 Each referee must include "What would change my mind: [specific ask]" on every MAJOR concern.
 
-### Phase 3: Editor synthesis
+### Phase 3: Editor synthesis (reduce → judge, with the hallucination gate)
 
-Read both referee reports. Classify each MAJOR concern as FATAL / ADDRESSABLE / TASTE. Produce editorial decision using the decision rule table in `editor.md`.
+Read both referee reports. **Reduce** their `FINDING`s, classify each MAJOR concern as FATAL / ADDRESSABLE / TASTE, and produce the editorial decision using the decision rule table in `editor.md`.
+
+**Post-judge hallucination gate** ([`orchestration-schemas.md` §4](../../references/orchestration-schemas.md)): the editor reduces the referees — it must not desk-reject or escalate on a CRITICAL reason **neither referee raised**. Any editor-introduced blocker that is not traceable to a referee finding is re-verified in a fresh `claim-verifier` fork or dropped to `[JUDGE-HALLUCINATED]` and the decision recomputed. (The editor may always downgrade or de-duplicate referee concerns.)
 
 Report: `quality_reports/peer_review_[paper]/editorial_decision.md`.
 

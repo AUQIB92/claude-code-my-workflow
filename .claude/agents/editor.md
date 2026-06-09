@@ -2,7 +2,8 @@
 name: editor
 description: Journal editor who desk-reviews manuscripts, selects two referees with deliberately different dispositions, calibrates to a target journal from `.claude/references/journal-profiles.md`, and synthesizes an editorial decision (FATAL / ADDRESSABLE / TASTE). Used by `/review-paper --peer [journal]`.
 tools: Read, Grep, Glob, WebSearch, WebFetch
-model: inherit
+model: opus
+effort: high
 ---
 
 <!-- Adapted from Hugo Sant'Anna's clo-author (github.com/hugosantanna/clo-author),

@@ -66,6 +66,10 @@ Before writing any R code:
 
 **Do NOT proceed to extensions.** Isolate which step introduces the difference, check common causes (sample size, SE computation, default options, variable definitions), and document the investigation even if unresolved.
 
+**The mismatch does not presume the code is correct.** The on-disk output is a *challenger*, not an oracle — a refactor may have broken a previously-correct table, so the *manuscript* number may be the right one and the code the stale/buggy side. Frame it as "one of {paper, code} must change — isolate which," never "revert the code to match the paper."
+
+**A defensible alternative is not a failure.** If the gap is explained by a *concrete, named alternative specification* (e.g. never-treated vs not-yet-treated comparison group, conditional vs unconditional parallel trends, `reghdfe` vs `feols` clustering df, MC seed/reps, display rounding), record that named alternative and mark the claim **EXPLAINED** rather than FAIL — see the `status` semantics below. A blank or vague note ("unclear") never downgrades a FAIL.
+
 ### Replication Report
 
 Save to `quality_reports/LectureNN_replication_report.md`:
@@ -146,24 +150,28 @@ claims:
       n: exact
     last_verified_on: <ISO-8601>
     last_verified_by: "/audit-reproducibility"
-    status: PASS                                   # PASS | FAIL | STALE | UNVERIFIED
+    status: PASS                                   # PASS | FAIL | EXPLAINED | STALE | UNVERIFIED
     notes: |
       Optional notes — e.g., "matches paper to 3 decimals; SE differs in 4th
       decimal due to clustering df adjustment, within tolerance."
+      To downgrade a FAIL to EXPLAINED, this field MUST name a concrete
+      alternative spec, e.g. "never-treated vs not-yet-treated comparison
+      group; under not-yet-treated the published −1.19 matches the script."
 ```
 
 ### `status` semantics
 
 - **PASS** — last audit confirmed the claim within tolerance.
-- **FAIL** — last audit detected a discrepancy outside tolerance. Blocks `/commit` for the affected files unless explicit override.
+- **FAIL** — last audit detected a discrepancy outside tolerance **and** no concrete named alternative is recorded in `notes`. Blocks `/commit` for the affected files unless explicit override.
+- **EXPLAINED** — outside tolerance, **but** `notes` records a *specific named alternative specification* that accounts for the gap (defensible alternative, paper-corrected, or code-corrected). Surfaced in the audit report and meant to flow into a response-to-referees; does **not** block. The hard floor holds: an UNMATCHED claim or a note without a named alternative stays FAIL — `/audit-reproducibility` never downgrades on a blank or vague note.
 - **STALE** — the underlying `source_file` or `output_file` was modified after `last_verified_on`. Re-run `/audit-reproducibility` to refresh.
 - **UNVERIFIED** — the claim was added to the manuscript but never run through `/audit-reproducibility`. Should not appear in a submission-ready passport.
 
 ### Integration
 
 - **`/audit-reproducibility`** reads the passport at start, writes back after every claim audit. Failed claims are reported with their `id` and `location` so the author can find them in the manuscript instantly.
-- **`/commit`** reads the passport when a diff touches both `manuscript.tex` (or .qmd) and any `source_file` listed. If the passport contains any FAIL or STALE for a claim whose `source_file` is in the diff, `/commit` halts (advisory by default; gate-refuse if `--strict-passport` is set in `.claude/settings.json`).
-- **`/review-paper`** (default mode + `--peer`) appends a summary section to its report when the passport exists: `claims: N total, PASS: A, FAIL: B, STALE: C, UNVERIFIED: D`. Editors and referees know whether numeric claims have been independently verified at draft time.
+- **`/commit`** reads the passport when a diff touches both `manuscript.tex` (or .qmd) and any `source_file` listed. If the passport contains any FAIL or STALE for a claim whose `source_file` is in the diff, `/commit` halts (advisory by default; gate-refuse if `--strict-passport` is set in `.claude/settings.json`). **EXPLAINED claims do not halt** — the author has already recorded a defensible named alternative.
+- **`/review-paper`** (default mode + `--peer`) appends a summary section to its report when the passport exists: `claims: N total, PASS: A, FAIL: B, EXPLAINED: E, STALE: C, UNVERIFIED: D`. Editors and referees know whether numeric claims have been independently verified at draft time — and EXPLAINED rows tell them which contested numbers already carry a documented justification.
 
 ### Inspiration
 

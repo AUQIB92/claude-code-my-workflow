@@ -177,6 +177,12 @@ def run_context_monitor() -> int:
     # Estimate current context usage (coarse proxy)
     percentage = estimate_context_percentage(hook_input)
 
+    # Persist the latest estimate so the status line can surface it (best-effort).
+    try:
+        (get_session_dir() / "context-pct.txt").write_text(f"{percentage:.0f}")
+    except Exception:
+        pass
+
     # Check throttling
     if is_throttled(percentage):
         return 0

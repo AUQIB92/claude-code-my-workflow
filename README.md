@@ -182,6 +182,7 @@ This workflow is designed as a **single hub for an entire research program** —
 
 ### Agents (`.claude/agents/`)
 
+<!-- surface-sync-table: agents -->
 | Agent | What It Does |
 |-------|-------------|
 | `proofreader` | Grammar, typos, overflow, consistency review |
@@ -205,6 +206,7 @@ This workflow is designed as a **single hub for an entire research program** —
 
 ### Skills (`.claude/skills/`)
 
+<!-- surface-sync-table: skills -->
 | Skill | What It Does |
 |-------|-------------|
 | `/compile-latex` | 3-pass XeLaTeX compilation with bibtex |

@@ -86,6 +86,10 @@ Do **not** demote `claim-verifier`, `methods-referee`, or `editor` to Sonnet to 
 
 Aider's pattern uses one model as both planner and executor. We deliberately do not — same-model self-pairings produce correlated errors. Our split runs **different tier** on architect (Opus) vs. editor (Haiku/Sonnet); the diversity is part of the cost story.
 
+### Corollary: challenger ≠ auditor tier (guardrail, not a build)
+
+If a future contributor ever adds an explicit *challenger → auditor* step (e.g., an "audit-then-score" / "ground truth is a process" verifier where one agent argues against a claim and a second adjudicates), the challenger **must** run on a different tier than the auditor — two same-tier LLMs share blind spots, so a same-tier challenger launders correlated errors as independent confirmation. This costs nothing to honor today; it exists so the diversity property isn't quietly lost when the split is built. **This is a constraint on a hypothetical future step, not a green light to build it** — the current verification path uses the cheaper EXPLAINED-with-named-alternative mechanism (see `replication-protocol.md` and `verify-claims`), which adds no second agent and no cost multiplier.
+
 ## How `/commit` uses this rule
 
 `/commit`'s pre-commit verifier currently runs at the orchestrator's tier. When this rule's pattern matures (Sonnet 4.6 reliably catches most issues), the verifier can be routed to Sonnet by default with Opus reserved for `--strict` mode. Pending evaluation.

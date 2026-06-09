@@ -5,9 +5,11 @@ Pre-Compact State Capture Hook
 Fires before context compaction to:
 1. Capture current state (active plan, current task, recent decisions)
    so post-compact-restore.py can surface it afterwards.
-2. OPTIONALLY block compaction when an active plan is still DRAFT, to
-   avoid losing mid-plan context before the user has approved it.
-   Opt-in via CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1 (default: off).
+2. Block compaction once when an active plan is still DRAFT, to avoid
+   losing mid-plan context before the user has approved it. ON by
+   default (v2.0); opt out via CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=0.
+   Blocks at most once per DRAFT plan, fail-open — a user can always
+   re-run compaction to proceed.
 
 The blocking protocol follows modern Claude Code semantics:
   exit 0 + JSON {"decision": "block", "reason": "..."} on stdout.
@@ -149,7 +151,7 @@ def should_block_draft(plan_info: dict | None) -> tuple[bool, str]:
     which would make this guard fire again on every subsequent
     compaction of the same DRAFT plan.
     """
-    if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "0") != "1":
+    if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "1") != "1":
         return False, ""
     if not plan_info or plan_info.get("status") != "draft":
         return False, ""

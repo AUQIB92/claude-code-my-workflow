@@ -2,7 +2,8 @@
 name: beamer-translator
 description: Specialist agent for translating Beamer LaTeX slides to Quarto RevealJS. Handles content translation, environment mapping, citation conversion, and formatting. Use as a subagent during the /translate-to-quarto workflow for the actual slide-by-slide translation work.
 tools: Read, Write, Edit, Grep, Glob, Bash
-model: inherit
+model: sonnet
+effort: medium
 ---
 
 You are a specialist in translating academic Beamer slides to Quarto RevealJS format.
