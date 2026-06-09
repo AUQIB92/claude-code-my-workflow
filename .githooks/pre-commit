@@ -72,11 +72,12 @@ else
             [ -f "$f" ] || continue
             python3 scripts/quality_score.py "$f"
             rc=$?
-            if [ "$rc" -eq 1 ]; then
-                echo "✗ quality gate: '$f' scored below 80." >&2
+            # quality_score.py: rc 2 = auto-fail (compile/syntax FAILURE), rc 1 =
+            # score < 80 (or scorer error / file-not-found). BOTH must block — a
+            # file that fails to compile is the worst case, not an "infra error".
+            if [ "$rc" -ne 0 ]; then
+                echo "✗ quality gate: '$f' failed (rc=$rc — 2=compile/syntax failure, 1=score<80 or scorer error)." >&2
                 FAIL=1
-            elif [ "$rc" -ge 2 ]; then
-                echo "⚠ quality_score.py errored on '$f' (rc=$rc) — not blocking on infra error; review manually." >&2
             fi
         done <<< "$STAGED"
     else

@@ -35,22 +35,29 @@ import re
 import sys
 from pathlib import Path
 
+# Optional git GLOBAL options that can sit between `git` and the subcommand —
+# `git -C <dir>`, `git -c k=v`, `--git-dir=`, `--work-tree=`, `--no-pager`,
+# `--paginate`. Without this prefix, `git -C /repo reset --hard` (or `git -c x=y
+# clean -fd`) silently bypasses every guardrail.
+_GO = (r"(?:-C\s+\S+\s+|-c\s+\S+\s+|--git-dir(?:=\S+\s+|\s+\S+\s+)|"
+       r"--work-tree(?:=\S+\s+|\s+\S+\s+)|--no-pager\s+|--paginate\s+|-p\s+)*")
+
 # (compiled pattern, human reason, safe alternative)
 GIT_DENY = [
-    (re.compile(r"\bgit\s+reset\s+--hard\b"),
+    (re.compile(r"\bgit\s+" + _GO + r"reset\s+--hard\b"),
      "git reset --hard discards uncommitted work irrecoverably.",
      "Use `git stash` (recoverable) or reset specific paths."),
-    (re.compile(r"\bgit\s+clean\b.*(--force\b|(?<![\w-])-[a-z]*f)"),
+    (re.compile(r"\bgit\s+" + _GO + r"clean\b.*(--force\b|(?<![\w-])-[a-z]*f)"),
      "git clean -f/--force deletes UNTRACKED files — including data not yet committed.",
      "Inspect with `git clean -n` first; delete specific paths by hand."),
-    (re.compile(r"\bgit\s+push\b.*(--force(?![\w-])|(?<!-)\s-f\b)"),
+    (re.compile(r"\bgit\s+" + _GO + r"push\b.*(--force(?![\w-])|(?<!-)\s-f\b)"),
      "git push --force clobbers remote history.",
      "Use `git push --force-with-lease` if you truly must rewrite a branch."),
-    (re.compile(r"\bgit\s+add\s+(-A\b|--all\b|\.(?:\s|$))"),
-     "Blanket staging (git add -A / . ) can stage data, secrets, or settings.local.json. "
+    (re.compile(r"\bgit\s+" + _GO + r"add\s+(?:--\s+)?(-A\b|--all\b|\.(?:\s|$)|:/)"),
+     "Blanket staging (git add -A / . / -- . / :/) can stage data, secrets, or settings.local.json. "
      "The /commit skill forbids it.",
      "Stage specific files: `git add path/to/file ...`."),
-    (re.compile(r"\bgit\s+(checkout|restore)\s+(--\s+)?\.(?:\s|$)"),
+    (re.compile(r"\bgit\s+" + _GO + r"(checkout|restore)\s+(--\s+)?\.(?:\s|$)"),
      "Mass discard of working-tree changes is irreversible.",
      "Discard specific files, or `git stash` to keep them recoverable."),
 ]

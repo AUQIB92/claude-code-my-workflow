@@ -35,6 +35,7 @@ import json
 import os
 import sys
 import hashlib
+import re
 import subprocess
 from pathlib import Path
 from datetime import datetime
@@ -72,10 +73,15 @@ def active_plan(project_dir: str) -> str | None:
             text = p.read_text(encoding="utf-8", errors="replace")
         except Exception:
             continue
-        up = text.upper()
-        if "COMPLETED" in up and "STATUS" in up and "DRAFT" not in up and "APPROVED" not in up:
+        # Parse the Status FIELD, not a whole-file substring — a DRAFT plan that
+        # merely mentions "APPROVED"/"COMPLETED" must not be mis-labelled.
+        m = re.search(r"^\s*\**\s*status\s*\**\s*:\s*\**\s*"
+                      r"(draft|approved|completed|implemented|in[ -]?progress)",
+                      text, re.IGNORECASE | re.MULTILINE)
+        v = m.group(1).lower() if m else "in-progress"
+        if v.startswith(("completed", "implemented")):
             continue
-        status = "APPROVED" if "APPROVED" in up else ("DRAFT" if "DRAFT" in up else "in-progress")
+        status = "APPROVED" if v.startswith("approved") else ("DRAFT" if v.startswith("draft") else "in-progress")
         return f"{p.name} ({status})"
     return None
 

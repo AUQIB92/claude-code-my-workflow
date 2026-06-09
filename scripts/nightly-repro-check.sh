@@ -26,9 +26,15 @@ if not pdir.is_dir():
     print("no quality_reports/passports/ — nothing to check"); sys.exit(0)
 
 def parse_iso(s):
-    s = s.strip().strip('"').strip("'").replace("Z", "+00:00")
-    try: return datetime.datetime.fromisoformat(s).timestamp()
-    except Exception: return None
+    s = s.strip().strip('"').strip("'")
+    date_only = ("T" not in s) and (":" not in s)   # e.g. "2026-06-01"
+    try:
+        dt = datetime.datetime.fromisoformat(s.replace("Z", "+00:00"))
+        if date_only:                                # treat as END of that day so a
+            dt = dt.replace(hour=23, minute=59, second=59)  # same-day edit isn't STALE
+        return dt.timestamp()
+    except Exception:
+        return None
 
 stale = []
 for pf in sorted(pdir.glob("*.yaml")):

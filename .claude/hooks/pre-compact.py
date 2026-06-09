@@ -5,11 +5,13 @@ Pre-Compact State Capture Hook
 Fires before context compaction to:
 1. Capture current state (active plan, current task, recent decisions)
    so post-compact-restore.py can surface it afterwards.
-2. Block compaction once when an active plan is still DRAFT, to avoid
-   losing mid-plan context before the user has approved it. ON by
-   default (v2.0); opt out via CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=0.
-   Blocks at most once per DRAFT plan, fail-open — a user can always
-   re-run compaction to proceed.
+2. OPTIONALLY block compaction once when an active plan is still DRAFT,
+   to avoid losing mid-plan context before approval. **Opt-in** via
+   CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1 (default OFF — the v2.0 default-ON
+   flip was reverted: blocking the harness's *automatic* compaction can
+   strand a user at the context ceiling, and post-compact-restore.py
+   re-injects the plan afterward anyway). Blocks at most once per DRAFT
+   plan, fail-open.
 
 The blocking protocol follows modern Claude Code semantics:
   exit 0 + JSON {"decision": "block", "reason": "..."} on stdout.
@@ -61,16 +63,18 @@ def find_active_plan(project_dir: str) -> dict | None:
     for plan_file in plan_files[:3]:  # Check last 3 plans
         content = plan_file.read_text()
 
-        # Skip completed plans
-        if "COMPLETED" in content.upper():
-            continue
-
-        # Extract status
-        status = "in_progress"
-        if "APPROVED" in content.upper():
-            status = "approved"
-        elif "DRAFT" in content.upper():
-            status = "draft"
+        # Parse the plan's Status FIELD (e.g. "**Status:** DRAFT"), not a
+        # whole-file substring — a DRAFT plan whose body merely mentions
+        # "APPROVED" or "COMPLETED" (a checklist item, or the legend
+        # "Status (DRAFT/APPROVED/COMPLETED)") must not be mis-classified.
+        m = re.search(r"^\s*\**\s*status\s*\**\s*:\s*\**\s*"
+                      r"(draft|approved|completed|implemented|in[ -]?progress)",
+                      content, re.IGNORECASE | re.MULTILINE)
+        v = m.group(1).lower() if m else "in_progress"
+        if v.startswith(("completed", "implemented")):
+            continue  # skip finished plans
+        status = "approved" if v.startswith("approved") else (
+                 "draft" if v.startswith("draft") else "in_progress")
 
         # Find current task (first unchecked item)
         current_task = None
@@ -151,7 +155,7 @@ def should_block_draft(plan_info: dict | None) -> tuple[bool, str]:
     which would make this guard fire again on every subsequent
     compaction of the same DRAFT plan.
     """
-    if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "1") != "1":
+    if os.environ.get("CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT", "0") != "1":
         return False, ""
     if not plan_info or plan_info.get("status") != "draft":
         return False, ""
