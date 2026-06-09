@@ -125,6 +125,14 @@ Enforced by `/commit` (halts + asks for override) **and** — once you run `./sc
 | `/stata-replication [paper-or-data]` | End-to-end Stata pipeline scaffold + execution via `stata-mcp` (mirrors `/data-analysis` for R) |
 | `/simulation-study [estimator+DGP]` | Reproducible Monte Carlo study: DGP, estimator grid, seeded reps, bias/RMSE/coverage/size/power + Monte Carlo SEs |
 | `/r-package-check [pkg path]` | R package release gate: `devtools::document()` + tests + `R CMD check --as-cran`, CRAN-policy triage, `r-package-reviewer` pass |
+| `/replication-package [paper] [outputs-dir]` | Assemble a submission-ready DCAS / openICPSR replication package (README, dataset manifest, env capture, Table/Figure→script:line map, confidential-data note); calls `/audit-reproducibility` and blocks on FAIL |
+| `/capture-environment [project-dir] [--docker]` | Snapshot the computational environment — detect R/Stata/Python, emit renv.lock + sessionInfo / requirements.txt / uv.lock + optional Dockerfile, record seeds, write a paste-ready "Computational requirements" block |
+| `/did-event-study [data] [--outcome --unit --time --gvar] [--control never\|notyet]` | Thin wrapper for staggered DiD / event-study via canonical packages (Callaway–Sant'Anna `did`, Sun–Abraham `fixest::sunab`, HonestDiD; Stata `csdid`/`eventstudyinteract`/`honestdid`) — surfaces native pre-trends, event-study plot, group-time ATTs, HonestDiD breakdown M; never reimplements an estimator |
+| `/power-analysis [--mode mde\|n\|power] [--design rct\|cluster\|multiarm\|sim]` | Power / required-N / MDE for study design (RCT, clustered/ICC, multi-arm, or simulation-based) + a methods paragraph for `/preregister` |
+| `/disclosure-check [outputs-dir] [--provider] [--threshold]` | Pre-screen restricted-data outputs for SDL violations (small cells, dominance, PII, unrounded stats); gates on any CRITICAL |
+| `/grant-proposal [--funder nsf\|nih\|erc\|foundation] [--input spec]` | Scaffold a grant proposal (aims/methods/timeline/budget/broader-impacts) from an `/interview-me` spec; delegates DMP to `/data-management-plan` + facilities to `/capture-environment`; runs an aims↔methods↔budget coherence pass and emits a funder-requirements checklist |
+| `/data-management-plan [--funder nsf\|nih\|erc\|horizon]` | Draft a funder-compliant Data Management Plan (NSF/NIH 2023/ERC/Horizon) composing confidential-data + environment-capture primitives |
+| `/coauthor-brief [--since <tag\|date\|Ndays>] [--for <name>]` | Generate a collaborator handoff brief: git delta, per-artifact state, open questions, reproduce-locally + restricted-data steps |
 
 ---
 

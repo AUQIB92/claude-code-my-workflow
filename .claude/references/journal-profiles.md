@@ -28,6 +28,8 @@ Every profile has these fields:
 
 ## Econ Top-5
 
+> **AEA Data Editor / DCAS policy (applies to all AEA-imprint journals — AER, AEJ:*, JEL, JEP).** Acceptance is conditional on a replication package that clears the **AEA Data and Code Availability Standard** under the Data Editor: a complete deposit (openICPSR), a data availability statement, and code that reproduces every reported number. Run [`/replication-package`](../skills/replication-package/SKILL.md) (which gates on [`/audit-reproducibility`](../skills/audit-reproducibility/SKILL.md)) before submission; for restricted data, deposit cleared outputs + access instructions per [`confidential-data.md`](../rules/confidential-data.md). Econometrica, ReStud, and the political-science journals below enforce comparable archives at acceptance.
+
 ### American Economic Review (AER)
 
 **Short name:** `AER`
