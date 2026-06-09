@@ -72,9 +72,19 @@ If both succeed, delete `Slides/HelloWorld.tex` and `Quarto/HelloWorld.qmd` and 
 
 ## How It Works
 
+### Goal-first, gate-enforced (the v2.0 shift)
+
+You don't craft a perfect prompt — you **state a goal and let the work loop toward it under gates**. Specialist agents do the labor; enforcing gates decide when it's good enough; you adjudicate the disagreements they surface. Three things make that trustworthy:
+
+- **Real gates, not reminders.** A version-controlled pre-commit hook (run `./scripts/install-hooks.sh` once) runs the surface-sync + quality (≥80) checks on *every* commit — bypassing the skill no longer bypasses the review. A `git-guardrails` hook blocks destructive git (`reset --hard`, `clean -f`, `push --force`, `add -A`); the review runtime re-checks any reviewer-introduced "fatal" finding before it counts.
+- **A real orchestration runtime.** Reviews fan out to forked specialist agents, reduce over a shared finding schema, judge with a hallucination gate, and loop until dry — see [`orchestrator-protocol.md`](.claude/rules/orchestrator-protocol.md).
+- **Ground truth as a process.** A mismatch isn't always a failure: a defensible, *named* alternative is recorded as `EXPLAINED` and carried into your response-to-referees, while genuine errors stay fail-closed.
+
+This is **not** an autonomous daemon — the loop is always you- or skill-initiated, and you stay the auditor. Scheduled [Routines](.claude/references/scheduled-routines.md) handle recurring chores (nightly reproducibility, weekly lit-delta, inbox triage) and notify only when they find something.
+
 ### Contractor Mode
 
-You describe a task. For complex or ambiguous requests, Claude first creates a requirements specification with MUST/SHOULD/MAY priorities and clarity status (CLEAR/ASSUMED/BLOCKED). You approve the spec, then Claude plans the approach and invokes the right skill (e.g. `/create-lecture`, `/qa-quarto`, `/review-paper --adversarial`). That skill implements the orchestrator pattern internally — implement, verify, review, fix, re-verify, score — and returns a summary when the work meets quality standards. Say "just do it" and it auto-commits when the score clears 80.
+You describe a task. For complex or ambiguous requests, Claude first creates a requirements specification with MUST/SHOULD/MAY priorities and clarity status (CLEAR/ASSUMED/BLOCKED). You approve the spec, then Claude plans the approach and invokes the right skill (e.g. `/create-lecture`, `/qa-quarto`, `/review-paper --adversarial`). That skill implements the orchestrator runtime internally — implement, verify, review, fix, re-verify, score — and returns a summary when the work meets quality standards. Say "just do it" and it runs the full loop; commits still require an explicit `/commit` (which the pre-commit hook then gates).
 
 ### Specialized Agents
 
@@ -91,7 +101,7 @@ Each is better at its narrow task than a generalist would be. The `/slide-excell
 
 ### Adversarial QA
 
-Two agents work in opposition: the **critic** reads both Beamer and Quarto and produces harsh findings. The **fixer** implements exactly what the critic found. They loop until the critic says "APPROVED" (or 5 rounds max). This catches errors that single-pass review misses.
+Two agents work in opposition: the **critic** reads both Beamer and Quarto and produces harsh findings. The **fixer** implements exactly what the critic found. They **loop until dry** — converging when a round surfaces no new issue (a 5-round cap is the fallback, not the primary stop). This catches errors that single-pass review misses.
 
 ### Quality Review
 
@@ -101,7 +111,7 @@ Every artifact gets a score (0–100). Scores below threshold halt the workflow 
 - **90** — PR threshold
 - **95** — excellence (aspirational)
 
-> **Framing honesty:** Thresholds are advisory at the harness level — the `/commit` skill runs quality checks and halts on failure, but there is no pre-commit git hook that blocks a direct `git commit`. If you bypass the skill, you bypass the review. For hard enforcement, configure a git pre-commit hook.
+> **Framing honesty:** Thresholds are advisory at the harness level — the `/commit` skill runs quality checks and halts on failure. **And** as of v2.0, running `./scripts/install-hooks.sh` once installs a real pre-commit hook (`.githooks/pre-commit`) that runs the surface-sync + quality (≥80) gates on *every* commit, so bypassing the skill no longer bypasses the review. Opt out per-commit with `SKIP_QUALITY_GATE=1` or `git commit --no-verify`.
 
 ### Context Survival
 
@@ -178,7 +188,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>18 agents, 46 skills, 29 rules, 6 hooks</strong> (click to expand)</summary>
+<summary><strong>18 agents, 50 skills, 30 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -240,8 +250,6 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/preregister` | Generate a preregistration document (OSF / AsPredicted / AEA RCT Registry style) from a research spec |
 | `/verify-claims` (v1.7.0) | Chain-of-Verification fact-check (forked verifier, fresh context). HIGH/MED/LOW-WARN severity tiers (v1.9.0); HIGH-WARN gate-refuses `/commit`. |
 | `/humanize` (v1.9.0) | Detect AI-voice tells in academic prose (10 detection categories; read-only, no rewrite) |
-| `/prompt` (v1.9.0) | Reformat informal/dictated input into a structured six-section prompt, then execute (ported from Blattman with stripping) |
-| `/prompt-only` (v1.9.0) | Same formatting as `/prompt` but emits the prompt as a reusable artifact (no execution) |
 | `/compress-session` (v1.9.0) | Distil current session into structured notes (decisions, next actions, *discarded-as-noise*) before auto-compaction |
 | `/promote-memory` (v1.9.0) | Five-critic council that votes on which `[LEARN]` entries graduate from personal-memory.md to MEMORY.md |
 | `/stata-replication` (v1.9.0) | End-to-end Stata pipeline via the `stata-mcp` MCP server (mirrors `/data-analysis` for R-first projects) |
@@ -255,6 +263,12 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/grant-proposal` (v2.0) | Scaffold an NSF/NIH/ERC/foundation grant proposal by composing primitives (spec → aims/methods, delegated DMP + facilities, coherence pass + requirements checklist) |
 | `/data-management-plan` (v2.0) | Funder-compliant Data Management Plan (NSF / NIH DMS 2023 / ERC / Horizon Europe) — folds in disclosure-avoidance + IRB constraints and a replication-package/environment plan; outputs a draft + funder checklist |
 | `/coauthor-brief` (v2.0) | Collaborator handoff brief — what changed since last brief, per-artifact state, open questions, reproduce-locally + restricted-data access steps |
+| `/triage-inbox` (v2.0) | Schedulable academic inbox + calendar triage via Gmail/Calendar MCP — classifies referee requests, R&R/editor, co-author threads, seminar/conference invites, grant/admin deadlines; proposes one human-gated action each (draft reply, calendar hold, `/new-referee-project`, `/coauthor-brief`, snooze); emits a digest + referee-obligations tracker; degrades gracefully when MCP is absent; never auto-sends |
+| `/syllabus` (v2.0) | Build/restructure a course syllabus from a topic or reading list — course description + prerequisites, week-by-week schedule (topic→readings→deliverables), measurable learning objectives, assessment scheme + rubric, standard policies (late work / AI use / integrity / accessibility), and a per-week work-list mapping weeks to `/create-lecture` decks; economics-aware (PhD metrics/micro/macro sequences, undergrad) |
+| `/teach-from-paper` (v2.0) | Reads a paper end-to-end and pitches it to a stated audience level — lecture outline (motivation → setup → key result → method → takeaways), the 3-5 results worth presenting with intuition, a slide skeleton for `/create-lecture`, discussion questions, and a problem-set brief for `/scaffold-exercises` |
+| `/respond-to-eval` (v2.0) | Teaching analogue of `/respond-to-referees` — clusters course-eval comments into themes, weights by frequency (signal vs noise), classifies Keep / Change / Investigate / Out-of-scope, and drafts concrete changes mapped to the syllabus + slide decks; saves the plan to `quality_reports/teaching/` |
+| `/scaffold-exercises` (v2.0) | Scaffold a graded problem set across analytical/empirical/coding types, with worked solutions and "why this matters" explainers emitted to a separate solution key |
+| `/new-skill` (v2.0) | Scaffold a new skill that follows this repo's conventions — interviews for purpose, triggers, and tools, writes `.claude/skills/<name>/SKILL.md` from the template with frontmatter/body that pass `check-skill-integrity.py` first try, then reminds to add the surface-table rows |
 
 ### Research Workflow
 
