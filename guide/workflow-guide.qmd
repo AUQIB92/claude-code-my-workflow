@@ -53,7 +53,7 @@ Claude Code runs on your computer with full access to your file system, terminal
 | Run shell commands | Compile LaTeX, run R scripts, render Quarto --- directly |
 | Access git history | Commits, PRs, branches --- all from the conversation |
 | Persistent memory | CLAUDE.md + MEMORY.md survive across sessions |
-| Orchestrator pattern | Specific skills (`/qa-quarto`, `/review-paper --adversarial`, `/create-lecture`, …) run a 6-step verify-review-fix-score loop internally |
+| Orchestrator runtime | Specific skills (`/qa-quarto`, `/review-paper --adversarial`, `/create-lecture`, …) run a real fan-out → reduce → judge → loop-until-dry runtime internally |
 | Multi-agent workflows | 18 specialized agents for proofreading, layout, pedagogy, code review, fact-checking, AI-voice auditing, simulation + R-package review |
 | Quality review | Advisory scoring inside `/commit` (halt + ask to override); targets: 80 commit, 90 PR, 95 excellence |
 | CLI/headless mode | Run from scripts: `claude -p "compile all lectures"` |
@@ -412,7 +412,7 @@ APPROVED   NEEDS WORK
           | (Round 2)     |
           +----+----------+
                |
-          ... (up to 5 rounds)
+          ... (loop-until-dry: converge after 2 dry rounds; 5-round cap is a fallback)
 ```
 
 **Why it works:** The critic can't fix files (read-only), so it has no incentive to downplay issues. The fixer can't approve itself (the critic re-audits). This prevents the common failure of Claude saying "looks good" about its own work.
@@ -431,17 +431,17 @@ The critic-fixer loop above is text-only — it compares LaTeX source to Quarto 
 Optional, not required: `/qa-quarto` and `/visual-audit` already catch most issues without it. Treat Computer Use as an extra rung when text-level audits aren't enough (e.g., suspecting a TikZ render glitch that the source code looks fine for).
 :::
 
-## The Orchestrator: A Pattern, Not a Daemon
+## The Orchestrator: A Runtime, Not a Daemon
 
 Individual agents are specialists. Skills like `/slide-excellence` and `/qa-quarto` coordinate a few agents for specific tasks. In day-to-day work, you don't have to think about which agents to run — the right skill runs the right agents for you.
 
-The **orchestrator protocol** (`.claude/rules/orchestrator-protocol.md`) defines the 6-step loop (IMPLEMENT → VERIFY → REVIEW → FIX → RE-VERIFY → SCORE) that skills implement internally. It is **not** a runtime daemon: plan approval does NOT auto-trigger this loop. You invoke a skill (e.g., `/create-lecture`, `/qa-quarto`, `/review-paper --adversarial`) and the skill runs the pattern within its own scope.
+The **orchestrator protocol** (`.claude/rules/orchestrator-protocol.md`) is a **real runtime**, built on the `Task` subagent primitive every Claude Code session has: skills fan out to forked reviewers, reduce their typed findings through a deterministic gate, judge with a post-judge hallucination guard, and loop until dry. What is **not** automatic is the *trigger*: nothing launches this loop on its own, and there is no background daemon — plan approval does NOT auto-trigger it. You invoke a skill (e.g., `/create-lecture`, `/qa-quarto`, `/review-paper --adversarial`) and the skill runs the runtime within its own scope. The human is the auditor of the disagreements the loop surfaces; this is explicitly not an autonomous daemon.
 
 What's mechanically implemented today: `/commit` (verifier + quality_score), `/qa-quarto` (critic-fixer loop), `/review-paper --adversarial` (critic-fixer loop), `/slide-excellence` (multi-agent fanout), `/review-paper --peer` (editor + 2 referees + cross-artifact). See [Pattern 2](#pattern-2-contractor-mode-orchestrator) for the complete workflow.
 
 ## Quality Review: The 80/90/95 System {#sec-quality}
 
-The [quality-gates rule](#sec-blocks) (`quality-gates.md`) defines scoring thresholds that `/commit` and review skills apply. Thresholds are **advisory** — enforced inside specific skills, not by a repo-wide git pre-commit hook. A direct `git commit` bypasses the review. Every file gets a quality score from 0 to 100:
+The [quality-gates rule](#sec-blocks) (`quality-gates.md`) defines scoring thresholds that `/commit` and review skills apply. Thresholds are **advisory** — enforced inside specific skills **and**, once you run `./scripts/install-hooks.sh`, by a real git pre-commit hook (`.githooks/pre-commit`) that runs the surface-sync + quality (≥80) gates on every commit. Bypass it sparingly with `SKIP_QUALITY_GATE=1` or `--no-verify`. Every file gets a quality score from 0 to 100:
 
 | Score | Threshold | Meaning | Action |
 |-------|-----------|---------|--------|
@@ -764,22 +764,22 @@ Claude Code also offers experimental **Agent Teams** --- multiple independent se
 **Retirement notice:** Sonnet 4 and the original Opus 4 retire on **2026-06-15**. If your environment pins one of these (`ANTHROPIC_MODEL` env, hard-coded model IDs in CI, etc.), migrate before then. See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for the migration checklist.
 :::
 
-Not all agents need the same model. Each agent file has a `model:` field in its YAML frontmatter. By default, all agents use `model: inherit` (they use whatever model your main session runs). But you can customize this to optimize cost:
+Not all agents need the same model. Each agent file has a `model:` field in its YAML frontmatter. In v2.0 all 18 agents are **pinned** to an explicit model + effort tier (no longer `inherit`), following the 70/20/10 routing pattern below. You can re-tune any agent to optimize cost:
 
 | Task Type | Recommended Model | Why | Examples |
 |-----------|-------------------|-----|----------|
 | Complex translation | `model: opus` | Needs deep understanding of both formats | beamer-translator, quarto-critic |
 | Fast, constrained work | `model: sonnet` | Speed matters more than depth | r-reviewer, quarto-fixer |
-| Default | `model: inherit` | Uses whatever the main session runs | proofreader, slide-auditor |
+| Mechanical default | `model: haiku` | Bounded, fast work | proofreader, slide-auditor |
 
-**The principle:** Use Opus for tasks that require holding two large documents in mind simultaneously (translation, adversarial comparison). Use Sonnet for tasks with clear, bounded scope (fix these 12 issues, check this R script). Let everything else inherit.
+**The principle:** Use Opus for tasks that require holding two large documents in mind simultaneously (translation, adversarial comparison). Use Sonnet for tasks with clear, bounded scope (fix these 12 issues, check this R script). Use Haiku for mechanical work. In v2.0 every agent is pinned explicitly rather than inheriting — see `agent-fleet.md` for the full fleet + tiers.
 
 To change an agent's model, edit its YAML frontmatter:
 
 ```yaml
 ---
 name: quarto-critic
-model: opus   # was: inherit
+model: opus   # pinned per agent-fleet.md (v2.0: no agent inherits)
 ---
 ```
 
@@ -1085,11 +1085,11 @@ While MEMORY.md stores long-lived project facts, **plans** store task-specific s
 
 See Pattern 1 in [Workflow Patterns](#sec-patterns) for the full protocol.
 
-### Session Logs --- Why-Not-Just-What History (with Automated Reminders)
+### Session Logs --- Why-Not-Just-What History (auto-written)
 
 Git commits record what changed, but not *why*. Session logs fill this gap. Claude writes to `quality_reports/session_logs/` at three points: right after plan approval, incrementally during implementation (as decisions happen), and at session end. This means the log captures reasoning *as it happens*, before auto-compression can discard it.
 
-Because relying on instructions alone is fragile (Claude forgets during long sessions), a **Stop hook** (`.claude/hooks/log-reminder.py`) fires after every response. It tracks how many responses have passed since the session log was last updated. After a threshold, it blocks Claude from stopping until the log is current. This turns a best practice into an enforced behavior.
+Because relying on instructions alone is fragile (Claude forgets during long sessions), a **Stop hook** (`.claude/hooks/log-reminder.py`) fires after every response. In v2.0 it no longer merely nags — it **auto-writes the session log** for every meaningful change-set, so the why-history is captured without depending on Claude remembering to do it.
 
 New sessions can read these logs to understand not just the current state of the project, but the reasoning behind it. See Pattern 1 in [Workflow Patterns](#sec-patterns) for the full protocol.
 
@@ -1111,7 +1111,7 @@ The first four layers are your safety net. Anything written to disk survives ind
 
 The session log reminder above is one example of a broader pattern: using **hooks** to enforce rules that Claude might otherwise forget during long sessions. Rules live in context and can be compressed away. Hooks live in `.claude/settings.json` and fire every time, regardless of context state.
 
-The template includes hooks for logging, notifications, and context survival:
+The template includes 7 hooks for logging, notifications, context survival, and git safety (plus a real git pre-commit hook, `.githooks/pre-commit`, installed via `./scripts/install-hooks.sh`):
 
 | Hook | Event | What It Does |
 |------|-------|-------------|
@@ -1120,7 +1120,8 @@ The template includes hooks for logging, notifications, and context survival:
 | Context state capture | `PreCompact` | Saves plan state before auto-compaction |
 | Context restoration | `SessionStart[compact|resume]` | Restores context after compaction or resume |
 | Context monitor | `PostToolUse[Bash|Task]` | Progressive warnings at 40%/55%/65%/80%/90% context |
-| Verification reminder | `PostToolUse[Write|Edit]` | Reminds to compile/render before marking done |
+| Git guardrails | `PreToolUse[Bash]` | Blocks destructive git (`reset --hard`, `clean -f`, `push --force`, `add -A`) |
+| Claim reconcile | `PostToolUse[Edit|Write]` | Flags stale numeric claims when analysis scripts change |
 
 Verification and Beamer-Quarto sync are enforced via auto-loaded rules, which are the right tool for nuanced judgment. Hooks are reserved for enforcement that *must* survive context compression.
 
@@ -1336,9 +1337,10 @@ User: "Translate Lecture 5 to Quarto"
         Step 6: SCORE
         |  Apply quality-gates rubric
         |
-        +-- Score >= 80?
+        +-- Converged? (a round adds 0 new Critical/Major)
               YES -> Present summary to user
-              NO  -> Loop to Step 3 (max 5 rounds)
+              NO  -> Loop to Step 3 in fresh context
+                     (loop-until-dry; 5-round cap is a fallback only)
 ```
 
 ### Agent Selection
@@ -1363,7 +1365,7 @@ Sometimes you do not want to approve the final result --- you just want it done:
 
 > "Translate Lecture 5 to Quarto. Just do it."
 
-In this mode, the orchestrator still runs the full verify-review-fix loop (quality is non-negotiable), but skips the final approval pause and auto-commits if the score is 80 or above. It still presents the summary so you can see what was done.
+In this mode, the orchestrator still runs the full fan-out → reduce → judge → loop-until-dry runtime (quality is non-negotiable) and skips the final approval pause for the current skill. It does **not** auto-commit: "just do it" is never commit authorization — commits require an explicit `/commit` or unambiguous request. It still presents the summary so you can see what was done.
 
 ### Relationship to Existing Skills
 
@@ -1373,7 +1375,7 @@ The orchestrator does NOT replace skills. It coordinates them:
 - `/slide-excellence` remains available for comprehensive multi-agent review
 - `/create-lecture` remains available as a guided creation workflow
 
-The difference: when you invoke a skill directly, it runs its specific workflow. When the orchestrator is active, it decides which agents to invoke based on context. The orchestrator is the default; skills are for targeted use.
+The difference: when you invoke a skill directly, it runs its specific workflow. The orchestrator runtime lives *inside* each skill — there is no repo-wide orchestrator that activates on its own or chains skills together. A skill is always user- or skill-initiated; nothing fires the runtime unattended.
 
 ::: {.callout-tip collapse="true"}
 ## When to Use Skills vs. the Orchestrator
@@ -1432,7 +1434,7 @@ Translation preserves all content while adapting format, converting TikZ to SVG 
         +-- Critic: finds issues
         +-- Fixer: applies fixes
         +-- Critic: re-audits
-        +-- ... (until APPROVED or 5 rounds)
+        +-- ... (loop-until-dry: converge after 2 dry rounds; 5-round cap is a fallback)
 ```
 
 ## Pattern 5: Replication-First Coding {#pattern-5-replication-first-coding}
@@ -2385,7 +2387,7 @@ The template includes matching LaTeX and Quarto palettes. To customize:
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
-The guide includes 24 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
+The guide includes 50 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
 
 ### When to Create a Skill
 
@@ -2594,7 +2596,7 @@ Cross-references in-text citations against bibliography entries. Identifies miss
 ::: {.callout-tip}
 ## Real Example: /deep-audit Was Created with /learn
 
-The `/deep-audit` skill was itself extracted from a repeating workflow using `/learn`. After running 7 rounds of manual consistency audits --- each time launching 4 parallel agents to check guide accuracy, hook code quality, skills/rules consistency, and cross-document counts --- the pattern was codified into a skill. Now `/deep-audit` launches those same 4 agents, triages findings, applies fixes, and loops until clean (max 5 rounds). It also encodes a table of known bug patterns from past audits so future rounds catch regressions faster.
+The `/deep-audit` skill was itself extracted from a repeating workflow using `/learn`. After running 7 rounds of manual consistency audits --- each time launching 4 parallel agents to check guide accuracy, hook code quality, skills/rules consistency, and cross-document counts --- the pattern was codified into a skill. Now `/deep-audit` launches those same 4 agents, triages findings, applies fixes, and loops until clean (loop-until-dry: converges after 2 dry rounds, with a fallback cap). It also encodes a table of known bug patterns from past audits so future rounds catch regressions faster.
 
 This is the `/learn` lifecycle in action: discover a repeating workflow → extract it → never repeat the manual steps again.
 :::
@@ -2608,7 +2610,7 @@ This is the `/learn` lifecycle in action: discover a repeating workflow → extr
 5. **Verify everything.** The verification rule exists for a reason. Never skip compilation or rendering checks.
 6. **Session logs matter.** Document design decisions, not just what changed. Future-you will thank present-you.
 7. **Devil's Advocate early.** Challenge slide structure before you've built 50 slides on a shaky foundation.
-8. **Progressive disclosure.** Start with CLAUDE.md + 2--3 rules. Add more as your workflow matures. Newcomers should not face 24 rules on day one.
+8. **Progressive disclosure.** Start with CLAUDE.md + 2--3 rules. Add more as your workflow matures. Newcomers should not face all 30 rules on day one.
 9. **Use `CLAUDE.local.md` for personal overrides.** This file is automatically gitignored and loaded alongside `CLAUDE.md`. Put machine-specific paths, personal preferences, and local tool versions here --- they won't pollute the shared repo.
 
 ::: {.callout-note collapse="true"}
@@ -2683,13 +2685,25 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/checkpoint` | `.claude/skills/checkpoint/` | Structured session-handoff snapshot — companion to narrative session logs (v1.8.0) |
 | `/preregister` | `.claude/skills/preregister/` | Generate a preregistration document (OSF / AsPredicted / AEA RCT Registry) from a research spec (v1.8.0) |
 | `/humanize` | `.claude/skills/humanize/` | Detect AI-voice tells in academic prose (read-only audit; no rewrite) (v1.9.0) |
-| `/prompt` | `.claude/skills/prompt/` | Reformat informal input into a structured six-section prompt, then execute (v1.9.0; ported from Blattman v2.1 with stripping) |
-| `/prompt-only` | `.claude/skills/prompt-only/` | Same formatting as `/prompt` but emits the prompt as a reusable artifact (no execution) (v1.9.0) |
 | `/compress-session` | `.claude/skills/compress-session/` | Distil the current session into a structured note (decisions, files, open questions, next actions, discarded-as-noise) before auto-compaction (v1.9.0) |
 | `/promote-memory` | `.claude/skills/promote-memory/` | Five-critic council that votes on whether candidate `[LEARN]` entries should be promoted from personal-memory.md to MEMORY.md (v1.9.0) |
 | `/stata-replication` | `.claude/skills/stata-replication/` | End-to-end Stata pipeline scaffold + execution via the `stata-mcp` MCP server (mirrors `/data-analysis` for R-first projects; v1.9.0) |
 | `/simulation-study` | `.claude/skills/simulation-study/` | Reproducible Monte Carlo study — DGP, estimator grid, seeded reps, bias/RMSE/coverage/size/power with Monte Carlo SEs (v1.10.0) |
 | `/r-package-check` | `.claude/skills/r-package-check/` | R package release gate — `devtools::document()` + tests + `R CMD check --as-cran` + CRAN-policy triage (v1.10.0) |
+| `/replication-package` | `.claude/skills/replication-package/` | Assemble a submission-ready DCAS / openICPSR replication package; calls `/audit-reproducibility` and blocks on FAIL (v2.0) |
+| `/capture-environment` | `.claude/skills/capture-environment/` | Snapshot the computational environment (renv.lock / sessionInfo / requirements.txt / uv.lock + optional Dockerfile + seeds) (v2.0) |
+| `/did-event-study` | `.claude/skills/did-event-study/` | Staggered DiD / event-study wrapper over canonical packages (Callaway–Sant'Anna `did`, `fixest::sunab`, HonestDiD; Stata `csdid`/`eventstudyinteract`/`honestdid`) (v2.0) |
+| `/power-analysis` | `.claude/skills/power-analysis/` | Power / required-N / MDE for study design (RCT, clustered/ICC, multi-arm, or simulation-based) + a methods paragraph for `/preregister` (v2.0) |
+| `/disclosure-check` | `.claude/skills/disclosure-check/` | Pre-screen restricted-data outputs for SDL violations (small cells, dominance, PII); gates on any CRITICAL (v2.0) |
+| `/grant-proposal` | `.claude/skills/grant-proposal/` | Scaffold a grant proposal (NSF/NIH/ERC/foundation) from an `/interview-me` spec; delegates DMP + facilities; aims↔methods↔budget coherence pass (v2.0) |
+| `/data-management-plan` | `.claude/skills/data-management-plan/` | Draft a funder-compliant Data Management Plan (NSF/NIH 2023/ERC/Horizon) (v2.0) |
+| `/coauthor-brief` | `.claude/skills/coauthor-brief/` | Generate a collaborator handoff brief: git delta, per-artifact state, open questions, reproduce-locally + restricted-data steps (v2.0) |
+| `/triage-inbox` | `.claude/skills/triage-inbox/` | Triage academic email + calendar (Gmail/Calendar MCP) into a prioritized digest + referee-obligations tracker; human-gated actions only (v2.0) |
+| `/syllabus` | `.claude/skills/syllabus/` | Build a course syllabus from a topic/reading list (schedule, objectives, assessment + rubric, per-week `/create-lecture` work-list) (v2.0) |
+| `/teach-from-paper` | `.claude/skills/teach-from-paper/` | Turn a paper into a lecture outline, teachable results, slide skeleton (→ `/create-lecture`), discussion questions, exercise brief (v2.0) |
+| `/respond-to-eval` | `.claude/skills/respond-to-eval/` | Turn student course evaluations into a classified teaching-improvement plan (Keep/Change/Investigate/Out-of-scope) (v2.0) |
+| `/scaffold-exercises` | `.claude/skills/scaffold-exercises/` | Scaffold a graded problem set (analytical/empirical/coding) with worked solutions; clean student set + separate solution key (v2.0) |
+| `/new-skill` | `.claude/skills/new-skill/` | Scaffold a convention-compliant skill (interview → write `SKILL.md` with gate-passing frontmatter) (v2.0) |
 
 ## All Rules
 
@@ -2698,9 +2712,10 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Rule | File | Purpose |
 |------|------|---------|
 | Plan-First Workflow | `plan-first-workflow.md` | Plan mode + context preservation |
-| Orchestrator Protocol | `orchestrator-protocol.md` | Contractor mode loop |
+| Orchestrator Protocol | `orchestrator-protocol.md` | Review runtime: fan-out → reduce → judge (+ hallucination gate) → loop-until-dry (goal-first / gate-enforced; augments contractor mode) |
 | Session Logging | `session-logging.md` | Three logging triggers |
 | Meta-Governance | `meta-governance.md` | Template vs working project distinctions |
+| Prompt Shaping | `prompt-shaping.md` | Ambient prompt-shaping habit (replaces the retired `/prompt` and `/prompt-only` skills) |
 
 **Path-scoped** (load only when working on matching files):
 
@@ -2730,17 +2745,19 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | Stata Code Conventions | `stata-code-conventions.md` | `**/*.do`, `scripts/stata/**` — header scaffold, numbered pipeline, esttab tables, clustering discipline, AEA compliance (v1.9.0) |
 | Simulation Conventions | `simulation-conventions.md` | `**/*simulation*.R`, `**/*_sim.R`, `explorations/**` — Monte Carlo discipline: DGP/estimand, L'Ecuyer seeding, Monte Carlo SE, coverage-vs-truth, raw-result storage (v1.10.0) |
 | R Package Conventions | `r-package-conventions.md` | `R/**`, `tests/**`, `DESCRIPTION`, `NAMESPACE`, `man/**` — package-source standards: no `library()` in `R/`, roxygen NAMESPACE, Imports/Suggests, testthat 3e, CRAN policy (v1.10.0) |
+| Confidential Data | `confidential-data.md` | restricted/confidential data paths — no raw confidential data in git, disclosure-avoidance discipline, used by `/disclosure-check` / `/replication-package` / `/data-management-plan` (v2.0) |
 
 ## Hooks
 
 | Hook | Type | Configuration |
 |------|------|--------------|
-| Session log reminder | Stop (command) | `.claude/hooks/log-reminder.py` |
+| Session log auto-writer | Stop (command) | `.claude/hooks/log-reminder.py` — auto-writes the session log on every meaningful change-set (no longer merely a reminder) |
 | Desktop notification | Notification (command) | `.claude/hooks/notify.sh` |
-| Context state capture | PreCompact (command) | `.claude/hooks/pre-compact.py` |
+| Context state capture | PreCompact (command) | `.claude/hooks/pre-compact.py` — DRAFT-block default is ON |
 | Context restoration | SessionStart[compact\|resume] (command) | `.claude/hooks/post-compact-restore.py` |
 | Context monitor | PostToolUse[Bash\|Task] (command) | `.claude/hooks/context-monitor.py` |
-| Verification reminder | PostToolUse[Write\|Edit] (command) | `.claude/hooks/verify-reminder.py` |
+| Git guardrails | PreToolUse (command) | `.claude/hooks/git-guardrails.py` — blocks `reset --hard` / `clean -f` / `push --force` / `add -A` |
+| Claim reconcile | PostToolUse (command) | `.claude/hooks/claim-reconcile.py` — flags stale numeric claims when scripts change |
 
 **Additional hook events** available in Claude Code (not used in this template but available for custom hooks):
 
@@ -2780,7 +2797,7 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 
 ### Hooks Not Firing
 
-**Symptom:** No context warnings, no verification reminders.
+**Symptom:** No context warnings, no auto-written session log, no git guardrails firing.
 
 **Fix:**
 1. Check hooks are configured: `cat .claude/settings.json | grep hooks`

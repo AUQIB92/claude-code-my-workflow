@@ -6,6 +6,82 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## v2.0.0 — 2026-06-09
+
+A **paradigm-shift major release.** The template moves from a *prompt-craft contractor* — craft a prompt, invoke a skill, read a report — to a **verification-gated research lab**: you state a goal, a fleet of specialist agents does the labor under **gates that enforce themselves**, and you act as the **auditor of the disagreements they surface**. Two ideas converge: *"loops, not prompts"* (Boris Cherny / the Claude Code team) and *"ground truth is a process, not a dataset"* (Amazon Science). The result modernizes the **orchestration**, not the substance — the passport, simulation contract, and journal-calibrated referees are untouched. Shipped against `quality_reports/plans/2026-06-09_v2.0-modernization-master-plan.md`.
+
+### ⭐ Why upgrade — read this even if you've used the template before
+
+If you forked v1.x, here is what is *materially different* now (one-stop summary):
+
+| Before (v1.x) | Now (v2.0) |
+|---|---|
+| Quality gate ran **only inside `/commit`** — a direct `git commit` bypassed it | A real **git pre-commit hook** (`./scripts/install-hooks.sh`) runs surface-sync + quality (≥80) on **every** commit |
+| The review loop was *"a pattern, not a runtime"* — prose a human triggered | A **real runtime**: fan-out → reduce → judge **+ hallucination gate** → **loop-until-dry** (`orchestrator-protocol.md`) |
+| A numeric mismatch was always a **FAIL** (so people disabled the gate) | A defensible, **named** alternative is recorded as **`EXPLAINED`** and flows into your response-to-referees; real errors stay fail-closed |
+| Hooks **nagged** ("you should update the log / compile") | Hooks **act**: the Stop hook **auto-writes** the session log; `git-guardrails` **blocks** destructive git; `claim-reconcile` flags stale claims the moment analysis changes |
+| 17 of 18 agents ran on `model: inherit` (cost savings unrealized) | Every agent **pinned** to model + effort (Opus referees / Sonnet reviewers / Haiku mechanical) |
+| You **audited** reproducibility | You **produce** the deposit: `/replication-package` builds the AEA DCAS / openICPSR package |
+| Onboarding said *"paste this starter prompt"* | Onboarding is **goal-first**; the `/prompt` and `/prompt-only` skills are retired (shaping is now ambient) |
+
+**If you do only one thing after pulling v2.0:** run `./scripts/install-hooks.sh` to activate the pre-commit gate.
+
+**Inventory at release: 50 skills, 18 agents, 30 rules, 7 hooks** (was 38 / 18 / 28 / 6 at v1.10.0). Net: +14 skills, −2 retired; +2 rules; +2 hooks, −1 retired. New: 9 references (3 added), 2 output-styles, CI.
+
+### Added — economist "producer" skills (the biggest gold-standard gap)
+
+- **`/replication-package`** — assembles a submission-ready **AEA DCAS / openICPSR** deposit: standard README, dataset manifest, computational-requirements capture, a Table/Figure → `script:line` map (from the passport), and a confidential-data deposit note. Gates on `/audit-reproducibility` (blocks on FAIL, allows EXPLAINED). *Move from auditing reproducibility to producing the deliverable.*
+- **`/capture-environment`** — snapshots the computational environment: `renv.lock` + `sessionInfo` (R), `requirements.txt`/`uv.lock` (Python), Stata version + ado list, seeds/RNG, and an optional pinning `Dockerfile`.
+- **`/did-event-study`** — a **thin wrapper** over canonical staggered-DiD packages (Callaway–Sant'Anna `did`, Sun–Abraham `fixest::sunab`, HonestDiD; Stata twins) that surfaces each package's *native* diagnostics and **never reimplements an estimator**. Warns on the never-treated vs not-yet-treated control choice (the contested decision the EXPLAINED disposition exists for).
+- **`/power-analysis`** — power / required-N / MDE for two-arm RCTs (clustering/ICC), multi-arm, and simulation-based designs; feeds `/preregister`.
+- **`/disclosure-check`** — statistical-disclosure-limitation pre-screen for restricted-data outputs (small cells, dominance, PII); gates on CRITICAL.
+- **`/grant-proposal`** + **`/data-management-plan`** — compose the confidential-data + environment-capture primitives into NSF/NIH/ERC-shaped drafts + requirements checklists.
+- **`/coauthor-brief`** — a collaborator/multi-machine handoff brief (git delta, per-artifact state, reproduce-locally + restricted-data access steps).
+- **`confidential-data.md` rule** — restricted/IRB-data protocol (never commit raw data; disclosure clearance; restricted-data-safe multi-author git topology). **AEA Data Editor / DCAS policy** added to `journal-profiles.md`.
+
+### Added — teaching-at-scale (the repo's origin, previously a blind spot)
+
+- **`/syllabus`**, **`/teach-from-paper`**, **`/respond-to-eval`** (the teaching analogue of `/respond-to-referees`), and **`/scaffold-exercises`** (graded problem sets with worked solutions + explainers, adapted from `mattpocock/skills`).
+
+### Added — autonomy, runtime, and authoring
+
+- **Real orchestration runtime** — `.claude/references/orchestration-schemas.md` (the `FINDING`/`SCORECARD`/`RUN_CONFIG` contracts + the post-judge **hallucination gate**) and `agent-fleet.md` (the 18-agent manifest with tiers). `orchestrator-protocol.md` rewritten from *pattern* to *runtime*.
+- **Event-driven + scheduled autonomy** — `claim-reconcile.py` (flags stale numeric claims when an analysis script/output changes), `.claude/references/scheduled-routines.md` + `scripts/nightly-repro-check.sh`, and **`/triage-inbox`** (schedulable, human-gated email/calendar triage + referee-obligations tracker).
+- **`/new-skill`** — scaffolds a convention-compliant skill that passes `check-skill-integrity` on the first try (adapted from `mattpocock/skills`' write-a-skill).
+- **Output styles** — `.claude/output-styles/academic-writing.md` and `referee.md` (the template shipped zero before).
+- **CI** — `.github/workflows/gates.yml` (surface-sync + integrity + model-version checks on every PR) and `deploy.yml` (re-render the guide → `docs/` on push to `main`).
+- **Enforcing pre-commit hook** — `.githooks/pre-commit` + `scripts/install-hooks.sh` (opt-in via `core.hooksPath`).
+- **`git-guardrails.py`** (PreToolUse) — blocks `git reset --hard`, `git clean -f`, `git push --force`, and blanket `git add -A`; warns on hardcoded machine paths in code (`CLAUDE_STRICT_PATHS=1` to hard-block).
+- **Table-row sync gate** — `check-surface-sync.py` now verifies that the enumerative skills/agents *tables* (not just prose counts) carry one row per item on disk — the drift that hid the v1.5.0 peer-review trio for three releases.
+
+### Changed
+
+- **Verification 2.0 — "ground truth is a process."** `audit-reproducibility` and `claim-verifier` gain an **`EXPLAINED`** disposition: an out-of-tolerance numeric/citation mismatch stays a fail-closed FAIL **unless** the author records a *concrete named alternative* (e.g. "never-treated vs not-yet-treated comparison group"), in which case it is surfaced, non-blocking, and carried into the response-to-referees. The hard floor holds (fabricated citations, unmatched claims, vague notes never downgrade). `audit-reproducibility` also no longer presumes the manuscript is the oracle — a mismatch means "one of {paper, code} must change."
+- **Loop-until-dry.** `qa-quarto`, `review-paper --adversarial`, `deep-audit`, and `seven-pass-review` converge when a round surfaces no new CRITICAL/MAJOR finding (2 dry rounds), with the old "max 5 rounds" demoted to a fallback cap; synthesizers run the **post-judge hallucination gate** (an editor can't desk-reject on a reason no referee raised).
+- **Hooks act instead of nagging.** `log-reminder.py` now **auto-writes** a structured session-log entry on each meaningful change-set (was a stderr reminder). `pre-compact.py`'s DRAFT-plan block is **ON by default**. The statusline now shows context-% + dirty-file count + plan status.
+- **Per-agent model routing realized.** All 18 agents pinned to `model:` + `effort:` per `model-routing.md` (9 Opus / 8 Sonnet / 1 Haiku).
+- **Goal-first onboarding.** The README "How It Works" leads with *goal-first, gate-enforced*; the guide and landing page reframed accordingly. "Contractor mode" remains, augmented.
+
+### Removed
+
+- **`/prompt` and `/prompt-only` skills** — retired. Prompt-craft is 2023-era; a loop-first workflow shapes every ambiguous request automatically, so this is now the ambient **`prompt-shaping.md`** rule, not a command. (`prompt-formatting-core.md` re-pointed; `/interview-me` remains for multi-turn specification.)
+- **`verify-reminder.py` hook** — retired. Its per-edit "compile reminder" is superseded by the Stop-hook completion note in the auto-writing session log.
+
+### Upgrading (forkers pulling v2.0)
+
+1. **`./scripts/install-hooks.sh`** — activate the pre-commit gate (the single highest-value step).
+2. If you customized `/prompt` or `/prompt-only`, move that logic into your own rule or `/interview-me` — the skills are gone.
+3. If you reference `verify-reminder.py` in a fork, remove it; the Stop hook (`log-reminder.py`) now writes logs.
+4. Pin `model:`/`effort:` in any custom agents (`model-routing.md`), and re-run `./scripts/check-surface-sync.sh` after adding skills — it now checks table rows too.
+5. No data migrations; the passport schema is backward-compatible (`EXPLAINED` is additive).
+
+### Notes
+
+- Count surfaces (README, CLAUDE.md, guide source + rendered HTML, landing page, skill template) updated to 50 / 18 / 30 / 7; `check-surface-sync.sh` (now including the table-row gate), `check-skill-integrity.py`, and `check-model-versions.sh` all pass.
+- Explicit **non-goals** (documented, not omissions): no autonomous daemon, no plugin marketplace, no multi-estimator production fleet (one `/did-event-study` proof-of-concept), no challenger→auditor→ledger pipeline (the zero-cost `EXPLAINED` mechanism instead), `MEMORY.md` stays the committed memory backend.
+
+---
+
 ## v1.10.0 — 2026-05-31
 
 A **hub-expansion + currency-refresh** minor release. The template gains a Monte Carlo simulation capability and an R package-development release gate, refreshes the model / effort / cost guidance for **Opus 4.8**, and reframes itself as a hub for an entire research program — not just slides and papers. Shipped against the plan at `quality_reports/plans/2026-05-31_v1.10.0-simulation-and-hub.md` (local-only per the `quality_reports/plans/*` ignore rule). No breaking changes.

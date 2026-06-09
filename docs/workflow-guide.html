@@ -2380,7 +2380,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#why-specialized-agents-beat-one-size-fits-all" id="toc-why-specialized-agents-beat-one-size-fits-all" class="nav-link" data-scroll-target="#why-specialized-agents-beat-one-size-fits-all"><span class="header-section-number">3.1</span> Why Specialized Agents Beat One-Size-Fits-All</a></li>
   <li><a href="#the-adversarial-pattern-critic-fixer" id="toc-the-adversarial-pattern-critic-fixer" class="nav-link" data-scroll-target="#the-adversarial-pattern-critic-fixer"><span class="header-section-number">3.2</span> The Adversarial Pattern: Critic + Fixer</a></li>
-  <li><a href="#the-orchestrator-a-pattern-not-a-daemon" id="toc-the-orchestrator-a-pattern-not-a-daemon" class="nav-link" data-scroll-target="#the-orchestrator-a-pattern-not-a-daemon"><span class="header-section-number">3.3</span> The Orchestrator: A Pattern, Not a Daemon</a></li>
+  <li><a href="#the-orchestrator-a-runtime-not-a-daemon" id="toc-the-orchestrator-a-runtime-not-a-daemon" class="nav-link" data-scroll-target="#the-orchestrator-a-runtime-not-a-daemon"><span class="header-section-number">3.3</span> The Orchestrator: A Runtime, Not a Daemon</a></li>
   <li><a href="#sec-quality" id="toc-sec-quality" class="nav-link" data-scroll-target="#sec-quality"><span class="header-section-number">3.4</span> Quality Review: The 80/90/95 System</a>
   <ul class="collapse">
   <li><a href="#how-scores-are-calculated" id="toc-how-scores-are-calculated" class="nav-link" data-scroll-target="#how-scores-are-calculated"><span class="header-section-number">3.4.1</span> How Scores Are Calculated</a></li>
@@ -2422,7 +2422,7 @@ window.Quarto = {
   <li><a href="#memory---cross-session-persistence" id="toc-memory---cross-session-persistence" class="nav-link" data-scroll-target="#memory---cross-session-persistence"><span class="header-section-number">4.8</span> Memory — Cross-Session Persistence</a>
   <ul class="collapse">
   <li><a href="#plans-compression-resistant-task-memory" id="toc-plans-compression-resistant-task-memory" class="nav-link" data-scroll-target="#plans-compression-resistant-task-memory"><span class="header-section-number">4.8.1</span> Plans — Compression-Resistant Task Memory</a></li>
-  <li><a href="#session-logs-why-not-just-what-history-with-automated-reminders" id="toc-session-logs-why-not-just-what-history-with-automated-reminders" class="nav-link" data-scroll-target="#session-logs-why-not-just-what-history-with-automated-reminders"><span class="header-section-number">4.8.2</span> Session Logs — Why-Not-Just-What History (with Automated Reminders)</a></li>
+  <li><a href="#session-logs-why-not-just-what-history-auto-written" id="toc-session-logs-why-not-just-what-history-auto-written" class="nav-link" data-scroll-target="#session-logs-why-not-just-what-history-auto-written"><span class="header-section-number">4.8.2</span> Session Logs — Why-Not-Just-What History (auto-written)</a></li>
   <li><a href="#how-it-all-fits-together" id="toc-how-it-all-fits-together" class="nav-link" data-scroll-target="#how-it-all-fits-together"><span class="header-section-number">4.8.3</span> How It All Fits Together</a></li>
   <li><a href="#hooks---automated-enforcement" id="toc-hooks---automated-enforcement" class="nav-link" data-scroll-target="#hooks---automated-enforcement"><span class="header-section-number">4.8.4</span> Hooks — Automated Enforcement</a></li>
   <li><a href="#context-survival-system-advanced" id="toc-context-survival-system-advanced" class="nav-link" data-scroll-target="#context-survival-system-advanced"><span class="header-section-number">4.8.5</span> Context Survival System (Advanced)</a></li>
@@ -2558,7 +2558,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 31, 2026</p>
+      <p class="date-modified">June 9, 2026</p>
     </div>
   </div>
     
@@ -2614,8 +2614,8 @@ window.Quarto = {
 <td>CLAUDE.md + MEMORY.md survive across sessions</td>
 </tr>
 <tr class="odd">
-<td>Orchestrator pattern</td>
-<td>Specific skills (<code>/qa-quarto</code>, <code>/review-paper --adversarial</code>, <code>/create-lecture</code>, …) run a 6-step verify-review-fix-score loop internally</td>
+<td>Orchestrator runtime</td>
+<td>Specific skills (<code>/qa-quarto</code>, <code>/review-paper --adversarial</code>, <code>/create-lecture</code>, …) run a real fan-out → reduce → judge → loop-until-dry runtime internally</td>
 </tr>
 <tr class="even">
 <td>Multi-agent workflows</td>
@@ -3124,7 +3124,7 @@ APPROVED   NEEDS WORK
           | (Round 2)     |
           +----+----------+
                |
-          ... (up to 5 rounds)</code></pre>
+          ... (loop-until-dry: converge after 2 dry rounds; 5-round cap is a fallback)</code></pre>
 <p><strong>Why it works:</strong> The critic can’t fix files (read-only), so it has no incentive to downplay issues. The fixer can’t approve itself (the critic re-audits). This prevents the common failure of Claude saying “looks good” about its own work.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3154,15 +3154,15 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 </section>
-<section id="the-orchestrator-a-pattern-not-a-daemon" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="the-orchestrator-a-pattern-not-a-daemon"><span class="header-section-number">3.3</span> The Orchestrator: A Pattern, Not a Daemon</h2>
+<section id="the-orchestrator-a-runtime-not-a-daemon" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="the-orchestrator-a-runtime-not-a-daemon"><span class="header-section-number">3.3</span> The Orchestrator: A Runtime, Not a Daemon</h2>
 <p>Individual agents are specialists. Skills like <code>/slide-excellence</code> and <code>/qa-quarto</code> coordinate a few agents for specific tasks. In day-to-day work, you don’t have to think about which agents to run — the right skill runs the right agents for you.</p>
-<p>The <strong>orchestrator protocol</strong> (<code>.claude/rules/orchestrator-protocol.md</code>) defines the 6-step loop (IMPLEMENT → VERIFY → REVIEW → FIX → RE-VERIFY → SCORE) that skills implement internally. It is <strong>not</strong> a runtime daemon: plan approval does NOT auto-trigger this loop. You invoke a skill (e.g., <code>/create-lecture</code>, <code>/qa-quarto</code>, <code>/review-paper --adversarial</code>) and the skill runs the pattern within its own scope.</p>
+<p>The <strong>orchestrator protocol</strong> (<code>.claude/rules/orchestrator-protocol.md</code>) is a <strong>real runtime</strong>, built on the <code>Task</code> subagent primitive every Claude Code session has: skills fan out to forked reviewers, reduce their typed findings through a deterministic gate, judge with a post-judge hallucination guard, and loop until dry. What is <strong>not</strong> automatic is the <em>trigger</em>: nothing launches this loop on its own, and there is no background daemon — plan approval does NOT auto-trigger it. You invoke a skill (e.g., <code>/create-lecture</code>, <code>/qa-quarto</code>, <code>/review-paper --adversarial</code>) and the skill runs the runtime within its own scope. The human is the auditor of the disagreements the loop surfaces; this is explicitly not an autonomous daemon.</p>
 <p>What’s mechanically implemented today: <code>/commit</code> (verifier + quality_score), <code>/qa-quarto</code> (critic-fixer loop), <code>/review-paper --adversarial</code> (critic-fixer loop), <code>/slide-excellence</code> (multi-agent fanout), <code>/review-paper --peer</code> (editor + 2 referees + cross-artifact). See <a href="#pattern-2-contractor-mode-orchestrator">Pattern 2</a> for the complete workflow.</p>
 </section>
 <section id="sec-quality" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="sec-quality"><span class="header-section-number">3.4</span> Quality Review: The 80/90/95 System</h2>
-<p>The <a href="#sec-blocks">quality-gates rule</a> (<code>quality-gates.md</code>) defines scoring thresholds that <code>/commit</code> and review skills apply. Thresholds are <strong>advisory</strong> — enforced inside specific skills, not by a repo-wide git pre-commit hook. A direct <code>git commit</code> bypasses the review. Every file gets a quality score from 0 to 100:</p>
+<p>The <a href="#sec-blocks">quality-gates rule</a> (<code>quality-gates.md</code>) defines scoring thresholds that <code>/commit</code> and review skills apply. Thresholds are <strong>advisory</strong> — enforced inside specific skills <strong>and</strong>, once you run <code>./scripts/install-hooks.sh</code>, by a real git pre-commit hook (<code>.githooks/pre-commit</code>) that runs the surface-sync + quality (≥80) gates on every commit. Bypass it sparingly with <code>SKIP_QUALITY_GATE=1</code> or <code>--no-verify</code>. Every file gets a quality score from 0 to 100:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 20%">
@@ -3596,7 +3596,7 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Claude Code ships with built-in skills beyond this template’s 38: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
+<p>Claude Code ships with built-in skills beyond this template’s 50: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
 </div>
 </div>
 </section>
@@ -3671,7 +3671,7 @@ APPROVED   NEEDS WORK
 <p><strong>Retirement notice:</strong> Sonnet 4 and the original Opus 4 retire on <strong>2026-06-15</strong>. If your environment pins one of these (<code>ANTHROPIC_MODEL</code> env, hard-coded model IDs in CI, etc.), migrate before then. See <a href="../TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> for the migration checklist.</p>
 </div>
 </div>
-<p>Not all agents need the same model. Each agent file has a <code>model:</code> field in its YAML frontmatter. By default, all agents use <code>model: inherit</code> (they use whatever model your main session runs). But you can customize this to optimize cost:</p>
+<p>Not all agents need the same model. Each agent file has a <code>model:</code> field in its YAML frontmatter. In v2.0 all 18 agents are <strong>pinned</strong> to an explicit model + effort tier (no longer <code>inherit</code>), following the 70/20/10 routing pattern below. You can re-tune any agent to optimize cost:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 24%">
@@ -3701,18 +3701,18 @@ APPROVED   NEEDS WORK
 <td>r-reviewer, quarto-fixer</td>
 </tr>
 <tr class="odd">
-<td>Default</td>
-<td><code>model: inherit</code></td>
-<td>Uses whatever the main session runs</td>
+<td>Mechanical default</td>
+<td><code>model: haiku</code></td>
+<td>Bounded, fast work</td>
 <td>proofreader, slide-auditor</td>
 </tr>
 </tbody>
 </table>
-<p><strong>The principle:</strong> Use Opus for tasks that require holding two large documents in mind simultaneously (translation, adversarial comparison). Use Sonnet for tasks with clear, bounded scope (fix these 12 issues, check this R script). Let everything else inherit.</p>
+<p><strong>The principle:</strong> Use Opus for tasks that require holding two large documents in mind simultaneously (translation, adversarial comparison). Use Sonnet for tasks with clear, bounded scope (fix these 12 issues, check this R script). Use Haiku for mechanical work. In v2.0 every agent is pinned explicitly rather than inheriting — see <code>agent-fleet.md</code> for the full fleet + tiers.</p>
 <p>To change an agent’s model, edit its YAML frontmatter:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> quarto-critic</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">model</span><span class="kw">:</span><span class="at"> opus</span><span class="co">   # was: inherit</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">model</span><span class="kw">:</span><span class="at"> opus</span><span class="co">   # pinned per agent-fleet.md (v2.0: no agent inherits)</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -4261,10 +4261,10 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 </ul>
 <p>See Pattern 1 in <a href="#sec-patterns">Workflow Patterns</a> for the full protocol.</p>
 </section>
-<section id="session-logs-why-not-just-what-history-with-automated-reminders" class="level3" data-number="4.8.2">
-<h3 data-number="4.8.2" class="anchored" data-anchor-id="session-logs-why-not-just-what-history-with-automated-reminders"><span class="header-section-number">4.8.2</span> Session Logs — Why-Not-Just-What History (with Automated Reminders)</h3>
+<section id="session-logs-why-not-just-what-history-auto-written" class="level3" data-number="4.8.2">
+<h3 data-number="4.8.2" class="anchored" data-anchor-id="session-logs-why-not-just-what-history-auto-written"><span class="header-section-number">4.8.2</span> Session Logs — Why-Not-Just-What History (auto-written)</h3>
 <p>Git commits record what changed, but not <em>why</em>. Session logs fill this gap. Claude writes to <code>quality_reports/session_logs/</code> at three points: right after plan approval, incrementally during implementation (as decisions happen), and at session end. This means the log captures reasoning <em>as it happens</em>, before auto-compression can discard it.</p>
-<p>Because relying on instructions alone is fragile (Claude forgets during long sessions), a <strong>Stop hook</strong> (<code>.claude/hooks/log-reminder.py</code>) fires after every response. It tracks how many responses have passed since the session log was last updated. After a threshold, it blocks Claude from stopping until the log is current. This turns a best practice into an enforced behavior.</p>
+<p>Because relying on instructions alone is fragile (Claude forgets during long sessions), a <strong>Stop hook</strong> (<code>.claude/hooks/log-reminder.py</code>) fires after every response. In v2.0 it no longer merely nags — it <strong>auto-writes the session log</strong> for every meaningful change-set, so the why-history is captured without depending on Claude remembering to do it.</p>
 <p>New sessions can read these logs to understand not just the current state of the project, but the reasoning behind it. See Pattern 1 in <a href="#sec-patterns">Workflow Patterns</a> for the full protocol.</p>
 </section>
 <section id="how-it-all-fits-together" class="level3" data-number="4.8.3">
@@ -4330,7 +4330,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <section id="hooks---automated-enforcement" class="level3" data-number="4.8.4">
 <h3 data-number="4.8.4" class="anchored" data-anchor-id="hooks---automated-enforcement"><span class="header-section-number">4.8.4</span> Hooks — Automated Enforcement</h3>
 <p>The session log reminder above is one example of a broader pattern: using <strong>hooks</strong> to enforce rules that Claude might otherwise forget during long sessions. Rules live in context and can be compressed away. Hooks live in <code>.claude/settings.json</code> and fire every time, regardless of context state.</p>
-<p>The template includes hooks for logging, notifications, and context survival:</p>
+<p>The template includes 7 hooks for logging, notifications, context survival, and git safety (plus a real git pre-commit hook, <code>.githooks/pre-commit</code>, installed via <code>./scripts/install-hooks.sh</code>):</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 23%">
@@ -4371,9 +4371,14 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <td>Progressive warnings at 40%/55%/65%/80%/90% context</td>
 </tr>
 <tr class="even">
-<td>Verification reminder</td>
-<td><code>PostToolUse[Write|Edit]</code></td>
-<td>Reminds to compile/render before marking done</td>
+<td>Git guardrails</td>
+<td><code>PreToolUse[Bash]</code></td>
+<td>Blocks destructive git (<code>reset --hard</code>, <code>clean -f</code>, <code>push --force</code>, <code>add -A</code>)</td>
+</tr>
+<tr class="odd">
+<td>Claim reconcile</td>
+<td><code>PostToolUse[Edit|Write]</code></td>
+<td>Flags stale numeric claims when analysis scripts change</td>
 </tr>
 </tbody>
 </table>
@@ -4721,9 +4726,10 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
         Step 6: SCORE
         |  Apply quality-gates rubric
         |
-        +-- Score &gt;= 80?
+        +-- Converged? (a round adds 0 new Critical/Major)
               YES -&gt; Present summary to user
-              NO  -&gt; Loop to Step 3 (max 5 rounds)</code></pre>
+              NO  -&gt; Loop to Step 3 in fresh context
+                     (loop-until-dry; 5-round cap is a fallback only)</code></pre>
 </section>
 <section id="agent-selection" class="level3" data-number="5.2.3">
 <h3 data-number="5.2.3" class="anchored" data-anchor-id="agent-selection"><span class="header-section-number">5.2.3</span> Agent Selection</h3>
@@ -4774,7 +4780,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <blockquote class="blockquote">
 <p>“Translate Lecture 5 to Quarto. Just do it.”</p>
 </blockquote>
-<p>In this mode, the orchestrator still runs the full verify-review-fix loop (quality is non-negotiable), but skips the final approval pause and auto-commits if the score is 80 or above. It still presents the summary so you can see what was done.</p>
+<p>In this mode, the orchestrator still runs the full fan-out → reduce → judge → loop-until-dry runtime (quality is non-negotiable) and skips the final approval pause for the current skill. It does <strong>not</strong> auto-commit: “just do it” is never commit authorization — commits require an explicit <code>/commit</code> or unambiguous request. It still presents the summary so you can see what was done.</p>
 </section>
 <section id="relationship-to-existing-skills" class="level3" data-number="5.2.5">
 <h3 data-number="5.2.5" class="anchored" data-anchor-id="relationship-to-existing-skills"><span class="header-section-number">5.2.5</span> Relationship to Existing Skills</h3>
@@ -4784,7 +4790,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
 <li><code>/slide-excellence</code> remains available for comprehensive multi-agent review</li>
 <li><code>/create-lecture</code> remains available as a guided creation workflow</li>
 </ul>
-<p>The difference: when you invoke a skill directly, it runs its specific workflow. When the orchestrator is active, it decides which agents to invoke based on context. The orchestrator is the default; skills are for targeted use.</p>
+<p>The difference: when you invoke a skill directly, it runs its specific workflow. The orchestrator runtime lives <em>inside</em> each skill — there is no repo-wide orchestrator that activates on its own or chains skills together. A skill is always user- or skill-initiated; nothing fires the runtime unattended.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -4854,7 +4860,7 @@ Orchestrator executes the plan end-to-end --- no prompts.</code></pre>
         +-- Critic: finds issues
         +-- Fixer: applies fixes
         +-- Critic: re-audits
-        +-- ... (until APPROVED or 5 rounds)</code></pre>
+        +-- ... (loop-until-dry: converge after 2 dry rounds; 5-round cap is a fallback)</code></pre>
 </section>
 <section id="pattern-5-replication-first-coding" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="pattern-5-replication-first-coding"><span class="header-section-number">5.5</span> Pattern 5: Replication-First Coding</h2>
@@ -6262,7 +6268,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </section>
 <section id="sec-create-skills" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="sec-create-skills"><span class="header-section-number">7.4</span> Step 4: Creating Custom Skills</h2>
-<p>The guide includes 24 <a href="#skills---reusable-slash-commands">skills</a> for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.</p>
+<p>The guide includes 50 <a href="#skills---reusable-slash-commands">skills</a> for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.</p>
 <section id="when-to-create-a-skill" class="level3" data-number="7.4.1">
 <h3 data-number="7.4.1" class="anchored" data-anchor-id="when-to-create-a-skill"><span class="header-section-number">7.4.1</span> When to Create a Skill</h3>
 <p>Create a skill when: - You repeatedly explain the same 3+ step workflow to Claude - You need domain-specific quality checks (citation style, notation consistency, lab protocols) - You enforce field-specific output formats (thesis structure, journal templates) - You coordinate multi-tool workflows (data → analysis → manuscript)</p>
@@ -6531,7 +6537,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The <code>/deep-audit</code> skill was itself extracted from a repeating workflow using <code>/learn</code>. After running 7 rounds of manual consistency audits — each time launching 4 parallel agents to check guide accuracy, hook code quality, skills/rules consistency, and cross-document counts — the pattern was codified into a skill. Now <code>/deep-audit</code> launches those same 4 agents, triages findings, applies fixes, and loops until clean (max 5 rounds). It also encodes a table of known bug patterns from past audits so future rounds catch regressions faster.</p>
+<p>The <code>/deep-audit</code> skill was itself extracted from a repeating workflow using <code>/learn</code>. After running 7 rounds of manual consistency audits — each time launching 4 parallel agents to check guide accuracy, hook code quality, skills/rules consistency, and cross-document counts — the pattern was codified into a skill. Now <code>/deep-audit</code> launches those same 4 agents, triages findings, applies fixes, and loops until clean (loop-until-dry: converges after 2 dry rounds, with a fallback cap). It also encodes a table of known bug patterns from past audits so future rounds catch regressions faster.</p>
 <p>This is the <code>/learn</code> lifecycle in action: discover a repeating workflow → extract it → never repeat the manual steps again.</p>
 </div>
 </div>
@@ -6547,7 +6553,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <li><strong>Verify everything.</strong> The verification rule exists for a reason. Never skip compilation or rendering checks.</li>
 <li><strong>Session logs matter.</strong> Document design decisions, not just what changed. Future-you will thank present-you.</li>
 <li><strong>Devil’s Advocate early.</strong> Challenge slide structure before you’ve built 50 slides on a shaky foundation.</li>
-<li><strong>Progressive disclosure.</strong> Start with CLAUDE.md + 2–3 rules. Add more as your workflow matures. Newcomers should not face 24 rules on day one.</li>
+<li><strong>Progressive disclosure.</strong> Start with CLAUDE.md + 2–3 rules. Add more as your workflow matures. Newcomers should not face all 30 rules on day one.</li>
 <li><strong>Use <code>CLAUDE.local.md</code> for personal overrides.</strong> This file is automatically gitignored and loaded alongside <code>CLAUDE.md</code>. Put machine-specific paths, personal preferences, and local tool versions here — they won’t pollute the shared repo.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -6856,16 +6862,6 @@ research-spec.md  ─────────────→  preregistration-dr
 <td>Detect AI-voice tells in academic prose (read-only audit; no rewrite) (v1.9.0)</td>
 </tr>
 <tr class="even">
-<td><code>/prompt</code></td>
-<td><code>.claude/skills/prompt/</code></td>
-<td>Reformat informal input into a structured six-section prompt, then execute (v1.9.0; ported from Blattman v2.1 with stripping)</td>
-</tr>
-<tr class="odd">
-<td><code>/prompt-only</code></td>
-<td><code>.claude/skills/prompt-only/</code></td>
-<td>Same formatting as <code>/prompt</code> but emits the prompt as a reusable artifact (no execution) (v1.9.0)</td>
-</tr>
-<tr class="even">
 <td><code>/compress-session</code></td>
 <td><code>.claude/skills/compress-session/</code></td>
 <td>Distil the current session into a structured note (decisions, files, open questions, next actions, discarded-as-noise) before auto-compaction (v1.9.0)</td>
@@ -6889,6 +6885,76 @@ research-spec.md  ─────────────→  preregistration-dr
 <td><code>/r-package-check</code></td>
 <td><code>.claude/skills/r-package-check/</code></td>
 <td>R package release gate — <code>devtools::document()</code> + tests + <code>R CMD check --as-cran</code> + CRAN-policy triage (v1.10.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/replication-package</code></td>
+<td><code>.claude/skills/replication-package/</code></td>
+<td>Assemble a submission-ready DCAS / openICPSR replication package; calls <code>/audit-reproducibility</code> and blocks on FAIL (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/capture-environment</code></td>
+<td><code>.claude/skills/capture-environment/</code></td>
+<td>Snapshot the computational environment (renv.lock / sessionInfo / requirements.txt / uv.lock + optional Dockerfile + seeds) (v2.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/did-event-study</code></td>
+<td><code>.claude/skills/did-event-study/</code></td>
+<td>Staggered DiD / event-study wrapper over canonical packages (Callaway–Sant’Anna <code>did</code>, <code>fixest::sunab</code>, HonestDiD; Stata <code>csdid</code>/<code>eventstudyinteract</code>/<code>honestdid</code>) (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/power-analysis</code></td>
+<td><code>.claude/skills/power-analysis/</code></td>
+<td>Power / required-N / MDE for study design (RCT, clustered/ICC, multi-arm, or simulation-based) + a methods paragraph for <code>/preregister</code> (v2.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/disclosure-check</code></td>
+<td><code>.claude/skills/disclosure-check/</code></td>
+<td>Pre-screen restricted-data outputs for SDL violations (small cells, dominance, PII); gates on any CRITICAL (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/grant-proposal</code></td>
+<td><code>.claude/skills/grant-proposal/</code></td>
+<td>Scaffold a grant proposal (NSF/NIH/ERC/foundation) from an <code>/interview-me</code> spec; delegates DMP + facilities; aims↔︎methods↔︎budget coherence pass (v2.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/data-management-plan</code></td>
+<td><code>.claude/skills/data-management-plan/</code></td>
+<td>Draft a funder-compliant Data Management Plan (NSF/NIH 2023/ERC/Horizon) (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/coauthor-brief</code></td>
+<td><code>.claude/skills/coauthor-brief/</code></td>
+<td>Generate a collaborator handoff brief: git delta, per-artifact state, open questions, reproduce-locally + restricted-data steps (v2.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/triage-inbox</code></td>
+<td><code>.claude/skills/triage-inbox/</code></td>
+<td>Triage academic email + calendar (Gmail/Calendar MCP) into a prioritized digest + referee-obligations tracker; human-gated actions only (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/syllabus</code></td>
+<td><code>.claude/skills/syllabus/</code></td>
+<td>Build a course syllabus from a topic/reading list (schedule, objectives, assessment + rubric, per-week <code>/create-lecture</code> work-list) (v2.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/teach-from-paper</code></td>
+<td><code>.claude/skills/teach-from-paper/</code></td>
+<td>Turn a paper into a lecture outline, teachable results, slide skeleton (→ <code>/create-lecture</code>), discussion questions, exercise brief (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/respond-to-eval</code></td>
+<td><code>.claude/skills/respond-to-eval/</code></td>
+<td>Turn student course evaluations into a classified teaching-improvement plan (Keep/Change/Investigate/Out-of-scope) (v2.0)</td>
+</tr>
+<tr class="odd">
+<td><code>/scaffold-exercises</code></td>
+<td><code>.claude/skills/scaffold-exercises/</code></td>
+<td>Scaffold a graded problem set (analytical/empirical/coding) with worked solutions; clean student set + separate solution key (v2.0)</td>
+</tr>
+<tr class="even">
+<td><code>/new-skill</code></td>
+<td><code>.claude/skills/new-skill/</code></td>
+<td>Scaffold a convention-compliant skill (interview → write <code>SKILL.md</code> with gate-passing frontmatter) (v2.0)</td>
 </tr>
 </tbody>
 </table>
@@ -6918,7 +6984,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <tr class="even">
 <td>Orchestrator Protocol</td>
 <td><code>orchestrator-protocol.md</code></td>
-<td>Contractor mode loop</td>
+<td>Review runtime: fan-out → reduce → judge (+ hallucination gate) → loop-until-dry (goal-first / gate-enforced; augments contractor mode)</td>
 </tr>
 <tr class="odd">
 <td>Session Logging</td>
@@ -6929,6 +6995,11 @@ research-spec.md  ─────────────→  preregistration-dr
 <td>Meta-Governance</td>
 <td><code>meta-governance.md</code></td>
 <td>Template vs working project distinctions</td>
+</tr>
+<tr class="odd">
+<td>Prompt Shaping</td>
+<td><code>prompt-shaping.md</code></td>
+<td>Ambient prompt-shaping habit (replaces the retired <code>/prompt</code> and <code>/prompt-only</code> skills)</td>
 </tr>
 </tbody>
 </table>
@@ -7067,6 +7138,11 @@ research-spec.md  ─────────────→  preregistration-dr
 <td><code>r-package-conventions.md</code></td>
 <td><code>R/**</code>, <code>tests/**</code>, <code>DESCRIPTION</code>, <code>NAMESPACE</code>, <code>man/**</code> — package-source standards: no <code>library()</code> in <code>R/</code>, roxygen NAMESPACE, Imports/Suggests, testthat 3e, CRAN policy (v1.10.0)</td>
 </tr>
+<tr class="odd">
+<td>Confidential Data</td>
+<td><code>confidential-data.md</code></td>
+<td>restricted/confidential data paths — no raw confidential data in git, disclosure-avoidance discipline, used by <code>/disclosure-check</code> / <code>/replication-package</code> / <code>/data-management-plan</code> (v2.0)</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -7087,9 +7163,9 @@ research-spec.md  ─────────────→  preregistration-dr
 </thead>
 <tbody>
 <tr class="odd">
-<td>Session log reminder</td>
+<td>Session log auto-writer</td>
 <td>Stop (command)</td>
-<td><code>.claude/hooks/log-reminder.py</code></td>
+<td><code>.claude/hooks/log-reminder.py</code> — auto-writes the session log on every meaningful change-set (no longer merely a reminder)</td>
 </tr>
 <tr class="even">
 <td>Desktop notification</td>
@@ -7099,7 +7175,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <tr class="odd">
 <td>Context state capture</td>
 <td>PreCompact (command)</td>
-<td><code>.claude/hooks/pre-compact.py</code></td>
+<td><code>.claude/hooks/pre-compact.py</code> — DRAFT-block default is ON</td>
 </tr>
 <tr class="even">
 <td>Context restoration</td>
@@ -7112,9 +7188,14 @@ research-spec.md  ─────────────→  preregistration-dr
 <td><code>.claude/hooks/context-monitor.py</code></td>
 </tr>
 <tr class="even">
-<td>Verification reminder</td>
-<td>PostToolUse[Write|Edit] (command)</td>
-<td><code>.claude/hooks/verify-reminder.py</code></td>
+<td>Git guardrails</td>
+<td>PreToolUse (command)</td>
+<td><code>.claude/hooks/git-guardrails.py</code> — blocks <code>reset --hard</code> / <code>clean -f</code> / <code>push --force</code> / <code>add -A</code></td>
+</tr>
+<tr class="odd">
+<td>Claim reconcile</td>
+<td>PostToolUse (command)</td>
+<td><code>.claude/hooks/claim-reconcile.py</code> — flags stale numeric claims when scripts change</td>
 </tr>
 </tbody>
 </table>
@@ -7205,7 +7286,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </section>
 <section id="hooks-not-firing" class="level3" data-number="8.5.3">
 <h3 data-number="8.5.3" class="anchored" data-anchor-id="hooks-not-firing"><span class="header-section-number">8.5.3</span> Hooks Not Firing</h3>
-<p><strong>Symptom:</strong> No context warnings, no verification reminders.</p>
+<p><strong>Symptom:</strong> No context warnings, no auto-written session log, no git guardrails firing.</p>
 <p><strong>Fix:</strong> 1. Check hooks are configured: <code>cat .claude/settings.json | grep hooks</code> 2. Ensure Python 3 is available: <code>which python3</code> 3. Check hook file permissions: <code>ls -la .claude/hooks/</code></p>
 </section>
 <section id="claude-ignores-rules" class="level3" data-number="8.5.4">
