@@ -52,7 +52,7 @@ For two-arm RCTs, clustered RCTs, and multi-arm comparisons, compute analyticall
 - **MDE mode:** `MDE = (z_{1−α/2} + z_{1−β}) · SE(effect)`, where `SE` is built from the SD, N, allocation, and `DEFF`. Report MDE in raw and standardized units.
 - **N mode:** invert the above for total N (and #clusters when clustered) given the target MDE.
 - **Power mode:** given N and a hypothesized effect, return achieved power.
-- **Multi-arm:** apply the chosen correction to `alpha` (e.g. `alpha/(K−1)` for Bonferroni vs control) and report per-comparison *and* familywise power.
+- **Multi-arm:** divide `alpha` by the **number of comparisons in the family** `m` (Bonferroni `alpha/m`): `m = K−1` for all-vs-control, `m = K(K−1)/2` for all-pairwise. Report per-comparison *and* familywise power.
 
 Sweep a grid (N or #clusters × effect size) so Phase 3 can draw a power curve and an MDE-vs-N curve.
 

@@ -1,144 +1,144 @@
 ---
 name: did-event-study
-description: Thin wrapper that runs a staggered difference-in-differences / event-study using canonical, maintained packages and surfaces their native diagnostics — it never reimplements an estimator. R via `did::att_gt`+`aggte` (Callaway–Sant'Anna), `fixest::sunab` (Sun–Abraham), and `HonestDiD` (Rambachan–Roth) for parallel-trends sensitivity; Stata via `csdid` / `eventstudyinteract` / `honestdid`. Use when the user says "run a staggered DiD", "event-study", "Callaway Sant'Anna", "Sun Abraham", "group-time ATT", "pre-trends test", "HonestDiD", or "honest parallel trends".
-argument-hint: "[panel data path] [--outcome Y --unit id --time t --gvar first_treat] [--control never|notyet]"
+description: Run a staggered difference-in-differences / event-study analysis to the Sant'Anna practitioner standard — drives the canonical packages (R `did`/`DRDID`/`didFF`/`contdid`; Stata `csdid`/`drdid`), enforces the doubly-robust default, a mandatory diagnostic + sensitivity suite, uniform-band inference, replicate-and-verify-against-source discipline, and ends in a graded credibility verdict. Use when user says "run a DiD", "event study", "staggered adoption", "Callaway Sant'Anna", "att_gt", "csdid", "did with multiple periods", or points at panel data with a treatment-timing variable. NEVER reimplements an estimator.
+argument-hint: "[data path] [--outcome --unit --time --gvar] [--control nevertreated|notyettreated] [--continuous] [--stata]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash"]
 effort: high
 ---
 
-# `/did-event-study` — Staggered DiD / Event-Study (thin wrapper)
+# /did-event-study — DiD / event study, Sant'Anna practitioner standard
 
-Run a staggered-adoption DiD / event-study by **calling a canonical package**, then surface that package's **native diagnostics** verbatim. This is a *proof-of-concept that launders no authority*: every number traces to a maintained estimator, and the skill writes back the exact package calls so the user owns the code.
+This is a **thin orchestrator over the canonical packages** — it never reimplements an estimator. It walks the practitioner workflow from *Difference-in-Differences with Multiple Time Periods* (Callaway & Sant'Anna 2021), the *Doubly Robust DiD* estimators (Sant'Anna & Zhao 2020), and the *"What's Trending in DiD?"* synthesis (Roth, Sant'Anna, Bilinski & Poe 2023), and it follows the **replicate-and-verify-against-source** discipline.
 
-**Input:** `$ARGUMENTS` — a panel-data path (`.csv` / `.rds` / `.dta`) plus the column roles (`--outcome`, `--unit`, `--time`, `--gvar` = first-treated period, `0`/`Inf` for never-treated), optional `--covariates`, and the contested `--control` choice (`never` vs `notyet`).
+> **Actor → Critic.** The skill is the *Actor*: it runs your packages and the diagnostics. It then puts on the *Critic* hat for **Phase 8 — a graded credibility verdict**, never a binary "passes." A mismatch with a pre-test is *evidence on credibility*, not a gate. (This actor/critic + mandatory-diagnostic + graded-credibility shape mirrors `.claude/rules/orchestrator-protocol.md` and the verification posture of `audit-reproducibility`.)
 
-**Core principle:** ONE estimator family per run, run *correctly*, beats a five-estimator fleet run carelessly. The skill does not hand-roll a TWFE event-study, a fake placebo, or a bespoke aggregation — those are exactly the steps the canonical packages exist to get right.
+> **Read first:** [`.claude/rules/did-conventions.md`](../../rules/did-conventions.md) — the HARD standards this skill enforces (data coding, DR default, control group, inference, aggregation, verification, and the pitfalls to avoid). Then the canonical resources in §Resources.
+
+Items marked **[CONFIRM-PEDRO]** are opinionated defaults to sign off before they ship.
 
 ## When to use
 
-- You have **panel/repeated-cross-section data with staggered treatment timing** and want group-time ATTs and an event-study aggregation.
-- You want the **native pre-trends test and event-study plot** from `did`/`fixest`, not a reimplementation.
-- You want **HonestDiD (Rambachan–Roth) sensitivity** — the breakdown `M` / relative-magnitudes bound for the parallel-trends assumption.
-- You're scoping the **never-treated vs not-yet-treated comparison-group** decision and want the contrast staged explicitly (the choice the EXPLAINED disposition in [`audit-reproducibility`](../audit-reproducibility/SKILL.md) was built around).
+- Staggered or 2×T adoption with panel or repeated cross-sections; a binary absorbing treatment, or a **continuous dose**.
+- Any time someone reaches for a TWFE event study under staggered timing — route here instead.
 
 ## When NOT to use
 
-- **2×2 (single treatment period, two groups).** A plain `feols(y ~ treat | unit + time)` is the right tool — no staggering, no aggregation needed.
-- **You need the finite-sample properties of an estimator** (bias / coverage under a known DGP) — that's [`/simulation-study`](../simulation-study/SKILL.md), not a single empirical run.
-- **Continuous / dose treatment, IV-DiD, or non-absorbing treatment.** These need a different canonical package (e.g. `did_multiplegt_dyn`); this skill covers the absorbing-treatment, binary case.
+- A single 2×2 with one pre / one post and no covariates is a one-liner — still use `DRDID::drdid()`, but you don't need the full pipeline.
+- Reversible / switching treatments (units turning on **and** off): these packages assume absorbing treatment. Stop and reconsider the design.
 
----
+## Workflow (fixed order)
 
-## Workflow Phases
+### Phase 0 — Reproducibility setup (gate before any estimation)
+- `set.seed(...)` is **REQUIRED** — all inference is bootstrap-based. (The JEL replication uses a fixed seed; pick one and pin it.)
+- Pin software (`renv::restore(prompt = FALSE)`), use `here::here()` for paths (no hard-coded machine paths — the `git-guardrails` hook blocks them in `.R`/`.do`), one master script runs the pipeline end-to-end.
+- Resolve namespace conflicts explicitly (`conflicted::conflict_prefer("select","dplyr")`, `…("filter","dplyr")`).
 
-### Phase 0: Pre-flight — pin the design, warn on the contested choice
+### Phase 1 — Design / estimand
+- Reshape to **LONG**: one row per unit-period (`tidyr::pivot_longer`).
+- Required columns: `yname` (outcome), `tname` (time), `idname` (**time-invariant, numeric** unit id), `gname` (group = **first period treated**; **never-treated coded EXACTLY `0`**).
+- Tabulate the roll-out (share of units/population by cohort) to make the design explicit: **2×2 → 2×T → staggered G×T**.
+- Pick the estimand up front. The recommended single summary is the **Overall ATT from `aggte(type = "group")`**; dynamics via `type = "dynamic"`.
 
-Before running anything, produce a **Pre-Flight Report**. The single most consequential — and most contested — decision is the **comparison group**; surface it loudly.
+### Phase 2 — Estimator selection
+Follow the decision logic in §Estimator selection. Output: which estimator, `est_method`/`estMethod`, `control_group`, `panel` vs RC, covariates yes/no.
 
-```markdown
-## Pre-Flight Report — DiD / Event-Study
+### Phase 3 — Estimation (drive the package; do not reimplement)
+- **2×2 (one pre / one post):**
+  `DRDID::drdid(yname, tname, idname, dname, xformla = ~covs, data, panel = TRUE, estMethod = "imp")` → `summary()`.
+  IPW-only: `DRDID::ipwdid(..., normalized = TRUE)`; OR-only: `DRDID::ordid(...)`.
+- **Staggered / multi-period (G×T or 2×T):**
+  ```r
+  out <- did::att_gt(
+    yname, tname, idname, gname,
+    xformla     = NULL,             # or ~ x1 + x2 (time-invariant / baseline covariates)
+    data        = mydata,
+    panel       = TRUE,             # FALSE for repeated cross-sections (idname ignored)
+    control_group = "notyettreated",# staggered; "nevertreated" for a clean 2×T design
+    est_method  = "dr",             # doubly robust DEFAULT (only used when xformla is set)
+    base_period = "universal",      # REQUIRED for a readable event study + HonestDiD
+    bstrap = TRUE, cband = TRUE, biters = 1000,   # publication: biters = 25000
+    clustervars = NULL,             # ≤ 2, one must equal idname
+    weightsname = NULL              # design-relevant weights if any
+  )
+  ```
+  `att_gt` builds every `ATT(g,t)` from a clean `drdid` 2×2 — that is *why* it avoids the forbidden already-treated-as-control comparisons that bias TWFE.
+- **TWFE event study — as a benchmark, not the headline [CONFIRM-PEDRO: framing]:**
+  `fixest::feols(y ~ i(time_to_treat, treat, ref = -1) | id + year, cluster = ~id)`. Confirm `att_gt(est_method = "reg")` matches it in simple cases (SEs differ only because of the bootstrap) so any divergence is attributable to *design*, not a coding bug.
+- **Continuous dose [ALPHA — API may change]:**
+  `contdid::cont_did(yname, dname, gname, tname, idname, data, target_parameter = "level"|"slope", aggregation = "dose"|"eventstudy")`. `dname` is the **time-invariant real dose** (its actual value pre-treatment, **not 0**); `gname = 0` for never-treated. `level → ATT(d)`, `slope → ACRT(d)`.
+- **Stata twins** (`--stata`, for the dual-software cross-check): `csdid y covs, ivar(id) time(t) gvar(g) method(dripw) notyet`; `estat event` / `estat simple`; `drdid` for the 2×2. Match R numerics with `csdid … asinr`.
 
-**Data:** [path] — [N units × T periods, balanced? gaps?]
-**Roles:** outcome=[Y], unit=[id], time=[t], cohort/gvar=[first_treat] (never-treated coded as [0|Inf])
-**Covariates:** [list or "none — unconditional parallel trends"]
-**Comparison group:** never-treated │ not-yet-treated  ← CONTESTED, see warning
-**Estimator(s):** Callaway–Sant'Anna (did) │ Sun–Abraham (fixest) │ +HonestDiD
-**Anticipation / base period:** [e.g. e = -1 normalized; anticipation = 0]
+### Phase 4 — Mandatory diagnostics (none skippable)
+1. **Pre-trends (a PRE-TEST, not a test):** read pre-treatment `ATT(g,t)` for `t<g` and the **Wald p-value** from `summary(out)`; in event-study form all `e<0 ≈ 0`, with `e = -1 ≈ 0`. Passing is *evidence on credibility*, **not proof** PT holds where you need it. **Do NOT pre-test with a TWFE event study** — under selective timing it can reject PT even when it holds.
+2. **Event study:** `aggte(out, type = "dynamic")` → `ggdid()` (red = pre pseudo-ATTs, blue = post; set `ylim` so panels compare). Pseudo-ATTs are valid only under no-anticipation.
+3. **Negative-weights / forbidden-comparison check:** satisfied *by design* via `att_gt`/`csdid`; flag negative TWFE weights as the reason to prefer the ATT(g,t) building block.
+4. **DR overlap:** inspect propensity-score overlap (the JEL Figure 1 idea). PS trimming default `trim.level = 0.995`; `ps.flag` reports IPT convergence.
+
+### Phase 5 — Sensitivity (ROBUSTNESS, never a pass/fail pre-test)
+- **HonestDiD (Rambachan & Roth):** `honest_did(es, type = "relative_magnitude", Mbarvec = c(0, 0.5, 1), gridPoints = 100)` and `type = "smoothness"`; report the **breakdown** `Mbar`/`M` at which conclusions change. Requires `base_period = "universal"` and a consecutive event-time vector with `ref = -1`. `honest_did()` is the README S3 glue, **not** an export — paste the method or call `HonestDiD::createSensitivityResults_relativeMagnitudes()`. **[CONFIRM-PEDRO: lead with relative-magnitudes `Mbar` or smoothness `M`?]**
+- **didFF functional-form sensitivity (Roth & Sant'Anna 2023):** `didFF::didFF(...)`; where the implied counterfactual density of `Y(0)` dips below 0, parallel-trends-for-all-functional-forms is violated. Small p → reject insensitivity. (Parallel trends is **not** invariant to levels vs logs — the functional form is a substantive identification choice.)
+- **He argues formal sensitivity should be standard practice.** Pair it with substantive reasoning about which time-varying confounders could break PT and how large a plausible violation is.
+
+### Phase 6 — Inference
+- Multiplier bootstrap, `bstrap = TRUE`, `cband = TRUE` → **uniform/simultaneous** bands robust to multiple testing. `biters = 25000` for publication. **Never** ship pointwise-only (`bstrap = FALSE, cband = FALSE`) as the headline.
+- `clustervars` ≤ 2 (one = `idname`); cluster TWFE benchmarks at the unit level. Few-treated-cluster settings need care **[CONFIRM-PEDRO: name `fwildclusterboot`/`boottest`, or method-only?]**.
+- Report design-relevant weights (`weightsname`) AND report weighted *and* unweighted.
+
+### Phase 7 — Aggregation & reporting
+- `aggte(out, type = "dynamic", min_e =, max_e =, balance_e =, bstrap = TRUE, biters = 25000, na.rm = TRUE)` for the event study; `type = "group"` for the headline **Overall ATT**; `type = "calendar"` per period. **Always pass `type` explicitly; avoid `type = "simple"`** (overweights early-treated).
+- Report the `e ∈ {0,…,K}` average with `overall.att`/`overall.se`/CI, BOTH simultaneous and pointwise bands on the plot, and map **every coefficient/figure to its generating script + line**.
+
+### Phase 8 — Credibility verdict (graded, honest — the Critic)
+Synthesize the diagnostics into a **graded** verdict (Strong / Moderate / Weak / Not-credible) with explicit reasons — never a binary "passes":
+- **Design** — `gname` coded right (`0` = never-treated)? absorbing treatment? clean control group exists?
+- **Pre-trends** — Wald p + visual `e<0 ≈ 0` (state: evidence, not proof).
+- **Sensitivity** — HonestDiD breakdown `Mbar`; `didFF` p-value.
+- **Overlap** — DR/PS overlap acceptable; trimming not heavily binding.
+- **Inference** — uniform bands; seed set; weights reported both ways.
+
+## Estimator selection
+
 ```
-
-> ⚠️ **Comparison-group warning.** Never-treated vs not-yet-treated is a substantive identification choice, not a default. If there are **few or no never-treated units**, not-yet-treated is usually required (and `did` will warn). If treatment effects are dynamic, not-yet-treated controls are themselves treated later — `did` handles this correctly, a naive TWFE does not. **State the choice, do not silently pick one.** This is the canonical [EXPLAINED](../audit-reproducibility/SKILL.md) named alternative: the same paper can report −1.19 (not-yet-treated) and −1.187 (never-treated) and *both* be defensible — record which one the headline uses.
-
-If outcome/unit/time/gvar cannot be inferred from the data, **stop and ask** before estimating.
-
-### Phase 1: Run the canonical estimator(s)
-
-Call the package — do **not** reimplement. Follow [`r-code-conventions.md`](../../rules/r-code-conventions.md) (header, `library()` at top, `set.seed()` once, relative paths) and write outputs to `scripts/R/_outputs/` (or `scripts/stata/_outputs/`).
-
-**R — Callaway–Sant'Anna (`did`):**
-```r
-library(did)
-att <- att_gt(yname = "Y", tname = "t", idname = "id", gname = "first_treat",
-              xformla = ~ x1 + x2,              # covariates; ~1 for unconditional
-              control_group = "notyettreated",  # or "nevertreated" — the Phase-0 choice
-              data = panel)
-es  <- aggte(att, type = "dynamic")             # event-study aggregation
-grp <- aggte(att, type = "group")               # cohort-specific ATTs
-saveRDS(list(att = att, es = es, grp = grp), "scripts/R/_outputs/did_main.rds")
+Continuous dose?            → contdid::cont_did(...)            [ALPHA]
+else 2 groups × 2 periods?  → DRDID::drdid(..., estMethod="imp")
+else many periods/cohorts?  → did::att_gt(...)   (wraps drdid per ATT(g,t))
+repeated cross-sections?    → att_gt(panel=FALSE) / drdid(panel=FALSE)
 ```
+- **Doubly-robust is the default** (`est_method="dr"` / `estMethod="imp"`: IPT propensity score + WLS outcome regression — doubly robust for *inference*). `est_method` matters only with covariates.
+- **Control group:** `nevertreated` when a clean never-treated pool exists; `notyettreated` for staggered designs (larger but stronger cross-group PT restrictions — "no free lunch"). **[CONFIRM-PEDRO: confirm this as the default rule.]**
+- **Under limited overlap**, prefer OR/regression-adjustment over DR.
+- **Heterogeneity-robust estimators usually agree** (CS, Sun–Abraham, BJS, dCDH) — the first-order priority is a transparent target parameter + transparent comparison group, not agonizing over the package. **[CONFIRM-PEDRO: foreground your `staggered` package as the default under (quasi-)random timing?]**
 
-**R — Sun–Abraham (`fixest::sunab`), as a cross-check on the same data:**
-```r
-library(fixest)
-sa <- feols(Y ~ sunab(first_treat, t) | id + t, data = panel, cluster = ~id)
-```
+## Verification / replication standard (from `DiD_book`)
+- Translate **from**, and verify **against**, the **original author code** — benchmark against the actual Stata `esttab`/`outreg` outputs, not printed paper numbers.
+- **Match the source to `abs_diff < 1e-6`** on BOTH point estimate AND SE; loosen only deliberately and document the scope. "Replication first — match original numbers before extending."
+- Mandatory infra: `renv.lock` + `renv::restore()`, `here::here()`, `set.seed`, one master script, machine-readable outputs (`.rds`, `.csv` coefficients, a per-analysis `verification_against_stata.csv`).
+- **Dual-software cross-check:** run R *and* Stata; only bootstrap-SE and cosmetic graphing differences are tolerable.
 
-**Stata equivalents** (mirrors, same estimands): `csdid Y x1 x2, ivar(id) time(t) gvar(first_treat) notyet` → `estat event`; `eventstudyinteract Y rel_*, cohort(first_treat) control_cohort(never) absorb(id t) vce(cluster id)`.
+## Resources (canonical, public)
+- **did-resources hub:** <https://psantanna.com/did-resources/> — the curated list (the JEL Practitioner's Guide, *What's Trending*, the 14-lecture course, the DiD checklist, all packages). **[CONFIRM-PEDRO: confirm this is the link to lead with.]**
+- **Packages:** `did` <https://bcallaway11.github.io/did/> · `DRDID` <https://psantanna.com/DRDID/> · `didFF` · `contdid` · `staggered` · Stata `csdid`/`drdid` · Python `drdid`/`csdid`.
+- **Papers:** Callaway & Sant'Anna (2021) <https://doi.org/10.1016/j.jeconom.2020.12.001> · Sant'Anna & Zhao (2020) <https://doi.org/10.1016/j.jeconom.2020.06.003> · Roth & Sant'Anna (2023, *Econometrica*) <https://doi.org/10.3982/ECTA19402> · Rambachan & Roth (2023, HonestDiD) · continuous treatment <https://arxiv.org/abs/2107.02637>.
 
-### Phase 2: Surface the NATIVE diagnostics
-
-Do not invent diagnostics — print the ones the packages already compute:
-
-1. **Pre-trends test** — `did`'s universal pre-test `Wpval` (and per-period pre-event estimates from `es`); `fixest`'s pre-period coefficients. Report the p-value *and* the caveat that a passed pre-test is not proof of parallel trends.
-2. **Event-study plot** — `ggdid(es)` / `iplot(sa)`. Save to `scripts/R/_outputs/`; pass `bg = "transparent"` for Beamer (per `r-code-conventions.md` §4).
-3. **Group-time ATT table** — `summary(att)`: the full `ATT(g,t)` matrix, with the aggregation weights that produce the overall ATT.
-4. **HonestDiD breakdown `M`** — Rambachan–Roth sensitivity over the relative-magnitudes (`Mbar`) or smoothness (`M`) restriction:
-   ```r
-   library(HonestDiD)
-   honest <- honest_did(es, type = "relative_magnitude", Mbarvec = seq(0, 2, by = 0.5))
-   ```
-   Report the **breakdown value** — the `M`/`Mbar` at which the CI first includes zero. A small breakdown means the result is fragile to pre-trend violations.
-
-### Phase 3: Write the results block + the exact calls
-
-Write `scripts/R/_outputs/did_event_study_summary.md`:
-
-```markdown
-# DiD / Event-Study Results — [outcome] on [treatment]
-
-**Estimator:** Callaway–Sant'Anna (did vX.Y.Z) │ comparison group: not-yet-treated
-**Overall ATT:** -1.187 (SE 0.42, [95% CI ...]) — aggte(type="dynamic")
-**Pre-trends:** universal pre-test p = 0.31 (not rejected; ≠ proof of PT)
-**HonestDiD:** CI excludes 0 up to Mbar = 1.0; breakdown Mbar ≈ 1.3
-**Sun–Abraham cross-check:** -1.20 (SE 0.44) — consistent
-
-## Exact package calls (you own this code)
-[paste the att_gt / aggte / sunab / honest_did calls run above]
-
-## Comparison-group sensitivity (the contested choice)
-| Control group   | Overall ATT | SE   |
-|-----------------|-------------|------|
-| not-yet-treated | -1.19       | 0.42 |
-| never-treated   | -1.187      | 0.43 |
-```
-
-Embed the **literal package calls** so the run is fully reproducible and editable by hand. The user, not the skill, is the author of the specification.
-
----
-
-## Output / Report format
-
-- `scripts/R/_outputs/did_main.rds` — the `att_gt` object + both aggregations (re-aggregatable, auditable).
-- `scripts/R/_outputs/event_study.{pdf,png}` — the native event-study plot.
-- `scripts/R/_outputs/did_event_study_summary.md` — headline ATT, native diagnostics, HonestDiD breakdown, the contested-control sensitivity table, and the exact calls.
+## Output
+Write to `scripts/R/_outputs/` (and `scripts/Stata/` if `--stata`): the master script, the `ATT(g,t)` + aggregations (`.rds`), the event-study figure (simultaneous + pointwise bands), the HonestDiD/`didFF` sensitivity, the `verification_against_stata.csv`, and a `did_credibility_verdict.md` (the Phase 8 graded verdict + every table→script:line map).
 
 ## Exit behavior
-
-- **Estimation + diagnostics succeed:** exit 0; print the headline ATT, pre-test p-value, and HonestDiD breakdown to the user.
-- **Package emits a substantive warning** (e.g. no never-treated units under `nevertreated`; collinear covariates; unbalanced cohorts dropped): surface it verbatim — **do not swallow it** — and pause for the user to confirm the design.
-- **Outcome/unit/time/gvar unresolved, or the required package is not installed:** stop and ask before estimating; never fall back to a hand-rolled TWFE substitute.
-
-## Cross-references
-
-- [`.claude/skills/simulation-study/SKILL.md`](../simulation-study/SKILL.md) — for the *finite-sample* behavior of these estimators under a known DGP (TWFE-vs-CS bias, coverage); this skill is one empirical run, not a Monte Carlo.
-- [`.claude/skills/audit-reproducibility/SKILL.md`](../audit-reproducibility/SKILL.md) — the never-treated vs not-yet-treated contrast is its canonical **EXPLAINED** named alternative; audit the ATT this skill produces against the manuscript.
-- [`.claude/skills/preregister/SKILL.md`](../preregister/SKILL.md) — pin the comparison group, anticipation window, and event-study horizon *before* estimating to avoid specification-searching.
-- [`.claude/rules/r-code-conventions.md`](../../rules/r-code-conventions.md) — R script standards (seed, paths, figure theme).
-- [`.claude/rules/replication-protocol.md`](../../rules/replication-protocol.md) — tolerance thresholds for matching the ATT against a paper.
+- Exit 0 with the graded verdict. A **Not-credible** verdict or a failed source-verification (`abs_diff ≥ 1e-6`) is surfaced prominently — never silently passed.
+- Pairs with `/audit-reproducibility` (numeric claims ↔ outputs) and `/replication-package` (the deposit).
 
 ## What this skill does NOT do
+- **Reimplement any estimator** — it drives your packages; if a number looks implausible, debug the wrapper / sample / weights / clustering / data construction / engine **before** interpreting it.
+- **Handle reversible treatments**, or use TWFE as the headline under staggered timing.
+- **Consult any private vault** — this skill is self-contained and public-resource-only.
+- **Replace your judgment** — the credibility verdict is advisory; you are the auditor.
 
-- **Reimplement any estimator.** No bespoke TWFE event-study, no hand-rolled aggregation, no DIY placebo. Every number comes from `did` / `fixest` / `HonestDiD` (or their Stata twins). If you need an estimator these packages don't provide, this is the wrong skill.
-- **Choose your comparison group for you.** It stages never-treated vs not-yet-treated and warns; the identification call is yours.
-- **Certify parallel trends.** A passed pre-test is necessary-not-sufficient; HonestDiD quantifies fragility but does not *prove* the assumption.
-- **Run a five-estimator fleet.** One canonical family per run, run correctly — not a leaderboard of half-checked methods.
-- **Handle continuous/dose treatment, non-absorbing treatment, or IV-DiD.** Out of scope (see "When NOT to use").
+## Flags
+- `--outcome` `--unit` `--time` `--gvar` — map columns to `yname`/`idname`/`tname`/`gname`.
+- `--control` `<nevertreated|notyettreated>` — comparison group (default per §Estimator selection).
+- `--continuous` — continuous-dose mode (`contdid`, ALPHA).
+- `--stata` — also run the Stata twin (`csdid`/`drdid`) for the dual-software cross-check.
+
+## Cross-references
+- [`.claude/rules/did-conventions.md`](../../rules/did-conventions.md) — the enforceable standards.
+- [`.claude/skills/audit-reproducibility/SKILL.md`](../audit-reproducibility/SKILL.md) · [`.claude/skills/replication-package/SKILL.md`](../replication-package/SKILL.md) · [`.claude/skills/power-analysis/SKILL.md`](../power-analysis/SKILL.md) · [`.claude/skills/simulation-study/SKILL.md`](../simulation-study/SKILL.md).

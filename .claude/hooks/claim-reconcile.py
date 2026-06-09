@@ -65,7 +65,13 @@ def main() -> int:
     if not passports:
         return 0  # no claims tracked → nothing to reconcile
 
-    changed = Path(fp).name
+    # Match + throttle on the project-relative PATH, not the bare basename —
+    # otherwise scripts/R/results.rds and scripts/stata/results.rds throttle
+    # each other, and clean.R spuriously matches data_clean.R.
+    try:
+        changed = str(Path(fp).resolve().relative_to(Path(project_dir).resolve()))
+    except Exception:
+        changed = Path(fp).name
 
     # Throttle: one nudge per changed file per THROTTLE_S.
     st_path = state_dir() / "claim-reconcile-state.json"
