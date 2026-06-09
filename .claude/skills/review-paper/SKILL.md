@@ -436,3 +436,10 @@ The shipped `journal-profiles.md` covers 5 econ journals (AER, QJE, JPE, ECMA, R
 
 For non-econ paper types in `methods-referee.md`, extend the paper-type list (e.g., biology: `observational / experimental / computational / review`).
 
+## Cross-references
+
+- [`.claude/skills/audit-reproducibility/SKILL.md`](../audit-reproducibility/SKILL.md) — numeric-claim verification (auto-invoked on referenced scripts).
+- [`.claude/skills/replication-package/SKILL.md`](../replication-package/SKILL.md) — assemble the AEA DCAS deposit once the paper passes review.
+- [`.claude/skills/capture-environment/SKILL.md`](../capture-environment/SKILL.md) · [`.claude/skills/disclosure-check/SKILL.md`](../disclosure-check/SKILL.md) — environment capture + restricted-data screening for the deposit.
+- [`.claude/skills/seven-pass-review/SKILL.md`](../seven-pass-review/SKILL.md) — heavier 7-lens pass for submission-ready drafts.
+

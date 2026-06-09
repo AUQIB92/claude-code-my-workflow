@@ -84,59 +84,15 @@ Enforced by `/commit` (halts + asks for override) **and** — once you run `./sc
 
 ## Skills Quick Reference
 
-<!-- surface-sync-table: skills -->
-| Command | What It Does |
-|---------|-------------|
-| `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
-| `/deploy [LectureN]` | Render Quarto + sync to docs/ |
-| `/extract-tikz [LectureN]` | TikZ → PDF → SVG |
-| `/new-diagram [snippet] [output.tex]` | Scaffold a TikZ diagram from the gallery with prevention + review |
-| `/proofread [file]` | Grammar/typo/overflow review |
-| `/visual-audit [file]` | Slide layout audit |
-| `/pedagogy-review [file]` | Narrative, notation, pacing review |
-| `/review-r [file]` | R code quality review |
-| `/qa-quarto [LectureN]` | Adversarial Quarto vs Beamer QA |
-| `/slide-excellence [file]` | Combined multi-agent review |
-| `/translate-to-quarto [file]` | Beamer → Quarto translation |
-| `/validate-bib` | Cross-reference citations |
-| `/devils-advocate` | Challenge slide design |
-| `/create-lecture` | Full lecture creation |
-| `/commit [msg]` | Stage, commit, PR, merge |
-| `/lit-review [topic]` | Literature search + synthesis |
-| `/research-ideation [topic]` | Research questions + strategies |
-| `/interview-me [topic]` | Interactive research interview |
-| `/review-paper [file]` | Manuscript review (single-pass / `--adversarial` / `--peer <journal>` simulated pipeline) |
-| `/respond-to-referees [report] [manuscript]` | R&R cross-reference + response draft |
-| `/data-analysis [dataset]` | End-to-end R analysis |
-| `/audit-reproducibility [paper]` | Enforce replication tolerance thresholds on paper ↔ code |
-| `/learn [skill-name]` | Extract discovery into persistent skill |
-| `/context-status` | Show session health + context usage |
-| `/deep-audit` | Repository-wide consistency audit |
-| `/permission-check` | Diagnose permission layers when prompts fire unexpectedly |
-| `/seven-pass-review` | Seven-pass adversarial manuscript review (parallel forked subagents) |
-| `/verify-claims [file]` | Chain-of-Verification fact-check (forked verifier, fresh context) |
-| `/checkpoint [topic]` | Save a structured state snapshot (active plan, decisions, file pointers, next actions) before stopping or handing off |
-| `/preregister [--style osf|aspredicted|aea-rct]` | Draft a preregistration document (OSF / AsPredicted / AEA RCT Registry) from a research spec |
-| `/humanize [file]` | Detect AI-voice tells in academic prose (read-only audit; no rewrite) |
-| `/compress-session [slug]` | Distil current session into structured notes before auto-compaction (vs `/checkpoint` for natural stops) |
-| `/promote-memory [filter]` | Five-critic council that votes on which `[LEARN]` entries graduate from personal-memory.md to MEMORY.md |
-| `/stata-replication [paper-or-data]` | End-to-end Stata pipeline scaffold + execution via `stata-mcp` (mirrors `/data-analysis` for R) |
-| `/simulation-study [estimator+DGP]` | Reproducible Monte Carlo study: DGP, estimator grid, seeded reps, bias/RMSE/coverage/size/power + Monte Carlo SEs |
-| `/r-package-check [pkg path]` | R package release gate: `devtools::document()` + tests + `R CMD check --as-cran`, CRAN-policy triage, `r-package-reviewer` pass |
-| `/replication-package [paper] [outputs-dir]` | Assemble a submission-ready DCAS / openICPSR replication package (README, dataset manifest, env capture, Table/Figure→script:line map, confidential-data note); calls `/audit-reproducibility` and blocks on FAIL |
-| `/capture-environment [project-dir] [--docker]` | Snapshot the computational environment — detect R/Stata/Python, emit renv.lock + sessionInfo / requirements.txt / uv.lock + optional Dockerfile, record seeds, write a paste-ready "Computational requirements" block |
-| `/did-event-study [data] [--outcome --unit --time --gvar] [--control never\|notyet]` | Thin wrapper for staggered DiD / event-study via canonical packages (Callaway–Sant'Anna `did`, Sun–Abraham `fixest::sunab`, HonestDiD; Stata `csdid`/`eventstudyinteract`/`honestdid`) — surfaces native pre-trends, event-study plot, group-time ATTs, HonestDiD breakdown M; never reimplements an estimator |
-| `/power-analysis [--mode mde\|n\|power] [--design rct\|cluster\|multiarm\|sim]` | Power / required-N / MDE for study design (RCT, clustered/ICC, multi-arm, or simulation-based) + a methods paragraph for `/preregister` |
-| `/disclosure-check [outputs-dir] [--provider] [--threshold]` | Pre-screen restricted-data outputs for SDL violations (small cells, dominance, PII, unrounded stats); gates on any CRITICAL |
-| `/grant-proposal [--funder nsf\|nih\|erc\|foundation] [--input spec]` | Scaffold a grant proposal (aims/methods/timeline/budget/broader-impacts) from an `/interview-me` spec; delegates DMP to `/data-management-plan` + facilities to `/capture-environment`; runs an aims↔methods↔budget coherence pass and emits a funder-requirements checklist |
-| `/data-management-plan [--funder nsf\|nih\|erc\|horizon]` | Draft a funder-compliant Data Management Plan (NSF/NIH 2023/ERC/Horizon) composing confidential-data + environment-capture primitives |
-| `/coauthor-brief [--since <tag\|date\|Ndays>] [--for <name>]` | Generate a collaborator handoff brief: git delta, per-artifact state, open questions, reproduce-locally + restricted-data steps |
-| `/triage-inbox [--since --cap --no-calendar --dry-run]` | Triage academic email + calendar (Gmail/Calendar MCP) into a prioritized digest + referee-obligations tracker; proposes human-gated actions (draft reply / calendar hold / scaffold project / snooze), never auto-sends; schedulable |
-| `/syllabus [topics-or-readings] [--weeks --level --sessions-per-week]` | Build a course syllabus from a topic/reading list — description + prerequisites, weekly schedule (topic→readings→deliverables), measurable objectives, assessment scheme + rubric, policies, and a per-week `/create-lecture` work-list |
-| `/teach-from-paper [paper] [--level] [--minutes] [--no-exercises]` | Turn a paper into a lecture outline, teachable results + intuition, a slide skeleton (→ `/create-lecture`), discussion questions, and an exercise brief (→ `/scaffold-exercises`) |
-| `/respond-to-eval [evals] [prior-plan]` | Turn student course evaluations into a classified teaching-improvement plan (Keep/Change/Investigate/Out-of-scope, mapped to syllabus + decks) |
-| `/scaffold-exercises [topic] [--difficulty] [--count] [--types] [--dataset] [--no-solutions]` | Scaffold a graded problem set (analytical/empirical/coding) with worked solutions + explainers; clean student set + separate solution key |
-| `/new-skill [name] [--from-learn] [--dry-run]` | Scaffold a convention-compliant skill — interview → write `SKILL.md` from the template with gate-passing frontmatter (flag + allowed-tools parity), then remind to register the README/CLAUDE.md surface rows |
+The full table of all skills lives in [README.md](README.md#skills-claudeskills). Most-used, by workflow:
+
+- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises`
+- **Papers / review:** `/review-paper` (`--peer`) `/seven-pass-review` `/respond-to-referees` `/verify-claims` `/proofread` `/humanize`
+- **Data / reproducibility:** `/data-analysis` `/did-event-study` `/simulation-study` `/audit-reproducibility` `/replication-package` `/capture-environment` `/power-analysis` `/disclosure-check`
+- **Research / writing:** `/interview-me` `/lit-review` `/research-ideation` `/preregister` `/grant-proposal` `/data-management-plan`
+- **Meta / workflow:** `/commit` `/learn` `/new-skill` `/checkpoint` `/context-status` `/deep-audit` `/coauthor-brief` `/triage-inbox`
+
+Stata (`/stata-replication`), R packages (`/r-package-check`), TikZ (`/extract-tikz`, `/new-diagram`), and more — see the README for the complete index.
 
 ---
 

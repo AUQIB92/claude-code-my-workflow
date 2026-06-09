@@ -1,6 +1,6 @@
 # Scheduled & Background Routines
 
-The loop-first half of the workflow: recurring scholarly chores that should run *on a schedule* and surface only when they find something — not when you remember to run them. These are **Routines** (cron-scheduled remote agents managed by [`/schedule`](../skills/schedule/SKILL.md)), not committed cron files, so they survive a closed laptop and run on web infrastructure.
+The loop-first half of the workflow: recurring scholarly chores that should run *on a schedule* and surface only when they find something — not when you remember to run them. These are **Routines** (cron-scheduled remote agents managed by `/schedule`), not committed cron files, so they survive a closed laptop and run on web infrastructure.
 
 > **Use Routines, not `CronCreate`,** for any away-from-keyboard work — Routines run on managed infra and persist; a local cron dies with the REPL. Each routine below is a *prompt + interval*; set them up once with `/schedule`.
 
@@ -36,7 +36,7 @@ The nightly reproducibility job is the *backstop*. The *immediate* signal is the
 
 ## Cross-references
 
-- [`/schedule`](../skills/schedule/SKILL.md) — create/list/run routines.
+- `/schedule` — create/list/run routines.
 - [`.claude/hooks/claim-reconcile.py`](../hooks/claim-reconcile.py) — the event-driven reconciliation hook.
 - [`.claude/rules/replication-protocol.md`](../rules/replication-protocol.md) — what the reproducibility routine checks.
 - [`.claude/rules/confidential-data.md`](../rules/confidential-data.md) — why unattended runs stay human-gated near restricted data.
