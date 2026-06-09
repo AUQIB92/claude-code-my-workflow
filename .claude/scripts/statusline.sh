@@ -64,7 +64,11 @@ fi
 # Context % — best-effort, persisted by context-monitor.py under the
 # session dir keyed by md5(project_dir)[:8].
 ctx=""
-hash="$(printf '%s' "$cwd" | python3 -c 'import sys,hashlib; print(hashlib.md5(sys.stdin.read().encode()).hexdigest()[:8])' 2>/dev/null)"
+# Hash the SAME key context-monitor.py writes under: CLAUDE_PROJECT_DIR if set,
+# else the git toplevel (the project root) — NOT the raw cwd, which differs in
+# a subdirectory and would point at the wrong sessions folder.
+proj="${CLAUDE_PROJECT_DIR:-$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")}"
+hash="$(printf '%s' "$proj" | python3 -c 'import sys,hashlib; print(hashlib.md5(sys.stdin.read().encode()).hexdigest()[:8])' 2>/dev/null)"
 pct_file="$HOME/.claude/sessions/${hash}/context-pct.txt"
 [ -f "$pct_file" ] && ctx="ctx $(cat "$pct_file" 2>/dev/null)%"
 set -e

@@ -23,7 +23,7 @@ import sys, re, pathlib, datetime
 root = pathlib.Path(sys.argv[1])
 pdir = root / "quality_reports" / "passports"
 if not pdir.is_dir():
-    print("no passports/ — nothing to check"); sys.exit(0)
+    print("no quality_reports/passports/ — nothing to check"); sys.exit(0)
 
 def parse_iso(s):
     s = s.strip().strip('"').strip("'").replace("Z", "+00:00")

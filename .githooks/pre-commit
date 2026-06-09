@@ -27,6 +27,20 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || {
 }
 cd "$REPO_ROOT" || exit 2
 
+# Validate the STAGED index, not the working tree: stash unstaged *tracked*
+# changes so what we check on disk is exactly what will be committed. Without
+# this, staging a stale README while the corrected version sits unstaged would
+# pass the gate (Codex review, PR #130). Untracked files are intentionally NOT
+# stashed (avoids slow/surprising stashes of large data dirs). A trap restores
+# on any exit; a stash failure never blocks the commit.
+_STASHED=0
+if ! git diff --quiet 2>/dev/null; then
+    if git stash push --keep-index --quiet --message "pre-commit-gate" 2>/dev/null; then
+        _STASHED=1
+        trap '[ "$_STASHED" = "1" ] && git stash pop --quiet 2>/dev/null || true' EXIT
+    fi
+fi
+
 FAIL=0
 
 echo "── pre-commit: surface-sync gates ──"

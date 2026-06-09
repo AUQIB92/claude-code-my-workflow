@@ -89,8 +89,18 @@ def main() -> int:
         fp = ti.get("file_path", "") or ""
         if Path(fp).suffix not in CODE_EXT:
             return 0
-        content = ti.get("content") or ti.get("new_string") or ""
-        if isinstance(content, str):
+        # Collect every string that becomes file content: Write.content,
+        # Edit.new_string, and EACH MultiEdit edit's new_string (a list).
+        candidates = []
+        for k in ("content", "new_string"):
+            v = ti.get(k)
+            if isinstance(v, str):
+                candidates.append(v)
+        for e in ti.get("edits", []) or []:
+            v = (e or {}).get("new_string")
+            if isinstance(v, str):
+                candidates.append(v)
+        for content in candidates:
             m = HARDCODED_PATH.search(content)
             if m:
                 msg = (f"Hardcoded machine path '{m.group(0)}' in {Path(fp).name} "
@@ -100,6 +110,7 @@ def main() -> int:
                     deny(f"Blocked (CLAUDE_STRICT_PATHS=1): {msg}")
                 else:
                     sys.stderr.write(f"[git-guardrails] WARNING: {msg}\n")
+                break  # one finding per call is enough
         return 0
 
     return 0
