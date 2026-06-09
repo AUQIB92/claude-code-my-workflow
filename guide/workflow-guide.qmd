@@ -2388,7 +2388,7 @@ The template includes matching LaTeX and Quarto palettes. To customize:
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
-The guide includes 50 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
+The guide includes 51 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
 
 ### When to Create a Skill
 

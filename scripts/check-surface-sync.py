@@ -95,10 +95,18 @@ COMPOUND_PHRASINGS: list[tuple[str, list[tuple[int, str]]]] = [
 # template (not attribution, not a generic count). Each must be a scaffold
 # specific enough that false positives are unlikely.
 SINGULAR_PHRASINGS: list[tuple[str, str]] = [
-    # "this template's 27" (prose shortcut in Built-In Skills callout)
-    (r"this template's\s+(\d+)\b",                  "skills"),
+    # "this template's 27" (prose shortcut in Built-In Skills callout).
+    # Match BOTH the ASCII apostrophe and the typographic ’ (U+2019) that
+    # Quarto emits in rendered HTML — a straight-quote-only regex let
+    # docs/workflow-guide.html drift to a stale count past a green gate.
+    (r"this template['’]s\s+(\d+)\b",               "skills"),
     # "(N skills for LaTeX..." (templates/skill-template.md trailing note)
     (r"\((\d+)\s+skills?\s+for\b",                  "skills"),
+    # "The guide includes N skills" — the guide's .qmd prose AND its rendered
+    # HTML (an <a> tag sits between the number and "skills", so match the
+    # number right after "guide includes"). This prose form matched none of
+    # the count regexes at v2.0 and shipped a stale "50" to live users.
+    (r"guide includes\s+(\d+)\b",                   "skills"),
 ]
 
 # Enumerative-table markers. A surface opts a markdown table into the

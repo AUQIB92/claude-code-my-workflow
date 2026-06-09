@@ -64,7 +64,7 @@ Before writing any R code:
 
 ### If Mismatch
 
-**Do NOT proceed to extensions.** Isolate which step introduces the difference, check common causes (sample size, SE computation, default options, variable definitions), and document the investigation even if unresolved.
+**Do NOT proceed to extensions.** Isolate which step introduces the difference, check common causes (sample size, SE computation, default options, variable definitions), and document the investigation even if unresolved. To localize *which* step drifted, hand off to [`/diagnose`](../skills/diagnose/SKILL.md) (reproduce → minimise → bisect the pipeline) — it is the single-claim root-cause counterpart to `/audit-reproducibility`'s whole-paper check.
 
 **The mismatch does not presume the code is correct.** The on-disk output is a *challenger*, not an oracle — a refactor may have broken a previously-correct table, so the *manuscript* number may be the right one and the code the stale/buggy side. Frame it as "one of {paper, code} must change — isolate which," never "revert the code to match the paper."
 

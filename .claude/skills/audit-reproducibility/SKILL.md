@@ -232,6 +232,7 @@ See [`.claude/rules/replication-protocol.md`](../../rules/replication-protocol.m
 - [`.claude/rules/replication-protocol.md`](../../rules/replication-protocol.md) — the tolerance contract + passport schema.
 - [`templates/passport-template.yaml`](../../../templates/passport-template.yaml) — starter file to copy for a new paper.
 - [`.claude/skills/review-r/SKILL.md`](../review-r/SKILL.md) — catches code-style issues; this skill catches NUMERICAL reproducibility.
+- [`.claude/skills/diagnose/SKILL.md`](../diagnose/SKILL.md) — when a claim resolves to **FAIL** and you need to localize *which* pipeline step produced the out-of-tolerance value, hand off to `/diagnose` (single-claim root-cause: reproduce → minimise → bisect).
 - [`.claude/skills/review-paper/SKILL.md`](../review-paper/SKILL.md) — content review; pair with this skill for a full pre-submission audit.
 - [`.claude/skills/replication-package/SKILL.md`](../replication-package/SKILL.md) — gates on this skill before assembling the AEA DCAS deposit.
 - [`.claude/skills/capture-environment/SKILL.md`](../capture-environment/SKILL.md) · [`.claude/skills/disclosure-check/SKILL.md`](../disclosure-check/SKILL.md) — environment capture + restricted-data screening downstream.
