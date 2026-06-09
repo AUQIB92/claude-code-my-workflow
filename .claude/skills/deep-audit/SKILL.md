@@ -84,7 +84,7 @@ Focus: `.claude/skills/*/SKILL.md` and `.claude/rules/*.md`
 - Rule `paths:` reference existing directories
 - No contradictions between rules
 - CLAUDE.md skills table matches actual skill directories 1:1
-- All templates referenced in rules/guide exist in `templates/`
+- All templates referenced in `.claude/rules/*.md` and the guide (`guide/workflow-guide.qmd`) exist in `templates/`
 
 #### Agent 4: Cross-Document Consistency
 Focus: `README.md`, `docs/index.html`, `docs/workflow-guide.html`

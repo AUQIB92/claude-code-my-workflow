@@ -26,7 +26,7 @@ If you forked v1.x, here is what is *materially different* now (one-stop summary
 
 **If you do only one thing after pulling v2.0:** run `./scripts/install-hooks.sh` to activate the pre-commit gate.
 
-**Inventory at release: 50 skills, 18 agents, 30 rules, 7 hooks** (was 38 / 18 / 28 / 6 at v1.10.0). Net: +14 skills, −2 retired; +2 rules; +2 hooks, −1 retired. New: 9 references (3 added), 2 output-styles, CI.
+**Inventory at release: 51 skills, 18 agents, 32 rules, 7 hooks** (was 38 / 18 / 28 / 6 at v1.10.0). Net: +15 skills, −2 retired; +4 rules; +2 hooks, −1 retired. New: 9 references (3 added), 2 output-styles, CI.
 
 ### Added — economist "producer" skills (the biggest gold-standard gap)
 
@@ -48,6 +48,7 @@ If you forked v1.x, here is what is *materially different* now (one-stop summary
 - **Real orchestration runtime** — `.claude/references/orchestration-schemas.md` (the `FINDING`/`SCORECARD`/`RUN_CONFIG` contracts + the post-judge **hallucination gate**) and `agent-fleet.md` (the 18-agent manifest with tiers). `orchestrator-protocol.md` rewritten from *pattern* to *runtime*.
 - **Event-driven + scheduled autonomy** — `claim-reconcile.py` (flags stale numeric claims when an analysis script/output changes), `.claude/references/scheduled-routines.md` + `scripts/nightly-repro-check.sh`, and **`/triage-inbox`** (schedulable, human-gated email/calendar triage + referee-obligations tracker).
 - **`/new-skill`** — scaffolds a convention-compliant skill that passes `check-skill-integrity` on the first try (adapted from `mattpocock/skills`' write-a-skill).
+- **`/diagnose`** — root-cause a wrong/failing empirical result with a disciplined **reproduce → minimise → hypothesise → instrument → fix** loop (the net-new idea from a fresh pass over `mattpocock/skills`, reshaped for research code where the bug is usually a *silent wrong number*, not a crash; competing-hypothesis fan-out via `Task`, `--no-fix` to localize without editing).
 - **Output styles** — `.claude/output-styles/academic-writing.md` and `referee.md` (the template shipped zero before).
 - **CI** — `.github/workflows/gates.yml` (surface-sync + integrity + model-version checks on every PR) and `deploy.yml` (re-render the guide → `docs/` on push to `main`).
 - **Enforcing pre-commit hook** — `.githooks/pre-commit` + `scripts/install-hooks.sh` (opt-in via `core.hooksPath`).
@@ -77,7 +78,7 @@ If you forked v1.x, here is what is *materially different* now (one-stop summary
 
 ### Notes
 
-- Count surfaces (README, CLAUDE.md, guide source + rendered HTML, landing page, skill template) updated to 50 / 18 / 30 / 7; `check-surface-sync.sh` (now including the table-row gate), `check-skill-integrity.py`, and `check-model-versions.sh` all pass.
+- Count surfaces (README, CLAUDE.md, guide source + rendered HTML, landing page, skill template) updated to 51 / 18 / 32 / 7; `check-surface-sync.sh` (now including the table-row gate), `check-skill-integrity.py`, and `check-model-versions.sh` all pass.
 - Explicit **non-goals** (documented, not omissions): no autonomous daemon, no plugin marketplace, no multi-estimator production fleet (one `/did-event-study` proof-of-concept), no challenger→auditor→ledger pipeline (the zero-cost `EXPLAINED` mechanism instead), `MEMORY.md` stays the committed memory backend.
 
 ---
