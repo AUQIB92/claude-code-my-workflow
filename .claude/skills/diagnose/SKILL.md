@@ -127,8 +127,9 @@ A staggered-DiD `ATT` jumped from `−0.043` to `−0.071` after a data refresh;
 nrow(panel)                         # 12,400  (expected)
 nrow(merge(panel, covars, by="id")) # 12,933  <-- inflated! a many-to-many merge
 
-# Root cause: covars has 3 duplicate rows per id after the refresh; the join
-# fans 12,400 -> 12,933, re-weighting the ATT toward the duplicated units.
+# Root cause: the refresh left duplicate covars rows for a subset of ids; the
+# join fans those ids out, 12,400 -> 12,933 (+533 rows), re-weighting the ATT
+# toward the duplicated units.
 
 # Phase 5 — minimal fix at the root (dedup the key), NOT a downstream row filter:
 covars <- covars[!duplicated(covars$id), ]
