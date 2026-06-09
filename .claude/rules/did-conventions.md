@@ -32,13 +32,13 @@ Items marked **[CONFIRM-PEDRO]** are opinionated defaults awaiting sign-off.
 - DRDID convention: always `cbind(1, covariates)`.
 
 ## Control group — HARD
-- `nevertreated` when a clean never-treated pool exists; `notyettreated` for staggered designs (larger, but stronger cross-group PT — "no free lunch"). **[CONFIRM-PEDRO]**
+- **`notyettreated` is the default for staggered designs** (a larger, time-varying comparison; it imposes stronger cross-group PT — "no free lunch"); use `nevertreated` for a clean 2×T design.
 - **Never use already-treated units as controls** under heterogeneity (the source of "forbidden comparisons").
 
 ## Inference — HARD
 - Multiplier bootstrap with **uniform/simultaneous** bands: `bstrap = TRUE, cband = TRUE` (`biters ≥ 1000`; **25000** for publication). **Never** ship pointwise-only bands as the headline.
 - `set.seed(...)` before any estimation — inference is bootstrap-based.
-- `clustervars ≤ 2`, one must equal `idname`; cluster TWFE benchmarks at the unit level. Few-treated-cluster settings need care. **[CONFIRM-PEDRO: name `fwildclusterboot`/`boottest`?]**
+- `clustervars ≤ 2`, one must equal `idname`; cluster TWFE benchmarks at the unit level. Few-treated-cluster settings need care (e.g. a wild-cluster bootstrap via `fwildclusterboot`/`boottest`).
 - Report design-relevant weights (`weightsname`) AND report results weighted *and* unweighted.
 
 ## Aggregation & reporting — HARD
@@ -69,4 +69,4 @@ Items marked **[CONFIRM-PEDRO]** are opinionated defaults awaiting sign-off.
 ## Cross-references
 - [`.claude/skills/did-event-study/SKILL.md`](../skills/did-event-study/SKILL.md) — the pipeline.
 - [`.claude/rules/replication-protocol.md`](replication-protocol.md) · [`.claude/rules/r-code-conventions.md`](r-code-conventions.md) · [`.claude/rules/simulation-conventions.md`](simulation-conventions.md).
-- Canonical resources: <https://psantanna.com/did-resources/> (the JEL Practitioner's Guide, *What's Trending*, the course, all packages). **[CONFIRM-PEDRO: confirm public links.]**
+- Canonical resources: <https://psantanna.com/did-resources/> (the JEL Practitioner's Guide, *What's Trending*, the course, all packages).

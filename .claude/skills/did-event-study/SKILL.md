@@ -62,7 +62,7 @@ Follow the decision logic in §Estimator selection. Output: which estimator, `es
   )
   ```
   `att_gt` builds every `ATT(g,t)` from a clean `drdid` 2×2 — that is *why* it avoids the forbidden already-treated-as-control comparisons that bias TWFE.
-- **TWFE event study — as a benchmark, not the headline [CONFIRM-PEDRO: framing]:**
+- **TWFE event study — a benchmark/sanity-check, never the headline under heterogeneity:**
   `fixest::feols(y ~ i(time_to_treat, treat, ref = -1) | id + year, cluster = ~id)`. Confirm `att_gt(est_method = "reg")` matches it in simple cases (SEs differ only because of the bootstrap) so any divergence is attributable to *design*, not a coding bug.
 - **Continuous dose [ALPHA — API may change]:**
   `contdid::cont_did(yname, dname, gname, tname, idname, data, target_parameter = "level"|"slope", aggregation = "dose"|"eventstudy")`. `dname` is the **time-invariant real dose** (its actual value pre-treatment, **not 0**); `gname = 0` for never-treated. `level → ATT(d)`, `slope → ACRT(d)`.
@@ -75,13 +75,13 @@ Follow the decision logic in §Estimator selection. Output: which estimator, `es
 4. **DR overlap:** inspect propensity-score overlap (the JEL Figure 1 idea). PS trimming default `trim.level = 0.995`; `ps.flag` reports IPT convergence.
 
 ### Phase 5 — Sensitivity (ROBUSTNESS, never a pass/fail pre-test)
-- **HonestDiD (Rambachan & Roth):** `honest_did(es, type = "relative_magnitude", Mbarvec = c(0, 0.5, 1), gridPoints = 100)` and `type = "smoothness"`; report the **breakdown** `Mbar`/`M` at which conclusions change. Requires `base_period = "universal"` and a consecutive event-time vector with `ref = -1`. `honest_did()` is the README S3 glue, **not** an export — paste the method or call `HonestDiD::createSensitivityResults_relativeMagnitudes()`. **[CONFIRM-PEDRO: lead with relative-magnitudes `Mbar` or smoothness `M`?]**
+- **HonestDiD (Rambachan & Roth):** `honest_did(es, type = "relative_magnitude", Mbarvec = c(0, 0.5, 1), gridPoints = 100)` and `type = "smoothness"`; **lead with the relative-magnitudes `Mbar` breakdown** (the headline) and also report smoothness `M`. Requires `base_period = "universal"` and a consecutive event-time vector with `ref = -1`. `honest_did()` is the README S3 glue, **not** an export — paste the method or call `HonestDiD::createSensitivityResults_relativeMagnitudes()`.
 - **didFF functional-form sensitivity (Roth & Sant'Anna 2023):** `didFF::didFF(...)`; where the implied counterfactual density of `Y(0)` dips below 0, parallel-trends-for-all-functional-forms is violated. Small p → reject insensitivity. (Parallel trends is **not** invariant to levels vs logs — the functional form is a substantive identification choice.)
 - **He argues formal sensitivity should be standard practice.** Pair it with substantive reasoning about which time-varying confounders could break PT and how large a plausible violation is.
 
 ### Phase 6 — Inference
 - Multiplier bootstrap, `bstrap = TRUE`, `cband = TRUE` → **uniform/simultaneous** bands robust to multiple testing. `biters = 25000` for publication. **Never** ship pointwise-only (`bstrap = FALSE, cband = FALSE`) as the headline.
-- `clustervars` ≤ 2 (one = `idname`); cluster TWFE benchmarks at the unit level. Few-treated-cluster settings need care **[CONFIRM-PEDRO: name `fwildclusterboot`/`boottest`, or method-only?]**.
+- `clustervars` ≤ 2 (one = `idname`); cluster TWFE benchmarks at the unit level. Few-treated-cluster settings need care (e.g. a wild-cluster bootstrap via `fwildclusterboot`/`boottest`).
 - Report design-relevant weights (`weightsname`) AND report weighted *and* unweighted.
 
 ### Phase 7 — Aggregation & reporting
@@ -105,9 +105,9 @@ else many periods/cohorts?  → did::att_gt(...)   (wraps drdid per ATT(g,t))
 repeated cross-sections?    → att_gt(panel=FALSE) / drdid(panel=FALSE)
 ```
 - **Doubly-robust is the default** (`est_method="dr"` / `estMethod="imp"`: IPT propensity score + WLS outcome regression — doubly robust for *inference*). `est_method` matters only with covariates.
-- **Control group:** `nevertreated` when a clean never-treated pool exists; `notyettreated` for staggered designs (larger but stronger cross-group PT restrictions — "no free lunch"). **[CONFIRM-PEDRO: confirm this as the default rule.]**
+- **Control group:** **`notyettreated` is the default for staggered G×T** (a larger, time-varying comparison; it imposes stronger cross-group PT — "no free lunch"); use `nevertreated` for a clean 2×T design or when a credible never-treated pool is the right comparison.
 - **Under limited overlap**, prefer OR/regression-adjustment over DR.
-- **Heterogeneity-robust estimators usually agree** (CS, Sun–Abraham, BJS, dCDH) — the first-order priority is a transparent target parameter + transparent comparison group, not agonizing over the package. **[CONFIRM-PEDRO: foreground your `staggered` package as the default under (quasi-)random timing?]**
+- **Heterogeneity-robust estimators usually agree** (CS, Sun–Abraham, BJS, dCDH) — the first-order priority is a transparent target parameter + transparent comparison group, not agonizing over the package. Under **(quasi-)random rollout timing**, the efficient Roth–Sant'Anna `staggered` estimator is worth considering, but `att_gt` (Callaway–Sant'Anna) stays the workhorse default.
 
 ## Verification / replication standard (from `DiD_book`)
 - Translate **from**, and verify **against**, the **original author code** — benchmark against the actual Stata `esttab`/`outreg` outputs, not printed paper numbers.
@@ -116,7 +116,7 @@ repeated cross-sections?    → att_gt(panel=FALSE) / drdid(panel=FALSE)
 - **Dual-software cross-check:** run R *and* Stata; only bootstrap-SE and cosmetic graphing differences are tolerable.
 
 ## Resources (canonical, public)
-- **did-resources hub:** <https://psantanna.com/did-resources/> — the curated list (the JEL Practitioner's Guide, *What's Trending*, the 14-lecture course, the DiD checklist, all packages). **[CONFIRM-PEDRO: confirm this is the link to lead with.]**
+- **did-resources hub:** <https://psantanna.com/did-resources/> — the curated list (the JEL Practitioner's Guide, *What's Trending*, the 14-lecture course, the DiD checklist, all packages). **Lead here.**
 - **Packages:** `did` <https://bcallaway11.github.io/did/> · `DRDID` <https://psantanna.com/DRDID/> · `didFF` · `contdid` · `staggered` · Stata `csdid`/`drdid` · Python `drdid`/`csdid`.
 - **Papers:** Callaway & Sant'Anna (2021) <https://doi.org/10.1016/j.jeconom.2020.12.001> · Sant'Anna & Zhao (2020) <https://doi.org/10.1016/j.jeconom.2020.06.003> · Roth & Sant'Anna (2023, *Econometrica*) <https://doi.org/10.3982/ECTA19402> · Rambachan & Roth (2023, HonestDiD) · continuous treatment <https://arxiv.org/abs/2107.02637>.
 
