@@ -30,7 +30,7 @@ claims:
       n: exact                     # sample-size mismatch is never tolerated
     last_verified_on: 2026-05-20T00:00:00Z
     last_verified_by: "/audit-reproducibility"
-    status: UNVERIFIED             # PASS | FAIL | STALE | UNVERIFIED
+    status: UNVERIFIED             # PASS | FAIL | EXPLAINED | STALE | UNVERIFIED
     notes: |
       Optional notes. Use this field to record:
       - Known small discrepancies and why they're within tolerance
@@ -39,6 +39,10 @@ claims:
       - Cross-references to other claims that depend on this one
         (e.g., "C5 derives a derived quantity from C1; both must
         update together").
+      - To downgrade an out-of-tolerance FAIL to EXPLAINED, a CONCRETE
+        named alternative spec (e.g., "never-treated vs not-yet-treated
+        comparison group; published value matches under not-yet-treated").
+        A blank or vague note ("unclear") never downgrades a FAIL.
 
   # Example claim 2 — a percentage figure from a robustness check
   - id: C2

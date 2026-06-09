@@ -78,52 +78,21 @@ python scripts/quality_score.py Quarto/file.qmd
 | 90 | PR | Ready for deployment |
 | 95 | Excellence | Aspirational |
 
-Enforced by `/commit` (halts + asks for override); not enforced by a git pre-commit hook.
+Enforced by `/commit` (halts + asks for override) **and** — once you run `./scripts/install-hooks.sh` — by a real git pre-commit hook (`.githooks/pre-commit`) that runs the surface-sync + quality (≥80) gates on every commit. Bypass sparingly with `SKIP_QUALITY_GATE=1` or `--no-verify`.
 
 ---
 
 ## Skills Quick Reference
 
-| Command | What It Does |
-|---------|-------------|
-| `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
-| `/deploy [LectureN]` | Render Quarto + sync to docs/ |
-| `/extract-tikz [LectureN]` | TikZ → PDF → SVG |
-| `/new-diagram [snippet] [output.tex]` | Scaffold a TikZ diagram from the gallery with prevention + review |
-| `/proofread [file]` | Grammar/typo/overflow review |
-| `/visual-audit [file]` | Slide layout audit |
-| `/pedagogy-review [file]` | Narrative, notation, pacing review |
-| `/review-r [file]` | R code quality review |
-| `/qa-quarto [LectureN]` | Adversarial Quarto vs Beamer QA |
-| `/slide-excellence [file]` | Combined multi-agent review |
-| `/translate-to-quarto [file]` | Beamer → Quarto translation |
-| `/validate-bib` | Cross-reference citations |
-| `/devils-advocate` | Challenge slide design |
-| `/create-lecture` | Full lecture creation |
-| `/commit [msg]` | Stage, commit, PR, merge |
-| `/lit-review [topic]` | Literature search + synthesis |
-| `/research-ideation [topic]` | Research questions + strategies |
-| `/interview-me [topic]` | Interactive research interview |
-| `/review-paper [file]` | Manuscript review (single-pass / `--adversarial` / `--peer <journal>` simulated pipeline) |
-| `/respond-to-referees [report] [manuscript]` | R&R cross-reference + response draft |
-| `/data-analysis [dataset]` | End-to-end R analysis |
-| `/audit-reproducibility [paper]` | Enforce replication tolerance thresholds on paper ↔ code |
-| `/learn [skill-name]` | Extract discovery into persistent skill |
-| `/context-status` | Show session health + context usage |
-| `/deep-audit` | Repository-wide consistency audit |
-| `/permission-check` | Diagnose permission layers when prompts fire unexpectedly |
-| `/seven-pass-review` | Seven-pass adversarial manuscript review (parallel forked subagents) |
-| `/verify-claims [file]` | Chain-of-Verification fact-check (forked verifier, fresh context) |
-| `/checkpoint [topic]` | Save a structured state snapshot (active plan, decisions, file pointers, next actions) before stopping or handing off |
-| `/preregister [--style osf|aspredicted|aea-rct]` | Draft a preregistration document (OSF / AsPredicted / AEA RCT Registry) from a research spec |
-| `/humanize [file]` | Detect AI-voice tells in academic prose (read-only audit; no rewrite) |
-| `/prompt [text] [depth:light|standard|deep]` | Reformat informal input into a structured six-section prompt, then execute |
-| `/prompt-only [text] [depth] [--save path]` | Same formatting as `/prompt`, but emits the prompt as a reusable artifact (no execution) |
-| `/compress-session [slug]` | Distil current session into structured notes before auto-compaction (vs `/checkpoint` for natural stops) |
-| `/promote-memory [filter]` | Five-critic council that votes on which `[LEARN]` entries graduate from personal-memory.md to MEMORY.md |
-| `/stata-replication [paper-or-data]` | End-to-end Stata pipeline scaffold + execution via `stata-mcp` (mirrors `/data-analysis` for R) |
-| `/simulation-study [estimator+DGP]` | Reproducible Monte Carlo study: DGP, estimator grid, seeded reps, bias/RMSE/coverage/size/power + Monte Carlo SEs |
-| `/r-package-check [pkg path]` | R package release gate: `devtools::document()` + tests + `R CMD check --as-cran`, CRAN-policy triage, `r-package-reviewer` pass |
+The full table of all skills lives in [README.md](README.md#skills-claudeskills). Most-used, by workflow:
+
+- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises`
+- **Papers / review:** `/review-paper` (`--peer`) `/seven-pass-review` `/respond-to-referees` `/verify-claims` `/proofread` `/humanize`
+- **Data / reproducibility:** `/data-analysis` `/did-event-study` `/simulation-study` `/audit-reproducibility` `/diagnose` `/replication-package` `/capture-environment` `/power-analysis` `/disclosure-check`
+- **Research / writing:** `/interview-me` `/lit-review` `/research-ideation` `/preregister` `/grant-proposal` `/data-management-plan`
+- **Meta / workflow:** `/commit` `/learn` `/new-skill` `/checkpoint` `/context-status` `/deep-audit` `/coauthor-brief` `/triage-inbox`
+
+Stata (`/stata-replication`), R packages (`/r-package-check`), TikZ (`/extract-tikz`, `/new-diagram`), and more — see the README for the complete index.
 
 ---
 

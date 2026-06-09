@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+#
+# Pre-commit quality gate for the academic-workflow template.
+#
+# This closes the "a direct `git commit` bypasses every gate" hole: the
+# gates that `/commit` runs (surface-sync + quality score) now run on EVERY
+# commit, not only when you go through the skill.
+#
+# Install once per clone:   ./scripts/install-hooks.sh
+# (sets core.hooksPath=.githooks so git finds this version-controlled hook.)
+#
+# It runs two gates against the STAGED changes and aborts the commit on
+# failure:
+#   1. Surface-sync (ALWAYS): count + enumerative-table-row consistency,
+#      skill integrity, model-version currency — deterministic and fast.
+#   2. Quality score (>= 80) on staged .qmd / .tex / .R files with rubrics.
+#
+# Escape hatches (use sparingly; record the reason in the commit message):
+#   SKIP_QUALITY_GATE=1 git commit ...   # skip only the quality score
+#   git commit --no-verify ...           # skip ALL hooks (last resort)
+#
+set -uo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+    echo "pre-commit: not inside a git work tree" >&2
+    exit 2
+}
+cd "$REPO_ROOT" || exit 2
+
+# Validate the STAGED index, not the working tree, by stashing unstaged
+# *tracked* changes — but ONLY when it is safe. If any single file has BOTH
+# staged and unstaged changes (the `git add -p` workflow), a `stash --keep-index`
+# + `pop` round-trip can conflict and write literal conflict markers into your
+# file. In that case we skip the stash and validate the working tree as-is (with
+# a warning) rather than risk corrupting your work. Untracked files are never
+# stashed (avoids slow stashes of large data dirs). A failed pop is loud +
+# recoverable, never silently swallowed.
+_STASHED=0
+_staged="$(git diff --cached --name-only 2>/dev/null | sort)"
+_unstaged="$(git diff --name-only 2>/dev/null | sort)"
+_overlap="$(comm -12 <(printf '%s\n' "$_staged") <(printf '%s\n' "$_unstaged") | grep -c . || true)"
+if [ "${_overlap:-0}" -gt 0 ] 2>/dev/null; then
+    echo "ℹ pre-commit: ${_overlap} file(s) have both staged and unstaged changes —" >&2
+    echo "  validating the WORKING TREE (not the pure staged index) to avoid a stash conflict." >&2
+elif [ -n "$_unstaged" ]; then
+    if git stash push --keep-index --quiet --message "pre-commit-gate" 2>/dev/null; then
+        _STASHED=1
+        trap 'if [ "$_STASHED" = "1" ]; then git stash pop --quiet 2>/dev/null || echo "⚠ pre-commit: could not auto-restore unstaged changes — recover with: git stash pop" >&2; fi' EXIT
+    fi
+fi
+
+FAIL=0
+
+echo "── pre-commit: surface-sync gates ──"
+./scripts/check-surface-sync.sh
+[ $? -ne 0 ] && FAIL=1
+
+if [ "${SKIP_QUALITY_GATE:-0}" = "1" ]; then
+    echo ""
+    echo "── pre-commit: quality gate SKIPPED (SKIP_QUALITY_GATE=1) ──"
+else
+    # Staged, added-or-modified files that have quality rubrics.
+    STAGED="$(git diff --cached --name-only --diff-filter=ACM | grep -Ei '\.(qmd|tex|R)$' || true)"
+    if [ -n "$STAGED" ]; then
+        n="$(printf '%s\n' "$STAGED" | grep -c .)"
+        echo ""
+        echo "── pre-commit: quality score (>= 80) on ${n} staged file(s) ──"
+        # Score each file individually: portable (no mapfile/bash4), handles
+        # spaces in paths, and gives a per-file exit code we can classify.
+        while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            [ -f "$f" ] || continue
+            python3 scripts/quality_score.py "$f"
+            rc=$?
+            # quality_score.py: rc 2 = auto-fail (compile/syntax FAILURE), rc 1 =
+            # score < 80 (or scorer error / file-not-found). BOTH must block — a
+            # file that fails to compile is the worst case, not an "infra error".
+            if [ "$rc" -ne 0 ]; then
+                echo "✗ quality gate: '$f' failed (rc=$rc — 2=compile/syntax failure, 1=score<80 or scorer error)." >&2
+                FAIL=1
+            fi
+        done <<< "$STAGED"
+    else
+        echo ""
+        echo "── pre-commit: no staged .qmd/.tex/.R files to score ──"
+    fi
+fi
+
+if [ "$FAIL" -ne 0 ]; then
+    echo "" >&2
+    echo "✗ pre-commit gate failed — commit aborted." >&2
+    echo "  Fix the findings above, or (sparingly) bypass with SKIP_QUALITY_GATE=1 / --no-verify." >&2
+    exit 1
+fi
+
+echo ""
+echo "✓ pre-commit gates passed."
+exit 0

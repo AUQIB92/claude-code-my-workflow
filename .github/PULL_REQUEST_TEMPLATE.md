@@ -16,7 +16,8 @@
 - [ ] `/deep-audit` finds no new inconsistencies
 - [ ] Manually exercised the changed skill/agent/hook on a real file
 - [ ] Updated **both** `README.md` and `guide/workflow-guide.qmd` if user-facing
-- [ ] Skill counts agree across `CLAUDE.md`, `README.md`, `docs/index.html`, and the guide
+- [ ] `./scripts/check-surface-sync.sh` passes — prose counts **and** `surface-sync-table` rows (added the new skill's row to the README table) are in sync
+- [ ] Ran `./scripts/install-hooks.sh` so the pre-commit gate is active locally
 
 ## Generality (for new skills/agents/rules)
 

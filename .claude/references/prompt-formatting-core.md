@@ -1,6 +1,6 @@
 # Prompt-Formatting Core (shared reference)
 
-Used by `/prompt` and `/prompt-only`. Defines the **structured-prompt skeleton** and the **depth-calibration heuristic** that both skills emit.
+Applied by the [`prompt-shaping`](../rules/prompt-shaping.md) rule as a standing habit. (The `/prompt` and `/prompt-only` skills that formerly emitted this skeleton were retired in v2.0 — a loop-first workflow shapes every ambiguous request automatically rather than behind a command.) Defines the **structured-prompt skeleton** and the **depth-calibration heuristic**.
 
 > Pattern adapted with attribution from Chris Blattman's [`claudeblattman` v2.1](https://github.com/chrisblattman/claudeblattman) (`skills/prompt-references/formatting-core.md`). Blattman-specific elements (tool-routing to ChatGPT / Perplexity / Gemini, the `council` token that dispatches to his `/council` skill) are deliberately omitted — see this file's "What we don't ship" section.
 

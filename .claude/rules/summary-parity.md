@@ -52,7 +52,17 @@ The specific form is more informative when fresh but more likely to rot. The abs
 
 Treat repeated review-bot findings on the same paragraph as a **structural signal**, not a list of bugs to patch one at a time. Each patch narrows the drift window but doesn't close it — the next edit to the body reopens it elsewhere.
 
+## The two-strikes pattern travels
+
+The "flagged twice → stop patching, escalate" rule is not specific to summaries. It applies wherever a disagreement can be quietly re-papered-over each round instead of resolved:
+
+- `review-paper --adversarial` — the same concern raised in rounds N and N+2 is flagged for the user rather than patched a third time.
+- `audit-reproducibility` — a numeric claim downgraded to **EXPLAINED** in two consecutive audits without ever being corrected to PASS is surfaced prominently ("contested number EXPLAINED twice, never corrected") rather than left to hide behind its recorded note.
+
+In each case, two strikes means the *artifact is the wrong shape*, not that the wording needs one more touch.
+
 ## Cross-references
 
 - `MEMORY.md` — `[LEARN:audit]` on summary-body whack-a-mole (the originating incident: three consecutive Copilot findings on the v1.6.1 CHANGELOG opening paragraph, PRs #88–#90).
 - `.claude/skills/commit/SKILL.md` — when writing the commit message for a doc-heavy PR, apply this rule to the `## Summary` section before pushing.
+- `.claude/skills/audit-reproducibility/SKILL.md` — "Repeated EXPLAINED is a signal (two-strikes)" reuses this pattern for contested numeric claims.

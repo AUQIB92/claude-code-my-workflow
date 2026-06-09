@@ -102,6 +102,8 @@ For each file, count citation commands (`\citet` vs `\citep` vs `\cite`; `@key` 
 
 Gated behind `--cite-claim`. For the top-10 most-cited works per file, WebFetch the crossref abstract and surface it beside the in-text context. **No auto-judgment** — humans decide if the claim matches.
 
+> **This is existence/structure, not appropriateness.** Deciding whether the cited paper *actually says* what the in-text claim attributes to it is [`/verify-claims`](../verify-claims/SKILL.md)'s job — it reads the source and grounds a supports / partial / contradicts verdict in quotes + pages (with the EXPLAINED escape for a defensible named alternative). `--cite-claim` only surfaces the abstract; for the verdict, run `/verify-claims`.
+
 ### Report structure (`quality_reports/bib_audit_semantic.md`)
 
 ```markdown
@@ -148,9 +150,10 @@ Gated behind `--cite-claim`. For the top-10 most-cited works per file, WebFetch 
 
 - `.claude/skills/review-paper/SKILL.md` — pair for full pre-submission.
 - `.claude/skills/audit-reproducibility/SKILL.md` — numeric-claims counterpart.
+- `.claude/skills/verify-claims/SKILL.md` — citation **appropriateness** counterpart (does the cited paper support the claim?). This skill checks that a citation *exists and is well-formed*; `/verify-claims` checks that it *holds*.
 
 ## What this skill does NOT do
 
-- Judge whether a citation is used in the right *context* (`--cite-claim` surfaces abstracts but does not judge).
+- Judge whether a citation is used in the right *context* — whether the cited paper actually *says* what the claim attributes to it. That is `/verify-claims`'s job (see 2d); this skill stays existence-and-structure only.
 - Auto-fix your `.bib` file — all edits are recommendations.
 - Check non-DOI identifiers (ISBN, arXiv, SSRN) — roadmap.

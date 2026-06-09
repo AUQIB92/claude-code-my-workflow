@@ -1,0 +1,27 @@
+name: gates
+
+# Runs the deterministic, toolchain-free gates on every PR and push to a
+# feature branch — the same surface-sync + skill-integrity + model-version
+# checks the local pre-commit hook runs. Quality scoring (which needs
+# Quarto / R) stays local; CI guards the cheap, high-signal invariants.
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - main   # main is protected by the PRs that merge into it
+
+permissions:
+  contents: read
+
+jobs:
+  surface-sync:
+    name: surface-sync + skill-integrity + model-versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run gate suite
+        run: ./scripts/check-surface-sync.sh

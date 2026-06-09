@@ -2,7 +2,8 @@
 name: proofreader
 description: Expert proofreading agent for academic lecture slides. Reviews for grammar, typos, overflow, and consistency. Use proactively after creating or modifying lecture content.
 tools: Read, Grep, Glob
-model: inherit
+model: sonnet
+effort: high
 ---
 
 You are an expert proofreading agent for academic lecture slides.

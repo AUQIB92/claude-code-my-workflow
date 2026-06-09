@@ -90,7 +90,7 @@ Refuse to mark the document "ready" if any of these fails:
 
 - **Hypothesis directionality.** Each hypothesis must contain a direction ("higher than", "increases", "negatively predicts", "no effect" is acceptable as a directional claim under equivalence-testing). Reject "is associated with" without a sign.
 - **Estimator named.** Analysis plan names a specific estimator (OLS, logit, fixest::feols, lme4::lmer, ATT difference-in-means …) and a primary outcome variable. "Regression" alone is insufficient.
-- **Sample plan numeric.** Target N, stopping rule, or power-calc target appear. "As many as possible" is not a sample plan.
+- **Sample plan numeric.** Target N, stopping rule, or power-calc target appear. "As many as possible" is not a sample plan. For RCTs and prospective designs, run [`/power-analysis`](../power-analysis/SKILL.md) to produce the MDE / required-N and a ready-to-paste power paragraph for this field.
 - **Exclusions ex ante.** Outlier and exclusion rules are stated *before* the data is seen ("we will exclude observations with completion time < 1 minute"). Vague "we'll deal with outliers" fails.
 - **Internal consistency.** If the design is randomised, the unit of randomisation matches the unit of analysis OR the analysis plan addresses clustering. If observational, identification strategy is stated.
 
@@ -126,6 +126,7 @@ Include the registry URL: OSF → `osf.io/registries`, AsPredicted → `aspredic
 - `templates/preregistration-template.md` — the three style templates this skill consumes.
 - `templates/requirements-spec.md` — MUST/SHOULD/MAY annotation language re-used here.
 - `.claude/skills/interview-me/SKILL.md` — produces the spec this skill consumes via `--input`.
+- `.claude/skills/power-analysis/SKILL.md` — supplies the MDE / required-N + power paragraph for the sample-plan field (RCTs).
 - `.claude/skills/verify-claims/SKILL.md` — Phase 5 invokes this for citation post-flight.
 - `.claude/references/discipline-cards.md` — field defaults that drive `--style` selection.
 - `.claude/rules/replication-protocol.md` — preregistration is the *forward* commitment; replication-protocol is the *backward* contract.

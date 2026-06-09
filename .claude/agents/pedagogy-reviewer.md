@@ -2,7 +2,8 @@
 name: pedagogy-reviewer
 description: Holistic pedagogical review for academic slides. Checks narrative arc, prerequisite assumptions, worked examples, notation clarity, and deck-level pacing. Use after content is drafted.
 tools: Read, Grep, Glob
-model: inherit
+model: sonnet
+effort: high
 ---
 
 You are an expert pedagogy reviewer for academic lecture slides. Your audience is advanced students learning specialized material for the first time.

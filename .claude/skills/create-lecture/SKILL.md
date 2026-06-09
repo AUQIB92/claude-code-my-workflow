@@ -119,3 +119,10 @@ This prevents `/create-lecture` from deadlocking for every new forker.
 [ ] Session log updated
 [ ] Devil's Advocate run
 ```
+
+## Cross-references
+
+- [`.claude/skills/translate-to-quarto/SKILL.md`](../translate-to-quarto/SKILL.md) — port the finished Beamer deck to a Quarto RevealJS mirror.
+- [`.claude/skills/qa-quarto/SKILL.md`](../qa-quarto/SKILL.md) — adversarial Beamer↔Quarto parity (loop-until-dry).
+- [`.claude/skills/deploy/SKILL.md`](../deploy/SKILL.md) — render + publish the lecture to GitHub Pages.
+- [`.claude/skills/scaffold-exercises/SKILL.md`](../scaffold-exercises/SKILL.md) — problem sets + solutions to accompany the lecture.

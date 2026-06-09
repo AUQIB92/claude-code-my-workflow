@@ -47,7 +47,9 @@ In a single message, spawn 7 Task tool calls (one per lens). Each subagent gets:
 - The manuscript path (to re-read with its own context).
 - The lens-specific prompt (below).
 - Instructions to write to `quality_reports/seven_pass_[stem]/lens_[N]_[lens-name].md`.
-- Severity tagging: CRITICAL / MAJOR / MINOR.
+- A closing `findings:` + `scorecard:` block in the shared schema ([`orchestration-schemas.md`](../../references/orchestration-schemas.md)): `severity: CRITICAL | MAJOR | MINOR`, with `evidence` and `change_my_mind` on every CRITICAL/MAJOR. Phase 2 reduces over these typed findings — it does not re-read the prose.
+
+This is the **fan-out** primitive from [`orchestrator-protocol.md`](../../rules/orchestrator-protocol.md); `Task` subagents are the portable mechanism (the agents that fill lenses 3/6 are in [`agent-fleet.md`](../../references/agent-fleet.md)).
 
 Lens prompt rubrics are embedded inline below — one summary paragraph per lens. Each forked subagent receives its lens's rubric plus the manuscript path.
 
@@ -61,9 +63,11 @@ Lens prompt rubrics are embedded inline below — one summary paragraph per lens
 - **Lens 6 (Prose):** Sentences under 30 words? Active voice dominant? Hedging proportionate (neither overclaiming nor endless "may suggest")? Paragraph topic sentences?
 - **Lens 7 (Citations):** Invoke `/validate-bib --semantic`. For top-10 cited works, does the in-text claim match the cited paper's actual finding direction? Are contemporary / competing works cited?
 
-### Phase 2: Synthesize
+### Phase 2: Synthesize (reduce → judge, with the hallucination gate)
 
-Wait for all 7 lens reports. Then read them and produce:
+Wait for all 7 lens reports. **Reduce, don't re-review:** stack the seven `scorecard`s and apply the gate predicate from [`orchestration-schemas.md` §3](../../references/orchestration-schemas.md) — the Executive verdict is a function of the typed findings, not a fresh eighth opinion. Then **run the post-judge hallucination gate** ([§4](../../references/orchestration-schemas.md)): any CRITICAL the synthesis introduces that **no lens raised** must be re-verified in a fresh `claim-verifier` fork, or dropped to `[JUDGE-HALLUCINATED]` and the verdict recomputed. A synthesis may freely downgrade or de-duplicate lens findings; it may not invent a new blocker.
+
+Then produce:
 
 `quality_reports/seven_pass_[stem]/_SYNTHESIS.md`
 

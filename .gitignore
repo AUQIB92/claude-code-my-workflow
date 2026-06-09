@@ -55,9 +55,11 @@ CLAUDE.local.md
 # Quarto rendering artifacts
 .quarto/
 
-# quality_reports/ — per-project session logs, plans, specs, merges.
-# The directory structure ships in the template (via .gitkeep), but the
-# content is PROJECT-INTERNAL and shouldn't be inherited by forks.
+# quality_reports/ — per-project session logs, plans, specs, merges, audits,
+# diagnoses. The directory structure ships in the template (via .gitkeep), but
+# the content is PROJECT-INTERNAL and shouldn't be inherited by forks.
+# (diagnoses/ in particular may hold real data values/paths — never ship them;
+#  audits/ are repo-specific gap analyses, noise for a forker.)
 quality_reports/plans/*
 quality_reports/specs/*
 quality_reports/session_logs/*
@@ -65,6 +67,8 @@ quality_reports/merges/*
 quality_reports/decisions/*
 quality_reports/checkpoints/*
 quality_reports/preregistrations/*
+quality_reports/audits/*
+quality_reports/diagnoses/*
 !quality_reports/plans/.gitkeep
 !quality_reports/specs/.gitkeep
 !quality_reports/session_logs/.gitkeep
@@ -72,6 +76,8 @@ quality_reports/preregistrations/*
 !quality_reports/decisions/.gitkeep
 !quality_reports/checkpoints/.gitkeep
 !quality_reports/preregistrations/.gitkeep
+!quality_reports/audits/.gitkeep
+!quality_reports/diagnoses/.gitkeep
 
 # R analysis outputs (generated artifacts; keep scripts, ignore outputs)
 scripts/R/_outputs/

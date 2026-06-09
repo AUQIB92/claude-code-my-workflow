@@ -40,12 +40,46 @@ case "$mode" in
     *)                 mode_badge="[$mode]" ;;
 esac
 
+# Optional enrichment (branch, dirty count, plan status, context %).
+# Wrapped in `set +e` so a probe failure can never blank the status line.
+set +e
 branch=""
+dirty=""
 if [ -d "$cwd/.git" ] || git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
-    branch="$(git -C "$cwd" branch --show-current 2>/dev/null || true)"
+    branch="$(git -C "$cwd" branch --show-current 2>/dev/null)"
+    n="$(git -C "$cwd" status --porcelain 2>/dev/null | grep -c '.')"
+    [ "${n:-0}" -gt 0 ] 2>/dev/null && dirty="±${n}"
 fi
+
+# Most-recent plan's status (DRAFT / APPROVED / COMPLETED).
+plan_badge=""
+latest_plan="$(ls -t "$cwd"/quality_reports/plans/*.md 2>/dev/null | head -1)"
+if [ -n "$latest_plan" ]; then
+    if   grep -qi 'COMPLETED' "$latest_plan" 2>/dev/null; then plan_badge="plan:done"
+    elif grep -qi 'APPROVED'  "$latest_plan" 2>/dev/null; then plan_badge="plan:approved"
+    elif grep -qi 'DRAFT'     "$latest_plan" 2>/dev/null; then plan_badge="plan:DRAFT"
+    fi
+fi
+
+# Context % — best-effort, persisted by context-monitor.py under the
+# session dir keyed by md5(project_dir)[:8].
+ctx=""
+# Mirror context-monitor.py's get_session_dir() EXACTLY: CLAUDE_PROJECT_DIR set →
+# hash it; unset/empty → the writer falls back to sessions/default/, so do the same
+# (hashing the git toplevel here would point at the wrong folder on that path).
+if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+    hash="$(printf '%s' "$CLAUDE_PROJECT_DIR" | python3 -c 'import sys,hashlib; print(hashlib.md5(sys.stdin.read().encode()).hexdigest()[:8])' 2>/dev/null)"
+else
+    hash="default"
+fi
+pct_file="$HOME/.claude/sessions/${hash}/context-pct.txt"
+[ -f "$pct_file" ] && ctx="ctx $(cat "$pct_file" 2>/dev/null)%"
+set -e
 
 line="$mode_badge  $model"
 [ -n "$branch" ] && line="$line  @ $branch"
+[ -n "$dirty" ] && line="$line $dirty"
+[ -n "$plan_badge" ] && line="$line  $plan_badge"
+[ -n "$ctx" ] && line="$line  $ctx"
 
 printf '%s' "$line"
