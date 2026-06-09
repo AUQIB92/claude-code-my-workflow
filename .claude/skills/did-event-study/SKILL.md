@@ -84,7 +84,16 @@ Follow the decision logic in §Estimator selection. Output: which estimator, `es
 4. **DR overlap:** inspect propensity-score overlap (the JEL Figure 1 idea). PS trimming default `trim.level = 0.995`; `ps.flag` reports IPT convergence.
 
 ### Phase 5 — Sensitivity (ROBUSTNESS, never a pass/fail pre-test)
-- **HonestDiD (Rambachan & Roth):** `honest_did(es, type = "relative_magnitude", Mbarvec = c(0, 0.5, 1), gridPoints = 100)` and `type = "smoothness"`; **lead with the relative-magnitudes `Mbar` breakdown** (the headline) and also report smoothness `M`. Requires `base_period = "universal"` and a consecutive event-time vector with `ref = -1`. `honest_did()` is the README S3 glue, **not** an export — paste the method or call `HonestDiD::createSensitivityResults_relativeMagnitudes()`.
+- **HonestDiD (Rambachan & Roth)** — **lead with the relative-magnitudes `Mbar` breakdown** (headline), also report smoothness. Requires `base_period = "universal"`. **`honest_did()` is a NON-exported internal S3 method** in `HonestDiD` (bare `honest_did()` errors); use `HonestDiD:::honest_did(es, …)`, or the direct path below — **validated on `mpdta`**:
+  ```r
+  es    <- aggte(out, type = "dynamic")                 # universal base period
+  IF    <- es$inf.function$dynamic.inf.func.e           # influence function
+  sigma <- crossprod(IF) / n_units^2                    # IF-based covariance
+  HonestDiD::createSensitivityResults_relativeMagnitudes(
+    betahat = es$att.egt, sigma = sigma,
+    numPrePeriods = sum(es$egt < 0), numPostPeriods = sum(es$egt >= 0),
+    Mbarvec = c(0, 0.5, 1))                             # report the breakdown Mbar
+  ```
 - **didFF functional-form sensitivity (Roth & Sant'Anna 2023):** `didFF::didFF(...)`; where the implied counterfactual density of `Y(0)` dips below 0, parallel-trends-for-all-functional-forms is violated. Small p → reject insensitivity. (Parallel trends is **not** invariant to levels vs logs — the functional form is a substantive identification choice.)
 - **He argues formal sensitivity should be standard practice.** Pair it with substantive reasoning about which time-varying confounders could break PT and how large a plausible violation is.
 
