@@ -20,7 +20,7 @@ The opinionated defaults here reflect **Pedro Sant'Anna's sign-off** (2026-06-09
 ## Data & coding — HARD
 - Data MUST be **LONG**: one row per unit-period.
 - `gname` (group) = the **first period a unit is treated**; **never-treated coded EXACTLY `0`**.
-- `idname` must be **time-invariant and numeric**.
+- `idname` must be **time-invariant and numeric**, and **unique within each period**. **Check panel balance before any `panel = TRUE` estimation** — unbalanced or duplicate-`(id,period)` data errors in `DRDID`/`did` or silently changes the estimand (balancing drops attriters → a different target). For the full-sample textbook 2×2, use `panel = FALSE` with a row-unique id.
 - These estimators are **staggered-adoption / absorbing only** — once treated, always treated. No reversal.
 - `ATT(g,t)` is identified only for `t ≥ g`; `t < g` estimates are **pseudo-ATTs for pre-testing only** (valid only under no-anticipation).
 

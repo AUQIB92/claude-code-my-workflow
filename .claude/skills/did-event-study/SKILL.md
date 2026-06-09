@@ -44,8 +44,17 @@ Follow the decision logic in §Estimator selection. Output: which estimator, `es
 
 ### Phase 3 — Estimation (drive the package; do not reimplement)
 - **2×2 (one pre / one post):**
-  `DRDID::drdid(yname, tname, idname, dname, xformla = ~covs, data, panel = TRUE, estMethod = "imp")` → `summary()`.
+  ```r
+  DRDID::drdid(yname, tname, idname, dname, xformla = ~covs, data, panel = TRUE, estMethod = "imp")
+  ```
   IPW-only: `DRDID::ipwdid(..., normalized = TRUE)`; OR-only: `DRDID::ordid(...)`.
+  - **Pre-flight (learned from validating Card–Krueger):** `panel = TRUE` requires `idname` **unique within each period** AND a **balanced** panel. Real datasets often aren't — check first:
+    ```r
+    stopifnot(nrow(dplyr::count(data, .data[[idname]], .data[[tname]]) |> dplyr::filter(n > 1)) == 0)  # idname unique by period
+    balanced <- all(table(data[[idname]]) == length(unique(data[[tname]])))
+    ```
+  - **If unbalanced** (the common case): either (a) reproduce the **full-sample textbook 2×2** with `panel = FALSE` and a **row-unique id** (`data$rowid <- seq_len(nrow(data))`; this equals `feols(y ~ d*post)` to ~1e-10 — but RC SEs treat the waves as independent, so for a true panel report the clustered/panel SE separately); or (b) **balance** the panel (`keep ids present in all periods`) and use `panel = TRUE` — but this is a **different estimand** (the balanced subpopulation), so record it as a named alternative (`EXPLAINED`), e.g. "full-sample 2×2 = 2.914; balanced-panel DR = 2.972 (19 attriting stores dropped)."
+  - DR with **no covariates reduces to the simple 2×2** — DRDID earns its keep once `xformla` adds covariates.
 - **Staggered / multi-period (G×T or 2×T):**
   ```r
   out <- did::att_gt(
