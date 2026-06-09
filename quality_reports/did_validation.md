@@ -43,7 +43,9 @@ Installed `HonestDiD` 0.2.8 + `didFF` 0.1.0 (local source). Ran the full skill p
 
 **2nd real bug found & fixed:** the skill said `honest_did()` is "README glue, not an export." Precisely, it's a **non-exported internal S3 method** in `HonestDiD 0.2.8` — bare `honest_did()` errors. The skill now ships the **validated direct recipe** (`createSensitivityResults_relativeMagnitudes` with betahat + IF-based sigma from `aggte(dynamic)`), confirmed to run on `mpdta`.
 
-## R ↔ Stata dual-software cross-check — PASS (his strict `DiD_book` standard)
+## Stata-matches-R check — PASS (R is the benchmark; his strict 1e-6 standard)
+
+**R (`did::att_gt`) is the canonical implementation / benchmark; Stata (`csdid … asinr` = "as in R") must reproduce it** (not the reverse).
 
 `csdid lemp lpop, ... method(dripw) notyet asinr` (Stata-MP) vs `did::att_gt(... est_method="dr", control_group="notyettreated")` (R) on `mpdta`:
 

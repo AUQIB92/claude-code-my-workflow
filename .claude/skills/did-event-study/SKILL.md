@@ -75,7 +75,7 @@ Follow the decision logic in §Estimator selection. Output: which estimator, `es
   `fixest::feols(y ~ i(time_to_treat, treat, ref = -1) | id + year, cluster = ~id)`. Confirm `att_gt(est_method = "reg")` matches it in simple cases (SEs differ only because of the bootstrap) so any divergence is attributable to *design*, not a coding bug.
 - **Continuous dose [ALPHA — API may change]:**
   `contdid::cont_did(yname, dname, gname, tname, idname, data, target_parameter = "level"|"slope", aggregation = "dose"|"eventstudy")`. `dname` is the **time-invariant real dose** (its actual value pre-treatment, **not 0**); `gname = 0` for never-treated. `level → ATT(d)`, `slope → ACRT(d)`.
-- **Stata twins** (`--stata`, for the dual-software cross-check): `csdid y covs, ivar(id) time(t) gvar(g) method(dripw) notyet`; `estat event` / `estat simple`; `drdid` for the 2×2. Match R numerics with `csdid … asinr`.
+- **Stata twins** (`--stata`) — **R is the benchmark; Stata must match it.** `csdid y covs, ivar(id) time(t) gvar(g) method(dripw) notyet asinr` (the `asinr` option = "as in R") must reproduce `did::att_gt` to **1e-6**; `estat event` / `estat simple`; `drdid` for the 2×2. Any Python port is held to the same: **match R**.
 
 ### Phase 4 — Mandatory diagnostics (none skippable)
 1. **Pre-trends (a PRE-TEST, not a test):** read pre-treatment `ATT(g,t)` for `t<g` and the **Wald p-value** from `summary(out)`; in event-study form all `e<0 ≈ 0`, with `e = -1 ≈ 0`. Passing is *evidence on credibility*, **not proof** PT holds where you need it. **Do NOT pre-test with a TWFE event study** — under selective timing it can reject PT even when it holds.
@@ -131,7 +131,7 @@ repeated cross-sections?    → att_gt(panel=FALSE) / drdid(panel=FALSE)
 - Translate **from**, and verify **against**, the **original author code** — benchmark against the actual Stata `esttab`/`outreg` outputs, not printed paper numbers.
 - **Match the source to `abs_diff < 1e-6`** on BOTH point estimate AND SE; loosen only deliberately and document the scope. "Replication first — match original numbers before extending."
 - Mandatory infra: `renv.lock` + `renv::restore()`, `here::here()`, `set.seed`, one master script, machine-readable outputs (`.rds`, `.csv` coefficients, a per-analysis `verification_against_stata.csv`).
-- **Dual-software cross-check:** run R *and* Stata; only bootstrap-SE and cosmetic graphing differences are tolerable.
+- **R is the benchmark; other languages match R.** His R packages (`did`/`DRDID`/`didFF`/`contdid`) are the canonical implementations — Stata (`csdid`/`drdid` via `asinr` = "as in R") and Python ports must **reproduce R** to **1e-6** (point + analytic SE; bootstrap-SE and cosmetic graphing differences excepted). *(This is distinct from replicating a published paper, where that paper's original author code — often Stata — is the truth for its numbers.)*
 
 ## Resources (canonical, public)
 - **did-resources hub:** <https://psantanna.com/did-resources/> — the curated list (the JEL Practitioner's Guide, *What's Trending*, the 14-lecture course, the DiD checklist, all packages). **Lead here.**

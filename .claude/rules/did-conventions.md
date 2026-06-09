@@ -52,8 +52,8 @@ The opinionated defaults here reflect **Pedro Sant'Anna's sign-off** (2026-06-09
 - Confirm `att_gt(est_method = "reg")` matches the TWFE event study in simple cases, so divergence is attributable to *design* (negative weights), not a coding bug.
 
 ## Verification — HARD
-- Translate from, and verify against, the **original author code**; benchmark against actual Stata `esttab`/`outreg` outputs, not printed numbers.
-- Match the source to **`abs_diff < 1e-6`** on point estimate AND SE; loosen only deliberately and document the scope. Run **R and Stata** (dual-software cross-check); only bootstrap-SE + cosmetic graphing differences are tolerable.
+- **R is the benchmark for the estimators.** His R packages (`did`/`DRDID`/`didFF`/`contdid`) are the canonical implementations — **Stata (`csdid`/`drdid` via `asinr` = "as in R") and Python ports must reproduce R** to `abs_diff < 1e-6` on point estimate AND analytic SE (bootstrap-SE and cosmetic graphing differences excepted).
+- **Replicating a published paper is a separate check:** translate from, and verify against, *that paper's* original author code (often Stata) — there, the paper's author code is the truth for its numbers. Benchmark against the actual `esttab`/`outreg` outputs, not printed numbers; match to `1e-6`, loosening only deliberately and documented.
 - "Replication first — match original numbers before extending."
 
 ## Pitfalls Pedro warns against — DON'T
