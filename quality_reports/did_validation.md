@@ -43,5 +43,32 @@ Installed `HonestDiD` 0.2.8 + `didFF` 0.1.0 (local source). Ran the full skill p
 
 **2nd real bug found & fixed:** the skill said `honest_did()` is "README glue, not an export." Precisely, it's a **non-exported internal S3 method** in `HonestDiD 0.2.8` — bare `honest_did()` errors. The skill now ships the **validated direct recipe** (`createSensitivityResults_relativeMagnitudes` with betahat + IF-based sigma from `aggte(dynamic)`), confirmed to run on `mpdta`.
 
-## Overall verdict
-The `/did-event-study` pipeline is **validated end-to-end on real data** — 2×2 (Card–Krueger, 1e-14) and staggered + sensitivity (mpdta) — driving *his* packages, with **2 real bugs found by running it and fixed**. Still open: `contdid` continuous-treatment path (alpha; not yet exercised) and a dual-software (R↔Stata) cross-check to his strict 1e-6 on a staggered target (would use `JEL-DiD/4_GxT.R` + `csdid`).
+## R ↔ Stata dual-software cross-check — PASS (his strict `DiD_book` standard)
+
+`csdid lemp lpop, ... method(dripw) notyet asinr` (Stata-MP) vs `did::att_gt(... est_method="dr", control_group="notyettreated")` (R) on `mpdta`:
+
+| Quantity | Max \|R − Stata\| | Tol | Status |
+|---|---|---|---|
+| ATT(g,t), group 2004 (point) | **4.65e-08** | 1e-6 | ✅ |
+| ATT(g,t), group 2004 (analytic SE) | **4.11e-08** | 1e-6 | ✅ |
+| Overall simple ATT | **0.0** (−0.0413516 both) | 1e-6 | ✅ |
+
+His dual-software discipline — same substantive result in R and Stata to 1e-6 — is met.
+
+## `contdid` continuous-treatment path — PASS (reproduces his README example)
+
+Installed `contdid` (needed `npiv`). Ran his exact README example (`simulate_contdid_data(seed=1234)` → `cont_did(target_parameter="slope", aggregation="dose", notyettreated, num_knots=1, degree=3)`):
+
+| Quantity | My run | His README | Status |
+|---|---|---|---|
+| Overall ACRT | **0.1341** | 0.1341 | ✅ exact |
+
+## Overall verdict — VALIDATED END-TO-END
+The `/did-event-study` pipeline is validated across **every path it prescribes**, driving *his* packages against *his* reference outputs/standards:
+- **2×2** (Card–Krueger) → 1e-14;
+- **staggered** `att_gt`→`aggte`→`ggdid` (mpdta) → matches vignette;
+- **HonestDiD + didFF** sensitivity → run, validated recipe shipped;
+- **R↔Stata** dual-software → 4.65e-08 (his 1e-6 standard);
+- **continuous treatment** (`contdid`) → reproduces his README exactly.
+
+**2 real bugs found by running it and fixed** (panel=TRUE on unbalanced data; honest_did non-export). This is no longer "drafted in 2 hours" — it is run, broken, hardened, and verified against Pedro's own materials.
