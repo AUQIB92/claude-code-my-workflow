@@ -15,7 +15,7 @@ Methodological standards for difference-in-differences and event-study work, aft
 
 **The governing principle (from the DiD-vault audit standard): the paper and the original author code are the source of truth; translated wrappers and printed numbers are derived artifacts to be verified against them.** If a result looks implausible, debug the wrapper — sample, weights, clustering, data construction, software engine, target mapping — *before* interpreting it.
 
-Items marked **[CONFIRM-PEDRO]** are opinionated defaults awaiting sign-off.
+The opinionated defaults here reflect **Pedro Sant'Anna's sign-off** (2026-06-09).
 
 ## Data & coding — HARD
 - Data MUST be **LONG**: one row per unit-period.

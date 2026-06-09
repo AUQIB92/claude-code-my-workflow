@@ -14,7 +14,7 @@ This is a **thin orchestrator over the canonical packages** — it never reimple
 
 > **Read first:** [`.claude/rules/did-conventions.md`](../../rules/did-conventions.md) — the HARD standards this skill enforces (data coding, DR default, control group, inference, aggregation, verification, and the pitfalls to avoid). Then the canonical resources in §Resources.
 
-Items marked **[CONFIRM-PEDRO]** are opinionated defaults to sign off before they ship.
+The methodological defaults below reflect **Pedro Sant'Anna's sign-off**: `notyettreated` control default, HonestDiD led by relative-magnitudes `Mbar` (also report `M`), `staggered` as an option with `att_gt` the workhorse, TWFE benchmark-only.
 
 ## When to use
 
