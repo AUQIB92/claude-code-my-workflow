@@ -31,7 +31,7 @@ This repository is a **template** designed for academic researchers to fork and 
    ```
 5. **Test against ≥2 domains** when adding skills/agents — show that your contribution generalizes.
 6. **Install the gate once:** `./scripts/install-hooks.sh` points `core.hooksPath` at `.githooks/pre-commit`, so every commit runs the surface-sync + quality (≥80) checks locally — the same gates CI runs.
-7. **Keep the surfaces in sync** when adding features. Adding a skill means **adding its row to the README `<!-- surface-sync-table: skills -->` table** *and* keeping the prose counts (e.g. "51 skills") in sync across `README.md`, `docs/index.html`, the guide, and `templates/skill-template.md`. `./scripts/check-surface-sync.sh` enforces **both** the counts and the table rows — run it before you open a PR.
+7. **Keep the surfaces in sync** when adding features. Adding a skill means **adding its row to the README `<!-- surface-sync-table: skills -->` table** *and* keeping the prose counts (the "NN skills / NN rules" phrasings) in sync across `README.md`, `docs/index.html`, the guide, and `templates/skill-template.md`. `./scripts/check-surface-sync.sh` enforces **both** the counts and the table rows — run it before you open a PR.
 
 ## PR style
 

@@ -3664,11 +3664,11 @@ APPROVED   NEEDS WORK
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Current Anthropic lineup (verified 2026-05-31)
+<span class="screen-reader-only">Note</span>Current Anthropic lineup (verified 2026-06-10)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Opus 4.8</strong> (<code>claude-opus-4-8</code>) is the newest model and the API default (GA 2026-05-28, $5/$25 per MTok input/output, 1M context); it defaults to <code>high</code> effort. <strong>Opus 4.7</strong> is the prior generation. <strong>Sonnet 4.6</strong> is the workhorse mid-tier (1M context). <strong>Haiku 4.5</strong> is the cost-efficient fast model. <em>Verified against Anthropic docs 2026-05-31.</em></p>
+<p><strong>Fable 5</strong> (<code>claude-fable-5</code>, alias <code>fable</code>; opt-in via <code>/model fable</code> or the <code>best</code> alias) is the most capable Claude Code model — Mythos-class, GA 2026-06-09, $10/$50 per MTok, 1M context (128k max output), built for long-horizon agentic work; needs Claude Code ≥ 2.1.170 and falls back to Opus 4.8 on flagged content. <strong>Opus 4.8</strong> (<code>claude-opus-4-8</code>) is the API/account default and this template’s routed high-judgment tier (GA 2026-05-28, $5/$25 per MTok, 1M context, defaults to <code>high</code> effort) — see the routing rule for why the fleet deliberately stays on it. <strong>Opus 4.7</strong> is the prior generation. <strong>Sonnet 4.6</strong> is the workhorse mid-tier (1M context). <strong>Haiku 4.5</strong> is the cost-efficient fast model. <em>Verified against Anthropic docs 2026-06-10.</em></p>
 <p><strong>Retirement notice:</strong> Sonnet 4 and the original Opus 4 retire on <strong>2026-06-15</strong>. If your environment pins one of these (<code>ANTHROPIC_MODEL</code> env, hard-coded model IDs in CI, etc.), migrate before then. See <a href="../TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> for the migration checklist.</p>
 </div>
 </div>

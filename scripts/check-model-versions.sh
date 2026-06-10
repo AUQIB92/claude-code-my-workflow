@@ -78,7 +78,13 @@ for f in "${SURFACES[@]}"; do
         echo "$text" | grep -qiE "$TOP_TIER" && continue                       # already credits the top tier
         echo "$text" | grep -qiE "newest (Opus|Sonnet|Haiku)" && continue      # tier-relative superlative → fine
         echo "$text" | grep -qiE "(Opus|Sonnet|Haiku) $VER" || continue        # only flag lines naming a versioned tier
-        echo "$text" | grep -qiE "$ALLOW" && continue
+        # NOTE: deliberately NOT short-circuiting on the general $ALLOW list here.
+        # A superlative is a claim about the WHOLE lineup; an allow-marker earned by a
+        # different clause in the same sentence ("Opus 4.7 is the prior generation",
+        # a "GA 2026-.." date) must not suppress it — that exact interaction let
+        # "Opus 4.8 is the newest model" slip past this check in v2.1 review. The only
+        # explicit escape is an inline model-allow comment placed for THIS claim.
+        echo "$text" | grep -q "model-allow" && continue
         echo "  $f:$lineno  superlative claim may be stale (top tier is now '$TOP_TIER'):" >&2
         echo "      → $(echo "$text" | sed -E 's/^[[:space:]]+//' | cut -c1-110)" >&2
         drift=1

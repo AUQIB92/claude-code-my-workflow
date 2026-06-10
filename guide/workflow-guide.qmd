@@ -758,9 +758,9 @@ Claude Code also offers experimental **Agent Teams** --- multiple independent se
 ### Multi-Model Strategy: Cost vs. Quality {#multi-model-strategy-cost-vs-quality}
 
 ::: {.callout-note}
-## Current Anthropic lineup (verified 2026-05-31)
+## Current Anthropic lineup (verified 2026-06-10)
 
-**Opus 4.8** (`claude-opus-4-8`) is the newest model and the API default (GA 2026-05-28, \$5/\$25 per MTok input/output, 1M context); it defaults to `high` effort. **Opus 4.7** is the prior generation. **Sonnet 4.6** is the workhorse mid-tier (1M context). **Haiku 4.5** is the cost-efficient fast model. *Verified against Anthropic docs 2026-05-31.*
+**Fable 5** (`claude-fable-5`, alias `fable`; opt-in via `/model fable` or the `best` alias) is the most capable Claude Code model — Mythos-class, GA 2026-06-09, \$10/\$50 per MTok, 1M context (128k max output), built for long-horizon agentic work; needs Claude Code ≥ 2.1.170 and falls back to Opus 4.8 on flagged content. **Opus 4.8** (`claude-opus-4-8`) is the API/account default and this template's routed high-judgment tier (GA 2026-05-28, \$5/\$25 per MTok, 1M context, defaults to `high` effort) — see the routing rule for why the fleet deliberately stays on it. **Opus 4.7** is the prior generation. **Sonnet 4.6** is the workhorse mid-tier (1M context). **Haiku 4.5** is the cost-efficient fast model. *Verified against Anthropic docs 2026-06-10.*
 
 **Retirement notice:** Sonnet 4 and the original Opus 4 retire on **2026-06-15**. If your environment pins one of these (`ANTHROPIC_MODEL` env, hard-coded model IDs in CI, etc.), migrate before then. See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for the migration checklist.
 :::
