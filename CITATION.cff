@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If this template contributed to your research workflow, please cite it as below."
+title: "Claude Code Academic Workflow: a verification-gated research template for economists"
+type: software
+authors:
+  - family-names: "Sant'Anna"
+    given-names: "Pedro H. C."
+    website: "https://psantanna.com"
+repository-code: "https://github.com/pedrohcgs/claude-code-my-workflow"
+url: "https://psantanna.com/claude-code-my-workflow/"
+license: MIT
+version: 2.1.0
+date-released: 2026-06-10
+keywords:
+  - claude-code
+  - economics
+  - econometrics
+  - reproducible-research
+  - causal-inference
+  - difference-in-differences
+  - academic-writing
+  - research-workflow
+abstract: >-
+  A ready-to-fork Claude Code template for academic research — slides, papers,
+  data analysis, and Monte Carlo simulation studies. Verification-gated by
+  design: fan-out review fleets with hallucination gates, numeric-claim
+  reproducibility audits against code, an enforcing pre-commit quality gate,
+  and a validated difference-in-differences / event-study workflow built on
+  the Callaway–Sant'Anna ecosystem.

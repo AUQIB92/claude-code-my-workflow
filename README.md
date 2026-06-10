@@ -147,12 +147,12 @@ It covers:
 
 The guide covers Claude Code's latest capabilities:
 
-- **Model lineup** — **Opus 4.8** (`claude-opus-4-8`) is the newest model and the API default (GA 2026-05-28, $5/$25 per MTok, 1M context, defaults to `high` effort); Opus 4.7 is the prior generation. Sonnet 4.6 is the workhorse (1M context); Haiku 4.5 the fast tier. Sonnet 4 + original Opus 4 retire 2026-06-15 → migrate to Sonnet 4.6 / Opus 4.8. *(Verified against Anthropic docs 2026-05-31.)*
+- **Model lineup** — **Fable 5** (`claude-fable-5`, opt-in via `/model fable` or the `best` alias) is the most capable Claude Code model: Mythos-class, GA 2026-06-09, $10/$50 per MTok, 1M context (128k max output), built for long-horizon agentic work; it falls back to Opus 4.8 on flagged cyber/bio content and needs Claude Code ≥ 2.1.170. **Opus 4.8** (`claude-opus-4-8`) remains the API/account default (GA 2026-05-28, $5/$25 per MTok, 1M context, defaults to `high` effort) — and remains this template's routed high-judgment tier (see `model-routing.md` for why). Sonnet 4.6 is the workhorse (1M context); Haiku 4.5 the fast tier. Sonnet 4 + original Opus 4 retire 2026-06-15 → migrate to Sonnet 4.6 / Opus 4.8. *(Verified against Anthropic docs 2026-06-10.)*
 - **Effort levels** — `/effort` sets cost vs. thoroughness (`low` / `medium` / `high` / `xhigh` / `max`). **Opus 4.8 defaults to `high`** — its `high` does roughly what 4.7's `xhigh` did for fewer tokens, so reserve `xhigh` for extended exploration and `ultracode` (xhigh + dynamic workflows) for the largest autonomous runs.
 - **`/goal <verifiable condition>`** (v1.9.0; Anthropic May 2026) — keep working across turns until a fast model confirms the condition holds. Pairs with `/commit` quality gates for verified-end-state runs.
 - **`claude agents` dashboard** (v1.9.0; Anthropic May 2026) — single screen for parallel review work (`/review-paper --peer`, `/slide-excellence`).
 - **Cost-Conscious Composition** — prompt-cache TTL (5-min default on API keys; **1-hour automatic on Claude subscriptions**), 70/20/10 model routing (Haiku/Sonnet/Opus), `/cost` + `/usage` monitoring, Agent SDK credit-pool split (2026-06-15).
-- **Skill frontmatter** — `effort`, `context: fork`, `agent`, `hooks`, `disable-model-invocation` (v1.8.0+), and dynamic content (`$ARGUMENTS`, `!command` syntax)
+- **Skill frontmatter** — `effort`, `context: fork`, `agent`, `hooks`, `disable-model-invocation` (v1.8.0+), `disallowed-tools` (the *actual* tool restriction — `allowed-tools` only pre-approves), `paths` (glob-scoped auto-activation), and dynamic content (`$ARGUMENTS`, `!command` syntax)
 - **Permission modes** — Normal, Auto-accept, Plan, Auto (classifier-gated; on Team / Enterprise / API and rolling out to Max; needs Opus 4.6+ or Sonnet 4.6), Bypass
 - **Hook handler types** — command, prompt, and HTTP handlers with 20+ hook events; hooks see `effort.level` and `$CLAUDE_EFFORT` (Apr 2026 Week 19)
 - **Advanced agent configuration** — model, maxTurns, isolation, tool restrictions; `model-routing.md` rule codifies per-agent tier (v1.9.0)
@@ -188,7 +188,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>18 agents, 51 skills, 32 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>18 agents, 52 skills, 32 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -265,6 +265,7 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/coauthor-brief` (v2.0) | Collaborator handoff brief — what changed since last brief, per-artifact state, open questions, reproduce-locally + restricted-data access steps |
 | `/triage-inbox` (v2.0) | Schedulable academic inbox + calendar triage via Gmail/Calendar MCP — classifies referee requests, R&R/editor, co-author threads, seminar/conference invites, grant/admin deadlines; proposes one human-gated action each (draft reply, calendar hold, `/new-referee-project`, `/coauthor-brief`, snooze); emits a digest + referee-obligations tracker; degrades gracefully when MCP is absent; never auto-sends |
 | `/diagnose` (v2.0) | Root-cause a wrong/failing empirical result — disciplined reproduce → minimise → hypothesise → instrument → fix loop; tuned for research-code bugs (type coercion, NA/merge blow-ups, clustering/SE choice, seed/package-version drift); `--no-fix` localizes without editing |
+| `/submission-disclosures` (v2.1) | The submission-time disclosure block: AI-use disclosure matched to the target journal's verified-current policy, CRediT contributor roles, conflict-of-interest, and data-availability statements (NOT statistical disclosure — that's `/disclosure-check`) |
 | `/syllabus` (v2.0) | Build/restructure a course syllabus from a topic or reading list — course description + prerequisites, week-by-week schedule (topic→readings→deliverables), measurable learning objectives, assessment scheme + rubric, standard policies (late work / AI use / integrity / accessibility), and a per-week work-list mapping weeks to `/create-lecture` decks; economics-aware (PhD metrics/micro/macro sequences, undergrad) |
 | `/teach-from-paper` (v2.0) | Reads a paper end-to-end and pitches it to a stated audience level — lecture outline (motivation → setup → key result → method → takeaways), the 3-5 results worth presenting with intuition, a slide skeleton for `/create-lecture`, discussion questions, and a problem-set brief for `/scaffold-exercises` |
 | `/respond-to-eval` (v2.0) | Teaching analogue of `/respond-to-referees` — clusters course-eval comments into themes, weights by frequency (signal vs noise), classifies Keep / Change / Investigate / Out-of-scope, and drafts concrete changes mapped to the syllabus + slide decks; saves the plan to `quality_reports/teaching/` |

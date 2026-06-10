@@ -37,7 +37,7 @@ This repository is a **template** designed for academic researchers to fork and 
 
 - **Branch naming**: `feat/short-name`, `fix/short-name`, `chore/short-name`, `docs/short-name`.
 - **Commit messages**: imperative mood ("add", "fix", "refactor"), explain *why* in the body.
-- **Co-author Claude** if Claude Code helped: `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`.
+- **Co-author Claude** if Claude Code helped: `Co-Authored-By: Claude <noreply@anthropic.com>` (version-free — model names drift).
 - **Use the PR template** (auto-loaded when you open a PR).
 - **Squash before merging** if your branch has many WIP commits.
 
