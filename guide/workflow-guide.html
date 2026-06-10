@@ -2558,7 +2558,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">June 9, 2026</p>
+      <p class="date-modified">June 10, 2026</p>
     </div>
   </div>
     
@@ -2757,7 +2757,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>You talk, Claude orchestrates.</strong> The 18 agents, 51 skills, and 32 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
+<p><strong>You talk, Claude orchestrates.</strong> The 18 agents, 52 skills, and 32 rules exist so you don’t have to think about them. Describe your goal, approve the plan, and let the system work.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2770,7 +2770,7 @@ You see: &quot;Analysis complete. 3 tables, 4 figures. Score: 85/100.&quot;</cod
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This guide describes the full system — 18 agents, 51 skills, 32 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
+<p>This guide describes the full system — 18 agents, 52 skills, 32 rules. That is the ceiling, not the floor. <strong>Start with just CLAUDE.md and 2–3 skills</strong> (<code>/compile-latex</code>, <code>/proofread</code>, <code>/commit</code>). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you’re ready.</p>
 </div>
 </div>
 <hr>
@@ -3597,7 +3597,7 @@ APPROVED   NEEDS WORK
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Claude Code ships with built-in skills beyond this template’s 51: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
+<p>Claude Code ships with built-in skills beyond this template’s 52: <code>/batch</code> orchestrates parallel refactoring across your codebase (using git worktrees for isolation), <code>/simplify</code> runs 3-agent code review and applies fixes, and <code>/debug</code> helps troubleshoot sessions. These complement the academic skills above.</p>
 </div>
 </div>
 </section>
@@ -3664,11 +3664,11 @@ APPROVED   NEEDS WORK
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Current Anthropic lineup (verified 2026-05-31)
+<span class="screen-reader-only">Note</span>Current Anthropic lineup (verified 2026-06-10)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Opus 4.8</strong> (<code>claude-opus-4-8</code>) is the newest model and the API default (GA 2026-05-28, $5/$25 per MTok input/output, 1M context); it defaults to <code>high</code> effort. <strong>Opus 4.7</strong> is the prior generation. <strong>Sonnet 4.6</strong> is the workhorse mid-tier (1M context). <strong>Haiku 4.5</strong> is the cost-efficient fast model. <em>Verified against Anthropic docs 2026-05-31.</em></p>
+<p><strong>Fable 5</strong> (<code>claude-fable-5</code>, alias <code>fable</code>; opt-in via <code>/model fable</code> or the <code>best</code> alias) is the most capable Claude Code model — Mythos-class, GA 2026-06-09, $10/$50 per MTok, 1M context (128k max output), built for long-horizon agentic work; needs Claude Code ≥ 2.1.170 and falls back to Opus 4.8 on flagged content. <strong>Opus 4.8</strong> (<code>claude-opus-4-8</code>) is the API/account default and this template’s routed high-judgment tier (GA 2026-05-28, $5/$25 per MTok, 1M context, defaults to <code>high</code> effort) — see the routing rule for why the fleet deliberately stays on it. <strong>Opus 4.7</strong> is the prior generation. <strong>Sonnet 4.6</strong> is the workhorse mid-tier (1M context). <strong>Haiku 4.5</strong> is the cost-efficient fast model. <em>Verified against Anthropic docs 2026-06-10.</em></p>
 <p><strong>Retirement notice:</strong> Sonnet 4 and the original Opus 4 retire on <strong>2026-06-15</strong>. If your environment pins one of these (<code>ANTHROPIC_MODEL</code> env, hard-coded model IDs in CI, etc.), migrate before then. See <a href="../TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> for the migration checklist.</p>
 </div>
 </div>
@@ -6269,7 +6269,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </section>
 <section id="sec-create-skills" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="sec-create-skills"><span class="header-section-number">7.4</span> Step 4: Creating Custom Skills</h2>
-<p>The guide includes 51 <a href="#skills---reusable-slash-commands">skills</a> for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.</p>
+<p>The guide includes 52 <a href="#skills---reusable-slash-commands">skills</a> for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.</p>
 <section id="when-to-create-a-skill" class="level3" data-number="7.4.1">
 <h3 data-number="7.4.1" class="anchored" data-anchor-id="when-to-create-a-skill"><span class="header-section-number">7.4.1</span> When to Create a Skill</h3>
 <p>Create a skill when: - You repeatedly explain the same 3+ step workflow to Claude - You need domain-specific quality checks (citation style, notation consistency, lab protocols) - You enforce field-specific output formats (thesis structure, journal templates) - You coordinate multi-tool workflows (data → analysis → manuscript)</p>
@@ -6302,7 +6302,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </section>
 <section id="skill-frontmatter" class="level3" data-number="7.4.3">
 <h3 data-number="7.4.3" class="anchored" data-anchor-id="skill-frontmatter"><span class="header-section-number">7.4.3</span> Complete Frontmatter Reference</h3>
-<p>The YAML frontmatter controls how your skill behaves. Here are all available fields:</p>
+<p>The YAML frontmatter controls how your skill behaves. The most-used fields:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 28%">
@@ -6334,8 +6334,28 @@ research-spec.md  ─────────────→  preregistration-dr
 </tr>
 <tr class="even">
 <td><code>allowed-tools</code></td>
-<td>Restrict which tools the skill can use</td>
+<td><strong>Pre-approve</strong> tools (skip permission prompts). NOT a restriction — unlisted tools remain callable through normal permissions</td>
 <td><code>[&quot;Read&quot;, &quot;Bash&quot;, &quot;Glob&quot;]</code></td>
+</tr>
+<tr class="odd">
+<td><code>disallowed-tools</code></td>
+<td><strong>Remove</strong> tools from Claude’s pool while the skill is active — this is the actual restriction mechanism</td>
+<td><code>[&quot;Edit&quot;, &quot;Write&quot;]</code></td>
+</tr>
+<tr class="even">
+<td><code>paths</code></td>
+<td>Glob patterns scoping when the skill auto-activates (skill-level analogue of path-scoped rules)</td>
+<td><code>[&quot;scripts/**/*.R&quot;]</code></td>
+</tr>
+<tr class="odd">
+<td><code>when_to_use</code></td>
+<td>Extra routing context for auto-invocation</td>
+<td><code>after a merge conflict</code></td>
+</tr>
+<tr class="even">
+<td><code>arguments</code></td>
+<td>Named positional arguments for <code>$name</code> substitution</td>
+<td><code>[infile, outfile]</code></td>
 </tr>
 <tr class="odd">
 <td><code>effort</code></td>
@@ -6374,6 +6394,19 @@ research-spec.md  ─────────────→  preregistration-dr
 </tr>
 </tbody>
 </table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>allowed-tools</code> does not sandbox
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A common (and security-relevant) misreading: omitting <code>Bash</code> from <code>allowed-tools</code> does <strong>not</strong> make a skill read-only — <code>allowed-tools</code> only <em>pre-approves</em> the listed tools so they skip permission prompts; everything else stays callable under your normal permission settings. To genuinely remove tools while a skill runs, use <code>disallowed-tools</code> (e.g. <code>[&quot;Edit&quot;, &quot;Write&quot;, &quot;Bash&quot;]</code> for a read-only audit skill, plus <code>AskUserQuestion</code> for anything that runs unattended). See <code>templates/skill-template.md</code> for the full pattern.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -6558,7 +6591,7 @@ research-spec.md  ─────────────→  preregistration-dr
 <li><strong>Use <code>CLAUDE.local.md</code> for personal overrides.</strong> This file is automatically gitignored and loaded alongside <code>CLAUDE.md</code>. Put machine-specific paths, personal preferences, and local tool versions here — they won’t pollute the shared repo.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -6567,7 +6600,7 @@ research-spec.md  ─────────────→  preregistration-dr
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-46" class="callout-46-contents callout-collapse collapse">
+<div id="callout-47" class="callout-47-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For capabilities beyond file editing and shell commands — web search during literature review, database queries for replication, or reference manager integration (Zotero, Mendeley) — Claude Code supports <a href="https://modelcontextprotocol.io">MCP servers</a>. Configure them in <code>.claude/settings.json</code> under <code>&quot;mcpServers&quot;</code>. Start with skills and agents first; add MCP when you need external integrations.</p>
 <section id="extending-with-plugins" class="level2" data-number="7.6">

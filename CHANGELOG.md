@@ -6,6 +6,33 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## v2.1.0 — 2026-06-10
+
+A **currency + citability release**, driven by a 48-agent web-verified audit ("is this actually up to date and the best for economists, today?"). The architecture audit came back clean — the fixes are facts, not structure.
+
+### Changed — model refresh (Fable 5)
+
+- **`model-versions.md` SSoT** — Claude **Fable 5** (GA 2026-06-09) added as the top tier: `claude-fable-5` (alias `fable`), opt-in, $10/$50 per MTok, 1M context, falls back to Opus 4.8 on flagged content, needs Claude Code ≥ 2.1.170. Opus 4.8 demoted from "newest" to "current Opus tier; API/account default". Marker, table, and verified-date updated per the file's own protocol.
+- **`model-routing.md`** — new section "Where Fable 5 fits — and where it does not": the fleet deliberately stays on Opus/Sonnet/Haiku (2× price on the judgment tier + launch-week forced-tool-protocol failures observed at 28/28 vs 0 on Opus 4.8); Fable 5 recommended only for interactive long-horizon sessions. Re-evaluate at point releases.
+- **`check-model-versions.sh` hardened** — version regex generalized (`4.x` → any `major[.minor]`, so bare "Fable 5" is tracked), Fable added to the tier loop, and a new **superlative-drift check** (flags "newest/most capable" claims naming a non-top tier) — the exact class of claim the Fable launch falsified while the old gate stayed green. SSoT update protocol gains a manual superlative-grep step.
+- README model-lineup bullet rewritten (Fable 5 = most capable, Opus 4.8 = default + routed tier); CONTRIBUTING's Co-Authored-By example made version-free.
+
+### Fixed — Claude Code doc currency (3 real bugs)
+
+- **`scheduled-routines.md`**: the `/schedule` example used a **fabricated flag syntax** (`--cron/--prompt`) — replaced with the real natural-language form + `/schedule update` for precise cron, the 1-hour minimum interval, the daily run cap, and the committed-repos-only constraint. The MCP guardrail was **inverted**: cloud Routines include **all connectors with write access by default** (the risk is a fully-armed connector, not a missing one) — rewritten to least-privilege guidance.
+- **`templates/skill-template.md` + guide**: `allowed-tools` was taught as a restriction; per current docs it is a **pre-approval list** ("does not restrict which tools are available: every tool remains callable"). The actual restrictor is **`disallowed-tools`** — now documented, with a read-only-skill pattern (`disallowed-tools: ["Edit","Write","Bash"]` + `AskUserQuestion` for unattended loops) and new `paths` / `when_to_use` / `arguments` rows. Security note rewritten; guide gains an "`allowed-tools` does not sandbox" warning callout.
+
+### Added
+
+- **`/submission-disclosures`** — the submission-time disclosure block: **AI-use disclosure** matched to the target journal's *verified-current* policy (fetched at draft time, not remembered), CRediT roles, COI, and data-availability statements. Two independent audits flagged this as the most economist-salient 2026 norms gap (AEA-family journals now mandate AI-use statements). Distinct from `/disclosure-check` (statistical disclosure).
+- **`CITATION.cff`** — the repo is now citable (GitHub "Cite this repository"); Zenodo DOI is a follow-up (backlog).
+- **`.github/SECURITY.md` + `.github/CODE_OF_CONDUCT.md`** — community-health files a public template shipping hooks + autonomous loops should have.
+- **GitHub discoverability** — repo topics (was: zero) + homepage URL set.
+
+**Inventory at release: 52 skills, 18 agents, 32 rules, 7 hooks** (was 51 / 18 / 32 / 7 at v2.0.0).
+
+---
+
 ## v2.0.0 — 2026-06-09
 
 A **paradigm-shift major release.** The template moves from a *prompt-craft contractor* — craft a prompt, invoke a skill, read a report — to a **verification-gated research lab**: you state a goal, a fleet of specialist agents does the labor under **gates that enforce themselves**, and you act as the **auditor of the disagreements they surface**. Two ideas converge: *"loops, not prompts"* (Boris Cherny / the Claude Code team) and *"ground truth is a process, not a dataset"* (Amazon Science). The result modernizes the **orchestration**, not the substance — the passport, simulation contract, and journal-calibrated referees are untouched. Shipped against `quality_reports/plans/2026-06-09_v2.0-modernization-master-plan.md`.

@@ -21,18 +21,23 @@ The nightly reproducibility job is the *backstop*. The *immediate* signal is the
 
 ## Setting one up
 
+`/schedule` takes a **natural-language description**, not flags:
+
 ```text
-/schedule create "nightly-repro" --cron "0 6 * * *" \
-  --prompt "Run /audit-reproducibility against the current passport. If any claim FAILs (not EXPLAINED), summarize which tables are affected and push a notification; otherwise exit quietly."
+/schedule nightly at 6am: run /audit-reproducibility against the current passport.
+If any claim FAILs (not EXPLAINED), summarize which tables are affected and notify me;
+otherwise exit quietly.
 ```
 
-`scripts/nightly-repro-check.sh` is a thin local equivalent for users who prefer a machine cron over a Routine (note: a local cron does not survive a closed laptop — prefer `/schedule`).
+A precise cron expression (e.g. `0 6 * * *`) is applied via `/schedule update` *after* the routine exists; manage with `/schedule list` / `update` / `remove`. Two scheduling constraints to design around: the **minimum interval is 1 hour**, and accounts carry a **daily run cap** — so batch checks into one routine rather than many small ones. Routines operate on **committed repos**: anything uncommitted or private-by-design (e.g. a local research vault) is invisible to them.
+
+`scripts/nightly-repro-check.sh` is a thin local equivalent for users who prefer a machine cron over a Routine — and the right tool for uncommitted/private material (note: a local cron does not survive a closed laptop; for committed repos prefer `/schedule`).
 
 ## Guardrails for unattended runs
 
 - **Never point an unattended loop at a submission portal, shared/restricted data, or a co-author's inbox without a human gate.** Routines *propose*; a human *sends*. (`/triage-inbox` never auto-sends; the [`git-guardrails`](../hooks/git-guardrails.py) hook still blocks destructive git even in a routine.)
 - **Bound the cost.** A nightly full-manuscript re-audit is fine; a nightly 7× `/seven-pass-review` is not — cost-pilot first.
-- **MCP may be absent in headless/cron runs** (interactively-authenticated servers like Gmail). Routines that need them must degrade gracefully.
+- **Connectors are INCLUDED by default — least-privilege them.** Cloud Routines run with **all of your claude.ai connectors attached, write access included, and no approval prompts**. An unattended routine that only needs to read your repo should have Gmail/Calendar/Slack *removed from that routine's connector list* before it ever fires — the risk is not a missing connector but a fully-armed one acting without you. (Locally-authenticated MCP servers in your *terminal* sessions are a separate thing and may still be absent in other headless contexts — degrade gracefully either way.)
 
 ## Cross-references
 

@@ -43,22 +43,52 @@ SURFACES=(
 # A line is allowed to name an older version if it carries one of these markers.
 ALLOW='prior generation|prior gen|prior Opus|retire|migrat|historical|deprecat|was:|was |or later|incl\. 4\.|rolling out|GA 2026-0|beta|4\.[0-9]+.s |model-allow'
 
+# Version token: "4.8", "5", "5.1" — Fable has no minor version at launch, so
+# the regex must accept a bare major (the old `4\.[0-9]+` silently skipped it).
+VER='[0-9]+(\.[0-9]+)?'
+
 drift=0
-for tier in "Opus" "Sonnet" "Haiku"; do
-    current="$(echo "$CURRENT_LINE" | grep -oE "$tier 4\.[0-9]+" | head -1)"
+for tier in "Fable" "Opus" "Sonnet" "Haiku"; do
+    current="$(echo "$CURRENT_LINE" | grep -oE "$tier $VER" | head -1)"
     [ -n "$current" ] || continue
     for f in "${SURFACES[@]}"; do
         [ -f "$REPO/$f" ] || continue
         while IFS=: read -r lineno text; do
-            ver="$(echo "$text" | grep -oE "$tier 4\.[0-9]+" | head -1)"
+            ver="$(echo "$text" | grep -oE "$tier $VER" | head -1)"
             [ -n "$ver" ] || continue
             [ "$ver" = "$current" ] && continue                 # names the current version → fine
             echo "$text" | grep -qiE "$ALLOW" && continue       # allow-marked line → fine
             echo "  $f:$lineno  presents '$ver' (current $tier is '$current')" >&2
             echo "      → $(echo "$text" | sed -E 's/^[[:space:]]+//' | cut -c1-110)" >&2
             drift=1
-        done < <(grep -nE "$tier 4\.[0-9]+" "$REPO/$f")
+        done < <(grep -nE "$tier $VER" "$REPO/$f")
     done
+done
+
+# Superlative drift: "newest model" / "most capable" claims are SEMANTIC, not
+# version strings — the 2026-06-09 Fable 5 launch made "Opus 4.8 is the newest"
+# false while the version check above stayed green. Flag any superlative line
+# that names a non-top tier (Opus/Sonnet/Haiku) without mentioning the top tier
+# (Fable) and without an allow-marker. Tier-relative phrasings ("the newest
+# Opus") are fine and excluded.
+TOP_TIER="$(echo "$CURRENT_LINE" | sed -E 's/.*<!-- CURRENT: *//; s/ .*//')"   # e.g. "Fable"
+for f in "${SURFACES[@]}"; do
+    [ -f "$REPO/$f" ] || continue
+    while IFS=: read -r lineno text; do
+        echo "$text" | grep -qiE "$TOP_TIER" && continue                       # already credits the top tier
+        echo "$text" | grep -qiE "newest (Opus|Sonnet|Haiku)" && continue      # tier-relative superlative → fine
+        echo "$text" | grep -qiE "(Opus|Sonnet|Haiku) $VER" || continue        # only flag lines naming a versioned tier
+        # NOTE: deliberately NOT short-circuiting on the general $ALLOW list here.
+        # A superlative is a claim about the WHOLE lineup; an allow-marker earned by a
+        # different clause in the same sentence ("Opus 4.7 is the prior generation",
+        # a "GA 2026-.." date) must not suppress it — that exact interaction let
+        # "Opus 4.8 is the newest model" slip past this check in v2.1 review. The only
+        # explicit escape is an inline model-allow comment placed for THIS claim.
+        echo "$text" | grep -q "model-allow" && continue
+        echo "  $f:$lineno  superlative claim may be stale (top tier is now '$TOP_TIER'):" >&2
+        echo "      → $(echo "$text" | sed -E 's/^[[:space:]]+//' | cut -c1-110)" >&2
+        drift=1
+    done < <(grep -niE "newest|most capable" "$REPO/$f")
 done
 
 if [ "$drift" -ne 0 ]; then

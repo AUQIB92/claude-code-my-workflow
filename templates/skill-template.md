@@ -91,6 +91,21 @@ Beyond the basic fields shown above, skills support additional YAML frontmatter 
 | `hooks` | Skill-specific hooks (same syntax as settings.json) | Custom pre/post actions |
 | `model` | Force a specific model | `haiku` (cheaper), `opus` (smarter) |
 | `disable-model-invocation` | Prevent Claude from auto-triggering | `true` (only invoked via `/skill-name`) |
+| `disallowed-tools` | **Remove** tools from Claude's pool while the skill is active — the actual restriction mechanism (see the semantics note below) | `["Edit", "Write"]` for a read-only audit |
+| `paths` | Glob patterns that scope when the skill auto-activates — the skill-level analogue of path-scoped rules | `["scripts/**/*.R"]` |
+| `when_to_use` | Extra routing context for auto-invocation, beyond the description | `"after any merge conflict"` |
+| `arguments` | Named positional arguments for `$name` substitution in the body | `[infile, outfile]` |
+
+### `allowed-tools` vs `disallowed-tools` — the semantics matter {#allowed-vs-disallowed}
+
+**`allowed-tools` is a pre-approval list, not a sandbox.** Per the official docs: it "grants permission for the listed tools while the skill is active, so Claude can use them without prompting you for approval. **It does not restrict which tools are available: every tool remains callable**" — unlisted tools just go through your normal permission settings. Omitting `Bash` from `allowed-tools` does **not** make a skill read-only.
+
+**To actually remove tools, use `disallowed-tools`.** Tools listed there are taken out of Claude's available pool while the skill is active (the restriction clears on your next message). For autonomous or forked review skills that must never write — or never stall a background loop on a question — disallow explicitly:
+
+```yaml
+allowed-tools: ["Read", "Grep", "Glob"]        # pre-approve the read path (no prompts)
+disallowed-tools: ["Edit", "Write", "Bash"]    # actually remove the write path
+```
 
 **Dynamic content** — skills can include live data using string substitutions:
 
@@ -427,7 +442,7 @@ When adapting this template to your domain:
 | `Bash` | Running commands (R scripts, LaTeX compilation, git) |
 | `Task` | Launching subagents (for complex multi-step workflows) |
 
-**Security note:** Only grant `Bash` access if your skill needs to execute code or compile documents. For read-only validation skills, omit it.
+**Security note:** `allowed-tools` only pre-approves — it does **not** restrict (see [the semantics note](#allowed-vs-disallowed)). For a genuinely read-only validation skill, add `disallowed-tools: ["Edit", "Write", "Bash"]`; for autonomous/background skills, also disallow `AskUserQuestion` so the loop can't stall on a prompt. Listing only what you use in `allowed-tools` is still good hygiene (it documents intent and minimizes silent pre-approvals), but it is not a sandbox.
 
 ---
 
@@ -437,4 +452,4 @@ When adapting this template to your domain:
 - **Purpose:** Starter for domain-specific skills
 - **Usage:** Copy to `.claude/skills/[name]/SKILL.md`, customize for your field
 
-For existing skills examples, see `.claude/skills/` directory (51 skills for LaTeX, R, Quarto, and research workflows).
+For existing skills examples, see `.claude/skills/` directory (52 skills for LaTeX, R, Quarto, and research workflows).

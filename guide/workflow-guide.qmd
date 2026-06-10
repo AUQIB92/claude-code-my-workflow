@@ -155,13 +155,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 18 agents, 51 skills, and 32 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 18 agents, 52 skills, and 32 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 18 agents, 51 skills, 32 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 18 agents, 52 skills, 32 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -696,7 +696,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 51: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 52: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -758,9 +758,9 @@ Claude Code also offers experimental **Agent Teams** --- multiple independent se
 ### Multi-Model Strategy: Cost vs. Quality {#multi-model-strategy-cost-vs-quality}
 
 ::: {.callout-note}
-## Current Anthropic lineup (verified 2026-05-31)
+## Current Anthropic lineup (verified 2026-06-10)
 
-**Opus 4.8** (`claude-opus-4-8`) is the newest model and the API default (GA 2026-05-28, \$5/\$25 per MTok input/output, 1M context); it defaults to `high` effort. **Opus 4.7** is the prior generation. **Sonnet 4.6** is the workhorse mid-tier (1M context). **Haiku 4.5** is the cost-efficient fast model. *Verified against Anthropic docs 2026-05-31.*
+**Fable 5** (`claude-fable-5`, alias `fable`; opt-in via `/model fable` or the `best` alias) is the most capable Claude Code model — Mythos-class, GA 2026-06-09, \$10/\$50 per MTok, 1M context (128k max output), built for long-horizon agentic work; needs Claude Code ≥ 2.1.170 and falls back to Opus 4.8 on flagged content. **Opus 4.8** (`claude-opus-4-8`) is the API/account default and this template's routed high-judgment tier (GA 2026-05-28, \$5/\$25 per MTok, 1M context, defaults to `high` effort) — see the routing rule for why the fleet deliberately stays on it. **Opus 4.7** is the prior generation. **Sonnet 4.6** is the workhorse mid-tier (1M context). **Haiku 4.5** is the cost-efficient fast model. *Verified against Anthropic docs 2026-06-10.*
 
 **Retirement notice:** Sonnet 4 and the original Opus 4 retire on **2026-06-15**. If your environment pins one of these (`ANTHROPIC_MODEL` env, hard-coded model IDs in CI, etc.), migrate before then. See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for the migration checklist.
 :::
@@ -2388,7 +2388,7 @@ The template includes matching LaTeX and Quarto palettes. To customize:
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
-The guide includes 51 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
+The guide includes 52 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
 
 ### When to Create a Skill
 
@@ -2433,14 +2433,18 @@ Solution: [How to fix]
 
 ### Complete Frontmatter Reference {#skill-frontmatter}
 
-The YAML frontmatter controls how your skill behaves. Here are all available fields:
+The YAML frontmatter controls how your skill behaves. The most-used fields:
 
 | Field | Purpose | Example |
 |-------|---------|---------|
 | `name` | Display name in `/` menu | `compile-latex` |
 | `description` | **Most important.** Controls when Claude auto-loads the skill | `Compile Beamer slides...` |
 | `argument-hint` | Placeholder shown after `/skill-name` | `<filename>` |
-| `allowed-tools` | Restrict which tools the skill can use | `["Read", "Bash", "Glob"]` |
+| `allowed-tools` | **Pre-approve** tools (skip permission prompts). NOT a restriction — unlisted tools remain callable through normal permissions | `["Read", "Bash", "Glob"]` |
+| `disallowed-tools` | **Remove** tools from Claude's pool while the skill is active — this is the actual restriction mechanism | `["Edit", "Write"]` |
+| `paths` | Glob patterns scoping when the skill auto-activates (skill-level analogue of path-scoped rules) | `["scripts/**/*.R"]` |
+| `when_to_use` | Extra routing context for auto-invocation | `after a merge conflict` |
+| `arguments` | Named positional arguments for `$name` substitution | `[infile, outfile]` |
 | `effort` | Override reasoning effort level | `high` |
 | `context` | Set to `fork` to run in an isolated subagent | `fork` |
 | `agent` | Link to an agent definition in `.claude/agents/` | `proofreader` |
@@ -2448,6 +2452,12 @@ The YAML frontmatter controls how your skill behaves. Here are all available fie
 | `model` | Force a specific model | `haiku` |
 | `disable-model-invocation` | Prevent Claude from auto-triggering | `true` |
 | `user-invocable` | Whether it appears in the `/` menu | `true` (default) |
+
+::: {.callout-warning}
+## `allowed-tools` does not sandbox
+
+A common (and security-relevant) misreading: omitting `Bash` from `allowed-tools` does **not** make a skill read-only — `allowed-tools` only *pre-approves* the listed tools so they skip permission prompts; everything else stays callable under your normal permission settings. To genuinely remove tools while a skill runs, use `disallowed-tools` (e.g. `["Edit", "Write", "Bash"]` for a read-only audit skill, plus `AskUserQuestion` for anything that runs unattended). See `templates/skill-template.md` for the full pattern.
+:::
 
 ::: {.callout-note}
 ## Key Design Choices
