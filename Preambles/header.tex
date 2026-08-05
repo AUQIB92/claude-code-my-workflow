@@ -65,6 +65,16 @@
             citecolor=primary-blue, pdfborder={0 0 0}}
 
 % -----------------------------------------------------------------------------
+% Course code — set once per deck (after \input{header}, before \begin{document})
+% via \coursecode{CS401}. Shown in the footer on every slide so a deck's course
+% is identifiable without opening the title page. Empty by default.
+% -----------------------------------------------------------------------------
+\makeatletter
+\newcommand{\coursecode}[1]{\gdef\@coursecodetext{#1}}
+\gdef\@coursecodetext{}
+\makeatother
+
+% -----------------------------------------------------------------------------
 % Beamer theme assignments (only apply under Beamer).
 %
 % We detect Beamer via \@ifclassloaded{beamer}, which is the documented,
@@ -94,10 +104,11 @@
   \setbeamercolor{block title alerted}{fg=white, bg=primary-gold}
   \setbeamercolor{block body alerted}{bg=light-bg}
 
-  % Minimal footer: page X / N only, no navigation clutter
+  % Minimal footer: course code (left) + page X / N (right), no navigation clutter
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{footline}{%
-    \hfill{\color{neutral}\footnotesize\insertframenumber/\inserttotalframenumber}\hspace{0.7em}\vspace{0.3em}}
+    \color{neutral}\footnotesize\hspace{0.7em}\@coursecodetext\hfill
+    \insertframenumber/\inserttotalframenumber\hspace{0.7em}\vspace{0.3em}}
 }{}
 \makeatother
 

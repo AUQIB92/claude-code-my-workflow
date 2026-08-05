@@ -42,8 +42,8 @@ Report saved to `quality_reports/bib_audit_[structural|semantic].md`.
 ### Files scanned
 
 ```
-Slides/*.tex
-Quarto/*.qmd
+Slides/**/*.tex
+Quarto/**/*.qmd
 guide/*.qmd
 master_supporting_docs/**/*.tex
 ```
