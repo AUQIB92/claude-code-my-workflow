@@ -6,11 +6,14 @@
 % Anchor reading: Hamacher Ch. 7 (addressing modes, bus organization);
 %                 Mano Ch. 7 (single-bus datapath, RTL)
 %
-% Compile with: /compile-latex 05-addressing-cpu-bus
+% Compile with: /compile-latex CS401/05-addressing-cpu-bus
 % =============================================================================
 
 \documentclass[aspectratio=169]{beamer}
-\input{header}   % resolves via TEXINPUTS=../Preambles:$TEXINPUTS
+\input{header}   % resolves via TEXINPUTS=../../Preambles:$TEXINPUTS — compile
+                  % from cwd Slides/CS401/ (TeX writes output next to cwd, not
+                  % next to this file's own path, so cd here first)
+\coursecode{CS401}
 
 \title{Addressing Modes, CPU Organization, and Bus Structures}
 \subtitle{Week 5 --- Where Operands Live, and What Moves Them}

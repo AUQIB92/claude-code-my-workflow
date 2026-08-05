@@ -8,11 +8,14 @@
 %                 conventions, control unit inputs/outputs);
 %                 Stallings Ch. 16 (control unit design overview)
 %
-% Compile with: /compile-latex 06-hardwired-control
+% Compile with: /compile-latex CS401/06-hardwired-control
 % =============================================================================
 
 \documentclass[aspectratio=169]{beamer}
-\input{header}   % resolves via TEXINPUTS=../Preambles:$TEXINPUTS
+\input{header}   % resolves via TEXINPUTS=../../Preambles:$TEXINPUTS — compile
+                  % from cwd Slides/CS401/ (TeX writes output next to cwd, not
+                  % next to this file's own path, so cd here first)
+\coursecode{CS401}
 
 \title{Hardwired Control Unit Design}
 \subtitle{Week 6 --- How Hardware Generates the Control-Step Sequence}

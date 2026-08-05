@@ -400,6 +400,20 @@ class QualityScorer:
         self.auto_fail = False
         self.unverified = []  # could-not-verify notes (timeouts, missing tools)
 
+    def _find_bib_file(self) -> Path:
+        """Locate Bibliography_base.bib by walking up from the file's directory.
+
+        Course decks now nest under Slides/<CODE>/ or Quarto/<CODE>/ (one level
+        deeper than the old flat layout), so a fixed parent.parent guess breaks.
+        Walk upward until the repo-root bib file is found, or give up at the
+        filesystem root (caller treats a non-existent path as "no bib found").
+        """
+        for ancestor in self.filepath.resolve().parents:
+            candidate = ancestor / 'Bibliography_base.bib'
+            if candidate.exists():
+                return candidate
+        return self.filepath.parent.parent / 'Bibliography_base.bib'
+
     def score_quarto(self) -> Dict:
         """Score Quarto lecture slides."""
         content = self.filepath.read_text(encoding='utf-8')
@@ -432,7 +446,7 @@ class QualityScorer:
             self.score -= 20
 
         # Check broken citations (LaTeX-style \cite patterns)
-        bib_file = self.filepath.parent.parent / 'Bibliography_base.bib'
+        bib_file = self._find_bib_file()
         broken_citations = IssueDetector.check_broken_citations(content, bib_file)
 
         # Also check Quarto-style @key citations
@@ -448,8 +462,18 @@ class QualityScorer:
             })
             self.score -= 15
 
-        # Check plotly widgets (if HTML exists)
-        html_file = self.filepath.parent.parent / 'docs' / 'slides' / self.filepath.with_suffix('.html').name
+        # Check plotly widgets (if HTML exists). docs/slides/ mirrors whatever
+        # subpath the .qmd has under Quarto/ (e.g. Quarto/CS401/x.qmd ->
+        # docs/slides/CS401/x.html), so derive it relative to the repo root
+        # (repo root = the bib file's directory) rather than assuming a fixed
+        # nesting depth.
+        repo_root = self._find_bib_file().parent
+        quarto_dir = repo_root / 'Quarto'
+        try:
+            rel_qmd = self.filepath.resolve().relative_to(quarto_dir.resolve())
+        except ValueError:
+            rel_qmd = self.filepath.name
+        html_file = repo_root / 'docs' / 'slides' / Path(rel_qmd).with_suffix('.html')
         if html_file.exists():
             widget_count, _ = IssueDetector.check_plotly_widgets(html_file)
             expected_plotly = content.count('plotly::plot_ly')
@@ -532,10 +556,7 @@ class QualityScorer:
             return self._generate_report()
 
         # Check for undefined/broken citations (\cite, \citep, \citet patterns)
-        bib_file = self.filepath.parent.parent / 'Bibliography_base.bib'
-        if not bib_file.exists():
-            # Also check same directory
-            bib_file = self.filepath.parent / 'Bibliography_base.bib'
+        bib_file = self._find_bib_file()
         broken_citations = IssueDetector.check_broken_citations(content, bib_file)
         for key in broken_citations:
             self.issues['critical'].append({
