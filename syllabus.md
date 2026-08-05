@@ -1,0 +1,86 @@
+# Computer Organization and Architecture (PCC CS-401) — B.Tech CSE, Semester 4
+
+Undergraduate · 3 sessions/week (lecture) · 12 teaching weeks · Credits 4 (L-T-P: 3-0-2)
+
+## Course description
+
+This course develops a working model of how a computer executes instructions, from number representation and arithmetic hardware through processor control-unit design to the memory hierarchy and an introduction to parallel/pipelined architectures. Students leave able to trace an instruction from fetch to writeback, design and compare hardwired vs. microprogrammed control units, reason quantitatively about memory hierarchy performance, and distinguish RISC/CISC and pipelined design trade-offs.
+
+## Prerequisites
+
+Digital Logic Design (or equivalent: Boolean algebra, combinational/sequential circuits, flip-flops, basic ALU/adder circuits). Basic programming/algorithmic literacy is assumed but not tested directly.
+
+## Learning objectives
+
+By the end of this course, students will be able to:
+- Compute and compare system performance using the basic performance equation, clock rate, and Amdahl's Law (Weeks 1)
+- Represent and manipulate numbers in fixed-point and IEEE754 floating-point formats, and perform arithmetic/logical operations in hardware (Weeks 2-3)
+- Describe instruction sets, addressing modes, and CPU register/bus organization, and trace an instruction cycle (Weeks 4-5)
+- Design and contrast hardwired and microprogrammed control units for a given instruction set (Weeks 6-7)
+- Analyze I/O techniques (interrupt, polling, DMA, IOP) and select the appropriate technique for a given latency/throughput requirement (Week 8)
+- Evaluate memory hierarchy performance, including cache mapping/replacement policy choice and virtual memory (paging/segmentation) design (Weeks 9-10)
+- Compare Flynn's taxonomy classes and identify/resolve pipeline hazards in a pipelined instruction stream (Week 11)
+- Contrast RISC and CISC architectural philosophies and justify a design choice for a given workload (Week 12)
+
+## Weekly schedule
+
+| Week | Topic | Readings | Deliverable |
+|------|-------|----------|-------------|
+| 1 | Computer architecture vs. organization; classes of computers; basic structure; Basic Performance Equation, Clock Rate, Performance Measurement; Amdahl's Law | Hamacher Ch. 1; Stallings Ch. 1-2 | Assignment 1 issued |
+| 2 | Number systems and representation; arithmetic/logical operations and hardware implementation (adders, ALU); fixed-point representation | Hamacher Ch. 2, 9; Mano Ch. 1 | — |
+| 3 | Real numbers: fixed vs. floating point; IEEE754 representation and arithmetic; Unit-I review and problem-solving | Hamacher Ch. 9; Stallings Ch. 9 | **Class Test 1** (Unit I) |
+| 4 | Register Organization, Stack Organization; Instruction Set, Instruction formats; Instruction cycle, types of operands | Mano Ch. 5, 8; Hamacher Ch. 7 | Assignment 2 issued |
+| 5 | Addressing Modes (deep dive); CPU Organization; Single-bus and Multiple-bus organization | Hamacher Ch. 7; Mano Ch. 7 | — |
+| 6 | Control step sequence, control unit functions; Hardwired control unit design | Mano Ch. 7; Hamacher Ch. 7 | — |
+| 7 | Microprogrammed control unit design (horizontal/vertical microinstructions); Unit-II review, hardwired vs. microprogrammed comparison | Mano Ch. 7; Stallings Ch. 16 | **Class Test 2** (Unit II) |
+| 8 | I/O Unit: synchronous vs. asynchronous I/O; I/O techniques — interrupts, polling, DMA, IOP | Hamacher Ch. 4; Stallings Ch. 7 | Assignment 3 issued |
+| 9 | Memory hierarchy characteristics; Main Memory (ROM types); Cache Memory organization and mapping; replacement algorithms | Hamacher Ch. 8; Stallings Ch. 4 | — |
+| 10 | Associative memory; Virtual memory; main memory allocation, segmentation, paging; Secondary storage (HDD, RAID, optical, CD/DVD); Unit-III review | Hamacher Ch. 8; Stallings Ch. 8, 6 | **Class Test 3** (Unit III) |
+| 11 | Flynn's classification; parallel processing concepts; pipeline processing introduction and pipeline hazards; pipeline architecture design issues | Hamacher Ch. 5, 10; Stallings Ch. 17-18 | Assignment 4 issued |
+| 12 | Instruction pipelining (worked examples); RISC vs. CISC architectures; course review and doubt-clearing | Stallings Ch. 13, 18 | Assignments due; review sheet issued |
+
+*Practical component (L-T-P: 3-0-2) is run as a separate weekly lab session and is not scheduled above — pair with a lab manual if you want it mapped into this workflow.*
+
+## Assessment
+
+| Component | Weight | Maps to objectives |
+|-----------|-------:|--------------------|
+| Class Tests 1-3 (internal theory) | 25% (of 200 total; 50 marks) | All Unit I-III objectives |
+| Assignments 1-4 (internal theory, continuous) | included in Theory-50 per institute norm | All objectives, applied practice |
+| Practical / lab (separate component) | 25% (50 marks) | Hands-on complement to Units I-III (not scheduled here) |
+| External (end-semester) exam | 50% (100 marks) | All course objectives, cumulative |
+
+*Institute-specific split of the 50 internal theory marks across the 3 class tests and assignments was not specified in the source syllabus — the table above assumes tests carry the bulk of internal theory marks and assignments are graded as continuous assessment. Reconcile with your department's exact internal-assessment policy.*
+
+### Rubric — Class Tests / End-Semester Exam (numerical + derivation questions)
+
+| Criterion | Excellent | Adequate | Weak |
+|-----------|-----------|----------|------|
+| Correct method/algorithm selected | Correct technique identified and justified | Correct technique, justification thin | Wrong or missing technique |
+| Execution | Fully correct computation/derivation | Minor arithmetic/notational slips | Major errors, method breaks down |
+| Communication | Steps clearly labeled, notation consistent | Mostly clear, some gaps | Illegible or unstructured |
+
+## Policies
+
+**Late work:** Assignments submitted late lose 10% per day unless a documented excuse is provided in advance.
+**AI / LLM use:** Permitted for concept clarification and practice-problem generation; not permitted for graded submissions unless explicitly stated per assignment. Cite any AI assistance used.
+**Academic integrity:** Class tests and the end-semester exam are closed-book unless stated otherwise; copying in assignments is treated per institute anti-plagiarism policy.
+**Accessibility/accommodations:** Students needing accommodations should contact the instructor in the first two weeks.
+**Attendance:** Per institute minimum-attendance requirement for exam eligibility.
+
+## Week → lecture work-list (hand to `/create-lecture`)
+
+| Week | Deck name | Objective(s) | Anchor reading |
+|------|-----------|--------------|-----------------|
+| 1 | `01-intro-performance` | Compute/compare performance via basic performance equation, clock rate, Amdahl's Law | Hamacher Ch. 1 |
+| 2 | `02-number-systems-arithmetic` | Represent numbers and perform arithmetic/logical ops in hardware | Hamacher Ch. 2, 9 |
+| 3 | `03-ieee754-floating-point` | Fixed vs. floating point; IEEE754 representation and arithmetic | Hamacher Ch. 9 |
+| 4 | `04-registers-instructions` | Register/stack organization, instruction formats, instruction cycle, operand types | Mano Ch. 5, 8 |
+| 5 | `05-addressing-cpu-bus` | Addressing modes; CPU organization; single/multiple bus organization | Hamacher Ch. 7 |
+| 6 | `06-hardwired-control` | Control step sequence and hardwired control unit design | Mano Ch. 7 |
+| 7 | `07-microprogrammed-control` | Microprogrammed control unit design; hardwired vs. microprogrammed | Mano Ch. 7; Stallings Ch. 16 |
+| 8 | `08-io-techniques` | I/O techniques: interrupts, polling, DMA, IOP | Hamacher Ch. 4 |
+| 9 | `09-cache-memory` | Memory hierarchy; cache organization, mapping, replacement algorithms | Hamacher Ch. 8 |
+| 10 | `10-virtual-memory-storage` | Associative/virtual memory, paging/segmentation; secondary storage | Hamacher Ch. 8; Stallings Ch. 8, 6 |
+| 11 | `11-parallel-pipeline-hazards` | Flynn's classification; pipeline processing and hazards | Hamacher Ch. 5, 10 |
+| 12 | `12-pipelining-risc-cisc` | Instruction pipelining; RISC vs. CISC | Stallings Ch. 13, 18 |
