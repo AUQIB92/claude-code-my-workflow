@@ -1,6 +1,6 @@
 # Agent Fleet Manifest
 
-The 18 specialist subagents, what each is for, the model tier it runs at ([`model-routing.md`](../rules/model-routing.md)), and which skill dispatches it. This makes the fleet legible — when a fan-out skill picks a lens, this is the roster it picks from. Reviewers are **read-only** (they report `FINDING`s per [`orchestration-schemas.md`](orchestration-schemas.md)); only the fixer edits files.
+The 20 specialist subagents, what each is for, the model tier it runs at ([`model-routing.md`](../rules/model-routing.md)), and which skill dispatches it. This makes the fleet legible — when a fan-out skill picks a lens, this is the roster it picks from. Reviewers are **read-only** (they report `FINDING`s per [`orchestration-schemas.md`](orchestration-schemas.md)); only the fixer edits files.
 
 > **Keep this in sync** with `.claude/agents/*.md` frontmatter (`model:` / `effort:`) and with `model-routing.md`. The surface-sync gate counts agents; it does not yet diff this table row-for-row, so update it when you add or retier an agent. (It is a `references/` file, so it is not itself counted as an agent.)
 
@@ -30,6 +30,7 @@ A wrong "looks fine" from one of these is expensive (a desk-reject, a hallucinat
 | `proofreader` | Grammar, typos, overflow, terminology | read-only | `/proofread`, `/slide-excellence`, `/seven-pass-review` (prose lens) |
 | `pedagogy-reviewer` | Narrative arc, prerequisites, worked examples, notation, pacing | read-only | `/pedagogy-review`, `/slide-excellence` |
 | `humanize-auditor` | AI-voice tell detection (10 categories) | read-only | `/humanize` |
+| `notes-critic` | Beamer↔Notes parity audit (content, citations, no invention) | read-only | `/qa-notes` |
 
 ## Apply / translate tier — Sonnet 4.6, effort: medium
 
@@ -37,6 +38,7 @@ A wrong "looks fine" from one of these is expensive (a desk-reject, a hallucinat
 |---|---|---|---|
 | `quarto-fixer` | Applies `quarto-critic`'s diffs, re-renders, verifies | **writes** | `/qa-quarto` |
 | `beamer-translator` | Beamer→Quarto slide-by-slide translation | **writes** | `/translate-to-quarto` |
+| `notes-fixer` | Applies `notes-critic`'s diffs to Lecture Notes | **writes** | `/qa-notes` |
 
 ## Mechanical / voting tier — Haiku 4.5
 

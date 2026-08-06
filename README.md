@@ -188,7 +188,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>18 agents, 52 skills, 33 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>20 agents, 55 skills, 34 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -213,6 +213,8 @@ This workflow is designed as a **single hub for an entire research program** —
 | `promote-memory-council` (v1.9.0) | Five-critic council for `[LEARN]` promotion to MEMORY.md |
 | `sim-reviewer` (v1.10.0) | Monte Carlo simulation reviewer — DGP/estimand match, Monte Carlo SE, coverage-vs-truth, claims↔tables parity |
 | `r-package-reviewer` (v1.10.0) | R package-source reviewer — DESCRIPTION/NAMESPACE hygiene, roxygen completeness, testthat coverage, CRAN-policy red flags |
+| `notes-critic` | Beamer↔Lecture-Notes parity audit — content/citation completeness, no invention, derivation completeness |
+| `notes-fixer` | Implements fixes from `notes-critic` onto the Lecture Notes file |
 
 ### Skills (`.claude/skills/`)
 
@@ -271,6 +273,9 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/respond-to-eval` (v2.0) | Teaching analogue of `/respond-to-referees` — clusters course-eval comments into themes, weights by frequency (signal vs noise), classifies Keep / Change / Investigate / Out-of-scope, and drafts concrete changes mapped to the syllabus + slide decks; saves the plan to `quality_reports/teaching/` |
 | `/scaffold-exercises` (v2.0) | Scaffold a graded problem set across analytical/empirical/coding types, with worked solutions and "why this matters" explainers emitted to a separate solution key |
 | `/new-skill` (v2.0) | Scaffold a new skill that follows this repo's conventions — interviews for purpose, triggers, and tools, writes `.claude/skills/<name>/SKILL.md` from the template with frontmatter/body that pass `check-skill-integrity.py` first try, then reminds to add the surface-table rows |
+| `/index-textbook` (v2.2) | Build a persistent chapter → page-range → key-terms index for a course textbook (text-layer or OCR), so `/create-lecture` can cite a specific page instead of "standard treatment" |
+| `/lecture-notes` (v2.2) | Expand a finished, compiled Beamer deck into prose Lecture Notes (article-class PDF) — derived from Slides, never co-drafted, same relationship Quarto has to Beamer |
+| `/qa-notes` (v2.2) | Adversarial critic-fixer loop checking Lecture Notes against the Beamer source (content/citation parity, no invention) |
 
 ### Research Workflow
 

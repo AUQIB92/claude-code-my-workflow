@@ -35,13 +35,16 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 ├── Preambles/header.tex         # LaTeX headers (shared)
 ├── Slides/<CODE>/               # Beamer .tex files, one subfolder per course
 ├── Quarto/<CODE>/                # RevealJS .qmd mirrors, same course subfolders
+├── Notes/<CODE>/                # Prose Lecture Notes, derived from Slides/ (see single-source-of-truth.md)
 ├── syllabi/<CODE>.md            # One syllabus per course
 ├── docs/                        # GitHub Pages (auto-generated, mirrors Slides/Quarto nesting)
 ├── scripts/                     # Utility scripts + R code
 ├── quality_reports/             # Plans, session logs, merge reports, decision records
 ├── explorations/                # Research sandbox (see rules)
 ├── templates/                   # Session log, quality report templates
-└── master_supporting_docs/      # Papers and existing slides
+└── master_supporting_docs/<CODE>/{supporting_papers,supporting_slides,supporting_books/<Book>/}
+                                  # Course-scoped source material; supporting_books/<Book>/book.pdf
+                                  # is gitignored (copyright), index.md is committed
 ```
 
 **Multi-course convention.** `<CODE>` is a short course code (`CS401`, `MATH201`, ...). Course-less demo decks (e.g. `HelloWorld`) stay at the `Slides/`/`Quarto/` top level. Every skill that takes a lecture argument now takes `<CODE>/<lecture>` (e.g. `CS401/05-addressing-cpu-bus`).
@@ -76,6 +79,8 @@ python scripts/quality_score.py Quarto/CS401/file.qmd
 
 **Palette contract:** color names in `Preambles/header.tex` must match SCSS variables in `Quarto/theme-template.scss`. See [`Preambles/README.md`](Preambles/README.md).
 
+**Windows/MiKTeX note:** the `:`-joined `TEXINPUTS`/`BIBINPUTS` above works on TeX Live (macOS/Linux). MiKTeX on Windows needs `;` instead (`TEXINPUTS="../../Preambles;"`) — a `:`-joined value silently fails to resolve `header.tex`/the `.bib` file. See `.claude/skills/compile-latex/SKILL.md`.
+
 ---
 
 ## Quality Thresholds (advisory)
@@ -94,7 +99,7 @@ Enforced by `/commit` (halts + asks for override) **and** — once you run `./sc
 
 The full table of all skills lives in [README.md](README.md#skills-claudeskills). Most-used, by workflow:
 
-- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises`
+- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises` `/lecture-notes` `/qa-notes` `/index-textbook`
 - **Papers / review:** `/review-paper` (`--peer`) `/seven-pass-review` `/respond-to-referees` `/verify-claims` `/proofread` `/humanize` `/submission-disclosures`
 - **Data / reproducibility:** `/data-analysis` `/did-event-study` `/simulation-study` `/audit-reproducibility` `/diagnose` `/replication-package` `/capture-environment` `/power-analysis` `/disclosure-check`
 - **Research / writing:** `/interview-me` `/lit-review` `/research-ideation` `/preregister` `/grant-proposal` `/data-management-plan`

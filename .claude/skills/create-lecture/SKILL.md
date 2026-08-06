@@ -41,8 +41,9 @@ Once `<CODE>` is known, locate `.claude/rules/knowledge-base-<CODE>.md`. If it d
 Read the inputs, then produce a Pre-Flight Report in your response before Phase 1 starts.
 
 Inputs to read:
-- `.claude/rules/knowledge-base-<CODE>.md` — notation registry, narrative arc, applications for this course
+- `.claude/rules/knowledge-base-<CODE>.md` — notation registry, narrative arc, applications for this course, including its Anchor Textbooks table
 - `.claude/rules/content-invariants.md` — INV-1..INV-8 govern slide content
+- `master_supporting_docs/<CODE>/supporting_books/*/index.md` (if any exist) — page-cited definitions/theorems/key-terms for this course's anchor textbooks. When a chapter is indexed, cite the specific page (per `.claude/rules/textbook-grounding.md`); when it isn't, phrase textbook-attributed claims as general/standard treatment — never invent a page number.
 - Any source papers / existing slides the user provided
 - The previous lecture's `.tex` in `Slides/<CODE>/` (last section + ending slide) if one exists
 
@@ -106,6 +107,7 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 - Run Devil's Advocate
 - Run Substance Review (if domain reviewer configured)
 - Update knowledge base with new notation
+- Hand the finished, compiled deck to [`/lecture-notes`](../lecture-notes/SKILL.md) `<CODE>/<topic>` to generate the matching prose Notes, then [`/qa-notes`](../qa-notes/SKILL.md) to check Beamer↔Notes parity (loop until dry, same primitive as `/qa-quarto`)
 
 ---
 
@@ -123,11 +125,16 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 [ ] New notation added to knowledge base
 [ ] Session log updated
 [ ] Devil's Advocate run
+[ ] Lecture Notes generated (`/lecture-notes`) and `/qa-notes` parity check passed
+[ ] Textbook-attributed claims traced to an indexed page, or explicitly marked general/standard treatment (not invented page numbers)
 ```
 
 ## Cross-references
 
 - [`.claude/skills/translate-to-quarto/SKILL.md`](../translate-to-quarto/SKILL.md) — port the finished Beamer deck to a Quarto RevealJS mirror.
 - [`.claude/skills/qa-quarto/SKILL.md`](../qa-quarto/SKILL.md) — adversarial Beamer↔Quarto parity (loop-until-dry).
+- [`.claude/skills/lecture-notes/SKILL.md`](../lecture-notes/SKILL.md) — expand the finished deck into prose Lecture Notes.
+- [`.claude/skills/qa-notes/SKILL.md`](../qa-notes/SKILL.md) — adversarial Beamer↔Notes parity (loop-until-dry).
+- [`.claude/skills/index-textbook/SKILL.md`](../index-textbook/SKILL.md) — build the page-cited index this course's `supporting_books/*/index.md` inputs come from.
 - [`.claude/skills/deploy/SKILL.md`](../deploy/SKILL.md) — render + publish the lecture to GitHub Pages.
 - [`.claude/skills/scaffold-exercises/SKILL.md`](../scaffold-exercises/SKILL.md) — problem sets + solutions to accompany the lecture.

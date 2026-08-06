@@ -20,6 +20,29 @@ ls -lh paper_name.pdf
 - **Selective deep reading (a cost optimization, not a capacity limit):** for a long paper you may scan section by section and read the load-bearing parts (identification, methods, results) in detail while skimming appendices/references — this saves tokens, not because the model cannot hold the document.
 
 **Step 3 (fallback): split only when a direct read fails.** Reach for Ghostscript page-range splitting ONLY when the PDF is genuinely oversized (a book or high-resolution scan, hundreds of pages), corrupt, or a direct Read errors:
+
+## Textbooks are the default case, not the fallback
+
+Steps 1-3 above are written for papers, where splitting is a rare fallback. For a **300-900 page course textbook** (`master_supporting_docs/<CODE>/supporting_books/<ShortName>/book.pdf`, indexed by `/index-textbook`), skip straight to page-range splitting — do not attempt a direct whole-book `Read` first and fail into it. Identify chapter boundaries from the table of contents before splitting so ranges align with real chapters, not arbitrary page blocks.
+
+### OCR fallback for scanned textbooks
+
+Older textbook scans often have no text layer. Check before splitting:
+
+```bash
+pdftotext -f 1 -l 3 book.pdf - | wc -c
+```
+
+Near-zero output on the first few pages means no text layer — fall back to OCR:
+
+```bash
+# Per chapter-range PDF produced by the Ghostscript split above:
+gs -sDEVICE=png16m -r300 -dNOPAUSE -dBATCH -dSAFER \
+   -sOutputFile="chapter_p%03d.png" chapter_range.pdf
+tesseract chapter_p001.png chapter_p001 --psm 6   # repeat per page, or script the loop
+```
+
+Check `tesseract --version` is available before starting; if Tesseract is missing, ask the user to install it rather than silently producing an empty index. OCR output is noisier than a text layer — treat extracted definitions/theorems as provisional and note in `index.md` that the chapter was OCR'd, so a later human skim is expected.
 ```bash
 mkdir -p paper_name/
 for i in {0..9}; do

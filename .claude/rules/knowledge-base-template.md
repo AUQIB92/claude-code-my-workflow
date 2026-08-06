@@ -15,6 +15,17 @@ paths:
      tables as the course grows. Don't let two courses share one KB file;
      unrelated notation registries collapse into a confusing mixed bag. -->
 
+## Anchor Textbooks
+
+| Book (ShortName) | Index | Weeks/Lectures Backed | Page-Verified? |
+|-------------------|-------|------------------------|-----------------|
+| | `master_supporting_docs/[COURSE_CODE]/supporting_books/<ShortName>/index.md` | | not until `/index-textbook` runs |
+
+<!-- One row per anchor textbook. "Page-Verified?" starts as "not until
+     /index-textbook runs" for every book — flip to "yes (as of YYYY-MM-DD)"
+     only after /index-textbook has actually indexed it and /verify-claims
+     can check citations against real pages. See textbook-grounding.md. -->
+
 ## Notation Registry
 
 | Rule | Convention | Example | Anti-Pattern |

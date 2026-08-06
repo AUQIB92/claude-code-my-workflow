@@ -14,6 +14,27 @@ paths:
      Amend freely as Weeks 1-4 get authored for real — treat rows marked
      "(projected)" as provisional until a Week 1-4 .tex confirms them. -->
 
+## Anchor Textbooks
+
+| Book (ShortName) | Index | Weeks/Lectures Backed | Page-Verified? |
+|-------------------|-------|------------------------|-----------------|
+| Hamacher, *Computer Organization*, 5th ed. (Hamacher2002) | `master_supporting_docs/CS401/supporting_books/Hamacher2002/index.md` — **not built yet, no longer blocked.** PDF supplied 2026-08-06 has no text layer (scanned); `pdftoppm` (Poppler) and `tesseract` are now both installed on this machine (2026-08-06), so `/index-textbook CS401/Hamacher2002` can run the OCR fallback path. Not yet run. | Weeks 1-5, 8-11 per syllabus; Lectures 05-07 built so far | **No — standard treatment, not page-verified** |
+| Mano, *Computer System Architecture*, 3rd ed. (Mano1993) | `master_supporting_docs/CS401/supporting_books/Mano1993/index.md` — **built 2026-08-06, Ch. 5 (Sec. 5-4/5-9/5-10 only) + Ch. 7-8** (the chapters Lectures 05-07 need; rest of Ch. 5, Ch. 1-4, 6, 9-13 not indexed) | Week 5 (Ch. 8 — corrected, was mis-cited as Ch. 7); Week 6 (Ch. 5 — corrected 2026-08-06, was mis-cited as Ch. 7); Week 7 (Ch. 7, confirmed correct) | **Ch. 5 (Sec. 5-4/5-9/5-10), Ch. 7-8: Yes, page-cited. Rest of book: no.** |
+| Stallings, *Computer Organization and Architecture* (Stallings2015) | `master_supporting_docs/CS401/supporting_books/Stallings2015/index.md` — **not built.** PDF supplied 2026-08-06 is confirmed the **11th edition** ("Designing for Performance"), not the 10th/2015 edition this repo's bib key implies. Confirmed via its own TOC: "Control Unit Operation and Microprogrammed Control" is **Chapter 19** in this 11th-edition file, not Chapter 16 as Lectures 06-07 currently cite — plausibly a cross-edition renumbering, not necessarily a content error, but unconfirmed without the actual 2015 edition in hand. | Weeks 7-8, 11-12 (Lecture 06-07) | **No — edition mismatch flagged, not indexed. Do not page-cite from the 11th-edition file against the "Ch. 16" citations without resolving the edition question first.** |
+
+<!-- [LEARN:textbook-grounding] Lectures 05, 06, 07 cite these three books by
+     chapter (per syllabi/CS401.md's anchor-reading column), but the actual
+     slide content (definitions, control-word tables, RTL traces) was authored
+     from general knowledge of what these standard textbooks cover, not from
+     reading an actual page of any of them. No book.pdf exists yet under
+     master_supporting_docs/CS401/supporting_books/. Per textbook-grounding.md,
+     this is honest chapter-level attribution, not a fabricated page citation
+     -- but it is NOT page-verified, and should not be treated as such until
+     /index-textbook runs against real files and /verify-claims can check
+     these lectures' claims against the indexed pages. Drop the PDFs into
+     master_supporting_docs/CS401/supporting_books/<ShortName>/book.pdf and
+     run /index-textbook CS401/<ShortName> to close this gap. -->
+
 ## Notation Registry
 
 | Rule | Convention | Example | Anti-Pattern |
@@ -45,6 +66,12 @@ paths:
 | $X_{in}$ / $X_{out}$ | Register-gating control signal: $X_{in}=1$ loads register X from the bus this cycle; $X_{out}=1$ drives X's contents onto the bus this cycle | **Week 6 (new)** |
 | $D_i$ | One-hot opcode-decoder output — $D_i = 1$ exactly when the IR holds instruction $i$'s opcode | **Week 6 (new)** |
 | Control matrix | The combinational logic block that ANDs opcode-decode ($D_i$) with step-decode ($T_j$) lines, and ORs across instructions, to produce each control signal | **Week 6 (new)** |
+| Control word (microinstruction) | One stored row of control information: the signals to assert this cycle plus next-address information; a microprogram is the ordered sequence of control words implementing one instruction | **Week 7 (new)** |
+| Microaddress | The address of a control word inside control memory | **Week 7 (new)** |
+| CM (Control Memory) | Small ROM/RAM holding control words, indexed by microaddress; the microprogrammed analogue of Week 6's control matrix | **Week 7 (new)** |
+| MPC (Microprogram Counter) | Register holding the microaddress of the control word being read this cycle; the microprogrammed analogue of Week 6's `SC` | **Week 7 (new)** |
+| Mapping (address sequencing) | The unit that converts an opcode in `IR` into the starting microaddress of that instruction's microprogram, loaded into `MPC` on fetch; the microprogrammed analogue of Week 6's opcode decoder | **Week 7 (new)** |
+| Horizontal / vertical microinstruction | Horizontal: one bit per control signal, no decode delay, wide control word. Vertical: mutually-exclusive signals grouped into encoded fields expanded by a decoder, narrower control word, adds decode delay | **Week 7 (new)** |
 
 ## Lecture Progression
 
@@ -62,7 +89,7 @@ paths:
 
 | Application | Paper | Dataset | Lecture(s) | Purpose |
 |------------|-------|---------|------------|---------|
-| RTL trace of `R1 \gets R2 + R3` | Hamacher Ch. 7; Mano Ch. 7 | n/a (worked hardware trace) | Week 5, Week 6 | Running thread comparing single-bus (3 control steps via Y/Z) vs. three-bus (1 control step) organization — makes the cost/speed trade-off concrete and quantitative. Week 6 extends the same trace into a state table and Boolean control equations ($Y_{in}=D_{\text{ADD}}\cdot T_1$, etc.) for the hardwired control unit that drives it. |
+| RTL trace of `R1 \gets R2 + R3` | Hamacher Ch. 7; Mano Ch. 8 (Week 5, corrected 2026-08-06 — datapath/bus/addressing content); Mano Ch. 5 (Week 6, corrected 2026-08-06 — hardwired control-logic-gate content, was mis-cited as Ch. 7); Mano Ch. 7 (Week 7, confirmed — control-memory/microinstruction content) | n/a (worked hardware trace) | Week 5, Week 6, Week 7 | Running thread comparing single-bus (3 control steps via Y/Z) vs. three-bus (1 control step) organization — makes the cost/speed trade-off concrete and quantitative. Week 6 extends the same trace into a state table and Boolean control equations ($Y_{in}=D_{\text{ADD}}\cdot T_1$, etc.) for the hardwired control unit that drives it. Week 7 rebuilds the identical 3-step control unit as a microprogram (CM rows + MPC), giving a direct hardwired-vs.-microprogrammed comparison on the same worked example. |
 | Compiling `A[i] = A[i] + 1` | Hamacher Ch. 7 | n/a (compiler-codegen example) | Week 5 | Motivates addressing modes from a real toolchain need: immediate (constant), based/indexed (array element), indirect (pointer) |
 
 ## Design Principles
@@ -70,7 +97,7 @@ paths:
 | Principle | Evidence | Lectures Applied |
 |-----------|----------|-----------------|
 | Motivate every addressing mode with the C/assembly idiom it implements, not the mode name first | Prevents "list of modes to memorize" fatigue; ties notation to code students already reason about | Week 5 |
-| Thread one worked instruction trace across competing hardware designs to make trade-offs quantitative (cycle counts), not just qualitative (adjectives like "faster") | Cost/speed trade-offs are the recurring theme of CPU-organization content (Weeks 5-7) | Week 5, continued in Week 6 (state table + Boolean equations for hardwired control), and by design should continue into Week 7 (same trace, microprogrammed control) |
+| Thread one worked instruction trace across competing hardware designs to make trade-offs quantitative (cycle counts), not just qualitative (adjectives like "faster") | Cost/speed trade-offs are the recurring theme of CPU-organization content (Weeks 5-7) | Week 5 (bus organization), Week 6 (state table + Boolean equations for hardwired control), Week 7 (same trace rebuilt as a microprogram — CM rows + MPC — closing the three-week arc with a direct hardwired-vs.-microprogrammed head-to-head) |
 
 ## Anti-Patterns (Don't Do This)
 

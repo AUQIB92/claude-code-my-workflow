@@ -4,7 +4,11 @@
 %
 % Course: Computer Organization and Architecture (PCC CS-401)
 % Anchor reading: Hamacher Ch. 7 (addressing modes, bus organization);
-%                 Mano Ch. 7 (single-bus datapath, RTL)
+%                 Mano Ch. 8 (single-bus datapath, RTL, addressing modes --
+%                 corrected 2026-08-06 from a prior mis-citation of Ch. 7;
+%                 see master_supporting_docs/CS401/supporting_books/Mano1993/index.md.
+%                 Ch. 7 of this book is Microprogrammed Control, i.e. Lectures 06-07's
+%                 material, not this lecture's)
 %
 % Compile with: /compile-latex CS401/05-addressing-cpu-bus
 % =============================================================================
@@ -17,8 +21,16 @@
 
 \title{Addressing Modes, CPU Organization, and Bus Structures}
 \subtitle{Week 5 --- Where Operands Live, and What Moves Them}
-\author{PCC CS-401: Computer Organization and Architecture}
-\date{\today}
+\author[Dr. Auqib Hamid Lone]{%
+  \textbf{Dr. Auqib Hamid Lone}\\
+  \small Assistant Professor in Computer Science \& Engineering
+}
+\institute[GCET Ganderbal]{%
+  \small\textbf{PCC CS-401: Computer Organization and Architecture}\\[0.3em]
+  Department of Computer Science \& Engineering\\
+  Government College of Engineering \& Technology (GCET), Ganderbal
+}
+\date[\today]{\small\today}
 
 \begin{document}
 
@@ -434,7 +446,10 @@
       \node[font=\scriptsize, below] at (7.9,-5.7) {Z $\to$ bus (write-back)};
     \end{tikzpicture}
   \end{center}
-  \cite{Mano1993_computer_system_architecture}
+  \footnotesize \cite{Mano1993_computer_system_architecture} --- cf.\ Fig.~5-4, p.129
+  (registers and memory on the common bus system); the \texttt{Y}/\texttt{Z} buffer
+  registers shown here are this course's pedagogical simplification of the
+  ALU operand path.
 \end{frame}
 
 \begin{frame}{How the Single Bus Works}
@@ -522,35 +537,69 @@
 
 \begin{frame}{The Three-Bus Datapath}
   \begin{center}
-    % Diagram: three-bus CPU datapath (Hamacher-style).
+    % Diagram: three-bus CPU datapath, redrawn to match Mano Fig. 8-2
+    % ("Registers with common ALU", p.243) -- the register file feeds two
+    % MUX-selected buses (Bus A, Bus B) into the ALU. Bus C is DATA ONLY:
+    % it carries the ALU's result straight back into the register file.
+    % The SELD decoder is a SEPARATE select path (dashed) that drives the
+    % destination register's load-enable input -- it does not carry data,
+    % so it is drawn apart from the Bus C data loop (fixes an earlier draft
+    % that incorrectly routed Bus C's data through the decoder).
     % Coordinates: (x, y)
     %   Rfile box at (0,0), width 2.0, height 2.6 -- register file, 2 read ports + 1 write port
-    %   ALU box at (4.2,0), width 1.4, height 1.4
-    %   Bus A: Rfile upper-east tap (1.0,0.6) -> ALU upper-west input (3.5,0.45)
-    %   Bus B: Rfile lower-east tap (1.0,-0.6) -> ALU lower-west input (3.5,-0.45)
-    %   Bus C: ALU east (4.9,0) -> down to y=-2.2 -> left to x=0 -> up into Rfile.south
-    \begin{tikzpicture}[scale=0.85, transform shape,
+    %   MUXA at (2.4,0.9), width 1.0, height 1.0 -- selects one of 2 register
+    %     lines onto Bus A (2 fan-in stubs at y=1.2/0.6, both within the box's
+    %     0.4..1.4 vertical span)
+    %   MUXB at (2.4,-0.9), width 1.0, height 1.0 -- mirror of MUXA for Bus B
+    %   ALU box at (6.0,0), width 1.4, height 1.4
+    %   Bus C (data, solid primary-blue): ALU.east -> (7.4,0) -> down to
+    %     y=-2.6 -> left to x=0 -> up into Rfile.south (0,-1.3); label
+    %     "write-back (data)" at (3.5,-3.1), 0.5cm clear of the y=-2.6 run
+    %   DEC (SELD decoder, select only, no data) at (8.2,2.0), width 1.6,
+    %     height 0.9 -- dashed primary-gold arrow left along y=2.0 (0.6cm
+    %     clear of MUXA's top edge at y=1.4) into Rfile.north (0,1.3), a
+    %     DIFFERENT entry point from Bus C's Rfile.south entry
+    \begin{tikzpicture}[scale=0.82, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=2.0cm, minimum height=2.6cm, align=center] (RF) at (0,0) {R0..R3\\[2pt]\scriptsize 2 read ports\\\scriptsize 1 write port};
       \node[draw=primary-gold, fill=white, rounded corners,
-            minimum width=1.4cm, minimum height=1.4cm, align=center] (ALU) at (4.2,0) {ALU};
-      \draw[->, thick] (1.0,0.6) -- node[midway, above, font=\scriptsize] {Bus A} (3.5,0.45);
-      \draw[->, thick] (1.0,-0.6) -- node[midway, below, font=\scriptsize] {Bus B} (3.5,-0.45);
-      \draw[->, thick, primary-blue] (4.9,0) -- (4.9,-2.2) -- (0,-2.2) node[midway, above, font=\scriptsize]{Bus C} -- (0,-1.3);
+            minimum width=1.0cm, minimum height=1.0cm, align=center] (MUXA) at (2.4,0.9) {MUX};
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.0cm, minimum height=1.0cm, align=center] (MUXB) at (2.4,-0.9) {MUX};
+      \draw[->, thick] (1.0,1.2) -- (MUXA.west |- 0,1.2);
+      \draw[->, thick] (1.0,0.6) -- (MUXA.west |- 0,0.6);
+      \draw[->, thick] (1.0,-0.6) -- (MUXB.west |- 0,-0.6);
+      \draw[->, thick] (1.0,-1.2) -- (MUXB.west |- 0,-1.2);
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.4cm, minimum height=1.4cm, align=center] (ALU) at (6.0,0) {ALU};
+      \draw[->, thick] (MUXA.east) -- node[midway, above, font=\scriptsize] {Bus A (SELA)} (ALU.west |- 0,0.45);
+      \draw[->, thick] (MUXB.east) -- node[midway, below, font=\scriptsize] {Bus B (SELB)} (ALU.west |- 0,-0.45);
+      \draw[->, thick, primary-blue] (ALU.east) -- node[midway, above, font=\scriptsize] {Bus C}
+            (7.4,0) -- (7.4,-2.6) -- (0,-2.6) -- (RF.south);
+      \node[font=\scriptsize] at (3.5,-3.1) {write-back (data) into the selected register};
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.6cm, minimum height=0.9cm, align=center] (DEC) at (8.2,2.0) {Decoder\\(SELD)};
+      \draw[->, thick, primary-gold, dashed] (DEC.west) -- node[midway, above, font=\scriptsize] {load enable} (0,2.0) -- (RF.north);
     \end{tikzpicture}
   \end{center}
   \key{Bus A and Bus B} read two \emph{different} registers in the \emph{same}
-  cycle; \key{Bus C} writes the ALU's result back \cite{Hamacher2002_computer_organization}.
+  cycle (via MUX-selected \texttt{SELA}/\texttt{SELB}); \key{Bus C} carries the
+  ALU's result directly back into the register file, while the \texttt{SELD}
+  decoder (dashed) independently drives that register's load-enable line ---
+  cf.\ Mano, Fig.~8-2, p.243 (``Registers with common ALU''); the same
+  three-bus principle is also presented in Hamacher Ch.~7
+  \cite{Mano1993_computer_system_architecture,Hamacher2002_computer_organization}.
 \end{frame}
 
 \begin{frame}{Worked Trace: \texttt{R1} $\gets$ \texttt{R2 + R3} on Three Buses}
   \footnotesize
-  \begin{tabular}{@{}clll@{}}
+  \begin{tabular}{@{}cp{3.4cm}p{2.6cm}p{4.6cm}@{}}
     \toprule
     \textbf{Step} & \textbf{RTL} & \textbf{On the buses} & \textbf{What happens} \\
     \midrule
-    $T_1$ & $R1 \gets [R2] + [R3]$ & $A{=}[R2]$, $B{=}[R3]$, $C{=}\text{result}$ &
+    $T_1$ & $R1 \gets [R2] + [R3]$ & $A{=}[R2]$, $B{=}[R3]$,
+      $C{=}$result &
       Both operands read \emph{and} the ALU output written back, all in one cycle \\
     \bottomrule
   \end{tabular}
@@ -681,7 +730,7 @@
 \begin{frame}{References}
   \footnotesize
   \bibliographystyle{plain}
-  \bibliography{../Bibliography_base}
+  \bibliography{../../Bibliography_base}
 \end{frame}
 
 \end{document}

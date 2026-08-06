@@ -67,3 +67,5 @@ TEXINPUTS=../../Preambles:$TEXINPUTS BIBINPUTS=../..:$BIBINPUTS latexmk -xelatex
 - **Always use XeLaTeX**, never pdflatex
 - **TEXINPUTS** is required: your Beamer theme lives in `Preambles/`
 - **BIBINPUTS** is required: your `.bib` file lives in the repo root
+- **Path separator is platform-dependent.** TeX Live (macOS/Linux) accepts `:` (as shown above). **MiKTeX on Windows requires `;`** — `TEXINPUTS="../../Preambles;"` / `BIBINPUTS="../..;"` — a `:`-joined value silently fails to find `header.tex`/the `.bib` file with no clear error (verified: MiKTeX 25.12 on Windows). If a compile can't find `header.tex` despite the file existing at the expected relative path, try the other separator before debugging further.
+- **`\bibliography{}` and `\input{}` calls inside a `.tex` file use literal relative paths, not TEXINPUTS/BIBINPUTS resolution** — e.g. `\bibliography{../../Bibliography_base}` from `Slides/<CODE>/`. If a deck is ever moved to a different nesting depth, these hardcoded paths inside the file must be updated too, separately from any TEXINPUTS/BIBINPUTS env var.
