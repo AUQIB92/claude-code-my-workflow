@@ -11,7 +11,7 @@ Fact-check a draft using the **Post-Flight Verification protocol** ([`.claude/ru
 
 **Input:** `$ARGUMENTS` — path to a file containing the draft (markdown, .qmd, .tex, .md) or a shorthand pointer. Optional flags:
 
-- `--source <path-or-url>` — one or more source-material pointers (repeat for multiple). If omitted, the skill infers from context (e.g., papers referenced, cited arXiv URLs).
+- `--source <path-or-url>` — one or more source-material pointers (repeat for multiple). If omitted, the skill infers from context (e.g., papers referenced, cited arXiv URLs). For textbook-page claims, point at `master_supporting_docs/<CODE>/supporting_books/<ShortName>/index.md` — the verifier checks the claim against that chapter/page entry, not the raw book PDF (which is gitignored and may not exist on every machine).
 - `--no-fail-closed` — downgrade FAIL outcomes to warnings without regeneration. Use sparingly.
 
 ## When to pick this skill
@@ -46,6 +46,7 @@ Read the draft. Identify factual assertions of these types:
 | Negative literature | "No prior work studies X" |
 | Named entity | researcher, paper title, venue, package, estimator name |
 | Dataset claim | "The CPS contains field `educ_attain`" |
+| Textbook-page claim | "Mano, p. 342: the sequence counter resets via `SC_clear`" — governed by `.claude/rules/textbook-grounding.md`; source is `master_supporting_docs/<CODE>/supporting_books/<ShortName>/index.md`, not the paper bib |
 
 Skip: opinions, forward-looking suggestions, definitions the draft introduces.
 
