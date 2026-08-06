@@ -15,12 +15,16 @@ paths:
 Beamer .tex (SOURCE OF TRUTH)
   ├── extract_tikz.tex → PDF → SVGs (derived)
   ├── Quarto .qmd → HTML (derived)
+  ├── Notes/<CODE>/*-notes.tex → article-class PDF (derived, expanded prose;
+  │       checked via /qa-notes, same relationship Quarto has to Beamer)
   ├── Bibliography_base.bib (shared)
   └── Figures/LectureN/*.rds → plotly charts (data source)
 
 NEVER edit derived artifacts independently.
 ALWAYS propagate changes from source → derived.
 ```
+
+**Notes is a sibling of Quarto, not a special case.** Lecture Notes (`Notes/<CODE>/<lecture>-notes.tex`) are produced by `/lecture-notes` purely by expanding the Beamer source into prose — never co-drafted, never edited independently of a Beamer change. If the Beamer deck changes, re-run `/lecture-notes` (or hand-propagate) and re-check with `/qa-notes`, the same discipline `/qa-quarto` already enforces for Quarto. See `.claude/skills/lecture-notes/SKILL.md`.
 
 ---
 

@@ -3,21 +3,37 @@
 % Functions, Hardwired Control Unit Design
 %
 % Course: Computer Organization and Architecture (PCC CS-401)
-% Anchor reading: Mano Ch. 7 (state-table / sequence-counter method for
-%                 hardwired control); Hamacher Ch. 7 (control signal
+% Anchor reading: Mano Ch. 5 (hardwired control-unit design: Sec. 5-4 timing
+%                 and control, Sec. 5-9 control logic gates / control of
+%                 registers and common bus, Sec. 5-10 accumulator control --
+%                 corrected 2026-08-06 from a prior mis-citation of Ch. 7;
+%                 see master_supporting_docs/CS401/supporting_books/Mano1993/index.md.
+%                 Ch. 7 of this book is Microprogrammed Control, i.e. Lecture 07's
+%                 material, not this lecture's); Hamacher Ch. 7 (control signal
 %                 conventions, control unit inputs/outputs);
 %                 Stallings Ch. 16 (control unit design overview)
 %
-% Compile with: /compile-latex 06-hardwired-control
+% Compile with: /compile-latex CS401/06-hardwired-control
 % =============================================================================
 
 \documentclass[aspectratio=169]{beamer}
-\input{header}   % resolves via TEXINPUTS=../Preambles:$TEXINPUTS
+\input{header}   % resolves via TEXINPUTS=../../Preambles:$TEXINPUTS — compile
+                  % from cwd Slides/CS401/ (TeX writes output next to cwd, not
+                  % next to this file's own path, so cd here first)
+\coursecode{CS401}
 
 \title{Hardwired Control Unit Design}
 \subtitle{Week 6 --- How Hardware Generates the Control-Step Sequence}
-\author{PCC CS-401: Computer Organization and Architecture}
-\date{\today}
+\author[Dr. Auqib Hamid Lone]{%
+  \textbf{Dr. Auqib Hamid Lone}\\
+  \small Assistant Professor in Computer Science \& Engineering
+}
+\institute[GCET Ganderbal]{%
+  \small\textbf{PCC CS-401: Computer Organization and Architecture}\\[0.3em]
+  Department of Computer Science \& Engineering\\
+  Government College of Engineering \& Technology (GCET), Ganderbal
+}
+\date[\today]{\small\today}
 
 \begin{document}
 
@@ -222,17 +238,26 @@
     one $T_i$ is active per cycle.
   \end{block}
   \begin{center}
-    % Diagram: SC register feeding a step decoder, producing one-hot T_i lines.
+    % Diagram: SC register feeding a step decoder, producing one-hot T_i
+    % lines -- redrawn to match the SC/decoder portion of Mano Fig. 5-6
+    % (p.137): a 4-bit sequence counter feeds a 4x16 decoder that produces
+    % one-hot outputs. This course numbers steps from T1 (see the block
+    % text above and the notation registry), unlike Mano's own T0-based
+    % numbering, so a 4-bit/16-state counter yields T1..T16 here, not
+    % T0..T15; only the first three outputs are named since this course's
+    % worked trace only needs T1..T3 (the "..." marker below T3 signals the
+    % remaining outputs, at 0.4cm clearance from T3's box).
     % Coordinates: (x, y)
     %   SC box at (0, 0), width 2.0, height 1.0
     %   Decoder (trapezoid-ish via rectangle, kept simple/low-risk) at (3.6, 0)
     %   Output lines T1, T2, T3 fan out to the right at y = 1.0, 0, -1.0
+    %   "..." label at (7.2, -1.75), 0.4cm clear of T3's bottom edge (y=-1.35)
     \begin{tikzpicture}[scale=1.30, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
-            minimum width=2.0cm, minimum height=1.0cm, align=center] (SC) at (0,0) {SC \\ (counter)};
+            minimum width=2.0cm, minimum height=1.0cm, align=center] (SC) at (0,0) {SC \\ \scriptsize (4-bit counter)};
       \node[draw=primary-gold, fill=white, rounded corners,
-            minimum width=2.4cm, minimum height=1.6cm, align=center] (DEC) at (3.6,0) {Step\\decoder};
+            minimum width=2.4cm, minimum height=1.6cm, align=center] (DEC) at (3.6,0) {$4{\times}16$\\decoder};
       \draw[->, thick] (SC.east) -- (DEC.west);
       \node[draw=positive, fill=light-bg, rounded corners,
             minimum width=1.2cm, minimum height=0.7cm, align=center] (T1) at (7.2,1.0) {$T_1$};
@@ -243,9 +268,11 @@
       \draw[->, thick] (DEC.east) -- (5.4,1.0) -- (T1.west);
       \draw[->, thick] (DEC.east) -- (5.4,0) -- (T2.west);
       \draw[->, thick] (DEC.east) -- (5.4,-1.0) -- (T3.west);
+      \node[font=\scriptsize] at (7.2,-1.75) {$\cdots\,T_{16}$};
     \end{tikzpicture}
   \end{center}
-  \cite{Mano1993_computer_system_architecture}
+  \footnotesize \cite{Mano1993_computer_system_architecture} --- cf.\ Fig.~5-6, p.137
+  (the sequence-counter/timing-decoder portion of the control unit).
 \end{frame}
 
 \begin{frame}{How \texttt{SC} Advances}
@@ -323,32 +350,46 @@
 \begin{frame}{Two Decoders Feed the Control Matrix}
   \begin{center}
     % Diagram: IR feeds an opcode decoder (D_i lines); SC feeds a step decoder
-    % (T_j lines); both feed into a combinational "control matrix" block that
-    % outputs the actual control signals.
+    % (T_j lines); the I flip-flop (bit 15, loaded from IR) feeds the matrix
+    % directly; all three converge on the control matrix, which outputs the
+    % control signals. Redrawn to match Mano Fig. 5-6 (p.137): a 3x8
+    % operation decoder, a 4x16 timing decoder, and the I flip-flop are
+    % three of the inputs to the control logic gates (IR bits 0-11 are the
+    % fourth -- noted in prose below, omitted from the diagram for clarity).
+    % This course numbers steps from T1 (Mano numbers from T0 -- see the
+    % SC frame's note), so the timing decoder's outputs are T1..T16 here.
     % Coordinates: (x, y)
-    %   IR box at (0, 1.8); "Opcode decoder" at (3.2, 1.8); D_i label at (6.0, 2.3)
-    %   SC box at (0, -1.8); "Step decoder" at (3.2, -1.8); T_j label at (6.0, -2.3)
-    %   Control matrix box at (9.6, 0), tall, receiving both D_i and T_j as single
-    %     unbroken paths (ODEC/SDEC -> elbow at x=8.0 -> MAT.west), one arrowhead each
+    %   IR box at (0, 1.8); "3x8 decoder" at (3.2, 1.8); D_i label at (6.0, 2.3)
+    %   I flip-flop at (0, 0) -- bit 15, loaded via a short arrow from IR.south
+    %     (0.4cm+ clear of IR's bottom edge y=1.4 and SC's top edge y=-1.4),
+    %     feeds matrix directly at height 0; same primary-blue storage-element
+    %     color as IR/SC (not the gate-neutral color, since it's a register)
+    %   SC box at (0, -1.8); "4x16 decoder" at (3.2, -1.8); T_j label at (6.0, -2.3)
+    %   Control matrix box at (9.6, 0), tall, receiving D_i/I/T_j as single
+    %     unbroken paths (ODEC/IFF/SDEC -> elbow at x=8.0 -> MAT.west), one arrowhead each
     %   Control signals fan out right of matrix at (13.0, 0.9) and (13.0, -0.9)
     \begin{tikzpicture}[scale=0.90, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=1.6cm, minimum height=0.8cm, align=center] (IR) at (0,1.8) {IR};
       \node[draw=primary-gold, fill=white, rounded corners,
-            minimum width=2.2cm, minimum height=1.0cm, align=center] (ODEC) at (3.2,1.8) {Opcode\\decoder};
+            minimum width=2.2cm, minimum height=1.0cm, align=center] (ODEC) at (3.2,1.8) {$3{\times}8$\\decoder};
       \draw[->, thick] (IR.east) -- (ODEC.west);
-      \node[font=\scriptsize] at (6.0,2.3) {$D_1, D_2, \dots$};
+      \node[font=\scriptsize] at (6.0,2.3) {$D_0, \dots, D_7$};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=1.6cm, minimum height=0.7cm, align=center] (IFF) at (0,0) {$I$};
+      \draw[->, thick] (IR.south) -- node[midway, right, font=\scriptsize] {bit 15} (IFF.north);
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=1.6cm, minimum height=0.8cm, align=center] (SC) at (0,-1.8) {SC};
       \node[draw=primary-gold, fill=white, rounded corners,
-            minimum width=2.2cm, minimum height=1.0cm, align=center] (SDEC) at (3.2,-1.8) {Step\\decoder};
+            minimum width=2.2cm, minimum height=1.0cm, align=center] (SDEC) at (3.2,-1.8) {$4{\times}16$\\decoder};
       \draw[->, thick] (SC.east) -- (SDEC.west);
-      \node[font=\scriptsize] at (6.0,-2.3) {$T_1, T_2, \dots$};
+      \node[font=\scriptsize] at (6.0,-2.3) {$T_1, \dots, T_{16}$};
       \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
             minimum width=2.2cm, minimum height=3.8cm, align=center]
             (MAT) at (9.6,0) {\textbf{Control}\\\textbf{matrix}};
       \draw[->, thick] (ODEC.east) -- (8.0,1.8) |- (MAT.west |- 0,0.9);
+      \draw[->, thick] (IFF.east) -- (MAT.west |- 0,0);
       \draw[->, thick] (SDEC.east) -- (8.0,-1.8) |- (MAT.west |- 0,-0.9);
       \node[draw=positive, fill=light-bg, rounded corners,
             minimum width=1.8cm, minimum height=0.7cm, align=center] (OUT1) at (13.0,0.9) {$Y_{\text{in}}$, $Z_{\text{in}}$, \dots};
@@ -358,8 +399,11 @@
       \draw[->, thick] (MAT.east |- 0,-0.9) -- (OUT2.west);
     \end{tikzpicture}
   \end{center}
-  Every control signal is a Boolean function of the $D_i$ lines \emph{and} the
-  $T_j$ lines together \cite{Mano1993_computer_system_architecture}.
+  Every control signal is a Boolean function of the $D_i$ lines, the $T_j$
+  lines, and (for indirect-addressing-sensitive signals) the $I$ flip-flop
+  together --- \texttt{IR} bits 0--11 also feed the control logic gates
+  directly (omitted above for clarity) --- cf.\ Mano, Fig.~5-6, p.137
+  \cite{Mano1993_computer_system_architecture}.
 \end{frame}
 
 \begin{frame}{Building the State Table for \texttt{R1} $\gets$ \texttt{R2+R3}}
@@ -461,7 +505,12 @@
     % Diagram: capstone assembly -- IR and SC/clock both feed decoders, flags
     % feed in separately, everything converges on the control matrix, which
     % drives the datapath (register gating, ALU select, memory R/W) and also
-    % feeds back to clear/advance SC.
+    % feeds back to clear/advance SC. Redrawn to match Mano Fig. 5-6 (p.137)
+    % at its core (3x8 operation decoder + 4x16 timing decoder + control
+    % logic gates); Flags/Clock as separate explicit inputs and the SC
+    % feedback loop are this course's pedagogical extension of that core,
+    % drawn out for clarity (the book folds clock timing into the SC/decoder
+    % relationship itself rather than showing it as a fourth input box).
     % Coordinates: (x, y)
     %   IR at (0, 2.2); Flags at (0, 0.7); Clock at (0, -0.8); (feed control matrix)
     %   SC at (0, -2.3) -> step decoder at (3.0,-2.3) -> matrix
@@ -474,7 +523,7 @@
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=1.6cm, minimum height=0.8cm, align=center] (IR) at (0,2.2) {IR};
       \node[draw=primary-gold, fill=white, rounded corners,
-            minimum width=2.0cm, minimum height=0.9cm, align=center] (ODEC) at (3.2,2.2) {Opcode dec.};
+            minimum width=2.0cm, minimum height=0.9cm, align=center] (ODEC) at (3.2,2.2) {$3{\times}8$ dec.};
       \draw[->, thick] (IR.east) -- (ODEC.west);
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=1.8cm, minimum height=0.8cm, align=center] (FLAGS) at (0,0.7) {Flags};
@@ -483,7 +532,7 @@
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=1.6cm, minimum height=0.8cm, align=center] (SC) at (0,-2.3) {SC};
       \node[draw=primary-gold, fill=white, rounded corners,
-            minimum width=2.0cm, minimum height=0.9cm, align=center] (SDEC) at (3.2,-2.3) {Step dec.};
+            minimum width=2.0cm, minimum height=0.9cm, align=center] (SDEC) at (3.2,-2.3) {$4{\times}16$ dec.};
       \draw[->, thick] (SC.east) -- (SDEC.west);
       \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
             minimum width=2.6cm, minimum height=5.6cm, align=center]
@@ -502,7 +551,9 @@
       \node[font=\scriptsize, primary-gold] at (5.5,-3.5) {feedback into SC};
     \end{tikzpicture}
   \end{center}
-  \cite{Mano1993_computer_system_architecture,Hamacher2002_computer_organization}
+  \footnotesize cf.\ Mano, Fig.~5-6, p.137 (core: two decoders + SC + control
+  logic gates), extended with explicit Flags/Clock inputs and the SC
+  feedback loop \cite{Mano1993_computer_system_architecture,Hamacher2002_computer_organization}.
 \end{frame}
 
 \begin{frame}{Socratic Check: Adding a New Instruction}
@@ -611,7 +662,7 @@
 \begin{frame}{References}
   \footnotesize
   \bibliographystyle{plain}
-  \bibliography{../Bibliography_base}
+  \bibliography{../../Bibliography_base}
 \end{frame}
 
 \end{document}

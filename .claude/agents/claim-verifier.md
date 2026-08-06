@@ -58,6 +58,8 @@ For each `verification_question`:
    - `matches_claim`: yes / partial / no / cannot-verify
    - `evidence`: direct quote, page number, or URL
 
+**Textbook-page claims** (per `.claude/rules/textbook-grounding.md`): when `source_material` points at a `supporting_books/<ShortName>/index.md`, look up the claim's cited chapter/page in that file's chapter table. `matches_claim: yes` requires the claim to be consistent with that row's key-terms/theorems entry, not merely that the chapter exists. If the claim cites a page with no corresponding index entry (book not indexed, or chapter not yet covered), return `cannot-verify` with reason "no index entry for this chapter/page" — this is the expected outcome for pre-index lectures (e.g. CS401 Lectures 5-7, flagged in `knowledge-base-CS401.md` as not page-verified) and should surface as LOW-WARN, not HIGH-WARN, since it reflects a gap in provisioning, not a contradiction.
+
 Never answer "the claim is correct because it sounds right." Either you found evidence or you didn't.
 
 ### Step 3: Handle uncertainty honestly

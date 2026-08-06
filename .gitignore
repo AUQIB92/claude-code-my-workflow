@@ -82,6 +82,13 @@ quality_reports/diagnoses/*
 # R analysis outputs (generated artifacts; keep scripts, ignore outputs)
 scripts/R/_outputs/
 
+# Textbook source material — copyrighted scans/PDFs and raw full-text
+# extraction dumps must never be committed. Only the derived index.md
+# (chapters/pages/key-terms, no substantial verbatim text) is tracked.
+master_supporting_docs/**/supporting_books/**/*.pdf
+master_supporting_docs/**/supporting_books/**/*_fulltext.txt
+master_supporting_docs/**/supporting_books/**/extracted/
+
 # Output artifacts — uncomment lines below based on your preference
 # *.rds
 # output/**/*.rds

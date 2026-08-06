@@ -12,6 +12,12 @@
 %
 % To customize: edit the HEX values below AND the matching $variable in
 % Quarto/theme-template.scss, then run scripts/check-palette-sync.sh.
+%
+% TITLE PAGE. A formal, serif (Libertine) title-page template is defined in
+% the Beamer-only block below (\setbeamertemplate{title page}) -- title,
+% subtitle, a thin gold rule, then \author/\institute/\date. Frametitle and
+% body text remain on Beamer's sans-serif default. No SCSS counterpart is
+% needed for this (font/layout only, no new colors).
 % =============================================================================
 
 % -----------------------------------------------------------------------------
@@ -28,6 +34,15 @@
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
+
+% -----------------------------------------------------------------------------
+% Serif face for the title page (formal/academic look). Linux Libertine is
+% XeLaTeX- and pdfTeX-safe and redefines \rmdefault, so \rmfamily picks it up
+% everywhere \rmfamily is used explicitly. Body text and frametitles stay on
+% Beamer's own sans-serif default (unaffected) -- only the title-page
+% \setbeamerfont{...} overrides below opt in to \rmfamily.
+% -----------------------------------------------------------------------------
+\usepackage{libertine}
 
 % -----------------------------------------------------------------------------
 % PALETTE — mirrors Quarto/theme-template.scss variable names.
@@ -65,6 +80,16 @@
             citecolor=primary-blue, pdfborder={0 0 0}}
 
 % -----------------------------------------------------------------------------
+% Course code — set once per deck (after \input{header}, before \begin{document})
+% via \coursecode{CS401}. Shown in the footer on every slide so a deck's course
+% is identifiable without opening the title page. Empty by default.
+% -----------------------------------------------------------------------------
+\makeatletter
+\newcommand{\coursecode}[1]{\gdef\@coursecodetext{#1}}
+\gdef\@coursecodetext{}
+\makeatother
+
+% -----------------------------------------------------------------------------
 % Beamer theme assignments (only apply under Beamer).
 %
 % We detect Beamer via \@ifclassloaded{beamer}, which is the documented,
@@ -94,10 +119,42 @@
   \setbeamercolor{block title alerted}{fg=white, bg=primary-gold}
   \setbeamercolor{block body alerted}{bg=light-bg}
 
-  % Minimal footer: page X / N only, no navigation clutter
+  % ---------------------------------------------------------------------------
+  % Formal title page: serif (Libertine, via \rmfamily) for title-page
+  % elements only. Body text, itemize, and frametitle are intentionally left
+  % on Beamer's sans-serif default -- \usebeamerfont{title} is also what
+  % \transitionslide (below) uses for its big centered text, so section
+  % transitions pick up the same serif treatment for free.
+  % ---------------------------------------------------------------------------
+  \setbeamerfont{title}{family=\rmfamily, series=\bfseries, size=\Large}
+  \setbeamerfont{subtitle}{family=\rmfamily, shape=\itshape, size=\normalsize}
+  \setbeamerfont{author}{family=\rmfamily, size=\normalsize}
+  \setbeamerfont{institute}{family=\rmfamily, size=\scriptsize}
+  \setbeamerfont{date}{family=\rmfamily, size=\scriptsize}
+
+  \setbeamertemplate{title page}{
+    \vfill
+    \begin{center}
+      {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+      \vspace{0.15cm}
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+      \vspace{0.45cm}
+      {\color{primary-gold}\rule{0.42\textwidth}{0.6pt}\par}
+      \vspace{0.45cm}
+      {\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}
+      \vspace{0.35cm}
+      {\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}
+      \vspace{0.35cm}
+      {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}
+    \end{center}
+    \vfill
+  }
+
+  % Minimal footer: course code (left) + page X / N (right), no navigation clutter
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{footline}{%
-    \hfill{\color{neutral}\footnotesize\insertframenumber/\inserttotalframenumber}\hspace{0.7em}\vspace{0.3em}}
+    \color{neutral}\footnotesize\hspace{0.7em}\@coursecodetext\hfill
+    \insertframenumber/\inserttotalframenumber\hspace{0.7em}\vspace{0.3em}}
 }{}
 \makeatother
 
@@ -140,6 +197,11 @@
 \newcommand{\bad}[1]{\textcolor{negative}{#1}}
 
 % Standout frame macro: full-bleed dark background for section transitions.
+% Beamer-only (uses \begin{frame}/\setbeamercolor/\usebeamerfont) -- do not
+% call from an article-class file (e.g. Notes/<CODE>/*-notes.tex). \muted,
+% \key, \good, \bad, and \coursecode above are plain xcolor/gdef and are
+% safe to use from either class; verified when Notes/article-class support
+% was added.
 % Expand: \transitionslide{Your transition title}
 \newcommand{\transitionslide}[1]{%
   \begingroup

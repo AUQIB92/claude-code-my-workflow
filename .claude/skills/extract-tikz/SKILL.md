@@ -1,7 +1,7 @@
 ---
 name: extract-tikz
 description: Extract TikZ diagrams from Beamer `.tex` source, compile each to a standalone PDF, and convert to SVG with 0-based indexing. Use when user says "extract the tikz", "regenerate the diagrams", "rebuild the SVGs", "sync tikz to quarto", or after editing TikZ blocks in a Beamer deck that also has a Quarto mirror.
-argument-hint: "[LectureN, e.g., Lecture2]"
+argument-hint: "[CourseCode/lecture, e.g., CS401/05-addressing-cpu-bus]"
 allowed-tools: ["Read", "Bash", "Glob", "Task"]
 ---
 
@@ -46,11 +46,13 @@ If exit is non-zero: halt, report the offending lines, and ask the user to fix t
 ```bash
 cd Figures/$ARGUMENTS
 ```
+`$ARGUMENTS` is course-qualified (e.g. `CS401/05-addressing-cpu-bus`), so this directory nests two levels below `Figures/` — one more than a bare lecture name would.
 
 ### Step 3: Compile the extract_tikz.tex file
 ```bash
-TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode extract_tikz.tex
+TEXINPUTS=../../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode extract_tikz.tex
 ```
+Three `../` to reach the repo root's `Preambles/` from `Figures/<CourseCode>/<lecture>/` (two `../` was correct only for the old flat `Figures/<lecture>/`).
 
 ### Step 4: Count the number of pages
 ```bash
@@ -71,9 +73,10 @@ done
 
 ### Step 6: Sync to docs/ for deployment
 ```bash
-cd ../..
+cd ../../..
 ./scripts/sync_to_docs.sh $ARGUMENTS
 ```
+Three levels back up to the repo root from `Figures/<CourseCode>/<lecture>/`.
 
 ### Step 7: Verify SVG files
 - Read 2-3 SVG files to confirm they contain valid SVG markup
