@@ -1,7 +1,7 @@
 ---
 name: syllabus
 description: Build or restructure a course syllabus from a topic list or reading list — course description + prerequisites, week-by-week schedule (topic → readings → deliverables), measurable learning objectives, an assessment scheme + rubric, standard policies (late work, AI use, academic integrity, accessibility), and a per-week work-list to hand to `/create-lecture`. Use when user says "build a syllabus", "structure my course", "turn this reading list into a schedule", "draft a course outline", "make a syllabus for Econ 7xx", or "map weeks to lectures". Economics-aware (PhD metrics/micro/macro sequences, undergrad); generic enough for any field.
-argument-hint: "[course title or topic/reading list] [--weeks N] [--level phd|grad|undergrad] [--sessions-per-week N] [--no-policies]"
+argument-hint: "[CourseCode] [course title or topic/reading list] [--weeks N] [--level phd|grad|undergrad] [--sessions-per-week N] [--no-policies]"
 allowed-tools: ["Read", "Grep", "Glob", "Write"]
 effort: medium
 ---
@@ -20,8 +20,9 @@ Not for building the slides themselves (`/create-lecture`), reviewing a deck's p
 
 ## Phase 0: Intake (elicit before drafting)
 
-A syllabus is shaped almost entirely by three parameters. Resolve them first — from flags, then by asking. Do **not** start sequencing until all three are pinned.
+A syllabus is shaped almost entirely by four parameters. Resolve them first — from flags, then by asking. Do **not** start sequencing until all four are pinned.
 
+0. **Course code** — the short code this course will be filed under (e.g. `CS401`, `MATH201`). Everything downstream (`syllabi/<CODE>.md`, `Slides/<CODE>/`, `Quarto/<CODE>/`, `.claude/rules/knowledge-base-<CODE>.md`) keys off it, so pin it before drafting. If unstated and not inferable, ask.
 1. **Level + audience** — `--level` (`phd` / `grad` / `undergrad`). For economics, name the sequence (first-year metrics, micro theory, macro, field course, undergrad intermediate). Level sets reading depth, proof-vs-application balance, and assessment type.
 2. **Length + cadence** — `--weeks` (default 14) and `--sessions-per-week` (default 2). A reading seminar and a problem-set course at the same length need very different schedules.
 3. **Material** — the topic list or reading list (`$ARGUMENTS`, a file path, or a `.bib`). If the user points at a `.bib` or a folder of PDFs, `Glob`/`Read` to inventory it; if topics are bare, ask for 1-2 anchor texts per topic.
@@ -48,7 +49,7 @@ Echo a short **Intake Report** (level, weeks, cadence, N topics / N readings, an
 
 ## Output format
 
-Write to `syllabus.md` (or a user-specified path):
+Write to `syllabi/<CourseCode>.md` (or a user-specified path):
 
 ```markdown
 # [Course title] — [Term, Year]
@@ -82,8 +83,8 @@ By the end of this course, students will be able to:
 Late work · AI / LLM use · academic integrity · accessibility / accommodations · attendance.
 
 ## Week → lecture work-list (hand to `/create-lecture`)
-| Week | Deck name | Objective(s) | Anchor reading |
-|------|-----------|--------------|----------------|
+| Week | Deck name (`<CourseCode>/NN-topic`) | Objective(s) | Anchor reading |
+|------|-------------------------------------|--------------|-----------------|
 ```
 
 End the chat message (not the file) with a **gap summary**: weeks with no reading, objectives not assessed, deliverable collisions, or topics dropped for lack of time — the instructor decides how to resolve each.
@@ -97,7 +98,7 @@ End the chat message (not the file) with a **gap summary**: weeks with no readin
 
 ## Exit behavior
 
-- Phase 0 halts until level, length, and material are all resolved — a forked or unattended run never guesses these. If the material is empty, ask for a topic/reading list and stop.
+- Phase 0 halts until course code, level, length, and material are all resolved — a forked or unattended run never guesses these. If the material is empty, ask for a topic/reading list and stop.
 - Each phase gates on user sign-off (schedule before objectives, objectives before policies); re-ordering is offered cheaply at Phase 1.
 - The deliverable is the syllabus file plus the work-list; the chat message always carries the gap summary, even when empty (`No gaps — every week has a reading and every objective is assessed.`).
 - This skill is text-only; it never compiles, renders, or builds slides.

@@ -93,7 +93,7 @@ def uncompiled(project_dir: str) -> list[str]:
     for src, out_ext in ((root / "Slides", ".pdf"), (root / "Quarto", ".html")):
         if not src.is_dir():
             continue
-        for f in src.glob("*.tex" if out_ext == ".pdf" else "*.qmd"):
+        for f in src.rglob("*.tex" if out_ext == ".pdf" else "*.qmd"):
             out = f.with_suffix(out_ext)
             try:
                 if not out.exists() or f.stat().st_mtime > out.stat().st_mtime:

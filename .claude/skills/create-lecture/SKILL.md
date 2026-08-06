@@ -1,7 +1,7 @@
 ---
 name: create-lecture
 description: Create a new Beamer lecture `.tex` from source papers and materials, with notation consistency checks and the project's preamble wired in. Use when user says "create a lecture on X", "new lecture from these papers", "start a deck on topic Y", "scaffold a new Beamer file", "build me a lecture from these PDFs". Scaffolds the full deck — NOT for compiling existing `.tex` (use `/compile-latex`).
-argument-hint: "[Topic name]"
+argument-hint: "[CourseCode/Topic name], e.g. CS401/07-microprogrammed-control"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 context: fork
 disable-model-invocation: true
@@ -34,13 +34,18 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 
 ### Phase 0: Intake & Context (Pre-Flight Report required)
 
+**Resolve the course code first.** `$ARGUMENTS` is `<CODE>/<Topic name>` (e.g. `CS401/07-microprogrammed-control`). If no `<CODE>/` prefix is given and it isn't obvious from context (only one course exists in `Slides/`), ask which course this lecture belongs to before proceeding — every lecture lives under `Slides/<CODE>/`, and guessing wrong means scaffolding in the wrong place.
+
+Once `<CODE>` is known, locate `.claude/rules/knowledge-base-<CODE>.md`. If it doesn't exist, this is that course's first lecture: copy `.claude/rules/knowledge-base-template.md`, replace `[COURSE_CODE]`/`[COURSE NAME]`, and write it to `.claude/rules/knowledge-base-<CODE>.md` before continuing (see "First-lecture fallback" below).
+
 Read the inputs, then produce a Pre-Flight Report in your response before Phase 1 starts.
 
 Inputs to read:
-- `.claude/rules/knowledge-base-template.md` — notation registry, narrative arc, applications
+- `.claude/rules/knowledge-base-<CODE>.md` — notation registry, narrative arc, applications for this course, including its Anchor Textbooks table
 - `.claude/rules/content-invariants.md` — INV-1..INV-8 govern slide content
+- `master_supporting_docs/<CODE>/supporting_books/*/index.md` (if any exist) — page-cited definitions/theorems/key-terms for this course's anchor textbooks. When a chapter is indexed, cite the specific page (per `.claude/rules/textbook-grounding.md`); when it isn't, phrase textbook-attributed claims as general/standard treatment — never invent a page number.
 - Any source papers / existing slides the user provided
-- The previous lecture's `.tex` (last section + ending slide) if one exists
+- The previous lecture's `.tex` in `Slides/<CODE>/` (last section + ending slide) if one exists
 
 Required Pre-Flight Report block:
 
@@ -65,14 +70,14 @@ Required Pre-Flight Report block:
 
 State the pedagogical goal, get user confirmation, then proceed.
 
-**First-lecture fallback (fresh fork, empty knowledge base).** If `.claude/rules/knowledge-base-template.md` still has unfilled placeholder tables (no notation registry entries, no applications, no prior lectures in `Slides/`), do NOT halt waiting for it. Instead:
+**First-lecture fallback (new course, no knowledge base yet).** If `.claude/rules/knowledge-base-<CODE>.md` was just bootstrapped from the template and still has unfilled placeholder tables (no notation registry entries, no applications, no prior lectures in `Slides/<CODE>/`), do NOT halt waiting for it. Instead:
 
-1. Acknowledge the template is empty and we're creating the course's first lecture.
+1. Acknowledge this is the course's first lecture and the KB is empty.
 2. Propose a **minimal starter knowledge base** from the user's topic: 5-8 key symbols with conventions, 1-2 running applications, a short narrative arc (intro → main idea → implications). Present for approval.
-3. Write the approved stub into the knowledge base template so subsequent lectures inherit it.
+3. Write the approved stub into `.claude/rules/knowledge-base-<CODE>.md` so subsequent lectures in this course inherit it. Its `paths:` frontmatter should already scope it to `Slides/<CODE>/**/*.tex` and `Quarto/<CODE>/**/*.qmd` from the template — don't widen it to match other courses.
 4. Continue to Phase 1.
 
-This prevents `/create-lecture` from deadlocking for every new forker.
+This prevents `/create-lecture` from deadlocking for every new forker or new course.
 
 ### Phase 1: Paper Analysis (When Papers Provided)
 - Split into chunks, extract key ideas
@@ -87,6 +92,7 @@ This prevents `/create-lecture` from deadlocking for every new forker.
 - **GATE: User approves before Phase 3**
 
 ### Phase 3: Draft Slides (Iterative)
+- Scaffold the file at `Slides/<CODE>/<Topic name>.tex`, with `\coursecode{<CODE>}` set right after `\input{header}` (see `Preambles/header.tex`) so the course code shows in the footer of every slide
 - Work in batches of 5-10 slides
 - Check notation, apply creation patterns
 - Quality checks during drafting
@@ -101,6 +107,7 @@ This prevents `/create-lecture` from deadlocking for every new forker.
 - Run Devil's Advocate
 - Run Substance Review (if domain reviewer configured)
 - Update knowledge base with new notation
+- Hand the finished, compiled deck to [`/lecture-notes`](../lecture-notes/SKILL.md) `<CODE>/<topic>` to generate the matching prose Notes, then [`/qa-notes`](../qa-notes/SKILL.md) to check Beamer↔Notes parity (loop until dry, same primitive as `/qa-quarto`)
 
 ---
 
@@ -118,11 +125,16 @@ This prevents `/create-lecture` from deadlocking for every new forker.
 [ ] New notation added to knowledge base
 [ ] Session log updated
 [ ] Devil's Advocate run
+[ ] Lecture Notes generated (`/lecture-notes`) and `/qa-notes` parity check passed
+[ ] Textbook-attributed claims traced to an indexed page, or explicitly marked general/standard treatment (not invented page numbers)
 ```
 
 ## Cross-references
 
 - [`.claude/skills/translate-to-quarto/SKILL.md`](../translate-to-quarto/SKILL.md) — port the finished Beamer deck to a Quarto RevealJS mirror.
 - [`.claude/skills/qa-quarto/SKILL.md`](../qa-quarto/SKILL.md) — adversarial Beamer↔Quarto parity (loop-until-dry).
+- [`.claude/skills/lecture-notes/SKILL.md`](../lecture-notes/SKILL.md) — expand the finished deck into prose Lecture Notes.
+- [`.claude/skills/qa-notes/SKILL.md`](../qa-notes/SKILL.md) — adversarial Beamer↔Notes parity (loop-until-dry).
+- [`.claude/skills/index-textbook/SKILL.md`](../index-textbook/SKILL.md) — build the page-cited index this course's `supporting_books/*/index.md` inputs come from.
 - [`.claude/skills/deploy/SKILL.md`](../deploy/SKILL.md) — render + publish the lecture to GitHub Pages.
 - [`.claude/skills/scaffold-exercises/SKILL.md`](../scaffold-exercises/SKILL.md) — problem sets + solutions to accompany the lecture.

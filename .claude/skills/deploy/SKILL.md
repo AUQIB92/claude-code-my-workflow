@@ -1,7 +1,7 @@
 ---
 name: deploy
 description: Render Quarto `.qmd` slides to HTML and sync to `docs/` for GitHub Pages. Use when user says "deploy", "publish the slides", "ship to pages", "push the lecture live", "render and publish", or after Quarto edits that need to go public. NOT for local Quarto render only — use `quarto render` directly for that.
-argument-hint: "[LectureN or 'all']"
+argument-hint: "[CourseCode, CourseCode/lecture, or omit for 'all']"
 allowed-tools: ["Read", "Bash"]
 ---
 
@@ -12,11 +12,12 @@ Render Quarto slides and sync all files to `docs/` for GitHub Pages deployment.
 ## Steps
 
 1. **Run the sync script:**
-   - If `$ARGUMENTS` is provided (e.g., "Lecture4"): `./scripts/sync_to_docs.sh $ARGUMENTS`
-   - If no argument: `./scripts/sync_to_docs.sh` (syncs all lectures)
+   - Whole course (e.g., "CS401"): `./scripts/sync_to_docs.sh CS401`
+   - One lecture (e.g., "CS401/05-addressing-cpu-bus"): `./scripts/sync_to_docs.sh CS401/05-addressing-cpu-bus`
+   - No argument: `./scripts/sync_to_docs.sh` (syncs every course)
 
 2. **Verify deployment:**
-   - Check that HTML files exist in `docs/slides/`
+   - Check that HTML files exist in `docs/slides/<CourseCode>/`
    - Check that `_files/` directories were copied (RevealJS assets)
    - Check that `docs/Figures/` was synced from `Figures/`
 
@@ -25,17 +26,17 @@ Render Quarto slides and sync all files to `docs/` for GitHub Pages deployment.
    - Confirm count matches expected
 
 4. **Verify TikZ SVGs** (if applicable):
-   - Check that all referenced SVG files exist in `docs/Figures/LectureN/`
+   - Check that all referenced SVG files exist in `docs/Figures/<CourseCode>/<lecture>/`
 
 5. **Open in browser** for visual verification:
-   - `open docs/slides/LectureX_Name.html`          # macOS
-   - `# xdg-open docs/slides/LectureX_Name.html`    # Linux
+   - `open docs/slides/CS401/05-addressing-cpu-bus.html`          # macOS
+   - `# xdg-open docs/slides/CS401/05-addressing-cpu-bus.html`    # Linux
    - Confirm slides render, images display, navigation works
 
 6. **Report results** to the user
 
 ## What the sync script does:
-- Renders all `.qmd` files in `Quarto/` (skips `*_backup*` files)
-- Copies HTML and `_files/` directories to `docs/slides/`
-- Copies Beamer PDFs from `Slides/` to `docs/slides/`
-- Syncs `Figures/` to `docs/Figures/` using rsync
+- Recursively finds `.qmd` files under `Quarto/` (skips `*_backup*` files), matched against the argument if given
+- Renders each match, copies its HTML and `_files/` directory to `docs/slides/<same subpath as under Quarto/>`
+- Recursively finds Beamer PDFs under `Slides/` and copies each to the matching `docs/slides/<same subpath as under Slides/>`
+- Syncs `Figures/` to `docs/Figures/` using rsync (mirrors whatever course/lecture nesting exists)
