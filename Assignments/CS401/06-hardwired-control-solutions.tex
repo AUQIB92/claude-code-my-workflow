@@ -1,0 +1,77 @@
+% =============================================================================
+% Assignments/CS401/06-hardwired-control-solutions.tex
+% Assignment 6 Solution Key: Hardwired Control Unit Design
+% Mirrors 06-hardwired-control-assignment.tex's numbering.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-solutions.tex
+%   BIBINPUTS=../..:$BIBINPUTS bibtex 06-hardwired-control-solutions
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-solutions.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Assignment 6 --- Solution Key\\\large Hardwired Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Conceptual}
+
+\textbf{Q1.} $D_i$ alone identifies \emph{which instruction} is running, but says nothing about \emph{when} in that instruction's execution we are; $T_j$ alone identifies \emph{which step} is active, but says nothing about \emph{which instruction} is running. A signal like $Y_{\text{in}}$ must fire at $T_1$ for \texttt{ADD} but must \emph{not} fire at $T_1$ for, say, \texttt{LOAD}, which needs something different at its own $T_1$. Only the conjunction $D_{\text{ADD}} \cdot T_1$ correctly captures ``this is \texttt{ADD}, and we are at its first step'' --- neither factor alone can express that.
+
+\textbf{Q2.} Without $SC_{\text{clear}}$, \texttt{SC} would simply keep incrementing forever after an instruction's last step ($T_4, T_5, \dots$), since nothing resets it back to 0. The step decoder would dutifully produce one-hot lines for these later steps, but no instruction's state table defines any control signals for $T_4$ or beyond, so the datapath would simply idle: no signal would fire, and the next instruction would never be fetched. The CPU would therefore execute exactly \textbf{one instruction} and then freeze --- $SC_{\text{clear}}$ is what allows the control unit to cycle through a program at all.
+
+\section{Numerical}
+
+\textbf{Q3.} 12 instructions need \textbf{12 one-hot $D_i$ lines} (one output line per instruction, by definition of one-hot encoding). The opcode field needs $\lceil \log_2 12 \rceil = \textbf{4 bits}$ (4 bits address up to 16 distinct codes, which is the smallest power of two $\geq 12$; 3 bits would only address 8, which is insufficient).
+
+\textbf{Q4.} A 5-bit \texttt{SC} can hold $2^5 = \textbf{32}$ distinct binary values, so it can address up to \textbf{32 distinct control steps} ($T_1$ through $T_{32}$ in this course's 1-indexed convention).
+
+\section{Design}
+
+\textbf{Q5.} \texttt{SUB} has the identical three-step shape as \texttt{ADD}, differing only in the ALU function selected at $T_2$:
+
+\begin{center}
+\small
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{Step} & \textbf{RTL} & \textbf{Control signals active} \\
+\midrule
+$T_1$ & $Y \gets [\text{R5}]$ & $R5_{\text{out}}, Y_{\text{in}}$ \\
+$T_2$ & $Z \gets [Y] - [\text{R6}]$ & $R6_{\text{out}}$, ALU$=$subtract, $Z_{\text{in}}$ \\
+$T_3$ & $R4 \gets [Z]$ & $Z_{\text{out}}, R4_{\text{in}}, SC_{\text{clear}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Boolean equations (opcode line $D_{\text{SUB}}$):
+\[
+Y_{\text{in}} = D_{\text{SUB}} \cdot T_1, \quad
+Z_{\text{in}} = D_{\text{SUB}} \cdot T_2, \quad
+R4_{\text{in}} = D_{\text{SUB}} \cdot T_3, \quad
+SC_{\text{clear}} = D_{\text{SUB}} \cdot T_3.
+\]
+(If \texttt{ADD} also asserts $Z_{\text{in}}$ at its own $T_2$, as in the lecture's worked example, the full equation for $Z_{\text{in}}$ across both instructions is $Z_{\text{in}} = (D_{\text{ADD}} \cdot T_2) + (D_{\text{SUB}} \cdot T_2)$, following the same OR-across-instructions pattern.)
+
+\textbf{Q6.} State table for \texttt{LOAD R1, (R2)}:
+\begin{center}
+\small
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{Step} & \textbf{RTL} & \textbf{Control signals active} \\
+\midrule
+$T_1$ & $\text{MAR} \gets [\text{R2}]$ & $R2_{\text{out}}, \text{MAR}_{\text{in}}$ \\
+$T_2$ & $R1 \gets M[\text{MAR}]$ & $\text{MemRead}, R1_{\text{in}}, SC_{\text{clear}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$\text{MAR}_{\text{in}}$ fires only at $D_{\text{LOAD}} \cdot T_1$, so if no other instruction's state table lists $\text{MAR}_{\text{in}}$ at $T_1$, the equation is simply $\text{MAR}_{\text{in}} = D_{\text{LOAD}} \cdot T_1$, realized as a \textbf{single AND gate} with inputs $D_{\text{LOAD}}$ and $T_1$ and output $\text{MAR}_{\text{in}}$ --- no OR gate is needed unless a second instruction shares this exact signal at this exact step, in which case a second AND gate (for that instruction's $D_i \cdot T_1$ term) would feed the same OR gate, following the pattern established for $Z_{\text{in}}$ in the lecture.
+
+\end{document}

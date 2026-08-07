@@ -1,0 +1,90 @@
+% =============================================================================
+% InstructorHandouts/CS401/05-addressing-cpu-bus-instructor-handout.tex
+% Instructor Handout 5: Addressing Modes, CPU Organization, and Bus Structures
+%
+% INSTRUCTOR-ONLY. Not derived-for-students like Notes/Assignments' student
+% set — this is teaching prep. Extra worked examples and the self-study
+% reading list are grounded exactly like Notes (nothing invented, page-cited
+% where indexed); the Teaching Notes section is instructor judgment, labeled
+% as such, not fact-checkable content.
+%
+% Compile with: cd InstructorHandouts/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-instructor-handout.tex
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Instructor Handout 5: Addressing Modes, CPU Organization, and Bus Structures}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+{\centering\large\color{negative}\textbf{Instructor Copy --- Not for Student Distribution}\par}
+\vspace{0.5cm}
+
+\section{Before You Teach This Lecture}
+
+\begin{itemize}
+  \item \textbf{Mano, \textit{Computer System Architecture}, 3rd ed., Sec.~8-5 ``Addressing Modes,'' pp.~256--266} (indexed, page-cited). Read the book's own worked numerical example (Fig.~8-7) --- it gives you a second, book-native worked instance to fall back on if a student's question needs a different set of numbers than the ones in the slides or below.
+  \item \textbf{Mano, Sec.~8-2 ``General Register Organization,'' pp.~242--246} (indexed). This is the section Fig.~8-2 (``Registers with common ALU'') actually comes from --- read it once so you can explain \texttt{SELA}/\texttt{SELB}/\texttt{SELD} confidently if a student asks where those labels in the three-bus diagram come from.
+  \item \textbf{Mano, Fig.~5-4, p.~129} (indexed at the figure level; the surrounding Sec.~5-2 is not yet fully indexed). This is the real single-bus/common-bus-system figure the lecture's single-bus datapath is styled on.
+  \item \textbf{Hamacher, \textit{Computer Organization}, Ch.~7} --- \emph{not yet page-indexed for this course} (the supplied PDF has no text layer). Cite it only at chapter level with students; do not improvise a page number.
+\end{itemize}
+
+\section{Extra Worked Examples}
+
+These are additional instances beyond the one worked example each topic already has in the student Notes --- use them for board practice, a quiz, or to answer ``can you do a different one'' on the spot.
+
+\subsection{Addressing Modes: Autoincrement}
+
+\texttt{ADD R1, (R3)+} with $[\text{R3}] = 500$ and an operand size of 4 bytes.
+\begin{enumerate}
+  \item The mode is autoincrement, so $\text{EA} = [\text{R3}]$ \emph{before} the increment: $\text{EA} = 500$.
+  \item The operand is fetched from $M[500]$ and used in the \texttt{ADD}.
+  \item \emph{As a side effect}, \texttt{R3} is then incremented by the operand size: $[\text{R3}] \gets 500 + 4 = 504$.
+\end{enumerate}
+\textbf{Instructor note:} the point worth drawing out live is that the increment happens \emph{after} $\text{EA}$ is used, not before --- students conflate autoincrement with pre-increment addressing (which this course does not cover, but which students sometimes assume by analogy to \texttt{++i} vs.\ \texttt{i++} in C).
+
+\subsection{Single-Bus: A Different Register Pair}
+
+Trace \texttt{R7} $\gets$ \texttt{R0 + R1} on the single-bus datapath.
+\[
+T_1: Y \gets [\text{R0}], \qquad T_2: Z \gets [Y] + [\text{R1}], \qquad T_3: R7 \gets [Z].
+\]
+Still \textbf{3 control steps} --- worth stating explicitly that the register \emph{names} never affect the step count; only the operation's shape (two operands, one ALU op, one result) does.
+
+\subsection{Three-Bus: A Subtraction}
+
+Trace \texttt{R2} $\gets$ \texttt{R6} $-$ \texttt{R7} on the three-bus datapath: $A = [\text{R6}]$, $B = [\text{R7}]$, $C = $ result, ALU set to subtract, all in \textbf{1 control step}. Useful for pre-empting the (common) assumption that the three-bus organization's speed only applies to addition.
+
+\section{Teaching Notes}
+
+\textit{These are instructional suggestions grounded in this lecture's own content and general teaching craft --- not facts to be tested, and not independently citation-checked the way the worked examples and reading list above are. Adapt freely to your own classroom.}
+
+\subsection{Addressing Modes}
+\begin{itemize}
+  \item \textbf{Common misconception:} students frequently conflate indirect addressing (pointer in \emph{memory}) with register-indirect addressing (pointer in a \emph{register}) --- both ``follow a pointer,'' but only indirect costs two memory reads. Ask a cold-call question early: ``which one is cheaper, and why?''
+  \item \textbf{Board work:} draw the indirect-addressing chain (instruction $\to M[A] \to M[B] \to$ operand) live, one box at a time, rather than showing it pre-drawn --- the two-hop structure lands better when built incrementally.
+  \item \textbf{Live question:} ``What would autoincrement addressing look like if it took two separate instructions instead of one?'' (Answer: a register-indirect load, followed by a separate increment instruction --- this motivates \emph{why} the side-effect mode exists: it saves an instruction per loop iteration.)
+\end{itemize}
+
+\subsection{Single-Bus Organization}
+\begin{itemize}
+  \item \textbf{Common misconception:} students often read \texttt{Y} and \texttt{Z} as arbitrary extra complexity rather than a \emph{forced consequence} of the one-bus constraint. Before introducing them, ask: ``the ALU needs two operands this cycle, but the bus can carry one --- where does the first operand wait?'' and let the answer motivate \texttt{Y} before you name it.
+  \item \textbf{Board sequence:} draw the common bus and its four top registers first; add \texttt{Y}/ALU/\texttt{Z} \emph{below} only after the ``where does it wait'' question has been asked --- drawing the whole diagram at once tends to make \texttt{Y}/\texttt{Z} look decorative rather than necessary.
+  \item \textbf{Pacing:} this is the derivation most sections need a second pass on. Consider a fast first pass through the 3-step trace, then a slower second pass where you ask the class to supply each $T_i$ line themselves.
+\end{itemize}
+
+\subsection{Multiple-Bus Organization}
+\begin{itemize}
+  \item \textbf{Common misconception:} students sometimes attribute the three-bus design's speed to ``a faster ALU'' rather than to parallel \emph{read} paths. Explicitly contrast: same ALU, same clock, different wiring.
+  \item \textbf{Live question:} ``Why not build a CPU with ten buses instead of three?'' before showing the corresponding slide --- most classes converge on ``more wiring cost'' unprompted, which sets up the design-space-limits discussion well.
+\end{itemize}
+
+\end{document}

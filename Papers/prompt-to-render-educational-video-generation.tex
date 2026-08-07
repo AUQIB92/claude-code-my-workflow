@@ -1,0 +1,169 @@
+% =============================================================================
+% Papers/prompt-to-render-educational-video-generation.tex
+%
+% From Prompt to Render: Architectures, Benchmarks, and Evaluation Gaps in
+% LLM-Based Educational Video Generation
+%
+% Standalone research survey (IEEE conference format). Not part of the CS401
+% coursework tree -- lives in Papers/, independent of Slides/Quarto/Notes.
+%
+% Source material: quality_reports/lit_review_prompt_to_render_educational_
+% video_generation.md -- 15 papers, independently verified via a forked
+% claim-verifier pass (CoVe) before this manuscript was drafted from it.
+%
+% Compile with:
+%   cd Papers
+%   xelatex -interaction=nonstopmode prompt-to-render-educational-video-generation.tex
+%   bibtex prompt-to-render-educational-video-generation
+%   xelatex -interaction=nonstopmode prompt-to-render-educational-video-generation.tex
+%   xelatex -interaction=nonstopmode prompt-to-render-educational-video-generation.tex
+% =============================================================================
+
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\begin{document}
+
+\title{From Prompt to Render: Architectures, Benchmarks, and Evaluation Gaps in LLM-Based Educational Video Generation}
+
+\author{
+\IEEEauthorblockN{Dr. Auqib Hamid Lone}
+\IEEEauthorblockA{Department of Computer Science \& Engineering\\
+Government College of Engineering \& Technology (GCET), Ganderbal\\
+% Email intentionally left as a placeholder -- fill in before submission.
+Email: \texttt{[your-email]@gcetganderbal.ac.in}}
+}
+
+\maketitle
+
+\begin{abstract}
+Large language models are increasingly used not only to draft educational text but to orchestrate the generation of entire instructional videos, slide decks, and narrated lectures. This survey examines that shift along three axes: the \emph{architectures} used to go from a prompt to a rendered artifact, the \emph{benchmarks} used to compare systems, and the \emph{gaps} between what current evaluation measures and what pedagogical effectiveness actually requires. We find that the field has moved decisively away from end-to-end, pixel-space text-to-video generation toward agentic pipelines that decompose the task into checkable intermediates -- executable scripts, code, or editable slides -- specifically because raw video diffusion offers no mechanism to guarantee factual or logical correctness. Benchmarking has bifurcated accordingly: mature, general-purpose video-quality suites (VBench, EvalCrafter) coexist with a new generation of education-specific benchmarks (SlidesBench, MMMC/TeachQuiz, the Paper2Video benchmark) that attempt, for the first time, to measure knowledge transfer rather than visual fidelity. The central finding of this review is that, of nineteen recent systems and benchmarks surveyed, only one reports a controlled human-subject study of learning outcomes and only one reports a real classroom deployment with student-perceived quality judgments; the remainder evaluate the generated artifact, not the learner. We argue this is the field's most consequential open problem and outline concrete next steps -- cross-system human-subject studies, validation of LLM-as-judge knowledge-transfer proxies against human performance, and dedicated factuality and accessibility metrics -- that would close it.
+\end{abstract}
+
+\begin{IEEEkeywords}
+educational video generation, large language models, multi-agent systems, text-to-video, learning outcomes evaluation, video generation benchmarks
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Producing an educational video has traditionally meant hours of slide design, scripting, recording, and editing for a handful of minutes of finished content. Over the past two years, large language models (LLMs) have been proposed as a way to compress that pipeline: given a topic, a document, or a scientific paper, an LLM-driven system now routinely produces a full instructional video, complete with slides, narration, and in some cases a synthetic on-screen presenter. The pace of publication in this space has accelerated sharply -- the majority of the systems surveyed in this paper appeared within a twelve-month window -- and the underlying architectural philosophy has shifted just as quickly.
+
+Early text-to-video systems treated video generation as a single, end-to-end pixel-synthesis problem: a diffusion or transformer-based model consumes a prompt and emits a video directly. That approach is well suited to open-ended, creative video generation, but it is poorly suited to education, where a video's value depends on whether its claims are correct and whether its explanation is logically sound -- properties that pixel-space generation has no mechanism to guarantee or even check. The literature surveyed here shows the field responding to this mismatch by abandoning end-to-end generation almost entirely for educational use cases, in favor of \emph{agentic} pipelines that insert a structured, human- or machine-checkable intermediate representation (a script, a graph, executable code, or an editable slide deck) between the LLM and the final rendered output.
+
+This survey is organized around three questions that we argue must be answered together, not separately, to understand the current state of the field:
+
+\begin{enumerate}
+\item \textbf{Architectures} (Section~\ref{sec:architectures}): What computational pipelines are actually used to go from a prompt to a rendered educational video or presentation, and what problem does each design choice solve?
+\item \textbf{Benchmarks} (Section~\ref{sec:benchmarks}): What datasets and evaluation suites exist to compare these systems, and along what dimensions do they actually measure quality?
+\item \textbf{Evaluation gaps} (Section~\ref{sec:gaps}): Where does the field's evaluation practice diverge from what pedagogical effectiveness actually requires, and how large is that divergence in the current literature?
+\end{enumerate}
+
+Our review of nineteen systems, benchmarks, and surveys published primarily in 2025--2026 finds a clear and consistent answer to the third question: evaluation practice in this field overwhelmingly measures properties of the generated \emph{artifact} -- visual quality, design coherence, textual similarity to a reference -- rather than properties of the \emph{learner} who watches it. Section~\ref{sec:gaps} quantifies this claim and Section~\ref{sec:discussion} argues it is the single highest-leverage open problem for future work in this area.
+
+\section{Architectures: From Pixel Synthesis to Structured Intermediates}
+\label{sec:architectures}
+
+\subsection{The Decomposition Principle}
+
+The architectural throughline across nearly every system surveyed in this paper is decomposition. Rather than a single model mapping a prompt directly to pixels, each system inserts a checkable, editable, or executable intermediate representation between the language model and the rendered output, and evaluates or critiques that intermediate before rendering proceeds. This design choice recurs across otherwise very different systems and appears to be the field's dominant response to the correctness problem that end-to-end video diffusion cannot solve.
+
+\subsection{Script and Event-Graph Intermediates}
+
+Yan et al.\ propose LASEV, a hierarchical multi-agent system built around an Orchestrating Agent that supervises three specialized subordinates -- a Solution Agent, an Illustration Agent, and a Narration Agent \cite{yan2026lasev}. Rather than synthesizing pixels directly, LASEV constructs "a structured executable video script" that is deterministically compiled into the final video. The authors motivate this design explicitly by the failure of end-to-end video models on "scenarios that require strict logical rigor and precise knowledge representation," and report production at over one million videos per day with more than a 95\% cost reduction relative to industry-standard approaches. These figures speak to scale and cost efficiency; as Section~\ref{sec:gaps} discusses, they say nothing about whether the resulting videos teach effectively.
+
+\subsection{Code Intermediates}
+
+Chen, Lin, and Shou take decomposition a step further with Code2Video, which uses a Planner--Coder--Critic agent pipeline to produce \emph{executable code} (Manim, a Python animation library) rather than a script or event graph \cite{chen2025code2video}. The Planner structures lecture content into a temporally coherent flow and prepares visual assets; the Coder converts that structure into executable Python with a scope-guided auto-fix loop; and the Critic, a vision-language model conditioned on "visual anchor prompts," refines spatial layout before final rendering. Because the intermediate artifact is source code, it inherits software engineering's reproducibility and editability properties in a way pixel-based or even script-based intermediates do not. Code2Video reports a 40\% improvement over direct code generation without the Planner--Critic loop, evaluated on a new benchmark (MMMC) discussed in Section~\ref{sec:benchmarks}.
+
+\subsection{Multimodal Channel Decomposition}
+
+A third decomposition strategy splits the output into independent, separately generated and separately alignable channels. Zhu, Lin, and Shou's Paper2Video introduces PaperTalker, a multi-agent framework that generates slides, subtitles, synthesized speech, and talking-head video as coordinated but distinct channels, with slide-wise generation parallelized for efficiency \cite{zhu2025paper2video}. Islam, Manik, and Wang's ALIVE follows a related pattern for live lecture delivery, combining avatar-delivered explanation, a content-aware retrieval mechanism that fuses semantic similarity with timestamp alignment, and a real-time question-answering channel, all designed to run on local hardware for classroom deployment \cite{islam2025alive}. Holmberg's system for generating narrated lecture videos from existing slide decks similarly treats narration and visual highlighting as separate, alignable channels, using a highlight-alignment module that combines Levenshtein-distance matching with LLM-based semantic alignment at configurable granularity \cite{holmberg2025lectures}.
+
+\subsection{Slide-Centric Pipelines}
+
+A large cluster of systems treats the slide deck itself as the primary generated artifact, with video (if produced at all) as a downstream rendering step. PPTAgent uses a two-stage, edit-based methodology: it first analyzes reference presentations to extract slide-level functional types and content schemas, then drafts an outline and iteratively generates editing actions rather than pixels \cite{zheng2025pptagent}. AutoPresent, an eight-billion-parameter Llama-based model, generates slides as executable code and is reported to achieve results comparable to GPT-4o on this task, reinforcing the pattern -- also seen in Code2Video -- that programmatic generation outperforms direct image generation for structured visual content \cite{autopresent2025}. PASS extends this line of work beyond academic papers to arbitrary source documents, producing both slides and synthetic narration from a general Word document \cite{aggarwal2025pass}.
+
+\subsection{The Diminishing Role of General-Purpose Text-to-Video Backbones}
+
+General-purpose diffusion and transformer-based text-to-video models -- Sora, VideoPoet, CogVideoX, and open pipelines such as ModelScope and VideoCrafter2 -- remain active areas of research in their own right and, in some pipelines, still serve as the final rendering substrate. However, essentially none of the education-specific systems reviewed above treats such a model as the \emph{entire} pipeline. This is the paper's first architectural claim: agentic decomposition, not end-to-end pixel generation, is now the dominant architecture for LLM-based educational video generation, precisely because decomposition is what makes intermediate correctness checking possible.
+
+\section{Benchmarks and Datasets}
+\label{sec:benchmarks}
+
+\subsection{General-Purpose Video-Generation Benchmarks}
+
+Two benchmarks dominate general text-to-video evaluation. VBench, introduced by Huang et al.\ at CVPR 2024, decomposes "video generation quality" into sixteen hierarchical, disentangled dimensions -- among them subject consistency, motion smoothness, temporal flickering, and spatial relationships -- each with tailored prompts and automated evaluators validated against human perceptual judgments \cite{huang2024vbench}; an extended version, VBench++, broadens this evaluation suite further \cite{huang2024vbenchpp}. EvalCrafter, also published at CVPR 2024, takes a complementary approach, combining seventeen objective metrics spanning visual quality, content, and motion with subjective human ratings to produce a reliable cross-model ranking \cite{liu2024evalcrafter}. Both benchmarks are methodologically mature and widely adopted for their stated purpose. Neither, however, includes a dimension that measures the factual correctness of spoken or depicted content, or a viewer's comprehension of it -- an omission that is unsurprising given both were designed for general-purpose video generation, but one that matters a great deal once these benchmarks are used, as they routinely are, to justify claims about educational systems built on the same backbones.
+
+\subsection{Education-Specific Benchmarks}
+
+A second, much younger generation of benchmarks has emerged specifically to address this gap. SlidesBench, introduced alongside AutoPresent, comprises roughly seven thousand training and 585 testing examples drawn from 310 real slide decks across ten domains, and supports both reference-based evaluation (similarity to a target deck) and reference-free evaluation (design quality judged on its own terms) \cite{autopresent2025}. Code2Video introduces MMMC, a benchmark of professionally produced, discipline-specific educational videos, evaluated along VLM-as-judge aesthetic scores, code efficiency, and a novel metric called TeachQuiz \cite{chen2025code2video}. TeachQuiz works by having a vision-language model "unlearn" a concept and then measuring how much of that knowledge it recovers after watching the generated video -- the closest analogue in this literature to a genuine knowledge-transfer metric. Paper2Video introduces the largest and most metric-diverse benchmark found in this survey: 101 research papers paired with author-created presentation videos, slides, and speaker metadata, evaluated with four purpose-built metrics -- Meta Similarity, PresentArena, PresentQuiz, and IP Memory -- the last of which specifically measures whether a generated video preserves a paper's key claims \cite{zhu2025paper2video}. PresentQuiz follows the same architectural pattern as TeachQuiz: a quiz-based, model-judged proxy for whether the video conveys its intended content.
+
+\subsection{The Meta-Survey Perspective}
+
+Liu, Xiang, Li, and colleagues' survey formally establishes "AI-Generated Video Evaluation" (AIGVE) as a distinct research problem, taxonomizing existing approaches into metric-based, human-involved, and emerging model-centered (LLM/VLM-as-judge) evaluation, and explicitly arguing that current frameworks remain insufficient for video's complex spatial and temporal dynamics \cite{liu2024aigve}. This survey's own findings, detailed next, can be read as a narrowing of that broader AIGVE critique to the specific axis the general survey does not focus on: pedagogical effectiveness.
+
+\section{Evaluation Gaps}
+\label{sec:gaps}
+
+\subsection{What Is Measured, Ranked by Frequency}
+
+Table~\ref{tab:eval-taxonomy} ranks the evaluation approaches found across the nineteen systems, benchmarks, and surveys reviewed in this paper, from most to least common. Visual and production quality (VBench, EvalCrafter, the design dimension of PPTAgent's PPTEval) is measured almost universally. Structural and design coherence (PPTEval's coherence dimension, SlidesBench's design-quality track) and textual similarity to a reference (SlidesBench's reference-based track, Paper2Video's Meta Similarity, PASS's relevance/coherence/redundancy scoring) are also common. Knowledge-transfer proxies via an LLM or VLM judge -- TeachQuiz and PresentQuiz -- are present but rare, and, notably, neither paper that introduces one of these metrics reports a validation study correlating the judge model's score with actual human performance. Dedicated, reported factual-accuracy metrics applied to a system's own generated educational content are effectively absent from every generation-system paper surveyed. Actual human learning outcomes, measured in a controlled comparison, appear in exactly one paper. Real classroom deployment with human quality judgments appears in exactly one additional paper. Accessibility -- captioning quality, multilingual fidelity, or evaluation across learners with differing needs -- does not appear as a dedicated evaluation axis in any paper surveyed.
+
+\begin{table}[t]
+\caption{What current evaluation practice measures, ranked by prevalence across the 19 sources surveyed}
+\label{tab:eval-taxonomy}
+\centering
+\begin{tabular}{p{4.6cm}p{2.6cm}}
+\hline
+\textbf{Evaluation target} & \textbf{Prevalence} \\
+\hline
+Visual / production quality & Near-universal \\
+Structural / design coherence & Common \\
+Textual similarity to reference & Common \\
+Knowledge-transfer proxy (LLM/VLM judge) & Rare (2 papers) \\
+Factual accuracy of generated content & Effectively absent \\
+Controlled human learning-outcome study & 1 paper \\
+Real classroom deployment + student judgment & 1 paper \\
+Accessibility as a dedicated axis & Absent \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{The Learning-Outcome Gap}
+
+Two papers in this survey break the pattern described above, and both are worth examining closely precisely because they are exceptions. Stavrinou et al.'s ReelsEd system converts long-form lecture video into short-form "reels" while preserving instructor-authored material, and the authors evaluate it with a genuine controlled user study of 62 university students, comparing reels against traditional long-form video on engagement, quiz performance, task efficiency, and cognitive load \cite{stavrinou2025reeldeal}. The reels condition outperformed long-form video on engagement, quiz performance, and task efficiency without an increase in cognitive load, and participants reported high confidence in the system's pedagogical design. This is, to our knowledge, the strongest learning-outcome evaluation in the current literature on LLM-based educational video generation, and it is a genuine outlier: it is the only paper reviewed here that evaluates the learner rather than the artifact.
+
+Leinonen, Zhang, and Hellas take a complementary approach, deploying AI-generated slides -- built from instructor notes using five different tools (NotebookLM, Claude, Microsoft 365 Copilot, Cursor, and Claude Code) and pre-screened for quality by instructors -- in real university courses, then asking students to blind-rate the deployed slides against instructor-created ones \cite{leinonen2026aislides}. Students could not reliably distinguish AI-generated slides from instructor-made ones and rated them similarly in overall quality, though slides students merely \emph{suspected} of being AI-generated were rated lower regardless of their actual origin -- a perception bias that no artifact-only benchmark could ever detect, since it depends entirely on a human viewer's beliefs about provenance rather than any property of the artifact itself.
+
+That exactly two of nineteen sources reviewed here measure anything about a human learner, while the rest measure the generated object, is this survey's central finding. For a research area whose stated purpose is educational effectiveness, the field is, by a wide margin, evaluating itself on almost everything except that goal.
+
+\subsection{Unvalidated Knowledge-Transfer Proxies}
+
+TeachQuiz and PresentQuiz are the most promising evaluation innovations to emerge from this literature, precisely because they attempt to measure something closer to comprehension than to visual fidelity. Both work by having a language or vision-language model answer quiz questions after processing the generated video, and both are reasonable, scalable engineering solutions to the problem that human-subject studies are slow and expensive to run at the scale needed to iterate on a generation system. Neither paper that introduces one of these metrics, however, reports a study correlating the model-judge score with actual human quiz performance on the same video set. This is a specific, tractable, and currently open validation gap: without it, a system could in principle improve its TeachQuiz or PresentQuiz score by becoming better at satisfying a language model's quiz-answering behavior specifically, rather than by becoming more pedagogically effective for a human audience -- and the current literature has no evidence to rule that possibility out.
+
+\subsection{Factual Accuracy: A Known Problem, Nowhere Measured}
+
+A substantial and separate literature documents that LLMs cannot reliably self-evaluate the factual accuracy of their own output without external grounding such as retrieval-augmented generation, knowledge graphs, or human oversight \cite{hallucination2026review}. This is directly relevant to educational content, where a confidently delivered factual error is pedagogically worse than a stylistic or design flaw, since a learner has no independent way to catch it. Despite this, none of the generation systems surveyed in Section~\ref{sec:architectures} reports a dedicated fact-checking pass, applied to its own generated narration or slide text, as part of its evaluation. Mitigation techniques exist and are documented elsewhere in the LLM literature; applying one of them to a system's own output and reporting the result would be a direct, comparatively low-effort extension available to any of the systems reviewed here.
+
+\subsection{Accessibility: An Absent Axis}
+
+Several of the systems surveyed -- ALIVE and ReelsEd in particular -- are explicitly designed for real classroom use, yet no paper in this survey reports caption quality, multilingual generation fidelity, or evaluation across learners with differing accessibility needs (for example, cognitive load for neurodivergent learners, or comprehension for non-native speakers of the narration language) as a dedicated evaluation axis. Given the stated deployment goals of these systems, this is a significant and directly addressable gap.
+
+\section{Discussion and Future Directions}
+\label{sec:discussion}
+
+The architecture and benchmark literatures surveyed in Sections~\ref{sec:architectures} and~\ref{sec:benchmarks} are converging rapidly: new agentic architectures and new education-specific benchmarks have appeared on a roughly monthly cadence over the period covered by this review. The evaluation-methodology literature has not kept pace. The AIGVE meta-survey's call for more sophisticated evaluation frameworks \cite{liu2024aigve} has not yet produced anything for pedagogical effectiveness comparable to what VBench achieved for general video quality \cite{huang2024vbench} -- a single, widely adopted, multi-dimensional standard that most new systems are evaluated against by default. We see this as the field's most obviously missing artifact: a benchmark for pedagogical effectiveness that plays the same role for education-specific video generation that VBench plays for general video quality.
+
+Four concrete next steps follow directly from the gaps identified in Section~\ref{sec:gaps}. First, and most urgently: a cross-system, controlled human-subject study. Every learning-outcome result currently in the literature comes from a single research group evaluating its own single system in isolation; running the same protocol used by Stavrinou et al.\ \cite{stavrinou2025reeldeal} across two or three systems from different research groups -- for instance Code2Video, a slide-plus-narration pipeline such as PPTAgent combined with Holmberg's narration system, and a general text-to-video baseline -- would be the field's first genuinely comparative learning-outcome result. Second, TeachQuiz and PresentQuiz should be validated against human quiz performance on a shared set of generated videos; this is a focused, tractable study that would substantially increase confidence in the field's most promising existing proxy metrics, or reveal that they need revision. Third, applying an existing factuality or hallucination-detection method to the generated narration or slide text of one of the systems reviewed here, and reporting the result, would close a gap that is currently open purely for want of anyone doing it, not for lack of available technique. Fourth, accessibility evaluation -- caption accuracy, multilingual fidelity, and comprehension across learners with differing needs -- deserves the same systematic treatment currently given to visual quality, particularly for the systems in this survey that are explicitly aimed at real classroom deployment.
+
+\section{Conclusion}
+
+LLM-based educational video generation has, in a short period, converged on a clear architectural answer: decompose the generation task into a structured, checkable intermediate -- a script, an event graph, executable code, or an editable slide deck -- rather than generating pixels end to end. This decomposition is a direct and, we argue, correct response to the specific failure mode that pixel-space video diffusion cannot address: guaranteeing that educational content is factually and logically sound. Benchmarking has responded in kind, producing a new generation of education-specific evaluation suites that represent genuine progress over general-purpose video-quality metrics. What the field has not yet produced, with only two documented exceptions in the literature reviewed here, is evidence that any of these systems actually improves human learning. Closing that gap -- through cross-system human-subject studies, validated knowledge-transfer proxies, dedicated factuality checks, and accessibility evaluation -- is, in our view, the highest-leverage open problem in this area, and the natural next chapter for a field that has so far mostly asked whether its output looks right rather than whether it teaches.
+
+\bibliographystyle{IEEEtran}
+\bibliography{../Bibliography_base}
+
+\end{document}

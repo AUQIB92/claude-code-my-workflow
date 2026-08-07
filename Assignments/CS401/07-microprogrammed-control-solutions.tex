@@ -1,0 +1,65 @@
+% =============================================================================
+% Assignments/CS401/07-microprogrammed-control-solutions.tex
+% Assignment 7 Solution Key: Microprogrammed Control Unit Design
+% Mirrors 07-microprogrammed-control-assignment.tex's numbering.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 07-microprogrammed-control-solutions.tex
+%   BIBINPUTS=../..:$BIBINPUTS bibtex 07-microprogrammed-control-solutions
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 07-microprogrammed-control-solutions.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Assignment 7 --- Solution Key\\\large Microprogrammed Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Conceptual}
+
+\textbf{Q1.} The mapping unit converts the opcode currently in \texttt{IR} into the microaddress where \emph{that instruction's} microprogram begins in \texttt{CM}, and loads it into \texttt{MPC} on every fetch. Without it, \texttt{MPC} would always start at address 0 regardless of which instruction is actually in \texttt{IR} --- so \textbf{every instruction would execute whichever microprogram happens to occupy \texttt{CM} row 0}, regardless of its actual opcode. This is the microprogrammed analogue of a missing opcode decoder: a shared \texttt{CM} can only serve every instruction correctly if something translates opcode into starting address.
+
+\textbf{Q2.} \textbf{Width:} horizontal encoding needs one bit per control signal, so the control word is as wide as the total number of signals in the machine (100--400 bits is typical at real-ISA scale); vertical encoding groups mutually-exclusive signals into fields, needing only $\lceil \log_2 n \rceil$ bits per $n$-way group, so the total word is much narrower. \textbf{Delay:} horizontal signals are valid the instant \texttt{CM} is read, since each bit \emph{is} the signal directly, with no logic in between; vertical signals require an extra decoder stage between \texttt{CM}'s output and the datapath, so they become valid one decode delay \emph{after} \texttt{CM} is read.
+
+\section{Numerical}
+
+\textbf{Q3.} \textbf{Vertical:} $\lceil \log_2 20 \rceil = \textbf{5 bits}$ (5 bits address up to 32 values, the smallest power of two $\geq 20$; 4 bits would only reach 16, insufficient). \textbf{Horizontal:} \textbf{20 bits}, one per signal.
+
+\textbf{Q4.} $3 + 3 + 2 = \textbf{8 total \texttt{CM} rows}$ (assuming, as stated, that no rows are shared between the three instructions' microprograms).
+
+\section{Design}
+
+\textbf{Q5.} \texttt{SUB} has the identical shape to the lecture's \texttt{ADD} microprogram, with the ALU field changed to subtract at row 1:
+
+\begin{center}
+\small
+\begin{tabular}{@{}cllc@{}}
+\toprule
+\textbf{Microaddress} & \textbf{RTL} & \textbf{Control word (signals asserted)} & \textbf{Next} \\
+\midrule
+0 & $Y \gets [\text{R5}]$ & $R5_{\text{out}}, Y_{\text{in}}$ & 1 \\
+1 & $Z \gets [Y] - [\text{R6}]$ & $R6_{\text{out}}$, ALU$=$subtract, $Z_{\text{in}}$ & 2 \\
+2 & $R4 \gets [Z]$ & $Z_{\text{out}}, R4_{\text{in}}$, \textsc{End} & fetch \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+As in the lecture's \texttt{ADD} example, only \emph{where} the three control steps live has changed (three rows of \texttt{CM} instead of three rows of a hardwired state table); the RTL and signal content are otherwise identical in structure to the \texttt{ADD} case, differing only in the register names and the ALU function selected at microaddress 1.
+
+\textbf{Q6.} One valid grouping (following the lecture's worked example, which used Bus-source / Destination / ALU-operation fields):
+\begin{itemize}
+  \item \textbf{Bus-source field} --- selects which register drives the bus this step: $\{R2_{\text{out}}, R3_{\text{out}}, Z_{\text{out}}\}$, 3 mutually exclusive options (plus a "none" encoding) $\Rightarrow \lceil \log_2 4 \rceil = 2$ bits.
+  \item \textbf{Destination field} --- selects which register loads from the bus/ALU: $\{Y_{\text{in}}, Z_{\text{in}}, R1_{\text{in}}\}$, 3 options (plus "none") $\Rightarrow 2$ bits.
+  \item \textbf{ALU-operation field} --- here only one operation (add) is used in this microprogram, so 1 bit suffices to indicate ``add active / inactive.''
+  \item \textbf{\textsc{End} field} --- a single dedicated bit, since it is not mutually exclusive with the others (it can co-occur with a destination write on the final step).
+\end{itemize}
+\textbf{Total: $2 + 2 + 1 + 1 = 6$ bits}, versus \textbf{8 bits} for horizontal encoding of the same 8 signals --- a modest saving on this toy example, which the lecture notes compounds significantly at real instruction-set scale, where the horizontal count grows into the hundreds of bits while the vertical count grows only logarithmically with each group's size.
+
+\end{document}

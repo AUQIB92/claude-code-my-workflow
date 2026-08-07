@@ -10,7 +10,7 @@ effort: medium
 
 # Generate Lecture Notes from a Finished Beamer Deck
 
-Expand `Slides/<CODE>/<lecture>.tex` into `Notes/<CODE>/<lecture>-notes.tex` — full prose, same content, same relationship Quarto already has to Beamer (derived, never independently edited).
+Expand `Slides/<CODE>/<lecture>.tex` into `Notes/<CODE>/<lecture>-notes.tex` — a textbook chapter covering the same content, same relationship Quarto already has to Beamer (derived, never independently edited), but reorganized by topic rather than transcribed frame-by-frame (see Phase 2).
 
 **CRITICAL: The Beamer `.tex` file is the SINGLE SOURCE OF TRUTH.** Notes expand it; they do not add ideas the deck doesn't contain, and they do not drop any.
 
@@ -23,26 +23,43 @@ Expand `Slides/<CODE>/<lecture>.tex` into `Notes/<CODE>/<lecture>-notes.tex` —
 
 Read the full `.tex` source. For each frame, note: the motivating question/example, the definition(s), the derivation steps, the worked example, any TikZ diagram (its coordinate-map comment is the raw material for a prose description — reuse it, don't re-derive), and every citation.
 
-## Phase 2: Expand frame-by-frame into prose
+## Phase 2: Reorganize into a textbook chapter, don't transcribe frame-by-frame
 
-For each frame, in deck order, write a prose section (not a slide-by-slide transcript — sections may combine short frames, e.g. a 2-slide worked example becomes one prose subsection with a heading):
+**Read every frame, but write by topic, not by frame order.** A Beamer deck is paced for a live audience (Socratic questions, transition slides, "recap" framing, "bridge to next week" hooks); Notes should read like a textbook chapter on the same material. Content parity is still absolute — every fact, citation, diagram, and worked example in the deck must appear in the Notes and trace back to it (`/qa-notes` checks this) — but the *order and headings* should be regrouped by subject, the way a textbook chapter would organize it, not left as a slide-by-slide transcript.
 
+Concretely:
+
+- **Draft a topic outline before writing prose.** Group the deck's frames by subject (e.g., "definitions and motivation," "the core mechanism," "worked derivation," "trade-offs/comparison") rather than walking the deck's Acts/sections in order. Presentation-pacing frame titles ("A Question We Skipped," "Socratic Check: ...," "Bridge to Week N," "Recall: ... by Hand") are lecture devices — fold their content into the surrounding topic section as motivating context, don't keep them as standalone headings.
 - **Bullets become full sentences.** A slide bullet like "EA = [PC] + disp" becomes a sentence deriving why the effective address is computed that way, in the same notation.
 - **Every derivation step gets spelled out**, including steps a slide compresses (a slide may show only the final control-word equation; Notes shows the derivation that produced it).
-- **TikZ diagrams get a prose description** drawn from the diagram's coordinate-map comment (per `.claude/rules/tikz-prevention.md` Rule P2) — describe what the diagram shows and why, since a reader of the Notes may not see the rendered figure inline the same way a slide audience does.
-- **Citations are preserved 1:1** — same `\cite{}` keys, same attribution. If the cited chapter has an entry in `supporting_books/*/index.md`, add the specific page (per `.claude/rules/textbook-grounding.md`); if not, keep the existing chapter-level/general-treatment phrasing — do not upgrade to a page number you can't back.
+- **Every term the deck actually defines gets a formal `Definition` callout** (see Phase 3's template), not just a bolded word mid-paragraph.
+- **Every worked example/trace becomes a numbered `Example` environment** (see Phase 3), not an ad hoc "Worked Trace" subsection.
+- **TikZ diagrams are embedded as real, numbered figures** — reuse the diagram's exact TikZ code from the Beamer source verbatim (it has already passed `tikz-reviewer`; don't re-derive it), wrapped in a numbered `figure` environment with a page-cited caption (see Phase 3). A reader should see the actual diagram, not just a prose description of it.
+- **Citations are preserved 1:1** — same `\cite{}` keys, same attribution. If the cited chapter has an entry in `supporting_books/*/index.md`, add the specific page (per `.claude/rules/textbook-grounding.md`); if not, keep the existing chapter-level/general-treatment phrasing — do not upgrade to a page number you can't back, and do not imply a source "specifies" or "shows" something more precisely than what's actually indexed.
 - **Transitions between sections are full sentences**, not slide-title juxtaposition.
-- **Nothing invented, nothing dropped.** If a frame's content genuinely doesn't need expansion (e.g. a section-transition slide), a short paragraph is fine — don't pad.
+- **Nothing invented, nothing dropped.** If a frame's content genuinely doesn't need its own topic section (e.g. a section-transition slide), fold its motivating sentence into the section it introduces — don't pad with a standalone paragraph just to preserve frame-for-frame correspondence.
 
 ## Phase 3: Write the file
 
-`Notes/<CODE>/<lecture>-notes.tex` — XeLaTeX `article` class:
+`Notes/<CODE>/<lecture>-notes.tex` — XeLaTeX `article` class, styled as a textbook chapter (section/figure/example numbers prefixed by the week/lecture number, e.g. `<N>.1`, `Fig. <N>.1`, `Example <N>.1`):
 
 ```latex
 \documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
 \input{../../Preambles/header}   % same shared palette/macros as Beamer; \key/\good/\bad/\muted
                                    % must degrade gracefully outside Beamer (see header.tex)
 \coursecode{<CODE>}               % same macro as the Beamer deck; no-ops in article class if not shown in a footer there
+
+% Chapter-style numbering: <N> is this lecture's week/lecture number.
+\renewcommand{\thesection}{<N>.\arabic{section}}
+\renewcommand{\thefigure}{<N>.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+
+% Lightweight boxed Definition callout -- visually simple, consistent with
+% the project's existing \key/block conventions rather than a new theorem style.
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
 
 \title{<Deck Title> --- Lecture Notes}
 \author{<same as Beamer deck's \author>}
@@ -50,13 +67,28 @@ For each frame, in deck order, write a prose section (not a slide-by-slide trans
 
 \begin{document}
 \maketitle
-% prose sections, one per Phase-2 expansion unit
+% topic-organized sections per Phase 2's outline, not a frame-by-frame transcript
 \bibliography{../../Bibliography_base}
 \bibliographystyle{plain}
 \end{document}
 ```
 
-Compile the same way as a Beamer deck but from `Notes/<CODE>/`: `TEXINPUTS`/`BIBINPUTS` need `../../Preambles` / `../..` relative to that cwd (same depth reasoning as `/compile-latex` — TeX writes output next to cwd, not next to the file's own path).
+**Definitions:** `\begin{definitionbox}{Term}...\end{definitionbox}` for every term the deck formally defines.
+
+**Figures:** wrap each reused TikZ diagram in a real `figure` environment, not a bare `center`:
+```latex
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[...]
+    ... % exact code from the Beamer source, unchanged
+  \end{tikzpicture}
+  \caption{... --- cf.\ \textit{Book}, Fig.~X-Y, p.NNN \cite{key}.}
+\end{figure}
+```
+
+**Worked examples:** `\begin{example}...\end{example}` for every worked trace/derivation, so it numbers as `Example <N>.1`, `<N>.2`, ... automatically.
+
+Compile the same way as a Beamer deck but from `Notes/<CODE>/`: `TEXINPUTS`/`BIBINPUTS` need `../../Preambles` / `../..` relative to that cwd (same depth reasoning as `/compile-latex` — TeX writes output next to cwd, not next to the file's own path). On Windows/MiKTeX use `;` not `:` as the separator (see `.claude/skills/compile-latex/SKILL.md`).
 
 ## Phase 4: QA
 
@@ -64,7 +96,7 @@ Run [`/qa-notes`](../qa-notes/SKILL.md) `<CODE>/<lecture>` — the critic→fixe
 
 ## Report
 
-State: sections written, citations preserved count, any textbook claims upgraded to page-cited (vs. left general), and the `/qa-notes` outcome.
+State: the topic outline used (how deck frames were regrouped into textbook sections), sections/figures/examples written, citations preserved count, any textbook claims upgraded to page-cited (vs. left general), and the `/qa-notes` outcome.
 
 ## Cross-references
 

@@ -1,0 +1,51 @@
+% =============================================================================
+% Assignments/CS401/05-addressing-cpu-bus-assignment.tex
+% Assignment 5: Addressing Modes, CPU Organization, and Bus Structures
+%
+% Student set — NO answers. Solution key: 05-addressing-cpu-bus-solutions.tex.
+% Sourced from Slides/CS401/05-addressing-cpu-bus.tex and
+% Notes/CS401/05-addressing-cpu-bus-notes.tex; every problem reuses the
+% lecture's own notation and extends its worked examples to new instructions/
+% registers rather than repeating them verbatim.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-assignment.tex
+%   BIBINPUTS=../..:$BIBINPUTS bibtex 05-addressing-cpu-bus-assignment
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-assignment.tex (x2)
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Assignment 5: Addressing Modes, CPU Organization, and Bus Structures}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Answer every question. Show all working for Numerical and Design questions --- a bare final answer without the derivation earns partial credit only.
+
+\section{Conceptual}
+
+\textbf{Q1.} A compiler must generate code to access array element \texttt{A[i]} inside a loop, where \texttt{i} changes on every iteration. Explain why direct (absolute) addressing cannot be used for this, and name the addressing mode that should be used instead. Your answer must state \emph{why} the chosen mode's effective-address computation solves the problem direct addressing cannot.
+
+\textbf{Q2.} Both indirect addressing and register-indirect addressing compute an effective address by following a pointer. Explain the mechanism of each, and state which one is cheaper and why, in terms of the number and type of accesses (register vs.\ memory) required to resolve the effective address.
+
+\section{Numerical}
+
+\textbf{Q3.} An instruction \texttt{LOAD R1, 30(R3)} uses displacement addressing, with $[\text{R3}] = 2048$. Compute the effective address $\text{EA}$, and state the total cost of this instruction in terms of register and memory accesses.
+
+\textbf{Q4.} The single-bus datapath (as built in this lecture) requires 3 control steps to execute \texttt{R1} $\gets$ \texttt{R2+R3}. How many control steps does \texttt{R4} $\gets$ \texttt{R5+R6} require on the \emph{same} datapath? Justify your answer by writing out the RTL for each control step.
+
+\section{Design}
+
+\textbf{Q5.} Using the single-bus datapath, write the RTL trace (one line per control step, in the same format as the lecture's worked trace) for the instruction \texttt{R1} $\gets$ \texttt{R2} $-$ \texttt{R3} (subtraction, not addition). State how many control steps this requires and explain why the count is the same as for addition.
+
+\textbf{Q6.} Using the three-bus datapath, write the RTL for the instruction \texttt{R7} $\gets$ \texttt{R4} $+$ \texttt{R5}, stating explicitly what value is present on Bus A, Bus B, and Bus C during the single control step. How many control steps does this instruction require on this datapath?
+
+\end{document}
