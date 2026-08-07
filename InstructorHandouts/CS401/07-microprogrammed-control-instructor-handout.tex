@@ -1,0 +1,89 @@
+% =============================================================================
+% InstructorHandouts/CS401/07-microprogrammed-control-instructor-handout.tex
+% Instructor Handout 7: Microprogrammed Control Unit Design
+%
+% INSTRUCTOR-ONLY. See 05-addressing-cpu-bus-instructor-handout.tex for the
+% grounding-discipline note.
+%
+% Compile with: cd InstructorHandouts/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 07-microprogrammed-control-instructor-handout.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Instructor Handout 7: Microprogrammed Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+{\centering\large\color{negative}\textbf{Instructor Copy --- Not for Student Distribution}\par}
+\vspace{0.5cm}
+
+\section{Before You Teach This Lecture}
+
+\begin{sloppypar}
+\begin{itemize}
+  \item \textbf{Mano, \textit{Computer System Architecture}, 3rd ed., Ch.~7 in full, pp.~213--239} (fully indexed, confirmed-correct citation for this lecture --- unlike Week 6's anchor reading, this one was already correct).
+
+  Key sub-sections: 7-1 Control Memory (p.~213); 7-2 Address Sequencing (p.~215--224, the \texttt{CAR}\slash 4-path addressing this lecture's ``mapping unit'' simplifies); 7-3 Microprogram Example (p.~219--229, Figs.~7-1, 7-2, and 7-3); 7-4 Design of Control Unit (p.~230--239, Figs.~7-6 and 7-7 --- a real 3-decoder \texttt{F1}\slash\texttt{F2}\slash\texttt{F3} realization that is itself a worked horizontal/vertical hybrid, worth reading before Act 3's encoding-width discussion).
+  \item \textbf{Stallings, \textit{Computer Organization and Architecture}, Ch.~16} --- \emph{not yet page-indexed}, and the course knowledge base flags an edition mismatch: the supplied PDF is the 11th edition, not the 2015/10th edition the bibliography key implies. If you cross-check a page number against your own physical/PDF copy, confirm which edition it is first --- chapter numbering may not match (the 11th edition's control-unit chapter is numbered differently).
+\end{itemize}
+\end{sloppypar}
+
+\section{Extra Worked Examples}
+
+\subsection{A Different Instruction's Microprogram}
+
+Extend the lecture's \texttt{ADD} microprogram to \texttt{R7} $\gets$ \texttt{R0} $-$ \texttt{R1}:
+\begin{center}
+\small
+\begin{tabular}{@{}cllc@{}}
+\toprule
+\textbf{Microaddress} & \textbf{RTL} & \textbf{Control word} & \textbf{Next} \\
+\midrule
+0 & $Y \gets [\text{R0}]$ & $R0_{\text{out}}, Y_{\text{in}}$ & 1 \\
+1 & $Z \gets [Y] - [\text{R1}]$ & $R1_{\text{out}}$, ALU$=$sub, $Z_{\text{in}}$ & 2 \\
+2 & $R7 \gets [Z]$ & $Z_{\text{out}}, R7_{\text{in}}$, \textsc{End} & fetch \\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{Instructor note:} worth explicitly asking students where this microprogram would need to be \emph{stored} relative to \texttt{ADD}'s (e.g., if \texttt{ADD} occupies rows 0--2, this one must occupy a disjoint range, say rows 3--5) --- this previews the mapping-unit question below.
+
+\subsection{Vertical Encoding for a Smaller Signal Set}
+
+The lecture's worked vertical-encoding example groups \texttt{ADD}'s 8 signals into fields. For contrast, consider a hypothetical 2-step \texttt{LOAD R1, (R2)} microprogram using only 4 distinct signals: $R2_{\text{out}}$, $\text{MAR}_{\text{in}}$, \text{MemRead}, and $R1_{\text{in}}$ (plus \textsc{End}).
+
+With only two mutually-exclusive bus-source options ($R2_{\text{out}}$ or none) and two destination options ($\text{MAR}_{\text{in}}$ or $R1_{\text{in}}$), a 1-bit source field and a 1-bit destination field suffice, plus 1 bit each for \text{MemRead} and \textsc{End}: \textbf{4 bits} vertical versus \textbf{5 bits} horizontal (one per signal) --- a smaller absolute saving than the \texttt{ADD} example, useful for making the point that the vertical-encoding payoff scales \emph{with} the signal count, not independently of it.
+
+\section{Teaching Notes}
+
+\textit{Instructional suggestions, not fact-checked content --- adapt freely.}
+
+\subsection{Microinstructions and Control Memory}
+\begin{itemize}
+  \item \textbf{Common misconception:} students sometimes conclude microprogrammed control has ``no gates at all.'' Clarify: it replaces the \emph{custom, per-signal} AND-OR gates of the control matrix with generic memory-decode logic inside \texttt{CM} --- gates still exist, they are just not derived and wired by hand per instruction.
+\end{itemize}
+
+\subsection{Address Sequencing}
+\begin{itemize}
+  \item \textbf{Board sequence:} draw \texttt{MPC} and \texttt{CM} first (mirroring how you drew \texttt{SC}/decoder in Week 6, for continuity), then add the mapping unit and next-address feedback \emph{after} asking ``how does \texttt{MPC} know where to start for a \emph{different} instruction?'' --- let the question motivate the mapping unit rather than presenting it as a given.
+  \item \textbf{Live question:} ``If \texttt{ADD}'s microprogram occupies rows 0--2 and \texttt{SUB}'s is stored right after it, which row should the mapping unit send \texttt{MPC} to for \texttt{SUB}?'' (Answer: row 3 --- a quick concrete check that mapping is genuinely opcode-specific, not automatic.)
+\end{itemize}
+
+\subsection{Horizontal versus Vertical Encoding}
+\begin{itemize}
+  \item \textbf{Pacing:} the concepts here are simple but the bit-counting arithmetic is where students lose the thread. Do a quick tally on the board (count signals, compute $\lceil \log_2 n \rceil$ per group) \emph{before} showing the side-by-side diagram, so the diagram confirms arithmetic students already did rather than being their first exposure to it.
+  \item \textbf{Common misconception:} students sometimes think vertical encoding is ``strictly better'' since it's smaller, missing the decode-delay trade-off entirely. Ask directly: ``if vertical is smaller \emph{and} free, why would anyone ever choose horizontal?'' and let the answer (no decode delay) surface before you state it.
+\end{itemize}
+
+\subsection{Trade-offs and Synthesis}
+\begin{itemize}
+  \item \textbf{Live question:} tie back to Weeks 5--6 explicitly --- ``we've now seen three separate places a design trades speed for something else (bus count, control-unit style, encoding width). What's the common pattern?'' Good closing discussion prompt before the Week 8 bridge.
+\end{itemize}
+
+\end{document}

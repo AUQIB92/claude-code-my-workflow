@@ -1,0 +1,74 @@
+% =============================================================================
+% CompetitiveExam/CS401/05-addressing-cpu-bus-questions.tex
+% Competitive Exam Practice 5 — GATE (Computer Science) Pattern
+% Addressing Modes, CPU Organization, and Bus Structures
+%
+% Student-facing — NO answers. Answer key: 05-addressing-cpu-bus-answers.tex.
+% Provenance: a targeted search for real GATE CS past-year questions on this
+% lecture's specific sub-topics did not surface a candidate that survived
+% independent verification (Chain-of-Verification, per
+% .claude/rules/post-flight-verification.md) within this pass — every
+% question below is therefore original, written in GATE's own format (MCQ /
+% Numerical Answer Type) and calibrated to real GATE difficulty for this
+% topic, not attributed to any specific year.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-questions.tex
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Competitive Exam Practice 5: Addressing Modes, CPU Organization, and Bus Structures\\\large GATE (Computer Science) Pattern}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks, consistent with GATE CS's Computer Organization \& Architecture weighting. MCQ = single correct option; NAT = Numerical Answer Type (enter a numeric value, no options given).
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Which addressing mode is most suitable for accessing successive elements of an array inside a loop whose index variable changes on every iteration?
+\begin{enumerate}
+  \item[(A)] Immediate
+  \item[(B)] Direct
+  \item[(C)] Displacement (indexed)
+  \item[(D)] Register
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} An instruction uses indirect addressing with address field $A$. If $M[A] = B$ and $M[B] = 42$, the effective address of the operand is:
+\begin{enumerate}
+  \item[(A)] $A$
+  \item[(B)] $B$
+  \item[(C)] $42$
+  \item[(D)] $M[42]$
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} An instruction \texttt{LOAD R1, 25(R4)} uses displacement addressing, with $[\text{R4}] = 175$. The effective address is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} On a single-bus CPU datapath, a two-operand ALU instruction (such as \texttt{ADD R1, R2, R3}) that must stage both operands sequentially through the bus requires a minimum of how many control steps?
+\begin{enumerate}
+  \item[(A)] 1
+  \item[(B)] 2
+  \item[(C)] 3
+  \item[(D)] 4
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} In a three-bus CPU organization where Bus A and Bus B feed the ALU's two inputs and Bus C carries the ALU's output, the primary architectural advantage over a single-bus organization is:
+\begin{enumerate}
+  \item[(A)] Reduced control unit complexity
+  \item[(B)] Fewer registers required in the register file
+  \item[(C)] Two operands can be read and the result written back, all within the same clock cycle
+  \item[(D)] Lower total hardware cost
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} Indirect addressing (via a pointer stored in memory, not in a register) requires \rule{1.5cm}{0.4pt} memory access(es) in total to obtain the operand.
+
+\end{enumerate}
+
+\end{document}

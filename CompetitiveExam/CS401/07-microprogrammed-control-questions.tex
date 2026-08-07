@@ -1,0 +1,91 @@
+% =============================================================================
+% CompetitiveExam/CS401/07-microprogrammed-control-questions.tex
+% Competitive Exam Practice 7 — GATE (Computer Science) Pattern
+% Microprogrammed Control Unit Design
+%
+% Student-facing — NO answers. Answer key: 07-microprogrammed-control-answers.tex.
+%
+% Provenance: Q1 is a real GATE CS past-year question, independently verified
+% via a forked claim-verifier pass (Chain-of-Verification, per
+% .claude/rules/post-flight-verification.md) before inclusion. Verification
+% outcome was PARTIAL, not full CONFIRMED — reported honestly below rather
+% than upgraded to an unqualified "verified" tag:
+%   - Question text and all four options: independently confirmed on two
+%     sources (GeeksforGeeks x2), word-for-word match.
+%   - Year/section attribution (GATE CS 2002, Computer Organization &
+%     Architecture): confirmed on GeeksforGeeks.
+%   - Official question number: GeeksforGeeks labels it "Question 32" (an
+%     aggregator index), but two other indexes (GATE Overflow, ExamSIDE —
+%     both returned HTTP 403 to direct fetch this session, so only their
+%     page titles/slugs are evidence) suggest the official GATE 2002 paper
+%     numbering is "Question 2.7, 2 marks." Cited below as "Q2.7" per the
+%     verifier's recommendation, with the aggregator's "Q32" noted.
+%   - Correct answer "(D) all of the above": confirmed on one source
+%     (compsciedu) that does not itself state the exam year, so the
+%     year+answer link rests partly on cross-referencing two sources plus
+%     domain reasoning (each of A/B/C is independently a true property of
+%     horizontal microprogramming, so D follows) rather than a single
+%     source stating both facts together.
+% All other questions (Q2-Q6) are original, GATE-format, not attributed to
+% a specific year.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 07-microprogrammed-control-questions.tex
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Competitive Exam Practice 7: Microprogrammed Control Unit Design\\\large GATE (Computer Science) Pattern}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2002, Q2.7, 2 marks --- verified, see provenance note above]} \textbf{[MCQ, 2 marks]} Horizontal microprogramming:
+\begin{enumerate}
+  \item[(A)] does not require use of signal decoders
+  \item[(B)] results in larger sized microinstructions than vertical microprogramming
+  \item[(C)] uses one bit for each control signal
+  \item[(D)] all of the above
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Compared to horizontal microprogramming, vertical microprogramming:
+\begin{enumerate}
+  \item[(A)] requires no decoder between control memory and the datapath
+  \item[(B)] produces wider control words
+  \item[(C)] requires a decoder, adding to the delay before control signals become valid
+  \item[(D)] cannot encode mutually exclusive control signals
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} A set of 16 mutually exclusive control signals is to be encoded as a single vertical field. The minimum number of bits required is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a microprogrammed control unit, the component that loads the microprogram counter (\texttt{MPC}) with the starting microaddress of the instruction currently in \texttt{IR} is the:
+\begin{enumerate}
+  \item[(A)] Control memory
+  \item[(B)] Mapping unit
+  \item[(C)] Sequence counter
+  \item[(D)] Arithmetic logic unit
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Arranged from fastest to slowest per control step, the typical ordering of the following control-unit implementations is:
+\begin{enumerate}
+  \item[(A)] Vertical microprogrammed $>$ Horizontal microprogrammed $>$ Hardwired
+  \item[(B)] Hardwired $>$ Horizontal microprogrammed $>$ Vertical microprogrammed
+  \item[(C)] Horizontal microprogrammed $>$ Hardwired $>$ Vertical microprogrammed
+  \item[(D)] Hardwired $>$ Vertical microprogrammed $>$ Horizontal microprogrammed
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} \texttt{ADD} requires 3 control-memory rows, \texttt{SUB} requires 3, and \texttt{MUL} requires 5. Assuming no rows are shared between instructions, the total number of control-memory rows needed for all three microprograms is \rule{1.5cm}{0.4pt}.
+
+\end{enumerate}
+
+\end{document}

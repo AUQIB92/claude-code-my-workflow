@@ -1,0 +1,47 @@
+% =============================================================================
+% Assignments/CS401/07-microprogrammed-control-assignment.tex
+% Assignment 7: Microprogrammed Control Unit Design
+%
+% Student set — NO answers. Solution key: 07-microprogrammed-control-solutions.tex.
+% Sourced from Slides/CS401/07-microprogrammed-control.tex.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 07-microprogrammed-control-assignment.tex
+%   BIBINPUTS=../..:$BIBINPUTS bibtex 07-microprogrammed-control-assignment
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 07-microprogrammed-control-assignment.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Assignment 7: Microprogrammed Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Answer every question. Show all working for Numerical and Design questions.
+
+\section{Conceptual}
+
+\textbf{Q1.} Explain the role of the mapping unit in a microprogrammed control unit. What would happen if the mapping unit were removed and \texttt{MPC} simply reset to address 0 after every \textsc{End}?
+
+\textbf{Q2.} Compare horizontal and vertical microinstruction encoding in terms of (a) control-word width and (b) the delay before control signals become valid after \texttt{CM} is read.
+
+\section{Numerical}
+
+\textbf{Q3.} A machine has 20 mutually-exclusive bus-source signals (exactly one is active at a time). How many bits are needed to encode this as a single vertical field? How many bits would the same 20 signals need if encoded horizontally (one bit per signal)?
+
+\textbf{Q4.} \texttt{ADD} requires 3 control-memory rows (as in the lecture's worked example) and \texttt{SUB} requires a similarly-shaped 3-row microprogram. A third instruction, a register-only \texttt{NOT R1} (one-operand, no memory or bus-buffering needed beyond reading and writing \texttt{R1}), requires 2 rows. Assuming no rows are shared between instructions, how many total control-memory rows are needed to hold all three microprograms?
+
+\section{Design}
+
+\textbf{Q5.} Write the microprogram (microaddress, RTL, control word, next-address field) for \texttt{R4} $\gets$ \texttt{R5} $-$ \texttt{R6} on the single-bus datapath, in the same table format as the lecture's worked example for \texttt{R1} $\gets$ \texttt{R2+R3}. Your microprogram must have 3 rows, correct next-address fields, and an \textsc{End} marker on the last row.
+
+\textbf{Q6.} The worked \texttt{ADD} microprogram in the lecture uses 8 distinct control signals: $R2_{\text{out}}, R3_{\text{out}}, Y_{\text{in}}$, ALU$=$add, $Z_{\text{in}}, Z_{\text{out}}, R1_{\text{in}}$, \textsc{End}. Design a vertical encoding scheme for these 8 signals by grouping mutually-exclusive signals into encoded fields (following the lecture's worked example, which grouped bus-source, destination, and ALU-operation into three fields). State your field groupings and the resulting total control-word width in bits, compared to the 8 bits horizontal encoding would require.
+
+\end{document}

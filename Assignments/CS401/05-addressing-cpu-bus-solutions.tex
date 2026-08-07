@@ -1,0 +1,64 @@
+% =============================================================================
+% Assignments/CS401/05-addressing-cpu-bus-solutions.tex
+% Assignment 5 Solution Key: Addressing Modes, CPU Organization, and Bus Structures
+%
+% Mirrors 05-addressing-cpu-bus-assignment.tex's numbering. Instructor/answer-
+% key file — do not distribute to students alongside the assignment.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-solutions.tex
+%   BIBINPUTS=../..:$BIBINPUTS bibtex 05-addressing-cpu-bus-solutions
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-solutions.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Assignment 5 --- Solution Key\\\large Addressing Modes, CPU Organization, and Bus Structures}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Conceptual}
+
+\textbf{Q1.} Direct addressing encodes the effective address $A$ directly in the instruction's address field, and that field is fixed at \emph{compile time} --- it cannot change while the program runs. But \texttt{A[i]}'s address changes on every loop iteration as \texttt{i} changes. \textbf{Displacement (indexed) addressing} should be used instead: $\text{EA} = [R_{\text{base}}] + [R_{\text{index}}]$, where $R_{\text{index}}$ holds \texttt{i}. Because $\text{EA}$ is recomputed from a \emph{register} on every execution of the instruction, the same instruction correctly accesses a different array element on every iteration --- exactly the property direct addressing lacks.
+
+\textbf{Q2.} Indirect addressing: the instruction's address field $A$ points to a memory location, and \emph{that} memory location holds the actual operand's address, so $\text{EA} = M[A]$. This costs two memory reads: one to fetch the pointer from $M[A]$, one to fetch the operand from $M[\text{EA}]$. Register-indirect addressing: a register itself holds the operand's address, so $\text{EA} = [\text{R2}]$ (for example), costing only one memory read (to fetch the operand) plus one register read (to get the address, which is free/fast since it needs no bus transaction). \textbf{Register-indirect is cheaper} because the pointer lives in a register, not memory, eliminating one of indirect addressing's two memory accesses.
+
+\section{Numerical}
+
+\textbf{Q3.} Displacement addressing: $\text{EA} = [\text{R3}] + d = 2048 + 30 = 2078$. \textbf{Cost:} one register read (to obtain $[\text{R3}]$) plus one memory read (to fetch the operand from $M[2078]$) --- two accesses total, one of which is a (cheap) register read.
+
+\textbf{Q4.} \textbf{3 control steps}, identical to \texttt{R1} $\gets$ \texttt{R2+R3}. The single-bus datapath's control-step count depends only on the \emph{shape} of the operation (a two-operand ALU op needs to stage one operand in \texttt{Y}, compute and stage the result in \texttt{Z}, then write back), not on which specific registers are named:
+\[
+\begin{aligned}
+T_1&: Y \gets [\text{R5}] \\
+T_2&: Z \gets [Y] + [\text{R6}] \\
+T_3&: R4 \gets [Z]
+\end{aligned}
+\]
+
+\section{Design}
+
+\textbf{Q5.} Subtraction has the identical three-step shape as addition; only the ALU's selected function changes, at $T_2$:
+\[
+\begin{aligned}
+T_1&: Y \gets [\text{R2}] \qquad \text{(R2 onto bus, latched into Y)} \\
+T_2&: Z \gets [Y] - [\text{R3}] \qquad \text{(R3 onto bus} \to \text{ALU; ALU subtracts; result} \to Z\text{)} \\
+T_3&: R1 \gets [Z] \qquad \text{(Z onto bus, latched into R1)}
+\end{aligned}
+\]
+\textbf{3 control steps}, same as addition, because the bottleneck forcing three steps is structural (the bus can carry only one operand per cycle, and the ALU needs two, then a write-back) --- it does not depend on which ALU operation is selected, only on the fact that it is a two-operand, one-result operation.
+
+\textbf{Q6.} On the three-bus datapath, both operands are read and the result is written back in a single cycle:
+\[
+T_1: R7 \gets [\text{R4}] + [\text{R5}], \qquad A = [\text{R4}], \ B = [\text{R5}], \ C = \text{result}.
+\]
+Bus A carries $[\text{R4}]$ into the ALU's first input; Bus B carries $[\text{R5}]$ into the ALU's second input; Bus C carries the ALU's output back into \texttt{R7} via the destination decoder. This instruction requires \textbf{1 control step}, since Bus A and Bus B are separate physical paths that can each drive a different register's contents in the same cycle, and Bus C is not competing with either for the write-back.
+
+\end{document}

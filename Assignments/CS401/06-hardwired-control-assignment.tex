@@ -1,0 +1,48 @@
+% =============================================================================
+% Assignments/CS401/06-hardwired-control-assignment.tex
+% Assignment 6: Hardwired Control Unit Design
+%
+% Student set — NO answers. Solution key: 06-hardwired-control-solutions.tex.
+% Sourced from Slides/CS401/06-hardwired-control.tex and
+% Notes/CS401/06-hardwired-control-notes.tex.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-assignment.tex
+%   BIBINPUTS=../..:$BIBINPUTS bibtex 06-hardwired-control-assignment
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-assignment.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Assignment 6: Hardwired Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Answer every question. Show all working for Numerical and Design questions.
+
+\section{Conceptual}
+
+\textbf{Q1.} Explain why every control signal in a hardwired control unit depends on \emph{both} an opcode line ($D_i$) and a step line ($T_j$) together, rather than on either alone. Use $Y_{\text{in}}$ as a concrete example in your explanation.
+
+\textbf{Q2.} Explain what would happen to the control unit's behavior if the $SC_{\text{clear}}$ signal were never wired up. Your answer must describe the effect on \texttt{SC}, on the step decoder's output, and on whether the CPU can execute more than one instruction.
+
+\section{Numerical}
+
+\textbf{Q3.} A CPU's instruction set contains 12 distinct instructions. What is the minimum number of one-hot opcode-decoder output lines ($D_i$) needed to distinguish them, and what is the minimum number of bits the \texttt{IR}'s opcode field must have to encode 12 instructions?
+
+\textbf{Q4.} A sequence counter \texttt{SC} is implemented with 5 bits. What is the maximum number of distinct control steps ($T_i$ states) this \texttt{SC} can address?
+
+\section{Design}
+
+\textbf{Q5.} Build the state table and derive the Boolean control equations (in the same style as $Y_{\text{in}} = D_{\text{ADD}} \cdot T_1$) for the instruction \texttt{R4} $\gets$ \texttt{R5} $-$ \texttt{R6} on the single-bus datapath, assuming it has the same three-step shape as \texttt{ADD} but with the ALU set to subtract at $T_2$. Give one equation for each control signal in your state table.
+
+\textbf{Q6.} Suppose a new instruction, \texttt{LOAD R1, (R2)} (register-indirect addressing), is added to the ISA, taking two control steps: $T_1$: $\text{MAR} \gets [\text{R2}]$; $T_2$: $R1 \gets M[\text{MAR}]$. Write this instruction's state table, then draw (or describe precisely, gate by gate) the AND-OR realization of the control signal $\text{MAR}_{\text{in}}$, following the same method used in the lecture for $Z_{\text{in}}$.
+
+\end{document}

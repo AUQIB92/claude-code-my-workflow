@@ -188,7 +188,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>20 agents, 55 skills, 34 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>20 agents, 58 skills, 34 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -276,6 +276,9 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/index-textbook` (v2.2) | Build a persistent chapter → page-range → key-terms index for a course textbook (text-layer or OCR), so `/create-lecture` can cite a specific page instead of "standard treatment" |
 | `/lecture-notes` (v2.2) | Expand a finished, compiled Beamer deck into prose Lecture Notes (article-class PDF) — derived from Slides, never co-drafted, same relationship Quarto has to Beamer |
 | `/qa-notes` (v2.2) | Adversarial critic-fixer loop checking Lecture Notes against the Beamer source (content/citation parity, no invention) |
+| `/create-assignment` (v2.2) | Scaffold a graded engineering-course assignment (Conceptual/Numerical/Design problems) sourced from a lecture's Slides/Notes — student set + separate solution key, course-organized |
+| `/competitive-exam-questions` (v2.2) | Course-organized competitive-exam practice set (default GATE CS) — real past-year questions verified via Chain-of-Verification, plus original exam-pattern questions for topic gaps, each labeled by provenance |
+| `/instructor-handout` (v2.2) | Instructor-only teaching prep for a finished lecture — extra worked examples, delivery/teaching notes, and a page-cited "before you teach this" self-study reading list |
 
 ### Research Workflow
 
