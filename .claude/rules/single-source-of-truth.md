@@ -3,6 +3,7 @@ paths:
   - "Figures/**/*"
   - "Quarto/**/*.qmd"
   - "Slides/**/*.tex"
+  - "Notes/**/*.tex"
 ---
 
 # Single Source of Truth: Enforcement Protocol
@@ -24,7 +25,14 @@ NEVER edit derived artifacts independently.
 ALWAYS propagate changes from source → derived.
 ```
 
-**Notes is a sibling of Quarto, not a special case.** Lecture Notes (`Notes/<CODE>/<lecture>-notes.tex`) are produced by `/lecture-notes` purely by expanding the Beamer source into prose — never co-drafted, never edited independently of a Beamer change. If the Beamer deck changes, re-run `/lecture-notes` (or hand-propagate) and re-check with `/qa-notes`, the same discipline `/qa-quarto` already enforces for Quarto. See `.claude/skills/lecture-notes/SKILL.md`.
+**Notes is a sibling of Quarto, not a special case** — with one deliberate difference from Quarto in *how* "derived" is enforced. Quarto's fidelity is structural: frame-for-frame, near-verbatim translation (see the Content Fidelity Checklist below). Notes' fidelity is about **content parity, not structural mirroring**: every fact, citation, diagram, and worked example in the Beamer deck must appear somewhere in the Notes and trace back to it (checked by `/qa-notes`, nothing invented, nothing dropped) — but the Notes are free to, and by default *should*, reorganize that content into a textbook-chapter shape rather than following the deck's slide-by-slide/Act-by-Act presentation order. A Beamer deck is paced for a live audience (Socratic questions, transition slides, "recap" framing, "bridge to next week" hooks); a textbook chapter is organized by topic. Concretely, Notes should:
+
+- **Number sections by lecture/week**, e.g. `5.1, 5.2, ...` for Week 5, not plain `1, 2, 3` (`\renewcommand{\thesection}{<week>.\arabic{section}}` right after `\input{header}`).
+- **Number figures and worked examples the same way** — `Fig. 5.1`, `Example 5.1` — via `\renewcommand{\thefigure}{...}` and a `\newtheorem{example}{Example}[section]`-style counter, not ad hoc "Worked Trace" subsection headings.
+- **Use a formal `Definition` callout** for the handful of terms a lecture actually defines, rather than just bolding the term inline mid-paragraph.
+- **Drop presentation-pacing headings** ("A Question We Skipped," "Socratic Check," "Bridge to Week N") — fold that motivating content into the surrounding topic-organized narrative instead of leaving it as a standalone lecture-pacing beat.
+
+Notes are still never co-drafted and never edited independently of a Beamer change: if the Beamer deck changes, re-run `/lecture-notes` (or hand-propagate) and re-check with `/qa-notes`. See `.claude/skills/lecture-notes/SKILL.md` for the full template.
 
 ---
 

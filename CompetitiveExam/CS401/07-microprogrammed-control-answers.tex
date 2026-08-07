@@ -1,0 +1,33 @@
+% =============================================================================
+% CompetitiveExam/CS401/07-microprogrammed-control-answers.tex
+% Answer key for 07-microprogrammed-control-questions.tex.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Competitive Exam Practice 7 --- Answer Key\\\large Microprogrammed Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(D) all of the above.} Horizontal microprogramming dedicates one bit per control signal, so each bit directly \emph{is} the signal (no decoder needed), which is exactly why the microinstruction word is wider than the encoded-field vertical alternative. See the provenance note in the questions file for this answer's verification status.
+
+\item[\textbf{Q2}] \textbf{(C).} Vertical encoding groups mutually-exclusive signals into short encoded fields, which must be expanded by a decoder before the datapath sees valid one-hot signals --- that decode step is exactly the extra delay vertical encoding pays for its narrower control word.
+
+\item[\textbf{Q3}] \textbf{4.} $\lceil \log_2 16 \rceil = 4$ ($2^4 = 16$ exactly).
+
+\item[\textbf{Q4}] \textbf{(B) Mapping unit.} The mapping unit converts the opcode in \texttt{IR} into the starting microaddress of that instruction's microprogram and loads it into \texttt{MPC}; control memory only supplies control words \emph{after} \texttt{MPC} already points at the right row.
+
+\item[\textbf{Q5}] \textbf{(B).} Hardwired control has no memory-read delay at all (pure gates); horizontal microprogramming reads a wide control word directly with no decode step; vertical microprogramming pays an additional decoder delay on top of the memory read, making it the slowest of the three.
+
+\item[\textbf{Q6}] \textbf{11.} $3 + 3 + 5 = 11$.
+\end{enumerate}
+
+\end{document}

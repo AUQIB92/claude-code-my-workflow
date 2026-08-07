@@ -1,0 +1,88 @@
+% =============================================================================
+% InstructorHandouts/CS401/06-hardwired-control-instructor-handout.tex
+% Instructor Handout 6: Hardwired Control Unit Design
+%
+% INSTRUCTOR-ONLY. See 05-addressing-cpu-bus-instructor-handout.tex for the
+% grounding-discipline note (worked examples/reading list are fact-checked
+% like Notes; Teaching Notes are labeled instructor judgment).
+%
+% Compile with: cd InstructorHandouts/CS401 &&
+%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-instructor-handout.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Instructor Handout 6: Hardwired Control Unit Design}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+{\centering\large\color{negative}\textbf{Instructor Copy --- Not for Student Distribution}\par}
+\vspace{0.5cm}
+
+\section{Before You Teach This Lecture}
+
+\begin{itemize}
+  \item \textbf{Mano, \textit{Computer System Architecture}, 3rd ed., Sec.~5-4 ``Timing and Control,'' p.~135, with Fig.~5-6 on p.~137 and Fig.~5-7 on p.~138} (indexed, page-cited). Fig.~5-7 is a literal clock/timing \emph{waveform} diagram (not a block diagram) --- the lecture's slides describe SC's timing in prose only, so if you want to sketch actual clock pulses and $T_i$ waveforms on the board, this figure is worth having open.
+  \item \textbf{Mano, Sec.~5-9 ``Design of Basic Computer,'' pp.~157--164 (control logic gates, control of registers/common bus), and Sec.~5-10, pp.~164--167 (accumulator control logic)} (indexed). Figures 5-16/5-17/5-18 in this range are the book's own real gate-level realizations (control gates for \texttt{AR}, \texttt{IEN}, and bus selection) --- a third worked AND-OR example beyond \texttt{ADD}/\texttt{SUB}'s $Z_{\text{in}}$, if a student wants to see the pattern applied to a register-control signal instead of a data-path signal.
+  \item \textbf{Hamacher, Ch.~7} --- \emph{not yet page-indexed} for this course. Chapter-level citation only.
+  \item \textbf{Reminder:} this lecture's anchor reading was corrected this term from a prior mis-citation of Mano Ch.~7 (Microprogrammed Control, actually next week's topic) to Mano Ch.~5. If any of your own older notes/slides for this course still say ``Mano Ch.~7'' for hardwired control, they are citing the wrong chapter --- see the Mano1993 textbook index's correction record, at \url{master_supporting_docs/CS401/supporting_books/Mano1993/index.md}, for the full history.
+\end{itemize}
+
+\section{Extra Worked Examples}
+
+\subsection{Three Instructions Sharing a Signal}
+
+The student Notes derive $Z_{\text{in}}$ for two instructions (\texttt{ADD}, \texttt{SUB}). Extend to three: suppose \texttt{AND} also uses \texttt{Z} at its own $T_2$.
+\[
+Z_{\text{in}} = (D_{\text{ADD}} \cdot T_2) + (D_{\text{SUB}} \cdot T_2) + (D_{\text{AND}} \cdot T_2) = T_2 \cdot (D_{\text{ADD}} + D_{\text{SUB}} + D_{\text{AND}}).
+\]
+\textbf{Instructor note:} worth showing that the AND-OR gate realization simply grows by one more AND gate feeding the same OR gate --- the OR gate itself does not need to change shape, only gain an input, which is a good moment to point at real hardware's fixed-fan-in OR gates as a practical limit on how many instructions can cheaply share one signal.
+
+\subsection{A One-Step Instruction}
+
+Not every instruction needs three steps. Consider \texttt{MOV R1, R2} (register-to-register copy, no ALU operation):
+\begin{center}
+\small
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{Step} & \textbf{RTL} & \textbf{Control signals active} \\
+\midrule
+$T_1$ & $R1 \gets [\text{R2}]$ & $R2_{\text{out}}, R1_{\text{in}}, SC_{\text{clear}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Boolean equations: $R2_{\text{out}} = D_{\text{MOV}} \cdot T_1$, $R1_{\text{in}} = D_{\text{MOV}} \cdot T_1$, $SC_{\text{clear}} = D_{\text{MOV}} \cdot T_1$. \textbf{Instructor note:} useful as a contrast case --- it shows the state-table method scales \emph{down} as cleanly as it scales up, and that $SC_{\text{clear}}$ can co-occur with $T_1$ when an instruction is only one step long, which some students find counterintuitive after seeing only 3-step examples.
+
+\section{Teaching Notes}
+
+\textit{Instructional suggestions, not fact-checked content --- adapt freely.}
+
+\subsection{Control Unit Functions}
+\begin{itemize}
+  \item \textbf{Common misconception:} students often picture $D_i$ as a fixed wire with a fixed name across the whole course, rather than understanding it is \emph{one output among many} from a single decoder, exactly one of which is high at a time. Reinforce ``one-hot'' explicitly and early.
+\end{itemize}
+
+\subsection{The Sequence Counter and Timing Generation}
+\begin{itemize}
+  \item \textbf{Common error:} when deriving equations, students frequently forget that $SC_{\text{clear}}$ itself needs an opcode-and-step term ($D_{\text{ADD}} \cdot T_3$), treating it as a special signal exempt from the general pattern. It is not --- it is generated by the exact same method as every other control signal.
+  \item \textbf{Board sequence:} for the SC + decoder diagram, draw \texttt{SC} and the decoder box first, then add the $T_i$ output lines one at a time as you narrate ``one line goes high per cycle,'' rather than showing all outputs pre-drawn.
+\end{itemize}
+
+\subsection{Opcode Decoding and the Control Matrix}
+\begin{itemize}
+  \item \textbf{Board sequence:} build the two-decoders diagram left to right, matching data flow --- \texttt{IR}/\texttt{SC} first, then the two decoders, then the control matrix, then outputs last. Drawing the control matrix box before its inputs tends to make the diagram read as ``a black box that magically knows the answer'' rather than ``a circuit built from two decoders.''
+  \item \textbf{Live question:} ``If we add a 4-step \texttt{MUL} instruction, does \texttt{SC}'s bit width need to change?'' (A good check on whether students understand \texttt{SC}'s width is set by the \emph{longest} instruction in the ISA, not by any one instruction.)
+\end{itemize}
+
+\subsection{Deriving the Control Equations}
+\begin{itemize}
+  \item \textbf{Pacing:} the state-table $\to$ Boolean-equations $\to$ gates chain is usually the part of this lecture that benefits most from a second, slower pass, ideally with the class supplying the equation for one new signal themselves (e.g.\ $R1_{\text{in}}$) before you reveal it.
+\end{itemize}
+
+\end{document}

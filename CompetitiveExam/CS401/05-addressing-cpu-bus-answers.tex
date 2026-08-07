@@ -1,0 +1,33 @@
+% =============================================================================
+% CompetitiveExam/CS401/05-addressing-cpu-bus-answers.tex
+% Answer key for 05-addressing-cpu-bus-questions.tex.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Competitive Exam Practice 5 --- Answer Key\\\large Addressing Modes, CPU Organization, and Bus Structures}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(C) Displacement (indexed).} $\text{EA} = [\text{register}] + d$ is recomputed from a register on every execution, so it correctly tracks a changing loop index; direct addressing's fixed field cannot.
+
+\item[\textbf{Q2}] \textbf{(B) $B$.} Indirect addressing: $\text{EA} = M[A] = B$. The operand itself (42) is found at $M[B]$, but the \emph{effective address} is $B$, not the operand's value.
+
+\item[\textbf{Q3}] \textbf{200.} $\text{EA} = [\text{R4}] + d = 175 + 25 = 200$.
+
+\item[\textbf{Q4}] \textbf{(C) 3.} One step to stage the first operand into a buffer register, one to bring the second operand and compute (result into a second buffer register), one to write the result back --- the structural minimum when only one value can occupy the bus per cycle.
+
+\item[\textbf{Q5}] \textbf{(C).} Because Bus A and Bus B are separate physical paths and Bus C does not compete with either, both operand reads and the result write-back can all occur in a single clock cycle.
+
+\item[\textbf{Q6}] \textbf{2.} One memory access to fetch the pointer from $M[A]$, one to fetch the operand from $M[\text{pointer value}]$.
+\end{enumerate}
+
+\end{document}
