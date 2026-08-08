@@ -1,0 +1,54 @@
+% =============================================================================
+% Assignments/CS401/01-intro-performance-assignment.tex
+% Assignment 1: Computer Architecture, Organization, and Performance Measurement
+%
+% Student set — NO answers. Solution key: 01-intro-performance-solutions.tex.
+% Sourced from Slides/CS401/01-intro-performance.tex and
+% Notes/CS401/01-intro-performance-notes.tex; every problem reuses the
+% lecture's own notation and extends its worked examples to new machines/
+% programs rather than repeating them verbatim.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-intro-performance-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 01-intro-performance-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-intro-performance-assignment.tex (x2)
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Assignment 1: Computer Architecture, Organization, and Performance Measurement}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Deadline:} \key{two weeks from the date of issue} --- late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions --- a bare final answer without the derivation earns partial credit only.
+
+\section{Conceptual}
+
+\textbf{Q1.} A new model of an existing x86 processor ships with a redesigned datapath that halves the CPI of most instructions but keeps the instruction set, registers, and addressing modes unchanged. A binary compiled years ago runs unchanged and measurably faster on the new model. Explain this observation using the distinction between \emph{computer architecture} and \emph{computer organization}: which of the two changed, which stayed fixed, and why old software continues to work. Your answer must use both consequences --- compatibility and design freedom --- from the lecture.
+
+\textbf{Q2.} Two machines run the same program $P$. Machine A reports $\text{MIPS} = 1000$; Machine B reports $\text{MIPS} = 800$. A student concludes that A is faster. Explain why the MIPS numbers alone cannot support that conclusion, state the metric that \emph{should} be used instead, and identify the one special condition under which the MIPS comparison would happen to be a safe guide.
+
+\section{Numerical}
+
+\textbf{Q3.} Program $P$ executes $2 \times 10^8$ instructions. Machine A runs at $f = 2.5$ GHz with $\text{CPI} = 1.8$; Machine B runs at $f = 3.0$ GHz with $\text{CPI} = 2.2$. Compute the CPU time of both machines, state which is faster, and by what factor.
+
+\textbf{Q4.} A program's total execution time is 200 s. A new floating-point unit makes the FP portion of the program 3$\times$ faster. Compute the overall speedup, and separately compute the \emph{best possible} overall speedup (i.e.\ the ceiling when the FP part is made infinitely fast).
+
+\section{Design}
+
+\textbf{Q5.} A program spends 25\% of its time on load/store instructions. An engineer proposes a new memory system that makes loads/stores 8$\times$ faster. (a) Compute the resulting overall speedup. (b) Compute the hard ceiling on overall speedup that this proposal can ever reach, no matter how much faster loads/stores become. (c) The engineering target is a 2$\times$ overall speedup --- using your two numbers, argue whether investing further in the load/store path is the right place to spend design effort, and where the remaining gain must come from.
+
+\textbf{Q6.} You are required to achieve a \emph{4$\times$} overall speedup on a workload by improving only its floating-point portion, which you may make \emph{infinitely} fast. Using Amdahl's Law, determine the minimum fraction $f$ of execution time that the FP portion must occupy for this goal to be achievable, and give the resulting speedup expression that confirms it.
+
+\end{document}

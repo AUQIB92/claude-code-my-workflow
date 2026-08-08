@@ -1,0 +1,53 @@
+% =============================================================================
+% Assignments/CS401/04-registers-instructions-assignment.tex
+% Assignment 4: Registers, Stack Organization, Instruction Formats, Cycle
+%
+% Student set — NO answers. Solution key: 04-registers-instructions-solutions.tex.
+% Sourced from Slides/CS401/04-registers-instructions.tex and
+% Notes/CS401/04-registers-instructions-notes.tex; every problem reuses the
+% lecture's notation and extends its worked examples to new expressions.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-registers-instructions-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 04-registers-instructions-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-registers-instructions-assignment.tex (x2)
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Assignment 4: Registers, Stack Organization, Instruction Formats, and the Instruction Cycle}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Deadline:} \key{two weeks from the date of issue} --- late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions --- a bare final answer without the derivation earns partial credit only.
+
+\section{Conceptual}
+
+\textbf{Q1.} Registers come in two kinds: program-visible and internal. Name the three kinds of program-visible registers this course uses, and the four internal registers the control unit drives through the instruction cycle. Explain why a program can name the former but not the latter, and state which register's job is \emph{only} to hold the address of the next instruction.
+
+\textbf{Q2.} A stack can be built from registers (a register stack) or from main memory (a memory stack). Explain why real machines use memory stacks for function calls even though a register stack is faster. Your answer must name the concrete property of function calls that a small register stack cannot satisfy, and state what \texttt{SP} actually holds in each design.
+
+\section{Numerical}
+
+\textbf{Q3.} Compile the expression $Y = (A - B) \times (C + D)$ in each of the four instruction formats (3-address, 2-address, 1-address, 0-address), writing the instruction sequence for each. For the 2-address and 1-address forms, state how many instructions each needs and why any extra copy/temporary instructions are required. Give all four counts.
+
+\textbf{Q4.} The stack contains \texttt{[?, 3, 8, 2]} with the top at 2. Trace the following sequence, showing the stack after every operation and the value returned by each \texttt{POP}: \texttt{PUSH 5}, \texttt{ADD}, \texttt{PUSH 1}, \texttt{POP}, \texttt{POP}. Assume \texttt{ADD} pops the top two values and pushes their sum, and the stack grows downward in memory.
+
+\section{Design}
+
+\textbf{Q5.} Using the common-bus register-transfer mechanism from the lecture, write the complete step-by-step sequence to copy the contents of register \texttt{R5} into register \texttt{R3} ($R3 \gets [R5]$), mirroring the lecture's \texttt{R1} $\gets$ \texttt{[R2]} example (which used the select signals \texttt{SELA}/\texttt{SELB}/\texttt{SELD} and the bus). For each step state which select signal encodes what, what is on the bus, and what happens on the clock edge.
+
+\textbf{Q6.} On a 1-address (accumulator) machine, the instruction \texttt{ADD A} uses the accumulator as the implicit first operand and memory location \texttt{A} as the second. Write the fetch and execute phases of the instruction cycle for \texttt{ADD A}, in the same phase-by-phase table format as the lecture's \texttt{ADD R1, A} example: for Fetch give the register activity (\texttt{MAR}, \texttt{MDR}, \texttt{IR}, \texttt{PC}); for Decode state what the opcode does; for Execute give the register activity and the memory/ALU action. State which register ends up with the result.
+
+\end{document}
