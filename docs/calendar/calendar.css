@@ -1,12 +1,26 @@
 /* ============================================================
    Multi-course calendar styles — docs/calendar/calendar.css
    Re-theme of the appliedcryptography.page calendar onto the
-   portfolio's navy/gold/cream design tokens (docs/index.html).
+   portfolio's cedar/brass/paper design tokens (docs/assets/site.css).
+   All old token names are aliased below so the calendar follows the
+   site's light/dark themes automatically.
    ============================================================ */
+
+/* ── Token aliases → site design system ── */
+:root {
+	--navy: var(--primary);
+	--navy-deep: var(--primary-dark);
+	--navy-mid: var(--primary-dark);
+	--gold: var(--accent);
+	--gold-deep: var(--accent);
+	--paper: var(--surface);
+	--line: var(--border-soft);
+	--shadow-sm: var(--shadow-xs);
+}
 
 /* ── Wrapper ── */
 .calendar-wrap {
-	background: var(--paper, #ffffff);
+	background: var(--paper);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: var(--radius, 16px);
 	box-shadow: var(--shadow-sm);
@@ -19,7 +33,7 @@
 	flex-wrap: wrap;
 	gap: 0.5rem 1.4rem;
 	align-items: center;
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 12px;
 	padding: 0.85rem 1.1rem;
@@ -42,7 +56,7 @@
 .cal-ribbon-progress {
 	flex-basis: 100%;
 	height: 4px;
-	background-color: #eee7d7;
+	background-color: color-mix(in srgb, var(--border) 70%, transparent);
 	border-radius: 100px;
 	overflow: hidden;
 	margin-top: 0.35rem;
@@ -66,7 +80,7 @@
 
 .cal-tabs {
 	display: inline-flex;
-	background-color: #f4efdf;
+	background-color: var(--surface-sunken);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 12px;
 	padding: 3px;
@@ -94,7 +108,7 @@
 .cal-tab:hover { color: var(--navy, #012169); }
 
 .cal-tab[aria-selected="true"] {
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 	color: var(--navy, #012169);
 	box-shadow: var(--shadow-sm);
 }
@@ -110,7 +124,7 @@
 	font-size: 0.78rem;
 	font-weight: 600;
 	letter-spacing: 0.01em;
-	background-color: #f4efdf;
+	background-color: var(--surface-sunken);
 	color: var(--muted, #5b6b7b);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 100px;
@@ -131,7 +145,7 @@
 }
 
 .cal-filter[aria-pressed="true"][data-kind="assignment"] {
-	background-color: #f4efdf;
+	background-color: var(--surface-sunken);
 	color: var(--ink, #1c2b3a);
 	border-color: var(--line, #e8e1d0);
 }
@@ -167,7 +181,7 @@
 	font-size: 0.82rem;
 	font-weight: 600;
 	color: var(--ink, #1c2b3a);
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 8px;
 	padding: 0.4rem 0.75rem;
@@ -225,7 +239,7 @@
 }
 
 .cal-legend-dot[data-kind="lecture"] { background-color: var(--navy, #012169); }
-.cal-legend-dot[data-kind="assignment"] { background-color: #9aa3af; }
+.cal-legend-dot[data-kind="assignment"] { background-color: var(--muted); }
 .cal-legend-dot[data-kind="test"] { background-color: var(--gold, #B9975B); }
 
 .cal-tz {
@@ -240,7 +254,7 @@
 
 /* ── Empty / pending states ── */
 .cal-empty {
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 	border: 1px dashed var(--gold, #B9975B);
 	border-radius: 12px;
 	padding: 3rem 1.5rem;
@@ -274,7 +288,7 @@
 }
 
 .cal-error {
-	background-color: #fffdf6;
+	background-color: var(--glow);
 	border-left: 3px solid var(--gold, #B9975B);
 	border-radius: 12px;
 	padding: 1rem 1.25rem;
@@ -320,7 +334,7 @@
 	grid-template-columns: 56px 1fr auto;
 	gap: 1rem;
 	align-items: center;
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 12px;
 	padding: 0.85rem 1.1rem;
@@ -329,10 +343,10 @@
 
 .cal-event[data-today="true"] {
 	border-color: var(--gold, #B9975B);
-	box-shadow: 0 0 0 3px rgba(185,151,91,.22), var(--shadow-sm);
+	box-shadow: 0 0 0 3px var(--glow-strong), var(--shadow-sm);
 }
 
-.cal-event[data-kind="test"] { background-color: #fffdf6; }
+.cal-event[data-kind="test"] { background-color: var(--glow); }
 
 .cal-event-date {
 	display: flex;
@@ -390,7 +404,7 @@
 }
 
 .cal-event-kind[data-kind="assignment"] {
-	background-color: #f4efdf;
+	background-color: var(--surface-sunken);
 	color: var(--ink, #1c2b3a);
 	border: 1px solid var(--line, #e8e1d0);
 }
@@ -407,7 +421,7 @@
 	color: var(--navy, #012169);
 	padding: 0.15rem 0.5rem;
 	border-radius: 100px;
-	background: #f4efdf;
+	background: var(--surface-sunken);
 }
 
 .cal-event-time { font-size: 0.82rem; color: var(--muted, #5b6b7b); }
@@ -461,7 +475,7 @@
 	border-radius: 8px;
 	border: 1px solid var(--line, #e8e1d0);
 	color: var(--ink, #1c2b3a);
-	background-color: #f4efdf;
+	background-color: var(--surface-sunken);
 	text-decoration: none;
 	display: inline-flex;
 	align-items: center;
@@ -509,7 +523,7 @@
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 12px;
 	overflow: hidden;
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 }
 
 .cal-month-header {
@@ -571,11 +585,11 @@
 }
 
 .cal-month-table td:nth-child(7n) { border-right: none; }
-.cal-month-table td:hover { background-color: #faf6ea; }
+.cal-month-table td:hover { background-color: var(--surface-alt); }
 
 .cal-month-table td[data-outside="true"] {
 	color: var(--muted, #5b6b7b);
-	background-color: #f4f0e4;
+	background-color: var(--surface-sunken);
 	cursor: default;
 }
 
@@ -618,8 +632,8 @@
 	text-overflow: ellipsis;
 }
 
-.cal-day-chip[data-kind="assignment"] { background-color: #f4efdf; color: var(--ink, #1c2b3a); }
-.cal-day-chip[data-kind="test"] { background-color: rgba(185,151,91,.22); color: var(--gold-deep, #a07f45); }
+.cal-day-chip[data-kind="assignment"] { background-color: var(--surface-sunken); color: var(--ink, #1c2b3a); }
+.cal-day-chip[data-kind="test"] { background-color: var(--glow-strong); color: var(--gold-deep, #a07f45); }
 
 .cal-day-more {
 	font-size: 0.65rem;
@@ -628,7 +642,7 @@
 }
 
 .cal-day-panel {
-	background-color: var(--paper, #ffffff);
+	background-color: var(--paper);
 	border: 1px solid var(--line, #e8e1d0);
 	border-radius: 12px;
 	padding: 1rem 1.1rem;
