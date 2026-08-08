@@ -101,6 +101,20 @@ else
     cp -r "$REPO_ROOT/Figures" "$DOCS_DIR/Figures"
 fi
 
+# 6. Sync Assignments to docs/assignments/<CourseCode>/ (recursive).
+#    Solution keys (*-solutions.pdf) are NEVER published — excluded here and
+#    gitignored, so answer keys never reach the public GitHub Pages site.
+echo "Syncing Assignments (solutions excluded)..."
+while IFS= read -r pdf; do
+    relpdf="${pdf#"$REPO_ROOT/Assignments"/}"
+    reldir="$(dirname "$relpdf")"
+    [ "$reldir" = "." ] && reldir=""
+    outdir="$DOCS_DIR/assignments/$reldir"
+    mkdir -p "$outdir"
+    echo "  Copying $relpdf..."
+    cp "$pdf" "$outdir/"
+done < <(find "$REPO_ROOT/Assignments" -type f -name '*.pdf' ! -name '*solutions*')
+
 echo ""
 echo "=== Sync complete! ==="
 echo "Files synced to: $DOCS_DIR/slides/"

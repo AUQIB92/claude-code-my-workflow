@@ -40,6 +40,13 @@ Thumbs.db
 .env
 _cv.txt
 
+# Assignment solution keys — never commit or publish. Keeps the public
+# GitHub Pages site (docs/) and the source tree (Assignments/) free of
+# answer keys; sync_to_docs.sh excludes them too.
+**/*-solutions.tex
+**/*-solutions.pdf
+Assignments/CS401/*-solutions.*
+
 # Claude Code local files (not shared across machines)
 .claude/settings.local.json
 .claude/state/
@@ -85,6 +92,9 @@ quality_reports/diagnoses/*
 
 # R analysis outputs (generated artifacts; keep scripts, ignore outputs)
 scripts/R/_outputs/
+
+# Playwright scratch workspace (verification scripts, screenshots, node_modules)
+reference/
 
 # Textbook source material — copyrighted scans/PDFs and raw full-text
 # extraction dumps must never be committed. Only the derived index.md

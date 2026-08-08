@@ -32,6 +32,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="calendar/calendar.css">
+
   <style>
     :root {
       --navy: #012169;
@@ -294,6 +296,7 @@
       background: #f2ecdd; color: #6b5a30; border-radius: 100px; padding: 3px 12px;
       font-size: .76rem; font-weight: 500;
     }
+    .text-muted { color: var(--muted); }
     .card .go {
       font-size: .9rem; font-weight: 500; color: var(--navy);
       display: inline-flex; align-items: center; gap: 6px; transition: gap .2s var(--ease);
@@ -396,6 +399,7 @@
         <a href="#about">About</a>
         <a href="#experience">Experience</a>
         <a href="#courses">Courses</a>
+        <a href="#calendar">Calendar</a>
         <a href="#research">Research</a>
         <a href="#contact" class="cta">Contact</a>
       </div>
@@ -518,10 +522,24 @@
     </div>
   </section>
 
+  <!-- ================= COURSE CALENDAR ================= -->
+  <section id="calendar">
+    <div class="section-head reveal">
+      <span class="section-num">04</span>
+      <h2>Course calendar</h2>
+    </div>
+    <div class="calendar-wrap reveal">
+      <div data-cal-ribbon hidden></div>
+      <div data-cal-toolbar></div>
+      <div data-cal-view><p class="text-muted">Loading calendar&hellip;</p></div>
+      <div data-cal-caption></div>
+    </div>
+  </section>
+
   <!-- ================= RESEARCH ================= -->
   <section id="research">
     <div class="section-head reveal">
-      <span class="section-num">04</span>
+      <span class="section-num">05</span>
       <h2>Research &amp; writing</h2>
     </div>
     <div class="research-list">
@@ -617,6 +635,10 @@
       totop.classList.toggle('show', scrollY > 520);
     }, { passive: true });
     totop.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: 'smooth' }); });
+  </script>
+  <script src="calendar/calendar.js"></script>
+  <script>
+    if (window.calendarInit) window.calendarInit();
   </script>
 
 </body>
