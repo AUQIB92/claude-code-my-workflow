@@ -3,7 +3,7 @@
   ============================================================
   Personal Academic Portfolio — Dr. Auqib Hamid Lone
   ------------------------------------------------------------
-  Assistant Professor of Computer Science (GCET Kashmir).
+  Assistant Professor of Computer Science and Engineering (GCET Kashmir).
   Courses live at docs/courses/<code>/ and are listed below.
   To add a course: copy a <a class="card"> block and point the
   href at its hub under docs/courses/.
@@ -14,7 +14,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dr. Auqib Hamid Lone — Assistant Professor &amp; Blockchain Researcher</title>
-  <meta name="description" content="Dr. Auqib Hamid Lone — Assistant Professor of Computer Science at GCET Kashmir, blockchain and applied-cryptography researcher. Open course materials for Computer Organization and Architecture (CS-401).">
+  <meta name="description" content="Dr. Auqib Hamid Lone — Assistant Professor of Computer Science and Engineering at GCET Kashmir, blockchain and applied-cryptography researcher. Open course materials for Computer Organization and Architecture (CS-401).">
   <meta name="author" content="Dr. Auqib Hamid Lone">
   <meta name="theme-color" content="#012169">
 
@@ -213,6 +213,13 @@
     .about-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: start; }
     .about-grid p { margin-bottom: 1.05em; color: #33424f; font-size: 1.02rem; }
     .about-grid p b { color: var(--navy); font-weight: 600; }
+    .about-grid .pull {
+      margin: 22px 0 0; padding: 14px 20px;
+      font-family: 'Playfair Display', Georgia, serif; font-style: italic;
+      font-size: 1.15rem; line-height: 1.5; color: var(--navy);
+      background: linear-gradient(180deg, rgba(185,151,91,.12), rgba(185,151,91,.04));
+      border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0;
+    }
     .fact-box {
       background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
       padding: 28px 30px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
@@ -234,6 +241,29 @@
     .fact-box li b { color: var(--ink); font-weight: 500; }
     .fact-box li a { color: var(--navy); font-weight: 500; text-decoration: none; }
     .fact-box li a:hover { color: var(--gold-deep); }
+
+    /* ============ Experience ============ */
+    .xp-list { display: flex; flex-direction: column; }
+    .xp-item {
+      position: relative; padding: 6px 0 34px 34px;
+      border-left: 1px solid var(--line); margin-left: 4px;
+    }
+    .xp-item:last-child { padding-bottom: 6px; }
+    .xp-item::before {
+      content: ""; position: absolute; left: -5px; top: 12px;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 0 4px rgba(185,151,91,.18);
+    }
+    .xp-item .when {
+      font-family: 'Playfair Display', Georgia, serif; font-style: italic;
+      color: var(--gold-deep); font-size: .92rem; margin-bottom: 4px;
+      display: inline-flex; gap: 8px; align-items: center;
+    }
+    .xp-item .when .dash { color: var(--muted); }
+    .xp-item h3 { font-size: 1.1rem; font-weight: 600; color: var(--navy-deep); line-height: 1.35; }
+    .xp-item .org { font-size: .9rem; color: var(--muted); margin: 2px 0 8px; }
+    .xp-item p { font-size: .93rem; color: #33424f; max-width: 58em; }
+    .xp-item .tags { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 
     /* ============ Courses ============ */
     .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 26px; }
@@ -291,6 +321,9 @@
     .res-item h3 { font-size: 1.05rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; line-height: 1.4; }
     .res-item .venue { font-size: .86rem; color: var(--muted); margin-bottom: 8px; }
     .res-item p { font-size: .92rem; color: #33424f; }
+    .research-more { margin-top: 24px; font-size: .95rem; color: var(--muted); }
+    .research-more a { color: var(--navy); font-weight: 500; text-decoration: none; }
+    .research-more a:hover { color: var(--gold-deep); text-decoration: underline; }
 
     /* ============ Contact ============ */
     .contact-wrap {
@@ -361,6 +394,7 @@
       <a class="brand" href="index.html"><span class="mark">AL</span>Dr. Auqib Lone</a>
       <div class="nav-links">
         <a href="#about">About</a>
+        <a href="#experience">Experience</a>
         <a href="#courses">Courses</a>
         <a href="#research">Research</a>
         <a href="#contact" class="cta">Contact</a>
@@ -371,9 +405,9 @@
   <!-- ================= HERO ================= -->
   <header class="hero">
     <div class="reveal">
-      <span class="eyebrow">Computer Science &middot; Teaching &middot; Research</span>
+      <span class="eyebrow">Computer Science &amp; Engineering &middot; Teaching &middot; Research</span>
       <h1>Dr. Auqib Hamid Lone<br><span class="thin">Blockchain &amp; Applied Cryptography</span></h1>
-      <p class="role">Assistant Professor of Computer Science. I teach computer organization and architecture, and research how blockchain and cryptography secure the systems we rely on.</p>
+      <p class="role">Assistant Professor of Computer Science and Engineering. I teach computer organization and architecture, and research how blockchain and cryptography secure the systems we rely on.</p>
       <div class="cta-row">
         <a class="btn primary" href="#courses">Explore my courses</a>
         <a class="btn ghost" href="#contact">Get in touch</a>
@@ -397,6 +431,7 @@
         <p>I am an <b>Assistant Professor of Computer Science and Engineering</b> at GCET Kashmir, teaching core undergraduate courses to B.Tech CSE students. My PhD (NIT Srinagar) explored blockchain technology beyond cryptocurrencies — harnessing it to remove problems of trust and security in real applications.</p>
         <p>Before academia I was a <b>Research Scientist in blockchain and cryptography at Parity Financial (London)</b>, where I worked on custody infrastructure, transaction construction, and zero-knowledge privacy layers.</p>
         <p>My teaching materials are published openly here, so students and fellow instructors can reuse, adapt, and improve them.</p>
+        <blockquote class="pull">"Security is the balanced mix of feeling and reality."</blockquote>
       </div>
       <aside class="fact-box reveal">
         <h3>At a glance</h3>
@@ -405,16 +440,55 @@
           <li><span>Institution</span><b>GCET Kashmir</b></li>
           <li><span>Focus</span><b>Blockchain &amp; crypto</b></li>
           <li><span>Education</span><b>PhD, NIT Srinagar</b></li>
+          <li><span>Exams</span><b>GATE 98.5% &middot; NET-JRF AIR 31</b></li>
           <li><span>Courses published</span><b><a href="#courses">1 &amp; growing</a></b></li>
         </ul>
       </aside>
     </div>
   </section>
 
+  <!-- ================= EXPERIENCE ================= -->
+  <section id="experience">
+    <div class="section-head reveal">
+      <span class="section-num">02</span>
+      <h2>Experience</h2>
+    </div>
+    <div class="xp-list">
+      <div class="xp-item reveal">
+        <span class="when">Mar 2024 <span class="dash">&mdash;</span> present</span>
+        <h3>Assistant Professor, Computer Science &amp; Engineering</h3>
+        <div class="org">Government College of Engineering &amp; Technology (GCET), Kashmir, India</div>
+        <p>Teaching core and specialized undergraduate courses to B.Tech CSE students — including this site&rsquo;s CS-401 materials.</p>
+        <div class="tags"><span class="chip">Full-time</span><span class="chip">Teaching</span></div>
+      </div>
+      <div class="xp-item reveal">
+        <span class="when">Apr 2021 <span class="dash">&mdash;</span> Feb 2024</span>
+        <h3>Research Scientist, Blockchain &amp; Cryptography</h3>
+        <div class="org">Parity Financial (Parfin) &middot; London, UK</div>
+        <p>Researched and improved the underlying cryptography, blockchain, and security mechanisms behind custody infrastructure; built proofs of concept and helped teams integrate new blockchain platforms.</p>
+        <div class="tags"><span class="chip">Full-time</span><span class="chip">Research</span></div>
+      </div>
+      <div class="xp-item reveal">
+        <span class="when">Jun 2022 <span class="dash">&mdash;</span> Dec 2022</span>
+        <h3>Subject Matter Expert, Web3</h3>
+        <div class="org">Bloom Tech &middot; Remote (USA)</div>
+        <p>Subject Matter Expert for the Web3 course — authoring Ethereum token content covering the ERC-20 and ERC-721 standards.</p>
+        <div class="tags"><span class="chip">Part-time</span><span class="chip">Ethereum tokens</span></div>
+      </div>
+      <div class="xp-item reveal">
+        <span class="when">Apr 2021 <span class="dash">&mdash;</span> Dec 2023</span>
+        <h3>Technical Trainer, Blockchain</h3>
+        <div class="org">Colleges &amp; Universities &middot; Remote</div>
+        <p>Delivered training and teaching sessions on blockchain technology to college students, and developed the curriculum that underpins them.</p>
+        <div class="tags"><span class="chip">Part-time</span><span class="chip">Training</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= COURSES ================= -->
   <section id="courses">
     <div class="section-head reveal">
-      <span class="section-num">02</span>
+      <span class="section-num">03</span>
       <h2>Courses I teach</h2>
     </div>
     <div class="cards">
@@ -447,7 +521,7 @@
   <!-- ================= RESEARCH ================= -->
   <section id="research">
     <div class="section-head reveal">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <h2>Research &amp; writing</h2>
     </div>
     <div class="research-list">
@@ -475,16 +549,41 @@
           <p>Unpacking the cryptographic primitives under blockchains and charting what a post-quantum blockchain must change.</p>
         </div>
       </div>
+      <div class="res-item reveal">
+        <div class="yr">2020</div>
+        <div>
+          <h3>Applicability of mobile contact tracing in fighting pandemic (COVID-19): Issues, challenges, and solutions</h3>
+          <div class="venue">Computer Science Review (2020)</div>
+          <p>Survey of mobile contact-tracing systems deployed during the pandemic — their privacy issues, challenges, and solutions.</p>
+        </div>
+      </div>
+      <div class="res-item reveal">
+        <div class="yr">2020</div>
+        <div>
+          <h3>Forgery protection of academic certificates through integrity preservation at scale using Ethereum smart contract</h3>
+          <div class="venue">Scalable Computing: Practice and Experience (2020)</div>
+          <p>An Ethereum smart-contract approach to tamper-proof academic certificates, preserving integrity at scale.</p>
+        </div>
+      </div>
+      <div class="res-item reveal">
+        <div class="yr">2020</div>
+        <div>
+          <h3>Reputation driven dynamic access control framework for IoT atop PoA Ethereum blockchain</h3>
+          <div class="venue">Cryptology ePrint Archive (2020)</div>
+          <p>A dynamic, reputation-driven access-control framework for IoT, anchored on a Proof-of-Authority Ethereum chain.</p>
+        </div>
+      </div>
     </div>
+    <p class="research-more reveal">Full list on <a href="https://scholar.google.com/citations?user=Dr.-Auqib-Hamid-Lone">Google Scholar</a>.</p>
   </section>
 
   <!-- ================= CONTACT ================= -->
   <section id="contact">
     <div class="contact-wrap reveal">
       <h2>Let&rsquo;s talk about teaching and computing</h2>
-      <p>Students, instructors, and collaborators are always welcome — whether you have a question about the material, want to adapt a course, or have an idea to discuss.</p>
+      <p>Students, instructors, and collaborators are always welcome — whether you have a question about the material, want to adapt a course, or have an idea to discuss. Office hours: Mon&ndash;Sat, 2&ndash;3 PM.</p>
       <div class="contact-links">
-        <a href="mailto:auqib92@gmail.com">Email me</a>
+        <a href="mailto:auqib.cse@gcetkashmir.ac.in">Email me</a>
         <a href="https://github.com/AUQIB92">GitHub</a>
         <a href="CV/Auqib-Hamid-Lone-CV.pdf">CV</a>
         <a href="https://www.linkedin.com/in/dr-auqib-hamid-lone-45996067">LinkedIn</a>
