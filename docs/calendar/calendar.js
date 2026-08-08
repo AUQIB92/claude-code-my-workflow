@@ -352,7 +352,7 @@
 		const courseBtns = COURSES.map((c) =>
 			`<button class="cal-filter cal-filter-course" data-action="toggle-course" data-course="${c.code}"
 			        aria-pressed="${state.courses.includes(c.code)}">
-				<span class="cal-course-dot" style="--course:${c.color || "#012169"}"></span>${c.short}
+				<span class="cal-course-dot" style="--course:${c.color || "#2c5e2a"}"></span>${c.short}
 			</button>`
 		).join("");
 		const kindBtns = VALID_KINDS.map((k) =>
