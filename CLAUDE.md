@@ -42,6 +42,9 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 ├── quality_reports/             # Plans, session logs, merge reports, decision records
 ├── explorations/                # Research sandbox (see rules)
 ├── templates/                   # Session log, quality report templates
+├── CompetitiveExam/             # Competitive-exam practice sets
+│   ├── <CODE>/                 # Per-course sets: <lecture>-questions.tex / -answers.tex
+│   └── Books/index.md           # Source registry: PYQ books, availability ladder, topic→page maps
 └── master_supporting_docs/<CODE>/{supporting_papers,supporting_slides,supporting_books/<Book>/}
                                   # Course-scoped source material; supporting_books/<Book>/book.pdf
                                   # is gitignored (copyright), index.md is committed
@@ -136,7 +139,7 @@ Stata (`/stata-replication`), R packages (`/r-package-check`), TikZ (`/extract-t
 
 | Code | Syllabus | Lectures built | Lectures planned |
 | --- | --- | --- | --- |
-| `CS401` — Computer Organization and Architecture (PCC CS-401) | [`syllabi/CS401.md`](syllabi/CS401.md) | 05 (Addressing/CPU/Bus), 06 (Hardwired Control) | 01–04, 07–12 per the syllabus work-list |
+| `CS401` — Computer Organization and Architecture (PCC CS-401) | [`syllabi/CS401.md`](syllabi/CS401.md) | 01 (Intro/Performance), 02 (Number Systems/Arithmetic), 03 (IEEE 754), 04 (Registers/Instructions), 05 (Addressing/CPU/Bus), 06 (Hardwired Control), 07 (Microprogrammed Control) | 08–12 per the syllabus work-list |
 
 ### Non-course demos
 

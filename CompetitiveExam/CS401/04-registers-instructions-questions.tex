@@ -1,0 +1,85 @@
+% =============================================================================
+% CompetitiveExam/CS401/04-registers-instructions-questions.tex
+% Competitive Exam Practice 4 — GATE (Computer Science) Pattern
+% Registers, Instructions, and the Instruction Cycle
+%
+% Student-facing — NO answers. Answer key: 04-registers-instructions-answers.tex.
+% Provenance (availability-first, Tier 1 = local PYQ book):
+%   Q1-Q7 are real GATE past-year questions sourced from the local GATEOverflow
+%   Volume 3 (CO & Architecture) PYQ book, question headings + full text
+%   recovered via the render+OCR sub-pipeline (CompetitiveExam/Books/index.md).
+%   The book authenticates the question (year + question number printed on the
+%   page); answers are derived/justified in the answers file. See the answers
+%   file's header for per-question derivation notes.
+%   Q8 is an original GATE-pattern question filling the stack-organization
+%   subtopic, which has no local PYQ coverage in Volume 3.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-registers-instructions-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Competitive Exam Practice 4: Registers, Instructions, and the Instruction Cycle\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 1992, verified --- GATEOverflow V3 p.63]} \textbf{[NAT, 2 marks]} In an 11-bit computer instruction format, the size of the address field is 4 bits. The computer uses the expanding opcode technique and has 5 two-address instructions and 32 one-address instructions. The number of zero-address instructions it can support is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q2}] \textit{[GATE CS 2014 Set 1 Q9, verified --- GATEOverflow V3 p.63]} \textbf{[NAT, 1 mark]} A machine has a 32-bit architecture, with 1-word long instructions. It has 64 registers, each 32 bits long. It needs to support 45 instructions, which have an immediate operand in addition to two register operands. Assuming the immediate operand is an unsigned integer, the maximum value of the immediate operand is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q3}] \textit{[GATE CS 2024 Set 2 Q47, verified --- GATEOverflow V3 p.64]} \textbf{[NAT, 2 marks]} A processor with 16 general-purpose registers uses a 32-bit instruction format. The instruction format consists of an opcode field, an addressing-mode field, two register-operand fields, and a 16-bit scalar field. If 8 addressing modes are to be supported, the maximum number of unique opcodes possible for every addressing mode is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q4}] \textit{[GATE CS 2005 Q80, verified --- GATEOverflow V3 p.55]} \textbf{[MCQ, 2 marks]} Consider a CPU data path in which the ALU, the bus, and all registers are of identical size, all operations (including incrementation of the PC and the GPRs) are carried out in the ALU, and a memory read takes two clock cycles --- the first to load the address into the \texttt{MAR}, the second to load the data from the memory bus into the \texttt{MDR}. The instruction \texttt{add R0, R1} has the register-transfer interpretation $R0 \gets R0 + R1$. The minimum number of clock cycles needed for the \emph{execution} cycle of this instruction is:
+\begin{enumerate}
+  \item[(A)] 2
+  \item[(B)] 3
+  \item[(C)] 4
+  \item[(D)] 5
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[GATE CS 2005 Q81, verified --- GATEOverflow V3 p.55]} \textbf{[MCQ, 2 marks]} For the same data path as Q4, consider the two-word instruction \texttt{call Rn, sub}, whose register-transfer interpretation (assuming the PC is incremented during the fetch cycle of the first word) is $Rn \gets PC+1$; $PC \gets M[PC]$. The minimum number of CPU clock cycles needed during the \emph{execution} cycle of this instruction is:
+\begin{enumerate}
+  \item[(A)] 2
+  \item[(B)] 3
+  \item[(C)] 4
+  \item[(D)] 5
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[GATE CS 1994 Q12, verified --- GATEOverflow V3 p.68]} \textbf{[NAT, 2 marks]} Assume a CPU has only two registers $R_1$ and $R_2$, and only the instruction $XOR\ R_i, R_j$ ($R_i \gets R_i \oplus R_j$, for $i,j = 1, 2$). Using this XOR instruction, the minimum number of instructions needed to exchange the contents of $R_1$ and $R_2$ is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q7}] \textit{[GATE CS 2017 Set 1 Q49, verified --- GATEOverflow V3 p.62]} \textbf{[NAT, 1 mark]} Consider a RISC machine where each instruction is exactly 4 bytes long. Conditional and unconditional branch instructions use PC-relative addressing, with the offset specified in bytes relative to the address of the \emph{next} instruction in the program sequence. Consider the sequence:
+\begin{center}
+\small
+\begin{tabular}{ll}
+\textbf{Instr. No.} & \textbf{Instruction} \\
+$i$      & \texttt{add R2, R3, R4} \\
+$i{+}1$  & \texttt{sub R5, R6, R7} \\
+$i{+}2$  & \texttt{cmp R1, R9, R10} \\
+$i{+}3$  & \texttt{beq R1, Offset} \\
+\end{tabular}
+\end{center}
+If the target of the branch instruction is $i{+}2$, the decimal value of the Offset is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A stack grows downward and \texttt{SP} currently points at the top occupied word. To \texttt{PUSH} a new operand, the correct sequence of micro-operations is:
+\begin{enumerate}
+  \item[(A)] $SP \gets [SP] - 1$; then $M[SP] \gets$ operand
+  \item[(B)] $M[SP] \gets$ operand; then $SP \gets [SP] - 1$
+  \item[(C)] $SP \gets [SP] + 1$; then $M[SP] \gets$ operand
+  \item[(D)] $M[SP] \gets$ operand; then $SP \gets [SP] + 1$
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

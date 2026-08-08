@@ -1,0 +1,465 @@
+% =============================================================================
+% 03-ieee754-floating-point.tex — Week 3: IEEE 754 Floating-Point
+% Representation and Arithmetic
+%
+% Course: Computer Organization and Architecture (PCC CS-401)
+% Anchor reading: Hamacher Ch. 9 (floating-point representation, arithmetic);
+%                 Stallings Ch. 9 (floating-point) — chapter-level (not indexed);
+%                 Patterson & Hennessy ARM Edition, Ch. 3, Sec. 3.5 (Floating
+%                 Point, p.205 — IEEE 754 single/double, add/multiply datapath,
+%                 rounding) — page-cited via
+%                 master_supporting_docs/CS401/supporting_books/PattersonHennessy2017/index.md
+%                 (built 2026-08-07).
+%
+% Compile with: /compile-latex CS401/03-ieee754-floating-point
+% =============================================================================
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}   % resolves via TEXINPUTS=../../Preambles;$TEXINPUTS — compile
+                  % from cwd Slides/CS401/
+\coursecode{CS401}
+
+\title{IEEE 754 Floating-Point Representation and Arithmetic}
+\subtitle{Week 3 --- Real Numbers in a Finite Number of Bits}
+\author[Dr. Auqib Hamid Lone]{%
+  \textbf{Dr. Auqib Hamid Lone}\\
+  \small Assistant Professor in Computer Science \& Engineering
+}
+\institute[GCET Ganderbal]{%
+  \small\textbf{PCC CS-401: Computer Organization and Architecture}\\[0.3em]
+  Department of Computer Science \& Engineering\\
+  Government College of Engineering \& Technology (GCET), Ganderbal
+}
+\date[\today]{\small\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- RECAP AND ROADMAP
+% =============================================================================
+\section{Recap and Roadmap}
+
+\begin{frame}{Where We Left Off (Week 2)}
+  \begin{block}{Week 2 was about \emph{integers and their hardware}}
+    \begin{itemize}
+      \item Number systems and conversion.
+      \item Two's complement: negatives as ordinary bits, range
+        $-2^{n-1}$ to $2^{n-1}-1$.
+      \item Adders: HA $\to$ FA $\to$ ripple-carry; $A-B = A+(-B)$ free.
+    \end{itemize}
+  \end{block}
+  \vspace{0.2cm}
+  \begin{exampleblock}{The pivot today}
+    Integers cover a small, fixed range. Real numbers in science span
+    $10^{-300}$ to $10^{300}$ --- a single fixed point cannot cover them.
+    This week: the \key{IEEE 754} floating-point representation --- sign,
+    exponent, mantissa --- that trades precision for range.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Roadmap: Four Questions, One Thread}
+  \begin{enumerate}
+    \item \key{Scientific notation} --- the idea floating point is built on.
+    \item \key{IEEE 754 single precision} --- the 32-bit format, bit by bit.
+    \item \key{Normalization, bias, special values} --- how the format stays
+      efficient and correct.
+    \item \key{Floating-point arithmetic} --- how add/multiply actually run,
+      and where precision is lost.
+  \end{enumerate}
+  \vspace{0.3cm}
+  \begin{alertblock}{Running thread for today}
+    We will encode one number --- \key{10.75} --- in IEEE 754 single
+    precision, then add it to another and see where precision gets lost.
+  \end{alertblock}
+\end{frame}
+
+\transitionslide{Floating point is scientific notation, compressed into 32 bits.}
+
+% =============================================================================
+% ACT 1 --- SCIENTIFIC NOTATION
+% =============================================================================
+\section{Scientific Notation}
+
+\begin{frame}{Motivation: One Sign, One Mantissa, One Exponent}
+  \begin{block}{Socratic question}
+    Write $0.000\,000\,000\,000\,000\,000\,000\,000\,000\,001$ in science
+    notation. How many digits of the value does the ``1'' carry --- and how
+    many bits would a fixed point waste on leading zeros?
+  \end{block}
+  \begin{itemize}
+    \item Scientific notation: $1.0 \times 10^{-30}$ --- three fields, huge
+      range, constant precision.
+    \item \key{Sign} ($\pm$), \key{mantissa/significand} (the digits),
+      \key{exponent} (where the point goes).
+    \item A fixed point would need hundreds of bits for this value; floating
+      point needs the mantissa's precision only.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Definition: Floating-Point Value}
+  \begin{block}{General form}
+    A floating-point number represents
+    \[
+      (-1)^S \times M \times r^E,
+    \]
+    where $S$ is the \key{sign} bit, $M$ the \key{mantissa}, $E$ the
+    \key{exponent}, and $r$ the base (2 in hardware).
+  \end{block}
+  \begin{itemize}
+    \item Range comes from the exponent; precision from the mantissa ---
+      independent knobs.
+    \item Base 2, not 10: binary scientific notation
+      $1.xxx_2 \times 2^E$.
+    \item This is the format IEEE 754 standardizes for base 2.
+  \end{itemize}
+  (P\&H, Sec.~3.5, p.205; Hamacher Ch. 9) \cite{PattersonHennessy2017_computer_organization_design,Hamacher2002_computer_organization}
+\end{frame}
+
+\begin{frame}{Worked Example: Binary Scientific Notation}
+  \begin{block}{Write $10.75$ in binary scientific notation}
+    $10.75 = 8 + 2 + 0.5 + 0.25 = 1010.11_2$.
+  \end{block}
+  \begin{exampleblock}{Normalize}
+    $1010.11_2 = 1.01011_2 \times 2^3$. So: sign $S=0$, mantissa $= 01011$,
+    exponent $E = 3$.
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \muted{This is the running thread's starting point --- we will encode it in
+  IEEE 754 single precision next.}
+\end{frame}
+
+\begin{frame}{Socratic Check: What Does Normalization Buy?}
+  \begin{alertblock}{Question}
+    Any binary number has many representations ($10.75 = 0.101011 \times 2^4 =
+    1.01011 \times 2^3$). If we agree the mantissa always starts with a
+    leading 1 (``normalized''), what do we gain?
+  \end{alertblock}
+  \begin{itemize}
+    \item A \key{unique} representation --- every value has exactly one form.
+    \item We can \key{omit the leading 1} (it is implicit) --- one extra bit of
+      precision for free.
+    \item This is exactly what IEEE 754 does: a hidden ``1.'' in front of the
+      stored mantissa.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Scientific notation is the idea. Now: the 32-bit format that standardizes it.}
+
+% =============================================================================
+% ACT 2 --- IEEE 754 SINGLE PRECISION
+% =============================================================================
+\section{IEEE 754 Single Precision}
+
+\begin{frame}{The 32-Bit Layout}
+  \begin{center}
+    % Diagram: IEEE 754 single precision — 1 sign + 8 exponent + 23 mantissa.
+    % Coordinates: (x, y), scale 0.6
+    %   one rect x 0..16.8 at y 0; seps at 1.2, 9.2
+    %   labels: sign 0..1.2, exponent 1.2..9.2, mantissa 9.2..16.8
+    \begin{tikzpicture}[scale=0.6, transform shape,
+        every node/.style={font=\small}]
+      \draw[thick] (0,0) rectangle (16.8,-1.0);
+      \draw[thick] (1.2,0) -- (1.2,-1.0);
+      \draw[thick] (9.2,0) -- (9.2,-1.0);
+      \node at (0.6,-0.5) {$S$};
+      \node at (5.2,-0.5) {Exponent $E$ (8 bits)};
+      \node at (13.0,-0.5) {Mantissa (23 bits)};
+      \node[below] at (0.6,-1.2) {\scriptsize 1 bit};
+      \node[below] at (5.2,-1.2) {\scriptsize 8 bits};
+      \node[below] at (13.0,-1.2) {\scriptsize 23 bits};
+      \node[above] at (0.6,0.15) {\scriptsize bit 31};
+      \node[above] at (16.8,0.15) {\scriptsize bit 0};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item \key{Sign} $S$: 1 bit. \key{Exponent} $E$: 8 bits. \key{Mantissa}
+      $M$: 23 bits (fraction only; leading 1 hidden).
+    \item Value $= (-1)^S \times (1.M)_2 \times 2^{E-\text{bias}}$.
+    \item \key{Bias} $= 127$ for single precision: the stored 8-bit exponent is
+      $E_{\text{stored}} = E_{\text{true}} + 127$.
+  \end{itemize}
+  (P\&H, Sec.~3.5, p.205) \cite{PattersonHennessy2017_computer_organization_design}
+\end{frame}
+
+\begin{frame}{Why Bias the Exponent?}
+  \begin{block}{The problem}
+    The true exponent can be negative ($10.75 = 1.01011 \times 2^3$ has $E=3$,
+    but $0.5 = 1.0 \times 2^{-1}$ has $E=-1$). How do we store a signed
+    exponent without two's complement complicating comparison?
+  \end{block}
+  \begin{itemize}
+    \item \key{Bias}: store $E_{\text{stored}} = E_{\text{true}} + 127$, an
+      unsigned number.
+    \item Result: the \key{all-zeros} exponent means ``smallest,'' the
+      all-ones means ``largest'' --- unsigned comparison orders floats.
+    \item $E_{\text{true}} = -126$ to $+127$ (single); the extreme all-0 and
+      all-1 exponents are reserved (special values, next act).
+  \end{itemize}
+  \begin{exampleblock}{Example}
+    $10.75$ has $E_{\text{true}}=3 \Rightarrow E_{\text{stored}} = 3+127 =
+    130 = 1000\,0010_2$.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Worked Example: Encoding 10.75}
+  \begin{block}{Assemble the three fields}
+    From Act 1: $10.75 = 1010.11_2 = 1.01011_2 \times 2^3$, so $S=0$,
+    mantissa $M = 01011\,0000\,0000\,0000\,0000\,000$ (23 bits), exponent
+    $E_{\text{stored}} = 130 = 1000\,0010_2$.
+  \end{block}
+  \begin{exampleblock}{The full 32 bits}
+    \[
+      \underbrace{0}_{\text{sign}}
+      \ \underbrace{1000\,0010}_{\text{exp}=130}
+      \ \underbrace{01011000000000000000000}_{\text{mantissa}\ 01011\ldots}
+    \]
+    \texttt{0x412C0000} (hex).
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \muted{Check: $1.01011_2 \times 2^{130-127} = 1.01011_2 \times 2^3 =
+  1010.11_2 = 10.75$. \good{Correct.}}
+\end{frame}
+
+\begin{frame}{Socratic Check: Decoding Back}
+  \begin{alertblock}{Question}
+    Decode \texttt{0x3F800000} (sign 0, exponent $0111\,1111_2 = 127$, mantissa
+    all zeros). What value is it --- and what does that tell you about the
+    most ``normal'' number in the format?
+  \end{alertblock}
+  \begin{itemize}
+    \item $E_{\text{true}} = 127-127 = 0$; mantissa 0; value $= 1.0 \times 2^0
+      = \key{1.0}$.
+    \item The bias is chosen so that \key{1.0} is the most ordinary pattern
+      (exponent $0111\,1111$).
+    \item This is the ``anchor'' number --- check your encoding by seeing how
+      far the exponent field is from 127.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{The format is fixed. Now the edges: the special values and the arithmetic.}
+
+% =============================================================================
+% ACT 3 --- NORMALIZATION, SPECIAL VALUES, ROUNDING
+% =============================================================================
+\section{Normalization, Special Values, and Rounding}
+
+\begin{frame}{Special Values: When the Format Runs Out}
+  \begin{block}{Reserved exponent patterns}
+    \begin{itemize}
+      \item \key{Zero}: exponent all 0, mantissa all 0 ($+0$ and $-0$).
+      \item \key{Denormal (subnormal)}: exponent all 0, mantissa nonzero ---
+        numbers smaller than the smallest normalized; leading 1 is \emph{not}
+        assumed.
+      \item \key{Infinity}: exponent all 1, mantissa all 0 ($\pm\infty$).
+      \item \key{NaN} (Not a Number): exponent all 1, mantissa nonzero ---
+        $0/0$, $\sqrt{-1}$.
+    \end{itemize}
+  \end{block}
+  \vspace{0.2cm}
+  \muted{These four patterns give the format a well-defined behavior at its
+  extremes instead of undefined results. (P\&H, Sec.~3.5, p.205)
+  \cite{PattersonHennessy2017_computer_organization_design}}
+\end{frame}
+
+\begin{frame}{Worked Example: The Smallest and Largest}
+  \begin{block}{Single precision, normalized range}
+    \begin{itemize}
+      \item Smallest normalized: exponent $1$, mantissa 0 $\Rightarrow 1.0
+        \times 2^{-126} \approx 1.18 \times 10^{-38}$.
+      \item Largest normalized: exponent $254$, mantissa all 1 $\Rightarrow
+        (2 - 2^{-23}) \times 2^{127} \approx 3.4 \times 10^{38}$.
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock}{The point}
+    Roughly $10^{-38}$ to $10^{38}$ --- compare with fixed point's tiny range.
+    But note: only about 7 \key{significant decimal digits} (precision is
+    fixed by the 24-bit mantissa including the hidden 1).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Rounding and Precision Loss}
+  \begin{block}{The hard truth}
+    Most real numbers are \emph{not} exactly representable --- $0.1$ repeats
+    in binary. IEEE 754 rounds to the nearest representable value (with ties to
+    even).
+  \end{block}
+  \begin{itemize}
+    \item \key{Precision}: 24 bits of mantissa $\approx$ 7 decimal digits.
+    \item \key{Rounding}: the stored mantissa is the closest fit; error
+      $\le \tfrac{1}{2}$ ULP (unit in the last place).
+    \item Consequence: \key{floating-point arithmetic is approximate}; equality
+      tests on floats are dangerous.
+  \end{itemize}
+  (P\&H, Sec.~3.5, p.205) \cite{PattersonHennessy2017_computer_organization_design}
+\end{frame}
+
+\begin{frame}{Worked Example: Where Precision Is Lost}
+  \begin{block}{The thread continues}
+    Add $10.75 + 0.1$ in single precision. $0.1$ is stored as an approximation:
+    $0.1 \approx 1.10011001100110011001101_2 \times 2^{-4}$ (rounded to 24
+    bits).
+  \end{block}
+  \begin{exampleblock}{The catch}
+    When you add a \emph{large} and a \emph{small} number, the small one's low
+    bits are pushed out of the 24-bit window --- $10.75 + 0.1$ in single
+    precision may round to $10.85$ exactly, but adding $1\,000\,000 + 0.1$
+    rounds to \key{$1\,000\,000$} (the 0.1 vanishes entirely).
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \begin{alertblock}{Takeaway}
+    Precision is lost at the \key{least significant} digits, and the loss is
+    worst when adding numbers of very different magnitudes.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Socratic Check: Why Not Compare Floats for Equality?}
+  \begin{alertblock}{Question}
+    In a loop you compute $x = 0.1$ ten times by addition. Is $x == 1.0$
+    guaranteed true? What happens, and why?
+  \end{alertblock}
+  \begin{itemize}
+    \item No --- each $0.1$ is an approximation; ten additions accumulate
+      rounding error, so $x$ is $1.0000000000000002$-ish, not exactly 1.0.
+    \item Rule: compare floats with a \key{tolerance} ($|a-b| < \epsilon$),
+      never with $==$.
+    \item This is the practical consequence of finite precision.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{The format and its edges are set. Now: how does the hardware actually add two floats?}
+
+% =============================================================================
+% ACT 4 --- FLOATING-POINT ARITHMETIC
+% =============================================================================
+\section{Floating-Point Arithmetic}
+
+\begin{frame}{Motivation: Adding Two Exponents}
+  \begin{block}{Socratic question}
+    To add $1.5 \times 2^3 + 1.25 \times 2^5$, you cannot just add the
+    mantissas --- their exponents differ. What is the first thing the hardware
+    must do?
+  \end{block}
+  \begin{itemize}
+    \item \key{Align exponents}: shift the smaller mantissa right until both
+      exponents match.
+    \item Then add the mantissas, re-normalize, and round.
+    \item The alignment is exactly where the low-bit loss of the last act
+      comes from.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Floating-Point Add Algorithm}
+  \begin{block}{Four steps (P\&H, Sec.~3.5, p.205) \cite{PattersonHennessy2017_computer_organization_design}}
+    \begin{enumerate}
+      \item \key{Align}: shift the mantissa of the smaller-exponent operand
+        right until exponents are equal (track the shifted-out bits).
+      \item \key{Add}: add the (aligned) mantissas.
+      \item \key{Normalize}: shift the result to have a leading 1; adjust the
+        exponent.
+      \item \key{Round}: round the mantissa to the stored width (ties to even).
+    \end{enumerate}
+  \end{block}
+  \vspace{0.2cm}
+  \muted{Multiply is easier: multiply mantissas, add exponents (subtract bias
+  once), normalize, round --- no alignment step.}
+\end{frame}
+
+\begin{frame}{Worked Example: Adding 10.75 + 0.1 (Qualitative)}
+  \begin{block}{Align, add, normalize, round}
+    $10.75 = 1.01011_2 \times 2^3$; $0.1 \approx 1.100110\ldots_2 \times 2^{-4}$.
+  \end{block}
+  \begin{exampleblock}{The trace}
+    \begin{itemize}
+      \item Align: shift $0.1$'s mantissa right by $3-(-4) = 7$ places.
+      \item Add mantissas, re-normalize, round to 24 bits.
+      \item Result $\approx 10.85$ --- but the alignment \key{truncated} low
+        bits of 0.1, so the sum is slightly off from the exact value.
+    \end{itemize}
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \begin{alertblock}{Notice}
+    The error is invisible in the 7-digit window; it would only show if we
+    subtracted back or accumulated many such adds. Precision is \emph{silent}
+    loss.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Socratic Check: Multiplication, One Line}
+  \begin{alertblock}{Question}
+    What are the three fields of the \emph{product} of two normalized floats,
+    in terms of the inputs' fields --- and why is the exponent easier than in
+    addition?
+  \end{alertblock}
+  \begin{itemize}
+    \item Sign $S = S_1 \oplus S_2$; mantissa $M = M_1 \times M_2$
+      (re-normalized); exponent $E = E_1 + E_2 - \text{bias}$.
+    \item No alignment needed (exponents just add) --- but the mantissa
+      product is wider, needing normalization and rounding.
+    \item Symmetric to addition: multiply mantissas, add exponents, normalize,
+      round.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{One format, four steps of arithmetic, and a silent precision budget. Now: put it together.}
+
+% =============================================================================
+% ACT 5 --- SYNTHESIS
+% =============================================================================
+\section{Synthesis}
+
+\begin{frame}{The Thread, Closed}
+  \begin{block}{What we built today}
+    \begin{itemize}
+      \item \key{Scientific notation} $\to$ sign, mantissa, exponent.
+      \item \key{IEEE 754 single}: 1 sign + 8 exponent + 23 mantissa, bias 127,
+        hidden leading 1.
+      \item \key{Special values}: zero, denormal, infinity, NaN; reserved
+        exponent patterns.
+      \item \key{Arithmetic}: add = align, add, normalize, round; multiply =
+        multiply mantissas, add exponents, normalize, round.
+      \item \key{Precision}: ~7 decimal digits; rounding is silently
+        approximate.
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock}{The running thread}
+    $10.75 = 1.01011_2 \times 2^3$ encoded as \texttt{0x412C0000}; adding
+    $0.1$ showed alignment truncating low bits --- precision loss is silent.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Bridge to Week 4}
+  \begin{block}{What's still missing}
+    We now know how numbers are represented (integers, fixed point, IEEE 754)
+    and how the ALU computes on them. But bits and adders do not run a program
+    by themselves.
+  \end{block}
+  \begin{exampleblock}{Next week}
+    \key{The machine}: registers (the fast scratchpad), the stack (LIFO
+    operand home), instruction formats, and the fetch--decode--execute cycle
+    that animates them --- the storage spaces and the cycle.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item \key{Floating point} = $(-1)^S \times 1.M \times 2^{E-\text{bias}}$:
+      range from the exponent, precision from the mantissa.
+    \item \key{Single precision}: 32 bits = 1 + 8 + 23, bias 127, hidden 1.
+    \item \key{Special values}: zero/denormal/infinity/NaN from reserved
+      exponent patterns.
+    \item \key{Add}: align, add, normalize, round. \key{Multiply}: multiply
+      mantissas, add exponents, normalize, round.
+    \item \key{Precision}: ~7 digits; rounding is silent and approximate ---
+      never compare floats with $==$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

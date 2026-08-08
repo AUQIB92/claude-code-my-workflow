@@ -1,6 +1,6 @@
 ---
 name: instructor-handout
-description: Build an instructor-only prep handout (LaTeX PDF, course-organized) for a finished lecture — extra worked examples beyond the student Notes, delivery/teaching notes (emphasis points, common misconceptions, board-work suggestions), and a page-cited "before you teach this" self-study reading list. Use when user says "make an instructor handout for this lecture", "instructor prep notes course-wise", "teaching notes for week N", "what should I read before teaching this". NOT student-facing material (use `/lecture-notes` for that) and NOT a source of new facts — worked examples and citations must trace to the lecture/indexed textbooks; only the delivery-notes section is instructor judgment, and it is labeled as such.
+description: Build a complete, self-contained instructor teaching guide (LaTeX PDF, course-organized) for a finished lecture — full topic-by-topic explanations woven together with diagram walkthroughs (what to draw and how to present it), worked examples, common-misconception callouts, and a page-cited "before you teach this" self-study reading list, all in one document an instructor can teach directly from without needing the slides or Notes open. Use when user says "make an instructor handout for this lecture", "instructor prep notes course-wise", "complete teaching guide for week N", "what should I read and how should I teach this". NOT student-facing material (use `/lecture-notes` for that) and NOT a source of new facts — explanations, diagrams, and citations must trace to the lecture/indexed textbooks; only the delivery commentary (misconceptions, board sequencing, live questions) is instructor judgment, and it is visually distinguished from the explanatory content, not a separate bolted-on section.
 argument-hint: "[CourseCode/lecture], e.g. CS401/06-hardwired-control (Slides/CourseCode/lecture.tex and, ideally, Notes/CourseCode/lecture-notes.tex should already exist)"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash"]
 context: fork
@@ -8,56 +8,55 @@ model: sonnet
 effort: medium
 ---
 
-# `/instructor-handout` — Teaching Prep, Not Student Material
+# `/instructor-handout` — One Complete, Self-Contained Teaching Document
 
-Generate a single instructor-only LaTeX handout for a finished lecture: extra worked examples the instructor can draw on beyond what students see, concrete delivery notes, and a page-cited list of what to read before teaching. This is a sibling to `/lecture-notes` (student-facing textbook chapter), `/create-assignment`, and `/competitive-exam-questions` (both course-wise, both student/answer-key split) — this skill has no split, because there is no student-facing half to keep separate from.
+Generate a single instructor-only LaTeX handout that is genuinely sufficient to teach the lecture from directly — no slides, no separate Notes file needed open at the same time. This is **not** a light supplement that assumes the instructor already has the Notes and slides in front of them; it is the full explanation, woven together with presentation guidance, in one place.
 
-**Input:** `<CODE>/<lecture>`, e.g. `CS401/06-hardwired-control`.
+**Input:** `<CODE>/<lecture>`.
 
-## The three sections, and what governs each
+## Why this is one document, not several
 
-| Section | Content | Grounding rule |
-|---|---|---|
-| **Extra worked examples** | 1-2 additional worked examples per major topic, beyond what the Notes/Assignment already cover — different registers/instructions, same method | Same discipline as `/lecture-notes`: nothing invented, every method traces to the lecture; a genuinely new instance, not a copy of an existing worked example with names changed superficially |
-| **Delivery notes** | Emphasis points, common misconceptions, board-work sequence, live discussion questions, pacing cues | **Instructor judgment, not fact** — grounded in the lecture's own content and this project's teaching-craft conventions (motivation-before-formalism, Socratic questioning — `content-invariants.md` INV-8), but explicitly not citation-checkable, and labeled as such so it is never confused with textbook-sourced content |
-| **Self-study reading list** | Which indexed textbook sections to read before teaching, and why | `.claude/rules/textbook-grounding.md`, exactly as everywhere else: page-cite only what's in `supporting_books/*/index.md`; for anchor readings with no index yet (this course's Hamacher/Stallings), phrase as chapter-level/general, never invent a page |
+An earlier iteration of this skill split "extra worked examples," "teaching notes," and diagram-presentation guidance into separate, terser sections, and a second iteration split diagram-presentation into an entirely separate "board script" document. Both were rejected: the instructor wants to open **one file** and have everything — the explanation, the diagram, how to draw it, what students get confused about, what to ask — for a given topic, together, before moving to the next topic. Structure the handout by **topic**, not by content-type.
+
+## The topic unit (repeat this shape for every major topic in the lecture)
+
+For each topic/diagram/derivation, in the order the lecture presents them, write one self-contained block containing, woven into continuous prose (not separate labeled subsections unless the material genuinely needs the separation):
+
+1. **The full explanation** — the same depth and rigor as `/lecture-notes` would write (every derivation step spelled out, motivation before formalism), because the instructor should not need to also have the Notes open.
+2. **The diagram, embedded** — reuse the exact TikZ code from the Beamer source verbatim (already `tikz-reviewer`-approved; don't re-derive it), as a real numbered figure. **Run the P7 clearance audit** (`.claude/rules/tikz-prevention.md`) on each embedded diagram before compiling: no path crossing a box except at a connection point (P7a), no label on a line (P7b), labels ≥0.15 cm clear of box edges (P7c), no curve visibly crossing its own dashed asymptote (P7d). Fix any finding in the Beamer source first, then port the corrected diagram to the handout — the deck is the single source of truth, and the corrected diagram must ship in all three copies (deck, Notes, handout) identically.
+3. **How to present it** — folded in immediately after or alongside the diagram, not deferred to an end-of-document section: what to draw first vs. second (reuse the diagram's own coordinate-map comment, `tikz-prevention.md` Rule P2, as the real build order), and the line of explanation that goes with each stage, written as continuous guidance an instructor can read once and internalize, not a terse bullet.
+4. **Where students get stuck** — a specific, concrete misconception or error pattern for *this* topic, folded in at the point it's relevant, not batched into a generic list.
+5. **A question worth asking live** — where it naturally fits the explanation's flow (often right before revealing an answer the explanation is about to give).
+6. **An extra worked example**, if this topic already has one worked example in the Notes — a genuinely different instance (different registers/instructions), so the instructor has a second one ready without inventing it live.
+
+## Grounding rules (unchanged from before)
+
+- **Explanations, diagrams, and worked examples must trace to the lecture** (Slides/Notes) — nothing invented, no new facts. This is still, structurally, a derived artifact like Notes, just instructor-voiced and delivery-annotated.
+- **The self-study reading list is still page-cited** exactly per `.claude/rules/textbook-grounding.md`: real pages only for what's actually indexed in `supporting_books/*/index.md`; honest chapter-level phrasing for anchor readings that aren't indexed yet. Never invent a page number.
+- **Delivery commentary (misconceptions, live questions, board sequencing) is instructor judgment**, not fact-checkable content — but instead of isolating it in its own section, distinguish it visually inline (e.g., an indented, differently-styled aside) so it's still clearly separable from the sourced explanation, without breaking the single-document, single-read-through experience.
 
 ## Phase 0: Pre-Flight
 
 - Confirm `Slides/<CODE>/<lecture>.tex` exists and compiles.
-- Read `Slides/<CODE>/<lecture>.tex` end-to-end.
-- Read `Notes/<CODE>/<lecture>-notes.tex` if it exists — this tells you what worked examples and definitions students already have, so Phase 1's additions are genuinely additive, not redundant.
-- Read `Assignments/<CODE>/<lecture>-*.tex` if it exists, for the same reason (don't duplicate an assignment problem as an "extra worked example").
-- Read the lecture's anchor-reading comment block and cross-check against `master_supporting_docs/<CODE>/supporting_books/*/index.md` to know exactly which sections/pages are indexed (real page citations available) versus general-treatment-only.
+- Read it end-to-end, plus `Notes/<CODE>/<lecture>-notes.tex` if it exists (reuse its prose and topic organization as the explanatory backbone — don't re-derive from scratch what Notes already got right).
+- Read the anchor-reading comment block and cross-check `supporting_books/*/index.md` for what's actually page-indexed.
 
-## Phase 1: Extra worked examples
+## Phase 1: Write the file, one topic block at a time
 
-For each major topic that already has one worked example in the Notes, write one \emph{additional} worked example: same method, a different concrete instance (different registers, a different instruction from the same family, a boundary case). Write it at instructor-prep depth — include a sentence or two of reasoning an instructor might need to field an unplanned student question about it, not just the final answer.
-
-## Phase 2: Delivery notes
-
-For each major section, write 2-4 short bullets under a clearly-labeled "Teaching Notes" heading:
-- A misconception students commonly bring to this specific point (grounded in what the concept is most often confused with, e.g., confusing $D_i$ with $T_j$, or confusing indirect with register-indirect addressing).
-- A board-work suggestion (what to physically draw, and in what order, so the diagram builds up the way the reasoning does).
-- A question worth posing to the class live, distinct from the Socratic questions already in the slide deck (don't just copy the deck's own Socratic-check frames verbatim).
-- A pacing note where relevant (which derivation typically needs a second pass).
-
-Prefix this section (once, at the top of the document) with a one-line disclaimer: *these are instructional suggestions, not facts to be tested — adapt freely to your own classroom.*
-
-## Phase 3: Self-study reading list
-
-At the top of the document, before the worked examples, a **"Before You Teach This Lecture"** box: for each anchor textbook, list the specific indexed section(s) (with page range, from `index.md`) worth reading in full, and one sentence on what depth/context it adds beyond the slides. For anchor readings without an index yet, list the citation honestly at chapter level with a note that it's not yet page-indexed (matching how the Beamer decks themselves already phrase unindexed citations) — never fabricate a page number to make this section look more complete than it is.
-
-## Phase 4: Write the file
-
-`InstructorHandouts/<CODE>/<lecture>-instructor-handout.tex` — XeLaTeX `article` class, same chapter-style numbering convention as `/lecture-notes`/`/create-assignment`:
+`InstructorHandouts/<CODE>/<lecture>-instructor-handout.tex` — XeLaTeX `article`, same chapter-style section numbering as `/lecture-notes`:
 
 ```latex
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \input{../../Preambles/header}
 \coursecode{<CODE>}
-\renewcommand{\thesection}{<N>.\arabic{section}}   % <N> = this lecture's week number
+\renewcommand{\thesection}{<N>.\arabic{section}}
+\renewcommand{\thefigure}{<N>.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{\par\noindent\textbf{Definition (#1).}\ \itshape}{\par\vspace{0.3em}}
+% A visually distinct "teaching aside" for delivery commentary, inline with
+% the topic it belongs to rather than batched into a separate section.
+\newenvironment{teachingaside}{\begin{quote}\small\color{primary-gold}\textbf{Teaching note:}\ }{\end{quote}}
 
 \title{Instructor Handout <N>: <Lecture Title>}
 \author{PCC CS-401: Computer Organization and Architecture}
@@ -69,27 +68,33 @@ At the top of the document, before the worked examples, a **"Before You Teach Th
 \vspace{0.5cm}
 
 \section{Before You Teach This Lecture}
-% self-study reading list (Phase 3)
+% self-study reading list, page-cited where indexed
 
-\section{Extra Worked Examples}
-% Phase 1 content, organized by the same topics Notes/<lecture>-notes.tex uses
+\section{<Topic 1>}
+% full explanation, embedded figure with presentation guidance woven in,
+% \begin{teachingaside}...\end{teachingaside} asides at the points they're
+% relevant, an extra worked \begin{example}...\end{example} if applicable
 
-\section{Teaching Notes}
-% Phase 2 content, one subsection per major topic
+\section{<Topic 2>}
+% ...
+
+\section{Summary}
+% a one-page-scale recap: key definitions, equations, and results, for a
+% fast pre-class refresh
 \end{document}
 ```
 
-No `\bibliography`/`\cite` is needed unless a worked example directly quotes a textbook claim not already covered by the Notes' own citations — prefer citing textbook sections in prose (as in Phase 3's reading list) over BibTeX machinery for this document.
+No `\bibliography`/`\cite` needed unless quoting a specific textbook claim; prefer prose citations in the reading list.
 
-Compile the same way as Notes/Assignments: `TEXINPUTS`/`BIBINPUTS` relative to `InstructorHandouts/<CODE>/`; Windows/MiKTeX uses `;` not `:`.
+Compile the same way as Notes: `TEXINPUTS`/`BIBINPUTS` relative to `InstructorHandouts/<CODE>/`; Windows/MiKTeX uses `;` not `:`.
 
 ## Report
 
-State: number of extra worked examples added, number of teaching-note bullets, which anchor-reading sections were page-cited vs. left general, and the file path written.
+State: topics covered, extra worked examples added, teaching asides included, self-study sections page-cited vs. general, and the file path written.
 
 ## Cross-references
 
-- `.claude/skills/lecture-notes/SKILL.md` — the source-reading and chapter-numbering convention this skill reuses; also the definitive list of what students already have, so this skill doesn't repeat it.
+- `.claude/skills/lecture-notes/SKILL.md` — the explanatory backbone and chapter-numbering convention this skill reuses and extends with delivery guidance.
 - `.claude/skills/create-assignment/SKILL.md`, `.claude/skills/competitive-exam-questions/SKILL.md` — sibling course-wise, per-lecture deliverables.
-- `.claude/rules/textbook-grounding.md` — the citation-honesty discipline for Phase 3.
-- `.claude/rules/content-invariants.md` (INV-8) — motivation-before-formalism, the same principle behind this course's Socratic-question convention that Phase 2's delivery notes draw on.
+- `.claude/rules/textbook-grounding.md` — the citation-honesty discipline for the self-study reading list.
+- `.claude/rules/tikz-prevention.md` Rule P2 — the coordinate-map-comment convention used for "how to present it" diagram build order.

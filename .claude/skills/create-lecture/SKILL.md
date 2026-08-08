@@ -101,6 +101,7 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 - R scripts following conventions
 - TikZ diagrams in Beamer source (single source of truth)
 - Save RDS for future Quarto integration
+- **TikZ overlap audit (MANDATORY):** before Phase 5, run the P7 clearance audit (`.claude/rules/tikz-prevention.md`) on every diagram — each boxed node must declare explicit dimensions (P1), every diagram with ≥3 nodes must have a coordinate map (P2), and the map must be checked for: no path crossing a box except at a connection point (P7a), no label sitting on a line (P7b), labels ≥0.15 cm clear of box edges (P7c), and no curve visibly crossing its own dashed asymptote (P7d). Fix any finding before compiling. This audit is what prevents bus-through-box and label-on-arrow overlaps from shipping.
 
 ### Phase 5: Polish & Compile
 - Full 3-pass compilation
@@ -127,6 +128,7 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 [ ] Devil's Advocate run
 [ ] Lecture Notes generated (`/lecture-notes`) and `/qa-notes` parity check passed
 [ ] Textbook-attributed claims traced to an indexed page, or explicitly marked general/standard treatment (not invented page numbers)
+[ ] TikZ P7 audit passed: no box crossed by a path, no label on a line, labels clear of box edges, no curve crossing its dashed asymptote (see `.claude/rules/tikz-prevention.md`)
 ```
 
 ## Cross-references

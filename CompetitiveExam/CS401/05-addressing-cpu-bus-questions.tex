@@ -4,17 +4,16 @@
 % Addressing Modes, CPU Organization, and Bus Structures
 %
 % Student-facing — NO answers. Answer key: 05-addressing-cpu-bus-answers.tex.
-% Provenance: a targeted search for real GATE CS past-year questions on this
-% lecture's specific sub-topics did not surface a candidate that survived
-% independent verification (Chain-of-Verification, per
-% .claude/rules/post-flight-verification.md) within this pass — every
-% question below is therefore original, written in GATE's own format (MCQ /
-% Numerical Answer Type) and calibrated to real GATE difficulty for this
-% topic, not attributed to any specific year.
+% Provenance (availability-first, Tier 1 = local PYQ book): Q1-Q6 are real GATE
+% past-year questions sourced from the local GATEOverflow Volume 3 PYQ book
+% (CompetitiveExam/Books/index.md, Addressing Modes cluster, PDF pp.28-32),
+% headings + full text recovered via the render+OCR sub-pipeline. The book
+% authenticates each question; answers are derived/justified in the answers
+% file. Q7 is an original GATE-pattern question filling the bus-organization
+% subtopic, which has thin local PYQ coverage.
 %
 % Compile with: cd CompetitiveExam/CS401 &&
-%   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-questions.tex
-%   (Windows/MiKTeX: use ; not : as the separator)
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 05-addressing-cpu-bus-questions.tex
 % =============================================================================
 
 \documentclass[11pt]{article}
@@ -24,50 +23,77 @@
 \renewcommand{\thesection}{5.\arabic{section}}
 
 \title{Competitive Exam Practice 5: Addressing Modes, CPU Organization, and Bus Structures\\\large GATE (Computer Science) Pattern}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
-\noindent Each question carries 1--2 marks, consistent with GATE CS's Computer Organization \& Architecture weighting. MCQ = single correct option; NAT = Numerical Answer Type (enter a numeric value, no options given).
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
 
 \begin{enumerate}
-\item[\textbf{Q1}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Which addressing mode is most suitable for accessing successive elements of an array inside a loop whose index variable changes on every iteration?
+\item[\textbf{Q1}] \textit{[GATE CS 1996 Q1.16, verified --- GATEOverflow V3 p.29]} \textbf{[MCQ, 1 mark]} Relative mode of addressing is most relevant to writing:
 \begin{enumerate}
-  \item[(A)] Immediate
-  \item[(B)] Direct
-  \item[(C)] Displacement (indexed)
-  \item[(D)] Register
+  \item[(A)] Co-routines
+  \item[(B)] Position-independent code
+  \item[(C)] Shareable code
+  \item[(D)] Interrupt handlers
 \end{enumerate}
 
-\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} An instruction uses indirect addressing with address field $A$. If $M[A] = B$ and $M[B] = 42$, the effective address of the operand is:
+\item[\textbf{Q2}] \textit{[GATE CS 1998 Q1.19, verified --- GATEOverflow V3 p.29]} \textbf{[MCQ, 1 mark]} Which of the following addressing modes permits relocation without any change whatsoever in the code?
 \begin{enumerate}
-  \item[(A)] $A$
-  \item[(B)] $B$
-  \item[(C)] $42$
-  \item[(D)] $M[42]$
+  \item[(A)] Indirect addressing
+  \item[(B)] Indexed addressing
+  \item[(C)] Base register addressing
+  \item[(D)] PC-relative addressing
 \end{enumerate}
 
-\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} An instruction \texttt{LOAD R1, 25(R4)} uses displacement addressing, with $[\text{R4}] = 175$. The effective address is \rule{1.5cm}{0.4pt}.
-
-\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} On a single-bus CPU datapath, a two-operand ALU instruction (such as \texttt{ADD R1, R2, R3}) that must stage both operands sequentially through the bus requires a minimum of how many control steps?
+\item[\textbf{Q3}] \textit{[GATE CS 1999 Q2.23, verified --- GATEOverflow V3 p.29]} \textbf{[MCQ, 2 marks]} A certain processor supports only the immediate and the direct addressing modes. Which of the following programming-language features cannot be implemented on this processor?
 \begin{enumerate}
-  \item[(A)] 1
-  \item[(B)] 2
-  \item[(C)] 3
-  \item[(D)] 4
+  \item[(A)] Pointers
+  \item[(B)] Arrays
+  \item[(C)] Records
+  \item[(D)] Recursive procedures with local variables
 \end{enumerate}
 
-\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} In a three-bus CPU organization where Bus A and Bus B feed the ALU's two inputs and Bus C carries the ALU's output, the primary architectural advantage over a single-bus organization is:
+\item[\textbf{Q4}] \textit{[GATE CS 2000 Q1.10, verified --- GATEOverflow V3 p.29]} \textbf{[MCQ, 1 mark]} The most appropriate matching for the following pairs is:
+\begin{center}
+\small
+X: Indirect addressing \quad 1: Loops \\
+Y: Immediate addressing \quad 2: Pointers \\
+Z: Autodecrement addressing \quad 3: Constants
+\end{center}
 \begin{enumerate}
-  \item[(A)] Reduced control unit complexity
-  \item[(B)] Fewer registers required in the register file
-  \item[(C)] Two operands can be read and the result written back, all within the same clock cycle
-  \item[(D)] Lower total hardware cost
+  \item[(A)] X--3, Y--2, Z--1
+  \item[(B)] X--1, Y--3, Z--2
+  \item[(C)] X--2, Y--3, Z--1
+  \item[(D)] X--3, Y--1, Z--2
 \end{enumerate}
 
-\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} Indirect addressing (via a pointer stored in memory, not in a register) requires \rule{1.5cm}{0.4pt} memory access(es) in total to obtain the operand.
+\item[\textbf{Q5}] \textit{[GATE CS 2002 Q1.24, verified --- GATEOverflow V3 p.30]} \textbf{[MCQ, 1 mark]} In the absolute addressing mode:
+\begin{enumerate}
+  \item[(A)] the operand is inside the instruction
+  \item[(B)] the address of the operand is inside the instruction
+  \item[(C)] the register containing the address of the operand is specified inside the instruction
+  \item[(D)] the location of the operand is implicit
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[GATE CS 2004 Q20, verified --- GATEOverflow V3 p.30]} \textbf{[MCQ, 1 mark]} Which of the following addressing modes are suitable for program relocation at run time?
+\begin{enumerate}
+  \item[(A)] Absolute addressing only
+  \item[(B)] Based and relative addressing
+  \item[(C)] Indexed addressing only
+  \item[(D)] Indirect addressing only
+\end{enumerate}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} In a single-bus CPU, the instruction $R1 \gets R2 + R3$ is implemented over three control steps using two hidden registers. The reason the same transfer takes only \emph{one} step on a three-bus organization is that:
+\begin{enumerate}
+  \item[(A)] the ALU is faster on a three-bus design
+  \item[(B)] three buses can carry both operands and the result in the same cycle without a shared-path bottleneck
+  \item[(C)] the register file has more registers on a three-bus design
+  \item[(D)] control logic is simpler on a three-bus design
+\end{enumerate}
 
 \end{enumerate}
 

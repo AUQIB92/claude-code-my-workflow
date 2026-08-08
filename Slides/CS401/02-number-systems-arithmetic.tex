@@ -1,0 +1,512 @@
+% =============================================================================
+% 02-number-systems-arithmetic.tex — Week 2: Number Systems, Representation,
+% and Arithmetic Hardware
+%
+% Course: Computer Organization and Architecture (PCC CS-401)
+% Anchor reading: Hamacher Ch. 2, 9 (number representation, arithmetic);
+%                 Mano Ch. 1 (binary systems, complements, signed numbers);
+%                 Patterson & Hennessy ARM Edition, Ch. 3 (Arithmetic for
+%                 Computers), Sec. 3.2 (Addition and Subtraction, p.188),
+%                 Sec. 3.3 (Multiplication, p.191), Sec. 3.4 (Division, p.197)
+%                 — page-cited via
+%                 master_supporting_docs/CS401/supporting_books/PattersonHennessy2017/index.md
+%                 (built 2026-08-07).
+%
+% Compile with: /compile-latex CS401/02-number-systems-arithmetic
+% =============================================================================
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}   % resolves via TEXINPUTS=../../Preambles;$TEXINPUTS — compile
+                  % from cwd Slides/CS401/
+\coursecode{CS401}
+
+\title{Number Systems, Representation, and Arithmetic Hardware}
+\subtitle{Week 2 --- What the Bits Mean, and How Hardware Adds Them}
+\author[Dr. Auqib Hamid Lone]{%
+  \textbf{Dr. Auqib Hamid Lone}\\
+  \small Assistant Professor in Computer Science \& Engineering
+}
+\institute[GCET Ganderbal]{%
+  \small\textbf{PCC CS-401: Computer Organization and Architecture}\\[0.3em]
+  Department of Computer Science \& Engineering\\
+  Government College of Engineering \& Technology (GCET), Ganderbal
+}
+\date[\today]{\small\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- RECAP AND ROADMAP
+% =============================================================================
+\section{Recap and Roadmap}
+
+\begin{frame}{Where We Left Off (Week 1)}
+  \begin{block}{Week 1 was about \emph{speed}}
+    \begin{itemize}
+      \item Architecture (the interface) vs.\ organization (the implementation).
+      \item The performance equation: $\text{CPU time} = \text{IC} \times
+        \text{CPI} / f$ --- three independent levers.
+      \item Amdahl's Law: the unimproved fraction sets a hard ceiling.
+    \end{itemize}
+  \end{block}
+  \vspace{0.2cm}
+  \begin{exampleblock}{The pivot today}
+    The equation assumed we can \emph{count} instructions and \emph{measure}
+    CPI. But the CPU cannot execute anything until the \key{data} it works on
+    is represented in bits --- and arithmetic is implemented in hardware.
+    This week: what the bits mean, and how hardware adds.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Roadmap: Four Questions, One Thread}
+  \begin{enumerate}
+    \item \key{Number systems} --- how do we write numbers in binary, octal,
+      hex --- and convert?
+    \item \key{Signed representation} --- how does hardware represent negative
+      integers (two's complement)?
+    \item \key{Overflow and fixed point} --- when does arithmetic fail, and how
+      are fractions represented?
+    \item \key{Adder hardware} --- how do we build a circuit that actually adds?
+  \end{enumerate}
+  \vspace{0.3cm}
+  \begin{alertblock}{Running thread for today}
+    We will add $+7 + (-3)$ in binary --- bit by bit --- then build the circuit
+    that does it, and check the result against the range of the format.
+  \end{alertblock}
+\end{frame}
+
+\transitionslide{The bits are meaningless until we agree on what they mean.}
+
+% =============================================================================
+% ACT 1 --- NUMBER SYSTEMS
+% =============================================================================
+\section{Number Systems}
+
+\begin{frame}{Motivation: One Value, Many Alphabets}
+  \begin{block}{Socratic question}
+    The decimal number $13$ --- how would you write it if you had only two
+    symbols, or eight, or sixteen? Each is the \emph{same} value, different
+    alphabet.
+  \end{block}
+  \begin{itemize}
+    \item Decimal $13 = 1\times10^1 + 3\times10^0$.
+    \item Binary: $1101_2 = 1\times2^3+1\times2^2+0\times2^1+1\times2^0 = 13$.
+    \item Octal $15_8$, hex $D_{16}$ --- each a shorthand for groups of bits.
+    \item Hardware stores \emph{bits}; the base is just how we write them down.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Definition: Positional Number Systems}
+  \begin{block}{Positional notation}
+    In base $r$, a number with digits $d_{n-1}\dots d_1 d_0$ has value
+    \[
+      d_{n-1} r^{n-1} + \cdots + d_1 r^1 + d_0 r^0.
+    \]
+    The base is written as a subscript: $1101_2$, $15_8$, $D_{16}$.
+  \end{block}
+  \begin{itemize}
+    \item $r=2$ binary (digits 0,1), $r=8$ octal (0--7), $r=10$ decimal,
+      $r=16$ hex (0--9, A--F).
+    \item \key{Conversion}: repeated division by $r$ gives the digits from least
+      to most significant.
+    \item Hex/octal are just binary in \key{groups}: $1$ hex digit $=4$ bits,
+      $1$ octal digit $=3$ bits.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Decimal to Binary, and Back}
+  \begin{block}{$53_{10} \to$ binary (repeated division by 2)}
+    $53/2 = 26$ r $1$; $26/2 = 13$ r $0$; $13/2 = 6$ r $1$; $6/2 = 3$ r $0$;
+    $3/2 = 1$ r $1$; $1/2 = 0$ r $1$. Read remainders bottom-up: $110101_2$.
+  \end{block}
+  \begin{exampleblock}{Check: $110101_2 \to$ decimal}
+    $1{\times}32 + 1{\times}16 + 0{\times}8 + 1{\times}4 + 0{\times}2 + 1{\times}1
+    = 32+16+4+1 = 53$. \good{Correct.}
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \muted{Binary $\leftrightarrow$ hex is trivial by grouping: $1101\,0101_2 =
+  D5_{16}$ --- no arithmetic needed, just 4-bit groups.}
+\end{frame}
+
+\begin{frame}{Socratic Check: How Many Bits?}
+  \begin{alertblock}{Question}
+    How many bits do you need to represent $n$ distinct values? And with $k$
+    bits, what is the largest unsigned integer?
+  \end{alertblock}
+  \begin{itemize}
+    \item $n$ values $\Rightarrow$ $\lceil \log_2 n \rceil$ bits.
+    \item $k$ bits $\Rightarrow$ values $0$ to $2^k - 1$ (unsigned).
+    \item Example: 8 bits $\Rightarrow$ $0$ to $255$; 16 bits $\Rightarrow$
+      $0$ to $65535$.
+    \item This ceiling will matter the moment we talk about \key{overflow}.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Unsigned is easy. The hard question: how do we represent negative numbers?}
+
+% =============================================================================
+% ACT 2 --- SIGNED REPRESENTATION
+% =============================================================================
+\section{Signed Representation}
+
+\begin{frame}{Three Candidate Schemes for Negatives}
+  \begin{block}{We have $n$ bits. How do we encode a sign?}
+    \begin{itemize}
+      \item \bad{Sign-magnitude}: one sign bit + $n-1$ magnitude bits. Simple,
+        but two zeros ($+0$ and $-0$) and awkward addition.
+      \item \bad{One's complement}: negate = flip all bits. Still two zeros;
+        addition needs end-around carry.
+      \item \good{Two's complement}: negate = flip all bits and add 1.
+        One zero, and \emph{addition just works}.
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock}{Why two's complement wins}
+    $-x$ is defined so that $x + (-x) = 0$ \emph{in the same bit width}, with
+    the carry out simply discarded. The ALU needs only an adder.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Definition: Two's Complement}
+  \begin{block}{Two's complement of an $n$-bit number}
+    \[
+      -x \equiv 2^n - x \quad (\text{mod } 2^n).
+    \]
+    Equivalently: flip all bits of $x$ and add 1.
+  \end{block}
+  \begin{itemize}
+    \item Range: $-2^{n-1} \le x \le 2^{n-1}-1$. For $n=8$: $-128$ to $+127$.
+    \item The \key{sign bit} is the MSB: 0 for non-negative, 1 for negative.
+    \item Adding a number to its two's complement gives all zeros --- the
+      ``self-cancelling'' property that makes subtraction free.
+  \end{itemize}
+  (P\&H, Sec.~3.2, p.188; Hamacher Ch. 2) \cite{PattersonHennessy2017_computer_organization_design,Hamacher2002_computer_organization}
+\end{frame}
+
+\begin{frame}{Worked Example: +7 and $-3$ in 8-bit Two's Complement}
+  \begin{block}{Represent both}
+    $+7 = 0000\,0111_2$. $-3$: flip $0000\,0011 \to 1111\,1100$, add 1
+    $\Rightarrow 1111\,1101_2$.
+  \end{block}
+  \begin{exampleblock}{Check by adding}
+    $0000\,0111 + 1111\,1101 = 1\,0000\,0100$. Discard the carry-out
+    (9th bit) $\Rightarrow 0000\,0100 = +4$. \good{$7 + (-3) = 4$.}
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \begin{alertblock}{The thread, started}
+    This is the thread's first full example: negative numbers are ordinary
+    bits, and \key{addition needs no special subtraction hardware} --- just
+    discard the carry-out.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Socratic Check: Negating Without a Calculator}
+  \begin{alertblock}{Question}
+    $-5$ in 8-bit two's complement is $1111\,1011$. Without computing anything,
+    what is $-(-5)$, i.e.\ the two's complement of $1111\,1011$? What do you
+    expect, and why?
+  \end{alertblock}
+  \begin{itemize}
+    \item Flip $1111\,1011 \to 0000\,0100$, add 1 $\Rightarrow 0000\,0101 = +5$.
+    \item Negating twice returns the original --- two's complement is an
+      \key{involution}: $-(-x) = x$.
+    \item This self-inverse property is why negation is easy to implement and
+      verify.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Two's complement makes negatives look like ordinary bits. But arithmetic can still overflow the range.}
+
+% =============================================================================
+% ACT 3 --- OVERFLOW AND FIXED POINT
+% =============================================================================
+\section{Overflow and Fixed-Point}
+
+\begin{frame}{What Is Overflow?}
+  \begin{block}{Definition}
+    \key{Overflow} occurs when the true result of an arithmetic operation
+    cannot be represented in the format's range.
+  \end{block}
+  \begin{itemize}
+    \item Unsigned: carry out of the MSB is overflow.
+    \item Two's complement: overflow $\neq$ carry out. A carry out of the MSB
+      does \emph{not} always mean overflow (recall $7+(-3)$ above).
+    \item The correct condition: overflow occurs when the sign of the result
+      is \emph{wrong} --- i.e.\ adding two positives gives a negative, or two
+      negatives give a positive.
+  \end{itemize}
+  (P\&H, Sec.~3.2, p.188) \cite{PattersonHennessy2017_computer_organization_design}
+\end{frame}
+
+\begin{frame}{Worked Example: Overflow vs.\ Carry}
+  \begin{block}{8-bit two's complement (range $-128$ to $+127$)}
+    \begin{itemize}
+      \item \texttt{+100 + +50:} $0110\,0100 + 0011\,0010 = 1001\,0110$, which
+        reads as $-106$ --- \bad{wrong sign}, so \key{overflow}.
+      \item \texttt{+127 + 1:} $0111\,1111 + 1 = 1000\,0000 = -128$ --- again
+        \bad{wrong sign}, overflow.
+      \item \texttt{-1 + (-1):} $1111\,1111 + 1111\,1111 = 1\,1111\,1110$;
+        discard carry $\Rightarrow 1111\,1110 = -2$ --- \good{correct}.
+    \end{itemize}
+  \end{block}
+  \begin{alertblock}{Rule of thumb}
+    Overflow happens exactly when the two operands share a sign bit and the
+    result's sign bit differs. Carry-out alone is \emph{not} the test.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Fixed-Point Representation}
+  \begin{block}{Fractional numbers with a fixed binary point}
+    A fixed-point number has an agreed position for the ``binary point'':
+    \[
+      b_{k-1}\dots b_0 . b_{-1} b_{-2} \dots b_{-m}
+      \quad\text{value} = \sum_i b_i 2^i.
+    \]
+  \end{block}
+  \begin{itemize}
+    \item E.g.\ \texttt{Q8.8}: 8 integer bits, 8 fraction bits --- each
+      fractional bit is $2^{-1}, 2^{-2}, \dots$.
+    \item $0.5 = 0.1_2$; $0.25 = 0.01_2$; $0.75 = 0.11_2$.
+    \item Simple and fast (add/sub work on the same integer hardware), but the
+      fixed point limits range and precision --- which is why Week 3 moves to
+      floating point.
+  \end{itemize}
+  (Hamacher Ch. 2; Mano Ch. 1) \cite{Hamacher2002_computer_organization,Mano1993_computer_system_architecture}
+\end{frame}
+
+\begin{frame}{Worked Example: A Fixed-Point Addition}
+  \begin{block}{Add $3.5 + 0.75$ in Q8.8}
+    $3.5 = 0000\,0011.1000\,0000$; $0.75 = 0000\,0000.1100\,0000$.
+  \end{block}
+  \begin{exampleblock}{Add bitwise}
+    $0000\,0011.1000\,0000 + 0000\,0000.1100\,0000 = 0000\,0100.0100\,0000$.
+    Read off: $4.25$. \good{Correct: $3.5+0.75=4.25$.}
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \muted{The integer ALU adds fixed-point values unchanged --- the programmer
+  just agrees where the point is.}
+\end{frame}
+
+\begin{frame}{Socratic Check: When Does Fixed Point Fail?}
+  \begin{alertblock}{Question}
+    What happens if you try to store $0.1$ in binary --- does it terminate?
+    What consequence does that have for fixed-point arithmetic?
+  \end{alertblock}
+  \begin{itemize}
+    \item $0.1$ in binary is a \key{repeating} fraction
+      ($0.000110011\dots_2$) --- it does not terminate.
+    \item Fixed point must \key{truncate}, so $0.1$ is stored
+      approximately --- repeated arithmetic accumulates error.
+    \item This is the fundamental limitation that floating point (Week 3)
+      manages but does not eliminate.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{We can represent negatives and fractions. Now: the hardware that actually adds.}
+
+% =============================================================================
+% ACT 4 --- ADDER HARDWARE
+% =============================================================================
+\section{Adder Hardware}
+
+\begin{frame}{Motivation: From Addition to a Circuit}
+  \begin{block}{Socratic question}
+    A human adds two numbers one column at a time, carrying. What is the
+    smallest circuit that adds two \emph{single bits} plus a carry-in --- and
+    how do we chain them into a multi-bit adder?
+  \end{block}
+  \begin{itemize}
+    \item \key{Half adder} (HA): two inputs $A, B$; outputs sum $S$ and
+      carry $C$.
+    \item \key{Full adder} (FA): three inputs $A, B, C_{in}$; outputs sum $S$
+      and carry $C_{out}$.
+    \item Chain $n$ full adders: each FA's $C_{out}$ feeds the next $C_{in}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Definition: Half Adder and Full Adder}
+  \begin{block}{Boolean equations}
+    \small
+    \texttt{Half adder:}\quad $S = A \oplus B$, \quad $C = A \cdot B$.\\
+    \texttt{Full adder:}\quad $S = A \oplus B \oplus C_{in}$, \quad
+    $C_{out} = A\cdot B + C_{in}\cdot(A \oplus B)$.
+  \end{block}
+  \begin{center}
+    % Diagram: full adder block — inputs A,B,Cin; outputs S,Cout.
+    % Coordinates: (x, y), scale 1.0
+    %   FA box at (0,0), 1.8w x 1.2h -> spans x -0.9..0.9, y -0.6..0.6
+    %   A/B labels at x=-1.6, arrows into left edge at x=-0.9 (y=+-0.45)
+    %   Cin label BELOW its line at (-0.45,-1.35); line enters box bottom
+    %   S/Cout labels at x=+1.6, arrows out of right edge at x=+0.9
+    \begin{tikzpicture}[scale=1.0, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.8cm, minimum height=1.2cm, align=center] (FA) at (0,0) {Full\\Adder};
+      \node[font=\scriptsize] at (-1.6,0.45) {$A$};
+      \node[font=\scriptsize] at (-1.6,-0.45) {$B$};
+      \node[font=\scriptsize] at (-0.45,-1.35) {$C_{in}$};
+      \node[font=\scriptsize] at (1.6,0.45) {$S$};
+      \node[font=\scriptsize] at (1.6,-0.45) {$C_{out}$};
+      \draw[->, thick] (-1.1,0.45) -- (-0.9,0.45);
+      \draw[->, thick] (-1.1,-0.45) -- (-0.9,-0.45);
+      \draw[->, thick] (-0.9,-1.0) -- (0,-1.0) -- (0,-0.6);
+      \draw[->, thick] (0.9,0.45) -- (1.2,0.45);
+      \draw[->, thick] (0.9,-0.45) -- (1.2,-0.45);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Worked Example: Full Adder Truth Table}
+  \begin{center}
+    \small
+    \begin{tabular}{@{}ccc|cc@{}}
+      \toprule
+      $A$ & $B$ & $C_{in}$ & $S$ & $C_{out}$ \\
+      \midrule
+      0 & 0 & 0 & 0 & 0 \\
+      0 & 0 & 1 & 1 & 0 \\
+      0 & 1 & 0 & 1 & 0 \\
+      0 & 1 & 1 & 0 & 1 \\
+      1 & 0 & 0 & 1 & 0 \\
+      1 & 0 & 1 & 0 & 1 \\
+      1 & 1 & 0 & 0 & 1 \\
+      1 & 1 & 1 & 1 & 1 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Count the 1s in $(A,B,C_{in})$: if odd, $S=1$; if $\ge 2$, $C_{out}=1$.}
+\end{frame}
+
+\begin{frame}{Ripple-Carry Adder: Chaining the Full Adders}
+  \begin{center}
+    % Diagram: ripple-carry adder — 4 full adders chained by carry.
+    % Coordinates: (x, y), scale 0.9
+    %   FA0..FA3 at x = 0, 2.6, 5.2, 7.8, y=0
+    %   carry chaining horizontal lines between FAs at y=-0.9
+    %   C_out of rightmost = overflow flag (or carry out)
+    % Layout: FA_i at (2.6i,0), 1.4w x 0.9h -> spans x 2.6i+-0.7, y +-0.45.
+    %   A_i/B_i labels at x=2.6i-0.85 (0.15 clear of the left edge 2.6i-0.7);
+    %   arrows into the left edge at x=2.6i-0.7.
+    %   S_i labels at (2.6i+0.9,0.6) ABOVE the output arrow (which runs at
+    %   y=0.35 from 2.6i+0.7 to 2.6i+1.1) so the label never sits on the line.
+    \begin{tikzpicture}[scale=0.9, transform shape,
+        every node/.style={font=\small}]
+      \foreach \i in {0,1,2,3} {
+        \node[draw=primary-gold, fill=white, rounded corners,
+              minimum width=1.4cm, minimum height=0.9cm, align=center]
+              (FA\i) at (2.6*\i, 0) {FA\i};
+        \node[font=\scriptsize] at (2.6*\i - 0.85, 0.35) {$A_\i$};
+        \node[font=\scriptsize] at (2.6*\i - 0.85, -0.35) {$B_\i$};
+        \draw[->, thick] (2.6*\i - 0.6, 0.35) -- (2.6*\i - 0.7, 0.35);
+        \draw[->, thick] (2.6*\i - 0.6, -0.35) -- (2.6*\i - 0.7, -0.35);
+        \node[font=\scriptsize] at (2.6*\i + 0.9, 0.6) {$S_\i$};
+        \draw[->, thick] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 1.1, 0.35);
+      }
+      \draw[->, thick] (0.7,-0.55) -- (0.7,-1.0) -- (2.1,-1.0) -- (2.1,-0.55);
+      \draw[->, thick] (3.3,-0.55) -- (3.3,-1.0) -- (4.7,-1.0) -- (4.7,-0.55);
+      \draw[->, thick] (5.9,-0.55) -- (5.9,-1.0) -- (7.3,-1.0) -- (7.3,-0.55);
+      \node[font=\scriptsize] at (0.0,-1.2) {$C_{in}=0$};
+      \node[font=\scriptsize] at (10.4,0.0) {$C_{out}$};
+      \draw[->, thick] (FA3.east |- 0,-0.45) -- (10.0,-0.45);
+      \node[font=\scriptsize, align=left] at (10.4,-0.8) {carry-out\\$\Rightarrow$ overflow\\\scriptsize (unsigned)};
+    \end{tikzpicture}
+  \end{center}
+  The carry \key{ripples} from the least-significant to the most-significant
+  bit --- hence the name. The final $C_{out}$ is the unsigned overflow flag.
+\end{frame}
+
+\begin{frame}{Worked Example: Adding $7 + (-3)$ in Hardware}
+  \begin{block}{The thread, closed}
+    $+7 = 0111$, $-3 = 1101$ (4-bit two's complement). Add with a 4-bit
+    ripple-carry adder, $C_{in}=0$:
+  \end{block}
+  \begin{exampleblock}{Column by column}
+    $0111 + 1101$: bit 0: $1+1=0$ carry 1; bit 1: $1+0+1=0$ carry 1;
+    bit 2: $1+1+1=1$ carry 1; bit 3: $0+1+1=0$ carry 1.
+    Result $0100 = +4$, carry-out $=1$ (discarded).
+    \good{$7 + (-3) = 4$, no overflow --- signs match the result.}
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \muted{One adder, same circuit, handles both signed and unsigned --- the
+  interpretation is the programmer's choice.}
+\end{frame}
+
+\begin{frame}{Socratic Check: Adder and Subtraction, One Circuit}
+  \begin{alertblock}{Question}
+    The ALU has only an adder. To compute $A - B$, what single extra step is
+    needed --- and what does it imply for the cost of subtraction hardware?
+  \end{alertblock}
+  \begin{itemize}
+    \item Subtract $B$'s two's complement: $A - B = A + (-B)$.
+    \item $-B$ = flip $B$ + add 1 --- implementable with a MUX (choose $B$ or
+      $\bar B$) plus a forced carry-in of 1.
+    \item So subtraction is \key{free}: one adder + a MUX, no separate
+      subtractor needed. (P\&H, Sec.~3.2, p.188)
+      \cite{PattersonHennessy2017_computer_organization_design}
+  \end{itemize}
+\end{frame}
+
+\transitionslide{We have the representation and the hardware. Now: put it together.}
+
+% =============================================================================
+% ACT 5 --- SYNTHESIS
+% =============================================================================
+\section{Synthesis}
+
+\begin{frame}{The Thread, Closed}
+  \begin{block}{What we built today}
+    \begin{itemize}
+      \item \key{Number systems}: positional notation; conversion by repeated
+        division; hex/octal as bit grouping.
+      \item \key{Two's complement}: $-x \equiv 2^n - x$; range
+        $-2^{n-1}$ to $2^{n-1}-1$; negation = flip + 1.
+      \item \key{Overflow}: wrong sign bit after addition of two same-signed
+        operands --- not the same as carry-out.
+      \item \key{Fixed point}: agreed binary point; integer hardware works
+        unchanged; fractions repeat in binary.
+      \item \key{Adder}: HA $\to$ FA $\to$ ripple-carry; $A-B = A + (-B)$ is
+        free.
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock}{The running thread}
+    $+7 + (-3)$: represent both in two's complement, add with a ripple-carry
+    adder, discard the carry-out, check the sign --- $4$, no overflow.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Bridge to Week 3}
+  \begin{block}{What's still missing}
+    Fixed point handles fractions but with fixed range/precision. Real numbers
+    span enormous ranges (from $10^{-300}$ to $10^{300}$ in science) --- one
+    fixed point cannot cover them.
+  \end{block}
+  \begin{exampleblock}{Next week}
+    \key{Floating point}: the IEEE\,754 representation --- sign, exponent,
+    mantissa --- trading a little precision for a huge range. Week 3 builds the
+    format, the normalization, and the arithmetic.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item \key{Number systems}: value $= \sum d_i r^i$; convert by repeated
+      division; hex/octal group bits.
+    \item \key{Two's complement}: $-2^{n-1} \le x \le 2^{n-1}-1$; negate by
+      flip + 1; addition needs no special subtraction hardware.
+    \item \key{Overflow}: carry-out $\neq$ overflow; wrong result sign is the
+      test.
+    \item \key{Fixed point}: an agreed binary point; simple but limited range
+      and precision.
+    \item \key{Adder}: HA/FA equations; ripple-carry chain; $A-B = A+(-B)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

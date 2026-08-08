@@ -1,6 +1,8 @@
 ---
 paths:
   - "Slides/**/*.tex"
+  - "Notes/**/*.tex"
+  - "InstructorHandouts/**/*.tex"
   - "Figures/**/*.tex"
   - "Preambles/**/*.tex"
 ---
@@ -127,9 +129,55 @@ This keeps each diagram small enough that the measurement rules are tractable.
 
 ---
 
+## Rule P7: Geometric clearance — every edge must stay clear of every box and line (MANDATORY)
+
+The coordinate map (P2) plus this clearance check is the only thing that stops the two most common real collisions: a bus/arrow passing *through* a box, and a label sitting *on* a line. Apply both checks to every diagram after drafting, before compiling:
+
+**P7a — Every path must clear every box.** Compute each box's span from its `minimum width/height` and center; verify no `\draw` line crosses that rectangle except at a legitimate connection point (an edge anchor or a drawn perpendicular join). Watch for the classic failure: a horizontal "bus" drawn at a y that passes through the vertical span of a box above it.
+
+```latex
+% BAD — the bus at y=-0.4 passes THROUGH the CPU box (which spans y -0.8..0.8)
+\node (CPU) at (0,0) [minimum width=2.6cm, minimum height=1.6cm] {...};
+\draw (-1.3,-0.4) -- (4.3,-0.4);   % y=-0.4 is inside the CPU's y-span → overlap
+
+% GOOD — the bus runs BELOW every box (y=-1.4 is below CPU bottom at -0.8),
+% and each box connects to it with a short vertical drop at its own x.
+\draw (-1.3,-1.4) -- (6.1,-1.4);
+\draw (0,-0.8) -- (0,-1.4);        % CPU.south → bus
+```
+
+**P7b — No label may sit on a line.** An edge label must carry a directional keyword (P4) AND be offset so the text does not overlap the line it annotates. The most common miss is a label placed at the arrow's own y: `\node at (x, 0.35) {S}` next to `\draw (a,0.35)--(b,0.35)` puts the text on the line. Place such labels above/below the line, not at its midline, or shift the node off the line's y.
+
+```latex
+% BAD — S label sits exactly on the horizontal arrow at y=0.35
+\node[font=\scriptsize] at (2.6*\i + 0.85, 0.35) {$S_\i$};
+\draw[->] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 1.1, 0.35);
+
+% GOOD — label placed above the line, clear of it
+\node[font=\scriptsize] at (2.6*\i + 0.9, 0.6) {$S_\i$};
+\draw[->] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 1.1, 0.35);
+```
+
+**P7c — Labels must clear box edges.** An unboxed label sitting within ~0.1 cm of a box edge visually collides. Leave at least 0.15 cm between a label's anchor point and the nearest box border.
+
+**P7d — Curves/asymptotes must respect their own dashed reference lines.** When a curve is drawn next to a dashed threshold/asymptote (e.g. Amdahl's ceiling), the curve's maximum must *approach* that line from below — it must never visibly cross it. Tune the plot's scale factor so `max(curve) < dashed line y`, and place annotations below the flat region, not under the rising part.
+
+```latex
+% BAD — curve asymptote 4.0 but ceiling drawn at 2.0 → curve crosses the ceiling
+\draw[dashed] (0,2.0) -- (6.6,2.0);
+\draw plot (\x, {4.0*(1 - exp(-\x/1.2))});
+
+% GOOD — ceiling is the curve's asymptote; curve approaches it from below
+\draw[dashed] (0,3.5) -- (6.6,3.5);
+\draw plot (\x, {3.5*(1 - exp(-\x/1.1))});
+```
+
+---
+
 ## Enforcement
 
 - `/extract-tikz` runs a prevention pre-check as **Step 1** before compiling. Violations of P1 (boxed nodes only), P3 (bare `scale=`), or P4 (missing directional keyword on edge labels) halt the pipeline and report the offending block. P2 (coordinate map) and P5–P6 are reviewer concerns, not grep-checkable.
+- **P7 is a hard authoring gate, not a reviewer concern.** Every `tikzpicture` with ≥ 2 nodes or ≥ 1 line must carry a P2 coordinate map, and that map must be audited for P7a–P7d (box clearance, label-off-line, edge clearance, curve-vs-dashed-asymptote) before the file is compiled. `/create-lecture` (Phase 4), `/lecture-notes` (Phase 3), and `/instructor-handout` (Phase 1) each run this audit inline on every diagram they embed; `/new-diagram` runs the same audit before its standalone compile.
 - `/new-diagram` runs the same Step 1 grep patterns before its standalone compile — both skills use identical regexes so behavior doesn't drift.
 - `tikz-reviewer` cites these rules by name when reporting CRITICAL/MAJOR issues.
 - Quality scoring is defined in [`quality-gates.md`](quality-gates.md). The TikZ section there deducts −5 for a label-overlap finding (which is typically the symptom of a P1/P3/P4 violation that reached production); it does **not** currently deduct per-rule. That may change — consult `quality-gates.md` for the authoritative scoring rubric.

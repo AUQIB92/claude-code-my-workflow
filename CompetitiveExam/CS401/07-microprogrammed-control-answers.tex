@@ -1,6 +1,13 @@
 % =============================================================================
 % CompetitiveExam/CS401/07-microprogrammed-control-answers.tex
 % Answer key for 07-microprogrammed-control-questions.tex.
+%
+% Q2-Q4 are real GATE past-year questions, sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability).
+% The book authenticates each question (year + question number printed on the
+% page; full text recovered via render+OCR). The answers below are derived and
+% justified step by step; the collapsed answer keys inside the book are not
+% extractable, so these derivations stand in for the book's key.
 % =============================================================================
 
 \documentclass[11pt]{article}
@@ -10,7 +17,8 @@
 \renewcommand{\thesection}{7.\arabic{section}}
 
 \title{Competitive Exam Practice 7 --- Answer Key\\\large Microprogrammed Control Unit Design}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
@@ -19,15 +27,17 @@
 \begin{enumerate}
 \item[\textbf{Q1}] \textbf{(D) all of the above.} Horizontal microprogramming dedicates one bit per control signal, so each bit directly \emph{is} the signal (no decoder needed), which is exactly why the microinstruction word is wider than the encoded-field vertical alternative. See the provenance note in the questions file for this answer's verification status.
 
-\item[\textbf{Q2}] \textbf{(C).} Vertical encoding groups mutually-exclusive signals into short encoded fields, which must be expanded by a decoder before the datapath sees valid one-hot signals --- that decode step is exactly the extra delay vertical encoding pays for its narrower control word.
+\item[\textbf{Q2}] \textbf{(A).} The 26-bit microinstruction splits as $13 + X + Y$. The MUX has 8 status-bit inputs, so $Y = \lceil \log_2 8 \rceil = 3$. Hence $X = 26 - 13 - 3 = 10$ bits. The next-address field addresses control memory, so the number of words is $2^{10} = 1024$.
 
-\item[\textbf{Q3}] \textbf{4.} $\lceil \log_2 16 \rceil = 4$ ($2^4 = 16$ exactly).
+\item[\textbf{Q3}] \textbf{(C).} With at most two of 25 signals active, encode the (up to) two active signals in two independent fields, each needing $\lceil \log_2 25 \rceil = 5$ bits: $5 + 5 = 10$ bits. (A 2-bit field could not address 25 signals; 25 and 12 are not minimal.)
 
-\item[\textbf{Q4}] \textbf{(B) Mapping unit.} The mapping unit converts the opcode in \texttt{IR} into the starting microaddress of that instruction's microprogram and loads it into \texttt{MPC}; control memory only supplies control words \emph{after} \texttt{MPC} already points at the right row.
+\item[\textbf{Q4}] \textbf{(C).} Field (a) can take one of four states (none or one of 3), needing $\lceil \log_2 4 \rceil = 2$ bits. Field (b) must allow any subset of six micro-operations (each on/off), needing 6 bits. Total $= 2 + 6 = 8$ bits.
 
-\item[\textbf{Q5}] \textbf{(B).} Hardwired control has no memory-read delay at all (pure gates); horizontal microprogramming reads a wide control word directly with no decode step; vertical microprogramming pays an additional decoder delay on top of the memory read, making it the slowest of the three.
+\item[\textbf{Q5}] \textbf{(C).} Vertical encoding groups mutually-exclusive signals into short encoded fields, which must be expanded by a decoder before the datapath sees valid one-hot signals --- that decode step is exactly the extra delay vertical encoding pays for its narrower control word.
 
-\item[\textbf{Q6}] \textbf{11.} $3 + 3 + 5 = 11$.
+\item[\textbf{Q6}] \textbf{(B) Mapping unit.} The mapping unit converts the opcode in \texttt{IR} into the starting microaddress of that instruction's microprogram and loads it into \texttt{MPC}; control memory only supplies control words \emph{after} \texttt{MPC} already points at the right row.
+
+\item[\textbf{Q7}] \textbf{(B).} Hardwired control has no memory-read delay at all (pure gates); horizontal microprogramming reads a wide control word directly with no decode step; vertical microprogramming pays an additional decoder delay on top of the memory read, making it the slowest of the three.
 \end{enumerate}
 
 \end{document}

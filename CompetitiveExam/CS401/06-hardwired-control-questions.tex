@@ -4,13 +4,15 @@
 % Hardwired Control Unit Design
 %
 % Student-facing — NO answers. Answer key: 06-hardwired-control-answers.tex.
-% Provenance: a targeted search for real GATE CS past-year questions on this
-% lecture's specific sub-topics (sequence counter design, the D_i.T_j
-% control-equation method) turned up leads (e.g. a GATE IT 2004 item on a
-% control signal "Ain") that could not be reconstructed with enough
-% confidence from accessible sources to verify precisely, so none is
-% included as a real PYQ this pass. All questions below are original,
-% GATE-format, calibrated to real GATE difficulty for this topic.
+% Provenance (availability-first): Q1 is a real GATE past-year question sourced
+% from the local GATEOverflow Volume 3 PYQ book (CompetitiveExam/Books/index.md,
+% Control Unit cluster, PDF p.50; heading + full text via the render+OCR
+% sub-pipeline). The book authenticates the question; the answer is justified
+% in the answers file. The lecture's deeper sub-topics (sequence counter
+% design, the D_i.T_j control-equation method) have essentially no local PYQ
+% coverage in Volume 3 — only 1 Control Unit question exists — so Q2-Q7 remain
+% original, GATE-format, calibrated to real GATE difficulty, per the sourcing
+% ladder (Tier 1 present → local; otherwise original).
 %
 % Compile with: cd CompetitiveExam/CS401 &&
 %   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-questions.tex
@@ -24,7 +26,8 @@
 \renewcommand{\thesection}{6.\arabic{section}}
 
 \title{Competitive Exam Practice 6: Hardwired Control Unit Design\\\large GATE (Computer Science) Pattern}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
@@ -33,7 +36,15 @@
 \noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
 
 \begin{enumerate}
-\item[\textbf{Q1}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a hardwired control unit, every control signal is generated as a function of:
+\item[\textbf{Q1}] \textit{[GATE CS 1987 Q1-vi, verified --- GATEOverflow V3 p.50]} \textbf{[MCQ, 1 mark]} A microprogrammed control unit:
+\begin{enumerate}
+  \item[(A)] is faster than a hard-wired control unit
+  \item[(B)] facilitates easy implementation of new instructions
+  \item[(C)] is useful when very small programs are to be run
+  \item[(D)] usually refers to the control unit of a microprocessor
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a hardwired control unit, every control signal is generated as a function of:
 \begin{enumerate}
   \item[(A)] Opcode decoder lines only
   \item[(B)] Step decoder lines only
@@ -41,9 +52,9 @@
   \item[(D)] Neither --- signals are read from a stored table
 \end{enumerate}
 
-\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} An instruction set architecture has 25 distinct instructions. The minimum number of bits required in the instruction's opcode field to encode all of them is \rule{1.5cm}{0.4pt}.
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} An instruction set architecture has 25 distinct instructions. The minimum number of bits required in the instruction's opcode field to encode all of them is \rule{1.5cm}{0.4pt}.
 
-\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A sequence counter (\texttt{SC}) together with a step decoder, as used to generate one-hot control-step signals in a hardwired control unit, is functionally most similar to:
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A sequence counter (\texttt{SC}) together with a step decoder, as used to generate one-hot control-step signals in a hardwired control unit, is functionally most similar to:
 \begin{enumerate}
   \item[(A)] A program counter driving an instruction cache
   \item[(B)] An instruction register holding the current opcode
@@ -51,9 +62,9 @@
   \item[(D)] A stack pointer
 \end{enumerate}
 
-\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} A hardwired control unit's sequence counter is implemented with 6 bits. The maximum number of distinct control steps it can address is \rule{1.5cm}{0.4pt}.
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} A hardwired control unit's sequence counter is implemented with 6 bits. The maximum number of distinct control steps it can address is \rule{1.5cm}{0.4pt}.
 
-\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Which of the following is \textbf{NOT} a disadvantage of hardwired control relative to microprogrammed control?
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Which of the following is \textbf{NOT} a disadvantage of hardwired control relative to microprogrammed control?
 \begin{enumerate}
   \item[(A)] Difficult to modify after the chip is fabricated
   \item[(B)] Design/verification complexity grows with instruction-set size
@@ -61,7 +72,7 @@
   \item[(D)] Requires re-deriving Boolean equations whenever the ISA changes
 \end{enumerate}
 
-\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} For a control signal shared by two instructions at the same control step, e.g.\ $Z_{\text{in}} = (D_{\text{ADD}} \cdot T_2) + (D_{\text{SUB}} \cdot T_2)$, the OR operation reflects the fact that:
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} For a control signal shared by two instructions at the same control step, e.g.\ $Z_{\text{in}} = (D_{\text{ADD}} \cdot T_2) + (D_{\text{SUB}} \cdot T_2)$, the OR operation reflects the fact that:
 \begin{enumerate}
   \item[(A)] \texttt{ADD} and \texttt{SUB} must execute simultaneously
   \item[(B)] $Z_{\text{in}}$ must be asserted whenever \emph{any} instruction whose state table lists it at that step is running

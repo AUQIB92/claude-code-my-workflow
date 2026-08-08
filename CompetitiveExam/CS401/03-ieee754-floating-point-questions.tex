@@ -1,0 +1,85 @@
+% =============================================================================
+% CompetitiveExam/CS401/03-ieee754-floating-point-questions.tex
+% Competitive Exam Practice 3 — GATE (Computer Science) Pattern
+% IEEE 754 Floating-Point Representation and Arithmetic
+%
+% Student-facing — NO answers. Answer key: 03-ieee754-floating-point-answers.tex.
+% Provenance (availability-first, Tier 1 = local PYQ book): Q1-Q4 are real GATE
+% past-year questions sourced from the local GATEOverflow Volume 3 PYQ book
+% (CompetitiveExam/Books/index.md), headings + full text recovered via the
+% render+OCR sub-pipeline. The book authenticates each question; answers are
+% derived/justified in the answers file. Q5-Q6 are original GATE-pattern
+% questions filling the bias/range and precision-loss subtopics.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 03-ieee754-floating-point-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Competitive Exam Practice 3: IEEE 754 Floating-Point Representation and Arithmetic\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2014 Set 2 Q45, verified --- GATEOverflow V3 p.331]} \textbf{[MCQ, 1 mark]} A float variable $X$ is assigned the decimal value $-14.25$, represented in IEEE-754 single-precision (1 sign + 8 exponent + 23 mantissa). The representation of $X$ in hexadecimal notation is:
+\begin{enumerate}
+  \item[(A)] C1640000H
+  \item[(B)] 416C0000H
+  \item[(C)] 41640000H
+  \item[(D)] C16C0000H
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CS 2017 Set 2 Q12, verified --- GATEOverflow V3 p.331]} \textbf{[MCQ, 1 mark]} Given the following 32-bit single-precision IEEE-754 number: $0011\,1110\,0110\,1101\,0000\,0000\,0000\,0000$. The decimal value closest to this floating-point number is:
+\begin{enumerate}
+  \item[(A)] $1.45 \times 10^1$
+  \item[(B)] $1.45 \times 10^{-1}$
+  \item[(C)] $2.27 \times 10^1$
+  \item[(D)] $2.27 \times 10^{-1}$
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CS 2023 Q35, verified --- GATEOverflow V3 p.332]} \textbf{[MCQ, 2 marks]} Consider the IEEE-754 single-precision numbers $P = \text{0xC1800000}$ and $Q = \text{0x3F5C2EF4}$. The product $P \times Q$, represented in IEEE-754 single precision, is:
+\begin{enumerate}
+  \item[(A)] 0x404C2EF4
+  \item[(B)] 0x405C2EF4
+  \item[(C)] 0xC15C2EF4
+  \item[(D)] 0xC14C2EF4
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CS 2008 Q4, verified --- GATEOverflow V3 p.330]} \textbf{[MCQ, 1 mark]} In the IEEE floating-point representation, the hexadecimal value \texttt{0x00000000} corresponds to:
+\begin{enumerate}
+  \item[(A)] The normalized value $2^{-127}$
+  \item[(B)] The normalized value $2^{-126}$
+  \item[(C)] The normalized value $+0$
+  \item[(D)] The special value $+0$
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In IEEE-754 single precision, the exponent is stored in biased form ($E_{\text{stored}} = E_{\text{true}} + 127$). The reason for the bias, rather than two's complement, is that:
+\begin{enumerate}
+  \item[(A)] two's complement cannot represent negative exponents
+  \item[(B)] it makes the exponent field all zeros correspond to the smallest exponent and all ones to the largest, so unsigned comparison orders floats correctly
+  \item[(C)] it doubles the mantissa precision
+  \item[(D)] it eliminates the need for normalization
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A loop computes $x = 0.1$ ten times by repeated addition in single-precision floating point, then tests $x = 1.0$. Which statement is \textbf{TRUE}?
+\begin{enumerate}
+  \item[(A)] The test always passes because $10 \times 0.1 = 1.0$ exactly
+  \item[(B)] The test always fails because the product of ten adds is exactly $0.999\dots$
+  \item[(C)] The test may fail because $0.1$ is not exactly representable and rounding error accumulates across the additions
+  \item[(D)] The test fails only if overflow occurs
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

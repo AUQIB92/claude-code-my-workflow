@@ -1,6 +1,13 @@
 % =============================================================================
 % CompetitiveExam/CS401/05-addressing-cpu-bus-answers.tex
 % Answer key for 05-addressing-cpu-bus-questions.tex.
+%
+% Q1-Q6 are real GATE past-year questions, sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability).
+% The book authenticates each question (year + question number printed on the
+% page; full text recovered via render+OCR). The answers below are derived and
+% justified; the collapsed answer keys inside the book are not extractable, so
+% these justifications stand in for the book's key.
 % =============================================================================
 
 \documentclass[11pt]{article}
@@ -10,24 +17,27 @@
 \renewcommand{\thesection}{5.\arabic{section}}
 
 \title{Competitive Exam Practice 5 --- Answer Key\\\large Addressing Modes, CPU Organization, and Bus Structures}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{enumerate}
-\item[\textbf{Q1}] \textbf{(C) Displacement (indexed).} $\text{EA} = [\text{register}] + d$ is recomputed from a register on every execution, so it correctly tracks a changing loop index; direct addressing's fixed field cannot.
+\item[\textbf{Q1}] \textbf{(B).} PC-relative addressing computes $\text{EA} = [\text{PC}] + \text{displacement}$, so the code is position-independent: it can be loaded at any address and still branch correctly, because every reference is relative to the current PC.
 
-\item[\textbf{Q2}] \textbf{(B) $B$.} Indirect addressing: $\text{EA} = M[A] = B$. The operand itself (42) is found at $M[B]$, but the \emph{effective address} is $B$, not the operand's value.
+\item[\textbf{Q2}] \textbf{(D).} PC-relative addressing makes every reference relative to the program counter, so the whole program can be moved (relocated) to a different base address without changing any instruction. Absolute addressing embeds a fixed address; indexed and base-register modes still rely on an absolute base somewhere.
 
-\item[\textbf{Q3}] \textbf{200.} $\text{EA} = [\text{R4}] + d = 175 + 25 = 200$.
+\item[\textbf{Q3}] \textbf{(A).} Pointers require \key{indirect} addressing (the operand is \emph{another address} in memory). With only immediate (constant in the instruction) and direct (absolute address) modes, a pointer's value cannot be fetched and dereferenced. Arrays, records, and recursive procedures can all be built from direct addressing plus constants; pointers cannot.
 
-\item[\textbf{Q4}] \textbf{(C) 3.} One step to stage the first operand into a buffer register, one to bring the second operand and compute (result into a second buffer register), one to write the result back --- the structural minimum when only one value can occupy the bus per cycle.
+\item[\textbf{Q4}] \textbf{(C).} Indirect addressing $\to$ pointers (X--2); immediate $\to$ constants (Y--3); autodecrement $\to$ loops, since the index register auto-updates as the loop advances (Z--1).
 
-\item[\textbf{Q5}] \textbf{(C).} Because Bus A and Bus B are separate physical paths and Bus C does not compete with either, both operand reads and the result write-back can all occur in a single clock cycle.
+\item[\textbf{Q5}] \textbf{(B).} Absolute (direct) addressing puts the \emph{address} of the operand inside the instruction: $\text{EA} = A$. (A) describes immediate; (C) describes register-indirect; (D) describes register or stack addressing.
 
-\item[\textbf{Q6}] \textbf{2.} One memory access to fetch the pointer from $M[A]$, one to fetch the operand from $M[\text{pointer value}]$.
+\item[\textbf{Q6}] \textbf{(B).} Based and relative addressing compute $\text{EA}$ from a register (base or PC) plus a displacement, so the code can be relocated at run time by changing the base register --- no code change needed. Absolute addressing is fixed at link time.
+
+\item[\textbf{Q7}] \textbf{(B).} A single-bus design must serialize: drive $[R2]$ to one ALU input, then $[R3]$ to the other, then the result back --- hence three steps plus two hidden buffers. Three buses (Bus A/B for the operands, Bus C for the result) can carry both operands and the result in the same cycle because they are separate physical paths, so the register-transfer completes in one control step.
 \end{enumerate}
 
 \end{document}
