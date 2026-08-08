@@ -40,6 +40,26 @@ cd "Slides/$(dirname $ARGUMENTS)"
 TEXINPUTS=../../Preambles:$TEXINPUTS BIBINPUTS=../..:$BIBINPUTS latexmk -xelatex -interaction=nonstopmode "$(basename $ARGUMENTS).tex"
 ```
 
+**Windows / MiKTeX variant** (separator is `;`; set the env var inline for the command only):
+```cmd
+cd Slides\CS401
+set TEXINPUTS=../../Preambles;
+set BIBINPUTS=../..;
+xelatex -interaction=nonstopmode 05-addressing-cpu-bus.tex
+bibtex 05-addressing-cpu-bus
+xelatex -interaction=nonstopmode 05-addressing-cpu-bus.tex
+xelatex -interaction=nonstopmode 05-addressing-cpu-bus.tex
+```
+Or from Git Bash (PowerShell is not recommended for env-var-prefix commands):
+```bash
+cd Slides/CS401
+TEXINPUTS="../../Preambles;" BIBINPUTS="../..;" xelatex -interaction=nonstopmode 05-addressing-cpu-bus.tex
+BIBINPUTS="../..;" bibtex 05-addressing-cpu-bus
+TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 05-addressing-cpu-bus.tex
+TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 05-addressing-cpu-bus.tex
+```
+If `xelatex` is not on PATH, add MiKTeX's bin dir first (typically `C:\Users\<you>\AppData\Local\Programs\MiKTeX\miktex\bin\x64`): `set PATH=%PATH%;C:\Users\<you>\AppData\Local\Programs\MiKTeX\miktex\bin\x64`.
+
 2. **Check for warnings:**
    - Grep output for `Overfull \\hbox` warnings
    - Grep for `undefined citations` or `Label(s) may have changed`
@@ -50,6 +70,7 @@ TEXINPUTS=../../Preambles:$TEXINPUTS BIBINPUTS=../..:$BIBINPUTS latexmk -xelatex
    open Slides/$ARGUMENTS.pdf          # macOS
    # xdg-open Slides/$ARGUMENTS.pdf    # Linux
    ```
+   Windows: `start Slides\$ARGUMENTS.pdf` (forward the path as-is) or just open the PDF in your default viewer.
 
 4. **Report results:**
    - Compilation success/failure
