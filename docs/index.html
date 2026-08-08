@@ -5,8 +5,9 @@
   ------------------------------------------------------------
   Assistant Professor of Computer Science and Engineering (GCET Kashmir).
   Courses live at docs/courses/<code>/ and are listed below.
-  To add a course: copy a <a class="card"> block and point the
+  To add a course: copy a <a class="tile"> block and point the
   href at its hub under docs/courses/.
+  Design: shared system in docs/assets/site.css.
   ============================================================
 -->
 <html lang="en">
@@ -16,10 +17,10 @@
   <title>Dr. Auqib Hamid Lone — Assistant Professor &amp; Blockchain Researcher</title>
   <meta name="description" content="Dr. Auqib Hamid Lone — Assistant Professor of Computer Science and Engineering at GCET Kashmir, blockchain and applied-cryptography researcher. Open course materials for Computer Organization and Architecture (CS-401).">
   <meta name="author" content="Dr. Auqib Hamid Lone">
-  <meta name="theme-color" content="#012169">
+  <meta name="theme-color" content="#2c5e2a">
 
   <!-- Favicon (inline, palette-matching monogram) -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23012169'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-weight='700' fill='%23B9975B' text-anchor='middle'%3EAL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c5e2a'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-weight='700' fill='%23d4a464' text-anchor='middle'%3EAL%3C/text%3E%3C/svg%3E">
 
   <!-- Open Graph / social sharing -->
   <meta property="og:type" content="profile">
@@ -27,372 +28,23 @@
   <meta property="og:description" content="Assistant Professor of Computer Science &amp; Engineering. Blockchain &amp; applied cryptography research. Open course materials for CS-401.">
   <meta property="og:url" content="https://auqib92.github.io/claude-code-my-workflow/">
 
-  <!-- Fonts: serif display + humanist sans -->
+  <!-- Fonts: Inria Serif display, Inria Sans text, JetBrains Mono labels -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --navy: #012169;
-      --navy-deep: #070f2e;
-      --navy-mid: #0a1f5c;
-      --gold: #B9975B;
-      --gold-deep: #a07f45;
-      --gold-soft: #e6d5ad;
-      --ink: #1c2b3a;
-      --muted: #5b6b7b;
-      --cream: #faf8f2;
-      --paper: #ffffff;
-      --line: #e8e1d0;
-      --shadow-sm: 0 1px 2px rgba(7,15,46,.05), 0 6px 20px rgba(7,15,46,.06);
-      --shadow-lg: 0 2px 6px rgba(7,15,46,.06), 0 24px 60px rgba(7,15,46,.14);
-      --radius: 16px;
-      --nav-h: 66px;
-      --ease: cubic-bezier(.22,.61,.36,1);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 8px); }
-
-    body {
-      font-family: 'Inter', -apple-system, system-ui, sans-serif;
-      color: var(--ink);
-      background: var(--cream);
-      line-height: 1.72;
-      font-weight: 400;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    ::selection { background: var(--gold-soft); color: var(--navy-deep); }
-
-    /* faint dotted texture over the whole page */
-    body::before {
-      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background-image: radial-gradient(rgba(1,33,105,.05) 1px, transparent 1px);
-      background-size: 26px 26px;
-    }
-    nav, header, section, footer { position: relative; z-index: 1; }
-
-    /* ============ Reveal-on-scroll ============ */
-    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
-    .reveal.in { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) {
-      .reveal { opacity: 1; transform: none; transition: none; }
-      html { scroll-behavior: auto; }
-    }
-
-    /* ============ Navigation ============ */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(250,248,242,.86);
-      backdrop-filter: blur(14px) saturate(1.4);
-      -webkit-backdrop-filter: blur(14px) saturate(1.4);
-      border-bottom: 1px solid var(--line);
-      transition: box-shadow .3s;
-    }
-    nav.scrolled { box-shadow: 0 6px 24px rgba(7,15,46,.07); }
-    .nav-inner {
-      max-width: 1080px; margin: 0 auto; padding: 0 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      height: var(--nav-h);
-    }
-    .brand {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 700; font-size: 1.22rem; color: var(--navy);
-      text-decoration: none; letter-spacing: .2px;
-      display: inline-flex; align-items: center; gap: 10px;
-    }
-    .brand .mark {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-      color: var(--gold); display: grid; place-items: center;
-      font-size: .82rem; font-weight: 700;
-      box-shadow: var(--shadow-sm);
-    }
-    .nav-links { display: flex; align-items: center; gap: 26px; }
-    .nav-links a {
-      color: var(--muted); text-decoration: none; font-size: .92rem; font-weight: 500;
-      transition: color .2s; position: relative;
-    }
-    .nav-links a::after {
-      content: ""; position: absolute; left: 0; bottom: -5px; height: 2px; width: 0;
-      background: var(--gold); transition: width .25s var(--ease);
-    }
-    .nav-links a:hover { color: var(--navy); }
-    .nav-links a:hover::after { width: 100%; }
-    .nav-links .cta {
-      color: var(--paper); background: var(--navy);
-      padding: 9px 18px; border-radius: 100px; font-weight: 500;
-    }
-    .nav-links .cta::after { display: none; }
-    .nav-links .cta:hover { background: var(--navy-mid); color: var(--paper); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-
-    /* ============ Hero ============ */
-    .hero {
-      max-width: 1080px; margin: 0 auto; padding: 92px 24px 56px;
-      display: grid; grid-template-columns: 1.45fr 1fr; gap: 56px; align-items: center;
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-size: .78rem; font-weight: 600;
-      letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep);
-      margin-bottom: 20px;
-    }
-    .eyebrow::before { content: ""; width: 34px; height: 2px; background: var(--gold); }
-    .hero h1 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 700; font-size: clamp(2.4rem, 5.2vw, 3.7rem);
-      line-height: 1.1; color: var(--navy-deep);
-    }
-    .hero h1 .thin { color: var(--gold); font-style: italic; font-weight: 500; }
-    .hero .role {
-      margin-top: 20px; font-size: 1.12rem; color: var(--muted); font-weight: 400;
-      max-width: 31em; line-height: 1.7;
-    }
-    .hero .cta-row { margin-top: 32px; display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 9px;
-      text-decoration: none; font-weight: 500; font-size: .95rem;
-      padding: 13px 28px; border-radius: 100px; transition: all .22s var(--ease);
-    }
-    .btn.primary { background: var(--navy); color: var(--paper); box-shadow: var(--shadow-sm); }
-    .btn.primary:hover { background: var(--navy-mid); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-    .btn.ghost { border: 1.5px solid var(--navy); color: var(--navy); background: transparent; }
-    .btn.ghost:hover { background: rgba(1,33,105,.06); transform: translateY(-2px); }
-
-    /* sigil — layered monogram on a subtly gridded ring */
-    .hero .sigil { position: relative; aspect-ratio: 1; max-width: 320px; justify-self: center; width: 100%; }
-    .sigil .halo {
-      position: absolute; inset: -18px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(185,151,91,.14), transparent 66%);
-    }
-    .sigil .ring {
-      position: absolute; inset: 0; border-radius: 50%;
-      background:
-        radial-gradient(circle at 30% 25%, rgba(185,151,91,.18), transparent 55%),
-        radial-gradient(circle at 72% 76%, rgba(1,33,105,.14), transparent 55%),
-        var(--paper);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow-lg);
-      display: grid; place-items: center;
-      animation: float 8s ease-in-out infinite;
-    }
-    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-    .sigil .ring::before {
-      content: ""; position: absolute; inset: 16px; border-radius: 50%;
-      border: 1px dashed rgba(185,151,91,.5);
-    }
-    .sigil .initials {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 4.8rem; font-weight: 700; color: var(--navy); letter-spacing: .03em;
-    }
-    .sigil .initials span { color: var(--gold); }
-    .sigil .tagline {
-      position: absolute; bottom: 2%; left: 50%; transform: translateX(-50%);
-      font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
-      color: var(--muted); white-space: nowrap;
-    }
-
-    /* ============ Sections ============ */
-    section { max-width: 1080px; margin: 0 auto; padding: 80px 24px; }
-    .section-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 42px; position: relative; }
-    .section-num {
-      font-family: 'Playfair Display', Georgia, serif; font-style: italic;
-      font-size: 1.35rem; color: var(--gold); line-height: 1;
-    }
-    .section-head h2 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 600; font-size: clamp(1.7rem, 3vw, 2.2rem); color: var(--navy-deep); line-height: 1.1;
-    }
-    .section-head::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
-
-    /* ============ About ============ */
-    .about-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: start; }
-    .about-grid p { margin-bottom: 1.05em; color: #33424f; font-size: 1.02rem; }
-    .about-grid p b { color: var(--navy); font-weight: 600; }
-    .about-grid .pull {
-      margin: 22px 0 0; padding: 14px 20px;
-      font-family: 'Playfair Display', Georgia, serif; font-style: italic;
-      font-size: 1.15rem; line-height: 1.5; color: var(--navy);
-      background: linear-gradient(180deg, rgba(185,151,91,.12), rgba(185,151,91,.04));
-      border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0;
-    }
-    .fact-box {
-      background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 28px 30px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
-    }
-    .fact-box::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--navy), var(--gold));
-    }
-    .fact-box h3 {
-      font-family: 'Playfair Display', Georgia, serif; font-size: 1.08rem;
-      font-weight: 600; color: var(--navy); margin-bottom: 14px;
-    }
-    .fact-box ul { list-style: none; }
-    .fact-box li {
-      padding: 10px 0; border-bottom: 1px dashed var(--line);
-      font-size: .92rem; color: var(--muted); display: flex; justify-content: space-between; gap: 12px;
-    }
-    .fact-box li:last-child { border-bottom: none; }
-    .fact-box li b { color: var(--ink); font-weight: 500; }
-    .fact-box li a { color: var(--navy); font-weight: 500; text-decoration: none; }
-    .fact-box li a:hover { color: var(--gold-deep); }
-
-    /* ============ Experience ============ */
-    .xp-list { display: flex; flex-direction: column; }
-    .xp-item {
-      position: relative; padding: 6px 0 34px 34px;
-      border-left: 1px solid var(--line); margin-left: 4px;
-    }
-    .xp-item:last-child { padding-bottom: 6px; }
-    .xp-item::before {
-      content: ""; position: absolute; left: -5px; top: 12px;
-      width: 9px; height: 9px; border-radius: 50%;
-      background: var(--gold); box-shadow: 0 0 0 4px rgba(185,151,91,.18);
-    }
-    .xp-item .when {
-      font-family: 'Playfair Display', Georgia, serif; font-style: italic;
-      color: var(--gold-deep); font-size: .92rem; margin-bottom: 4px;
-      display: inline-flex; gap: 8px; align-items: center;
-    }
-    .xp-item .when .dash { color: var(--muted); }
-    .xp-item h3 { font-size: 1.1rem; font-weight: 600; color: var(--navy-deep); line-height: 1.35; }
-    .xp-item .org { font-size: .9rem; color: var(--muted); margin: 2px 0 8px; }
-    .xp-item p { font-size: .93rem; color: #33424f; max-width: 58em; }
-    .xp-item .tags { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
-
-    /* ============ Courses ============ */
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 26px; }
-    .card {
-      background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 32px 32px 28px; box-shadow: var(--shadow-sm); text-decoration: none; color: inherit;
-      display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;
-      transition: transform .28s var(--ease), box-shadow .28s var(--ease);
-    }
-    .card::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--navy), var(--gold));
-      opacity: 0; transition: opacity .28s;
-    }
-    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-    .card:hover::before { opacity: 1; }
-    .card .code {
-      font-size: .76rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--gold-deep);
-    }
-    .card h3 {
-      font-family: 'Playfair Display', Georgia, serif; font-weight: 600;
-      font-size: 1.35rem; color: var(--navy-deep); line-height: 1.3;
-    }
-    .card p { font-size: .93rem; color: var(--muted); flex: 1; }
-    .card .meta { display: flex; gap: 8px; flex-wrap: wrap; }
-    .chip {
-      background: #f2ecdd; color: #6b5a30; border-radius: 100px; padding: 3px 12px;
-      font-size: .76rem; font-weight: 500;
-    }
-    .card .go {
-      font-size: .9rem; font-weight: 500; color: var(--navy);
-      display: inline-flex; align-items: center; gap: 6px; transition: gap .2s var(--ease);
-    }
-    .card .go::after { content: "\2192"; color: var(--gold); font-size: 1.05rem; }
-    .card:hover .go { gap: 10px; }
-    .card.coming { opacity: .72; }
-    .card.coming:hover { transform: none; box-shadow: var(--shadow-sm); }
-    .card.coming .go { color: var(--muted); }
-    .card.coming .go::after { content: ""; }
-
-    /* ============ Research ============ */
-    .research-list { display: flex; flex-direction: column; gap: 18px; }
-    .res-item {
-      background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 26px 30px; box-shadow: var(--shadow-sm); display: grid;
-      grid-template-columns: auto 1fr; gap: 22px; align-items: start;
-      transition: transform .25s var(--ease), box-shadow .25s var(--ease);
-    }
-    .res-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-    .res-item .yr {
-      font-family: 'Playfair Display', Georgia, serif; font-style: italic;
-      color: var(--gold-deep); font-size: 1.1rem; min-width: 62px; line-height: 1.4;
-    }
-    .res-item h3 { font-size: 1.05rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; line-height: 1.4; }
-    .res-item .venue { font-size: .86rem; color: var(--muted); margin-bottom: 8px; }
-    .res-item p { font-size: .92rem; color: #33424f; }
-    .research-more { margin-top: 24px; font-size: .95rem; color: var(--muted); }
-    .research-more a { color: var(--navy); font-weight: 500; text-decoration: none; }
-    .research-more a:hover { color: var(--gold-deep); text-decoration: underline; }
-
-    /* ============ Contact ============ */
-    .contact-wrap {
-      background:
-        radial-gradient(circle at 12% 20%, rgba(185,151,91,.22), transparent 45%),
-        radial-gradient(circle at 88% 85%, rgba(185,151,91,.16), transparent 45%),
-        linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-mid) 55%, #14317e 100%);
-      border-radius: 24px; padding: 72px 48px; color: var(--paper); text-align: center;
-      box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
-    }
-    .contact-wrap::after {
-      content: ""; position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
-      background-size: 22px 22px; opacity: .5;
-    }
-    .contact-wrap h2 {
-      font-family: 'Playfair Display', Georgia, serif; font-weight: 600;
-      font-size: clamp(1.8rem, 3vw, 2.3rem); margin-bottom: 16px; position: relative; z-index: 1;
-    }
-    .contact-wrap p { color: rgba(255,255,255,.85); max-width: 34em; margin: 0 auto 34px; position: relative; z-index: 1; }
-    .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
-    .contact-links a {
-      color: var(--navy-deep); background: var(--paper); text-decoration: none;
-      font-weight: 500; font-size: .94rem; padding: 13px 26px; border-radius: 100px;
-      transition: all .22s var(--ease); display: inline-flex; align-items: center; gap: 8px;
-    }
-    .contact-links a:hover { background: var(--gold); color: var(--navy-deep); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,.25); }
-
-    /* ============ Footer ============ */
-    footer {
-      max-width: 1080px; margin: 0 auto; padding: 44px 24px 60px;
-      border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem;
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    }
-    footer a { color: var(--navy); text-decoration: none; }
-    footer a:hover { color: var(--gold-deep); }
-
-    /* back-to-top */
-    .to-top {
-      position: fixed; right: 26px; bottom: 26px; z-index: 90;
-      width: 44px; height: 44px; border-radius: 50%;
-      background: var(--navy); color: var(--paper); display: grid; place-items: center;
-      text-decoration: none; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none;
-      transform: translateY(10px); transition: all .3s var(--ease);
-    }
-    .to-top.show { opacity: 1; pointer-events: auto; transform: none; }
-    .to-top:hover { background: var(--navy-mid); transform: translateY(-3px); }
-
-    /* ============ Responsive ============ */
-    @media (max-width: 780px) {
-      .hero { grid-template-columns: 1fr; padding-top: 60px; text-align: center; gap: 40px; }
-      .hero .eyebrow { justify-content: center; }
-      .hero .cta-row { justify-content: center; }
-      .hero .sigil { max-width: 230px; order: -1; }
-      .about-grid { grid-template-columns: 1fr; }
-      .nav-links { gap: 18px; }
-      .nav-links a:not(.cta) { display: none; }
-      section { padding: 60px 20px; }
-      .contact-wrap { padding: 48px 26px; border-radius: 18px; }
-      .res-item { grid-template-columns: 1fr; gap: 6px; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,400;0,700;1,400&family=Inria+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 
-  <nav id="topnav">
-    <div class="nav-inner">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="navbar" id="topnav">
+    <div class="container navbar-inner">
       <a class="brand" href="index.html"><span class="mark">AL</span>Dr. Auqib Lone</a>
-      <div class="nav-links">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <div class="nav-links" id="navLinks">
         <a href="#about">About</a>
         <a href="#experience">Experience</a>
         <a href="#courses">Courses</a>
@@ -400,132 +52,164 @@
         <a href="#contact" class="cta">Contact</a>
       </div>
     </div>
+    <div class="nav-progress" id="navProgress"></div>
   </nav>
 
   <!-- ================= HERO ================= -->
   <header class="hero">
-    <div class="reveal">
-      <span class="eyebrow">Computer Science &amp; Engineering &middot; Teaching &middot; Research</span>
-      <h1>Dr. Auqib Hamid Lone<br><span class="thin">Blockchain &amp; Applied Cryptography</span></h1>
-      <p class="role">Assistant Professor of Computer Science and Engineering. I teach computer organization and architecture, and research how blockchain and cryptography secure the systems we rely on.</p>
-      <div class="cta-row">
-        <a class="btn primary" href="#courses">Explore my courses</a>
-        <a class="btn ghost" href="#contact">Get in touch</a>
+    <div class="hero-frame" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Computer Science &amp; Engineering &middot; GCET Kashmir</p>
+      <h1>Dr. Auqib Hamid Lone</h1>
+      <p class="hero-tagline">Blockchain, applied cryptography, and the craft of teaching how computers really work.</p>
+      <div class="hero-chips">
+        <span class="chip-glass">Assistant Professor</span>
+        <span class="chip-glass">PhD &middot; NIT Srinagar</span>
+        <span class="chip-glass">Blockchain &amp; Crypto</span>
       </div>
-    </div>
-    <div class="sigil reveal">
-      <div class="halo"></div>
-      <div class="ring"><div class="initials">A<span>L</span></div></div>
-      <div class="tagline">Dr. Auqib Hamid Lone</div>
+      <div class="hero-cta">
+        <a href="#courses" class="btn btn-glass">Explore my courses</a>
+        <a href="#contact" class="btn btn-glass">Get in touch</a>
+      </div>
     </div>
   </header>
 
-  <!-- ================= ABOUT ================= -->
-  <section id="about">
-    <div class="section-head reveal">
-      <span class="section-num">01</span>
-      <h2>About</h2>
+  <!-- ================= AT A GLANCE STRIP ================= -->
+  <section class="strip" aria-label="At a glance">
+    <div class="container">
+      <p class="strip-label"><span>At a glance</span></p>
+      <ul class="strip-row">
+        <li><b>GCET Kashmir</b><span>Assistant Professor, CSE</span></li>
+        <li><b>98.5&thinsp;%ile</b><span>GATE (CS)</span></li>
+        <li><b>AIR 31</b><span>UGC NET-JRF</span></li>
+        <li><b>6+</b><span>Publications</span></li>
+        <li><b>3 yrs</b><span>Industry research, London</span></li>
+      </ul>
     </div>
-    <div class="about-grid">
-      <div class="reveal">
-        <p>I am an <b>Assistant Professor of Computer Science and Engineering</b> at GCET Kashmir, teaching core undergraduate courses to B.Tech CSE students. My PhD (NIT Srinagar) explored blockchain technology beyond cryptocurrencies — harnessing it to remove problems of trust and security in real applications.</p>
-        <p>Before academia I was a <b>Research Scientist in blockchain and cryptography at Parity Financial (London)</b>, where I worked on custody infrastructure, transaction construction, and zero-knowledge privacy layers.</p>
-        <p>My teaching materials are published openly here, so students and fellow instructors can reuse, adapt, and improve them.</p>
-        <blockquote class="pull">"Security is the balanced mix of feeling and reality."</blockquote>
+  </section>
+
+  <main id="main">
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 01 &middot; Orientation</p>
+        <h2 class="section-title">About</h2>
       </div>
-      <aside class="fact-box reveal">
-        <h3>At a glance</h3>
-        <ul>
-          <li><span>Role</span><b>Assistant Professor, CSE</b></li>
-          <li><span>Institution</span><b>GCET Kashmir</b></li>
-          <li><span>Focus</span><b>Blockchain &amp; crypto</b></li>
-          <li><span>Education</span><b>PhD, NIT Srinagar</b></li>
-          <li><span>Exams</span><b>GATE 98.5% &middot; NET-JRF AIR 31</b></li>
-          <li><span>Courses published</span><b><a href="#courses">1 &amp; growing</a></b></li>
-        </ul>
-      </aside>
+      <div class="grid-2">
+        <div class="prose dropcap">
+          <p>I am an <strong>Assistant Professor of Computer Science and Engineering</strong> at GCET Kashmir, teaching core undergraduate courses to B.Tech CSE students. My PhD at NIT Srinagar explored blockchain technology beyond cryptocurrencies — harnessing it to remove problems of trust and security in real applications.</p>
+          <p>Before academia I was a <strong>Research Scientist in blockchain and cryptography at Parity Financial (London)</strong>, where I worked on custody infrastructure, transaction construction, and zero-knowledge privacy layers.</p>
+          <p>My teaching materials are published openly here, so students and fellow instructors can reuse, adapt, and improve them.</p>
+          <blockquote class="pullquote">&ldquo;Security is the balanced mix of feeling and reality.&rdquo;</blockquote>
+        </div>
+        <aside class="card card-highlight">
+          <h3>Field notes</h3>
+          <ul class="facts">
+            <li><span>Role</span><b>Assistant Professor, CSE</b></li>
+            <li><span>Institution</span><b>GCET Kashmir</b></li>
+            <li><span>Focus</span><b>Blockchain &amp; crypto</b></li>
+            <li><span>Education</span><b>PhD, NIT Srinagar</b></li>
+            <li><span>Office hours</span><b>Mon&ndash;Sat, 2&ndash;3 PM</b></li>
+            <li><span>Courses published</span><b><a href="#courses">1 &amp; growing</a></b></li>
+          </ul>
+        </aside>
+      </div>
     </div>
   </section>
 
   <!-- ================= EXPERIENCE ================= -->
-  <section id="experience">
-    <div class="section-head reveal">
-      <span class="section-num">02</span>
-      <h2>Experience</h2>
-    </div>
-    <div class="xp-list">
-      <div class="xp-item reveal">
-        <span class="when">Mar 2024 <span class="dash">&mdash;</span> present</span>
-        <h3>Assistant Professor, Computer Science &amp; Engineering</h3>
-        <div class="org">Government College of Engineering &amp; Technology (GCET), Kashmir, India</div>
-        <p>Teaching core and specialized undergraduate courses to B.Tech CSE students — including this site&rsquo;s CS-401 materials.</p>
-        <div class="tags"><span class="chip">Full-time</span><span class="chip">Teaching</span></div>
+  <section id="experience" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 02 &middot; Appointments</p>
+        <h2 class="section-title">Experience</h2>
       </div>
-      <div class="xp-item reveal">
-        <span class="when">Apr 2021 <span class="dash">&mdash;</span> Feb 2024</span>
-        <h3>Research Scientist, Blockchain &amp; Cryptography</h3>
-        <div class="org">Parity Financial (Parfin) &middot; London, UK</div>
-        <p>Researched and improved the underlying cryptography, blockchain, and security mechanisms behind custody infrastructure; built proofs of concept and helped teams integrate new blockchain platforms.</p>
-        <div class="tags"><span class="chip">Full-time</span><span class="chip">Research</span></div>
-      </div>
-      <div class="xp-item reveal">
-        <span class="when">Jun 2022 <span class="dash">&mdash;</span> Dec 2022</span>
-        <h3>Subject Matter Expert, Web3</h3>
-        <div class="org">Bloom Tech &middot; Remote (USA)</div>
-        <p>Subject Matter Expert for the Web3 course — authoring Ethereum token content covering the ERC-20 and ERC-721 standards.</p>
-        <div class="tags"><span class="chip">Part-time</span><span class="chip">Ethereum tokens</span></div>
-      </div>
-      <div class="xp-item reveal">
-        <span class="when">Apr 2021 <span class="dash">&mdash;</span> Dec 2023</span>
-        <h3>Technical Trainer, Blockchain</h3>
-        <div class="org">Colleges &amp; Universities &middot; Remote</div>
-        <p>Delivered training and teaching sessions on blockchain technology to college students, and developed the curriculum that underpins them.</p>
-        <div class="tags"><span class="chip">Part-time</span><span class="chip">Training</span></div>
+      <div class="rail">
+        <div class="rail-item">
+          <span class="badge">Mar 2024 &mdash; Present</span>
+          <span class="badge badge-accent">Full-time</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Assistant Professor, Computer Science &amp; Engineering</h3>
+            <p class="rail-org">Government College of Engineering &amp; Technology (GCET), Kashmir, India</p>
+            <p class="rail-text">Teaching core and specialized undergraduate courses to B.Tech CSE students — including this site&rsquo;s CS-401 materials.</p>
+          </div>
+        </div>
+        <div class="rail-item">
+          <span class="badge">Apr 2021 &mdash; Feb 2024</span>
+          <span class="badge badge-accent">Research</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Research Scientist, Blockchain &amp; Cryptography</h3>
+            <p class="rail-org">Parity Financial (Parfin) &middot; London, UK</p>
+            <p class="rail-text">Researched and improved the underlying cryptography, blockchain, and security mechanisms behind custody infrastructure; built proofs of concept and helped teams integrate new blockchain platforms.</p>
+          </div>
+        </div>
+        <div class="rail-item">
+          <span class="badge">Jun 2022 &mdash; Dec 2022</span>
+          <span class="badge badge-muted">Part-time</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Subject Matter Expert, Web3</h3>
+            <p class="rail-org">Bloom Tech &middot; Remote (USA)</p>
+            <p class="rail-text">Subject Matter Expert for the Web3 course — authoring Ethereum token content covering the ERC-20 and ERC-721 standards.</p>
+          </div>
+        </div>
+        <div class="rail-item">
+          <span class="badge">Apr 2021 &mdash; Dec 2023</span>
+          <span class="badge badge-muted">Part-time</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Technical Trainer, Blockchain</h3>
+            <p class="rail-org">Colleges &amp; Universities &middot; Remote</p>
+            <p class="rail-text">Delivered training and teaching sessions on blockchain technology to college students, and developed the curriculum that underpins them.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ================= COURSES ================= -->
-  <section id="courses">
-    <div class="section-head reveal">
-      <span class="section-num">03</span>
-      <h2>Courses I teach</h2>
-    </div>
-    <div class="cards">
-      <a class="card reveal" href="courses/cs401/">
-        <span class="code">PCC CS-401</span>
-        <h3>Computer Organization and Architecture</h3>
-        <p>A working model of how a computer executes instructions — from number representation and arithmetic hardware, through processor control-unit design, to the memory hierarchy and pipelining.</p>
-        <div class="meta">
-          <span class="chip">B.Tech CSE · Sem 4</span>
-          <span class="chip">12 weeks</span>
-          <span class="chip">4 credits</span>
-        </div>
-        <span class="go">Open course hub</span>
-      </a>
-      <!--
-        ADD MORE COURSES: copy the <a class="card"> block above, change the
-        code/title/description, and put the hub at docs/courses/<code>/.
-        For a planned course not yet live, change the class to "card coming",
-        keep an href="#", and remove the <span class="go"> line.
-      -->
-      <a class="card coming reveal" href="#">
-        <span class="code">Your next course</span>
-        <h3>Add another course</h3>
-        <p>Copy the card markup above to list your next course here. When its hub is live at <code>docs/courses/&lt;code&gt;/</code>, point the link at it.</p>
-        <div class="meta"><span class="chip">Coming soon</span></div>
-      </a>
+  <section id="courses" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 03 &middot; Teaching</p>
+        <h2 class="section-title">Courses I teach</h2>
+      </div>
+      <div class="cards">
+        <a class="tile" href="courses/cs401/" data-glyph="&para;">
+          <span class="kicker">PCC CS-401</span>
+          <h3>Computer Organization and Architecture</h3>
+          <p>A working model of how a computer executes instructions — from number representation and arithmetic hardware, through processor control-unit design, to the memory hierarchy and pipelining.</p>
+          <span class="meta">
+            <span class="badge">B.Tech CSE &middot; Sem 4</span>
+            <span class="badge">12 weeks</span>
+            <span class="badge">4 credits</span>
+          </span>
+          <span class="go">Open course hub</span>
+        </a>
+        <!--
+          ADD MORE COURSES: copy the <a class="tile"> block above, change the
+          kicker/title/description, and point the href at docs/courses/<code>/.
+          For a planned course not yet live, add class "coming", use href="#",
+          and remove the <span class="go"> line.
+        -->
+        <a class="tile coming" href="#" data-glyph="&dagger;">
+          <span class="kicker">Your next course</span>
+          <h3>Add another course</h3>
+          <p>Copy the card markup above to list your next course here. When its hub is live at <code>docs/courses/&lt;code&gt;/</code>, point the link at it.</p>
+          <span class="meta"><span class="badge badge-muted">Coming soon</span></span>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- ================= RESEARCH ================= -->
-  <section id="research">
-    <div class="section-head reveal">
-      <span class="section-num">04</span>
-      <h2>Research &amp; writing</h2>
-    </div>
-    <div class="research-list">
-      <div class="res-item reveal">
+  <section id="research" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 04 &middot; Scholarship</p>
+        <h2 class="section-title">Research &amp; writing</h2>
+      </div>
+      <div class="pub">
         <div class="yr">2021</div>
         <div>
           <h3>Applicability of Blockchain smart contracts in securing Internet and IoT: A systematic literature review</h3>
@@ -533,23 +217,7 @@
           <p>Systematic review of how smart contracts can secure IoT — identifying the open problems and future directions for on-chain access control at the edge.</p>
         </div>
       </div>
-      <div class="res-item reveal">
-        <div class="yr">2019</div>
-        <div>
-          <h3>Forensic-chain: Blockchain-based digital forensics chain of custody with PoC in Hyperledger Composer</h3>
-          <div class="venue">Digital Investigation, Vol. 28 (2019)</div>
-          <p>A proof-of-concept for an immutable, auditable chain-of-custody for digital evidence, built on Hyperledger.</p>
-        </div>
-      </div>
-      <div class="res-item reveal">
-        <div class="yr">2020</div>
-        <div>
-          <h3>Demystifying Cryptography behind Blockchains and a Vision for Post-Quantum Blockchains</h3>
-          <div class="venue">IEEE INOCON (2020)</div>
-          <p>Unpacking the cryptographic primitives under blockchains and charting what a post-quantum blockchain must change.</p>
-        </div>
-      </div>
-      <div class="res-item reveal">
+      <div class="pub">
         <div class="yr">2020</div>
         <div>
           <h3>Applicability of mobile contact tracing in fighting pandemic (COVID-19): Issues, challenges, and solutions</h3>
@@ -557,7 +225,15 @@
           <p>Survey of mobile contact-tracing systems deployed during the pandemic — their privacy issues, challenges, and solutions.</p>
         </div>
       </div>
-      <div class="res-item reveal">
+      <div class="pub">
+        <div class="yr">2020</div>
+        <div>
+          <h3>Demystifying Cryptography behind Blockchains and a Vision for Post-Quantum Blockchains</h3>
+          <div class="venue">IEEE INOCON (2020)</div>
+          <p>Unpacking the cryptographic primitives under blockchains and charting what a post-quantum blockchain must change.</p>
+        </div>
+      </div>
+      <div class="pub">
         <div class="yr">2020</div>
         <div>
           <h3>Forgery protection of academic certificates through integrity preservation at scale using Ethereum smart contract</h3>
@@ -565,7 +241,7 @@
           <p>An Ethereum smart-contract approach to tamper-proof academic certificates, preserving integrity at scale.</p>
         </div>
       </div>
-      <div class="res-item reveal">
+      <div class="pub">
         <div class="yr">2020</div>
         <div>
           <h3>Reputation driven dynamic access control framework for IoT atop PoA Ethereum blockchain</h3>
@@ -573,28 +249,72 @@
           <p>A dynamic, reputation-driven access-control framework for IoT, anchored on a Proof-of-Authority Ethereum chain.</p>
         </div>
       </div>
+      <div class="pub">
+        <div class="yr">2019</div>
+        <div>
+          <h3>Forensic-chain: Blockchain-based digital forensics chain of custody with PoC in Hyperledger Composer</h3>
+          <div class="venue">Digital Investigation, Vol. 28 (2019)</div>
+          <p>A proof-of-concept for an immutable, auditable chain-of-custody for digital evidence, built on Hyperledger.</p>
+        </div>
+      </div>
+      <p style="margin-top:1.2rem">Full list on <a href="https://scholar.google.com/citations?user=Dr.-Auqib-Hamid-Lone">Google Scholar</a>.</p>
     </div>
-    <p class="research-more reveal">Full list on <a href="https://scholar.google.com/citations?user=Dr.-Auqib-Hamid-Lone">Google Scholar</a>.</p>
   </section>
 
   <!-- ================= CONTACT ================= -->
-  <section id="contact">
-    <div class="contact-wrap reveal">
-      <h2>Let&rsquo;s talk about teaching and computing</h2>
-      <p>Students, instructors, and collaborators are always welcome — whether you have a question about the material, want to adapt a course, or have an idea to discuss. Office hours: Mon&ndash;Sat, 2&ndash;3 PM.</p>
-      <div class="contact-links">
-        <a href="mailto:auqib.cse@gcetkashmir.ac.in">Email me</a>
-        <a href="https://github.com/AUQIB92">GitHub</a>
-        <a href="CV/Auqib-Hamid-Lone-CV.pdf">CV</a>
-        <a href="https://www.linkedin.com/in/dr-auqib-hamid-lone-45996067">LinkedIn</a>
-        <a href="https://scholar.google.com/citations?user=Dr.-Auqib-Hamid-Lone">Google Scholar</a>
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 05 &middot; Correspondence</p>
+        <h2 class="section-title">Contact</h2>
+      </div>
+      <div class="contact-band">
+        <h2>Let&rsquo;s talk about teaching and computing</h2>
+        <p>Students, instructors, and collaborators are always welcome — whether you have a question about the material, want to adapt a course, or have an idea to discuss. Office hours: Mon&ndash;Sat, 2&ndash;3 PM.</p>
+        <div class="hero-cta">
+          <a class="btn btn-glass" href="mailto:auqib.cse@gcetkashmir.ac.in">Email me</a>
+          <a class="btn btn-glass" href="https://github.com/AUQIB92">GitHub</a>
+          <a class="btn btn-glass" href="CV/Auqib-Hamid-Lone-CV.pdf">CV</a>
+          <a class="btn btn-glass" href="https://www.linkedin.com/in/dr-auqib-hamid-lone-45996067">LinkedIn</a>
+          <a class="btn btn-glass" href="https://scholar.google.com/citations?user=Dr.-Auqib-Hamid-Lone">Google Scholar</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <footer>
-    <span>&copy; <span id="year"></span> Dr. Auqib Hamid Lone.</span>
-    <span>Built with care &middot; course materials open for reuse</span>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="footer-wordmark">Dr. Auqib Hamid Lone</p>
+          <p class="footer-tagline">Assistant Professor of Computer Science &amp; Engineering at GCET Kashmir. Course materials published openly — reuse, adapt, and improve them.</p>
+        </div>
+        <div>
+          <p class="footer-heading">Teaching</p>
+          <ul class="footer-nav">
+            <li><a href="courses/cs401/">CS-401 Course Hub</a></li>
+            <li><a href="slides/CS401/">Slide decks</a></li>
+            <li><a href="workflow-guide.html">Workflow guide</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-heading">Connect</p>
+          <ul class="footer-nav">
+            <li><a href="mailto:auqib.cse@gcetkashmir.ac.in">Email</a></li>
+            <li><a href="https://github.com/AUQIB92">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/dr-auqib-hamid-lone-45996067">LinkedIn</a></li>
+            <li><a href="https://scholar.google.com/citations?user=Dr.-Auqib-Hamid-Lone">Google Scholar</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> Dr. Auqib Hamid Lone.</p>
+        <p>Built with care &middot; course materials open for reuse.</p>
+      </div>
+    </div>
   </footer>
 
   <a class="to-top" href="#" aria-label="Back to top">&uarr;</a>
@@ -603,18 +323,31 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Reveal-on-scroll
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    // Mobile menu
+    const toggle = document.getElementById('menuToggle');
+    const links = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('active');
+      toggle.classList.toggle('active', open);
+      toggle.setAttribute('aria-expanded', open);
+      document.body.classList.toggle('menu-open', open);
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      links.classList.remove('active');
+      toggle.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
+    }));
 
-    // Nav shadow + back-to-top
+    // Navbar shadow, reading progress, back-to-top
     const nav = document.getElementById('topnav');
+    const progress = document.getElementById('navProgress');
     const totop = document.querySelector('.to-top');
     addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', scrollY > 8);
-      totop.classList.toggle('show', scrollY > 520);
+      totop.classList.toggle('visible', scrollY > 520);
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(scrollY / max, 1) : 0) + ')';
     }, { passive: true });
     totop.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: 'smooth' }); });
   </script>
