@@ -3,41 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Code Academic Workflow — LaTeX, Quarto, Research Automation</title>
-  <meta name="description" content="A production-grade Claude Code template for AI-assisted academic research: lecture slides, papers, data analyses, and replication packages with multi-agent review and quality gates. Adopted by 15+ research groups.">
-  <meta name="keywords" content="Claude Code, academic workflow, LaTeX, Quarto, research automation, lecture slides, data analysis, reproducibility, econometrics, R&amp;R, peer review">
-  <meta name="author" content="Pedro H. C. Sant'Anna">
-  <link rel="canonical" href="https://psantanna.com/claude-code-my-workflow/">
+  <title>Computer Organization &amp; Architecture (CS-401) — Course Hub</title>
+  <meta name="description" content="Lecture slides, notes, assignments, and competitive-exam practice for PCC CS-401 Computer Organization and Architecture — B.Tech CSE, Semester 4.">
+  <meta name="keywords" content="CS-401, computer organization, computer architecture, B.Tech, CSE, lecture slides, IEEE754, control unit, microprogramming, GATE CS">
+  <meta name="author" content="Computer Organization and Architecture, PCC CS-401">
 
   <!-- Open Graph / social sharing -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Claude Code Academic Workflow Template">
-  <meta property="og:description" content="A ready-to-fork Claude Code template for academic research — slides, papers, data analysis, and Monte Carlo simulation studies: 58 skills, 20 specialized agents, 34 rules, adversarial QA, and quality gates.">
-  <meta property="og:url" content="https://psantanna.com/claude-code-my-workflow/">
+  <meta property="og:title" content="Computer Organization &amp; Architecture (CS-401)">
+  <meta property="og:description" content="Course hub for PCC CS-401: 12-week lecture slides, notes, assignments, and GATE practice sets.">
+  <meta property="og:url" content="https://auqib92.github.io/claude-code-my-workflow/">
 
   <!-- Structured data for Google rich snippets -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Claude Code Academic Workflow",
-    "description": "Production-grade Claude Code template for AI-assisted academic research with multi-agent review, quality gates, and adversarial QA.",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "macOS, Linux, Windows",
-    "url": "https://github.com/pedrohcgs/claude-code-my-workflow",
-    "license": "https://opensource.org/licenses/MIT",
-    "author": { "@type": "Person", "name": "Pedro H. C. Sant'Anna" }
+    "@type": "Course",
+    "name": "Computer Organization and Architecture (PCC CS-401)",
+    "description": "A working model of how a computer executes instructions, from number representation and arithmetic hardware through processor control-unit design to the memory hierarchy and an introduction to parallel/pipelined architectures.",
+    "provider": {
+      "@type": "Organization",
+      "name": "B.Tech CSE, Semester 4"
+    },
+    "numberOfCredits": "4",
+    "occupationalCredential": "B.Tech CSE",
+    "teaches": "Basic performance equation, IEEE754 floating-point, instruction set design, addressing modes, hardwired and microprogrammed control, memory hierarchy, pipeline hazards, RISC vs. CISC"
   }
   </script>
   <style>
     body {
       font-family: Georgia, 'Times New Roman', serif;
-      font-size: 1.3rem;
-      max-width: 1100px;
+      font-size: 1.15rem;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 2.5em 1.5em;
       color: #222;
-      line-height: 1.8;
+      line-height: 1.75;
       background: #fff;
     }
 
@@ -64,7 +65,13 @@
     a { color: #012169; }
     a:hover { color: #B9975B; }
 
-    .wip {
+    .subtitle {
+      color: #555;
+      font-size: 0.95em;
+      margin-bottom: 1.5em;
+    }
+
+    .notice {
       background: #fffbf0;
       border: 1px solid #e8dcc8;
       padding: 0.9em 1.2em;
@@ -74,58 +81,45 @@
       line-height: 1.7;
     }
 
-    .byline {
-      color: #888;
+    table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 0.9em;
-      margin-bottom: 2em;
+      margin: 1em 0;
     }
 
-    .guide-btn {
-      display: inline-block;
-      background: #012169;
-      color: #fff;
-      padding: 0.6em 1.4em;
-      text-decoration: none;
-      font-family: -apple-system, system-ui, sans-serif;
-      font-size: 0.92em;
-      margin-top: 0.5em;
+    th, td {
+      text-align: left;
+      padding: 0.55em 0.7em;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
     }
-    .guide-btn:hover { background: #B9975B; color: #fff; }
 
-    .overview-list {
-      list-style: none;
-      padding: 0;
-    }
-    .overview-list li {
-      padding: 0.5em 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .overview-list li:last-child { border-bottom: none; }
-    .overview-list strong {
+    th {
+      background: #f2f4f8;
+      color: #012169;
       font-family: -apple-system, system-ui, sans-serif;
       font-size: 0.88em;
-      color: #012169;
+      font-weight: 600;
     }
-    .overview-list .desc {
+
+    td a { font-weight: 600; }
+
+    .tag {
+      display: inline-block;
+      font-family: -apple-system, system-ui, sans-serif;
+      font-size: 0.75em;
+      font-weight: 600;
+      padding: 0.12em 0.55em;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .tag.ready { background: #e6f4ea; color: #1a6b2e; }
+    .tag.todo  { background: #f1f1f1; color: #777; }
+
+    .meta {
       color: #666;
       font-size: 0.9em;
-    }
-
-    code {
-      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
-      font-size: 0.85em;
-      background: #f5f5f5;
-      padding: 0.15em 0.4em;
-    }
-
-    pre {
-      background: #f8f8f8;
-      border: 1px solid #e5e5e5;
-      padding: 1.2em 1.4em;
-      overflow-x: auto;
-      font-size: 0.85em;
-      line-height: 1.7;
-      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
     }
 
     .footer {
@@ -136,113 +130,142 @@
       color: #999;
     }
 
-    /* ── Responsive: tablets ── */
-    @media (max-width: 768px) {
-      body {
-        font-size: 1.1rem;
-        padding: 1.5em 1em;
-      }
-
-      h1 { font-size: 1.6em; }
-      h2 { font-size: 1.1em; }
-
-      pre {
-        font-size: 0.78em;
-        padding: 0.9em 1em;
-      }
-    }
-
     /* ── Responsive: phones ── */
-    @media (max-width: 480px) {
-      body {
-        font-size: 1rem;
-        padding: 1.2em 0.8em;
-        line-height: 1.6;
-      }
-
-      h1 { font-size: 1.4em; }
-
-      .guide-btn {
-        display: block;
-        text-align: center;
-        padding: 0.7em 1em;
-      }
-
-      pre {
-        font-size: 0.72em;
-        padding: 0.8em;
-        word-break: break-all;
-        white-space: pre-wrap;
-      }
-
-      .overview-list li {
-        padding: 0.6em 0;
-      }
-
-      .overview-list .desc {
-        font-size: 0.85em;
-      }
+    @media (max-width: 600px) {
+      body { font-size: 1rem; padding: 1.2em 0.8em; }
+      h1 { font-size: 1.5em; }
+      table { font-size: 0.82em; }
+      th, td { padding: 0.45em 0.5em; }
     }
   </style>
 </head>
 <body>
 
-  <h1>My Claude Code Setup</h1>
-  <div class="byline">Pedro H. C. Sant'Anna &middot; Emory University</div>
+  <h1>Computer Organization and Architecture</h1>
+  <div class="subtitle">PCC CS-401 &middot; B.Tech CSE, Semester 4 &middot; Undergraduate &middot; 12 teaching weeks &middot; Credits 4 (L-T-P: 3-0-2)</div>
 
-  <div class="wip">
-    <strong>Actively developed and maintained.</strong> This summarizes how I use Claude Code for academic work &mdash; slides, papers, data analysis, and more. Adopted by 15+ research groups across economics, energy, political science, and engineering. I keep learning and updating these files.
+  <div class="notice">
+    <strong>Course hub.</strong> Lectures 1&ndash;7 are published below; Lectures 8&ndash;12 are in progress.
+    Each week links the Beamer slide deck (PDF); supporting material &mdash; prose notes, assignments, instructor handouts, and GATE practice sets &mdash; lives alongside in the source repository.
   </div>
 
-  <p>A foundation for AI-assisted academic work using <a href="https://code.claude.com/docs/en/overview">Claude Code</a>. You describe what you want &mdash; lecture slides, a research paper, a data analysis, a replication package &mdash; and Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results &mdash; goal-first and gate-enforced. Like a contractor who handles the entire job, with you as the auditor of the disagreements the review loop surfaces. It is deliberately not an autonomous daemon: every loop is started by you or a skill, never on its own.</p>
+  <h2>Course description</h2>
+  <p>This course develops a working model of how a computer executes instructions, from number representation and arithmetic hardware through processor control-unit design to the memory hierarchy and an introduction to parallel/pipelined architectures. Students leave able to trace an instruction from fetch to writeback, design and compare hardwired vs. microprogrammed control units, reason quantitatively about memory hierarchy performance, and distinguish RISC/CISC and pipelined design trade-offs.</p>
 
-  <p>
-    <a class="guide-btn" href="workflow-guide.html">Read the full guide</a>
-  </p>
+  <h2>Prerequisites</h2>
+  <p>Digital Logic Design (or equivalent: Boolean algebra, combinational/sequential circuits, flip-flops, basic ALU/adder circuits). Basic programming/algorithmic literacy is assumed but not tested directly.</p>
 
-  <h2>What's in the template</h2>
+  <h2>Weekly lectures</h2>
+  <table>
+    <thead>
+      <tr><th>Week</th><th>Topic</th><th>Anchor readings</th><th>Slides</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Architecture vs. organization; basic performance equation, clock rate, Amdahl&rsquo;s Law</td>
+        <td>Hamacher Ch. 1; Stallings Ch. 1&ndash;2</td>
+        <td><a href="slides/CS401/01-intro-performance.pdf">01-intro-performance</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Number systems and representation; arithmetic/logical operations and hardware (adders, ALU); fixed-point</td>
+        <td>Hamacher Ch. 2, 9; Mano Ch. 1</td>
+        <td><a href="slides/CS401/02-number-systems-arithmetic.pdf">02-number-systems-arithmetic</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Real numbers: fixed vs. floating point; IEEE754 representation and arithmetic</td>
+        <td>Hamacher Ch. 9; Stallings Ch. 9</td>
+        <td><a href="slides/CS401/03-ieee754-floating-point.pdf">03-ieee754-floating-point</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Register &amp; stack organization; instruction set &amp; formats; instruction cycle; operand types</td>
+        <td>Mano Ch. 5, 8; Hamacher Ch. 7</td>
+        <td><a href="slides/CS401/04-registers-instructions.pdf">04-registers-instructions</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Addressing modes (deep dive); CPU organization; single-bus and multiple-bus organization</td>
+        <td>Hamacher Ch. 7; Mano Ch. 8</td>
+        <td><a href="slides/CS401/05-addressing-cpu-bus.pdf">05-addressing-cpu-bus</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Control step sequence, control unit functions; hardwired control unit design</td>
+        <td>Mano Ch. 5; Hamacher Ch. 7</td>
+        <td><a href="slides/CS401/06-hardwired-control.pdf">06-hardwired-control</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Microprogrammed control unit design; horizontal/vertical microinstructions; comparison</td>
+        <td>Mano Ch. 7; Stallings Ch. 16</td>
+        <td><a href="slides/CS401/07-microprogrammed-control.pdf">07-microprogrammed-control</a></td>
+        <td><span class="tag ready">Published</span></td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>I/O Unit: synchronous vs. asynchronous I/O; interrupts, polling, DMA, IOP</td>
+        <td>Hamacher Ch. 4; Stallings Ch. 7</td>
+        <td class="meta">&mdash;</td>
+        <td><span class="tag todo">In progress</span></td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Memory hierarchy; main memory (ROM types); cache organization, mapping, replacement</td>
+        <td>Hamacher Ch. 8; Stallings Ch. 4</td>
+        <td class="meta">&mdash;</td>
+        <td><span class="tag todo">In progress</span></td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>Associative memory; virtual memory; paging, segmentation; secondary storage (HDD, RAID, optical)</td>
+        <td>Hamacher Ch. 8; Stallings Ch. 8, 6</td>
+        <td class="meta">&mdash;</td>
+        <td><span class="tag todo">In progress</span></td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td>Flynn&rsquo;s classification; parallel processing; pipeline processing and hazards</td>
+        <td>Hamacher Ch. 5, 10; Stallings Ch. 17&ndash;18</td>
+        <td class="meta">&mdash;</td>
+        <td><span class="tag todo">In progress</span></td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td>Instruction pipelining (worked examples); RISC vs. CISC architectures; course review</td>
+        <td>Stallings Ch. 13, 18</td>
+        <td class="meta">&mdash;</td>
+        <td><span class="tag todo">In progress</span></td>
+      </tr>
+    </tbody>
+  </table>
 
-  <ul class="overview-list">
-    <li><strong>Full academic lifecycle</strong> <span class="desc">&mdash; not just slides: research papers, data analysis, Monte Carlo simulation studies, replication packages, proposals, and presentations</span></li>
-    <li><strong>Contractor mode via skills</strong> <span class="desc">&mdash; you describe the task; Claude picks a skill (<code>/create-lecture</code>, <code>/review-paper</code>, <code>/qa-quarto</code>, &hellip;) that runs the orchestrator <em>runtime</em> internally: plan, implement, review with agents via fan-out &rarr; reduce &rarr; judge (with a post-judge hallucination gate), fix, re-verify, score against quality thresholds &mdash; looping until dry</span></li>
-    <li><strong>Beamer &rarr; Quarto pipeline</strong> <span class="desc">&mdash; 11-phase translation with TikZ-to-SVG and ggplot-to-plotly conversion</span></li>
-    <li><strong>18 specialized agents</strong> <span class="desc">&mdash; proofreader, slide auditor, pedagogy reviewer, R reviewer, TikZ critic, domain reviewer, adversarial QA pair, translator, verifier, claim-verifier (Chain-of-Verification), the simulated-peer-review trio (editor, domain referee, methods referee), the Monte Carlo sim-reviewer, the CRAN-focused R package-reviewer, the AI-voice humanize-auditor, and the promote-memory council &mdash; all pinned to a fixed model + effort tier (no longer <code>inherit</code>)</span></li>
-    <li><strong>Adversarial critic-fixer loop</strong> <span class="desc">&mdash; two agents that check each other's work and loop until dry (converge after 2 consecutive clean rounds; a 5-round cap is only a fallback) &mdash; the critic can't fix, the fixer can't approve</span></li>
-    <li><strong>Quality scoring with mandatory verification</strong> <span class="desc">&mdash; every file scored 0&ndash;100; <code>/commit</code> halts below 80 (user can override with an explicit reason); skills that implement the orchestrator pattern verify every output before reporting done</span></li>
-    <li><strong>58 slash commands + 34 context-aware rules + 7 hooks</strong> <span class="desc">&mdash; <code>/compile-latex</code>, <code>/proofread</code>, <code>/deploy</code>, <code>/commit</code>, <code>/qa-quarto</code>, <code>/lit-review</code>, <code>/review-paper</code>, <code>/respond-to-referees</code>, <code>/new-diagram</code>, <code>/data-analysis</code>, <code>/simulation-study</code>, <code>/r-package-check</code>, <code>/audit-reproducibility</code>, <code>/checkpoint</code>, <code>/preregister</code>, <code>/replication-package</code>, <code>/disclosure-check</code>, <code>/grant-proposal</code>, <code>/syllabus</code>, <code>/triage-inbox</code>, and more &mdash; plus quality gates, TikZ prevention/measurement, notation consistency, R conventions, and the ambient prompt-shaping rule (no <code>/prompt</code> command)</span></li>
-    <li><strong>Simulated peer review</strong> <span class="desc">&mdash; <code>/review-paper --peer &lt;journal&gt;</code> runs a full editorial pipeline: editor desk review, two blind referees with deliberately different dispositions (STRUCTURAL / CREDIBILITY / MEASUREMENT / POLICY / THEORY / SKEPTIC), editorial synthesis with FATAL / ADDRESSABLE / TASTE classification. Calibrated to 5 econ journals (AER / QJE / JPE / ECMA / ReStud) plus a template for adding your own field. Adapted from Hugo Sant&rsquo;Anna&rsquo;s <a href="https://github.com/hugosantanna/clo-author">clo-author</a> with permission.</span></li>
-    <li><strong>Research workflow skills</strong> <span class="desc">&mdash; <code>/lit-review</code> for literature synthesis, <code>/research-ideation</code> for hypothesis generation, <code>/interview-me</code> to formalize ideas, <code>/review-paper</code> for manuscript review, <code>/data-analysis</code> for end-to-end R analysis</span></li>
-    <li><strong>Smart hooks (7)</strong> <span class="desc">&mdash; desktop notifications (macOS/Linux); pre-compaction context snapshots to session logs (DRAFT-block default ON); progressive context-usage warnings; <code>log-reminder.py</code> auto-writes the session log on every meaningful change-set; <code>git-guardrails.py</code> blocks dangerous git ops (<code>reset --hard</code>, <code>clean -f</code>, <code>push --force</code>, <code>add -A</code>); <code>claim-reconcile.py</code> flags stale numeric claims when scripts change; plus a real git pre-commit hook (<code>.githooks/pre-commit</code> via <code>./scripts/install-hooks.sh</code>) that runs the surface-sync + quality gates</span></li>
-    <li><strong>TikZ diagram pipeline</strong> <span class="desc">&mdash; 8-snippet gallery (DAGs, DiD, event study, timeline, regression scatter, flowchart, supply-demand), <code>/new-diagram</code> scaffold with prevention pre-checks, production Beamer preamble with palette-synced Quarto theme, measurement-based collision audits via <code>tikz-reviewer</code></span></li>
-    <li><strong>Plan-first workflow with continuous learning</strong> <span class="desc">&mdash; non-trivial tasks start in plan mode; <code>[LEARN:tag]</code> corrections persist in MEMORY.md across sessions; plans survive context compression</span></li>
-    <li><strong>Research exploration workflow</strong> <span class="desc">&mdash; structured <code>explorations/</code> sandbox with fast-track prototyping (60/100 threshold), simplified orchestrator for R/research, and merge-only quality reporting</span></li>
-    <li><strong>Automated session logging</strong> <span class="desc">&mdash; a Stop hook (<code>log-reminder.py</code>) auto-writes the session log on every meaningful change-set rather than merely nagging; Beamer-Quarto sync enforced via auto-loaded rules</span></li>
-    <li><strong>2026 features</strong> <span class="desc">&mdash; effort levels for cost control, permission modes, expanded hook events, skill frontmatter (<code>effort</code>, <code>context: fork</code>), <code>/batch</code> for parallel refactoring, plugins, headless CLI mode, output-styles (academic-writing, referee), CI via <code>.github/workflows</code>, and scheduled Routines (<code>nightly-repro-check.sh</code>)</span></li>
-    <li><strong>Community ecosystem</strong> <span class="desc">&mdash; extended by <a href="https://github.com/hugosantanna/clo-author">clo-author</a>, <a href="https://github.com/chrisblattman/claudeblattman">claudeblattman</a>, <a href="https://github.com/scunning1975/MixtapeTools">MixtapeTools</a>, <a href="https://github.com/karpathy/autoresearch">autoresearch</a>, and <a href="https://github.com/aspi6246/ClaudeCodeTools">ClaudeCodeTools</a> &mdash; 15+ research groups have adopted this workflow</span></li>
-  </ul>
+  <h2>Assessment</h2>
+  <table>
+    <thead>
+      <tr><th>Component</th><th style="text-align:right">Weight</th><th>Maps to objectives</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Class Tests 1&ndash;3 (internal theory)</td><td style="text-align:right">25%</td><td>All Unit I&ndash;III objectives</td></tr>
+      <tr><td>Assignments 1&ndash;4 (internal, continuous)</td><td style="text-align:right">included in Theory-50</td><td>All objectives, applied practice</td></tr>
+      <tr><td>Practical / lab (separate component)</td><td style="text-align:right">25%</td><td>Hands-on complement to Units I&ndash;III</td></tr>
+      <tr><td>External (end-semester) exam</td><td style="text-align:right">50%</td><td>All course objectives, cumulative</td></tr>
+    </tbody>
+  </table>
 
-  <h2>Getting started</h2>
-
-<pre># Fork this repo on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/claude-code-my-workflow.git my-project
-cd my-project</pre>
-
-  <p>Then start Claude Code and paste the <a href="workflow-guide.html#sec-first-session">starter prompt</a> from the guide. Describe your project in 2&ndash;3 sentences and Claude will read all the configuration files, fill in the placeholders, and adapt the workflow to your use case.</p>
-
-  <p>The <a href="workflow-guide.html">full guide</a> walks through everything: setup, agents, quality gates, workflow patterns, and customization.</p>
-
-  <p>
-    <a class="guide-btn" href="workflow-guide.html">Read the full guide</a>
-    &nbsp;&nbsp;
-    <a class="guide-btn" href="workflow-guide.html#sec-first-session" style="background: #B9975B;">Copy the starter prompt</a>
-  </p>
-
-  <h2>Source</h2>
-
-  <p>Everything is on GitHub: <a href="https://github.com/pedrohcgs/claude-code-my-workflow">pedrohcgs/claude-code-my-workflow</a></p>
+  <h2>Repository layout</h2>
+  <p>This site is generated from a course repository. For each lecture the single source of truth is the Beamer deck (<code>Slides/CS401/&lt;lecture&gt;.tex</code>); derived materials &mdash; prose <em>Notes</em>, graded <em>Assignments</em>, <em>Instructor Handouts</em>, and <em>CompetitiveExam</em> GATE practice sets &mdash; mirror the same numbering. Textbook indexes for the anchor texts (Hamacher, Stallings, Mano, Patterson&amp;Hennessy) live in <code>master_supporting_docs/</code>. Source: <a href="https://github.com/AUQIB92/claude-code-my-workflow">github.com/AUQIB92/claude-code-my-workflow</a>.</p>
 
   <div class="footer">
-    MIT License. Use freely for teaching, research, or any academic purpose.
+    CS-401 course hub &middot; published via GitHub Pages from the <code>docs/</code> folder.
   </div>
 
 </body>
