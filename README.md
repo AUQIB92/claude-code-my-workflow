@@ -1,14 +1,14 @@
-# My Claude Code Setup
+# Dr. Auqib Hamid Lone — Academic Workflow & Course Hub
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Changelog](https://img.shields.io/badge/See-CHANGELOG-blue.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
 
-> **Actively maintained.** A summary of how I use Claude Code for academic work — slides, papers, data analysis, and more — packaged so you can fork it for your own research. See [CHANGELOG.md](CHANGELOG.md) for the latest changes.
+> **Actively maintained.** How I use Claude Code for my teaching and research — lecture slides, prose notes, assignments, and competitive-exam practice, all under quality gates. See [CHANGELOG.md](CHANGELOG.md) for the latest changes.
 
-**Live site:** [psantanna.com/claude-code-my-workflow](https://psantanna.com/claude-code-my-workflow/)
+**Live site:** [auqib92.github.io/claude-code-my-workflow](https://auqib92.github.io/claude-code-my-workflow/)
 
-A ready-to-fork foundation for AI-assisted academic work. You describe what you want — lecture slides, a research paper, a data analysis, a replication package — and Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results. Like a contractor who handles the entire job. Extracted from a production PhD course and extended by a growing [community](#community--extensions).
+A working repository for AI-assisted course development and academic work. I describe what I want — a lecture deck, lecture notes, a graded assignment, a GATE practice set — and Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results. Like a contractor who handles the entire job. Forked from Pedro Sant'Anna's [claude-code-my-workflow](https://github.com/pedrohcgs/claude-code-my-workflow) template and extended for my courses (currently CS-401 Computer Organization &amp; Architecture).
 
 ---
 
@@ -24,12 +24,12 @@ A ready-to-fork foundation for AI-assisted academic work. You describe what you 
 
 ```bash
 # Fork this repo on GitHub (click "Fork" on the repo page), then:
-git clone https://github.com/YOUR_USERNAME/claude-code-my-workflow.git my-project
+git clone https://github.com/AUQIB92/claude-code-my-workflow.git my-project
 cd my-project
 ./scripts/validate-setup.sh        # reports missing tools with install links
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username.
+(If you forked it, replace `AUQIB92` with your GitHub username.)
 
 ### 2. Start Claude Code and Paste This Prompt
 
@@ -37,15 +37,15 @@ Replace `YOUR_USERNAME` with your GitHub username.
 claude
 ```
 
-**Using VS Code?** Open the Claude Code panel instead. Everything works the same — see the [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-setup) for details.
+**Using VS Code?** Open the Claude Code panel instead. Everything works the same — see the [full guide](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#sec-setup) for details.
 
-> **Avoid prompt fatigue.** Out of the box, Claude Code asks permission for every tool invocation. After the first few approvals, toggle **Auto-accept edits** mode (a keybinding; see the [permission modes section](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#settings---permissions-and-hooks) of the guide) or run `claude --permission-mode acceptEdits`. For fully-autonomous runs on a trusted repo, **Bypass** mode skips prompts entirely. The template's `.claude/settings.json` pre-approves ~100 common Bash and Edit/Write patterns, so even at default permissions most work is unattended.
+> **Avoid prompt fatigue.** Out of the box, Claude Code asks permission for every tool invocation. After the first few approvals, toggle **Auto-accept edits** mode (a keybinding; see the [permission modes section](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#settings---permissions-and-hooks) of the guide) or run `claude --permission-mode acceptEdits`. For fully-autonomous runs on a trusted repo, **Bypass** mode skips prompts entirely. The template's `.claude/settings.json` pre-approves ~100 common Bash and Edit/Write patterns, so even at default permissions most work is unattended.
 
-Then paste the [starter prompt](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-first-session) from the guide, filling in your project details:
+Then paste the [starter prompt](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#sec-first-session) from the guide, filling in your project details:
 
 > I am starting to work on **[PROJECT NAME]** in this repo. **[Describe your project in 2–3 sentences.]** I've set up the Claude Code academic workflow... Please read the configuration files and adapt them for my project. Enter plan mode and start.
 
-The [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-first-session) has the complete starter prompt with all the details.
+The [full guide](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#sec-first-session) has the complete starter prompt with all the details.
 
 **What this does:** Claude reads all the configuration files, fills in your project name, institution, and preferences, then enters contractor mode — planning, implementing, and (within the skill you invoke) running the review + verify loop. You approve the plan, invoke a skill, and the skill handles the rest within its scope.
 
@@ -132,7 +132,7 @@ Multiple complementary verification layers run before submission:
 
 ## The Guide
 
-For a comprehensive walkthrough, read the **[full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html)** (or see the [source](guide/workflow-guide.qmd)).
+For a comprehensive walkthrough, read the **[full guide](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html)** (or see the [source](guide/workflow-guide.qmd)).
 
 It covers:
 1. **Why This Workflow Exists** — the problem and the vision
@@ -177,7 +177,7 @@ The guide covers Claude Code's latest capabilities:
 | Preregistration | OSF / AsPredicted / AEA RCT Registry-ready document (`/preregister --style`) — full workflow in Pattern 16 |
 | Manuscript submission discipline | `/humanize` (detect AI voice), `/verify-claims` HIGH-WARN gate (block fabricated citations), reviewer-disposition variance |
 
-**Disciplines preloaded:** Economics (top-5 journal profiles, R conventions) and Political Science (APSR / AJPS / JOP profiles, formal-theory + survey-experiment paper types, conjoint/`cjoint` conventions). Forkers extend for psych / sociology / public-health via journal profiles + paper types + discipline cards.
+**Disciplines preloaded:** Computer Science &amp; Engineering (this repo's CS-401 course) alongside the template's Economics (top-5 journal profiles, R conventions) and Political Science (APSR / AJPS / JOP profiles) defaults. Forkers extend for psych / sociology / public-health via journal profiles + paper types + discipline cards.
 
 ### One repo, many project types
 
@@ -401,7 +401,9 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 
 ## Origin
 
-This infrastructure was extracted from **Econ 730: Causal Panel Data** at Emory University, developed by Pedro Sant'Anna using Claude Code over 6+ sessions. The course produced 6 complete PhD lecture decks with 800+ slides, interactive Quarto versions with plotly charts, and full R replication packages — all managed through this multi-agent workflow. The patterns are domain-agnostic: the same agents, rules, and orchestrator work for any academic project.
+This repository is a fork of **Pedro Sant'Anna's [claude-code-my-workflow](https://github.com/pedrohcgs/claude-code-my-workflow)** — a multi-agent, gate-enforced academic workflow originally extracted from a production PhD course (Econ 730 at Emory University). I've adapted it for my teaching: building open lecture decks, prose notes, assignments, and competitive-exam practice for undergraduate computer science courses. The patterns are domain-agnostic: the same agents, rules, and orchestrator work for any academic project.
+
+See the [live site](https://auqib92.github.io/claude-code-my-workflow/) and [course hub](https://auqib92.github.io/claude-code-my-workflow/courses/cs401/) for the published CS-401 materials.
 
 ---
 
@@ -417,7 +419,7 @@ As of March 2026, **15+ research groups** across economics, energy, political sc
 - **[autoresearch](https://github.com/karpathy/autoresearch)** by Andrej Karpathy — Constraint-based autonomous research with `program.md` as constitutional document
 - **[ClaudeCodeTools](https://github.com/aspi6246/ClaudeCodeTools)** — "The Editor" persona: seven-audit sequential paper review protocol
 
-See the [guide's ecosystem section](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-ecosystem) for detailed descriptions, design principles, and more resources.
+See the [guide's ecosystem section](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#sec-ecosystem) for detailed descriptions, design principles, and more resources.
 
 ---
 
@@ -425,7 +427,7 @@ See the [guide's ecosystem section](https://psantanna.com/claude-code-my-workflo
 
 - **What's new:** see [CHANGELOG.md](CHANGELOG.md). We follow loose semver — breaking changes get major bumps so you can decide when to pull updates.
 - **How to contribute:** see [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md). PRs welcome for generalizable improvements; fork-specific work stays in your fork.
-- **Pin to a version:** `git checkout v2.0.0` (current as of 2026-06-09).
+- **Pin to a version:** `git checkout v2.1.0` (newest tag in this fork).
 
 ---
 
