@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Changelog](https://img.shields.io/badge/See-CHANGELOG-blue.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
+[![Acknowledgments](https://img.shields.io/badge/Thanks-Pedro%20Sant'Anna-blue.svg)](ACKNOWLEDGMENTS.md)
 
 > **Actively maintained.** How I use Claude Code for my teaching and research — lecture slides, prose notes, assignments, and competitive-exam practice, all under quality gates. See [CHANGELOG.md](CHANGELOG.md) for the latest changes.
 
@@ -402,6 +403,8 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 ## Origin
 
 This repository is a fork of **Pedro Sant'Anna's [claude-code-my-workflow](https://github.com/pedrohcgs/claude-code-my-workflow)** — a multi-agent, gate-enforced academic workflow originally extracted from a production PhD course (Econ 730 at Emory University). I've adapted it for my teaching: building open lecture decks, prose notes, assignments, and competitive-exam practice for undergraduate computer science courses. The patterns are domain-agnostic: the same agents, rules, and orchestrator work for any academic project.
+
+**The workflow infrastructure is Pedro's work — this repo would not exist without it.** See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for full credit to the original author and incorporated projects. The [LICENSE](LICENSE) retains the original copyright notice.
 
 See the [live site](https://auqib92.github.io/claude-code-my-workflow/) and [course hub](https://auqib92.github.io/claude-code-my-workflow/courses/cs401/) for the published CS-401 materials.
 
