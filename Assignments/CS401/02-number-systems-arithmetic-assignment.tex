@@ -1,0 +1,53 @@
+% =============================================================================
+% Assignments/CS401/02-number-systems-arithmetic-assignment.tex
+% Assignment 2: Number Systems, Representation, and Arithmetic Hardware
+%
+% Student set — NO answers. Solution key: 02-number-systems-arithmetic-solutions.tex.
+% Sourced from Slides/CS401/02-number-systems-arithmetic.tex and
+% Notes/CS401/02-number-systems-arithmetic-notes.tex; every problem reuses the
+% lecture's own notation and extends its worked examples to new values.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 02-number-systems-arithmetic-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 02-number-systems-arithmetic-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 02-number-systems-arithmetic-assignment.tex (x2)
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{2.\arabic{section}}
+
+\title{Assignment 2: Number Systems, Representation, and Arithmetic Hardware}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Deadline:} \key{two weeks from the date of issue} --- late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions --- a bare final answer without the derivation earns partial credit only.
+
+\section{Conceptual}
+
+\textbf{Q1.} Three schemes can encode negative numbers in $n$ bits: sign-magnitude, one's complement, and two's complement. Explain, in terms of (i) how negation is performed and (ii) how addition behaves on a single adder, why two's complement is the scheme a hardware designer chooses. Your answer must name the specific defect of each of the two losing schemes (the property that rules each out for addition hardware).
+
+\textbf{Q2.} In two's complement, a carry out of the most-significant bit is \emph{not} the same thing as overflow. Explain the correct test for overflow, and give a concrete 8-bit example where a carry-out occurs but the result is \emph{correct} (no overflow), and one where no carry-out occurs yet the result is \emph{wrong} (overflow).
+
+\section{Numerical}
+
+\textbf{Q3.} (a) Convert $89_{10}$ to binary by repeated division by 2, showing the remainders. (b) Convert the binary result directly to hex by grouping bits, and check by converting your hex value back to decimal. (c) Represent $-36$ in 8-bit two's complement, showing the flip-and-add-1 steps.
+
+\textbf{Q4.} Using the fixed-point \texttt{Q8.8} format (8 integer bits, 8 fraction bits), (a) write $6.25$ and $1.5$ in binary and add them bitwise to compute the sum; (b) write $-2$ in 8-bit two's complement (integer part only) and verify that $6.25 + (-2) = 4.25$ works by ordinary binary addition with the carry-out discarded.
+
+\section{Design}
+
+\textbf{Q5.} Using a 4-bit ripple-carry adder, trace the addition $+5 + (-2)$ in 4-bit two's complement, showing the carry chain bit-by-bit exactly as the lecture traced $7 + (-3)$. State the 4-bit result, the carry-out, and whether the result is correct in 4-bit two's complement (and why).
+
+\textbf{Q6.} Design the subtraction path of the ALU: using the single-adder approach from the lecture, show the hardware sketch (one adder, one MUX, one forced carry-in) that computes $A - B$ as $A + \bar B + 1$. For each of the two ALU operations \texttt{ADD} and \texttt{SUB}, state what the MUX selects and what the carry-in is. Explain why no separate subtractor is needed.
+
+\end{document}

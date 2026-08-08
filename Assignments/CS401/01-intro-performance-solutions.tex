@@ -1,0 +1,76 @@
+% =============================================================================
+% Assignments/CS401/01-intro-performance-solutions.tex
+% Assignment 1 Solution Key: Computer Architecture, Organization, Performance
+%
+% Mirrors 01-intro-performance-assignment.tex's numbering. Instructor/answer-
+% key file — do not distribute to students alongside the assignment.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-intro-performance-solutions.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 01-intro-performance-solutions
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-intro-performance-solutions.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Assignment 1 --- Solution Key\\\large Computer Architecture, Organization, and Performance Measurement}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Conceptual}
+
+\textbf{Q1.} The redesign changed the machine's \textbf{organization} --- the datapath, which sets CPI --- while the \textbf{architecture} (instruction set, registers, addressing modes) stayed fixed. Because architecture is the programmer-visible interface, a program compiled against that interface runs unchanged on any machine sharing it: that is the \key{compatibility} consequence. Because organization is free to vary within a fixed architecture, the engineers were able to redesign the datapath --- pipelining, wider buses, faster ALU --- to make the \emph{same} instructions execute faster: that is the \key{design freedom} consequence. Old software works because the contract (architecture) was kept stable; the speedup comes because the construction (organization) was improved.
+
+\textbf{Q2.} MIPS ignores \emph{what each instruction does}: it counts instructions executed per second, not useful work. A machine with the same MIPS can finish a program in half the time if its instruction set gets more done per instruction, and MIPS also varies with the program (a program with more easy instructions inflates the count). Here, even though A's MIPS is larger, B could still be faster if B's instructions do more useful work per instruction on $P$, or if $P$'s instruction mix favors B. The correct metric is \key{execution time} (CPU time) of the actual program. The one safe condition: when the two machines have \emph{identical instruction sets} (the same architecture and identical compiled code), the higher MIPS machine is also the faster one --- as in the lecture's worked example where B's 1000 MIPS matched a 2$\times$ time advantage.
+
+\section{Numerical}
+
+\textbf{Q3.} Using $\text{CPU time} = \text{IC} \times \text{CPI} \times T_c = \text{IC} \times \text{CPI} / f$:
+\[
+T_A = \frac{2\times 10^8 \times 1.8}{2.5\times 10^9} = \frac{3.6\times 10^8}{2.5\times 10^9}
+    = 0.144\ \text{s}, \qquad
+T_B = \frac{2\times 10^8 \times 2.2}{3.0\times 10^9} = \frac{4.4\times 10^8}{3.0\times 10^9}
+    \approx 0.1467\ \text{s}.
+\]
+\textbf{Machine A is faster}, by factor $T_B / T_A = 0.1467 / 0.144 \approx 1.019$ --- barely, and despite B's faster clock, because B's higher CPI (2.2 vs.\ 1.8) nearly cancels the clock-rate advantage.
+
+\textbf{Q4.} With $f = 0.30$ and $S_f = 3$:
+\[
+\text{Speedup} = \frac{1}{(1 - 0.30) + 0.30/3} = \frac{1}{0.70 + 0.10} = \frac{1}{0.80} = 1.25\times.
+\]
+The ceiling (FP infinitely fast) is
+\[
+\lim_{S_f \to \infty} \text{Speedup} = \frac{1}{1 - f} = \frac{1}{0.70} \approx 1.43\times.
+\]
+Even an infinite speedup of the FP portion on a 30\% fraction yields at most 1.43$\times$ --- the 70\% unimproved portion dominates.
+
+\section{Design}
+
+\textbf{Q5.} Let $f = 0.25$ be the load/store fraction, $S_f = 8$ the speedup of that fraction.
+\[
+(a)\ \text{Speedup} = \frac{1}{(1 - 0.25) + 0.25/8} = \frac{1}{0.75 + 0.03125} = \frac{1}{0.78125} \approx 1.28\times.
+\]
+\[
+(b)\ \text{Ceiling} = \frac{1}{1 - 0.25} = \frac{1}{0.75} \approx 1.33\times.
+\]
+(c) The target is 2$\times$; the best this path can ever deliver is $\approx 1.33\times$, so \key{the load/store path alone cannot meet the goal}, no matter how much more it is sped up. Further effort on loads/stores is the \emph{wrong place to invest} for reaching 2$\times$. The remaining gain must come from the other 75\% of execution time --- accelerating the non-load/store portion (arithmetic, control, etc.) --- because Amdahl's Law says the unimproved fraction sets the ceiling, and here that fraction is large.
+
+\textbf{Q6.} The goal is $\text{Speedup} = 4$ with $S_f \to \infty$. Amdahl's Law gives the ceiling $\text{Speedup} = 1/(1-f)$; setting it to 4:
+\[
+\frac{1}{1 - f} = 4 \quad\Longrightarrow\quad 1 - f = \frac{1}{4} \quad\Longrightarrow\quad f = \frac{3}{4} = 0.75.
+\]
+So the FP portion must occupy \key{at least 75\%} of execution time. Confirming: with $f = 0.75$ and $S_f \to \infty$,
+\[
+\text{Speedup} = \frac{1}{(1 - 0.75) + 0.75/\infty} = \frac{1}{0.25} = 4\times.
+\]
+Design implication: if the workload's FP fraction is smaller than 75\%, the 4$\times$ target is \emph{mathematically unreachable} by improving FP alone --- the non-FP 25\% or more would also have to be sped up.
+
+\end{document}

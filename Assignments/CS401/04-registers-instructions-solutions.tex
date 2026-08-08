@@ -1,0 +1,95 @@
+% =============================================================================
+% Assignments/CS401/04-registers-instructions-solutions.tex
+% Assignment 4 Solution Key: Registers, Stack, Formats, Instruction Cycle
+%
+% Mirrors 04-registers-instructions-assignment.tex's numbering.
+% Instructor/answer-key file — do not distribute to students.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-registers-instructions-solutions.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 04-registers-instructions-solutions
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-registers-instructions-solutions.tex (x2)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Assignment 4 --- Solution Key\\\large Registers, Stack Organization, Instruction Formats, and the Instruction Cycle}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Conceptual}
+
+\textbf{Q1.} \textbf{Program-visible} registers this course uses: the \key{general-purpose} register file \texttt{R0}, \texttt{R1}, \dots, \texttt{Rn-1}; the \key{accumulator} \texttt{AC} (implicit operand/result register of one-address ISAs); and the \key{stack pointer} \texttt{SP}. \textbf{Internal} registers: \texttt{PC} (address of the next instruction), \texttt{IR} (the current instruction), \texttt{MAR} (address for the current memory access), and \texttt{MDR} (data in transit to/from memory). A program can name the program-visible registers because instructions are \emph{defined} to address them as operands/results; the internal registers are never encoded in an instruction field --- only the control unit reads and writes them, so the program cannot reference them. The register whose job is only to hold the address of the next instruction is \texttt{PC}.
+
+\textbf{Q2.} Function calls nest deeply (recursion), and each active call needs its own frame --- return address, saved registers, local variables. A \key{register stack} holds only a handful of words (e.g.\ 64), far too few for deeply nested or recursive calls, so a register stack cannot store the frames. A \key{memory stack} is as large as main memory, so it can hold arbitrarily many nested frames. Real machines therefore keep the stack in memory with \texttt{SP} in a register: in the memory-stack design \texttt{SP} holds the \emph{address} of the current top of the memory stack; in a register stack, \texttt{SP} is a counter register holding the index/position of the top element within the register file. The trade-off is speed (register stack is fast) against capacity (memory stack is unbounded).
+
+\section{Numerical}
+
+\textbf{Q3.} Using the lecture's convention (contents of register $X$ written $[X]$), $Y = (A-B) \times (C+D)$:
+\begin{itemize}
+  \item \textbf{3-address:} \texttt{SUB R1, A, B};\ \texttt{ADD R2, C, D};\ \texttt{MUL Y, R1, R2} \;—\; \key{3 instructions}.
+  \item \textbf{2-address:} \texttt{MOV R1, A};\ \texttt{SUB R1, B};\ \texttt{MOV R2, C};\ \texttt{ADD R2, D};\ \texttt{MUL Y, R1} \;—\; \key{5 instructions}. The two \texttt{MOV}s are needed because the destructive form overwrites its first operand ($R1 \gets [R1] - [B]$), so operands must be copied before being modified.
+  \item \textbf{1-address (accumulator):} \texttt{LOAD A};\ \texttt{SUB B};\ \texttt{STORE T};\ \texttt{LOAD C};\ \texttt{ADD D};\ \texttt{MUL T};\ \texttt{STORE Y} \;—\; \key{7 instructions}. A temporary \texttt{T} in memory is required because the accumulator holds only one partial result at a time.
+  \item \textbf{0-address (stack):} \texttt{PUSH A};\ \texttt{PUSH B};\ \texttt{SUB};\ \texttt{PUSH C};\ \texttt{PUSH D};\ \texttt{ADD};\ \texttt{MUL};\ \texttt{POP Y} \;—\; \key{8 instructions}, each the shortest possible.
+\end{itemize}
+The four counts: \key{3, 5, 7, 8} --- the same pattern as the lecture's $(A{+}B)\times(C{+}D)$.
+
+\textbf{Q4.} Stack grows downward; top on the right.
+\[
+\begin{array}{c|l}
+\text{Step} & \text{Stack after (top right)} \\
+\hline
+\text{initial} & [?,\ 3,\ 8,\ 2] \\
+\texttt{PUSH 5} & [?,\ 3,\ 8,\ 2,\ 5] \\
+\texttt{ADD}     & [?,\ 3,\ 8,\ 7] \quad (\text{pop }5,\text{ pop }2,\text{ push }7) \\
+\texttt{PUSH 1}  & [?,\ 3,\ 8,\ 7,\ 1] \\
+\texttt{POP}     & \text{returns }1 \Rightarrow [?,\ 3,\ 8,\ 7] \\
+\texttt{POP}     & \text{returns }7 \Rightarrow [?,\ 3,\ 8]
+\end{array}
+\]
+Final stack \texttt{[?, 3, 8]}; \texttt{POP}s returned \key{1} then \key{7}.
+
+\section{Design}
+
+\textbf{Q5.} To copy the contents of \texttt{R5} into \texttt{R3} ($R3 \gets [R5]$):
+\begin{enumerate}
+  \item \texttt{SELA} encodes ``\texttt{R5}'' --- R5's output-enable goes high (R5 selected to drive the bus).
+  \item R5's contents are driven onto the common bus.
+  \item \texttt{SELD} encodes ``\texttt{R3}'' --- R3's load-enable goes high (R3 selected as destination).
+  \item On the clock edge, R3 captures whatever the bus holds: $R3 \gets [R5]$.
+\end{enumerate}
+No direct \texttt{R5}$\to$\texttt{R3} wire exists; every transfer uses the single common bus plus the two select signals --- exactly the mechanism of the lecture's \texttt{R1} $\gets$ \texttt{[R2]} example, with \texttt{R5} in place of \texttt{R2} and \texttt{R3} in place of \texttt{R1}.
+
+\textbf{Q6.} For \texttt{ADD A} (accumulator machine):
+\begin{center}
+\small
+\begin{tabular}{@{}cp{3.4cm}p{3.6cm}p{3.4cm}@{}}
+\toprule
+\textbf{Phase} & \textbf{Register activity} & \textbf{Memory / ALU} & \textbf{State} \\
+\midrule
+Fetch &
+  \texttt{MAR}$\gets$\texttt{[PC]}; \texttt{MDR}$\gets$instr.; \texttt{IR}$\gets$\texttt{[MDR]}; \texttt{PC}$\gets$\texttt{[PC]}$+1$ &
+  read instruction word &
+  instruction in \texttt{IR} \\
+Decode &
+  \texttt{IR} opcode $\to$ control unit &
+  --- &
+  operation identified as ADD \\
+Execute &
+  operand \texttt{[A]} fetched; \texttt{AC}$\gets$\texttt{[AC]}+\texttt{[A]} &
+  read operand; ALU adds &
+  result in \texttt{AC} \\
+\bottomrule
+\end{tabular}
+\end{center}
+The result is stored in the \key{accumulator AC} --- the implicit destination of the 1-address format. The fetch row is identical to every other instruction; only the execute row is opcode-specific.
+
+\end{document}

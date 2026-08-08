@@ -1,0 +1,53 @@
+% =============================================================================
+% Assignments/CS401/03-ieee754-floating-point-assignment.tex
+% Assignment 3: IEEE 754 Floating-Point Representation and Arithmetic
+%
+% Student set — NO answers. Solution key: 03-ieee754-floating-point-solutions.tex.
+% Sourced from Slides/CS401/03-ieee754-floating-point.tex and
+% Notes/CS401/03-ieee754-floating-point-notes.tex; every problem reuses the
+% lecture's notation and extends its worked examples to new values.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 03-ieee754-floating-point-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 03-ieee754-floating-point-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 03-ieee754-floating-point-assignment.tex (x2)
+%   (Windows/MiKTeX: use ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Assignment 3: IEEE 754 Floating-Point Representation and Arithmetic}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Deadline:} \key{two weeks from the date of issue} --- late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions --- a bare final answer without the derivation earns partial credit only.
+
+\section{Conceptual}
+
+\textbf{Q1.} The true exponent of a floating-point number can be negative, and IEEE 754 stores it \emph{biased} ($E_{\text{stored}} = E_{\text{true}} + 127$ for single precision) rather than in two's complement. Explain why the bias is used: what property of ordering the biased representation gives the hardware, and why that matters for comparison instructions. Your answer must state what a stored exponent of all zeros and all ones is \emph{reserved} for.
+
+\textbf{Q2.} A student writes a loop that accumulates $x = x + 0.1$ ten times and then tests $x = 1.0$. Explain why this test can fail even though $0.1 \times 10 = 1.0$ in exact arithmetic, and state the correct way to compare two floating-point numbers for ``equality.''
+
+\section{Numerical}
+
+\textbf{Q3.} Encode the value $7.75$ in IEEE 754 single precision (32 bits), showing: the binary expansion, the normalized scientific form $1.xxx_2 \times 2^E$, the sign bit, the biased exponent, and the 23-bit mantissa field. Write the final answer as an 8-hex-digit value (e.g.\ \texttt{0x412C0000}).
+
+\textbf{Q4.} Decode the 32-bit pattern \texttt{0x3F400000} into its decimal value, showing each field: sign, exponent, mantissa. Check your work by confirming the value against its binary scientific form. (Recall the lecture's anchor: \texttt{0x3F800000} $= 1.0$.)
+
+\section{Design}
+
+\textbf{Q5.} Perform the single-precision addition $10.5 + 0.25$ qualitatively following the four-step add algorithm (align, add, normalize, round). For each step state precisely what happens to the mantissas and exponents. Then repeat for $1\,000\,000.0 + 0.25$, and explain, in terms of the alignment step, why the $0.25$ may be lost entirely --- the same effect the lecture demonstrated with $0.1$.
+
+\textbf{Q6.} Derive the single-precision product of $1.5 \times 2.0$ using the multiplication rule (multiply mantissas, add exponents, subtract the bias once, normalize, round). State the exact product's sign, exponent, and mantissa fields, and show that the result re-encodes to exactly $3.0$. Explain why multiplication needs no alignment step.
+
+\end{document}
