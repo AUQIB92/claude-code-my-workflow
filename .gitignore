@@ -36,6 +36,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Local secrets / scratch (never commit)
+.env
+_cv.txt
+
 # Claude Code local files (not shared across machines)
 .claude/settings.local.json
 .claude/state/
