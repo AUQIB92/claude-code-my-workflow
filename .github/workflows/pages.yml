@@ -1,0 +1,41 @@
+name: deploy-gh-pages
+
+# Publishes the docs/ folder as the GitHub Pages site on every push to main.
+# Uses the actions/* Pages deploy stack (configure -> upload artifact ->
+# deploy) rather than committing built output, so Pages rebuilds are triggered
+# by real pushes (not by GITHUB_TOKEN bot commits, which the legacy
+# branch-deployment mode silently ignores).
+#
+# After the first push, set Settings -> Pages -> Source to "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
