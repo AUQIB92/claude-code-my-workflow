@@ -755,6 +755,17 @@ code {
 
 .rail-spacer { margin-left: auto; }
 
+/* Button cluster at the right of a rail row — mirrors the per-topic
+   resource buttons in the appliedcryptography topic ledger */
+.rail-actions {
+  order: 5;
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
 .btn-sm {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -769,7 +780,6 @@ code {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  order: 5;
   transition: background-color var(--fast) var(--ease), border-color var(--fast) var(--ease);
 }
 .btn-sm:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }

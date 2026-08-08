@@ -115,6 +115,36 @@ while IFS= read -r pdf; do
     cp "$pdf" "$outdir/"
 done < <(find "$REPO_ROOT/Assignments" -type f -name '*.pdf' ! -name '*solutions*')
 
+# 7. Sync prose Lecture Notes to docs/notes/<CourseCode>/ (recursive).
+#    Notes are student-facing and derived from the Beamer decks.
+echo "Syncing Lecture Notes..."
+while IFS= read -r pdf; do
+    relpdf="${pdf#"$REPO_ROOT/Notes"/}"
+    reldir="$(dirname "$relpdf")"
+    [ "$reldir" = "." ] && reldir=""
+    outdir="$DOCS_DIR/notes/$reldir"
+    mkdir -p "$outdir"
+    echo "  Copying $relpdf..."
+    cp "$pdf" "$outdir/"
+done < <(find "$REPO_ROOT/Notes" -type f -name '*.pdf')
+
+# 8. Sync CompetitiveExam practice sets to docs/competitive-exam/<CourseCode>/.
+#    Only per-course question/answer PDFs are published — the copyrighted
+#    textbook scans under CompetitiveExam/Books/ are NEVER synced.
+echo "Syncing CompetitiveExam practice sets (Books excluded)..."
+while IFS= read -r pdf; do
+    relpdf="${pdf#"$REPO_ROOT/CompetitiveExam"/}"
+    reldir="$(dirname "$relpdf")"
+    [ "$reldir" = "." ] && reldir=""
+    case "$relpdf" in
+        Books/*) continue ;;  # skip copyrighted scans
+    esac
+    outdir="$DOCS_DIR/competitive-exam/$reldir"
+    mkdir -p "$outdir"
+    echo "  Copying $relpdf..."
+    cp "$pdf" "$outdir/"
+done < <(find "$REPO_ROOT/CompetitiveExam" -type f -name '*.pdf')
+
 echo ""
 echo "=== Sync complete! ==="
 echo "Files synced to: $DOCS_DIR/slides/"
