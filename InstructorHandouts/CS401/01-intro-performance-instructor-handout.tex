@@ -1,0 +1,261 @@
+% =============================================================================
+% InstructorHandouts/CS401/01-intro-performance-instructor-handout.tex
+% Instructor Handout 1: Computer Architecture, Organization, and Performance
+%
+% INSTRUCTOR-ONLY. Complete, self-contained teaching guide -- explanation,
+% embedded diagrams, presentation guidance, and delivery commentary are woven
+% together per topic (not split into separate documents/sections), so an
+% instructor can teach directly from this file with no slides or Notes open.
+% Explanations/diagrams/examples trace to Slides/CS401/01-intro-performance.tex
+% and Notes/CS401/01-intro-performance-notes.tex; "Teaching note" asides are
+% instructor judgment, visually distinguished but not a separate section.
+%
+% Anchor readings: Hamacher, Computer Organization, Ch. 1 (chapter-level, not
+%   indexed); Patterson & Hennessy, Computer Organization and Design, ARM
+%   Edition, Sec. 1.1 (p.3), Sec. 1.4 (p.16), Sec. 1.6 (p.28) -- page-cited
+%   (PattersonHennessy2017 index built 2026-08-07).
+%
+% Compile with: cd InstructorHandouts/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-intro-performance-instructor-handout.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{1.\arabic{section}}
+\renewcommand{\thefigure}{1.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\newenvironment{teachingaside}{\begin{quote}\small\color{primary-gold}\textbf{Teaching note:}\ }{\end{quote}}
+
+\title{Instructor Handout 1: Computer Architecture, Organization, and Performance}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+{\centering\large\color{negative}\textbf{Instructor Copy --- Not for Student Distribution}\par}
+\vspace{0.5cm}
+
+\section{Before You Teach This Lecture}
+
+\begin{itemize}
+  \item \textbf{Patterson \& Hennessy, \textit{Computer Organization and Design}, ARM Edition} --- Sec.~1.1 ``Computer Abstractions and Technology,'' p.3 (architecture vs.\ organization, classes of computers); Sec.~1.4 ``Under the Covers,'' p.16 (basic structure); Sec.~1.6 ``Performance,'' p.28 (performance equation, CPI, MIPS, Amdahl's Law). Page-cited --- index built 2026-08-07. This is your precise, page-citable anchor for the quantitative core.
+  \item \textbf{Hamacher, \textit{Computer Organization}, Ch.~1} --- \emph{not yet page-indexed}. Cite at chapter level; the source for classes of computers and the general framing.
+  \item \textbf{Plan the two worked machines before class} (the running thread): program P $= 10^7$ instructions; Machine A (2 GHz, CPI 2) vs.\ Machine B (3 GHz, CPI 3), then B's CPI dropped to 1.5. Do the arithmetic yourself first so the numbers on the board are right the first time.
+  \item \textbf{Decide your benchmark story.} The performance/measurement section needs one concrete ``real machine'' framing --- a processor model and clock rate you can name. P\&H's Sec.~1.6 uses the Core~i7; if you want a local, simpler anchor, pick any modern x86/ARM part you can state specs for.
+\end{itemize}
+
+\section{Architecture vs.\ Organization, and Basic Structure}
+
+Open the course by stating the big question this course answers: a program is written in a high-level language, compiled to machine instructions, and run on hardware --- what sits \emph{between} the program and the silicon? Answer it in two words: the machine. Then define the two terms that frame the entire course, and have students say which is which before you confirm.
+
+\begin{definitionbox}{Computer Architecture}
+The programmer-visible interface of a machine --- its instruction set, registers, data types, and addressing modes. Two machines with the same architecture run the same programs.
+\end{definitionbox}
+
+\begin{definitionbox}{Computer Organization}
+The hardware implementation of that interface --- the datapath, control unit, buses, and memory hierarchy. Same architecture, different organization, different speed.
+\end{definitionbox}
+
+State the punchline plainly: same architecture $\Rightarrow$ same programs run; different organization $\Rightarrow$ they run at different speeds and costs. P\&H frame it as the ``what'' (the programmer's contract) versus the ``how'' (the hardware's construction) --- Sec.~1.1, p.3 \cite{PattersonHennessy2017_computer_organization_design}.
+
+\begin{teachingaside}
+The student trap in this section is treating architecture and organization as the \emph{same thing} or as a mere vocabulary pair. The teaching move is to make the distinction do work immediately: ``why has x86 survived for decades even though the hardware underneath it is completely different now?'' The answer (stable architecture, changing organization) makes the distinction a \emph{reason}, not a label.
+\end{teachingaside}
+
+Cover the classes of computers as a class discussion (personal, server, supercomputer, embedded, personal mobile) --- ask students which computers they own and what each one optimizes. Extract the single lesson: the design goal differs by class, so ``best'' is not a universal adjective (Hamacher, Ch.~1; P\&H, Sec.~1.1, p.3).
+
+Then draw the basic structure (Figure~\ref{fig:basic-structure}).
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.85, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=2.6cm, minimum height=1.6cm, align=center] (CPU) at (0,0) {CPU\\[1pt]\scriptsize ALU, Registers,\\Control Unit};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.8cm, minimum height=1.6cm, align=center] (MEM) at (5.2,0) {Memory};
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.8cm, minimum height=1.0cm, align=center] (IO) at (5.2,-2.8) {I/O Devices};
+    \draw[very thick, jet] (-1.3,-1.4) -- (6.1,-1.4);
+    \draw[<->, very thick, primary-blue] (0,-0.8) -- (0,-1.4);
+    \draw[<->, very thick, primary-blue] (5.2,-0.8) -- (5.2,-1.4);
+    \draw[<->, thick] (5.2,-2.3) -- (5.2,-1.4);
+    \draw[thick, primary-gold, dashed] (0,0.8) -- (0,1.3) -- (5.2,1.3) -- (5.2,0.8);
+    \node[font=\scriptsize, below] at (2.6,-1.6) {address / data bus};
+    \node[font=\scriptsize, right] at (5.2,-1.85) {data};
+    \node[font=\scriptsize, above] at (2.6,1.35) {control};
+  \end{tikzpicture}
+  \caption{The basic structure of a computer --- cf.\ P\&H, Sec.~1.4, p.16: CPU (ALU + registers + control) connected to memory and I/O by buses \cite{PattersonHennessy2017_computer_organization_design}.}
+  \label{fig:basic-structure}
+\end{figure}
+
+\textbf{How to present it:} draw the three boxes first (CPU left, memory top-right, I/O bottom-right), then the horizontal bus between CPU and memory labeled \emph{address / data}, then the vertical drop to I/O. Add the dashed control line last and label it \emph{control} --- narrating that control travels separately from data. The separation of ``address/data'' from ``control'' is the detail students most often miss and is worth a beat.
+
+\begin{teachingaside}
+Students will want the CPU box to be a single block. Pause on the internal contents (ALU, registers, control unit) and note: the next six weeks are about what is \emph{inside} that box. This lecture is the only one where the CPU is a black box --- later lectures open it up.
+\end{teachingaside}
+
+Close by previewing the instruction cycle at one sentence's depth: the CPU repeatedly fetches, decodes, executes. Today we need only the consequence --- that execution time is built from instruction count (IC), cycles per instruction (CPI), and clock rate ($f$). Week 4 dissects the cycle itself.
+
+\section{The Basic Performance Equation}
+
+Pose the Socratic question that opens the section: two machines run the same program; one has a faster clock, the other executes fewer instructions. Which is faster? Let students argue, then land the principle: the only honest measure is \key{time}; everything else is a component of time.
+
+\begin{definitionbox}{Basic Performance Equation}
+\[
+  \text{CPU time} = \text{IC} \times \text{CPI} \times T_c = \frac{\text{IC} \times \text{CPI}}{f},
+\]
+where $\text{IC}$ is the instruction count, $\text{CPI}$ the average cycles per instruction, $T_c$ the clock cycle time, and $f = 1/T_c$ the clock rate.
+\end{definitionbox}
+
+Introduce the three factors with who-controls-what (Table~\ref{tab:factors}). The table is the ``so what'' of the whole equation: each factor is a separate design lever, owned by a different part of the design, and improving one can hurt another.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}p{3.2cm}p{3.6cm}p{3.6cm}p{3.6cm}@{}}
+\toprule
+\textbf{Factor} & \textbf{What it measures} & \textbf{Influenced by} & \textbf{Changed by} \\
+\midrule
+$\text{IC}$ & instructions per program & ISA, compiler, program & architecture \\
+$\text{CPI}$ & cycles per instruction & datapath, pipeline, memory & organization \\
+$f$ ($T_c$) & clock rate & fabrication, circuit design & technology + design \\
+\bottomrule
+\end{tabular}
+\caption{The three factors of the performance equation and what sets each one.}
+\label{tab:factors}
+\end{table}
+
+\begin{teachingaside}
+The most common error is treating a ``faster clock'' as automatically ``a faster machine.'' The worked tie below exists precisely to kill that intuition. If you can only teach one example this lecture, teach the tie --- it is the example that makes the equation necessary rather than decorative.
+\end{teachingaside}
+
+\begin{example}[Two machines, one program --- a tie]
+Machine A: 2 GHz, CPI 2; Machine B: 3 GHz, CPI 3; program P $= 10^7$ instructions.
+\begin{itemize}
+  \item \texttt{A:} time $= 10^7 \times 2 \times 0.5\text{ns} = 10$ ms.
+  \item \texttt{B:} time $= 10^7 \times 3 \times \tfrac{1}{3}\text{ns} = 10$ ms.
+\end{itemize}
+Tie, despite B's faster clock --- B's higher CPI cancels it. Faster clock $\not\Rightarrow$ faster machine.
+\end{example}
+
+\textbf{How to present it:} write the equation, then fill in A and B \emph{side by side on the board}, one line at a time, so the class watches the tie emerge rather than hearing ``they tie.'' The punchline --- ``faster clock $\not\Rightarrow$ faster machine, the equation decides'' --- lands only if they saw the numbers arrive at the same answer.
+
+\begin{example}[Breaking the tie by improving CPI]
+B's designer reduces CPI from 3 to 1.5 (better pipelining): time $= 10^7 \times 1.5 \times \tfrac{1}{3}\text{ns} = 5$ ms --- now B is 2$\times$ faster, via CPI (organization), not clock rate.
+\end{example}
+
+\textbf{A question worth asking live}, after the second example: ``where did that 2$\times$ come from --- the clock, the ISA, or the organization?'' The answer (organization, via CPI) is the forward hook to Weeks 5--7, where the course builds the datapath and control that set CPI.
+
+\begin{teachingaside}
+Resist the urge to skip the tie example because ``the numbers are round and obvious.'' The tie is not a trivial coincidence --- it is the counterexample that breaks the intuitive (wrong) belief that clock rate equals speed. Spend the time; it pays for itself for the rest of the course.
+\end{teachingaside}
+
+\section{Measuring and Comparing Performance}
+
+State the measurement principle first: the right measure is \key{execution time} on a representative workload (or its inverse, throughput). Distinguish \key{wall-clock time} (everything counts) from \key{CPU time} (only the CPU's computing time) --- the latter isolates processor design.
+
+Then introduce MIPS with its caveat.
+
+\begin{definitionbox}{MIPS}
+\[
+  \text{MIPS} = \frac{\text{IC}}{\text{execution time} \times 10^6} = \frac{f}{\text{CPI} \times 10^6},
+\]
+Million Instructions Per Second. Misleading when instruction sets differ.
+\end{definitionbox}
+
+Give the three reasons MIPS misleads (P\&H, Sec.~1.6, p.28) \cite{PattersonHennessy2017_computer_organization_design}: it ignores what each instruction does; it varies with the program; two machines can report the same MIPS yet have different execution times.
+
+\begin{example}[The MIPS trap when instruction sets match]
+Machine A: 1 GHz, CPI 2.0, IC $= 10^6$. Machine B: 1 GHz, CPI 1.0, same P.
+\begin{itemize}
+  \item \texttt{A:} MIPS $= 500$, time $= 2$ ms.
+  \item \texttt{B:} MIPS $= 1000$, time $= 1$ ms.
+\end{itemize}
+Here MIPS and time agree (2$\times$), because the instruction sets match. The trap appears only when instruction sets differ.
+\end{example}
+
+\begin{teachingaside}
+Students love MIPS because it is one number that sounds like speed. The teaching move is to let them use it, then produce the counterexample where it fails --- two machines, same reported MIPS, very different time because one instruction does more work. The rule that sticks: ``report time; use MIPS with a caveat.'' State the rule, don't just imply it.
+\end{teachingaside}
+
+Close the measurement section with the Socratic check: Machine C runs 500M instructions in 1 s; Machine D runs 800M in 1.6 s. Which is faster? (C --- 1 s vs.\ 1.6 s, despite fewer instructions.) The point: instruction count is a component, not a speed metric.
+
+\section{Amdahl's Law}
+
+Motivate with the puzzle: a program takes 100 s; you make multiplies 10$\times$ faster, but multiplies are 20\% of the time. Ask the class to guess the whole-program speedup before revealing 1.22$\times$. Let the guesses (including ``10$\times$'') land, then show the arithmetic: $80 + 2 = 82$ s.
+
+\begin{definitionbox}{Amdahl's Law}
+If a fraction $f$ of execution time can be sped up by a factor $S_f$, the overall speedup is
+\[
+  \text{Speedup} = \frac{1}{(1-f) + \dfrac{f}{S_f}}.
+\]
+As $S_f \to \infty$, speedup $\to 1/(1-f)$: the unimproved fraction sets a hard ceiling.
+\end{definitionbox}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=1.0, transform shape,
+      every node/.style={font=\small}]
+    \draw[->, thick] (0,0) -- (6.6,0) node[right] {$S_f$ (per-part speedup)};
+    \draw[->, thick] (0,0) -- (0,4.4) node[above] {overall speedup};
+    \draw[thick, dashed] (0,3.5) -- (6.6,3.5);
+    \node[font=\scriptsize, right] at (6.2,3.55) {$1/(1-f)$ ceiling};
+    \draw[very thick, primary-blue] plot[domain=0.1:6.0, smooth]
+      (\x, {3.5*(1 - exp(-\x/1.1))}) ;
+    \node[font=\scriptsize, primary-blue] at (3.2,3.1) {speedup curve};
+    \node[font=\scriptsize] at (4.8,2.3) {adding more to $S_f$};
+    \node[font=\scriptsize] at (4.8,1.9) {gains almost nothing};
+  \end{tikzpicture}
+  \caption{Amdahl's Law: overall speedup saturates at $1/(1-f)$ --- an infinite per-part speedup cannot beat the unimproved fraction.}
+  \label{fig:amdahl}
+\end{figure}
+
+\textbf{How to present it:} draw the two axes, then the dashed ceiling line at $1/(1-f)$ \emph{before} the curve, and label it ``the ceiling.'' Then draw the curve rising steeply and flattening. Reading the saturation off the picture --- ``adding more to $S_f$ gains almost nothing'' --- is the whole law in one look.
+
+\begin{teachingaside}
+The single most important move in this section is to make students compute the ceiling \emph{before} the general formula: $1/(1-f)$ as ``the part you did not improve is the part you cannot fix.'' Once they feel why the 60\% (or 70\%) unimproved fraction dominates, the formula is just notation for what they already derived.
+\end{teachingaside}
+
+\begin{example}[Applying Amdahl's Law]
+40\% FP, new FP unit 4$\times$ faster: $\text{Speedup} = 1/(0.6 + 0.1) = 1/0.7 \approx 1.43\times$.
+\end{example}
+
+\begin{example}[The ceiling in action]
+40\% FP, FP unit infinitely fast: $\lim = 1/0.6 \approx 1.67\times$. To reach 3$\times$ overall, the FP unit is the wrong investment --- the other 60\% must also improve.
+\end{example}
+
+\begin{teachingaside}
+The design-implication reading of Amdahl's Law --- ``where not to invest'' --- is what separates students who can compute it from students who can \emph{use} it. Ask the design question live: ``if a program must run 3$\times$ faster and FP is 40\%, where do you invest?'' The answer (also the other 60\%) is the point of the whole section.
+\end{teachingaside}
+
+\textbf{A question worth asking live}, near the end: ``is the ceiling real, or is it a pessimistic assumption?'' The twist (Section~\ref{sec:twist} below) is worth stating even if time is short --- it inoculates students against over-quoting Amdahl.
+
+\subsection{The Parallelism Twist}
+\label{sec:twist}
+
+Amdahl's Law is often quoted against parallel computing: ``even with infinite processors, the serial fraction limits speedup.'' The statement is right for fixed-size workloads, but it assumes $f$ is \key{fixed}. If the problem \emph{grows} (larger input), the parallel fraction usually grows with it, so larger problems extract more parallelism and soften the ceiling. Amdahl's Law is about fixed-size workloads, not scaling problems.
+
+\begin{teachingaside}
+This is a one-minute ``so you know the caveat'' moment, not a second lesson. State it, then move on --- Week 11 (parallelism) will return to it properly. The goal here is only to stop students from confidently quoting Amdahl as a universal truth.
+\end{teachingaside}
+
+\section{Synthesis and Summary}
+
+Close the lecture by closing the thread: the running comparison --- A (2 GHz, CPI 2) and B (3 GHz, CPI 3) tied at 10 ms; improving B's CPI to 1.5 made it 2$\times$ faster --- was a CPI (organization) win, not a clock-rate win. The thread used every tool of the chapter: the equation to compute time, the factor table to see which lever was pulled, and time (not MIPS) as the metric.
+
+Set up Week 2's hook: the performance equation assumes we can count instructions and CPI, but before the CPU can execute anything, the data must be represented in bits and arithmetic implemented in hardware. Week 2: number systems (two's complement) and adders/subtractors.
+
+\textbf{Summary --- quick reference:} \emph{Architecture} = programmer's interface; \emph{organization} = hardware implementation; same architecture, different organization, different speed. \emph{Basic structure:} CPU (ALU + registers + control) $\leftrightarrow$ memory $\leftrightarrow$ I/O via buses. \emph{Performance equation:} $\text{CPU time} = \text{IC} \times \text{CPI}/f$, three independent factors. \emph{Measurement:} time (or throughput) on a representative benchmark; beware MIPS. \emph{Amdahl's Law:} $\text{Speedup} = 1\big/[(1-f)+f/S_f]$; the unimproved fraction sets the ceiling.
+
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+
+\end{document}

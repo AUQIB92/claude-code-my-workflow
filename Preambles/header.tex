@@ -12,12 +12,6 @@
 %
 % To customize: edit the HEX values below AND the matching $variable in
 % Quarto/theme-template.scss, then run scripts/check-palette-sync.sh.
-%
-% TITLE PAGE. A formal, serif (Libertine) title-page template is defined in
-% the Beamer-only block below (\setbeamertemplate{title page}) -- title,
-% subtitle, a thin gold rule, then \author/\institute/\date. Frametitle and
-% body text remain on Beamer's sans-serif default. No SCSS counterpart is
-% needed for this (font/layout only, no new colors).
 % =============================================================================
 
 % -----------------------------------------------------------------------------
@@ -34,15 +28,6 @@
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
-
-% -----------------------------------------------------------------------------
-% Serif face for the title page (formal/academic look). Linux Libertine is
-% XeLaTeX- and pdfTeX-safe and redefines \rmdefault, so \rmfamily picks it up
-% everywhere \rmfamily is used explicitly. Body text and frametitles stay on
-% Beamer's own sans-serif default (unaffected) -- only the title-page
-% \setbeamerfont{...} overrides below opt in to \rmfamily.
-% -----------------------------------------------------------------------------
-\usepackage{libertine}
 
 % -----------------------------------------------------------------------------
 % PALETTE — mirrors Quarto/theme-template.scss variable names.
@@ -119,37 +104,6 @@
   \setbeamercolor{block title alerted}{fg=white, bg=primary-gold}
   \setbeamercolor{block body alerted}{bg=light-bg}
 
-  % ---------------------------------------------------------------------------
-  % Formal title page: serif (Libertine, via \rmfamily) for title-page
-  % elements only. Body text, itemize, and frametitle are intentionally left
-  % on Beamer's sans-serif default -- \usebeamerfont{title} is also what
-  % \transitionslide (below) uses for its big centered text, so section
-  % transitions pick up the same serif treatment for free.
-  % ---------------------------------------------------------------------------
-  \setbeamerfont{title}{family=\rmfamily, series=\bfseries, size=\Large}
-  \setbeamerfont{subtitle}{family=\rmfamily, shape=\itshape, size=\normalsize}
-  \setbeamerfont{author}{family=\rmfamily, size=\normalsize}
-  \setbeamerfont{institute}{family=\rmfamily, size=\scriptsize}
-  \setbeamerfont{date}{family=\rmfamily, size=\scriptsize}
-
-  \setbeamertemplate{title page}{
-    \vfill
-    \begin{center}
-      {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
-      \vspace{0.15cm}
-      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
-      \vspace{0.45cm}
-      {\color{primary-gold}\rule{0.42\textwidth}{0.6pt}\par}
-      \vspace{0.45cm}
-      {\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}
-      \vspace{0.35cm}
-      {\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}
-      \vspace{0.35cm}
-      {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}
-    \end{center}
-    \vfill
-  }
-
   % Minimal footer: course code (left) + page X / N (right), no navigation clutter
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{footline}{%
@@ -213,4 +167,4 @@
     \vfill
   \end{frame}
   \endgroup
-}
+} 

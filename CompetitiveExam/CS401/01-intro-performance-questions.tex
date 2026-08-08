@@ -1,0 +1,63 @@
+% =============================================================================
+% CompetitiveExam/CS401/01-intro-performance-questions.tex
+% Competitive Exam Practice 1 — GATE (Computer Science) Pattern
+% Computer Architecture, Organization, and Performance
+%
+% Student-facing — NO answers. Answer key: 01-intro-performance-answers.tex.
+% Provenance (availability-first, Tier 1 = local PYQ book):
+%   Q1-Q4 are real GATE past-year questions sourced from the local GATEOverflow
+%   Volume 3 (CO & Architecture) PYQ book, question headings + full text
+%   recovered via the render+OCR sub-pipeline (CompetitiveExam/Books/index.md).
+%   The book authenticates each question (year + question number printed on the
+%   page); answers are derived/justified in the answers file.
+%   Q5-Q6 are original GATE-pattern questions filling the measurement/MIPS and
+%   Amdahl-ceiling subtopics, which have thin local PYQ coverage.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-intro-performance-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Competitive Exam Practice 1: Computer Architecture, Organization, and Performance\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2014 Set 1 Q55, verified --- GATEOverflow V3 p.91]} \textbf{[NAT, 1 mark]} Consider two processors $P_1$ and $P_2$ executing the same instruction set. Under identical conditions, for the same input, a program running on $P_2$ takes 25\% less time but incurs 20\% more CPI (clock cycles per instruction) than the program running on $P_1$. If the clock frequency of $P_1$ is 1 GHz, the clock frequency of $P_2$ (in GHz) is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q2}] \textit{[GATE CS 2024 Set 1 Q45, verified --- GATEOverflow V3 p.91]} \textbf{[NAT, 2 marks]} The baseline execution time of a program on a 2 GHz single-core machine is 100 ns. The code corresponding to 90\% of the execution time can be fully parallelized. The overhead of using an additional core is 10 ns when running on a multicore system. Assume all cores run their share of the parallelized code for an equal amount of time. The number of cores that minimizes the execution time of the program is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q3}] \textit{[GATE CS 2014 Set 1 Q43, verified --- GATEOverflow V3 p.91]} \textbf{[NAT, 2 marks]} Consider a 6-stage instruction pipeline with all stages perfectly balanced and no cycle-time overhead from pipelining. When an application executes on this 6-stage pipeline, the speedup achieved with respect to non-pipelined execution, if 25\% of the instructions incur 2 pipeline stall cycles each, is \rule{1.5cm}{0.4pt}.
+
+\item[\textbf{Q4}] \textit{[GATE CS 2026 Set 2 Q47, verified --- GATEOverflow V3 p.91]} \textbf{[NAT, 2 marks]} A non-pipelined instruction execution unit operating at 1.6 GHz takes an average of 5 clock cycles to complete the execution of an instruction. To improve performance, the system was pipelined with the goal of one instruction per clock cycle, but could operate only at 1.2 GHz due to pipeline overheads. While executing a program on the pipelined design, 30\% of instructions encountered a stall of 2 cycles due to pipeline hazards. The speedup obtained by the pipelined design over the non-pipelined one for this program is \rule{1.5cm}{0.4pt} (rounded off to two decimal places).
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Two machines, $M_1$ and $M_2$, both run at 1 GHz. For a fixed program, $M_1$ reports 800 MIPS and $M_2$ reports 400 MIPS. $M_1$ has a CPI of 1.25; $M_2$ has a CPI of 2.5. Which statement is correct?
+\begin{enumerate}
+  \item[(A)] $M_1$ is twice as fast as $M_2$ on this program
+  \item[(B)] $M_2$ is twice as fast as $M_1$ on this program
+  \item[(C)] They run the program in equal time, since $f/\text{CPI}$ determines time and $f$ is equal
+  \item[(D)] MIPS alone cannot be compared because the instruction sets may differ
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A program spends 30\% of its execution time on a part that is being upgraded. Which of the following is \textbf{TRUE} about the maximum possible overall speedup?
+\begin{enumerate}
+  \item[(A)] It is unbounded if the upgraded part becomes infinitely fast
+  \item[(B)] It approaches $1/(1 - 0.30) \approx 1.43\times$ as the upgrade becomes infinitely fast
+  \item[(C)] It is at most $0.30 \times$ the upgrade factor
+  \item[(D)] It is exactly 3.33$\times$ regardless of the upgrade factor
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

@@ -11,15 +11,19 @@ paths:
      Slides/ other than the HelloWorld sample, so this registry projects
      backward from syllabi/CS401.md (Weeks 1-4 topics) to give Week 5 consistent
      notation to build on, then forward for the rest of the course arc.
-     Amend freely as Weeks 1-4 get authored for real — treat rows marked
-     "(projected)" as provisional until a Week 1-4 .tex confirms them. -->
+      Week 4 (04-registers-instructions) authored 2026-08-07, confirming the
+      register/instruction symbols marked "(projected)" below. Weeks 1-3
+      (01-intro-performance, 02-number-systems-arithmetic,
+      03-ieee754-floating-point) authored 2026-08-07, confirming the
+      performance/arithmetic/float symbols below. -->
 
 ## Anchor Textbooks
 
 | Book (ShortName) | Index | Weeks/Lectures Backed | Page-Verified? |
 |-------------------|-------|------------------------|-----------------|
 | Hamacher, *Computer Organization*, 5th ed. (Hamacher2002) | `master_supporting_docs/CS401/supporting_books/Hamacher2002/index.md` — **not built yet, no longer blocked.** PDF supplied 2026-08-06 has no text layer (scanned); `pdftoppm` (Poppler) and `tesseract` are now both installed on this machine (2026-08-06), so `/index-textbook CS401/Hamacher2002` can run the OCR fallback path. Not yet run. | Weeks 1-5, 8-11 per syllabus; Lectures 05-07 built so far | **No — standard treatment, not page-verified** |
-| Mano, *Computer System Architecture*, 3rd ed. (Mano1993) | `master_supporting_docs/CS401/supporting_books/Mano1993/index.md` — **built 2026-08-06, Ch. 5 (Sec. 5-4/5-9/5-10 only) + Ch. 7-8** (the chapters Lectures 05-07 need; rest of Ch. 5, Ch. 1-4, 6, 9-13 not indexed) | Week 5 (Ch. 8 — corrected, was mis-cited as Ch. 7); Week 6 (Ch. 5 — corrected 2026-08-06, was mis-cited as Ch. 7); Week 7 (Ch. 7, confirmed correct) | **Ch. 5 (Sec. 5-4/5-9/5-10), Ch. 7-8: Yes, page-cited. Rest of book: no.** |
+| Mano, *Computer System Architecture*, 3rd ed. (Mano1993) | `master_supporting_docs/CS401/supporting_books/Mano1993/index.md` — **built 2026-08-06, Ch. 5 (Sec. 5-2/5-4/5-9/5-10 only) + Ch. 7-8** (the chapters Lectures 04-07 need; rest of Ch. 5, Ch. 1-4, 6, 9-13 not indexed) | Week 4 (Ch. 5 Sec. 5-2 common bus + Ch. 8 CPU/registers/stack/formats); Week 5 (Ch. 8 — corrected, was mis-cited as Ch. 7); Week 6 (Ch. 5 — corrected 2026-08-06, was mis-cited as Ch. 7); Week 7 (Ch. 7, confirmed correct) | **Ch. 5 (Sec. 5-2/5-4/5-9/5-10), Ch. 7-8: Yes, page-cited. Rest of book: no.** |
+| Patterson & Hennessy, *Computer Organization and Design: The Hardware/Software Interface, ARM Edition*, 5th ed. (PattersonHennessy2017) | `master_supporting_docs/CS401/supporting_books/PattersonHennessy2017/index.md` — **built 2026-08-07, Ch. 1-6 + App. A/C/D in full.** 1074-page text-layer PDF (ARMv8/LEGv8 edition, ISBN 978-0-12-801733-3). **Pagination note: PDF↔printed offset is non-constant** (inserted online "e." pages); resolve printed pages via the running head at the top of each PDF page, never a fixed offset. | Weeks 1-3 (Ch. 1 §1.6, Ch. 3 arithmetic/IEEE 754); Weeks 4-5 (Ch. 2 LEGv8 instructions/operands/formats/addressing); Weeks 6-7 (Ch. 4 §4.3-4.4 datapath + single-cycle control, App. C hardwired→microprogrammed); Weeks 9-10 (Ch. 5 caches/virtual memory/RAID); Weeks 11-12 (Ch. 6 Flynn/multicore/GPU, App. D RISC survey). **Week 8 (I/O) not covered — stay with Hamacher/Stallings.** | **Ch. 1-6, App. A/C/D: Yes, page-cited** |
 | Stallings, *Computer Organization and Architecture* (Stallings2015) | `master_supporting_docs/CS401/supporting_books/Stallings2015/index.md` — **not built.** PDF supplied 2026-08-06 is confirmed the **11th edition** ("Designing for Performance"), not the 10th/2015 edition this repo's bib key implies. Confirmed via its own TOC: "Control Unit Operation and Microprogrammed Control" is **Chapter 19** in this 11th-edition file, not Chapter 16 as Lectures 06-07 currently cite — plausibly a cross-edition renumbering, not necessarily a content error, but unconfirmed without the actual 2015 edition in hand. | Weeks 7-8, 11-12 (Lecture 06-07) | **No — edition mismatch flagged, not indexed. Do not page-cite from the 11th-edition file against the "Ch. 16" citations without resolving the edition question first.** |
 
 <!-- [LEARN:textbook-grounding] Lectures 05, 06, 07 cite these three books by
@@ -51,13 +55,27 @@ paths:
 
 | Symbol | Meaning | Introduced |
 |--------|---------|------------|
-| PC | Program Counter — address of the next instruction to fetch | Week 4 (projected: registers/instruction cycle) |
-| IR | Instruction Register — holds the instruction currently executing | Week 4 (projected) |
-| MAR | Memory Address Register — holds the address for the current memory access | Week 4 (projected) |
-| MDR | Memory Data/Buffer Register — holds data in transit to/from memory (aka MBR) | Week 4 (projected) |
-| AC | Accumulator — implicit operand/result register in single-address ISAs | Week 4 (projected) |
-| R0..Rn-1 | General-purpose register file | Week 4 (projected) |
-| SP | Stack Pointer | Week 4 (projected: stack organization) |
+| PC | Program Counter — address of the next instruction to fetch | **Week 4 (confirmed: fetch phase)** |
+| IC | Instruction Count — number of instructions a program executes | **Week 1 (new)** |
+| CPI | Cycles Per Instruction — average clock cycles per instruction | **Week 1 (new)** |
+| $f$ | Clock rate (Hz); $T_c = 1/f$ is the clock cycle time | **Week 1 (new)** |
+| CPU time | $\text{IC} \times \text{CPI} \times T_c = \text{IC}\times\text{CPI}/f$ — the basic performance equation | **Week 1 (new)** |
+| MIPS | $\text{IC}/(\text{time}\times10^6) = f/(\text{CPI}\times10^6)$ — million instructions/sec; misleading when ISAs differ | **Week 1 (new)** |
+| Amdahl's Law | $\text{Speedup} = 1/[(1-f)+f/S_f]$ — $f$ = improved fraction, $S_f$ = its speedup; ceiling $1/(1-f)$ | **Week 1 (new)** |
+| Two's complement | $-x \equiv 2^n - x$ (mod $2^n$) — ``flip all bits, add 1''; range $-2^{n-1}$ to $2^{n-1}-1$; sign bit = MSB | **Week 2 (new)** |
+| Overflow | Result outside the format range; two's complement test = wrong sign after adding same-signed operands (carry-out $\neq$ overflow) | **Week 2 (new)** |
+| Fixed point | Number with an agreed binary-point position (e.g. Q8.8); integer ALU adds unchanged | **Week 2 (new)** |
+| HA / FA | Half adder ($S=A\oplus B$, $C=A\cdot B$); full adder ($S=A\oplus B\oplus C_{in}$, $C_{out}=A\cdot B + C_{in}(A\oplus B)$); ripple-carry chains FAs | **Week 2 (new)** |
+| IEEE 754 single | 32 bits = 1 sign + 8 exponent + 23 mantissa; value $=(-1)^S\times(1.M)_2\times2^{E-127}$; bias 127; hidden leading 1 | **Week 3 (new)** |
+| Float special values | Zero (exp 0, mant 0), denormal (exp 0, mant $\neq0$), $\pm\infty$ (exp all 1, mant 0), NaN (exp all 1, mant $\neq0$) | **Week 3 (new)** |
+| Float add | Align → add → normalize → round; multiply = multiply mantissas, add exponents (minus bias once), normalize, round | **Week 3 (new)** |
+| ULP / precision | ~7 significant decimal digits in single precision; rounding error $\le \tfrac12$ ULP; never compare floats with $==$ | **Week 3 (new)** |
+| IR | Instruction Register — holds the instruction currently executing | **Week 4 (confirmed)** |
+| MAR | Memory Address Register — holds the address for the current memory access | **Week 4 (confirmed)** |
+| MDR | Memory Data/Buffer Register — holds data in transit to/from memory (aka MBR) | **Week 4 (confirmed)** |
+| AC | Accumulator — implicit operand/result register in single-address ISAs | **Week 4 (confirmed)** |
+| R0..Rn-1 | General-purpose register file | **Week 4 (confirmed)** |
+| SP | Stack Pointer | **Week 4 (confirmed: stack organization)** |
 | EA | Effective Address — actual operand address after applying an addressing mode | **Week 5 (new)** |
 | Y, Z | Internal hidden registers in the single-bus CPU datapath that buffer ALU operands/results | **Week 5 (new)** |
 | Bus A / Bus B / Bus C | Three parallel buses in the multiple-bus datapath: A, B feed ALU inputs, C carries the ALU output | **Week 5 (new)** |
@@ -89,6 +107,7 @@ paths:
 
 | Application | Paper | Dataset | Lecture(s) | Purpose |
 |------------|-------|---------|------------|---------|
+| Two-machine comparison on one program ($10^7$ instr.: A = 2 GHz/CPI 2 vs. B = 3 GHz/CPI 3, then B CPI→1.5) | P\&H Ch. 1 Sec. 1.6 (p.28); Hamacher Ch. 1 | n/a (worked performance comparison) | Week 1 | Running thread making the performance equation, factor independence, and Amdahl's Law quantitative; shows a CPI (organization) win vs. a clock-rate win |
 | RTL trace of `R1 \gets R2 + R3` | Hamacher Ch. 7; Mano Ch. 8 (Week 5, corrected 2026-08-06 — datapath/bus/addressing content); Mano Ch. 5 (Week 6, corrected 2026-08-06 — hardwired control-logic-gate content, was mis-cited as Ch. 7); Mano Ch. 7 (Week 7, confirmed — control-memory/microinstruction content) | n/a (worked hardware trace) | Week 5, Week 6, Week 7 | Running thread comparing single-bus (3 control steps via Y/Z) vs. three-bus (1 control step) organization — makes the cost/speed trade-off concrete and quantitative. Week 6 extends the same trace into a state table and Boolean control equations ($Y_{in}=D_{\text{ADD}}\cdot T_1$, etc.) for the hardwired control unit that drives it. Week 7 rebuilds the identical 3-step control unit as a microprogram (CM rows + MPC), giving a direct hardwired-vs.-microprogrammed comparison on the same worked example. |
 | Compiling `A[i] = A[i] + 1` | Hamacher Ch. 7 | n/a (compiler-codegen example) | Week 5 | Motivates addressing modes from a real toolchain need: immediate (constant), based/indexed (array element), indirect (pointer) |
 

@@ -45,17 +45,16 @@
 \section{Recap and Roadmap}
 
 \begin{frame}{Where We Left Off (Week 5)}
-  \begin{block}{Last week: hardware datapaths, traced by hand}
-    \begin{itemize}
-      \item \key{Addressing modes} compute the effective address \texttt{EA} of an
-        operand from an instruction's address field.
-      \item A \key{single-bus} datapath moves \texttt{R1} $\gets$ \texttt{R2+R3} in
-        \textbf{3} control steps ($T_1, T_2, T_3$), using hidden registers
-        \texttt{Y}, \texttt{Z} to buffer the bus.
-      \item A \key{three-bus} datapath does the same transfer in \textbf{1} control
-        step --- more wiring, fewer cycles.
-    \end{itemize}
-  \end{block}
+  \emph{Last week: hardware datapaths, traced by hand.}
+  \begin{itemize}
+    \item \key{Addressing modes} compute the effective address \texttt{EA} of an
+      operand from an instruction's address field.
+    \item A \key{single-bus} datapath moves \texttt{R1} $\gets$ \texttt{R2+R3} in
+      \textbf{3} control steps ($T_1, T_2, T_3$), using hidden registers
+      \texttt{Y}, \texttt{Z} to buffer the bus.
+    \item A \key{three-bus} datapath does the same transfer in \textbf{1} control
+      step --- more wiring, fewer cycles.
+  \end{itemize}
   \vspace{0.3cm}
   \begin{exampleblock}{The gap we left open}
     We \emph{wrote} $T_1, T_2, T_3$ ourselves, on paper. Nothing in the hardware
@@ -76,12 +75,10 @@
       right signals?
     \end{enumerate}
   \vspace{0.4cm}
-  \begin{alertblock}{Running thread for today}
-    We reuse the \emph{same} instruction from Week 5, \texttt{R1} $\gets$
-    \texttt{R2} + \texttt{R3} on the single-bus datapath, and build the actual
-    control unit that drives it --- so ``the hardware decides'' becomes gates and
-    equations, not hand-waving.
-  \end{alertblock}
+  \muted{\key{Running thread for today:} we reuse the \emph{same} instruction from
+  Week 5, \texttt{R1} $\gets$ \texttt{R2} + \texttt{R3} on the single-bus datapath,
+  and build the actual control unit that drives it --- so ``the hardware decides''
+  becomes gates and equations, not hand-waving.}
 \end{frame}
 
 \transitionslide{Today: what generates the control-step sequence, automatically?}
@@ -93,7 +90,7 @@
 
 \begin{frame}{A Question We Skipped}
   \begin{block}{Socratic question}
-    In Week 5's trace, $Y_{}$ loaded from the bus at $T_1$ and $Z$ loaded from the
+    In Week 5's trace, $Y$ loaded from the bus at $T_1$ and $Z$ loaded from the
     ALU at $T_2$ --- but never the other way around. \emph{Who decided that?} Not
     the ALU, not the bus, not the register file --- none of them ``know'' what
     step it is.
@@ -182,7 +179,8 @@
   Applied to Week 5's single-bus trace of \texttt{R1} $\gets$ \texttt{R2+R3}:
   \begin{itemize}
     \item $T_1$: $R2_{\text{out}}, Y_{\text{in}}$ \quad (R2 drives the bus, Y latches it)
-    \item $T_2$: $R3_{\text{out}}$, ALU $\gets$ add, $Z_{\text{in}}$ \quad (R3 drives the bus, ALU adds \texttt{[Y]}, Z latches the result)
+    \item $T_2$: $R3_{\text{out}}$, ALU $\gets$ add, $Z_{\text{in}}$ \quad
+      (R3 drives the bus, ALU adds \texttt{[Y]}, Z latches)
     \item $T_3$: $Z_{\text{out}}, R1_{\text{in}}$ \quad (Z drives the bus, R1 latches it)
   \end{itemize}
   These are exactly the control signals the control unit must assert --- we now
@@ -190,19 +188,26 @@
 \end{frame}
 
 \begin{frame}{Two Philosophies for Building a Control Unit}
-  \begin{itemize}
-    \item \key{Hardwired control} --- the mapping from (opcode, step) to control
-      signals is built directly out of logic gates. Fast, but the wiring is fixed
-      once built.
-    \item \key{Microprogrammed control} --- the control signals for each step are
-      stored as ``microinstructions'' in a small memory, and a microprogram
-      counter steps through them. Slower per step, but far easier to change.
-  \end{itemize}
-  \begin{alertblock}{This week vs. next week}
+  \begin{center}
+    \small
+    \begin{tabular}{@{}p{3.4cm}p{4.9cm}p{4.9cm}@{}}
+      \toprule
+      & \textbf{Hardwired control} & \textbf{Microprogrammed control} \\
+      \midrule
+      Where the \,(opcode, step) $\to$ signal map lives &
+      directly in logic gates &
+      stored as microinstructions in a small memory \\
+      Speed per control step & fastest (pure combinational) & slightly slower (a memory read) \\
+      Ease of change & rigid --- rewiring gates & easy --- write new rows \\
+      Typical use & RISC, speed-critical & complex ISAs, flexibility-critical \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \begin{exampleblock}{This week vs. next week}
     Today we build \textbf{hardwired} control --- the classical, gate-level
     approach. Week 7 rebuilds the \emph{same} control unit as
     \textbf{microprogrammed} control, and we compare them directly.
-  \end{alertblock}
+  \end{exampleblock}
 \end{frame}
 
 \transitionslide{Now: how is $T_1, T_2, \dots$ generated --- automatically?}
@@ -273,6 +278,9 @@
   \end{center}
   \footnotesize \cite{Mano1993_computer_system_architecture} --- cf.\ Fig.~5-6, p.137
   (the sequence-counter/timing-decoder portion of the control unit).
+  \muted{Shown here as the general ISA-sized counter (4 bits, up to 16 steps);
+  this course's worked trace only uses $T_1, T_2, T_3$, so its \texttt{SC} can
+  be sized down to 2 bits --- see ``The Two Threads Meet.''}
 \end{frame}
 
 \begin{frame}{How \texttt{SC} Advances}
@@ -342,6 +350,10 @@
     \item New notation: $D_i$ --- a one-hot \key{opcode decoder} output, where
       $D_{\text{ADD}} = 1$ exactly when the \texttt{IR} holds the \texttt{ADD}
       opcode (and every other $D_j = 0$).
+    \item New notation: the \key{$I$ flip-flop} --- captures \texttt{IR} bit 15,
+      which marks an \emph{indirect} addressing instruction (Week 5). When
+      $I = 1$, signals that resolve an address indirectly must behave
+      differently, so the control matrix receives $I$ as an extra input.
     \item Every control signal will turn out to depend on \emph{both} an opcode
       line ($D_i$) and a step line ($T_j$) --- never one alone.
   \end{itemize}
@@ -623,14 +635,20 @@
 \end{frame}
 
 \begin{frame}{The Two Threads Meet}
-  \begin{block}{Control-step count depends on the bus organization (Week 5)}
-    \begin{itemize}
-      \item Single-bus: 3 states ($T_1, T_2, T_3$) $\Rightarrow$ \texttt{SC} needs 2
-        bits, step decoder has 3 outputs, and \texttt{ADD}'s state table has 3 rows.
-      \item Three-bus: 1 state ($T_1$ only) $\Rightarrow$ \texttt{SC} barely needs
-        to exist, and \texttt{ADD}'s state table has 1 row.
-    \end{itemize}
-  \end{block}
+  \begin{center}
+    \small
+    \begin{tabular}{@{}p{3.4cm}p{4.6cm}p{4.6cm}@{}}
+      \toprule
+      & \textbf{Single bus} & \textbf{Three bus} \\
+      \midrule
+      Control steps for \texttt{R1} $\gets$ \texttt{R2+R3} & 3 ($T_1,T_2,T_3$) & 1 ($T_1$) \\
+      \texttt{SC} width & 2 bits for this trace (general: up to 4 bits / 16 steps, cf.\ the SC frame) & barely needed \\
+      Step-decoder outputs & 3 & 1 \\
+      State-table rows for \texttt{ADD} & 3 & 1 \\
+      Control-matrix cost & more AND/OR gates & fewer gates, more bus wiring \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
   \begin{itemize}
     \item Fewer control steps means a \emph{smaller} state table and fewer AND/OR
       gates in the control matrix --- the cost moves from control logic into bus

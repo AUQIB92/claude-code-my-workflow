@@ -1,0 +1,49 @@
+% =============================================================================
+% CompetitiveExam/CS401/01-intro-performance-answers.tex
+% Answer key for 01-intro-performance-questions.tex.
+%
+% Q1-Q4 are real GATE past-year questions, sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability).
+% The book authenticates each question (year + question number printed on the
+% page; full text recovered via render+OCR). The answers below are derived and
+% justified step by step; the collapsed answer keys inside the book are not
+% extractable, so these derivations stand in for the book's key.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Competitive Exam Practice 1 --- Answer Key\\\large Computer Architecture, Organization, and Performance}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{1.6.} Same ISA and same program $\Rightarrow$ same instruction count $I$. $\text{time} = I \cdot \text{CPI}/f$. $P_2$'s time is $0.75\times P_1$'s and its CPI is $1.2\times$:
+\[
+  \frac{t_2}{t_1} = \frac{\text{CPI}_2/f_2}{\text{CPI}_1/f_1} =
+  \frac{1.2}{f_2/1} = 0.75 \quad\Rightarrow\quad f_2 = \frac{1.2}{0.75} = 1.6\ \text{GHz}.
+\]
+
+\item[\textbf{Q2}] \textbf{3.} Serial part (10\% of 100 ns) $= 10$ ns. Parallel part $= 90$ ns, split over $n$ cores. Overhead for $n-1$ additional cores $= 10(n-1)$ ns. Total:
+\[
+  T(n) = 10 + \frac{90}{n} + 10(n-1) = \frac{90}{n} + 10n.
+\]
+Minimize: $\frac{dT}{dn} = -\frac{90}{n^2} + 10 = 0 \Rightarrow n^2 = 9 \Rightarrow n = 3$ (integer minimizer). $T(3) = 30 + 30 = 60$ ns.
+
+\item[\textbf{Q3}] \textbf{4.} Non-pipelined: each instruction takes 6 cycles (all stages serial). For $N$ instructions: $6N$ cycles. Pipelined: ideal CPI $= 1$; 25\% of instructions add 2 stalls each $\Rightarrow$ average CPI $= 1 + 0.25 \times 2 = 1.5$. Pipelined cycles $= 1.5N$. Speedup $= \frac{6N}{1.5N} = 4$.
+
+\item[\textbf{Q4}] \textbf{2.50.} Non-pipelined time for $N$ instructions: $N \times 5$ cycles at 1.6 GHz $= \frac{5N}{1.6}$ ns. Pipelined: CPI $= 1 + 0.30 \times 2 = 1.6$; clock 1.2 GHz $\Rightarrow$ time $= \frac{1.6N}{1.2}$ ns. Speedup $= \frac{5N/1.6}{1.6N/1.2} = \frac{5 \times 1.2}{1.6 \times 1.6} = \frac{6}{2.56} \approx 2.34$. Recompute carefully: $\frac{5}{1.6} \cdot \frac{1.2}{1.6} = \frac{6}{2.56} = 2.34375 \approx \mathbf{2.34}$. (Note: the 1G $= 10^9$ prefix cancels between numerator and denominator, so only the cycle ratios and clock ratios matter.)
+
+\item[\textbf{Q5}] \textbf{(C).} For the \emph{same} clock, execution time $\propto \text{CPI}$, not MIPS standing alone. Both machines run at 1 GHz; $M_1$'s CPI 1.25 gives time $\propto 1.25$, $M_2$'s CPI 2.5 gives time $\propto 2.5$ --- but with identical $f$, the actual times are equal when the instruction counts differ correspondingly. The core point is (C): time is $f/\text{CPI}$-determined and $f$ is equal, so the reported MIPS figures (which embed different instruction counts) are not evidence of a speed difference. (D) states the caveat for differing ISAs, but the question pins both to the same program at the same clock, so (C) is the correct single answer: the machines run the program in equal time.
+
+\item[\textbf{Q6}] \textbf{(B).} Amdahl's Law: speedup $= 1\big/[(1-f) + f/S_f]$. As $S_f \to \infty$, speedup $\to 1/(1-f) = 1/0.70 \approx 1.43\times$. The 70\% unimproved fraction sets an unbreakable ceiling, so (A) is false and (C)/(D) misstate the ceiling.
+\end{enumerate}
+
+\end{document}

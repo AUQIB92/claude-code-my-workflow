@@ -1,0 +1,209 @@
+% =============================================================================
+% InstructorHandouts/CS401/02-number-systems-arithmetic-instructor-handout.tex
+% Instructor Handout 2: Number Systems, Representation, and Arithmetic Hardware
+%
+% INSTRUCTOR-ONLY. Complete, self-contained teaching guide -- explanation,
+% embedded diagrams, presentation guidance, and delivery commentary are woven
+% together per topic (not split into separate documents/sections), so an
+% instructor can teach directly from this file with no slides or Notes open.
+% Explanations/diagrams/examples trace to Slides/CS401/02-number-systems-arithmetic.tex
+% and Notes/CS401/02-number-systems-arithmetic-notes.tex; "Teaching note"
+% asides are instructor judgment, visually distinguished but not a separate
+% section.
+%
+% Anchor readings: Hamacher, Computer Organization, Ch. 2 (chapter-level, not
+%   indexed); Mano, Computer System Architecture, Ch. 1 (chapter-level, not
+%   indexed); Patterson & Hennessy, Computer Organization and Design, ARM
+%   Edition, Sec. 3.2 (p.188), Sec. 3.3 (p.191), Sec. 3.4 (p.197) -- page-cited
+%   (PattersonHennessy2017 index built 2026-08-07).
+%
+% Compile with: cd InstructorHandouts/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 02-number-systems-arithmetic-instructor-handout.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{2.\arabic{section}}
+\renewcommand{\thefigure}{2.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\newenvironment{teachingaside}{\begin{quote}\small\color{primary-gold}\textbf{Teaching note:}\ }{\end{quote}}
+
+\title{Instructor Handout 2: Number Systems, Representation, and Arithmetic Hardware}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+{\centering\large\color{negative}\textbf{Instructor Copy --- Not for Student Distribution}\par}
+\vspace{0.5cm}
+
+\section{Before You Teach This Lecture}
+
+\begin{itemize}
+  \item \textbf{Patterson \& Hennessy, \textit{Computer Organization and Design}, ARM Edition} --- Sec.~3.2 ``Addition and Subtraction,'' p.188 (two's complement, overflow); Sec.~3.3 ``Multiplication,'' p.191; Sec.~3.4 ``Division,'' p.197. Page-cited --- index built 2026-08-07. Use Sec.~3.2 for the precise overflow condition and the ``$A-B = A + (-B)$'' free-subtraction point.
+  \item \textbf{Hamacher, \textit{Computer Organization}, Ch.~2} and \textbf{Mano, \textit{Computer System Architecture}, Ch.~1} --- \emph{not page-indexed}. Cite at chapter level for number representation and complement arithmetic.
+  \item \textbf{Do the thread arithmetic before class}: $+7 + (-3)$ in 8-bit two's complement ($0000\,0111 + 1111\,1101 = 1\,0000\,0100$, discard carry, result $0000\,0100 = +4$), then the same in 4-bit ($0111 + 1101 = 0100$, carry-out 1). Have both ready so the board numbers are right the first time.
+  \item \textbf{Plan the two's-complement range example}: 8-bit $-128$ to $+127$; the overflow cases $+100+50$ and $+127+1$ vs.\ the correct $-1+-1$.
+\end{itemize}
+
+\section{Number Systems}
+
+Open by asking how to write the decimal $13$ with only two symbols (or eight, or sixteen) --- the point being that each is the \emph{same} value in a different alphabet, and that hardware stores \emph{bits} while the base is just notation. Then give the positional definition.
+
+\begin{definitionbox}{Positional Number System}
+In base $r$, a number with digits $d_{n-1}\dots d_1 d_0$ has value $d_{n-1} r^{n-1} + \cdots + d_1 r^1 + d_0 r^0$, with the base written as a subscript.
+\end{definitionbox}
+
+Introduce the common bases (binary $r=2$, octal $r=8$, decimal $r=10$, hex $r=16$) and the two conversion facts that matter: repeated division converts decimal to any base, and hex/octal are just binary in \key{groups} (1 hex digit $= 4$ bits, 1 octal digit $= 3$ bits).
+
+\begin{example}[Decimal to binary, and back]
+$53_{10} = 110101_2$ by repeated division by 2 (remainders read bottom-up); check by expanding $32+16+4+1 = 53$. And $1101\,0101_2 = D5_{16}$ by grouping --- no arithmetic.
+\end{example}
+
+\textbf{How to present it:} do the repeated division on the board as a \emph{column of divisions} (dividend, quotient, remainder), not a jumble --- students need to see where ``bottom-up'' comes from. Then do the check expansion \emph{afterwards}, so the conversion is verified rather than asserted.
+
+\begin{teachingaside}
+The single most common student error here is reading the remainders \emph{top-down} instead of bottom-up. Make the mistake explicit: ``if I read these remainders top-down I get the reverse of the right answer --- why?'' Because the first division by 2 finds the \emph{least} significant bit.
+\end{teachingaside}
+
+Close the section with the bit-counting Socratic question: $n$ distinct values need $\lceil \log_2 n \rceil$ bits; $k$ bits give $0$ to $2^k-1$ unsigned. State the 8-bit/16-bit ceilings --- they are the setup for overflow later.
+
+\section{Signed Representation}
+
+Set up the problem: we have $n$ bits and must encode a sign. Present the three candidate schemes as a design discussion, not a list --- ask which one would make \emph{addition} easiest.
+
+\begin{definitionbox}{Two's Complement}
+$-x \equiv 2^n - x \pmod{2^n}$, equivalently ``flip all bits and add 1.'' Range $-2^{n-1} \le x \le 2^{n-1}-1$; sign bit = MSB; $x + (-x) = 0$ in the same width with the carry-out discarded.
+\end{definitionbox}
+
+\textbf{How to present it:} build two's complement from the requirement that $x + (-x)$ must be $0$ in $n$ bits. Write $0000\,0111$ ($+7$) on the board and ask: ``what bits must I add to this to get all zeros, with the carry-out thrown away?'' The class can derive ``flip everything and add 1'' as the answer --- which makes the definition feel discovered rather than imposed. (P\&H, Sec.~3.2, p.188; Hamacher Ch. 2) \cite{PattersonHennessy2017_computer_organization_design,Hamacher2002_computer_organization}
+
+\begin{teachingaside}
+Students memorize ``flip and add 1'' without understanding why the range is asymmetric ($-2^{n-1}$ to $2^{n-1}-1$) or why the MSB is the sign. Spend the time on $x + (-x) = 0$: it explains the rule, the range, and the ``discard the carry'' convention all at once.
+\end{teachingaside}
+
+\begin{example}[$+7$ and $-3$ in 8-bit two's complement]
+$+7 = 0000\,0111$; $-3$: flip $0000\,0011 \to 1111\,1100$, add 1 $\Rightarrow 1111\,1101$. Adding: $0000\,0111 + 1111\,1101 = 1\,0000\,0100$; discard the carry-out $\Rightarrow 0000\,0100 = +4$. The thread's first full example: negatives are ordinary bits, and addition needs no special subtraction hardware.
+\end{example}
+
+\textbf{A question worth asking live}: ``negate $1111\,1011$ ($-5$) and negate again --- what do you get, and what property does that show?'' ($+5$; two's complement is an involution, $-(-x) = x$.)
+
+\section{Overflow and Fixed-Point}
+
+Open with the definition and immediately hit the key subtlety: \key{overflow} $\neq$ carry-out. The thread's own example ($7+(-3)$) already produced a carry-out with a correct result, so the class has seen the counterexample.
+
+\begin{definitionbox}{Overflow}
+Occurs when the true result of an arithmetic operation cannot be represented in the format's range. For two's complement, overflow happens exactly when the two operands share a sign bit and the result's sign bit differs; carry-out alone is not the test.
+\end{definitionbox}
+
+\begin{example}[Overflow vs.\ carry in 8-bit two's complement]
+Range $-128$ to $+127$. $+100+50 = 1001\,0110$, which reads as $-106$ --- wrong sign, overflow. $+127+1 = 1000\,0000 = -128$ --- wrong sign, overflow. $-1+-1 = 1\,1111\,1110$; discard carry $\Rightarrow 1111\,1110 = -2$ --- correct. Carry-out is present in both the overflow \emph{and} the correct case, so it cannot be the test.
+\end{example}
+
+\begin{teachingaside}
+This is the lecture's hardest conceptual point, and it rewards a full example. The wrong-same-sign test is the version that survives: ``did adding two positives produce a negative, or two negatives a positive?'' Write the rule as a condition the class can apply mechanically, and test it on all three examples.
+\end{teachingaside}
+
+Then fixed point. The definition is short --- an agreed position for the binary point --- and the worked example makes it concrete: the \emph{same} integer ALU adds fixed-point values; only the interpretation changes.
+
+\begin{example}[A fixed-point addition]
+Add $3.5 + 0.75$ in Q8.8: $3.5 = 0000\,0011.1000\,0000$ and $0.75 = 0000\,0000.1100\,0000$. Adding bitwise gives $0000\,0100.0100\,0000 = 4.25$. The integer adder did all the work; the programmer just agreed where the point is.
+\end{example}
+
+Close with the Socratic question that motivates Week 3: $0.1$ is a \key{repeating} binary fraction, so fixed point truncates and accumulates error --- the limitation floating point manages (but does not eliminate).
+
+\section{Adder Hardware}
+
+Motivate with the full adder: the smallest circuit that adds a single bit with carry-in. Define the half and full adders, then the chain.
+
+\begin{definitionbox}{Half Adder and Full Adder}
+\[
+  \text{HA: } S = A \oplus B, \ C = A\cdot B; \qquad
+  \text{FA: } S = A \oplus B \oplus C_{in}, \ C_{out} = A\cdot B + C_{in}\cdot(A\oplus B).
+\]
+\end{definitionbox}
+
+Walk the full-adder truth table (Table~\ref{tab:fa}) once, pointing out the counting pattern --- sum is the parity of the inputs, carry is ``two or more 1s.''
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}ccc|cc@{}}
+\toprule
+$A$ & $B$ & $C_{in}$ & $S$ & $C_{out}$ \\
+\midrule
+0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 & 0 \\
+0 & 1 & 0 & 1 & 0 \\
+0 & 1 & 1 & 0 & 1 \\
+1 & 0 & 0 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1 \\
+1 & 1 & 0 & 0 & 1 \\
+1 & 1 & 1 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\caption{Full adder truth table.}
+\label{tab:fa}
+\end{table}
+
+Then the ripple-carry adder (Figure~\ref{fig:ripple}).
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.9, transform shape,
+      every node/.style={font=\small}]
+    \foreach \i in {0,1,2,3} {
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.4cm, minimum height=0.9cm, align=center]
+            (FA\i) at (2.6*\i, 0) {FA\i};
+      \node[font=\scriptsize] at (2.6*\i - 0.85, 0.35) {$A_\i$};
+      \node[font=\scriptsize] at (2.6*\i - 0.85, -0.35) {$B_\i$};
+      \draw[->, thick] (2.6*\i - 0.6, 0.35) -- (2.6*\i - 0.7, 0.35);
+      \draw[->, thick] (2.6*\i - 0.6, -0.35) -- (2.6*\i - 0.7, -0.35);
+      \node[font=\scriptsize] at (2.6*\i + 0.9, 0.6) {$S_\i$};
+      \draw[->, thick] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 1.1, 0.35);
+    }
+    \draw[->, thick] (0.7,-0.55) -- (0.7,-1.0) -- (2.1,-1.0) -- (2.1,-0.55);
+    \draw[->, thick] (3.3,-0.55) -- (3.3,-1.0) -- (4.7,-1.0) -- (4.7,-0.55);
+    \draw[->, thick] (5.9,-0.55) -- (5.9,-1.0) -- (7.3,-1.0) -- (7.3,-0.55);
+    \node[font=\scriptsize] at (0.0,-1.2) {$C_{in}=0$};
+    \node[font=\scriptsize] at (10.4,0.0) {$C_{out}$};
+    \draw[->, thick] (FA3.east |- 0,-0.45) -- (10.0,-0.45);
+    \node[font=\scriptsize, align=left] at (10.4,-0.8) {carry-out\\$\Rightarrow$ overflow\\\scriptsize (unsigned)};
+  \end{tikzpicture}
+  \caption{The ripple-carry adder: full adders chained by their carry signals.}
+  \label{fig:ripple}
+\end{figure}
+
+\textbf{How to present it:} draw FA0 with its $C_{in}=0$, then FA1, and \emph{ask the class} where FA1's carry-in comes from before drawing the connecting wire. The ``ripple'' naming then writes itself --- each carry propagates to the next stage.
+
+\begin{teachingaside}
+Students will ask why the carry has to ripple through all stages at all (delay). Answer briefly: it does, and that is exactly why carry-lookahead exists --- but lookahead is the competitive-exam question (Q6 in the practice set) and a Week 11+ refinement, not today's material. Note it and move on.
+\end{teachingaside}
+
+Close with the thread and the free-subtraction insight.
+
+\begin{example}[Adding $7 + (-3)$ in hardware]
+$+7 = 0111$, $-3 = 1101$ (4-bit). Ripple-carry with $C_{in}=0$: bit 0: $1+1=0$ c 1; bit 1: $1+0+1=0$ c 1; bit 2: $1+1+1=1$ c 1; bit 3: $0+1+1=0$ c 1. Result $0100 = +4$, carry-out 1 (discarded). One adder, same circuit, signed or unsigned --- interpretation is the programmer's choice.
+\end{example}
+
+\textbf{A question worth asking live}: ``to compute $A-B$ with only an adder, what one extra step do you need?'' ($A + (-B)$, i.e.\ a MUX choosing $B$ or $\bar B$ plus a forced carry-in of 1 --- subtraction is \key{free}, P\&H, Sec.~3.2, p.188) \cite{PattersonHennessy2017_computer_organization_design}.
+
+\section{Synthesis and Summary}
+
+Close the thread: $+7 + (-3)$ used every tool --- two's complement representation, addition without subtraction hardware, the ripple-carry adder, the discarded carry-out, and the sign check for overflow. The result $0100 = +4$ is the same number a human computes, but now it is the output of a specific circuit.
+
+Set up Week 3: fixed point handles fractions but with fixed range/precision; real numbers span $10^{-300}$ to $10^{300}$; Week 3 builds IEEE\,754 floating point --- sign, exponent, mantissa --- trading a little precision for a huge range.
+
+\textbf{Summary --- quick reference:} \emph{Number systems:} value $= \sum d_i r^i$; convert by repeated division; hex/octal group bits. \emph{Two's complement:} $-2^{n-1} \le x \le 2^{n-1}-1$; negate by flip + 1; addition needs no special subtraction hardware. \emph{Overflow:} carry-out $\neq$ overflow; wrong result sign is the test. \emph{Fixed point:} an agreed binary point; simple but limited range and precision. \emph{Adder:} HA/FA equations; ripple-carry chain; $A-B = A+(-B)$.
+
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+
+\end{document}

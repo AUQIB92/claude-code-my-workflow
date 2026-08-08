@@ -10,24 +10,27 @@
 \renewcommand{\thesection}{6.\arabic{section}}
 
 \title{Competitive Exam Practice 6 --- Answer Key\\\large Hardwired Control Unit Design}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{enumerate}
-\item[\textbf{Q1}] \textbf{(C).} Every hardwired control signal is a Boolean function of an opcode line $D_i$ \emph{and} a step line $T_j$ together --- neither alone identifies both ``which instruction'' and ``which step.''
+\item[\textbf{Q1}] \textbf{(B).} Microprogrammed control stores control information in a control memory, so adding a new instruction means adding new microinstructions --- a software-like change, hence ``facilitates easy implementation of new instructions.'' It is \emph{slower} per step than hardwired (a memory read per microinstruction), so (A) is false; (C) and (D) are not the distinguishing properties.
 
-\item[\textbf{Q2}] \textbf{5.} $\lceil \log_2 25 \rceil = 5$ (4 bits address only 16 codes, insufficient for 25; 5 bits address 32).
+\item[\textbf{Q2}] \textbf{(C).} Every hardwired control signal is a Boolean function of an opcode line $D_i$ \emph{and} a step line $T_j$ together --- neither alone identifies both ``which instruction'' and ``which step.''
 
-\item[\textbf{Q3}] \textbf{(C).} \texttt{SC} counts through control-step numbers and the step decoder expands the count into one-hot $T_i$ lines, exactly as a modulo-$n$ counter plus decoder would.
+\item[\textbf{Q3}] \textbf{5.} $\lceil \log_2 25 \rceil = 5$ (4 bits address only 16 codes, insufficient for 25; 5 bits address 32).
 
-\item[\textbf{Q4}] \textbf{64.} $2^6 = 64$.
+\item[\textbf{Q4}] \textbf{(C).} \texttt{SC} counts through control-step numbers and the step decoder expands the count into one-hot $T_i$ lines, exactly as a modulo-$n$ counter plus decoder would.
 
-\item[\textbf{Q5}] \textbf{(C).} Hardwired control is \emph{faster} per step than microprogrammed control (pure combinational logic, no memory read) --- this is an \emph{advantage} of hardwired control, not a disadvantage, making it the correct choice for "NOT a disadvantage."
+\item[\textbf{Q5}] \textbf{64.} $2^6 = 64$.
 
-\item[\textbf{Q6}] \textbf{(B).} The OR-of-products pattern exists precisely because a control signal can be needed by more than one instruction at the same step number; each instruction that needs it contributes its own $(D_i \cdot T_j)$ term to the same shared equation.
+\item[\textbf{Q6}] \textbf{(C).} Hardwired control is \emph{faster} per step than microprogrammed control (pure combinational logic, no memory read) --- this is an \emph{advantage} of hardwired control, not a disadvantage, making it the correct choice for "NOT a disadvantage."
+
+\item[\textbf{Q7}] \textbf{(B).} The OR-of-products pattern exists precisely because a control signal can be needed by more than one instruction at the same step number; each instruction that needs it contributes its own $(D_i \cdot T_j)$ term to the same shared equation.
 \end{enumerate}
 
 \end{document}

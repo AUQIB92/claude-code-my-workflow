@@ -1,0 +1,70 @@
+% =============================================================================
+% CompetitiveExam/CS401/04-registers-instructions-answers.tex
+% Answer key for 04-registers-instructions-questions.tex.
+%
+% Q1-Q7 are real GATE past-year questions, sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability).
+% The book authenticates each question (year + question number printed on the
+% page; full text recovered via render+OCR). The answers below are derived and
+% justified step by step. Each derivation is self-contained so the answers can
+% be independently re-checked; the collapsed answer keys inside the book are
+% not extractable, so these justifications stand in for the book's key.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Competitive Exam Practice 4 --- Answer Key\\\large Registers, Instructions, and the Instruction Cycle}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{256.} Expanding-opcode decomposition:
+\begin{itemize}
+  \item \textbf{Two-address:} opcode occupies $11 - 4 - 4 = 3$ bits $\Rightarrow 2^3 = 8$ codes; 5 used, leaving 3.
+  \item \textbf{One-address:} each of the 3 free two-address prefixes extends into the former second-address field: $3 \times 2^4 = 48$ codes; 32 used, leaving $48 - 32 = 16$.
+  \item \textbf{Zero-address:} each of the 16 free one-address prefixes extends into the last 4-bit field: $16 \times 2^4 = 256$ codes.
+\end{itemize}
+
+\item[\textbf{Q2}] \textbf{16383.} $32$-bit word $=$ opcode $+$ two register fields $+$ immediate. Each register needs $\lceil\log_2 64\rceil = 6$ bits, so the two fields cost 12 bits. The opcode needs $\lceil\log_2 45\rceil = 6$ bits (6 bits encode 64 $\geq$ 45; 5 bits encode only 32). Remaining immediate width: $32 - 6 - 12 = 14$ bits. Largest unsigned $= 2^{14} - 1 = 16383$.
+
+\item[\textbf{Q3}] \textbf{32.} $32$-bit word $=$ opcode $+$ mode $+$ two register fields $+$ scalar. Addressing-mode field: $\lceil\log_2 8\rceil = 3$ bits. Each register: $\lceil\log_2 16\rceil = 4$ bits, so two fields cost 8 bits. Scalar field: 16 bits. Opcode width $= 32 - 3 - 8 - 16 = 5$ bits, giving $2^5 = 32$ unique opcodes per addressing mode.
+
+\item[\textbf{Q4}] \textbf{(B) 3.} On a single-bus data path the execution of \texttt{add R0, R1} needs one value on the bus at a time:
+\begin{enumerate}
+  \item Drive \texttt{[R1]} onto the bus into one ALU input.
+  \item Drive \texttt{[R0]} onto the bus into the other ALU input.
+  \item ALU computes $R0 \gets R0 + R1$; result written back to \texttt{R0}.
+\end{enumerate}
+No memory access is involved (both operands are in registers), so the two-cycle memory-read timing does not affect this instruction --- the minimum is 3 clock cycles.
+
+\item[\textbf{Q5}] \textbf{(C) 4.} \texttt{call Rn, sub} is a two-word instruction, so its execution must fetch the second word and then transfer:
+\begin{enumerate}
+  \item \texttt{MAR} $\gets$ \texttt{[PC]} --- load the address of the second word (memory read cycle 1).
+  \item \texttt{MDR} $\gets$ \emph{memory data} --- fetch the second word (memory read cycle 2).
+  \item $Rn \gets PC + 1$ --- ALU computes the return address (saved during fetch of the first word, so \texttt{PC} now points at the second word).
+  \item $PC \gets \texttt{[MDR]}$ --- jump target loaded into the PC.
+\end{enumerate}
+Total: 4 clock cycles.
+
+\item[\textbf{Q6}] \textbf{3.} The XOR-swap uses the identity $x \oplus y$ three times:
+\begin{itemize}
+  \item $XOR\ R_1, R_2$ \quad ($R_1 \gets R_1 \oplus R_2$)
+  \item $XOR\ R_2, R_1$ \quad ($R_2 \gets (R_1 \oplus R_2) \oplus R_2 = R_1$)
+  \item $XOR\ R_1, R_2$ \quad ($R_1 \gets (R_1 \oplus R_2) \oplus R_1 = R_2$)
+\end{itemize}
+After three XORs the contents are exchanged. No extra register or temporary storage is needed, so 3 is minimal.
+
+\item[\textbf{Q7}] \textbf{-8.} The branch is at instruction $i{+}3$; the offset is relative to the \emph{next} instruction, i.e.\ $i{+}4$. The target is $i{+}2$, which is $2$ instructions before the reference point, i.e.\ $-2$ instructions $\times$ 4 bytes per instruction $= -8$ bytes.
+
+\item[\textbf{Q8}] \textbf{(A).} PUSH decrements first so the operand is stored at the \emph{new} (lower) top: $SP \gets [SP]-1$ (stack grows downward toward lower addresses), then $M[SP] \gets$ operand. Writing the operand first would overwrite the current top before \texttt{SP} moves, and (C)/(D) use $+1$, which would grow the stack upward.
+\end{enumerate}
+
+\end{document}

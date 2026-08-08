@@ -1,0 +1,72 @@
+% =============================================================================
+% CompetitiveExam/CS401/02-number-systems-arithmetic-questions.tex
+% Competitive Exam Practice 2 — GATE (Computer Science) Pattern
+% Number Systems, Representation, and Arithmetic Hardware
+%
+% Student-facing — NO answers. Answer key: 02-number-systems-arithmetic-answers.tex.
+% Provenance (availability-first, Tier 1 = local PYQ book): all questions are
+% real GATE past-year questions sourced from the local GATEOverflow Volume 3
+% PYQ book (CompetitiveExam/Books/index.md), question headings + full text
+% recovered via the render+OCR sub-pipeline. The book authenticates each
+% question; answers are derived/justified in the answers file.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 02-number-systems-arithmetic-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{2.\arabic{section}}
+
+\title{Competitive Exam Practice 2: Number Systems, Representation, and Arithmetic Hardware\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2000 Q1.6, verified --- GATEOverflow V3 p.351]} \textbf{[MCQ, 1 mark]} The number $43$ in 2's complement representation is:
+\begin{enumerate}
+  \item[(A)] $01010101$
+  \item[(B)] $11010101$
+  \item[(C)] $00101011$
+  \item[(D)] $10101011$
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CS 1994 Q2.7, verified --- GATEOverflow V3 p.349]} \textbf{[NAT, 1 mark]} Consider $n$-bit (including the sign bit) 2's complement representation of integer numbers. The range of integer values $N$ that can be represented is $-$ \rule{1.5cm}{0.4pt} $\le N \le$ \rule{1.5cm}{0.4pt} (write in terms of $n$).
+
+\item[\textbf{Q3}] \textit{[GATE CS 1997 Q5.4, verified --- GATEOverflow V3 p.350]} \textbf{[MCQ, 1 mark]} Given $\sqrt{(224)_r} = (13)_r$, the value of the radix $r$ is:
+\begin{enumerate}
+  \item[(A)] 10
+  \item[(B)] 8
+  \item[(C)] 5
+  \item[(D)] 6
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CS 1999 Q2.16, verified --- GATEOverflow V3 p.288]} \textbf{[NAT, 1 mark]} The number of full adders and half adders required to add two 16-bit numbers in a ripple-carry adder is \rule{1.5cm}{0.4pt} full adders and \rule{1.5cm}{0.4pt} half adder(s).
+
+\item[\textbf{Q5}] \textit{[GATE CS 2001 Q2.10, verified --- GATEOverflow V3 p.351]} \textbf{[MCQ, 1 mark]} The 2's complement representation of $(-539)_{10}$ in hexadecimal is:
+\begin{enumerate}
+  \item[(A)] ABE
+  \item[(B)] DBC
+  \item[(C)] DE5
+  \item[(D)] 9E7
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[GATE CS 2004 Q62, verified --- GATEOverflow V3 p.289]} \textbf{[MCQ, 2 marks]} A 4-bit carry-lookahead adder, which adds two 4-bit numbers, is designed using AND, OR, NOT, NAND, NOR gates only. Assuming all inputs are available in both complemented and uncomplemented forms and the delay of each gate is one time unit, the overall propagation delay of the adder is (assume the carry network is implemented using two-level AND--OR logic):
+\begin{enumerate}
+  \item[(A)] 4 time units
+  \item[(B)] 6 time units
+  \item[(C)] 10 time units
+  \item[(D)] 12 time units
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

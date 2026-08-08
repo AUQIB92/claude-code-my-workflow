@@ -89,6 +89,10 @@ master_supporting_docs/**/supporting_books/**/*.pdf
 master_supporting_docs/**/supporting_books/**/*_fulltext.txt
 master_supporting_docs/**/supporting_books/**/extracted/
 
+# MSYS crash dumps (Windows) — never commit
+**/bash.exe.stackdump
+bash.exe.stackdump
+
 # Output artifacts — uncomment lines below based on your preference
 # *.rds
 # output/**/*.rds

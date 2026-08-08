@@ -49,7 +49,8 @@
 }{\par\vspace{0.3em}}
 
 \title{Addressing Modes, CPU Organization, and Bus Structures\\\large Lecture Notes --- Week 5}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
@@ -92,7 +93,7 @@ These are the same idea as direct and indirect addressing, but with the pointer'
 
 \subsection{Displacement Addressing --- How Arrays Actually Work}
 
-The displacement family (relative, based, indexed addressing) computes $\text{EA} = [\text{register}] + \text{displacement}$. This is precisely how array indexing is compiled: a base register $R_{\text{base}}$ holds the address of $A[0]$, an index register $R_{\text{index}}$ holds the loop variable $i$, and dedicated adder hardware computes $\text{EA} = [R_{\text{base}}] + [R_{\text{index}}] = \&A[i]$ every time the instruction executes. Because $\text{EA}$ is recomputed from a register on every execution, the very same instruction correctly accesses a different array element on every loop iteration --- which is exactly why direct addressing cannot serve this role: its address field is fixed once, at compile time, while $A[i]$'s address changes every iteration. Displacement addressing is the hardware primitive underneath every array access and struct-field access in every high-level language.
+The displacement family (relative, based, indexed addressing) computes the effective address as $\text{EA} = [\text{register}] + \text{displacement}$. This is precisely how array indexing is compiled: a base register $R_{\text{base}}$ holds the address of $A[0]$, an index register $R_{\text{index}}$ holds the loop variable $i$, and dedicated adder hardware computes $\text{EA} = \&A[i]$ every time the instruction executes --- i.e.\ $\text{EA} = [R_{\text{base}}] + [R_{\text{index}}]$. Because $\text{EA}$ is recomputed from a register on every execution, the very same instruction correctly accesses a different array element on every loop iteration --- which is exactly why direct addressing cannot serve this role: its address field is fixed once, at compile time, while $A[i]$'s address changes every iteration. Displacement addressing is the hardware primitive underneath every array access and struct-field access in every high-level language.
 
 \subsection{Autoincrement / Autodecrement Addressing}
 

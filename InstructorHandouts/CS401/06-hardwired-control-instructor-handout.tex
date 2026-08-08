@@ -2,12 +2,17 @@
 % InstructorHandouts/CS401/06-hardwired-control-instructor-handout.tex
 % Instructor Handout 6: Hardwired Control Unit Design
 %
-% INSTRUCTOR-ONLY. See 05-addressing-cpu-bus-instructor-handout.tex for the
-% grounding-discipline note (worked examples/reading list are fact-checked
-% like Notes; Teaching Notes are labeled instructor judgment).
+% INSTRUCTOR-ONLY. Complete, self-contained teaching guide -- explanation,
+% embedded diagrams, presentation guidance, and delivery commentary are woven
+% together per topic (not split into separate documents/sections), so an
+% instructor can teach directly from this file with no slides or Notes open.
+% Explanations/diagrams/examples trace to Slides/CS401/06-hardwired-control.tex
+% and Notes/CS401/06-hardwired-control-notes.tex; "Teaching note" asides are
+% instructor judgment, visually distinguished but not a separate section.
 %
 % Compile with: cd InstructorHandouts/CS401 &&
 %   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 06-hardwired-control-instructor-handout.tex
+%   (Windows/MiKTeX: use ; not : as the separator)
 % =============================================================================
 
 \documentclass[11pt]{article}
@@ -15,9 +20,16 @@
 \input{../../Preambles/header}
 \coursecode{CS401}
 \renewcommand{\thesection}{6.\arabic{section}}
+\renewcommand{\thefigure}{6.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\newenvironment{teachingaside}{\begin{quote}\small\color{primary-gold}\textbf{Teaching note:}\ }{\end{quote}}
 
 \title{Instructor Handout 6: Hardwired Control Unit Design}
-\author{PCC CS-401: Computer Organization and Architecture}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
 \date{\today}
 
 \begin{document}
@@ -28,61 +40,278 @@
 \section{Before You Teach This Lecture}
 
 \begin{itemize}
-  \item \textbf{Mano, \textit{Computer System Architecture}, 3rd ed., Sec.~5-4 ``Timing and Control,'' p.~135, with Fig.~5-6 on p.~137 and Fig.~5-7 on p.~138} (indexed, page-cited). Fig.~5-7 is a literal clock/timing \emph{waveform} diagram (not a block diagram) --- the lecture's slides describe SC's timing in prose only, so if you want to sketch actual clock pulses and $T_i$ waveforms on the board, this figure is worth having open.
-  \item \textbf{Mano, Sec.~5-9 ``Design of Basic Computer,'' pp.~157--164 (control logic gates, control of registers/common bus), and Sec.~5-10, pp.~164--167 (accumulator control logic)} (indexed). Figures 5-16/5-17/5-18 in this range are the book's own real gate-level realizations (control gates for \texttt{AR}, \texttt{IEN}, and bus selection) --- a third worked AND-OR example beyond \texttt{ADD}/\texttt{SUB}'s $Z_{\text{in}}$, if a student wants to see the pattern applied to a register-control signal instead of a data-path signal.
-  \item \textbf{Hamacher, Ch.~7} --- \emph{not yet page-indexed} for this course. Chapter-level citation only.
-  \item \textbf{Reminder:} this lecture's anchor reading was corrected this term from a prior mis-citation of Mano Ch.~7 (Microprogrammed Control, actually next week's topic) to Mano Ch.~5. If any of your own older notes/slides for this course still say ``Mano Ch.~7'' for hardwired control, they are citing the wrong chapter --- see the Mano1993 textbook index's correction record, at \url{master_supporting_docs/CS401/supporting_books/Mano1993/index.md}, for the full history.
+  \item \textbf{Mano, \textit{Computer System Architecture}, 3rd ed., Sec.~5-4 ``Timing and Control,'' Sec.~5-9 ``Control of Registers and Common Bus,'' Sec.~5-10 ``Control of the Common Bus and Memory,'' pp.~135--167} (indexed, page-cited; corrected 2026-08-06 from an earlier draft's mis-attribution to Ch.~7, which is actually Week 7's microprogrammed-control material). Read Fig.~5-6, p.137 once before class --- the two-decoder-plus-control-matrix block diagram below is styled directly on it, and knowing where the book's own labels sit will make it easier to field a "why does the book draw it differently" question.
+  \item \textbf{Hamacher, \textit{Computer Organization}, Ch.~7} --- \emph{not yet page-indexed}. Cite at chapter level with students; it's the source for the control-unit input/output contract used below.
+  \item \textbf{Reread Week 5's single-bus trace} (\texttt{R1} $\gets$ \texttt{R2+R3}, $T_1,T_2,T_3$ via \texttt{Y}/\texttt{Z}) before this lecture --- this entire lecture is that trace's missing piece, made mechanical, and the opening minutes lean on students remembering it cold.
 \end{itemize}
 
-\section{Extra Worked Examples}
+\section{Control Unit Functions}
 
-\subsection{Three Instructions Sharing a Signal}
+Open by returning to the exact three-line trace from last week and asking the class directly: \texttt{Y} loaded from the bus at $T_1$ and \texttt{Z} loaded from the ALU at $T_2$ --- never the other way round. Who decided that ordering? Not the ALU (it only computes what it's told), not the bus (it only carries what's driven onto it), not the register file (it only loads/drives when signaled). Every one of those components is \emph{passive}. Something else has to watch the instruction and the clock and tell every other component what to do, every cycle.
 
-The student Notes derive $Z_{\text{in}}$ for two instructions (\texttt{ADD}, \texttt{SUB}). Extend to three: suppose \texttt{AND} also uses \texttt{Z} at its own $T_2$.
-\[
-Z_{\text{in}} = (D_{\text{ADD}} \cdot T_2) + (D_{\text{SUB}} \cdot T_2) + (D_{\text{AND}} \cdot T_2) = T_2 \cdot (D_{\text{ADD}} + D_{\text{SUB}} + D_{\text{AND}}).
-\]
-\textbf{Instructor note:} worth showing that the AND-OR gate realization simply grows by one more AND gate feeding the same OR gate --- the OR gate itself does not need to change shape, only gain an input, which is a good moment to point at real hardware's fixed-fan-in OR gates as a practical limit on how many instructions can cheaply share one signal.
+\begin{definitionbox}{Control Unit}
+The control unit is the hardware that, every clock cycle, examines the current instruction and the current control step, and asserts the \textup{\textbf{control signals}} that make every other component (registers, ALU, memory, buses) do the right thing for that instruction at that step.
+\end{definitionbox}
 
-\subsection{A One-Step Instruction}
+Be precise about the boundary: the control unit does not compute results (the ALU's job) and does not store data (registers'/memory's job) --- it only decides \emph{when} and \emph{which} component acts.
 
-Not every instruction needs three steps. Consider \texttt{MOV R1, R2} (register-to-register copy, no ALU operation):
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-blue, fill=light-bg, rounded corners, thick,
+          minimum width=3.0cm, minimum height=3.6cm, align=center]
+          (CU) at (5.0,0) {\textbf{Control}\\\textbf{Unit}};
+    \node[draw=neutral, fill=white, rounded corners, text width=2.6cm,
+          minimum height=0.7cm, align=center] (in1) at (0,1.5) {IR (opcode)};
+    \node[draw=neutral, fill=white, rounded corners, text width=2.6cm,
+          minimum height=0.7cm, align=center] (in2) at (0,0.5) {Flags (Z,N,C,V)};
+    \node[draw=neutral, fill=white, rounded corners, text width=2.6cm,
+          minimum height=0.7cm, align=center] (in3) at (0,-0.5) {Current step $T_i$};
+    \node[draw=neutral, fill=white, rounded corners, text width=2.6cm,
+          minimum height=0.7cm, align=center] (in4) at (0,-1.5) {Clock / reset};
+    \draw[->, thick] (in1.east) -- (CU.west |- 0,1.5);
+    \draw[->, thick] (in2.east) -- (CU.west |- 0,0.5);
+    \draw[->, thick] (in3.east) -- (CU.west |- 0,-0.5);
+    \draw[->, thick] (in4.east) -- (CU.west |- 0,-1.5);
+    \node[draw=positive, fill=light-bg, rounded corners, text width=3.4cm,
+          minimum height=0.7cm, align=center] (out1) at (10.8,1.5) {Register gating ($X_{\text{in}}/X_{\text{out}}$)};
+    \node[draw=positive, fill=light-bg, rounded corners, text width=3.4cm,
+          minimum height=0.7cm, align=center] (out2) at (10.8,0.5) {ALU select};
+    \node[draw=positive, fill=light-bg, rounded corners, text width=3.4cm,
+          minimum height=0.7cm, align=center] (out3) at (10.8,-0.5) {Memory Read/Write};
+    \node[draw=positive, fill=light-bg, rounded corners, text width=3.4cm,
+          minimum height=0.7cm, align=center] (out4) at (10.8,-1.5) {Next-step signal};
+    \draw[->, thick] (CU.east |- 0,1.5) -- (out1.west);
+    \draw[->, thick] (CU.east |- 0,0.5) -- (out2.west);
+    \draw[->, thick] (CU.east |- 0,-0.5) -- (out3.west);
+    \draw[->, thick] (CU.east |- 0,-1.5) -- (out4.west);
+  \end{tikzpicture}
+  \caption{The control unit as a black box: inputs (left) row-aligned with the outputs (right) they most directly drive --- cf.\ Hamacher, Ch.~7.}
+  \label{fig:cu-io}
+\end{figure}
+
+\textbf{How to present it:} draw the central box and label it first, empty. Add the four input boxes one at a time on the left, asking after each "what would the control unit need to know this for?" before revealing the matching output on the right at the \emph{same height} --- the row-alignment is the whole point of the figure, so build it row-by-row, not column-by-column.
+
+\begin{teachingaside}
+Students often think the control unit "computes" something. Head this off directly: it routes decisions, it does not do arithmetic. A quick contrast question works well here --- "if the control unit breaks, does the ALU stop being able to add?" (No — it just never gets told to.)
+\end{teachingaside}
+
+Introduce the $X_{\text{in}}$/$X_{\text{out}}$ notation next, applied immediately to last week's trace: at $T_1$, $R2_{\text{out}}$ and $Y_{\text{in}}$ fire together; at $T_2$, $R3_{\text{out}}$ fires, ALU is set to add, and $Z_{\text{in}}$ fires; at $T_3$, $Z_{\text{out}}$ and $R1_{\text{in}}$ fire together. State plainly: these three lines are exactly what the rest of the lecture builds hardware to generate automatically.
+
+Then contrast the two design philosophies in one breath, before diving into either: hardwired control wires the (opcode, step) $\to$ signal mapping directly into gates (fast, fixed once built); microprogrammed control stores it in memory and steps through it (slower per step, easy to change). This lecture builds hardwired in full; Week 7 rebuilds the identical control unit as microprogrammed, for direct comparison.
+
+\section{The Sequence Counter and Timing Generation}
+
+Pose the gap explicitly: last week, $T_1, T_2, T_3$ were written \emph{by hand}, on paper. Nothing in the hardware yet decides "it is now $T_2$." What physical component would track that?
+
+\begin{definitionbox}{Sequence Counter (\texttt{SC})}
+A small counter register holding the number of the current control step. A \textup{\textbf{step decoder}} converts \texttt{SC}'s binary value into one-hot signals $T_1, T_2, T_3, \dots$, so exactly one $T_i$ line is active per cycle.
+\end{definitionbox}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=1.30, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=2.0cm, minimum height=1.0cm, align=center] (SC) at (0,0) {SC \\ \scriptsize (4-bit counter)};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.4cm, minimum height=1.6cm, align=center] (DEC) at (3.6,0) {$4{\times}16$\\decoder};
+    \draw[->, thick] (SC.east) -- (DEC.west);
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.2cm, minimum height=0.7cm, align=center] (T1) at (7.2,1.0) {$T_1$};
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.2cm, minimum height=0.7cm, align=center] (T2) at (7.2,0) {$T_2$};
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.2cm, minimum height=0.7cm, align=center] (T3) at (7.2,-1.0) {$T_3$};
+    \draw[->, thick] (DEC.east) -- (5.4,1.0) -- (T1.west);
+    \draw[->, thick] (DEC.east) -- (5.4,0) -- (T2.west);
+    \draw[->, thick] (DEC.east) -- (5.4,-1.0) -- (T3.west);
+    \node[font=\scriptsize] at (7.2,-1.75) {$\cdots\,T_{16}$};
+  \end{tikzpicture}
+  \caption{The sequence counter feeding a step decoder --- cf.\ Mano, Fig.~5-6, p.137. This course numbers steps from $T_1$; Mano's own text numbers from $T_0$.}
+  \label{fig:sc}
+\end{figure}
+
+\textbf{How to present it:} draw \texttt{SC} alone first and ask "if this just counts $0,1,2,3,\dots$ in binary, how does that become a single active $T_2$ wire?" \emph{before} drawing the decoder --- most classes will guess "some kind of decoder" unprompted, which makes the reveal land as confirmation rather than new information. Draw the decoder next, then the $T_1$/$T_2$/$T_3$ output lines one at a time, tracing which decoder output line corresponds to which \texttt{SC} value.
+
+\begin{teachingaside}
+Flag the $T_0$-vs-$T_1$ indexing mismatch with Mano explicitly and early --- if a student opens the book and sees $T_0$ where the board says $T_1$, that is not an error, it's a course convention choice (this course numbers from 1). Naming the discrepancy once, out loud, prevents three separate confused questions later.
+\end{teachingaside}
+
+Explain \texttt{SC}'s advance rule: by default $SC \gets [SC]+1$ every clock pulse; at the instruction's \emph{last} step, the control unit asserts $SC_{\text{clear}}$, resetting $SC \gets 0$. Ask the class live, before answering: "what would happen if we forgot to wire up $SC_{\text{clear}}$?" Let a few guesses land, then confirm: \texttt{SC} would keep counting $T_4, T_5, \dots$ forever, the decoder would produce one-hot lines for steps no instruction defines any signals for, the datapath would simply idle, and the CPU would freeze after the very first instruction.
+
+\begin{example}[Worked Trace Revisited: Where \texttt{SC} Points]
+$T_1$: $SC=0$, $Y \gets [R2]$. $T_2$: $SC=1$, $Z \gets [Y]+[R3]$. $T_3$: $SC=2$, $R1 \gets [Z]$, then $SC_{\text{clear}}=1$ fires, resetting $SC \gets 0$.
+\end{example}
+
+\begin{example}[A Second Instance: A 5-Step Instruction]
+Suppose a hypothetical \texttt{LOAD} instruction needs 5 steps (memory access is slower than a register-only ALU op). $SC$ counts $0,1,2,3,4$ across $T_1$--$T_5$, and $SC_{\text{clear}}$ fires at $T_5$, not $T_3$ --- worth stating explicitly that $SC_{\text{clear}}$'s firing point is instruction-specific, decided by each instruction's own state table (Section~\ref{sec:equations}), not fixed hardware.
+\end{example}
+
+\section{Opcode Decoding and the Control Matrix}
+
+\texttt{SC} answers \emph{when}. It says nothing about \emph{which} instruction is running --- $Y_{\text{in}}$ should fire at $T_1$ for \texttt{ADD}, but a \texttt{LOAD} needs something else entirely at its own $T_1$. Introduce $D_i$: a one-hot opcode-decoder output, $D_{\text{ADD}}=1$ exactly when \texttt{IR} holds the \texttt{ADD} opcode. State the key structural fact plainly, as a claim the rest of the lecture will prove: every control signal depends on \emph{both} an opcode line and a step line together, never either alone.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.90, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.6cm, minimum height=0.8cm, align=center] (IR) at (0,1.8) {IR};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.2cm, minimum height=1.0cm, align=center] (ODEC) at (3.2,1.8) {$3{\times}8$\\decoder};
+    \draw[->, thick] (IR.east) -- (ODEC.west);
+    \node[font=\scriptsize] at (6.0,2.3) {$D_0, \dots, D_7$};
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.6cm, minimum height=0.7cm, align=center] (IFF) at (0,0) {$I$};
+    \draw[->, thick] (IR.south) -- node[midway, right, font=\scriptsize] {bit 15} (IFF.north);
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.6cm, minimum height=0.8cm, align=center] (SC) at (0,-1.8) {SC};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.2cm, minimum height=1.0cm, align=center] (SDEC) at (3.2,-1.8) {$4{\times}16$\\decoder};
+    \draw[->, thick] (SC.east) -- (SDEC.west);
+    \node[font=\scriptsize] at (6.0,-2.3) {$T_1, \dots, T_{16}$};
+    \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+          minimum width=2.2cm, minimum height=3.8cm, align=center]
+          (MAT) at (9.6,0) {\textbf{Control}\\\textbf{matrix}};
+    \draw[->, thick] (ODEC.east) -- (8.0,1.8) |- (MAT.west |- 0,0.9);
+    \draw[->, thick] (IFF.east) -- (MAT.west |- 0,0);
+    \draw[->, thick] (SDEC.east) -- (8.0,-1.8) |- (MAT.west |- 0,-0.9);
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.8cm, minimum height=0.7cm, align=center] (OUT1) at (13.0,0.9) {$Y_{\text{in}}$, $Z_{\text{in}}$, \dots};
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.8cm, minimum height=0.7cm, align=center] (OUT2) at (13.0,-0.9) {$SC_{\text{clear}}$};
+    \draw[->, thick] (MAT.east |- 0,0.9) -- (OUT1.west);
+    \draw[->, thick] (MAT.east |- 0,-0.9) -- (OUT2.west);
+  \end{tikzpicture}
+  \caption{Two decoders feeding the control matrix --- cf.\ Mano, Fig.~5-6, p.137. \texttt{IR} bits 0--11 also feed the control logic gates directly.}
+  \label{fig:matrix}
+\end{figure}
+
+\textbf{How to present it:} build the two decoder chains independently and in parallel columns --- \texttt{IR} $\to$ $3{\times}8$ decoder on top, \texttt{SC} $\to$ $4{\times}16$ decoder on bottom --- before drawing the control matrix box at all. Only once both output bundles ($D_i$'s and $T_j$'s) are on the board do you draw the matrix and route both bundles into it, plus the $I$ flip-flop fed from \texttt{IR} bit 15. This ordering matches how the two chains are conceptually independent until they converge.
+
+\begin{teachingaside}
+The most common error here is students treating the opcode decoder and step decoder as one combined circuit rather than two entirely separate decode operations that happen to feed the same downstream box. Ask directly: "does the step decoder need to know the opcode to produce $T_2$?" (No.) That question, asked before revealing the matrix, tends to fix the misconception before it forms.
+\end{teachingaside}
+
+\section{Deriving the Control Equations}
+\label{sec:equations}
+
+This is the section where the lecture stops gesturing at "the control unit decides" and produces actual logic gates. Introduce the state table as the bridge.
+
+\begin{definitionbox}{State Table}
+Lists, for each control step, which control signals are active. A signal is asserted only when \emph{both} the relevant opcode line $D_i=1$ \emph{and} the listed step $T_j=1$ hold simultaneously.
+\end{definitionbox}
+
 \begin{center}
-\small
+\footnotesize
 \begin{tabular}{@{}cll@{}}
 \toprule
 \textbf{Step} & \textbf{RTL} & \textbf{Control signals active} \\
 \midrule
-$T_1$ & $R1 \gets [\text{R2}]$ & $R2_{\text{out}}, R1_{\text{in}}, SC_{\text{clear}}$ \\
+$T_1$ & $Y \gets [R2]$            & $R2_{\text{out}}, Y_{\text{in}}$ \\
+$T_2$ & $Z \gets [Y] + [R3]$      & $R3_{\text{out}}$, ALU$=$add, $Z_{\text{in}}$ \\
+$T_3$ & $R1 \gets [Z]$            & $Z_{\text{out}}, R1_{\text{in}}, SC_{\text{clear}}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-Boolean equations: $R2_{\text{out}} = D_{\text{MOV}} \cdot T_1$, $R1_{\text{in}} = D_{\text{MOV}} \cdot T_1$, $SC_{\text{clear}} = D_{\text{MOV}} \cdot T_1$. \textbf{Instructor note:} useful as a contrast case --- it shows the state-table method scales \emph{down} as cleanly as it scales up, and that $SC_{\text{clear}}$ can co-occur with $T_1$ when an instruction is only one step long, which some students find counterintuitive after seeing only 3-step examples.
 
-\section{Teaching Notes}
+Read the equations straight off this table on the board:
+\[
+  Y_{\text{in}} = D_{\text{ADD}} \cdot T_1, \quad
+  Z_{\text{in}} = D_{\text{ADD}} \cdot T_2, \quad
+  R1_{\text{in}} = D_{\text{ADD}} \cdot T_3, \quad
+  SC_{\text{clear}} = D_{\text{ADD}} \cdot T_3.
+\]
 
-\textit{Instructional suggestions, not fact-checked content --- adapt freely.}
+\begin{example}[Deriving $Z_{\text{in}}$ for Two Instructions]
+Suppose \texttt{SUB} also uses \texttt{Z} at its own $T_2$ (identical 3-step shape to \texttt{ADD}, differing only in the ALU function at $T_2$). From \texttt{ADD}: $D_{\text{ADD}} \cdot T_2$. From \texttt{SUB}: $D_{\text{SUB}} \cdot T_2$. Any instruction whose state table lists $Z_{\text{in}}$ at $T_2$ contributes a term, OR'd in:
+\[
+  Z_{\text{in}} = (D_{\text{ADD}} \cdot T_2) + (D_{\text{SUB}} \cdot T_2) = T_2 \cdot (D_{\text{ADD}} + D_{\text{SUB}}).
+\]
+\end{example}
 
-\subsection{Control Unit Functions}
-\begin{itemize}
-  \item \textbf{Common misconception:} students often picture $D_i$ as a fixed wire with a fixed name across the whole course, rather than understanding it is \emph{one output among many} from a single decoder, exactly one of which is high at a time. Reinforce ``one-hot'' explicitly and early.
-\end{itemize}
+\begin{teachingaside}
+Derive this one live, step by step, rather than presenting the final OR equation directly --- write \texttt{ADD}'s term, ask "what happens if \texttt{SUB} needs the same signal," then write \texttt{SUB}'s term, then ask how to combine them \emph{before} writing the OR. The general pattern (every control signal is an OR, across instructions, of $D_i \cdot T_j$ terms) lands much harder as something the class derives than something they're told.
+\end{teachingaside}
 
-\subsection{The Sequence Counter and Timing Generation}
-\begin{itemize}
-  \item \textbf{Common error:} when deriving equations, students frequently forget that $SC_{\text{clear}}$ itself needs an opcode-and-step term ($D_{\text{ADD}} \cdot T_3$), treating it as a special signal exempt from the general pattern. It is not --- it is generated by the exact same method as every other control signal.
-  \item \textbf{Board sequence:} for the SC + decoder diagram, draw \texttt{SC} and the decoder box first, then add the $T_i$ output lines one at a time as you narrate ``one line goes high per cycle,'' rather than showing all outputs pre-drawn.
-\end{itemize}
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=1.25, transform shape,
+      every node/.style={font=\small}]
+    \node[font=\scriptsize] at (-0.75,1.9) {$D_{\text{ADD}}$};
+    \node[font=\scriptsize] at (-0.75,1.1) {$T_2$};
+    \node[draw=neutral, fill=white, rounded corners,
+          minimum width=1.0cm, minimum height=1.4cm, align=center] (AND1) at (3.0,1.5) {AND};
+    \draw[->, thick] (0,1.9) -- (AND1.west |- 0,1.9);
+    \draw[->, thick] (0,1.1) -- (AND1.west |- 0,1.1);
+    \node[font=\scriptsize] at (-0.75,-1.1) {$D_{\text{SUB}}$};
+    \node[font=\scriptsize] at (-0.75,-1.9) {$T_2$};
+    \node[draw=neutral, fill=white, rounded corners,
+          minimum width=1.0cm, minimum height=1.4cm, align=center] (AND2) at (3.0,-1.5) {AND};
+    \draw[->, thick] (0,-1.1) -- (AND2.west |- 0,-1.1);
+    \draw[->, thick] (0,-1.9) -- (AND2.west |- 0,-1.9);
+    \node[draw=neutral, fill=white, rounded corners,
+          minimum width=1.0cm, minimum height=1.6cm, align=center] (OR) at (6.2,0) {OR};
+    \draw[->, thick] (AND1.east) -- (5.3,1.5) -- (5.3,0.4) -- (OR.west |- 0,0.4);
+    \draw[->, thick] (AND2.east) -- (5.3,-1.5) -- (5.3,-0.4) -- (OR.west |- 0,-0.4);
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=1.4cm, minimum height=0.8cm, align=center] (OUT) at (9.0,0) {$Z_{\text{in}}$};
+    \draw[->, thick] (OR.east) -- (OUT.west);
+  \end{tikzpicture}
+  \caption{The control matrix as actual logic gates realizing $Z_{\text{in}} = (D_{\text{ADD}}\cdot T_2)+(D_{\text{SUB}}\cdot T_2)$.}
+  \label{fig:andor}
+\end{figure}
 
-\subsection{Opcode Decoding and the Control Matrix}
-\begin{itemize}
-  \item \textbf{Board sequence:} build the two-decoders diagram left to right, matching data flow --- \texttt{IR}/\texttt{SC} first, then the two decoders, then the control matrix, then outputs last. Drawing the control matrix box before its inputs tends to make the diagram read as ``a black box that magically knows the answer'' rather than ``a circuit built from two decoders.''
-  \item \textbf{Live question:} ``If we add a 4-step \texttt{MUL} instruction, does \texttt{SC}'s bit width need to change?'' (A good check on whether students understand \texttt{SC}'s width is set by the \emph{longest} instruction in the ISA, not by any one instruction.)
-\end{itemize}
+\textbf{How to present it:} draw the two AND gates first, each fed by its own $(D_i, T_2)$ pair, and say explicitly "this AND gate is the Boolean equation's first product term, drawn as hardware" --- then draw the OR gate and connect both AND outputs into it, narrating that the equation and the physical layout are the \emph{same object}, viewed two ways. This is the moment that makes "hardwired" concrete rather than a vocabulary word.
 
-\subsection{Deriving the Control Equations}
-\begin{itemize}
-  \item \textbf{Pacing:} the state-table $\to$ Boolean-equations $\to$ gates chain is usually the part of this lecture that benefits most from a second, slower pass, ideally with the class supplying the equation for one new signal themselves (e.g.\ $R1_{\text{in}}$) before you reveal it.
-\end{itemize}
+Close by assembling the full capstone diagram (Figure~\ref{fig:full}) and running the "adding \texttt{MUL}" thought experiment live: a new opcode line $D_{\text{MUL}}$ must be added to the decoder; every signal \texttt{MUL} touches (e.g.\ $Z_{\text{in}}$) must be re-derived; and a new AND gate, $D_{\text{MUL}} \cdot T_2$, must be physically wired into the existing OR gate. None of this is a software change.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.62, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.6cm, minimum height=0.8cm, align=center] (IR) at (0,2.2) {IR};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=0.9cm, align=center] (ODEC) at (3.2,2.2) {$3{\times}8$ dec.};
+    \draw[->, thick] (IR.east) -- (ODEC.west);
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.8cm, minimum height=0.8cm, align=center] (FLAGS) at (0,0.7) {Flags};
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.8cm, minimum height=0.8cm, align=center] (CLK) at (0,-0.8) {Clock};
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=1.6cm, minimum height=0.8cm, align=center] (SC) at (0,-2.3) {SC};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=0.9cm, align=center] (SDEC) at (3.2,-2.3) {$4{\times}16$ dec.};
+    \draw[->, thick] (SC.east) -- (SDEC.west);
+    \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+          minimum width=2.6cm, minimum height=5.6cm, align=center]
+          (MAT) at (7.0,0) {\textbf{Control}\\\textbf{matrix}};
+    \draw[->, thick] (ODEC.east) -- (5.4,2.2) -- (MAT.west |- 0,2.0);
+    \draw[->, thick] (FLAGS.east) -- (5.4,0.7) -- (MAT.west |- 0,0.7);
+    \draw[->, thick] (CLK.east) -- (5.4,-0.8) -- (MAT.west |- 0,-0.8);
+    \draw[->, thick] (SDEC.east) -- (5.4,-2.3) -- (MAT.west |- 0,-2.0);
+    \node[draw=positive, fill=light-bg, rounded corners, text width=2.6cm,
+          minimum height=0.8cm, align=center] (OUT1) at (11.0,1.6) {Register gating, ALU select, Mem R/W};
+    \draw[->, thick] (MAT.east |- 0,1.6) -- (OUT1.west);
+    \node[draw=positive, fill=light-bg, rounded corners, text width=2.2cm,
+          minimum height=0.8cm, align=center] (OUT2) at (11.0,-1.2) {$SC_{\text{clear}}$ / advance};
+    \draw[->, thick] (MAT.east |- 0,-1.2) -- (OUT2.west);
+    \draw[->, thick, primary-gold] (OUT2.south) -- (11.0,-3.2) -- (0,-3.2) -- (SC.south);
+    \node[font=\scriptsize, primary-gold] at (5.5,-3.5) {feedback into SC};
+  \end{tikzpicture}
+  \caption{The complete hardwired control unit --- cf.\ Mano, Fig.~5-6, p.137, extended with explicit Flags/Clock inputs and the SC feedback loop.}
+  \label{fig:full}
+\end{figure}
+
+\begin{teachingaside}
+Draw the $SC_{\text{clear}}$ feedback arrow \emph{last}, and narrate it as closing a loop: "the control matrix's own output decides whether the very counter that feeds the control matrix keeps counting or resets." Students who see the feedback arrow before understanding the forward path tend to read the diagram as more complicated than it is.
+\end{teachingaside}
+
+\section{Summary --- Quick Reference}
+
+\textbf{Control unit:} reads (opcode, step, flags), asserts control signals every cycle. \textbf{SC + step decoder:} generates $T_1, T_2, \dots$ automatically; $SC_{\text{clear}}$ resets at the last step. \textbf{Opcode decoder:} one-hot $D_i$ lines. \textbf{Every control signal:} OR, across instructions, of $(D_i \cdot T_j)$ AND terms --- state table makes this systematic. \textbf{Hardwired control pipeline:} state table $\to$ Boolean equations $\to$ AND/OR gates --- fast, but new instructions mean new gates wired by hand, which is exactly what motivates microprogrammed control (Week 7). Control-step count is not free: single-bus needs 3 states, three-bus needs 1 --- design cost simply moves between bus wiring and control logic.
 
 \end{document}

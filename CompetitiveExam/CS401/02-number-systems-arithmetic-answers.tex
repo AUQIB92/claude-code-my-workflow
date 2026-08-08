@@ -1,0 +1,47 @@
+% =============================================================================
+% CompetitiveExam/CS401/02-number-systems-arithmetic-answers.tex
+% Answer key for 02-number-systems-arithmetic-questions.tex.
+%
+% Q1-Q6 are real GATE past-year questions, sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability).
+% The book authenticates each question (year + question number printed on the
+% page; full text recovered via render+OCR). The answers below are derived and
+% justified step by step; the collapsed answer keys inside the book are not
+% extractable, so these derivations stand in for the book's key.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{2.\arabic{section}}
+
+\title{Competitive Exam Practice 2 --- Answer Key\\\large Number Systems, Representation, and Arithmetic Hardware}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(C).} $43 = 32 + 8 + 2 + 1 = 00101011$ in 8-bit binary. Since 43 is non-negative, its 2's complement representation is the plain binary value. ($01010101 = 85$; $11010101$ and $10101011$ have the sign bit set, so they are negative.)
+
+\item[\textbf{Q2}] $\mathbf{-2^{n-1} \le N \le 2^{n-1}-1}$. With $n$ bits in two's complement, the MSB is the sign bit; the most negative value has MSB 1 and all else 0 ($-2^{n-1}$), and the most positive has MSB 0 and all else 1 ($2^{n-1}-1$). One of the $2^n$ bit patterns is wasted by reserving it for the single representation of zero.
+
+\item[\textbf{Q3}] \textbf{(C).} Squaring both sides: $(224)_r = (13)_r^2$. Expanding: $2r^2 + 2r + 4 = (r+3)^2 = r^2 + 6r + 9$. Rearranging: $r^2 - 4r - 5 = 0$, i.e.\ $(r-5)(r+1)=0$. Since $r > 4$ (digit 4 appears), $r = 5$.
+
+\item[\textbf{Q4}] \textbf{15 full adders, 1 half adder.} A ripple-carry adder adds bit 0 with no carry-in, so it needs only a half adder (or a full adder with $C_{in}=0$); every other bit position (1 through 15) needs a full adder to accept the carry from the previous stage. Hence $n-1 = 15$ full adders and 1 half adder.
+
+\item[\textbf{Q5}] \textbf{(C).} $539_{10} = 0x21B$. The 2's complement of a positive number in $k$ bits is $2^k - x$. Using 12 bits: $-539 = 4096 - 539 = 3557_{10} = 0xDE5$. (Option (C) as printed in the book is DE5; the OCR reading ``DES'' is a 5/S glyph ambiguity.)
+
+\item[\textbf{Q6}] \textbf{(B).} Critical path through the carry-lookahead adder:
+\begin{itemize}
+  \item \textbf{Generate propagate/generate:} $P_i = A_i \oplus B_i$ and $G_i = A_i \cdot B_i$. XOR is two gate levels (two-level AND--OR), so delay $= 2$.
+  \item \textbf{Carry network:} each $C_i$ is a two-level AND--OR expression (sum of products), delay $= 2$.
+  \item \textbf{Sum:} $S_i = P_i \oplus C_i$, another two gate levels, delay $= 2$.
+\end{itemize}
+Total $= 2 + 2 + 2 = 6$ time units.
+\end{enumerate}
+
+\end{document}

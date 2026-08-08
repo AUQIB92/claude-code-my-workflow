@@ -1,0 +1,46 @@
+% =============================================================================
+% CompetitiveExam/CS401/03-ieee754-floating-point-answers.tex
+% Answer key for 03-ieee754-floating-point-questions.tex.
+%
+% Q1-Q4 are real GATE past-year questions, sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability).
+% The book authenticates each question (year + question number printed on the
+% page; full text recovered via render+OCR). The answers below are derived and
+% justified step by step; the collapsed answer keys inside the book are not
+% extractable, so these derivations stand in for the book's key.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Competitive Exam Practice 3 --- Answer Key\\\large IEEE 754 Floating-Point Representation and Arithmetic}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(A).} $-14.25$: magnitude $14.25 = 1110.01_2 = 1.11001_2 \times 2^3$. Sign bit $= 1$ (negative). Exponent $= 3 + 127 = 130 = 1000\,0010_2$. Mantissa $= 1100100\ldots$ (to 23 bits). Assembled as sign, exponent, mantissa, the word is $1\ 10000010\ 11001000000000000000000 = \text{0xC1640000}$.
+
+\item[\textbf{Q2}] \textbf{(D).} Sign $= 0$. Exponent $= 01111100_2 = 124$, so $E_{\text{true}} = 124 - 127 = -3$. Mantissa $= 101101\ldots$, value $= 1.101101_2 \times 2^{-3}$. Summing the set bits: $2^{-3}+2^{-4}+2^{-6}+2^{-7}+2^{-9} = 0.125+0.0625+0.015625+0.0078125+0.001953125 = 0.21289\ldots \approx 2.13 \times 10^{-1}$. The closest option is $2.27 \times 10^{-1}$ (D).
+
+\item[\textbf{Q3}] \textbf{(C).} Decode both.
+\begin{itemize}
+  \item $P = \text{0xC1800000}$: sign 1, exponent $10000011_2 = 131$, $E_{\text{true}} = 4$, mantissa 0 $\Rightarrow P = -1.0 \times 2^4 = -16$.
+  \item $Q = \text{0x3F5C2EF4}$: sign 0, exponent $01111110_2 = 126$, $E_{\text{true}} = -1$, mantissa $1.1011100\ldots_2$ $\Rightarrow Q = 1.10111\ldots \times 2^{-1}$.
+\end{itemize}
+Product sign $= 1$ (negative). Stored exponent $= E_P + E_Q + 127 = 4 + (-1) + 127 = 130 = 1000\,0010_2$. Mantissa product $1.0 \times 1.10111\ldots = 1.10111\ldots$ (already in $[1,2)$, no renormalization), so the mantissa field is $Q$'s mantissa unchanged. Assembling sign, exponent, mantissa gives $\text{0xC15C2EF4}$.
+
+\item[\textbf{Q4}] \textbf{(D).} Exponent all zeros and mantissa all zeros is the \key{special value} $+0$ --- it is not a normalized number (a normalized number requires a nonzero exponent and an implicit leading 1). \texttt{0x00000000} is exactly this pattern.
+
+\item[\textbf{Q5}] \textbf{(B).} The bias makes the stored exponent an unsigned field ordered so that all-zeros is the smallest and all-ones the largest exponent, letting ordinary unsigned comparison order floats correctly. (Two's complement \emph{can} represent negative exponents --- that is not the reason; the issue is comparison ease.)
+
+\item[\textbf{Q6}] \textbf{(C).} $0.1$ is a repeating binary fraction, so each stored value is an approximation; ten additions accumulate rounding error, so $x$ ends up slightly off $1.0$ and the equality test may fail. (A) is false because $10 \times 0.1$ is not exact in binary; (B) is false because the error direction is not guaranteed; (D) misidentifies the failure mode --- no overflow is involved.
+\end{enumerate}
+
+\end{document}
