@@ -44,10 +44,14 @@
 
 \textbf{Q4.} Using the fixed-point \texttt{Q8.8} format (8 integer bits, 8 fraction bits), (a) write $6.25$ and $1.5$ in binary and add them bitwise to compute the sum; (b) write $-2$ in 8-bit two's complement (integer part only) and verify that $6.25 + (-2) = 4.25$ works by ordinary binary addition with the carry-out discarded.
 
+\textbf{Q7.} The lecture traced $13\times(-6)$ by Booth's algorithm using registers $A$ (accumulator, init $0$), $Q$ (multiplier), $Q_{-1}$ (one extra bit, init $0$), and $M$ (multiplicand), examining $(Q_0,Q_{-1})$ each cycle: $(0,0)$ or $(1,1)\to$ shift only; $(0,1)\to A\gets A+M$, then shift; $(1,0)\to A\gets A-M$, then shift; each cycle ends with an arithmetic-shift-right of $(A,Q,Q_{-1})$. Using 5-bit two's complement with $M=11=01011$ and $Q=-5=11011$, trace Booth's algorithm cycle by cycle (5 cycles), reporting $(Q_0,Q_{-1})$, the operation, and $A$ after each shift, in the same table format the lecture used for $13\times(-6)$. Read off $(A,Q)$ as a 10-bit two's complement value and verify it equals $11\times(-5)$.
+
 \section{Design}
 
 \textbf{Q5.} Using a 4-bit ripple-carry adder, trace the addition $+5 + (-2)$ in 4-bit two's complement, showing the carry chain bit-by-bit exactly as the lecture traced $7 + (-3)$. State the 4-bit result, the carry-out, and whether the result is correct in 4-bit two's complement (and why).
 
 \textbf{Q6.} Design the subtraction path of the ALU: using the single-adder approach from the lecture, show the hardware sketch (one adder, one MUX, one forced carry-in) that computes $A - B$ as $A + \bar B + 1$. For each of the two ALU operations \texttt{ADD} and \texttt{SUB}, state what the MUX selects and what the carry-in is. Explain why no separate subtractor is needed.
+
+\textbf{Q8.} The lecture traced restoring division of $13\div3$ (4-bit unsigned) using registers $A$ (remainder, init $0$), $Q$ (dividend $\to$ quotient), and $M$ (divisor), repeating three steps $n$ times: (1) shift $(A,Q)$ left by 1 bit; (2) $A\gets A-M$; (3) if $A<0$, restore $A\gets A+M$ and set $Q_0=0$, else set $Q_0=1$. Using 4-bit unsigned registers with dividend $Q=11=1011$ and divisor $M=3=0011$, trace restoring division cycle by cycle (4 cycles), reporting, for each cycle, the registers after the shift, the value of $A-M$ (and whether it is negative), the restore/keep decision with the resulting $Q_0$, and the registers after the decision --- in the same table format the lecture used for $13\div3$. State the final quotient and remainder, and verify $11 = (\text{quotient})\times 3 + (\text{remainder})$.
 
 \end{document}
