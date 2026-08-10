@@ -15,6 +15,13 @@
 (function () {
 	"use strict";
 
+	// All URLs in this file (icsUrl, slide/notes/assignment links) are
+	// authored relative to the docs/ site root, not to whichever page the
+	// calendar happens to be mounted on (root portfolio vs. a course hub one
+	// directory deeper). Resolve them against the script's own location —
+	// docs/calendar/calendar.js — so both mount points work identically.
+	const SITE_ROOT = new URL("..", document.currentScript.src).href;
+
 	/* ──────────────  Icons (inline SVG, currentColor)  ────────────── */
 
 	const svg = (paths, vb) =>
@@ -76,11 +83,11 @@
 				if (m) {
 					const n = +m[1];
 					const slug = this.topics[String(n)];
-					const href = slug ? `slides/CS401/${pad(n)}-${slug}.pdf` : null;
+					const href = slug ? `${SITE_ROOT}slides/CS401/${pad(n)}-${slug}.pdf` : null;
 					const links = [];
 					if (href) links.push({ label: "Slides", icon: "presentation", primary: true, href });
-					if (slug) links.push({ label: "Notes", icon: "book-open", href: `notes/CS401/${pad(n)}-${slug}.pdf` });
-					if (slug) links.push({ label: "GATE practice", icon: "quiz", href: `gate/CS401/${pad(n)}-${slug}.pdf` });
+					if (slug) links.push({ label: "Notes", icon: "book-open", href: `${SITE_ROOT}notes/CS401/${pad(n)}-${slug}-notes.pdf` });
+					if (slug) links.push({ label: "GATE practice", icon: "quiz", href: `${SITE_ROOT}competitive-exam/CS401/${pad(n)}-${slug}-questions.pdf` });
 					return {
 						kind: "lecture",
 						chip: `L${n}`,
@@ -94,10 +101,10 @@
 				if (m) {
 					const n = +m[1];
 					const slug = this.topics[String(n)];
-					const base = slug ? `assignments/CS401/${pad(n)}-${slug}` : null;
+					const base = slug ? `${SITE_ROOT}assignments/CS401/${pad(n)}-${slug}` : null;
 					const links = [];
+					// Solution keys are never published (see sync_to_docs.sh) — no "Solutions" link.
 					if (base) links.push({ label: "Problem", icon: "clipboard", primary: true, href: `${base}-assignment.pdf` });
-					if (base) links.push({ label: "Solutions", icon: "file-check", href: `${base}-solutions.pdf` });
 					return {
 						kind: "assignment",
 						chip: `A${n}`,
@@ -248,6 +255,21 @@
 	const todayInstant = () => {
 		const now = new Date();
 		return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+	};
+
+	// Default focus day when today itself has no event: the most recently
+	// completed event (so the calendar opens on "where the course actually
+	// is" — e.g. the lecture just taught) rather than always jumping back to
+	// the very first event of the term. Falls back to the next upcoming
+	// event if the term hasn't started yet. `visible` must be ascending.
+	const nearestDefaultDay = (visible, t) => {
+		if (!visible.length) return null;
+		let lastPast = null;
+		for (const e of visible) {
+			if (e.start.instant <= t) lastPast = e;
+			else break;
+		}
+		return (lastPast || visible[0]).start.instant;
 	};
 
 	const monthKeyToInstant = (key) => {
@@ -593,7 +615,7 @@
 			day: null,
 			tz: "local",
 			courseLinks: active.map((c) => ({
-				href: c.icsUrl,
+				href: SITE_ROOT + c.icsUrl,
 				download: `${c.code}.ics`,
 				label: c.short,
 				icon: "download",
@@ -609,7 +631,7 @@
 			if (visible.length) {
 				const t = todayInstant();
 				const todayHas = visible.some((e) => isSameDayUTC(e.start.instant, t));
-				state.day = todayHas ? t : visible[0].start.instant;
+				state.day = todayHas ? t : nearestDefaultDay(visible, t);
 				const d = new Date(state.day);
 				state.month = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 				state.monthLabel = fmtMonthYear(monthKeyToInstant(state.month), undefined);
@@ -618,14 +640,21 @@
 		return state;
 	};
 
+	// "summary" (data-cal-mode="summary" on the #calendar section): render
+	// just the ribbon stats + progress bar, no toolbar/grid/detail-panel and
+	// no click/hash interactivity. Used on the portfolio root page, which
+	// only needs "where things stand" — the full interactive calendar
+	// (month/agenda views, filters, per-day detail panel with slide/notes
+	// links) lives on each course's own hub page instead.
 	window.calendarInit = async () => {
 		const section = document.getElementById("calendar");
 		if (!section) return;
+		const mode = section.dataset.calMode === "summary" ? "summary" : "full";
 		const host = section.querySelector("[data-cal-view]");
 
 		const active = COURSES.filter((c) => c.semesterStart != null && c.semesterEnd != null);
 		if (active.length === 0) {
-			host.innerHTML = emptyState();
+			if (host) host.innerHTML = emptyState();
 			const ribbonHost = section.querySelector("[data-cal-ribbon]");
 			if (ribbonHost) ribbonHost.hidden = true;
 			return;
@@ -634,7 +663,7 @@
 		try {
 			const allEvents = [];
 			for (const course of active) {
-				const res = await fetch(course.icsUrl, { cache: "no-cache" });
+				const res = await fetch(SITE_ROOT + course.icsUrl, { cache: "no-cache" });
 				if (!res.ok) throw new Error(`HTTP ${res.status} (${course.icsUrl})`);
 				const text = await res.text();
 				const parsed = parseICS(text)
@@ -652,13 +681,22 @@
 			const state = buildState(allEvents, window.location.hash);
 
 			const ribbonHost = section.querySelector("[data-cal-ribbon]");
+
+			if (mode === "summary") {
+				if (ribbonHost) {
+					ribbonHost.innerHTML = ribbon(allEvents, state);
+					ribbonHost.hidden = false;
+				}
+				return;
+			}
+
 			const toolbarHost = section.querySelector("[data-cal-toolbar]");
 			const captionHost = section.querySelector("[data-cal-caption]");
 
 			const rerender = () => {
 				state.monthLabel = fmtMonthYear(monthKeyToInstant(state.month), undefined);
 				state.courseLinks = active.map((c) => ({
-					href: c.icsUrl,
+					href: SITE_ROOT + c.icsUrl,
 					download: `${c.code}.ics`,
 					label: c.short,
 					icon: "download",
@@ -697,7 +735,7 @@
 						const visible = visibleEvents(allEvents, state);
 						const t = todayInstant();
 						const todayHas = visible.some((e) => isSameDayUTC(e.start.instant, t));
-						state.day = todayHas ? t : (visible[0] ? visible[0].start.instant : null);
+						state.day = todayHas ? t : nearestDefaultDay(visible, t);
 						if (state.day) {
 							const d = new Date(state.day);
 							state.month = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;

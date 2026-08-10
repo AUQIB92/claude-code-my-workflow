@@ -36,6 +36,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,400;0,700;1,400&family=Inria+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../../calendar/calendar.css">
 </head>
 <body>
 
@@ -50,6 +51,7 @@
       <div class="nav-links" id="navLinks">
         <a href="../../index.html">Portfolio</a>
         <a href="#lectures">Lectures</a>
+        <a href="#calendar">Calendar</a>
         <a href="#assignments">Assignments</a>
         <a href="#practice">Practice</a>
         <a href="#assessment">Assessment</a>
@@ -315,6 +317,21 @@
       </div>
     </section>
 
+    <!-- ================= CALENDAR ================= -->
+    <section id="calendar" class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 01b &middot; Session schedule</p>
+        <h2 class="section-title">Course calendar</h2>
+      </div>
+      <div class="card">
+        <div data-cal-ribbon hidden></div>
+        <div data-cal-toolbar></div>
+        <div data-cal-view><p class="text-muted">Loading calendar&hellip;</p></div>
+        <div data-cal-caption></div>
+      </div>
+      <p class="text-muted" style="font-size:.9rem">Every lecture links straight to its slides, notes, and GATE practice set; every assignment links to the problem set. Subscribe or download the <code>.ics</code> to add it to your own calendar.</p>
+    </section>
+
     <!-- ================= ASSIGNMENTS ================= -->
     <section id="assignments" class="section">
       <div class="section-head">
@@ -542,6 +559,9 @@
       io.observe(fill.closest('.ribbon'));
     }
   </script>
+
+  <script src="../../calendar/calendar.js"></script>
+  <script>if (window.calendarInit) window.calendarInit();</script>
 
 </body>
 </html>

@@ -346,13 +346,13 @@ code {
   background-size: 240px 240px;
 }
 
-/* ---------- Course hero photo backgrounds ----------
-   Per-course hero photo, composited with the exact same overlay-gradient
+/* ---------- Hero photo backgrounds ----------
+   Per-page hero photo, composited with the exact same overlay-gradient
    recipe as the default ".hero" background (so brightness/contrast for the
    title text stays consistent) with the photo swapped in as the base layer
    instead of the plain color gradient. Add class "hero-photo hero-photo--
-   <course>" on a course hub's <header class="hero ..."> and define a
-   ".hero.hero-photo--<course>" override here pointing at the image. */
+   <name>" on a <header class="hero ..."> and define a
+   ".hero.hero-photo--<name>" override here pointing at the image. */
 
 .hero.hero-photo--cs401 {
   background-image:
@@ -365,6 +365,19 @@ code {
   background-position: center;
 }
 .hero.hero-photo--cs401::before { content: none; }
+
+/* Portfolio root hero — GCET Kashmir campus photo. */
+.hero.hero-photo--college {
+  background-image:
+    radial-gradient(ellipse 62% 58% at 50% 58%, rgba(8, 18, 4, 0.42) 0%, transparent 76%),
+    linear-gradient(180deg, rgba(8, 18, 4, 0.35) 0%, rgba(8, 18, 4, 0.72) 100%),
+    radial-gradient(circle at 18% 22%, rgba(164, 228, 134, 0.16), transparent 46%),
+    radial-gradient(circle at 84% 78%, rgba(212, 164, 100, 0.14), transparent 50%),
+    url("../assets/Images/College.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.hero.hero-photo--college::before { content: none; }
 
 /* Engraved double frame, like a book plate */
 .hero-frame {

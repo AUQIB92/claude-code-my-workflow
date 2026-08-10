@@ -58,7 +58,7 @@
   </nav>
 
   <!-- ================= HERO ================= -->
-  <header class="hero">
+  <header class="hero hero-photo hero-photo--college">
     <div class="hero-frame" aria-hidden="true"></div>
     <div class="hero-content">
       <img class="hero-portrait" src="assets/Images/ProfilePic.jpg" alt="Portrait of Dr. Auqib Hamid Lone">
@@ -209,8 +209,12 @@
     </div>
   </section>
 
-  <!-- ================= COURSE CALENDAR ================= -->
-  <section id="calendar" class="section">
+  <!-- ================= COURSE CALENDAR (summary) =================
+       Just the at-a-glance stats + progress bar here. The full
+       interactive calendar (month/agenda views, filters, per-day detail
+       panel with slide/notes/GATE-practice links) lives on each course's
+       own hub page — see docs/courses/cs401/index.html#calendar. -->
+  <section id="calendar" class="section" data-cal-mode="summary">
     <div class="container">
       <div class="section-head">
         <p class="section-eyebrow">&sect; 04 &middot; Term schedule</p>
@@ -218,11 +222,8 @@
       </div>
       <div class="card">
         <div data-cal-ribbon hidden></div>
-        <div data-cal-toolbar></div>
-        <div data-cal-view><p class="text-muted">Loading calendar&hellip;</p></div>
-        <div data-cal-caption></div>
       </div>
-      <p class="text-muted" style="font-size:.9rem">Interactive calendar of lectures, assignments, and tests across the published courses. Subscribe or download the <code>.ics</code> to add CS-401's term schedule to your own calendar.</p>
+      <p class="text-muted" style="font-size:.9rem">At-a-glance term progress across the published courses. For the full interactive schedule &mdash; month/agenda views, per-lecture topics, and slide/notes links &mdash; open a course hub, e.g. <a href="courses/cs401/#calendar">CS-401's calendar</a>.</p>
     </div>
   </section>
 
