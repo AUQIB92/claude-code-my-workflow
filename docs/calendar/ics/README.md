@@ -7,17 +7,25 @@ config object + one `.ics` file.**
 
 ## Status
 
-**Active.** `cs401.ics` carries the real 2026-05-05 – 2026-07-28 term (per the
-4th-sem timetable, `docs/Timetable/4th Sem Time Table (2024).pdf`, w.e.f.
-05-05-2026): one `Lecture N` event per week (Mon/Tue/Fri/Sat 10:15–11:00 per
-the timetable; the flagship weekly event is placed on the week's first class
-day), `Assignment N Due` for the 7 published assignments, and three
-`Class Test N (Unit ...)` events. `semesterStart`/`semesterEnd` are set on the
-`CS401` object in `docs/calendar/calendar.js`.
+**Active.** `cs401.ics` carries the real 2026-06-22 – 2026-09-12 term, anchored
+to the actual teaching pace (Week 8 starts 2026-08-11 — confirmed by the
+instructor, working backward/forward from there at 5 class days/week:
+Mon/Tue/Thu/Fri/Sat, per the 4th-sem timetable's Mon/Tue/Fri/Sat lecture slots
+plus the Thursday lab). Week 8 is short one day (Monday 2026-08-10 is a
+holiday, so it starts Tuesday instead).
+
+Each week's `Lecture N` event is repeated on all of that week's real class
+days (5, except Week 8's 4) rather than posted once — so the month grid shows
+one pill per actual class session. `Assignment N Due` covers the 7 published
+assignments; three `Class Test N (Unit ...)` events are included.
+`semesterStart`/`semesterEnd` are set on the `CS401` object in
+`docs/calendar/calendar.js`.
 
 Assignment due dates and Class Test dates were inferred (end of each teaching
 week / after each ~4-lecture unit) — adjust the `DTSTART`/`DTEND` lines below
-directly if the real dates differ.
+directly if the real dates differ. `docs/calendar/ics/cs401.ics` is generated
+from a small script (not committed) rather than hand-edited line by line —
+regenerate the same way if the pace or roster of lecture titles changes again.
 
 ## Expected event formats (CS401)
 
