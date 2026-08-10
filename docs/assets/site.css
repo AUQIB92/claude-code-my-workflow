@@ -360,7 +360,7 @@ code {
     linear-gradient(180deg, rgba(8, 18, 4, 0.32) 0%, rgba(8, 18, 4, 0.70) 100%),
     radial-gradient(circle at 18% 22%, rgba(164, 228, 134, 0.14), transparent 46%),
     radial-gradient(circle at 84% 78%, rgba(212, 164, 100, 0.12), transparent 50%),
-    url("../public/MyBackground.png");
+    url("../public/COA.png");
   background-size: cover;
   background-position: center;
 }
