@@ -195,13 +195,174 @@ $+7 = 0111$, $-3 = 1101$ (4-bit). Ripple-carry with $C_{in}=0$: bit 0: $1+1=0$ c
 
 \textbf{A question worth asking live}: ``to compute $A-B$ with only an adder, what one extra step do you need?'' ($A + (-B)$, i.e.\ a MUX choosing $B$ or $\bar B$ plus a forced carry-in of 1 --- subtraction is \key{free}, P\&H, Sec.~3.2, p.188) \cite{PattersonHennessy2017_computer_organization_design}.
 
+\section{Multiplication: Booth's Algorithm}
+
+Open with the schoolbook complaint: shift-and-add multiplication adds $M$ to itself once per \emph{set} bit of $Q$, so it always costs $n$ additions for an $n$-bit $Q$ --- whether $Q$ is all 1s or has a single 1 --- and it treats the sign bit like any other bit, which is wrong for two's complement. The class has already built signed addition and subtraction (previous section); the question to pose is whether the \emph{same} adder can drive multiplication too, with no special sign-handling step. \key{Booth's algorithm} answers yes by recoding the multiplier so a run of 1s costs one subtract and one add instead of many adds.
+
+\begin{definitionbox}{Booth's Recoding Rule}
+Let $A$ be the accumulator (init 0), $Q$ the multiplier, $Q_{-1}$ one extra bit (init 0) holding the previously shifted-out $Q_0$, and $M$ the multiplicand --- all $n$ bits. Repeat $n$ times, examining $(Q_0,Q_{-1})$ each cycle: $(0,0)$ or $(1,1)$ --- no arithmetic, just arithmetic-shift-right $(A,Q,Q_{-1})$; $(0,1)$ --- $A \gets A+M$, then shift; $(1,0)$ --- $A \gets A-M$, then shift. After $n$ cycles the $2n$-bit signed product is $(A,Q)$. (P\&H, Sec.~3.3, p.191; Hamacher Ch.~6, Sec.~6.4.1, p.380) \cite{PattersonHennessy2017_computer_organization_design,Hamacher2002_computer_organization}
+\end{definitionbox}
+
+\textbf{How to present it:} write the three-row recoding rule on the board first, as a table the class can refer back to, \emph{before} drawing the datapath (Figure~\ref{fig:booth}) --- the hardware only makes sense once the rule is pinned down. Draw $A$, then $Q$, then $Q_{-1}$ left to right, the shift-right arrow spanning all three above the row, and the Add/Sub-with-$M$ block last, feeding up into $A$. Narrate it as: ``one adder, reused every cycle, plus a rule for whether it adds, subtracts, or does nothing this cycle.''
+
+\begin{figure}[h]
+  \centering
+  % Diagram: Booth's algorithm datapath -- A/Q/Q-1 shift register on top,
+  % Add/Sub-with-M block underneath feeding A. Copied verbatim from
+  % Slides/CS401/02-number-systems-arithmetic.tex ("Booth's Algorithm
+  % Hardware" frame) -- P7 clearance re-audited 2026-08-10: shift-right
+  % label at y=1.3 clears its arrow at y=0.9 by 0.4cm (P7b); Add/Sub box
+  % (y in [-2.3,-1.3]) and its feed arrow (x=0, y 0.45 to 1.3) do not cross
+  % any other box (P7a); no plotted curves (P7d n/a).
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.6cm, minimum height=0.9cm, align=center] (A) at (0,0) {$A$};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.6cm, minimum height=0.9cm, align=center] (Q) at (2.2,0) {$Q$};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.0cm, minimum height=0.9cm, align=center] (Qm1) at (4.0,0) {\scriptsize $Q_{-1}$};
+    \draw[->, thick] (0.8,0) -- (1.4,0);
+    \draw[->, thick] (3.0,0) -- (3.5,0);
+    \draw[->, thick] (-0.8,0.9) -- (4.5,0.9);
+    \node[font=\scriptsize] at (1.85,1.3) {arithmetic shift right};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.4cm, minimum height=1.0cm, align=center] (AS) at (0,-1.8) {\scriptsize Add/Sub\\\scriptsize with $M$};
+    \draw[->, thick] (0,-1.3) -- (0,-0.45);
+  \end{tikzpicture}
+  \caption{Booth's algorithm datapath: the $A/Q/Q_{-1}$ shift register with an Add/Sub-with-$M$ block feeding $A$.}
+  \label{fig:booth}
+\end{figure}
+
+\begin{example}[$13 \times (-6)$ by Booth's algorithm]
+5-bit two's complement, $M=13=01101$, $Q=-6=11010$:
+\begin{center}
+\small
+\begin{tabular}{@{}cccl@{}}
+\toprule
+Cycle & $(Q_0,Q_{-1})$ & Operation & $A$ after shift \\
+\midrule
+1 & $(0,0)$ & shift only & $00000$ \\
+2 & $(1,0)$ & $A\gets A-M$, shift & $11001$ \\
+3 & $(0,1)$ & $A\gets A+M$, shift & $00011$ \\
+4 & $(1,0)$ & $A\gets A-M$, shift & $11011$ \\
+5 & $(1,1)$ & shift only & $11101$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$(A,Q) = 1110110010_2 = -78$. \good{$13\times(-6)=-78$. Correct.}
+\end{example}
+
+\begin{teachingaside}
+Students will assume the saving is in \emph{cycles} --- it is not; Booth's always runs $n$ cycles, same as shift-and-add. The saving is in \emph{arithmetic operations}: a run of consecutive 1s in $Q$ collapses to one subtract (at the run's start) and one add (just past its end). Push this with the worst case: alternating bits ($0101\dots$) give an add/sub \emph{every} cycle, so Booth's does no better than shift-and-add there --- it is never worse, and strictly better whenever $Q$ has a run of two or more equal bits.
+\end{teachingaside}
+
+\textbf{A question worth asking live}: ``Booth's always runs $n$ cycles --- so where exactly is the saving, and is there a multiplier pattern where Booth's does no better than plain shift-and-add?'' (Answer above --- pose it before revealing the alternating-bits case.)
+
+\begin{example}[Extra: $(-9) \times 5$ by Booth's algorithm]
+A second, independently verified instance --- 5-bit two's complement, $M=-9=10111$, $Q=5=00101$, $Q_{-1}=0$, $A=00000$:
+\begin{center}
+\small
+\begin{tabular}{@{}cccl@{}}
+\toprule
+Cycle & $(Q_0,Q_{-1})$ & Operation & $A$ after shift \\
+\midrule
+1 & $(1,0)$ & $A\gets A-M$, shift & $00100$ \\
+2 & $(0,1)$ & $A\gets A+M$, shift & $11101$ \\
+3 & $(1,0)$ & $A\gets A-M$, shift & $00011$ \\
+4 & $(0,1)$ & $A\gets A+M$, shift & $11101$ \\
+5 & $(0,0)$ & shift only & $11110$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Final $Q=10011$, so $(A,Q)=1111010011_2$. Two's complement decode: invert $\to 0000101100$, $+1 \to 0000101101 = 45$, so the value is $-45$. \good{$(-9)\times 5 = -45$. Correct.} Have this one ready on a slip of paper --- it exercises a negative multiplicand, which the thread example does not.
+\end{example}
+
+\section{Division Algorithms}
+
+Open with long division by hand: bring down a digit, subtract the divisor as many times as it fits, record the count, repeat. In binary ``as many times as it fits'' collapses to \emph{once or zero times per bit}, so division becomes shift, subtract, and a one-bit decision. Frame the two hardware strategies as differing only in what happens when the subtraction goes negative.
+
+\begin{definitionbox}{Restoring Division}
+Registers $A$ (remainder, init 0), $Q$ (dividend $\to$ quotient), $M$ (divisor). Repeat $n$ times: (1) shift $(A,Q)$ left 1 bit; (2) $A \gets A-M$; (3) if $A<0$, \key{restore} $A \gets A+M$ and set $Q_0=0$, else set $Q_0=1$. Every cycle does a subtract, and on average half the time an extra restoring add --- up to 2 arithmetic operations per cycle. (P\&H, Sec.~3.4, p.197; Hamacher Ch.~6, Sec.~6.6, p.390-392) \cite{PattersonHennessy2017_computer_organization_design,Hamacher2002_computer_organization}
+\end{definitionbox}
+
+\begin{definitionbox}{Non-Restoring Division}
+Same registers. Repeat $n$ times: (1) shift $(A,Q)$ left 1 bit; (2) if $A\ge0$, $A\gets A-M$, else $A\gets A+M$; (3) if $A\ge0$, set $Q_0=1$, else $Q_0=0$. After $n$ cycles, if $A<0$ a single final correction $A\gets A+M$ recovers the true remainder ($Q$ is already correct). Exactly \emph{one} arithmetic operation per cycle, always --- no restore step.
+\end{definitionbox}
+
+\textbf{How to present it:} draw the two flowcharts (Figure~\ref{fig:division}) as two separate columns, left then right, with the dashed divider drawn last so it visually reads as ``two independent procedures,'' not one diagram with a branch. Before revealing the Non-Restoring column, ask the class to predict box 2 given only the rule ``never restore, carry the negative remainder forward.''
+
+\begin{figure}[h]
+  \centering
+  % Diagram: two independent 3-box flowcharts, Restoring (left, x=-2.6) and
+  % Non-Restoring (right, x=2.6), 2.0 units apart edge-to-edge, dashed
+  % divider at x=0 in the empty gap. Copied verbatim from
+  % Slides/CS401/02-number-systems-arithmetic.tex ("Restoring vs.
+  % Non-Restoring, Side by Side" frame) -- P7 clearance re-audited
+  % 2026-08-10: header labels at y=3.1 clear box tops at y=2.6 by 0.5cm
+  % (P7c); connecting arrows sit only in the inter-box gaps, crossing no
+  % box (P7a); no on-line labels (P7b); no plotted curves (P7d n/a).
+  \begin{tikzpicture}[scale=0.8, transform shape,
+      every node/.style={font=\small}]
+    \draw[dashed, gray!40] (0,-1.5) -- (0,3.3);
+    \node[font=\small, align=center] at (-2.6,3.1) {\textbf{Restoring}};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=3.2cm, minimum height=0.8cm, align=center] (R1) at (-2.6,2.2) {\scriptsize Shift $(A,Q)$ left 1};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=3.2cm, minimum height=0.8cm, align=center] (R2) at (-2.6,1.0) {\scriptsize $A \gets A - M$};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=3.4cm, minimum height=1.2cm, align=center] (R3) at (-2.6,-0.5) {\scriptsize If $A{<}0$: restore\\\scriptsize $A{\gets}A{+}M$, $Q_0{\gets}0$.\\\scriptsize Else $Q_0{\gets}1$.};
+    \draw[->, thick] (-2.6,1.8) -- (-2.6,1.4);
+    \draw[->, thick] (-2.6,0.6) -- (-2.6,0.1);
+    \node[font=\small, align=center] at (2.6,3.1) {\textbf{Non-Restoring}};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=3.2cm, minimum height=0.8cm, align=center] (N1) at (2.6,2.2) {\scriptsize Shift $(A,Q)$ left 1};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=3.4cm, minimum height=1.2cm, align=center] (N2) at (2.6,1.0) {\scriptsize If $A{\ge}0$: $A{\gets}A{-}M$.\\\scriptsize Else $A{\gets}A{+}M$.};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=3.4cm, minimum height=1.2cm, align=center] (N3) at (2.6,-0.7) {\scriptsize If $A{\ge}0$: $Q_0{\gets}1$.\\\scriptsize Else $Q_0{\gets}0$.};
+    \draw[->, thick] (2.6,1.8) -- (2.6,1.6);
+    \draw[->, thick] (2.6,0.4) -- (2.6,-0.1);
+  \end{tikzpicture}
+  \caption{Restoring vs.\ non-restoring division, side by side. Both repeat $n$ times; restoring can spend 2 arithmetic ops/cycle, non-restoring always spends exactly 1 (plus one final correction).}
+  \label{fig:division}
+\end{figure}
+
+\begin{example}[$13 \div 3$, both algorithms]
+4-bit unsigned, $Q=13=1101$ (dividend), $M=3=0011$ (divisor). Both run 4 cycles and must agree: quotient $Q=4=0100$, remainder $A=1=0001$ ($13=4\times3+1$). \good{Both algorithms converge on the same result; non-restoring gets there with fewer arithmetic operations.} Full per-cycle traces for both algorithms on this pair are in the Lecture Notes (Sec.~2.7, Example).
+\end{example}
+
+\begin{teachingaside}
+The recurring misconception here is that non-restoring division feels ``incomplete'' because it skips the restore step --- students expect the intermediate remainder to always be correct. It is not, and that is fine: the negative partial remainder is carried forward and \emph{compensated} by the next cycle's operation choice, with only the \emph{final} value needing at most one correction. Emphasize that both algorithms compute the identical quotient and remainder; the difference is purely how much arithmetic work gets done to get there.
+\end{teachingaside}
+
+\textbf{A question worth asking live}: ``restoring division does a subtract every cycle, plus a restoring add whenever $A<0$; non-restoring does exactly one add-or-subtract every cycle. Which does more total arithmetic operations, and why can non-restoring never do more?'' (Restoring: up to 2 ops/cycle. Non-restoring: exactly 1 op/cycle plus at most one final correction --- never more than restoring, often fewer.)
+
+\begin{example}[Extra: $11 \div 3$ by restoring division]
+A second, independently verified instance --- 4-bit unsigned, $Q=11=1011$ (dividend), $M=3=0011$ (divisor), $A=0000$:
+\begin{center}
+\small
+\begin{tabular}{@{}clcll@{}}
+\toprule
+Cycle & Shift $(A,Q)$ & $A\gets A-M$ & Decision & $A,Q$ after \\
+\midrule
+1 & $A{=}0001,Q{=}0110$ & $A=1110$ (neg.) & restore, $Q_0{=}0$ & $A{=}0001,\,Q{=}0110$ \\
+2 & $A{=}0010,Q{=}1100$ & $A=1111$ (neg.) & restore, $Q_0{=}0$ & $A{=}0010,\,Q{=}1100$ \\
+3 & $A{=}0101,Q{=}1000$ & $A=0010$ ($\ge0$) & keep, $Q_0{=}1$ & $A{=}0010,\,Q{=}1001$ \\
+4 & $A{=}0101,Q{=}0010$ & $A=0010$ ($\ge0$) & keep, $Q_0{=}1$ & $A{=}0010,\,Q{=}0011$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$Q=0011=3$ (quotient), $A=0010=2$ (remainder). \good{$11 = 3\times3+2$. Correct.} Non-restoring division on the same pair converges to the identical $Q=3,\,A=2$ with fewer arithmetic operations --- worth tracing on the board only if time allows; the point (same answer, less work) is already made.
+\end{example}
+
 \section{Synthesis and Summary}
 
-Close the thread: $+7 + (-3)$ used every tool --- two's complement representation, addition without subtraction hardware, the ripple-carry adder, the discarded carry-out, and the sign check for overflow. The result $0100 = +4$ is the same number a human computes, but now it is the output of a specific circuit.
+Close the thread: $+7 + (-3)$ used every tool from the first sections --- two's complement representation, addition without subtraction hardware, the ripple-carry adder, the discarded carry-out, and the sign check for overflow. The result $0100 = +4$ is the same number a human computes, but now it is the output of a specific circuit. The \emph{same} adder, driven by different control logic, then extended the thread to multiplication (Booth's algorithm: examine $(Q_0,Q_{-1})$, add/subtract/no-op, then arithmetic-shift-right --- computing $13\times(-6)=-78$) and division (shift, subtract, one-bit decision --- restoring and non-restoring both computing $13\div3=4$ remainder $1$, differing only in efficiency). No new arithmetic hardware was needed beyond the adder built earlier in the lecture.
 
 Set up Week 3: fixed point handles fractions but with fixed range/precision; real numbers span $10^{-300}$ to $10^{300}$; Week 3 builds IEEE\,754 floating point --- sign, exponent, mantissa --- trading a little precision for a huge range.
 
-\textbf{Summary --- quick reference:} \emph{Number systems:} value $= \sum d_i r^i$; convert by repeated division; hex/octal group bits. \emph{Two's complement:} $-2^{n-1} \le x \le 2^{n-1}-1$; negate by flip + 1; addition needs no special subtraction hardware. \emph{Overflow:} carry-out $\neq$ overflow; wrong result sign is the test. \emph{Fixed point:} an agreed binary point; simple but limited range and precision. \emph{Adder:} HA/FA equations; ripple-carry chain; $A-B = A+(-B)$.
+\textbf{Summary --- quick reference:} \emph{Number systems:} value $= \sum d_i r^i$; convert by repeated division; hex/octal group bits. \emph{Two's complement:} $-2^{n-1} \le x \le 2^{n-1}-1$; negate by flip + 1; addition needs no special subtraction hardware. \emph{Overflow:} carry-out $\neq$ overflow; wrong result sign is the test. \emph{Fixed point:} an agreed binary point; simple but limited range and precision. \emph{Adder:} HA/FA equations; ripple-carry chain; $A-B = A+(-B)$. \emph{Booth's algorithm:} $(Q_0,Q_{-1})$ recoding --- $(0,1)$ adds, $(1,0)$ subtracts, $(0,0)$/$(1,1)$ shift only; never worse than shift-and-add. \emph{Division:} restoring subtracts then conditionally restores (up to 2 ops/cycle); non-restoring always does exactly 1 op/cycle.
 
 \bibliographystyle{plain}
 \bibliography{../../Bibliography_base}

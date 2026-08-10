@@ -42,6 +42,10 @@
   \item \textbf{Sum:} $S_i = P_i \oplus C_i$, another two gate levels, delay $= 2$.
 \end{itemize}
 Total $= 2 + 2 + 2 = 6$ time units.
+
+\item[\textbf{Q7}] \textbf{(A).} Booth's algorithm recodes the multiplier by examining adjacent bit pairs $(Q_0, Q_{-1})$: it adds/subtracts only at a $0\to1$ or $1\to0$ transition and does nothing on a run of identical bits ($00$ or $11$). A strictly alternating pattern $101010\ldots1010$ has a transition at \emph{every} bit position, forcing an add or subtract on every single cycle --- the maximum possible number of arithmetic operations. Runs of identical bits (options B--D) let Booth's algorithm collapse a whole run into a single add/subtract at its boundary, which is exactly the speedup the algorithm is designed to exploit.
+
+\item[\textbf{Q8}] \textbf{8.} The restoring division algorithm (as in the lecture: $A$ = remainder, $Q$ = dividend $\to$ quotient, $M$ = divisor) repeats its shift--subtract--restore-or-set-bit cycle exactly $n$ times to produce an $n$-bit quotient. For two 8-bit operands, $n = 8$, so the loop executes 8 cycles, each producing exactly one quotient bit $Q_0$ --- regardless of how many of those cycles also perform a restoring add.
 \end{enumerate}
 
 \end{document}
