@@ -49,9 +49,9 @@
 			short: "CS-401",
 			title: "Computer Organization & Architecture",
 			icsUrl: "calendar/ics/cs401.ics",
-			semesterStart: null, // TODO: set term dates to activate
-			semesterEnd: null,
-			defaultTz: null, // null → browser-local time
+			semesterStart: 1777939200000, // 2026-05-05T00:00:00Z (per 4th-sem timetable, w.e.f. 05-05-2026)
+			semesterEnd: 1785283199000, // 2026-07-28T23:59:59Z (12 teaching weeks)
+			defaultTz: "Asia/Kolkata", // GCET Kashmir, fixed IST regardless of viewer
 			kinds: ["lecture", "assignment", "test"],
 			topics: {
 				"1": "intro-performance",
