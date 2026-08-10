@@ -357,10 +357,10 @@ code {
 .hero.hero-photo--cs401 {
   background-image:
     radial-gradient(ellipse 62% 58% at 50% 58%, rgba(8, 18, 4, 0.42) 0%, transparent 76%),
-    linear-gradient(180deg, rgba(8, 18, 4, 0.35) 0%, rgba(8, 18, 4, 0.72) 100%),
-    radial-gradient(circle at 18% 22%, rgba(164, 228, 134, 0.16), transparent 46%),
-    radial-gradient(circle at 84% 78%, rgba(212, 164, 100, 0.14), transparent 50%),
-    url("../assets/Images/courses/cs401-hero.jpg");
+    linear-gradient(180deg, rgba(8, 18, 4, 0.32) 0%, rgba(8, 18, 4, 0.70) 100%),
+    radial-gradient(circle at 18% 22%, rgba(164, 228, 134, 0.14), transparent 46%),
+    radial-gradient(circle at 84% 78%, rgba(212, 164, 100, 0.12), transparent 50%),
+    url("../public/MyBackground.png");
   background-size: cover;
   background-position: center;
 }
