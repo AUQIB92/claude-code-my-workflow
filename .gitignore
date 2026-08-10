@@ -107,6 +107,13 @@ master_supporting_docs/**/supporting_books/**/extracted/
 **/bash.exe.stackdump
 bash.exe.stackdump
 
+# Department timetables — contain other branches' schedules and other
+# faculty members' names/room assignments, not just this instructor's own
+# courses. Kept local-only; never published (this repo and docs/ are both
+# public). Only the CS401 class-day pattern derived from them is committed,
+# via docs/calendar/ics/cs401.ics.
+Timetable/
+
 # Output artifacts — uncomment lines below based on your preference
 # *.rds
 # output/**/*.rds
