@@ -40,6 +40,16 @@ Concretely:
 - **Transitions between sections are full sentences**, not slide-title juxtaposition.
 - **Nothing invented, nothing dropped.** If a frame's content genuinely doesn't need its own topic section (e.g. a section-transition slide), fold its motivating sentence into the section it introduces — don't pad with a standalone paragraph just to preserve frame-for-frame correspondence.
 
+## Phase 2.5: The Detail Bar (MANDATORY — "textbook-candidate prose")
+
+The deliverable, judged as a whole, is prose a student could study from **having missed the lecture entirely**. Every slide's compressed trace must be expanded until each intermediate state is written out. Five concrete tests:
+
+- **No elided steps.** Any derivation, memory trace, pointer-lifetime trace, or step-frame sequence in the deck (e.g. "How the Stack Grows — Step 1/2/3", "How the Heap Grows — Step 1/2/3") becomes a numbered, step-by-step walk-through with each intermediate state **before** the next line of reasoning — never "then the stack changes as you'd expect."
+- **Every example fully solved.** A numbered `example` ends with its complete answer/solution. No truncated traces, no "this is left as an exercise" inside a worked example.
+- **Exercises + a separate Solutions block.** End the chapter with `\subsection*{Exercises}` (3–5 problems, reusing the deck's traces but at least one genuinely new instance) and `\subsection*{Solutions}` giving the full working, so the Notes double as a self-check. Solutions are visually contained (e.g. `\small` + a `\begingroup`/`\endgroup` so a lecturer can suppress them when printing a student copy).
+- **Reading guidance.** At each major section start, one line pointing at the anchor reading (page-cited only where a real `supporting_books/*/index.md` entry exists; honest chapter-level otherwise, per `.claude/rules/textbook-grounding.md`).
+- **SSOT re-sync clause.** If the deck changed since these Notes were last generated (scope decisions, added/dropped frames, section reorganizations), the Notes **must** be re-aligned first, then `/qa-notes` re-run. A scope change in the deck (e.g. deferring `calloc`/`realloc`) is not an excuse to keep the old coverage.
+
 ## Phase 3: Write the file
 
 `Notes/<CODE>/<lecture>-notes.tex` — XeLaTeX `article` class, styled as a textbook chapter (section/figure/example numbers prefixed by the week/lecture number, e.g. `<N>.1`, `Fig. <N>.1`, `Example <N>.1`):
@@ -88,6 +98,23 @@ Concretely:
 ```
 
 **Worked examples:** `\begin{example}...\end{example}` for every worked trace/derivation, so it numbers as `Example <N>.1`, `<N>.2`, ... automatically.
+
+**Exercises + Solutions:** a self-contained block at the end of the chapter implementing the Detail Bar's fourth requirement:
+```latex
+\subsection*{Exercises}
+\begin{enumerate}
+  \item ...
+  \item ...
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}
+  \item ...
+  \item ...
+\end{enumerate}
+\endgroup
+```
 
 Compile the same way as a Beamer deck but from `Notes/<CODE>/`: `TEXINPUTS`/`BIBINPUTS` need `../../Preambles` / `../..` relative to that cwd (same depth reasoning as `/compile-latex` — TeX writes output next to cwd, not next to the file's own path). On Windows/MiKTeX use `;` not `:` as the separator (see `.claude/skills/compile-latex/SKILL.md`).
 
