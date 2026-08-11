@@ -1,0 +1,531 @@
+% CS301 Week 1 -- a gentle introduction to memory, pointers, and ADTs
+% Difficulty: core-lite (engineering reasoning, with guided traces)
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{Where Does Your Data Live?}
+\subtitle{Week 1 --- Pointers, Dynamic Memory, and Simple Contracts}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 1]{\small Week 1}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{Starting Point}
+
+\begin{frame}{Today's Three Questions}
+  \begin{enumerate}
+    \item Where does a running C program keep its data?
+    \item How can we use memory that we request while the program runs?
+    \item How can we describe a data structure before implementing it?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Plan}
+    First draw the memory. Then use one pointer. Then write one simple contract.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{A Variable Has a Place}
+  \begin{block}{Example}
+    \texttt{int marks = 80;} stores the value \texttt{80} somewhere in memory.
+  \end{block}
+  \begin{itemize}
+    \item The variable has a name: \texttt{marks}.
+    \item It has a value: \texttt{80}.
+    \item It also has an address: its place in memory.
+  \end{itemize}
+  \vspace{0.2cm}
+  \muted{An address is like a house number. It tells us where to look.}
+\end{frame}
+
+\section{Memory}
+
+\sectiondivider{Section 1}{Memory}
+
+\begin{frame}{Two Places to Remember}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\small}]
+      \node[draw, fill=primary-blue!15, minimum width=5cm, minimum height=1.2cm,
+        align=center]
+        (stack) at (0,1.7) {\textbf{Stack}\\short-lived local variables};
+      \node[draw, fill=primary-gold!25, minimum width=5cm, minimum height=1.2cm,
+        align=center]
+        (heap) at (0,-0.1) {\textbf{Heap}\\memory requested at run time};
+      \draw[->, thick, color=primary-blue] (stack.south) -- (heap.north)
+        node[midway, right, font=\scriptsize] {simple course picture};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Local variables usually live in the stack.
+    \item Dynamic memory lives in the heap.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How the Stack Grows --- Step 1: \texttt{main} starts}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\small] at (0,0.2)
+          {\texttt{main} frame\\ \texttt{int a = 5;}};
+    \node[draw, dashed, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-1.7)
+          {room for the next function's frame};
+    \draw[->, thick, color=primary-blue] (4.1,0.6) -- (4.1,-3.2)
+      node[midway, right, font=\scriptsize] {stack grows down};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Starting \texttt{main} creates one frame holding its local variables.
+    \item Every new function call pushes a new frame just below the current one.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How the Stack Grows --- Step 2: \texttt{add} is called}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\small] at (0,0.2)
+          {\texttt{main} frame\\ \texttt{int a = 5;}};
+    \node[draw, fill=primary-gold!25, minimum width=6.4cm, minimum height=1.5cm,
+          align=center, font=\small] at (0,-1.4)
+          {\texttt{add(x=5, y=3)} frame\\ \texttt{int s = x + y;} \quad (= 8)};
+    \node[draw, dashed, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-3.0)
+          {room for yet another frame};
+    \draw[->, thick, color=primary-blue] (4.1,0.6) -- (4.1,-3.2)
+      node[midway, right, font=\scriptsize] {stack grows down};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item The call to \texttt{add} pushed a second frame with its parameters and locals.
+    \item The new frame sits at a \key{lower} address than \texttt{main}'s frame.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How the Stack Grows --- Step 3: \texttt{add} returns}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\small] at (0,0.2)
+          {\texttt{main} frame\\ \texttt{int a = 5; int s = 8;}};
+    \node[draw, dashed, minimum width=6.4cm, minimum height=1.5cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-1.4)
+          {\texttt{add} frame popped\\ (no longer exists)};
+    \draw[->, thick, color=primary-blue] (4.1,0.6) -- (4.1,-3.2)
+      node[midway, right, font=\scriptsize] {stack grows down};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Returning popped the frame, and its memory is available again.
+    \item The answer \texttt{8} was copied back into \texttt{main}'s frame.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Stack: Automatic Storage}
+  \begin{block}{Local variable}
+    A variable declared inside a function is created when the function starts.
+  \end{block}
+  \begin{itemize}
+    \item It is available while that function is running.
+    \item It disappears when the function returns.
+    \item The program manages this basic lifetime automatically.
+  \end{itemize}
+  \begin{exampleblock}{Example}
+    \texttt{int score = 80;} inside a function is a local variable.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Why Do We Need the Heap?}
+  \begin{block}{A changing problem}
+    The user enters the number of records only after the program starts.
+  \end{block}
+  \begin{itemize}
+    \item We may need space for 3 records today and 300 tomorrow.
+    \item We may want the records to remain after a helper function returns.
+    \item The heap gives us memory whose size and lifetime we can request at run time.
+  \end{itemize}
+  \key{The heap is useful when the data must be flexible.}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{Which variable can outlive the function that created it?}
+    \texttt{int score = 80;}\hfill or\hfill \texttt{int *p = malloc(sizeof(int));}
+  \end{block}
+  \begin{itemize}
+    \item The local variable \texttt{score} belongs to its function call.
+    \item The heap block remains until the program releases it with \texttt{free}.
+    \item The pointer is only the handle; the block is the data storage.
+  \end{itemize}
+  \begin{exampleblock}{Turn and talk}
+    What must remain available if another function needs the record later?
+  \end{exampleblock}
+  \muted{The exact call for this --- \texttt{malloc} and \texttt{sizeof} --- comes in a few slides.}
+\end{frame}
+
+\section{Pointers}
+
+\sectiondivider{Section 2}{Pointers}
+
+\begin{frame}{What Is a Pointer?}
+  \begin{block}{Definition}
+    A pointer is a variable that stores an address
+    \cite{Wirth2004_algorithms_data_structures}.
+  \end{block}
+  \begin{itemize}
+    \item An ordinary variable stores a value such as \texttt{80}.
+    \item A pointer stores a place such as ``where the score lives''.
+    \item The type tells C what kind of value is at that place.
+  \end{itemize}
+  \vspace{0.15cm}
+  \begin{exampleblock}{One declaration}
+    \texttt{int *p;} means: \texttt{p} can point to an \texttt{int}.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{A Pointer Picture}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\small}]
+      \node[draw, fill=primary-blue!15, minimum width=3.0cm, minimum height=1cm,
+        align=center]
+        (p) at (-2.5,0) {\texttt{p}\\address};
+      \node[draw, fill=primary-gold!25, minimum width=3.0cm, minimum height=1cm,
+        align=center]
+        (x) at (2.5,0) {value\\\texttt{80}};
+      \draw[->, very thick] (p.east) -- (x.west)
+        node[midway, above, font=\scriptsize] {points to};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item \texttt{p} does not contain the score itself.
+    \item \texttt{p} tells us where the score can be found.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{A Pointer Can Reach a Node}
+  \begin{block}{A two-field node}
+\begin{semiverbatim}
+struct node \{
+  int data;
+  struct node *next;
+\};
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item \texttt{data} stores the value.
+    \item \texttt{next} stores the address of another node.
+    \item If there is no next node, set \texttt{next = NULL}.
+  \end{itemize}
+  \muted{This is the basic building block for a linked list in a later week.}
+\end{frame}
+
+\begin{frame}{The Safe Empty Pointer}
+  \begin{block}{\texttt{NULL}}
+    \texttt{NULL} means that a pointer is not pointing to a valid object.
+  \end{block}
+  \begin{itemize}
+    \item Use it to show that a pointer is currently empty.
+    \item Check a pointer before using the object it should point to.
+    \item Never try to read through an empty pointer.
+  \end{itemize}
+  \begin{exampleblock}{Picture}
+    \texttt{struct node *head = NULL;} means ``the list is empty''.
+  \end{exampleblock}
+\end{frame}
+
+\section{One Heap Block}
+
+\sectiondivider{Section 3}{One Heap Block}
+
+\begin{frame}[fragile]{Requesting One Integer}
+  \begin{block}{The basic pattern}
+\begin{semiverbatim}
+int *p = malloc(sizeof(int));
+if (p == NULL) return 1;
+*p = 80;
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item \texttt{malloc} requests bytes from the heap.
+    \item \texttt{sizeof(int)} asks C for the right number of bytes.
+    \item \texttt{p} stores the address of the requested space.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Allocate a Complete Node}
+  \begin{block}{A safer engineering pattern}
+\begin{semiverbatim}
+struct node *p = malloc(sizeof(struct node));
+if (p == NULL) return 1;
+p->data = 42;
+p->next = NULL;
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item \texttt{sizeof(struct node)} asks for exactly one node's bytes.
+    \item \texttt{p->data} means: the \texttt{data} field of the node \texttt{p} points at.
+    \item Initialising every field makes the node's state predictable.
+    \item This node has a clear end: \texttt{p->next == NULL}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Audit the Node Before You Ship It}
+  \begin{block}{Review checklist}
+    A small program is not finished when it compiles.
+  \end{block}
+  \begin{enumerate}
+    \item Was the allocation checked against \texttt{NULL}?
+    \item Was every field initialised before the node was used?
+    \item Is there exactly one clear owner responsible for \texttt{free(p)}?
+    \item Can the program reach the node later, or has its pointer been lost?
+  \end{enumerate}
+  \begin{exampleblock}{Engineering habit}
+    Test the normal path and the allocation-failure path.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Trace It Before Running It}
+  \begin{block}{After these lines, what is true?}
+\begin{semiverbatim}
+int *p = malloc(sizeof(int));
+*p = 80;
+\end{semiverbatim}
+  \end{block}
+  \begin{enumerate}
+    \item \texttt{p} contains an address.
+    \item The heap block at that address contains \texttt{80}.
+    \item The name \texttt{p} itself is not the heap block.
+  \end{enumerate}
+  \begin{exampleblock}{Challenge}
+    Which line would fail if \texttt{p == NULL}?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{What Happened?}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\small}]
+      \node[draw, fill=primary-blue!15, minimum width=3cm, minimum height=1cm]
+        (p) at (-2.5,0) {stack: \texttt{p}};
+      \node[draw, fill=primary-gold!25, minimum width=3cm, minimum height=1cm]
+        (box) at (2.5,0) {heap: \texttt{80}};
+      \draw[->, very thick] (p.east) -- (box.west)
+        node[midway, above, font=\scriptsize] {address};
+    \end{tikzpicture}
+  \end{center}
+  \begin{enumerate}
+    \item C found a free heap block.
+    \item The address was stored in \texttt{p}.
+    \item We used \texttt{*p} to write the value \texttt{80} there.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{How the Heap Grows --- Step 1: a block of three ints}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-gold!25, minimum width=6.0cm, minimum height=1.3cm,
+          align=center, font=\small] at (0,-0.3)
+          {\texttt{p = malloc(3 * sizeof(int));}\\ \texttt{10} \quad \texttt{20} \quad \texttt{30}};
+    \node[draw, dashed, minimum width=6.0cm, minimum height=1.1cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-2.4)
+          {free heap space};
+    \draw[->, thick, color=primary-gold] (-4.1,-3.4) -- (-4.1,0.0)
+      node[midway, left, font=\scriptsize] {heap grows up};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item One \texttt{malloc} with room for three integers \key{grew the used heap} upward.
+    \item The block survives after the allocating function returns.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How the Heap Grows --- Step 2: a second block}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-gold!25, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\small] at (0,-1.5)
+          {\texttt{p = malloc(3 * sizeof(int));}\\ \texttt{10} \quad \texttt{20} \quad \texttt{30}};
+    \node[draw, fill=primary-blue!15, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\small] at (0,0.0)
+          {\texttt{q = malloc(2 * sizeof(int));}\\ \texttt{40} \quad \texttt{50}};
+    \draw[->, thick, color=primary-gold] (-4.1,-3.4) -- (-4.1,0.0)
+      node[midway, left, font=\scriptsize] {heap grows up};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item The second request placed \texttt{q}'s block at a \key{higher} address.
+    \item Blocks are independent; each keeps its own data.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How the Heap Grows --- Step 3: \texttt{free} returns a block}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, dashed, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-1.5)
+          {\texttt{free(p)} --- block returned\\ (no longer usable)};
+    \node[draw, fill=primary-blue!15, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\small] at (0,0.0)
+          {\texttt{q = malloc(2 * sizeof(int));}\\ \texttt{40} \quad \texttt{50}};
+    \draw[->, thick, color=primary-gold] (-4.1,-3.4) -- (-4.1,0.0)
+      node[midway, left, font=\scriptsize] {heap grows up};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item \texttt{free(p)} gives \texttt{p}'s block back to the system.
+    \item \texttt{q}'s block is untouched, and the used heap can shrink again.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Returning the Memory}
+  \begin{block}{When the block is no longer needed}
+\begin{semiverbatim}
+free(p);
+p = NULL;
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item \texttt{free(p)} gives the heap block back to the system.
+    \item Setting \texttt{p} to \texttt{NULL} makes the old pointer visibly empty.
+    \item A block requested with \texttt{malloc} should eventually be freed.
+  \end{itemize}
+  \good{Request memory, use it, return it.}
+\end{frame}
+
+\begin{frame}{Two Beginner Mistakes}
+  \begin{itemize}
+    \item \bad{Memory leak}: forget to call \texttt{free}; the block stays reserved.
+    \item \bad{Dangling pointer}: use a pointer after its block was freed.
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Simple habit}
+    Keep track of who requested the memory and who will return it.
+  \end{exampleblock}
+\end{frame}
+
+\section{Simple Contracts}
+
+\sectiondivider{Section 4}{Simple Contracts}
+
+\begin{frame}{What Is an ADT?}
+  \begin{block}{Abstract Data Type}
+    An ADT describes what we can do with data, without saying how it is stored
+    \cite{Sedgewick2011_algorithms,Karumanchi2017_data_structures_algorithms_made_easy}.
+  \end{block}
+  \begin{itemize}
+    \item It is a promise about operations.
+    \item The implementation is the code and memory arrangement behind the promise.
+    \item Different implementations can follow the same promise.
+  \end{itemize}
+  \vspace{0.1cm}
+  \muted{An ADT has two parts: a declaration of data, and a declaration of operations
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.}
+\end{frame}
+
+\begin{frame}{This Course Is a Tour of ADTs}
+  \begin{block}{The pattern you will see every week}
+    Linked Lists, Stacks, Queues, Priority Queues, Binary Trees, Disjoint Sets,
+    Hash Tables, and Graphs are all commonly used ADTs
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+  \end{block}
+  \begin{itemize}
+    \item Each one starts the same way: state the contract, \emph{then} implement it.
+    \item Weeks 3--12 work through this list one ADT at a time.
+    \item Today's ``bag'' is a warm-up for that pattern, not a one-off example.
+  \end{itemize}
+  \muted{Watch for this shape: ``What is a Stack?'' then ``Stack ADT'' then
+    ``Implementation'' --- every week, same order.}
+\end{frame}
+
+\begin{frame}{Example: A Very Small Bag}
+  \begin{block}{The contract}
+    A bag of integers supports three operations:
+  \end{block}
+  \begin{enumerate}
+    \item \texttt{insert(x)} --- put \texttt{x} into the bag.
+    \item \texttt{member(x)} --- answer whether \texttt{x} is present.
+    \item \texttt{size()} --- report how many items are present.
+  \end{enumerate}
+  \vspace{0.15cm}
+  \muted{The contract does not yet say whether the bag uses an array or a list.}
+\end{frame}
+
+\begin{frame}{One Contract, Two Possible Implementations}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\small}]
+      \node[draw, thick, fill=light-bg, minimum width=5cm, minimum height=1cm]
+        (adt) at (0,2) {Bag contract: insert, member, size};
+      \node[draw, fill=primary-blue!15, minimum width=3.5cm, minimum height=0.9cm]
+        (array) at (-2.5,0) {dynamic array};
+      \node[draw, fill=primary-gold!25, minimum width=3.5cm, minimum height=0.9cm]
+        (list) at (2.5,0) {linked nodes};
+      \draw[->, thick] (adt) -- (array);
+      \draw[->, thick] (adt) -- (list);
+    \end{tikzpicture}
+  \end{center}
+  \begin{block}{The key distinction}
+    Same operations, different internal arrangement.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Contract or Implementation?}
+  \begin{block}{Classify each statement}
+    Is it part of the contract, or part of one implementation?
+  \end{block}
+  \begin{enumerate}
+    \item ``\texttt{member(7)} answers yes or no.''
+    \item ``The values are stored in an array.''
+    \item ``\texttt{size()} reports the number of values.''
+  \end{enumerate}
+  \vspace{0.15cm}
+  \muted{The first and third describe what users can ask. The second describes how.}
+\end{frame}
+
+\begin{frame}{Week 1 Summary}
+  \begin{itemize}
+    \item The stack holds ordinary short-lived local variables.
+    \item The heap holds memory requested while the program runs.
+    \item A pointer stores an address; \texttt{NULL} means ``points to nothing''.
+    \item Use \texttt{malloc}, check the result, use the block, and call \texttt{free}.
+    \item An ADT describes operations; a data structure implements them.
+    \item The rest of this course is a tour of ADTs: contract first, implementation second.
+  \end{itemize}
+  \vspace{0.15cm}
+  \begin{exampleblock}{Next week}
+    We will learn how to talk about the amount of work an operation needs.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

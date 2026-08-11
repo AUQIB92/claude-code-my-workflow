@@ -30,6 +30,18 @@ master_supporting_docs/<CODE>/supporting_books/<ShortName>/book.pdf
 
 If it doesn't exist, stop and ask the user to drop the PDF there first — this skill never fetches a textbook itself (copyright; the file must come from the user).
 
+### Step 0.5: Cross-check syllabus coverage (MANDATORY)
+
+Before indexing, read `syllabi/<CODE>.md` and find the row(s) — usually one week, but check the "Weeks/Lectures Backed" a course's knowledge base already assigns to this book — that this book is supposed to back. Extract the syllabus's own topic phrase verbatim (e.g. "interrupts, polling, DMA, IOP").
+
+After Steps 1-4 produce the chapter/section breakdown, **explicitly check each syllabus topic word/phrase against what was actually found in the book** — don't just index the assumed chapter and call it done. Concretely:
+
+- If the syllabus names a specific technique/term (e.g. "DMA", "IOP", "cache", "paging"), search for that term's actual presence in the extracted chapter content, not just the chapter title. Chapter titles are frequently wrong or ambiguous (see the Hamacher2002/CS401 case below); the syllabus's specific nouns are the ground truth to check against, and a title match is not the same as a content match.
+- If a named topic is **not found anywhere in the indexed pages**, do not silently omit it. Record it in `index.md` as an explicit gap (e.g. "this edition never uses the term 'DMA'/'IOP' — see §7.3 Arbitration for the closest functional analogue") so `/create-lecture` knows to phrase that specific topic as general/standard treatment (citing a different book) rather than assuming the whole syllabus line is covered because *some* of it page-cited cleanly.
+- If the assumed chapter (from the syllabus's existing citation, e.g. "Ch. 4") turns out not to contain the syllabus's topics at all, search the table of contents for the chapter(s) that actually do, and index those instead — don't index the wrong chapter just because it was named in an unverified citation. Correct the syllabus's citation once you've verified the right chapter (small, directly-scoped fix — same discipline as any other textbook-grounding correction).
+
+**Concrete precedent:** CS401 Week 8's syllabus row said "interrupts, polling, DMA, IOP" and cited "Hamacher Ch. 4." Indexing found Ch. 4 doesn't exist as I/O content in the edition on disk, the real I/O chapters were Ch. 3 + Ch. 7, and — critically — that even the *correct* chapters never use the terms "DMA" or "IOP" anywhere in the table of contents or body. A title/chapter-number check alone would have missed this; only checking each syllabus noun against actual content surfaced it.
+
 ### Step 1: Detect text-layer vs. scanned
 
 ```bash
@@ -78,7 +90,7 @@ One row per chapter (or logical sub-unit for long chapters). Page numbers are th
 
 ### Step 5: Report
 
-State: book indexed, chapter count, any chapters that failed extraction (flag, don't silently skip), and whether OCR was needed.
+State: book indexed, chapter count, any chapters that failed extraction (flag, don't silently skip), whether OCR was needed, and the **syllabus-coverage check result** from Step 0.5 — which syllabus topics were confirmed present, and which (if any) were not found in the book at all and must stay general-treatment.
 
 ## Important
 
@@ -90,5 +102,6 @@ State: book indexed, chapter count, any chapters that failed extraction (flag, d
 
 - `.claude/rules/pdf-processing.md` — the textbook-sized-PDF splitting path and OCR fallback this skill uses.
 - `.claude/rules/textbook-grounding.md` — the invariant this index exists to satisfy: a textbook-attributed claim must trace to an indexed page.
+- `syllabi/<CODE>.md` — the syllabus-coverage ground truth Step 0.5 checks indexed content against.
 - `.claude/skills/create-lecture/SKILL.md` — Phase 0 reads `supporting_books/*/index.md` for this course.
 - `.claude/skills/verify-claims/SKILL.md` and `.claude/agents/claim-verifier.md` — check a slide's page-cited claim against this index's chapter/page mapping.

@@ -28,6 +28,21 @@ paths:
      lecture: replace [COURSE_CODE] / [COURSE NAME], set `term`, then let the
      tables grow lecture by lecture. -->
 
+## Course Profile
+
+<!-- Read by every content-producing skill in Phase 0. `Default difficulty` is
+     derived from audience level + programme position per
+     .claude/rules/difficulty-levels.md — fill it in rather than making each
+     /create-lecture invocation pass --difficulty by hand. -->
+
+| Field | Value |
+|---|---|
+| Audience level | `undergrad` \| `grad` \| `phd` — one token, plus a qualifier, e.g. `undergrad (B.Tech CSE, semester 3)` |
+| Programme position | semester N of M |
+| Default difficulty | `intro` \| `core` \| `advanced` — derive from the two rows above via `.claude/rules/difficulty-levels.md` |
+| Exam target | e.g. GATE CS, or `none` |
+| Implementation language | the language slides and labs use; overrides any anchor book's language |
+
 ---
 
 ## 0. Operating Contract (read this first, every session)

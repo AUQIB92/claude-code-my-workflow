@@ -1,0 +1,121 @@
+% =============================================================================
+% CompetitiveExam/CS401/08-io-techniques-questions.tex
+% Competitive Exam Practice 8 — GATE (Computer Science) Pattern
+% I/O Techniques (Interrupts, Polling, Synchronous/Asynchronous Buses, DMA, IOP)
+%
+% Student-facing — NO answers. Answer key: 08-io-techniques-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book): Q1-Q7 are real GATE
+% past-year questions sourced from the local GATEOverflow Volume 3 PYQ book
+% (CompetitiveExam/Books/index.md: Interrupts cluster, PDF p.65; IO Handling
+% cluster, PDF p.59). Headings and full question text were recovered via
+% pdftotext from the text layer. The book authenticates each question (year +
+% question number printed on the page), so the "— GATEOverflow V3 p.<page>"
+% tag certifies source authenticity.
+%
+% Verification note for answers: the book's own answer keys are collapsed and
+% not extractable (see CompetitiveExam/Books/index.md), and web cross-checking
+% was attempted but all search engines were bot-blocked in the session where
+% this set was built (2026-08-11). Each answer in the answers file is therefore
+% derived and justified step by step from the course material (Slides/Notes,
+% which themselves page-verify against Hamacher 6th ed. Ch. 3 / Ch. 7) rather
+% than independently web-confirmed; see the answers file header. Q8-Q11 are
+% original GATE-pattern questions filling the polling-waste, sync/async-bus,
+% DMA/cycle-stealing, and IOP subtopics the local volume does not cover at the
+% lecture's level of specificity.
+%
+% Compile with: cd CompetitiveExam/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 08-io-techniques-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{8.\arabic{section}}
+
+\title{Competitive Exam Practice 8: I/O Techniques\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type; TF = True/False.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 1987 Q1-viii, verified --- GATEOverflow V3 p.65]} \textbf{[MCQ, 1 mark]} On receiving an interrupt from an I/O device, the CPU:
+\begin{enumerate}
+  \item[(A)] Halts for a predetermined time.
+  \item[(B)] Hands over control of the address bus and data bus to the interrupting device.
+  \item[(C)] Branches off to the interrupt service routine immediately.
+  \item[(D)] Branches off to the interrupt service routine after completion of the current instruction.
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CS 1995 Q1.3, verified --- GATEOverflow V3 p.65]} \textbf{[MCQ, 1 mark]} In a vectored interrupt:
+\begin{enumerate}
+  \item[(A)] The branch address is assigned to a fixed location in memory.
+  \item[(B)] The interrupting source supplies the branch information to the processor through an interrupt vector.
+  \item[(C)] The branch address is obtained from a register in the processor.
+  \item[(D)] None of the above.
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CS 1998 Q1.20, verified --- GATEOverflow V3 p.65]} \textbf{[MCQ, 1 mark]} Which of the following is true?
+\begin{enumerate}
+  \item[(A)] Unless enabled, a CPU will not be able to process interrupts.
+  \item[(B)] Loop instructions cannot be interrupted till they complete.
+  \item[(C)] A processor checks for interrupts before executing a new instruction.
+  \item[(D)] Only level-triggered interrupts are possible on microprocessors.
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CS 1996 Q1.24, verified --- GATEOverflow V3 p.59]} \textbf{[MCQ, 1 mark]} For the daisy-chain scheme of connecting I/O devices, which of the following statements is true?
+\begin{enumerate}
+  \item[(A)] It gives non-uniform priority to various devices.
+  \item[(B)] It gives uniform priority to all devices.
+  \item[(C)] It is only useful for connecting slow devices to a processor device.
+  \item[(D)] It requires a separate interrupt pin on the processor for each device.
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[GATE CS 1987 Q2a, verified --- GATEOverflow V3 p.59]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
+
+In a microprocessor-based system, if a bus (DMA) request and an interrupt request arrive simultaneously, the microprocessor attends first to the bus request.
+
+\item[\textbf{Q6}] \textit{[GATE CS 1987 Q2b, verified --- GATEOverflow V3 p.59]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
+
+Data transfer between a microprocessor and an I/O device is usually faster in a memory-mapped-I/O scheme than in an I/O-mapped-I/O scheme.
+
+\item[\textbf{Q7}] \textit{[GATE CS 1990 Q4-ii, verified --- GATEOverflow V3 p.59]} \textbf{[TF, 2 marks]} State whether the following statement is TRUE or FALSE, with reason:
+
+The data transfer between memory and I/O devices using programmed I/O is faster than interrupt-driven I/O.
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} A 2~GHz CPU reads input from a keyboard producing 10 keystrokes per second using a \texttt{READWAIT} polling loop of 2 instructions per failed iteration. The number of polling iterations the CPU executes \emph{between} two consecutive keystrokes is \_\_\_\_\_\_\_\_.
+
+\item[\textbf{Q9}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Despite being skew-immune and self-adapting to any device speed, most high-speed processor buses use synchronous rather than asynchronous protocols primarily because:
+\begin{enumerate}
+  \item[(A)] Synchronous buses require no shared bus clock.
+  \item[(B)] Every asynchronous transfer pays two full round-trip delays, which a fast, similar-speed synchronous bus never pays.
+  \item[(C)] Synchronous buses are immune to slow devices needing wait states.
+  \item[(D)] Asynchronous protocols cannot support more than one bus master.
+\end{enumerate}
+
+\item[\textbf{Q10}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a DMA transfer, \emph{cycle stealing} refers to:
+\begin{enumerate}
+  \item[(A)] The CPU taking memory bus cycles away from the DMA controller.
+  \item[(B)] The DMA controller taking memory bus cycles the CPU would otherwise have used, because both compete for the same bus.
+  \item[(C)] The CPU executing one ISR invocation per stolen word.
+  \item[(D)] The bus arbiter granting the bus to the CPU in preference to the DMA controller.
+\end{enumerate}
+
+\item[\textbf{Q11}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} An I/O processor (IOP) differs from a DMA controller in that it:
+\begin{enumerate}
+  \item[(A)] Moves the same volume of data with less extra hardware.
+  \item[(B)] Executes a whole channel program of transfers, formats, and simple decisions independently, interrupting the CPU only when the entire program completes.
+  \item[(C)] Never interrupts the CPU at all.
+  \item[(D)] Does not need to become bus master via arbitration.
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

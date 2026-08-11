@@ -1,0 +1,235 @@
+% CS301 Week 0 -- a clean, engineering-balanced course orientation
+% Difficulty: core-lite (engineering reasoning, with guided scaffolding)
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{Why Data Structures?}
+\subtitle{Week 0 --- A Gentle, Engineering Start}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 0]{\small Week 0}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{The Big Idea}
+
+\begin{frame}{Welcome to Data Structures}
+  \begin{block}{The simple idea}
+    A data structure is a way to keep data organised so that a program can use it
+    \cite{Sedgewick2011_algorithms,Karumanchi2017_data_structures_algorithms_made_easy}.
+  \end{block}
+  \begin{itemize}
+    \item Data: student names, marks, books, messages, or numbers.
+    \item Structure: the way those items are arranged in memory.
+    \item Operations: the things we want to do, such as find, add, or remove.
+  \end{itemize}
+  \vspace{0.2cm}
+  \muted{This course starts with the idea, then slowly adds code.}
+\end{frame}
+
+\begin{frame}{A Familiar Example: Finding a Book}
+  \begin{block}{Situation}
+    You need one book from a shelf of 1,000 books.
+  \end{block}
+  \begin{itemize}
+    \item If the books are mixed up, you check them one at a time.
+    \item If the books are arranged by title, you can go directly to the right area.
+    \item The books are the same. The arrangement is different.
+  \end{itemize}
+  \begin{exampleblock}{The course question}
+    Which arrangement makes the job easy?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Correct Is Not Always Convenient}
+  \begin{block}{A correct program}
+    A loop can check every student record and eventually find the right student.
+  \end{block}
+  \begin{itemize}
+    \item With five records, this feels easy.
+    \item With millions of records, the same idea may feel slow.
+    \item We do not change the answer. We change the way the records are kept.
+  \end{itemize}
+  \vspace{0.15cm}
+  \key{Data structures help a correct program remain useful as data grows.}
+\end{frame}
+
+\begin{frame}{What You Already Know}
+  \begin{itemize}
+    \item Variables store values.
+    \item Arrays store several values in a row.
+    \item Functions divide a program into manageable pieces.
+    \item Loops repeat work.
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{exampleblock}{What this course adds}
+    We will ask: ``What arrangement fits this job?''
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Try It: Choose the Arrangement}
+  \begin{block}{You are designing a college library app. Which task matters most?}
+    \begin{enumerate}
+      \item Show books in the order they were added.
+      \item Find a book by its title.
+      \item Add a newly returned book to the available-books list.
+    \end{enumerate}
+  \end{block}
+  \begin{itemize}
+    \item There is not one best arrangement for every task.
+    \item First name the frequent operation; only then choose a structure.
+  \end{itemize}
+  \begin{exampleblock}{Pair question}
+    Which task would you design for first, and why?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{A Slightly Harder Choice}
+  \begin{block}{Library workload for one day}
+    90 students search for books. 10 books are added to the catalogue.
+  \end{block}
+  \begin{enumerate}
+    \item Which operation should the arrangement favour?
+    \item Would your answer change if 90 books were added and only 10 searches happened?
+    \item What information is still missing before you choose an implementation?
+  \end{enumerate}
+  \begin{exampleblock}{Design habit}
+    Choose for the common workload, not for the most interesting operation.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Engineering Means Balancing Costs}
+  \begin{block}{A library catalogue has three competing goals}
+    Fast search, easy updates, and reasonable memory use.
+  \end{block}
+  \begin{itemize}
+    \item Sorting the catalogue can make searching easier.
+    \item Keeping the catalogue unsorted can make new-book updates simpler.
+    \item Keeping extra indexes can speed searches but uses more memory and code.
+  \end{itemize}
+  \begin{exampleblock}{Engineering question}
+    Which cost is most important for this library, and what evidence would you collect?
+  \end{exampleblock}
+\end{frame}
+
+\section{The Roadmap}
+
+\begin{frame}{The Course Roadmap}
+  \begin{enumerate}
+    \item \key{Weeks 1--2: Foundations} --- memory, pointers, and the cost of work.
+    \item \key{Weeks 3--5: Useful linear structures} --- arrays, stacks, and queues.
+    \item \key{Weeks 6--7: Linked structures} --- data that can grow and change.
+    \item \key{Weeks 8--10: Finding and ordering} --- searching, sorting, and files.
+    \item \key{Weeks 11--12: Connected data} --- trees, graphs, and hashing.
+  \end{enumerate}
+  \vspace{0.15cm}
+  \muted{We will not learn everything today. Today we learn where we are going.}
+\end{frame}
+
+\begin{frame}{One Small Story Through the Course}
+  \begin{alertblock}{Our running example}
+    A small program reads an expression such as \texttt{(a+b)*c}.
+  \end{alertblock}
+  \begin{itemize}
+    \item A \key{stack} can help check brackets.
+    \item A \key{queue} can help process items in arrival order.
+    \item A \key{list} can hold a changing collection of names.
+    \item A \key{tree} or \key{hash table} can help organise lookups.
+  \end{itemize}
+  \muted{Stacks, queues, lists, trees, and hash tables are exactly the structures
+    every working programmer reaches for first
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy} --- and exactly
+    the ones this course covers.}
+\end{frame}
+
+\begin{frame}{The Same Data, Different Jobs}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\small}]
+      \node[draw, fill=light-bg, minimum width=2.8cm, minimum height=0.9cm]
+        (data) at (0,2.2) {student records};
+      \node[draw, fill=primary-blue!15, minimum width=2.8cm, minimum height=0.9cm]
+        (find) at (-3.3,0) {find a student};
+      \node[draw, fill=primary-gold!25, minimum width=2.8cm, minimum height=0.9cm]
+        (add) at (0,0) {add a student};
+      \node[draw, fill=primary-blue!15, minimum width=2.8cm, minimum height=0.9cm]
+        (show) at (3.3,0) {show all students};
+      \draw[->, thick] (data) -- (find);
+      \draw[->, thick] (data) -- (add);
+      \draw[->, thick] (data) -- (show);
+    \end{tikzpicture}
+  \end{center}
+  \begin{block}{Important}
+    The best structure depends on what the program does most often.
+  \end{block}
+\end{frame}
+
+\begin{frame}{How to Learn This Course}
+  \begin{itemize}
+    \item Draw a small picture before writing code.
+    \item Say what each operation should do in plain language.
+    \item Trace one example by hand.
+    \item Write a little code, compile it, and test it.
+    \item Ask ``why this structure?'' rather than only memorising its name.
+  \end{itemize}
+  \vspace{0.2cm}
+  \good{Small traces are more useful than large memorised programs.}
+\end{frame}
+
+\begin{frame}{The Four Questions We Will Keep Asking}
+  \begin{enumerate}
+    \item What data do we have?
+    \item What operations do we need?
+    \item How should the data be arranged?
+    \item What does that arrangement make easy or difficult?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Today's takeaway}
+    Data structures are choices about organisation.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{A Small Challenge Before Week 1}
+  \begin{block}{Predict}
+    A class stores 30 student names. Tomorrow, the class may grow to 300.
+  \end{block}
+  \begin{enumerate}
+    \item What information would the program need before choosing a structure?
+    \item Which operation might be more important: adding, finding, or displaying?
+    \item What would you draw first: the data or the code?
+  \end{enumerate}
+  \muted{There is no single correct answer yet. We are practising the questions.}
+\end{frame}
+
+\begin{frame}{Next Week: Where Does Data Live?}
+  \begin{block}{Our first practical question}
+    When a C program runs, where do its variables and data live?
+  \end{block}
+  \begin{itemize}
+    \item We will meet the \key{stack} and the \key{heap}.
+    \item We will see what a \key{pointer} stores.
+    \item We will allocate and release one small block of memory.
+  \end{itemize}
+  \muted{No need to know these ideas yet. Bring your questions.}
+\end{frame}
+
+\begin{frame}{Week 0 Summary}
+  \begin{itemize}
+    \item A data structure organises data for useful operations.
+    \item The same correct program can become inconvenient when data grows.
+    \item This course moves from simple structures to more flexible ones.
+    \item We choose structures by looking at the workload they must serve.
+    \item The first step is understanding memory and pointers.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

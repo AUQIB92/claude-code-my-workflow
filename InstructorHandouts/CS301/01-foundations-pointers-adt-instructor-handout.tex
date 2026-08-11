@@ -1,0 +1,468 @@
+% =============================================================================
+% InstructorHandouts/CS301/01-foundations-pointers-adt-instructor-handout.tex
+% Instructor Handout 1: Where Does Your Data Live?
+%
+% INSTRUCTOR-ONLY. Complete, self-contained teaching guide -- explanation,
+% embedded diagrams, presentation guidance, and delivery commentary are woven
+% together per topic (not split into separate documents/sections), so an
+% instructor can teach directly from this file with no slides or Notes open.
+% Explanations/diagrams/examples trace to Slides/CS301/01-foundations-pointers-adt.tex
+% and Notes/CS301/01-foundations-pointers-adt-notes.tex; "Teaching note"
+% asides are instructor judgment, visually distinguished but not a separate
+% section.
+%
+% Board-Drawable Example standard (see .claude/skills/instructor-handout/SKILL.md):
+% every topic with worked content carries >=2 distinct board-drawable examples,
+% each with an explicit board build order; each section marks them "Board:"
+% plus a live-interaction hook.
+%
+% Page-verified anchors: Wirth2004 p.111 (pointer / dynamic allocation);
+%   Sedgewick2011 p.64 (ADT definition), p.120 (bag as a collection type).
+%
+% Compile with: cd InstructorHandouts/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-foundations-pointers-adt-instructor-handout.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{1.\arabic{section}}
+\renewcommand{\thefigure}{1.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\newenvironment{teachingaside}{\begin{quote}\small\color{primary-gold}\textbf{Teaching note:}\ }{\end{quote}}
+
+\title{Instructor Handout 1: Where Does Your Data Live?\\\large Pointers, Dynamic Memory, and Simple Contracts}
+\author{Dr.\ Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+{\centering\large\color{negative}\textbf{Instructor Copy --- Not for Student Distribution}\par}
+\vspace{0.5cm}
+
+\section{Before You Teach This Lecture}
+
+\begin{itemize}
+  \item \textbf{Wirth, \textit{Algorithms and Data Structures}, \S4.2, p.111} --- the pointer / dynamic-allocation anchor. \S4.1 (p.109) gives the recursive-variability motivation. \emph{Page-cited}; index built 2026-08-11. Read the \S4.2 opening paragraph if you only read one thing.
+  \item \textbf{Sedgewick \& Wayne, \textit{Algorithms}, \S1.2, p.64} --- the ADT/data-type definition; \S1.3, p.120 --- the bag as a collection type. \emph{Page-cited}. Both are in Java; covert syntax to C per the notation registry, never present it as C.
+  \item \textbf{Karumanchi, \textit{Data Structures And Algorithms Made Easy}, Ch.~1, p.18--19 (PDF)} --- the ADT definition (``a declaration of data'' plus ``a declaration of operations'') and its list of commonly used ADTs, used here to preview the Weeks~3--12 roadmap. \emph{Page-cited}; index built 2026-08-11. \textbf{Not} a source for this lecture's pointer/\texttt{malloc} content --- indexing found zero coverage of structured programming or \texttt{malloc}/\texttt{calloc}/\texttt{realloc}/\texttt{free} in this book.
+  \item \textbf{Horowitz \& Sahni, \textit{Fundamentals of Data Structures}, Ch.~1} and \textbf{Aho--Hopcroft--Ullman, Ch.~1} --- \emph{not page-indexed}. Cite at chapter level for structured programming / the ADT framing.
+  \item \textbf{Scope notice:} this lecture deliberately defers \texttt{calloc} and \texttt{realloc}. Allocation vocabulary is only \texttt{malloc}, \texttt{sizeof}, \texttt{free}, \texttt{NULL}. Do not introduce the other two here even if students ask --- it dilutes the one-block story.
+  \item \textbf{Plan the board examples in advance} (see each section below, marked \textbf{Board:}). The two running threads --- the stack trace and the heap trace --- are the ones to rehearse; the numbers on the board must be right the first time.
+\end{itemize}
+
+\section{Starting Point: Three Questions}
+
+Open by stating the question the whole lecture answers: \emph{where does a running C program keep its data?} Write it at the top of the board and leave it there --- every section of this lesson is one corner of that answer.
+
+Pose the three questions on the board before revealing anything: (1) where does a running C program keep its data, (2) how can we use memory we request while the program runs, (3) how can we describe a data structure before implementing it. Let students guess before you structure them.
+
+\textbf{Board: three quick prediction boxes.} Draw three labelled boxes (``where,'' ``how,'' ``describe'') and invite one-word answers from the class; leave the boxes unfilled until the end and return to them in the summary. This is the lesson's live spine and costs nothing.
+
+\begin{teachingaside}
+The trap to avoid on the first frame is jumping straight into vocabulary. The ``A Variable Has a Place'' idea --- \texttt{int marks = 80} has a name, a value, \emph{and} an address --- is the seed of everything; spend the time making the address concrete before naming the stack. Use the house-number line: ``an address is like a house number; it tells us where to look.''
+\end{teachingaside}
+
+\textbf{Board: a variable and its place.} Draw one box for \texttt{marks}, put \texttt{80} inside it, and write an invented address (say \texttt{0x7FFC}) above the box. Ask: ``if we only knew the value, could we tell the box from its neighbour? What else do we need?'' Answer: the address --- which is exactly what a pointer stores.
+
+\section{Memory: The Stack and the Heap}
+
+State the two-part geography and keep the orientation fixed all term: the \key{stack} (short-lived local variables) and the \key{heap} (memory requested at run time). Figure~\ref{fig:two-places} is the simple course picture.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[every node/.style={font=\small}]
+    \node[draw, fill=primary-blue!15, minimum width=5cm, minimum height=1.2cm,
+      align=center]
+      (stack) at (0,1.7) {\textbf{Stack}\\short-lived local variables};
+    \node[draw, fill=primary-gold!25, minimum width=5cm, minimum height=1.2cm,
+      align=center]
+      (heap) at (0,-0.1) {\textbf{Heap}\\memory requested at run time};
+    \draw[->, thick, color=primary-blue] (stack.south) -- (heap.north)
+      node[midway, right, font=\scriptsize] {simple course picture};
+  \end{tikzpicture}
+  \caption{The two places a running C program keeps data. Orientation (stack
+  above, heap below) is fixed for the whole course.}
+  \label{fig:two-places}
+\end{figure}
+
+\textbf{Board: draw the two boxes first} (stack top, heap bottom), label the growth directions \emph{only if} a student asks --- the detailed growth is the next move.
+
+\subsection{The stack grows (Questions worth the whole story)}
+
+The deck's step-frames (Figures~\ref{fig:stack1}--\ref{fig:stack2}) make automatic storage a three-step story:
+
+\begin{enumerate}
+  \item \texttt{main} starts $\Rightarrow$ one frame holding \texttt{int a = 5;}.
+  \item \texttt{add(x=5, y=3)} is called $\Rightarrow$ a second frame is pushed \emph{below}, holding the parameters and \texttt{int s = x + y; = 8}.
+  \item \texttt{add} returns $\Rightarrow$ its frame is popped, and \texttt{8} was copied back into \texttt{main}'s frame.
+\end{enumerate}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\small] at (0,0.2)
+          {\texttt{main} frame\\ \texttt{int a = 5;}};
+    \node[draw, dashed, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-1.7)
+          {room for the next function's frame};
+    \draw[->, thick, color=primary-blue] (4.1,0.6) -- (4.1,-3.2)
+      node[midway, right, font=\scriptsize] {stack grows down};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \caption{Stack, Step 1: \texttt{main} starts and its frame is created holding
+  \texttt{int a = 5;}.}
+  \label{fig:stack1}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\small] at (0,0.2)
+          {\texttt{main} frame\\ \texttt{int a = 5;}};
+    \node[draw, fill=primary-gold!25, minimum width=6.4cm, minimum height=1.5cm,
+          align=center, font=\small] at (0,-1.4)
+          {\texttt{add(x=5, y=3)} frame\\ \texttt{int s = x + y;} \quad (= 8)};
+    \node[draw, dashed, minimum width=6.4cm, minimum height=1.1cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-3.0)
+          {room for yet another frame};
+    \draw[->, thick, color=primary-blue] (4.1,0.6) -- (4.1,-3.2)
+      node[midway, right, font=\scriptsize] {stack grows down};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \caption{Stack, Step 2: the call to \texttt{add} pushes a second frame at a
+  lower address. Returning (Step 3) pops it.}
+  \label{fig:stack2}
+\end{figure}
+
+\textbf{Board: live stack trace (interactive).} Draw the empty board frame; ask a student to ``call'' \texttt{add} by walking to the board and pushing a new frame below \texttt{main}'s. Then a second student ``returns'' and erases it, copying \texttt{8} up. Two volunteers, three steps, and the whole class watches the stack grown and shrink. Ask mid-way: ``\emph{where does the next frame go --- higher or lower address?}'' (Lower --- the stack grows down.)
+
+\textbf{Board: a second, distinct trace (prediction trap).} Pose a different call: \texttt{main} holds \texttt{int n = 3;} and calls \texttt{doubleIt(n)} whose local is \texttt{int d = 2*n;}. Ask the class to draw the two-frame picture \emph{before} you do, including which address region is higher. Reveal after a show of hands.
+
+\begin{teachingaside}
+The recurring student error here is treating the stack as a ``magic box that grows.'' The teaching move is the low-address line: the \emph{directions} (heap up, stack down) get drawn once and reused for 12 weeks; if you vary them you undo a later diagram. Also be explicit that \emph{automatic} means ``the program manages it with no instructions from you'' --- students conflate ``automatic'' with ``I don't have to think about it,'' which is exactly wrong when pointers enter.
+\end{teachingaside}
+
+\subsection{Why the stack is not enough}
+
+State the requirement the stack cannot meet: the user enters the record count only after the program runs, and we may need 3 records today, 300 tomorrow. The stack decides frame sizes at compile time and discards locals on return --- it fails on size \emph{and} lifetime.
+
+\textbf{Board: the guessing trap.} Write \texttt{int a[1000000];} on the board and ask: ``when is this wasteful, and when does it still fail?'' (Wasteful when the count is small; fails when it exceeds a million --- so guessing rescues nothing.) This reuses Wirth's p.111 argument without the formalism: variable-sized data needs storage allocated \emph{when the data comes into existence} \cite{Wirth2004_algorithms_data_structures}.
+
+\textbf{Board: the prediction question (live).} Put the two declarations on the board:
+\begin{center}
+\texttt{int score = 80;} \quad vs. \quad \texttt{int *p = malloc(sizeof(int));}
+\end{center}
+Ask: ``\emph{which variable can outlive the function that created it?}'' Let votes land. Answer: the \emph{block}, not the variable that names it --- the pointer is only the handle. This sets up the entire next two sections. Do not reveal \texttt{malloc} detail here; you told them the call exists, and that is the hook.
+
+\section{Pointers: The Handle on Memory}
+
+\begin{definitionbox}{Pointer}
+A variable that stores an address. Its type records what kind of object resides at that address \cite{Wirth2004_algorithms_data_structures}.
+\end{definitionbox}
+
+The contrast to draw: an ordinary variable stores a value such as \texttt{80}; a pointer stores a \emph{place}. \texttt{int *p;} means ``\texttt{p} can point to an \texttt{int}.'' Every pointer is a handle, not the data.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[every node/.style={font=\small}]
+    \node[draw, fill=primary-blue!15, minimum width=3.0cm, minimum height=1cm,
+      align=center]
+      (p) at (-2.5,0) {\texttt{p}\\address};
+    \node[draw, fill=primary-gold!25, minimum width=3.0cm, minimum height=1cm,
+      align=center]
+      (x) at (2.5,0) {value\\\texttt{80}};
+    \draw[->, very thick] (p.east) -- (x.west)
+      node[midway, above, font=\scriptsize] {points to};
+  \end{tikzpicture}
+  \caption{A pointer picture: \texttt{p} holds an address; the value \texttt{80}
+  lives at that address.}
+  \label{fig:pointer-picture}
+\end{figure}
+
+\textbf{Board: box-and-arrow.} Draw the two boxes, put \texttt{80} in the right one, then draw the arrow and label it ``points to.'' Ask: ``\emph{what does \texttt{p} contain --- the \texttt{80} or the address?}'' (The address.) The arrow is the whole abstraction.
+
+\subsection{Pointers reach structures and stop}
+
+Introduce the two-field node:
+
+\begin{center}
+\small
+\begin{verbatim}
+struct node {
+  int data;
+  struct node *next;
+};
+\end{verbatim}
+\end{center}
+
+\texttt{data} stores the value; \texttt{next} stores the address of \emph{another} node; if there is no next node, \texttt{next = NULL}. Establish the arrow field-access now: \texttt{p->data} reads the \texttt{data} field of the node \texttt{p} points at. (The deck defines \texttt{->} at first use.)
+
+\begin{definitionbox}{\texttt{NULL}}
+The address value meaning ``points at nothing.'' Reading through it is undefined behaviour --- in practice, a crash.
+\end{definitionbox}
+
+\textbf{Board: node-picture drill (interactive).} Draw three boxes --- \texttt{head} on the board's left, then two node boxes, \texttt{data}/\texttt{next} each. Ask the class to draw the arrows so that \texttt{head} points at node 1 and node 1 points at node 2, with node 2's \texttt{next} written \texttt{NULL}. Then erase the middle arrow and ask: ``\emph{what happens to node 2 now?}'' Answer: reachable no longer --- a preview of how a \bad{dangling} situation begins.
+
+\textbf{Board: second distinct instance.} Instead of node 2, ask the class to extend to a third node and mark where the chain terminates --- then give the one-line meaning of \texttt{struct node *head = NULL;} (``the list is empty''). Two arrows, labels, one \texttt{NULL}: a cheap repeat that fixes the convention.
+
+\begin{teachingaside}
+Students will write \texttt{((*p).data)} from an earlier course and will resist \texttt{p->data} as ``sugar.'' Hold the line: the course standard is \texttt{->} everywhere, and the convention registry enforces it. Also expect the ``is a pointer a number?'' question --- yes, an address is a number, but its \emph{type} records what lives there; that is why \texttt{int *} and \texttt{struct node *} are different types.
+\end{teachingaside}
+
+\section{One Heap Block: Allocate, Use, Return}
+
+The whole memory discipline of the course is three moves, done to one block at a time. Restate the lesson's spine before this section: \good{request memory, use it, return it.} Section~\ref{sec:heap-detail} below is the worked core; Section~\ref{sec:heap-growth} is the growth picture; Section~\ref{sec:heap-return} is the return and the two mistakes.
+
+\section{Requesting One Integer}
+\label{sec:heap-detail}
+
+State the pattern before any explanation:
+
+{\footnotesize
+\begin{verbatim}
+int *p = malloc(sizeof(int));
+if (p == NULL) return 1;
+*p = 80;
+\end{verbatim}
+}
+
+Three facts: \texttt{malloc} requests bytes from the heap; \texttt{sizeof(int)} asks C for the right number of bytes; \texttt{p} stores the address of the requested space. Emphasise that you never count bytes by hand.
+
+\textbf{Board: the pattern with a distinct instance.} Walk the same three lines but for \texttt{double} instead of \texttt{int}: \texttt{double *d = malloc(sizeof(double)); if (d == NULL) return 1; *d = 3.5;}. Ask: ``\emph{what changes between the int and the double version?}'' Answer: only the type in the pointer declaration and inside \texttt{sizeof} --- the shape is identical. This is the ``one pattern, many types'' payoff.
+
+\textbf{Board: live failure trace.} Ask ``\emph{which line would fail if \texttt{p} is \texttt{NULL}?}'' (Line three, the dereference.) If \texttt{malloc} returned \texttt{NULL}, line three reads from nothing --- a crash. The \texttt{if} guard makes line two the controlled exit. Correct the habit live: never let a line touch a pointer that \emph{may} be \texttt{NULL} before you have checked.
+
+\begin{teachingaside}
+The most common lab mistake this week is dropping the \texttt{if (p == NULL)} line ``because it never happens.'' The teaching move is the trace above: the dereference is not protected, so an out-of-memory condition becomes a crash at a random later line. And do not let students \texttt{malloc(sizeof(8))}; the argument is the \emph{type}, and \texttt{sizeof} is the type-size operator.
+\end{teachingaside}
+
+\subsection{Allocate a complete node}
+
+The safer engineering pattern for the whole course:
+
+{\footnotesize
+\begin{verbatim}
+struct node *p = malloc(sizeof(struct node));
+if (p == NULL) return 1;
+p->data = 42;
+p->next = NULL;
+\end{verbatim}
+}
+
+Four properties to narrate: \texttt{sizeof(struct node)} asks for exactly one node (not a hand-counted \texttt{8} or \texttt{12}); the result is checked before use; \texttt{p->data} sets the value field; \texttt{p->next = NULL} marks the explicit end. Initialising every field makes state predictable.
+
+\textbf{Board: audit-the-node checklist (interactive ``code review'').} Write the four checks and ask the class to \emph{vet a snippet you show}:
+\begin{enumerate}
+  \item Was the allocation checked against \texttt{NULL}?
+  \item Was every field initialised before use?
+  \item Is there exactly one clear owner responsible for \texttt{free(p)}?
+  \item Can the program reach the node later, or has its pointer been lost?
+\end{enumerate}
+Show a deliberately broken variant --- say, no \texttt{NULL} check and no \texttt{next = NULL} --- and have students find the two violations. Then fix it live.
+
+\textbf{Board: trace-before-run challenge.} Put the two lines \texttt{int *p = malloc(sizeof(int)); *p = 80;} on the board and ask: ``\emph{what is true after these lines?}'' (p holds an address; the block holds \texttt{80}; \texttt{p} is not the block.) Reuse Figure~\ref{fig:happened} as the shared reference.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[every node/.style={font=\small}]
+    \node[draw, fill=primary-blue!15, minimum width=3cm, minimum height=1cm]
+      (p) at (-2.5,0) {stack: \texttt{p}};
+    \node[draw, fill=primary-gold!25, minimum width=3cm, minimum height=1cm]
+      (box) at (2.5,0) {heap: \texttt{80}};
+    \draw[->, very thick] (p.east) -- (box.west)
+      node[midway, above, font=\scriptsize] {address};
+  \end{tikzpicture}
+  \caption{What happened: \texttt{p} lives on the stack and holds the address of
+  a heap block containing \texttt{80}.}
+  \label{fig:happened}
+\end{figure}
+
+\section{How the Heap Grows}
+\label{sec:heap-growth}
+
+Now the converse picture: instead of growing the stack downward, the heap grows \emph{upward}. Three steps, mirroring the stack trace (Figures~\ref{fig:heap1}--\ref{fig:heap3}).
+
+\textbf{Board: heap growth trace (interactive).} Draw the empty heap column. Ask a volunteer to ``call \texttt{malloc(3 * sizeof(int))}'' and draw the block holding \texttt{10 20 30} just above the bottom; a second volunteer \texttt{malloc}'s \texttt{q}'s two-element block \emph{above} it; a third volunteers \texttt{free(p)} and shades the returned region ``free again.'' The class watches the used heap grow up then shrink.
+
+\begin{teachingaside}
+The single most instructive contrast in the lecture is running the two traces back to back: a volunteer pushed a stack frame \emph{down} and a volunteer pushed a heap block \emph{up}. Ask ``\emph{why opposite directions?}'' --- so the two regions can grow toward each other and share one free space without colliding (the real layout). If time permits, say only that much; the deck says no more in Week 1.
+\end{teachingaside}
+
+\textbf{Board: second distinct instance (prediction).} Cover Steps 2--3 and ask: ``\emph{after \texttt{free(q)}, where does a new \texttt{malloc} of three integers land?}'' Let guesses land, then reveal that exact placement is the allocator's choice --- what matters is that freed space is \emph{reusable}, not its guessed address. This inoculates students against hard-coding addresses.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-gold!25, minimum width=6.0cm, minimum height=1.3cm,
+          align=center, font=\small] at (0,-0.3)
+          {\texttt{p = malloc(3 * sizeof(int));}\\ \texttt{10} \quad \texttt{20} \quad \texttt{30}};
+    \node[draw, dashed, minimum width=6.0cm, minimum height=1.1cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-2.4)
+          {free heap space};
+    \draw[->, thick, color=primary-gold] (-4.1,-3.4) -- (-4.1,0.0)
+      node[midway, left, font=\scriptsize] {heap grows up};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \caption{Heap growth, Step 1: one \texttt{malloc(3 * sizeof(int))} grows the
+  used heap upward with a block holding \texttt{10}, \texttt{20}, \texttt{30}.}
+  \label{fig:heap1}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, fill=primary-gold!25, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\small] at (0,-1.5)
+          {\texttt{p = malloc(3 * sizeof(int));}\\ \texttt{10} \quad \texttt{20} \quad \texttt{30}};
+    \node[draw, fill=primary-blue!15, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\small] at (0,0.0)
+          {\texttt{q = malloc(2 * sizeof(int));}\\ \texttt{40} \quad \texttt{50}};
+    \draw[->, thick, color=primary-gold] (-4.1,-3.4) -- (-4.1,0.0)
+      node[midway, left, font=\scriptsize] {heap grows up};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \caption{Heap growth, Step 2: a second \texttt{malloc} places \texttt{q}'s
+  block at a higher address; blocks are independent.}
+  \label{fig:heap2}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
+          rounded corners=2pt] at (0,-1.5) {};
+    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[draw, dashed, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\scriptsize, text=neutral] at (0,-1.5)
+          {\texttt{free(p)} --- block returned\\ (no longer usable)};
+    \node[draw, fill=primary-blue!15, minimum width=6.0cm, minimum height=1.2cm,
+          align=center, font=\small] at (0,0.0)
+          {\texttt{q = malloc(2 * sizeof(int));}\\ \texttt{40} \quad \texttt{50}};
+    \draw[->, thick, color=primary-gold] (-4.1,-3.4) -- (-4.1,0.0)
+      node[midway, left, font=\scriptsize] {heap grows up};
+    \node[font=\scriptsize, text=neutral] at (0,-4.1) {low addresses};
+  \end{tikzpicture}
+  \caption{Heap growth, Step 3: \texttt{free(p)} returns \texttt{p}'s block;
+  \texttt{q}'s block is untouched.}
+  \label{fig:heap3}
+\end{figure}
+
+\section{Returning the Memory, and Two Beginner Mistakes}
+\label{sec:heap-return}
+
+The return idiom is two lines that travel together:
+
+{\footnotesize
+\begin{verbatim}
+free(p);
+p = NULL;
+\end{verbatim}
+}
+
+\texttt{free(p)} gives the heap block back to the system; \texttt{p = NULL} makes the old pointer visibly empty so it cannot be mistakenly used. This is the top of the deck's summary line: \good{Request memory, use it, return it.}
+
+The two mistakes that violate it:
+
+\begin{itemize}
+  \item \bad{Memory leak}: forget to call \texttt{free}; the block stays reserved (and if the pointer is overwritten, nothing can reach it ever again). Nothing crashes; the program quietly grows.
+  \item \bad{Dangling pointer}: use a pointer after its block was freed. Reads are garbage; writes corrupt whatever now occupies that space.
+\end{itemize}
+
+\textbf{Board: the two mistakes side by side (interactive clinical case).} Draw the heap with one block; then:
+\begin{enumerate}
+  \item Sketch the \bad{leak}: erase the variable box while leaving the heap block --- ask ``\emph{who can still reach this block?}'' (No one. It is gone from reach but still reserved.)
+  \item Sketch the \bad{dangling} pointer: shade the freed block ``free,'' keep the pointer arrow sharp --- ask ``\emph{what does the arrow now point at?}'' (Nothing usable.)
+\end{enumerate}
+The live habit: the owner is the one who frees. Ask a student to re-state who owns the node allocated in the \texttt{struct node} example.
+
+\textbf{Board: a second, distinct instance.} Show the leak on a \emph{loop}: a program that allocates one node per iteration and never frees any. Trace the growth and ask: ``\emph{what eventually happens to the program?}'' (It runs out of memory; nothing crashes today, but it dies on a long run.) This makes the leak concrete rather than abstract.
+
+\begin{teachingaside}
+Expect students to free \emph{without} setting \texttt{NULL}, then to dereference the stale pointer in a later function and blame the compiler. The pair \texttt{free(p); p = NULL;} is a single habit --- teach it as one gesture, not two lines. Also expect the ``I freed it but nothing bad happened'' shrug: the bug is silent today and fatal on the next run. That silence is why the framework exists.
+\end{teachingaside}
+
+\section{Simple Contracts: The ADT}
+
+\begin{definitionbox}{Abstract data type (ADT)}
+A description of what we can do with data, without saying how it is stored: a promise about operations \cite{Sedgewick2011_algorithms}.
+\end{definitionbox}
+
+The contract states \emph{what}; the implementation states \emph{how}; different implementations can follow the same promise. Sedgewick \& Wayne's one-liner, p.64: a data type is ``a set of values and a set of operations on those values'' \cite{Sedgewick2011_algorithms}.
+
+\textbf{Board: the bag contract (write it first).} Write on the board, one line each:
+\begin{enumerate}
+  \item \texttt{insert(x)} --- put \texttt{x} into the bag.
+  \item \texttt{member(x)} --- answer whether \texttt{x} is present.
+  \item \texttt{size()} --- report how many items are present.
+\end{enumerate}
+Pause and underline: ``\emph{the contract does not say whether the bag uses an array or a list.}'' That silence is the feature.
+
+\textbf{Board: one contract, two implementations (interactive classify).} Draw the contract box on top, then two boxes below --- \emph{dynamic array} and \emph{linked nodes} --- with ``implements'' arrows (Figure~\ref{fig:adt}). Run the deck's classify drill live, having students raise hands:
+\begin{enumerate}
+  \item ``\texttt{member(7)} answers yes or no.'' --- \good{contract}: what users can ask.
+  \item ``The values are stored in an array.'' --- \bad{implementation}: how.
+  \item ``\texttt{size()} reports the number of values.'' --- \good{contract}: what users can ask.
+\end{enumerate}
+The split is the lasting skill: \key{state the contract before writing a line of the implementation}.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[every node/.style={font=\small}]
+    \node[draw, thick, fill=light-bg, minimum width=5cm, minimum height=1cm]
+      (adt) at (0,2) {Bag contract: insert, member, size};
+    \node[draw, fill=primary-blue!15, minimum width=3.5cm, minimum height=0.9cm]
+      (array) at (-2.5,0) {dynamic array};
+    \node[draw, fill=primary-gold!25, minimum width=3.5cm, minimum height=0.9cm]
+      (list) at (2.5,0) {linked nodes};
+    \draw[->, thick] (adt) -- (array);
+    \draw[->, thick] (adt) -- (list);
+  \end{tikzpicture}
+  \caption{One contract, two implementations. Same operations, different
+  internal arrangement; the caller's code does not change.}
+  \label{fig:adt}
+\end{figure}
+
+\textbf{Board: second distinct instance (design question).} Pose a variant contract --- ``a queue of integers with \texttt{enqueue} and \texttt{dequeue}'' --- and ask the class which of the two bottom boxes they would \emph{guess} is cheaper for \emph{dequeue}. (Either answer is fine; the point is that both \emph{could} implement it, which is the abstract claim.) Note Sedgewick \& Wayne's \S1.3, p.120 offers bag/queue/stack as three collections differing only in which object is removed next --- a one-minute pointer for the curious.
+
+\textbf{Board: the course roadmap, ADT by ADT.} List on the board: Linked Lists, Stacks, Queues, Priority Queues, Binary Trees, Disjoint Sets, Hash Tables, Graphs --- the commonly used ADTs, in Karumanchi's phrasing, ``a declaration of data'' plus ``a declaration of operations'' (Karumanchi2017, p.~18--19 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}. Point out that this is not a random list: it is exactly the Weeks~3--12 work-list, and every one of those chapters opens the same way this section just did --- ``What is a Stack?'', then ``Stack ADT'', \emph{then} implementation. Today's bag is the class's first rehearsal of a pattern the course repeats eight more times.
+
+\begin{teachingaside}
+Karumanchi2017 is a strong anchor for the \emph{shape} of the ADT idea and for this roadmap. It is deliberately not cited in the stack, heap, or pointer sections above. Indexing it found no coverage there of structured programming or of C's heap-allocation calls (this course's supporting-books index, Step~0.5 coverage check). When answering student questions: cite Karumanchi2017 for ``what is an ADT'' and ``what's coming''; cite Wirth2004 for the C memory-management mechanics.
+\end{teachingaside}
+
+\begin{teachingaside}
+The ADT section is where classes mentally check out unless it is \emph{used}. The classify drill is the anchor --- it forces the what-vs-how split out of each student. Do not present the ADT as a vocabulary item; present it as a design decision, and preview that Weeks~3 and~7 implement the \emph{same} stack twice so the choice becomes real. This is deliberately the lightest-weight theoretical point of the lecture, matching the intro-level difficulty.
+\end{teachingaside}
+
+\section{Synthesis and Summary}
+
+Close by returning to the three prediction boxes from the opening frame and filling them in: \emph{where} = the stack (short-lived locals) and the heap (run-time requests); \emph{how} = \texttt{malloc}/\texttt{sizeof} obtains a heap block and \texttt{free} returns it, through a pointer handle; \emph{describe} = an ADT states operations before any implementation. The three boxes are the three questions of the title slide, now answered.
+
+\textbf{Quick reference.} \emph{Stack:} automatic, scope-bound, grows down; each call pushes a frame, each return pops it. \emph{Heap:} run-time sized, lifetime-controlled, grows up; \texttt{malloc} obtains, \texttt{free} returns, \texttt{NULL} means ``nothing.'' \emph{Pointer:} stores an address; \texttt{->} reads a field; never read through \texttt{NULL}. \emph{Allocation idiom:} \texttt{malloc} + \texttt{sizeof} $\rightarrow$ check \texttt{NULL} $\rightarrow$ initialise every field $\rightarrow$ use $\rightarrow$ \texttt{free} + set \texttt{NULL}. \emph{Two mistakes:} leak (never freed) and dangling pointer (used after free); every allocation has one owner. \emph{ADT:} operations stated without storage; a data structure is one implementation.
+
+Set up Week 2's hook: we can now build two implementations of the same bag, but we have no way to say which is better --- only ``it felt fast.'' Next week supplies the vocabulary (asymptotic analysis) to compare them without running either.
+
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+
+\end{document}

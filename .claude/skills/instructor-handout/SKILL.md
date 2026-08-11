@@ -27,7 +27,17 @@ For each topic/diagram/derivation, in the order the lecture presents them, write
 3. **How to present it** — folded in immediately after or alongside the diagram, not deferred to an end-of-document section: what to draw first vs. second (reuse the diagram's own coordinate-map comment, `tikz-prevention.md` Rule P2, as the real build order), and the line of explanation that goes with each stage, written as continuous guidance an instructor can read once and internalize, not a terse bullet.
 4. **Where students get stuck** — a specific, concrete misconception or error pattern for *this* topic, folded in at the point it's relevant, not batched into a generic list.
 5. **A question worth asking live** — where it naturally fits the explanation's flow (often right before revealing an answer the explanation is about to give).
-6. **An extra worked example**, if this topic already has one worked example in the Notes — a genuinely different instance (different registers/instructions), so the instructor has a second one ready without inventing it live.
+6. **At least 2 board-drawable examples per topic with worked content** — see the Board-Drawable Example standard below.
+
+## Board-Drawable Example standard (MANDATORY)
+
+The handout must make a chalk-/whiteboard class interactive, not just lecture. For **every** topic that has calculational or traceable content, provide **at least two distinct board-drawable examples**, plus a live-interaction hook:
+
+- **Distinct instances, not restates.** Each example must differ in its numbers/instances (e.g. a different couple of machines, a different base, a different trace) so the instructor has a second one ready without inventing it live — the old one-example-per-topic rule is explicitly superseded.
+- **Explicit board build order.** For each example, state *what to draw first vs. second, and what to label last*, with the line of narration that accompanies each stage. Reuse the diagram's coordinate-map comment (tikz-prevention Rule P2) as the construction order for diagram examples; a pure-symbol example gets an "on the board, in order:" sequence.
+- **Live-interaction hook.** At least one per topic: a pose-a-question, a prediction trap ("guess the speedup before I reveal it"), or a "draw the next state" prompt that forces participation before the answer is revealed.
+- **Sourcing rule.** Derived examples trace 1:1 to the deck/Notes (SSOT — the diagram already passed `tikz-reviewer`, port it verbatim). Any *additional* examples may come from the indexed textbooks too (`supporting_books/*/index.md`: real pages only) or honest chapter-level attribution — never invented numbers presented as textbook results.
+- **Visual cue.** Mark each board example inline as `\textbf{Board:}` at the start of its paragraph so an instructor scanning the page sees the drawable moments, distinct from the sourced `teachingaside` commentary.
 
 ## Grounding rules (unchanged from before)
 
@@ -90,7 +100,7 @@ Compile the same way as Notes: `TEXINPUTS`/`BIBINPUTS` relative to `InstructorHa
 
 ## Report
 
-State: topics covered, extra worked examples added, teaching asides included, self-study sections page-cited vs. general, and the file path written.
+State: topics covered, board-drawable examples added (minimum 2 per worked-content topic, satisfied), live-interaction hooks included, teaching asides included, self-study sections page-cited vs. general, and the file path written.
 
 ## Cross-references
 

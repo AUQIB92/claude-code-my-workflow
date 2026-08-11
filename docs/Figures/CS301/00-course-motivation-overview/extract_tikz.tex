@@ -1,0 +1,23 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\begin{document}
+
+\begin{frame}
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\small}]
+      \node[draw, fill=light-bg, minimum width=2.8cm, minimum height=0.9cm]
+        (data) at (0,2.2) {student records};
+      \node[draw, fill=primary-blue!15, minimum width=2.8cm, minimum height=0.9cm]
+        (find) at (-3.3,0) {find a student};
+      \node[draw, fill=primary-gold!25, minimum width=2.8cm, minimum height=0.9cm]
+        (add) at (0,0) {add a student};
+      \node[draw, fill=primary-blue!15, minimum width=2.8cm, minimum height=0.9cm]
+        (show) at (3.3,0) {show all students};
+      \draw[->, thick] (data) -- (find);
+      \draw[->, thick] (data) -- (add);
+      \draw[->, thick] (data) -- (show);
+    \end{tikzpicture}
+\end{center}
+\end{frame}
+
+\end{document}

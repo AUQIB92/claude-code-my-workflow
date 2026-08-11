@@ -1,0 +1,66 @@
+% =============================================================================
+% Assignments/CS401/08-io-techniques-assignment.tex
+% Assignment 8: I/O Techniques
+%
+% Student set — NO answers. Solution key: 08-io-techniques-solutions.tex
+% (gitignored, never published). Sourced from Slides/CS401/08-io-techniques.tex
+% and Notes/CS401/08-io-techniques-notes.tex.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 08-io-techniques-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 08-io-techniques-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 08-io-techniques-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{8.\arabic{section}}
+
+\title{Assignment 8: I/O Techniques}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Deadline:} \key{Tuesday, 25 August 2026, 11:59 PM} --- exactly \emph{two weeks} from issue (11 August 2026). Late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions.
+
+\section{Conceptual}
+
+\textbf{Q1.} A system gates every interrupt request through two independent switches: a single global bit \texttt{IE} inside the processor status register, and a per-device enable bit (\texttt{KIRQ} for the keyboard, \texttt{DIRQ} for the display) inside that device's control register. Explain why \emph{both} levels are needed rather than a single global switch. Give one concrete scenario where a programmer would want to (a) clear \texttt{PS.IE} globally while leaving every per-device enable set, and (b) clear a single device's own enable bit while leaving \texttt{PS.IE}$=1$.
+
+\textbf{Q2.} Compare two designs for resolving ``which device raised the interrupt?'': \textbf{polling the sources} and \textbf{vectored interrupts}. What exactly does the interrupt-vector table store, and why does the vectored design achieve \emph{constant-time} dispatch regardless of device count? Under what conditions is polling the sources still an acceptable choice?
+
+\section{Numerical}
+
+\textbf{Q3.} A 1~GHz CPU reads input from a keyboard that produces 10 keystrokes per second (one every 0.1~s). The \texttt{READWAIT} polling loop is 2 instructions per failed iteration (\texttt{Test KIN} plus the failed \texttt{Branch}). Following the method of the lecture's worked example, compute how many \texttt{READWAIT} iterations the CPU executes \emph{between} two consecutive keystrokes. State what useful work the CPU accomplishes on each of those iterations.
+
+\textbf{Q4.} A disk transfers a 12~KB block to memory, one 4-byte word at a time, using interrupt-driven I/O. Each ISR invocation costs 25 clock cycles of CPU time.
+\begin{enumerate}
+  \item[(a)] How many ISR invocations does the whole block transfer require?
+  \item[(b)] Re-design the same transfer using a DMA controller whose setup costs 40 clock cycles and whose single completion interrupt costs 25 clock cycles. How many CPU events does DMA require in total?
+  \item[(c)] The CPU runs at 2~GHz. Convert both totals into CPU time (in microseconds) and state, in one sentence, which technique's cost is scale-independent in block size and which is not.
+\end{enumerate}
+
+\section{Design}
+
+\textbf{Q5.} A system has three interrupt-capable devices: a fire alarm, a keyboard, and a printer. The fire alarm is safety-critical and must never be masked; the keyboard is used continuously; the printer is used occasionally. You are given the \texttt{IPENDING}/\texttt{IENABLE} register pair and a priority encoder from the lecture's design.
+\begin{enumerate}
+  \item[(a)] Assign each device a priority (1 = highest) and give the \texttt{IENABLE} mask value that keeps the fire alarm always enabled while allowing you to silence the keyboard and printer during a critical section.
+  \item[(b)] The fire alarm and the keyboard both raise a request on the same cycle while the printer is idle and interrupt nesting is disabled. Describe, step by step using the lecture's five-step handling scenario, the complete sequence from request through \texttt{RTI}, including what happens to the keyboard's request while the alarm's ISR runs.
+\end{enumerate}
+
+\textbf{Q6.} Design the CPU-side setup for a 64~KB disk-to-memory DMA transfer, again 4 bytes per word.
+\begin{enumerate}
+  \item[(a)] State the value that must be written into the DMA controller's word-count register.
+  \item[(b)] Describe the sequence of events after the CPU starts the DMA: who becomes bus master and via what mechanism, how the block is moved, and exactly how many times the CPU is interrupted for the whole transfer.
+  \item[(c)] Explain what \textbf{cycle stealing} is, why it is a necessary consequence of DMA sharing the memory bus with the CPU, and what the CPU loses during the transfer.
+\end{enumerate}
+
+\end{document}

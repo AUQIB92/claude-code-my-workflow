@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>20 agents, 63 skills, 36 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>20 agents, 63 skills, 38 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 

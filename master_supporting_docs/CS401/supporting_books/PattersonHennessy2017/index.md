@@ -43,7 +43,7 @@
 
 ## Course-mapping note (CS401 Weeks → this book)
 
-Patterson & Hennessy ARM Edition is a strong secondary anchor alongside Mano/Hamacher. Suggested mapping: **Week 1** → Ch. 1 §1.6 (performance) · **Weeks 2-3** → Ch. 3 (arithmetic, IEEE 754) · **Weeks 4-5** → Ch. 2 (LEGv8 instructions/operands/formats/addressing) · **Weeks 6-7** → Ch. 4 §4.3-4.4 (datapath + single-cycle control) and App. C (hardwired → microprogrammed translation) · **Weeks 9-10** → Ch. 5 (caches, virtual memory, RAID) · **Weeks 11-12** → Ch. 6 (Flynn taxonomy, multicore, GPU) and App. D (RISC survey). **Week 8 (I/O)** is NOT covered by this book — stay with Hamacher Ch. 4 / Stallings Ch. 7.
+Patterson & Hennessy ARM Edition is a strong secondary anchor alongside Mano/Hamacher. Suggested mapping: **Week 1** → Ch. 1 §1.6 (performance) · **Weeks 2-3** → Ch. 3 (arithmetic, IEEE 754) · **Weeks 4-5** → Ch. 2 (LEGv8 instructions/operands/formats/addressing) · **Weeks 6-7** → Ch. 4 §4.3-4.4 (datapath + single-cycle control) and App. C (hardwired → microprogrammed translation) · **Weeks 9-10** → Ch. 5 (caches, virtual memory, RAID) · **Weeks 11-12** → Ch. 6 (Flynn taxonomy, multicore, GPU) and App. D (RISC survey). **Week 8 (I/O)** is NOT covered by this book — stay with Hamacher Ch. 3 / Ch. 7 §7.1-7.4 (corrected 2026-08-11 from "Ch. 4" — see `Hamacher2002/index.md`) / Stallings Ch. 7 (general treatment; no Stallings PDF currently on disk to page-cite).
 
 ## Cross-references
 

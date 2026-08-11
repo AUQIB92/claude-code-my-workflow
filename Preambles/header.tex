@@ -167,4 +167,24 @@
     \vfill
   \end{frame}
   \endgroup
+}
+
+% Section divider frame (Beamer-only), an alternative to \transitionslide with a
+% darker two-line style: near-black (jet) background, a small white label line
+% above a larger gold title, and a thin gold rule along the bottom edge.
+% Expand: \sectiondivider{Section 2}{Pointers}
+\newcommand{\sectiondivider}[2]{%
+  \begingroup
+  \setbeamercolor{background canvas}{bg=jet}
+  \begin{frame}[plain]
+    \vspace*{3.0cm}
+    {\color{white}\ttfamily\large #1\par}
+    \vspace{0.5cm}
+    {\color{primary-gold}\LARGE #2\par}
+    \begin{tikzpicture}[remember picture, overlay]
+      \draw[primary-gold, line width=2.5pt]
+        ($(current page.south west)+(0,0.1)$) -- ($(current page.south east)+(0,0.1)$);
+    \end{tikzpicture}
+  \end{frame}
+  \endgroup
 } 
