@@ -8,6 +8,8 @@ Copy-paste starting points for common academic diagrams. Every snippet:
 
 ## Inventory
 
+**Econ / social-science.**
+
 | Snippet | Purpose |
 | --- | --- |
 | [`dag-basic.tex`](dag-basic.tex) | Three-node causal DAG: X → Y with confounder U. |
@@ -18,6 +20,25 @@ Copy-paste starting points for common academic diagrams. Every snippet:
 | [`regression-scatter.tex`](regression-scatter.tex) | Scatter with OLS fit line and confidence band. |
 | [`flowchart-3step.tex`](flowchart-3step.tex) | Vertical process flow with a decision diamond. |
 | [`supply-demand.tex`](supply-demand.tex) | Supply and demand with shifted demand. |
+
+**CS.**
+
+| Snippet | Purpose |
+| --- | --- |
+| [`cs-fsm-automaton.tex`](cs-fsm-automaton.tex) | 3-state DFA over {0,1} with start/accept states — theory of computation, compilers, sequential-circuit state machines. |
+| [`cs-logic-circuit.tex`](cs-logic-circuit.tex) | Half-adder gate diagram (XOR/AND) with fan-out — digital logic, computer organization ALU/adder content. |
+| [`cs-karnaugh-map.tex`](cs-karnaugh-map.tex) | 4-variable K-map in Gray-code order with a circled implicant — Boolean minimization, control-signal simplification. |
+| [`cs-binary-tree.tex`](cs-binary-tree.tex) | 7-node BST with a highlighted search path and level annotations — data structures, algorithms. |
+| [`cs-linked-list.tex`](cs-linked-list.tex) | Singly linked list, data/next cells, NULL terminator — pointers, dynamic memory. |
+| [`cs-memory-stack-heap.tex`](cs-memory-stack-heap.tex) | Process address space (text/data/heap/stack) with a heap pointer — OS, systems programming, malloc/pointer tracing. |
+| [`cs-pipeline-timing.tex`](cs-pipeline-timing.tex) | 5-stage instruction pipeline over 9 cycles with a marked hazard stall — computer architecture, CPI/throughput. |
+
+**Math.**
+
+| Snippet | Purpose |
+| --- | --- |
+| [`math-function-plot.tex`](math-function-plot.tex) | Annotated Cartesian plot (roots, vertex, axes extending past the data) — calculus, precalculus, numerical methods. |
+| [`math-venn-two-set.tex`](math-venn-two-set.tex) | Two-set Venn diagram with all four regions labelled at their centroids — discrete math, probability, logic. |
 
 ## Usage
 

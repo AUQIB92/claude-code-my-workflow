@@ -203,6 +203,153 @@ Every profile has these fields:
 
 ---
 
+## Computer Science (journals only — see the conference caveat below)
+
+> **⚠️ Read `discipline-cards.md`'s `cs` card before using `--peer` on a CS paper.** This pipeline (editor → 2 referees with dispositions → R&R) models a **journal** review process. CS's dominant venues — NeurIPS, ICML, STOC, POPL, SOSP, SIGCOMM, and similar — are **conferences**: a program committee, a fixed deadline, a short author rebuttal, and an accept/reject decision with no multi-round R&R. Running `--peer` against a conference target will simulate the wrong process. The two profiles below are genuine **journals**, where the R&R model actually applies. A `--conference` mode (PC review + rebuttal) is a documented gap — see `v2.0-backlog.md` — not yet built.
+
+The `paper_type` taxonomy for CS resolves almost entirely to `formal-theory` (algorithms, complexity, PL semantics, correctness proofs); `reduced-form` and `structural` do not apply. Empirical systems/ML work needs its own paper type, not yet added to `methods-referee.md` — treat as `descriptive` in the interim and flag the gap in the editor's report.
+
+### Journal of the ACM (JACM)
+
+**Short name:** `JACM`
+
+**Focus.** ACM's flagship, theory-weighted CS journal — algorithms, complexity, computability, foundations of PL and distributed computing. Publishes results with lasting technical significance, not incremental improvements on a known bound.
+
+**Bar.** Extremely selective; a JACM paper is expected to be a reference point in its subarea for years. Proofs must be complete and independently verifiable — no gaps deferred to "it is easy to see."
+
+**Domain-referee adjustments.**
+- Contribution 30 → 35 (novelty of technique/bound, not just the result, is the bar)
+- Fit 10 → 5 (JACM spans all of theoretical CS; narrower subfield fit matters less than technical depth)
+
+**Methods-referee adjustments** (via the `formal-theory` paper type).
+- Identification 35 → replaced by **proof completeness**: every lemma's proof must be checkable step-by-step; no "clearly" or "it follows that" bridging a nontrivial gap.
+- Replication 5 → 0 (not applicable; correctness is established by the proof itself, not by a data/code archive).
+
+**Typical concerns.**
+- "Is every step of this proof actually justified, or is there a gap disguised as obvious?"
+- "Is the achieved bound genuinely new, or a known technique applied to a slightly different setting?"
+- "Does the abstract's claimed result match what the theorem statement actually proves (no silent weakening of assumptions)?"
+- "Would this result still be cited in ten years?"
+
+**Referee-pool weights.**
+- STRUCTURAL: 0.30 (proof structure and technique)
+- SKEPTIC: 0.30 (gap-hunting is the primary referee function here)
+- THEORY: 0.25
+- MEASUREMENT: 0.05
+- CREDIBILITY: 0.05
+- POLICY: 0.05
+
+**Table format override.** None — JACM papers rarely have data tables; numbered theorem/lemma/proof environments (`amsthm`) are the structural unit instead.
+
+---
+
+### IEEE Transactions on Software Engineering (TSE)
+
+**Short name:** `TSE`
+
+**Focus.** Top software-engineering journal. Unlike JACM, genuinely empirical: mining software repositories, controlled experiments with developers, tool/technique evaluations, case studies at scale. The CS subfield closest to econ's empirical culture.
+
+**Bar.** Threats-to-validity discipline is the load-bearing methodological bar (construct/internal/external validity), analogous to identification concerns in econ but framed differently — the question is generalizability of a software-engineering finding across projects/languages/teams, not exogenous variation.
+
+**Domain-referee adjustments.**
+- External validity 15 → 25 (generalization across codebases/ecosystems is the central worry)
+- Contribution 30 → 25 (SE tolerates more incremental contributions than JACM, provided the evaluation is rigorous)
+
+**Methods-referee adjustments.**
+- Identification 35 → 30, reframed as **construct validity**: does the measured proxy (e.g., commit churn, bug-report count) actually capture the claimed construct (e.g., code quality)?
+- Replication 5 → 20 (artifact evaluation / reproducibility packages are increasingly expected, converging toward the CS-conference norm above).
+
+**Typical concerns.**
+- "Does this replicate across more than one codebase / language / team, or is it a single-project case study dressed up as a general finding?"
+- "Is the evaluation metric actually measuring the construct claimed, or a convenient proxy?"
+- "Is the tool comparison fair (same baseline configuration, same hardware, same dataset)?"
+- "Are threats to validity addressed substantively, or listed pro forma?"
+
+**Referee-pool weights.**
+- MEASUREMENT: 0.30
+- CREDIBILITY: 0.25
+- STRUCTURAL: 0.15
+- SKEPTIC: 0.15
+- POLICY: 0.10
+- THEORY: 0.05
+
+**Table format override.** None specific; IEEE two-column format and citation style apply at typesetting, not review.
+
+---
+
+## Mathematics (Top journals)
+
+> See `discipline-cards.md`'s `math` card. `/preregister` is never applicable here; `methods-referee.md`'s only relevant paper type is `formal-theory` — reduced-form, structural, descriptive, and survey-experiment are all meaningless for a proof-based submission.
+
+### Annals of Mathematics
+
+**Short name:** `Annals`
+
+**Focus.** Widely regarded as mathematics' most prestigious general journal. Publishes major results across pure mathematics — the paper is expected to resolve a significant open question or introduce a technique that reshapes its area.
+
+**Bar.** Exceptionally selective. Refereeing is slow and exhaustive by design — a referee is expected to verify the proof line by line, not assess plausibility. A long review time here is normal, not a red flag.
+
+**Domain-referee adjustments.**
+- Contribution 30 → 40 (the bar on mathematical significance, not just correctness, is the defining constraint)
+- Fit 10 → 5 (Annals spans all of pure math; technical importance dominates subfield fit)
+
+**Methods-referee adjustments** (via `formal-theory`).
+- Identification → **proof completeness and rigor**: every non-trivial step must be independently verifiable; long or computer-assisted case analyses should note whether independent verification (or formalization) was attempted.
+- Replication 5 → 0 (not applicable).
+
+**Typical concerns.**
+- "Is there a gap in the argument that the authors have papered over with 'it is straightforward to check'?"
+- "Does the result actually resolve the stated open problem, or a weaker version of it?"
+- "Is the technique novel, or a known method applied in a new setting — and if the latter, is that still significant enough?"
+
+**Referee-pool weights.**
+- SKEPTIC: 0.35
+- STRUCTURAL: 0.30
+- THEORY: 0.25
+- CREDIBILITY: 0.05
+- MEASUREMENT: 0.03
+- POLICY: 0.02
+
+**Table format override.** None — numbered theorem/lemma/definition environments (`amsthm`) are the structural unit; AMS citation style.
+
+---
+
+### Journal of the American Mathematical Society (JAMS)
+
+**Short name:** `JAMS`
+
+**Focus.** AMS's flagship journal, comparable in prestige and scope to Annals — major results across pure and some applied mathematics, with a slightly broader appetite for results with cross-area impact.
+
+**Bar.** Same order of selectivity as Annals; the practical distinguishing question referees ask is whether the result would be considered a landmark in its subfield even if not field-reshaping more broadly.
+
+**Domain-referee / methods-referee adjustments.** Same as Annals (see above) — treat as functionally identical for calibration purposes; the two journals compete for the same tier of submission.
+
+**Typical concerns.** Same as Annals, plus: "Is this a JAMS-tier result, or a strong-but-more-specialized result better suited to a top subfield journal (Inventiones, Duke)?"
+
+**Referee-pool weights.** Same as Annals.
+
+**Table format override.** None — same conventions as Annals.
+
+---
+
+### Inventiones Mathematicae
+
+**Short name:** `Inventiones`
+
+**Focus.** Top European general mathematics journal (Springer), essentially peer to Annals/JAMS in prestige for pure mathematics; historically especially strong in number theory, algebraic geometry, and topology.
+
+**Bar.** Same tier of selectivity as Annals/JAMS. A referee here is, again, verifying the proof rather than assessing plausibility.
+
+**Domain-referee / methods-referee adjustments.** Same as Annals (see above).
+
+**Typical concerns.** Same as Annals, with a modest additional weight on: "Does this fit Inventiones's traditional strength areas, or is a different top journal a better home?"
+
+**Referee-pool weights.** Same as Annals.
+
+**Table format override.** None specific.
+
+---
+
 ## Political Science (Top-3)
 
 Three flagship general-interest political-science journals. The `paper_type` taxonomy here typically resolves to `reduced-form`, `formal-theory`, or `survey-experiment` (added in v1.8.0 to support these journals). Other types still apply when relevant.

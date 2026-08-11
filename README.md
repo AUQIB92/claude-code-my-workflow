@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>20 agents, 58 skills, 34 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>20 agents, 63 skills, 36 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -280,6 +280,11 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/create-assignment` (v2.2) | Scaffold a graded engineering-course assignment (Conceptual/Numerical/Design problems) sourced from a lecture's Slides/Notes — student set + separate solution key, course-organized |
 | `/competitive-exam-questions` (v2.2) | Course-organized competitive-exam practice set (default GATE CS) — real past-year questions verified via Chain-of-Verification, plus original exam-pattern questions for topic gaps, each labeled by provenance |
 | `/instructor-handout` (v2.2) | Instructor-only teaching prep for a finished lecture — extra worked examples, delivery/teaching notes, and a page-cited "before you teach this" self-study reading list |
+| `/verify-symbolic` (v2.3) | Verify closed-form math claims (algebra, calculus, derivations) by independently re-deriving with SymPy and comparing to the claimed result — the `/audit-reproducibility` sibling for symbolic math instead of empirical estimates |
+| `/verify-algorithm` (v2.3) | Verify algorithm correctness against generated test cases and empirically stress-test a claimed Big-O by timing across input sizes — CONSISTENT/INCONSISTENT/INCONCLUSIVE, never a false "confirmed" |
+| `/lab-manual` (v2.3) | Per-week practical/lab sheet — objective, apparatus/toolchain, procedure, expected output, an observation table, viva-voce questions, and a rubric; closes the documented CS401 L-T-P practical gap (25% of the grade, previously zero tooling) |
+| `/coding-assignment` (v2.3) | Programming assignment with a hidden test suite and autograder harness — problem statement, reference solution (run through `/verify-algorithm` first), visible + hidden tests, autograder script; the CS-native sibling to `/create-assignment`'s written problems |
+| `/trace-execution` (v2.3) | Step-by-step execution trace as a sequence of coordinate-consistent TikZ diagrams (memory/stack/heap, pointer mutation, data-structure operations) — automates the pattern hand-built for CS301 Week 1's stack/heap traces |
 
 ### Research Workflow
 
