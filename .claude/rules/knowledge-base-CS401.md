@@ -17,6 +17,16 @@ paths:
       03-ieee754-floating-point) authored 2026-08-07, confirming the
       performance/arithmetic/float symbols below. -->
 
+## Course Profile
+
+| Field | Value |
+|---|---|
+| Audience level | `undergrad` (B.Tech CSE, semester 4) |
+| Programme position | semester 4 of 8 |
+| Default difficulty | **`core`** — derived from `undergrad` + semester 4 per `.claude/rules/difficulty-levels.md` |
+| Exam target | GATE CS (via `/competitive-exam-questions`) |
+| Implementation language | register-transfer notation and assembly; C only where it motivates an addressing mode |
+
 ## Anchor Textbooks
 
 | Book (ShortName) | Index | Weeks/Lectures Backed | Page-Verified? |
