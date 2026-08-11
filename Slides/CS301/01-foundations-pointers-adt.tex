@@ -436,13 +436,31 @@ p = NULL;
 \begin{frame}{What Is an ADT?}
   \begin{block}{Abstract Data Type}
     An ADT describes what we can do with data, without saying how it is stored
-    \cite{Sedgewick2011_algorithms}.
+    \cite{Sedgewick2011_algorithms,Karumanchi2017_data_structures_algorithms_made_easy}.
   \end{block}
   \begin{itemize}
     \item It is a promise about operations.
     \item The implementation is the code and memory arrangement behind the promise.
     \item Different implementations can follow the same promise.
   \end{itemize}
+  \vspace{0.1cm}
+  \muted{An ADT has two parts: a declaration of data, and a declaration of operations
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.}
+\end{frame}
+
+\begin{frame}{This Course Is a Tour of ADTs}
+  \begin{block}{The pattern you will see every week}
+    Linked Lists, Stacks, Queues, Priority Queues, Binary Trees, Disjoint Sets,
+    Hash Tables, and Graphs are all commonly used ADTs
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+  \end{block}
+  \begin{itemize}
+    \item Each one starts the same way: state the contract, \emph{then} implement it.
+    \item Weeks 3--12 work through this list one ADT at a time.
+    \item Today's ``bag'' is a warm-up for that pattern, not a one-off example.
+  \end{itemize}
+  \muted{Watch for this shape: ``What is a Stack?'' then ``Stack ADT'' then
+    ``Implementation'' --- every week, same order.}
 \end{frame}
 
 \begin{frame}{Example: A Very Small Bag}
@@ -496,6 +514,7 @@ p = NULL;
     \item A pointer stores an address; \texttt{NULL} means ``points to nothing''.
     \item Use \texttt{malloc}, check the result, use the block, and call \texttt{free}.
     \item An ADT describes operations; a data structure implements them.
+    \item The rest of this course is a tour of ADTs: contract first, implementation second.
   \end{itemize}
   \vspace{0.15cm}
   \begin{exampleblock}{Next week}

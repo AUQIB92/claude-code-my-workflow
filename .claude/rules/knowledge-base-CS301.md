@@ -37,12 +37,17 @@ paths:
 | *Data Structures with C*, Schaum's Outline Series (SchaumsC) | `master_supporting_docs/CS301/supporting_books/SchaumsC/index.md` — **not built.** Problem source rather than exposition; useful for `/create-assignment` and `/scaffold-exercises`. | Weeks 3–12 (worked problems) | **No — chapter-level attribution only** |
 | **Sedgewick & Wayne, *Algorithms*, 4th ed., 2011 (Sedgewick2011)** | `master_supporting_docs/CS301/supporting_books/Sedgewick2011/index.md` — ✅ **BUILT 2026-08-11.** Full chapter+section map; offset `pdf = printed + 13` verified at 9 points. Code is **Java** — cite for definitions/analysis, never syntax. | Weeks 1–3, 5–12 (ADT, collections, analysis, sorting, symbol tables, BST, hashing, graphs) | ✅ **Yes — page-verified anchors at pp. 64, 120, 142, 172, 187** |
 | **Wirth, *Algorithms and Data Structures* (Oberon rev., 2004 / ©1985) (Wirth2004)** | `master_supporting_docs/CS301/supporting_books/Wirth2004/index.md` — ✅ **BUILT 2026-08-11.** Complete section map, all 5 chapters; offset `printed = pdf + 4` verified at 6 points. Code is **Oberon** — cite for concepts, never syntax. **The AVL source** (§4.5), which Sedgewick lacks. | Weeks 1, 3–4, 6–11 (pointers/dynamic allocation, lists, trees, AVL, hashing, sorting) | ✅ **Yes — page-verified anchor at p. 111** |
+| **Karumanchi, *Data Structures And Algorithms Made Easy*, CareerMonk, 2017 (Karumanchi2017)** | `master_supporting_docs/CS301/supporting_books/Karumanchi2017/index.md` — ✅ **BUILT 2026-08-11.** Full 21-chapter map, no printed folios in this edition (cite as "p. N (PDF)"). Language-neutral C-style pseudocode (`struct`/pointer fields) throughout. **NOT a Week 1 anchor** — Step 0.5 found zero coverage of "structured programming" or `malloc`/`calloc`/`realloc`/`free`; only the ADT concept is well covered there. Its real strength is depth on Weeks 2–3, 5–12 (its chapters map almost 1:1 onto the rest of the syllabus, and it is the only anchor with dedicated Union-Find, string-matching (KMP/Rabin–Karp/Boyer–Moore), and selection-algorithm (median-of-medians) chapters). | Weeks 2–3, 5–12 (algorithm analysis, stacks/queues, linked lists, trees/AVL, graphs, sorting/searching, hashing) — **not Week 1's C-memory-management content** | ✅ **Yes — page-verified anchors throughout (chapter-boundary-checked at 21 points)** |
 
-<!-- [LEARN:textbook-grounding] UPDATED 2026-08-11 — the grounding gap is now
-     PARTIALLY closed. Two books were supplied and indexed: Sedgewick2011 and
-     Wirth2004. Both carry verified printed<->PDF page offsets and a set of
-     page-verified anchors (see the ✅ tables in their index.md files), so CS301
-     material may now cite those specific pages.
+<!-- [LEARN:textbook-grounding] UPDATED 2026-08-11 (second pass) — three books are
+     now supplied and indexed: Sedgewick2011, Wirth2004, and Karumanchi2017. All
+     three carry page-verified anchors (see the ✅ tables in their index.md
+     files), so CS301 material may cite specific pages from any of them —
+     EXCEPT Karumanchi2017 for Week 1's C-memory-management claims (structured
+     programming, malloc/calloc/realloc/free), which Step 0.5 confirmed it does
+     not cover at all. Week 1's pointer/malloc/free content stays grounded in
+     Wirth2004 or general/standard treatment; Karumanchi2017 is the strongest
+     anchor for Weeks 2-3 and 5-12 instead.
 
      STILL NOT INDEXED: the two institute-prescribed *text* books, Horowitz &
      Sahni and Aho-Hopcroft-Ullman, plus Knuth, Neapolitan, Morin, and Schaum's.
@@ -51,12 +56,13 @@ paths:
      as such. Per textbook-grounding.md: phrase them as general/standard
      treatment; never invent a page number.
 
-     NOTE THE MISMATCH: the two indexed books are NOT on the institute's
-     prescribed list, and the two prescribed texts are NOT indexed. Sedgewick
-     and Wirth are legitimate, canonical anchors and are safe to cite — but when
-     a claim must be traceable to the *prescribed* text for exam or audit
-     purposes, that still requires indexing Horowitz & Sahni. Morin2013 remains
-     the cheapest remaining target (openly licensed, no purchase needed). -->
+     NOTE THE MISMATCH: none of the three indexed books is on the institute's
+     prescribed list, and the two prescribed texts are still NOT indexed.
+     Sedgewick, Wirth, and Karumanchi are legitimate, canonical anchors and are
+     safe to cite — but when a claim must be traceable to the *prescribed* text
+     for exam or audit purposes, that still requires indexing Horowitz & Sahni.
+     Morin2013 remains the cheapest remaining target (openly licensed, no
+     purchase needed). -->
 
 <!-- [LEARN:textbook-grounding] Language mismatch is a standing hazard for this
      course: Sedgewick is Java, Wirth is Oberon, and CS301 is taught in C.

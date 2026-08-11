@@ -1,0 +1,723 @@
+% =============================================================================
+% 08-io-techniques.tex — Week 8: I/O Unit — Synchronous vs. Asynchronous I/O;
+% I/O Techniques (Interrupts, Polling, DMA, IOP)
+%
+% Course: Computer Organization and Architecture (PCC CS-401)
+% Anchor reading: Hamacher (6th ed.) Ch. 3 (programmer's-view I/O: memory-mapped
+%                 I/O, polling, interrupts, printed p.95-119) + Ch. 7 SS7.1-7.4
+%                 (bus structure, synchronous/asynchronous bus operation,
+%                 arbitration, interface circuits, printed p.227-242).
+%                 DMA and IOP are NOT named in this edition (verified via
+%                 master_supporting_docs/CS401/supporting_books/Hamacher2002/index.md,
+%                 2026-08-11 pass) -- SS7.3 Arbitration is the functional
+%                 analogue of DMA but the term is never used, so DMA/IOP content
+%                 below is phrased as general/standard treatment citing
+%                 Stallings Ch. 7, per .claude/rules/textbook-grounding.md.
+%
+% Compile with: /compile-latex CS401/08-io-techniques
+% =============================================================================
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}   % resolves via TEXINPUTS=../../Preambles:$TEXINPUTS — compile
+                  % from cwd Slides/CS401/ (TeX writes output next to cwd, not
+                  % next to this file's own path, so cd here first)
+\coursecode{CS401}
+
+\title{I/O Techniques}
+\subtitle{Week 8 --- Interrupts, Polling, Synchronous/Asynchronous Buses, DMA, and IOP}
+\author[Dr. Auqib Hamid Lone]{%
+  \textbf{Dr. Auqib Hamid Lone}\\
+  \small Assistant Professor in Computer Science \& Engineering
+}
+\institute[GCET Ganderbal]{%
+  \small\textbf{PCC CS-401: Computer Organization and Architecture}\\[0.3em]
+  Department of Computer Science \& Engineering\\
+  Government College of Engineering \& Technology (GCET), Ganderbal
+}
+\date[\today]{\small\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- RECAP AND ROADMAP
+% =============================================================================
+\section{Recap and Roadmap}
+
+\begin{frame}{Where We Left Off (Week 7)}
+  \begin{block}{Last week: how the CPU controls \emph{itself}}
+    \begin{itemize}
+      \item Hardwired control (Week 6) and microprogrammed control (Week 7)
+        both answered the same question: how does the CPU generate its own
+        control-step sequence, cycle by cycle?
+      \item Both designs assumed the CPU is the only thing that matters ---
+        registers, ALU, and an internal bus.
+    \end{itemize}
+  \end{block}
+  \vspace{0.3cm}
+  \begin{exampleblock}{The gap Week 7 flagged}
+    I/O devices --- keyboards, disks, printers --- are far slower than the
+    CPU. Naively waiting for one wastes thousands of cycles. This week: how
+    does the CPU decide what \emph{outside} devices do, and when?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Roadmap: Four Questions, One Thread}
+  \begin{enumerate}
+    \item \key{Program-controlled I/O (polling)} --- what does the CPU do if
+      it simply asks a device ``are you ready?'' in a loop?
+    \item \key{Interrupt-driven I/O} --- what if the device asks the CPU
+      instead?
+    \item \key{Synchronous vs.\ asynchronous buses} --- one level down: how
+      does the wire-level handshake between master and slave actually work?
+    \item \key{DMA and I/O processors} --- what if the CPU is removed from
+      the data path entirely?
+    \end{enumerate}
+  \vspace{0.3cm}
+  \begin{alertblock}{Running thread for today}
+    A single keyboard-input / display-output pair (\texttt{KIN}/\texttt{DOUT}
+    status flags) threads through polling and interrupts; a 4096-byte block
+    transfer threads through synchronous/asynchronous timing and into the
+    DMA/IOP Act, where a 3-device arbitration example appears.
+  \end{alertblock}
+\end{frame}
+
+\transitionslide{Today: who watches the device, and what happens when it's ready?}
+
+% =============================================================================
+% ACT 1 --- THE PROGRAMMER'S VIEW: MEMORY-MAPPED I/O AND POLLING
+% =============================================================================
+\section{Program-Controlled I/O (Polling)}
+
+\begin{frame}{Socratic Question: The Speed Mismatch}
+  \begin{block}{Question}
+    A CPU executes an instruction roughly every nanosecond. A keyboard
+    produces one keystroke roughly every \emph{hundred million} nanoseconds.
+    If the CPU must read every keystroke, what should it do in between?
+  \end{block}
+  The simplest possible answer: give every I/O device a small set of
+  registers the CPU can read and write \emph{exactly like memory}. This is
+  \key{memory-mapped I/O} --- a device's data/status/control registers occupy
+  addresses in the normal address space, no special I/O instructions needed
+  \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{The I/O Device Interface}
+  \begin{center}
+    % Diagram: CPU -- bus -- device interface (data/status/control registers)
+    % -- I/O device. Establishes the register model that the polling and
+    % interrupt worked examples build on for the rest of the Act.
+    % Coordinates: (x, y)
+    %   CPU box at (0, 0), width 2.2, height 1.2
+    %   Device Interface box at (6.0, 0), width 3.8, height 2.4
+    %   I/O Device box at (11.5, 0), width 2.0, height 1.2
+    \begin{tikzpicture}[scale=1.0, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.2cm, minimum height=1.2cm, align=center]
+            (CPU) at (0,0) {CPU};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=3.8cm, minimum height=2.4cm, align=center]
+            (IFACE) at (6.0,0) {\textbf{Device Interface}\\[0.15cm]
+              \footnotesize Data register\\ Status register\\ Control register};
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=2.0cm, minimum height=1.2cm, align=center]
+            (DEV) at (11.5,0) {I/O Device};
+      \draw[->, thick] (CPU.east) -- (IFACE.west)
+            node[midway, above] {\scriptsize address/data bus};
+      \draw[->, thick] (IFACE.east) -- (DEV.west)
+            node[midway, above] {\scriptsize device signals};
+    \end{tikzpicture}
+  \end{center}
+  Every interface supplies the same six functions: data/status/control
+  registers, address decoding, timing generation, and format conversion ---
+  \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{Definition: Program-Controlled I/O (Polling)}
+  \begin{block}{Polling}
+    In \textbf{program-controlled I/O}, the CPU repeatedly reads a device's
+    \emph{status register} in a loop, checking a ready flag, until the
+    device signals it is ready --- then performs the data transfer itself.
+  \end{block}
+  \begin{itemize}
+    \item New notation: \key{\texttt{KIN}} --- keyboard-input status flag,
+      set when a keystroke is ready in \texttt{KBD\_DATA}; \key{\texttt{DOUT}}
+      --- display-output status flag, set when the display is ready for the
+      next character in \texttt{DISP\_DATA}.
+    \item The CPU is the only thing that ever asks; the device never
+      initiates anything.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Worked Example: Polling Loops for \texttt{KIN} and \texttt{DOUT}}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \centering \textbf{Keyboard input}
+      \begin{block}{\texttt{READWAIT} loop}
+        \footnotesize
+        \begin{verbatim}
+READWAIT: Test KIN
+          Branch=0 READWAIT
+          MoveByte KBD_DATA, R
+        \end{verbatim}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering \textbf{Display output}
+      \begin{block}{\texttt{WRITEWAIT} loop}
+        \footnotesize
+        \begin{verbatim}
+WRITEWAIT: Test DOUT
+           Branch=0 WRITEWAIT
+           MoveByte R, DISP_DATA
+        \end{verbatim}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \muted{Both loops re-execute the same three instructions on every pass ---
+  the CPU is spinning, doing no other useful work
+  \cite{Hamacher2002_computer_organization}.}
+\end{frame}
+
+\begin{frame}{Socratic Check: What's Wasteful About Polling?}
+  \begin{alertblock}{Question}
+    A typist produces roughly 5 keystrokes per second. Between two
+    keystrokes, how many \texttt{READWAIT} iterations does a 2 GHz CPU
+    execute, and what is it accomplishing on each one?
+  \end{alertblock}
+  \begin{itemize}
+    \item On the order of hundreds of millions of iterations --- every one
+      of them re-reading a status flag that has not changed, accomplishing
+      \emph{nothing} useful.
+    \item Polling is simple and requires no extra hardware, but it wastes
+      CPU time in proportion to how much slower the device is than the CPU.
+      Fine for a single slow device with nothing else to do; wrong at scale.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{What if the device asked the CPU, instead of the CPU asking the device?}
+
+% =============================================================================
+% ACT 2 --- INTERRUPT-DRIVEN I/O
+% =============================================================================
+\section{Interrupt-Driven I/O}
+
+\begin{frame}{Definition: Interrupt}
+  \begin{block}{Interrupt}
+    An \textbf{interrupt} is a signal from a device that suspends the CPU's
+    current program, transfers control to a fixed handler --- the
+    \textbf{interrupt-service routine (ISR)} --- and resumes the original
+    program afterward, exactly where it left off.
+  \end{block}
+  \begin{center}
+    % Diagram: time-flow of control transfer. Main program timeline on the
+    % left (time increasing downward); a dashed diagonal arrow at the point
+    % of interrupt jumps right to the ISR timeline; a second dashed diagonal
+    % arrow returns control to the main program below the interrupt point.
+    % Coordinates: (x, y)
+    %   Main program line from (0, 3.2) to (0, -2.2)
+    %   Interrupt point on main line at (0, 1.6)
+    %   ISR line from (6.4, 1.0) to (6.4, -0.8)
+    %   Resume point on main line at (0, -1.4)
+    \begin{tikzpicture}[scale=0.62, transform shape,
+        every node/.style={font=\small}]
+      \draw[thick, primary-blue] (0,3.2) -- (0,-2.2);
+      \node[font=\scriptsize, anchor=east] at (-0.2,2.8) {Main program};
+      \draw[thick, primary-gold] (6.4,1.0) -- (6.4,-0.8);
+      \node[font=\scriptsize, anchor=west] at (6.6,0.85) {ISR};
+      \filldraw[primary-blue] (0,1.6) circle (2pt);
+      \filldraw[primary-blue] (0,-1.4) circle (2pt);
+      \draw[dashed, thick, ->] (0,1.6) -- (6.4,1.0)
+            node[midway, above] {\scriptsize interrupt accepted};
+      \draw[dashed, thick, ->] (6.4,-0.8) -- (0,-1.4)
+            node[midway, below] {\scriptsize return (RTI)};
+    \end{tikzpicture}
+  \end{center}
+  \muted{The gap between the request and the jump is \key{interrupt latency};
+  registers the ISR must not disturb are saved in \key{shadow registers}
+  \cite{Hamacher2002_computer_organization}.}
+\end{frame}
+
+\begin{frame}{Enabling and Disabling Interrupts}
+  \begin{block}{Two independent switches}
+    \begin{itemize}
+      \item \key{\texttt{IE}} --- a single interrupt-enable bit inside the
+        processor status register (\texttt{PS}); when \texttt{IE}$=0$ the
+        CPU ignores \emph{every} interrupt request, regardless of source.
+      \item A per-device interrupt-enable bit in that device's control
+        register (\texttt{KIRQ} for the keyboard, \texttt{DIRQ} for the
+        display) --- controls whether \emph{this} device is allowed to
+        request an interrupt at all.
+    \end{itemize}
+  \end{block}
+  A request reaches the CPU only when both switches agree: the device's own
+  enable bit \emph{and} \texttt{PS.IE} \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{Worked Example: A 5-Step Interrupt-Handling Scenario}
+  \footnotesize
+  \begin{enumerate}
+    \item Device sets its status flag (e.g.\ \texttt{KIN}$=1$) and, if
+      \texttt{KIRQ}$=1$, raises an interrupt-request line.
+    \item CPU finishes its \emph{current instruction} (never mid-instruction),
+      then checks \texttt{PS.IE}.
+    \item If enabled: CPU saves \texttt{PC} (and any registers the ISR will
+      clobber) into shadow registers, disables further interrupts, and loads
+      \texttt{PC} with the ISR's starting address.
+    \item ISR services the device (e.g.\ reads \texttt{KBD\_DATA}, clearing
+      \texttt{KIN}), then executes a return-from-interrupt instruction.
+    \item Return-from-interrupt restores the saved \texttt{PC} and re-enables
+      interrupts --- the interrupted program resumes with no memory of having
+      been interrupted \cite{Hamacher2002_computer_organization}.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Handling Multiple Devices}
+  \begin{block}{Two designs for ``which device interrupted?''}
+    \begin{itemize}
+      \item \textbf{Polling the sources}: on any interrupt, the ISR checks
+        each device's status flag in turn --- simple, but the fixed check
+        order costs time proportional to the number of devices.
+      \item \textbf{Vectored interrupts}: each device supplies its own
+        identifying code; hardware uses it to index directly into an
+        \key{interrupt-vector table} --- a table of ISR starting addresses,
+        one entry per device --- and jumps straight there.
+    \end{itemize}
+  \end{block}
+  \muted{Vectored interrupts trade a small amount of hardware (the vector
+  table and the lookup) for constant-time dispatch, regardless of device
+  count \cite{Hamacher2002_computer_organization}.}
+\end{frame}
+
+\begin{frame}{Interrupt Nesting and Priority}
+  \begin{center}
+    % Diagram: two devices' IRQ lines feed IPENDING (a bit per device);
+    % IENABLE supplies the per-device mask; both converge on a priority
+    % encoder + vector-table lookup that produces the ISR starting address.
+    % Mirrors Week 7's "Two Sources Feed MPC" diagram (IR/Flags -> MPC).
+    % Coordinates: (x, y)
+    %   Device 1 IRQ at (0, 2.6); Device 2 IRQ at (0, 0.8)
+    %   IPENDING box (tall, receives both) at (4.4, 1.7), w=2.4, h=2.8
+    %   IENABLE box at (4.4, -1.6), w=2.4, h=0.9
+    %   Priority + vector lookup at (9.0, 1.7), w=2.8, h=1.8
+    %   ISR start address output at (13.2, 1.7)
+    \begin{tikzpicture}[scale=0.78, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.0cm, minimum height=0.8cm, align=center]
+            (D1) at (0,2.6) {Device 1 IRQ};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.0cm, minimum height=0.8cm, align=center]
+            (D2) at (0,0.8) {Device 2 IRQ};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=2.4cm, minimum height=2.8cm, align=center]
+            (IPEND) at (4.4,1.7) {\textbf{IPENDING}};
+      \node[draw=primary-gold, fill=white, rounded corners, text width=2.2cm,
+            minimum height=0.9cm, align=center]
+            (IENABLE) at (4.4,-1.6) {\textbf{IENABLE} (mask)};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=2.8cm, minimum height=1.8cm, align=center]
+            (PRI) at (9.2,1.7) {Priority $+$\\vector-table\\lookup};
+      \node[draw=positive, fill=light-bg, rounded corners, text width=2.6cm,
+            minimum height=0.9cm, align=center]
+            (OUT) at (13.4,1.7) {ISR start address $\to$ \texttt{PC}};
+      \draw[->, thick] (D1.east) -- (IPEND.west |- 0,2.4);
+      \draw[->, thick] (D2.east) -- (IPEND.west |- 0,1.0);
+      \draw[->, thick] (IPEND.east) -- (PRI.west |- 0,2.3);
+      \draw[->, thick] (IENABLE.east) -- (7.0,-1.6) -- (7.0,1.1) -- (PRI.west |- 0,1.1);
+      \draw[->, thick] (PRI.east) -- (OUT.west);
+    \end{tikzpicture}
+  \end{center}
+  When both devices request simultaneously, the priority encoder grants the
+  higher-priority one first; \texttt{IPENDING} keeps the other's request
+  latched until it is serviced \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{Socratic Check: Simultaneous Interrupt Requests}
+  \begin{alertblock}{Question}
+    Device 1 (higher priority) and Device 2 both request an interrupt on the
+    same cycle. Device 1's ISR is still running when Device 2's request would
+    normally be granted. What happens?
+  \end{alertblock}
+  \begin{itemize}
+    \item If \textbf{nesting} is allowed and Device 2 outranks whatever
+      priority level Device 1's ISR is running at, Device 2 can interrupt
+      \emph{that ISR} --- the same 5-step scenario applies recursively.
+    \item If nesting is disabled (or Device 2 is lower priority), Device 2's
+      request stays latched in \texttt{IPENDING} until Device 1's ISR
+      re-enables interrupts.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Polling vs.\ Interrupts: Trade-offs}
+  \footnotesize
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    & \textbf{Polling} & \textbf{Interrupts} \\
+    \midrule
+    Who initiates & CPU (asks repeatedly) & Device (signals once, when ready) \\
+    CPU cost while waiting & Wasted spin cycles & Zero --- CPU runs other code \\
+    Extra hardware & None & \texttt{IE}, per-device enables, vector table \\
+    Response latency & Depends on poll rate & Interrupt latency (usually smaller) \\
+    Best fit & One slow device, nothing else to do & Multiple/unpredictable devices \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.3cm}
+  \key{Same problem, opposite direction of initiative} --- interrupts move
+  the waiting cost from the CPU to the hardware that detects readiness.
+\end{frame}
+
+\transitionslide{One level down: what does ``the device is ready'' look like on the wires?}
+
+% =============================================================================
+% ACT 3 --- THE HARDWARE VIEW: SYNCHRONOUS VS. ASYNCHRONOUS BUS
+% =============================================================================
+\section{Synchronous vs.\ Asynchronous Bus}
+
+\begin{frame}{Bus Structure: Master and Slave Roles}
+  \begin{block}{One shared bus, many devices}
+    Every I/O interface in Act 1's diagram in fact hangs off a single shared
+    \textbf{bus} --- address, data, and control lines every device listens
+    to. A \textbf{bus protocol} defines how a \textbf{master} (the device
+    driving the transfer, usually the CPU) and a \textbf{slave} (the
+    responding device) coordinate one data transfer without colliding.
+  \end{block}
+  \key{This Act asks}: when a master says ``take this data'' or ``give me
+  that data,'' how does the slave say ``I'm not ready yet'' or ``here it
+  is''? Two different answers: \key{synchronous} and \key{asynchronous}
+  \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{Definition: Synchronous Bus}
+  \begin{block}{Synchronous bus}
+    All devices share a common \textbf{bus clock}. The master places an
+    address/data on the bus at a fixed clock edge; every slave samples the
+    bus at the \emph{same} edge, with no per-transfer negotiation.
+  \end{block}
+  \begin{center}
+    % Diagram: 3-row digital timing diagram -- Clock (square wave), Address/
+    % Data valid (asserted through the transfer), Slave-ready (low during
+    % wait states, then high once data is valid). Shows the multi-cycle
+    % transfer used for a slow device.
+    % Coordinates: (x, y) -- time axis in cm, 1 cm = 1 clock half-period
+    %   Clock row at y=2.6; Address/Data row at y=1.3; Slave-ready row at y=0
+    %   Clock edges at x = 0,1,2,3,4,5,6,7,8 (four full periods)
+    \begin{tikzpicture}[scale=0.85, transform shape,
+        every node/.style={font=\scriptsize}]
+      \node[anchor=east] at (-0.3,2.6) {Clock};
+      \draw[thick, primary-blue]
+        (0,2.4) -- (0,2.8) -- (1,2.8) -- (1,2.4) -- (2,2.4) -- (2,2.8) --
+        (3,2.8) -- (3,2.4) -- (4,2.4) -- (4,2.8) -- (5,2.8) -- (5,2.4) --
+        (6,2.4) -- (6,2.8) -- (7,2.8) -- (7,2.4) -- (8,2.4);
+      \node[anchor=east] at (-0.3,1.3) {Address/Data};
+      \draw[thick, primary-gold]
+        (0.2,1.1) -- (0.2,1.5) -- (7.6,1.5) -- (7.6,1.1);
+      \node[anchor=east] at (-0.3,0) {Slave-ready};
+      \draw[thick, positive]
+        (0.2,-0.2) -- (5.8,-0.2) -- (5.8,0.2) -- (7.6,0.2) -- (7.6,-0.2);
+      \node[font=\scriptsize] at (2.9,-0.65) {wait states (slave not ready)};
+      \draw[dashed, gray!50] (5.8,-0.5) -- (5.8,3.0);
+      \draw[dashed, gray!50] (7.6,-0.5) -- (7.6,3.0);
+    \end{tikzpicture}
+  \end{center}
+  \muted{A slow slave stretches the transfer by holding \texttt{Slave-ready}
+  low for extra clock cycles --- the master simply waits, still synchronized
+  to the shared clock \cite{Hamacher2002_computer_organization}.}
+\end{frame}
+
+\begin{frame}{Definition: Asynchronous Bus (Full Handshake)}
+  \begin{block}{Asynchronous bus}
+    No shared clock. Master and slave exchange explicit
+    \textbf{Master-ready}/\textbf{Slave-ready} signals, each one only
+    changing \emph{in response to} the other --- a \key{full handshake}.
+  \end{block}
+  \begin{center}
+    % Diagram: 4-step interlocked ladder, Master column left, Slave column
+    % right, alternating diagonal arrows carrying ONLY a circled step number
+    % (no descriptive text on the diagram itself -- the legend below spells
+    % each step out). Keeping the on-diagram labels to a single glyph is
+    % what gives reliable P7b clearance here: two long text labels sharing
+    % the same x-midpoint (both arrows span the full x=0..6 width) would
+    % need several cm of vertical room even at wide pitch; a circled digit
+    % needs only a few mm, which the 1.2-unit pitch clears with margin.
+    % Coordinates: (x, y)
+    %   Master column at x=0, points at y = 3.6, 2.4, 1.2, 0.0
+    %   Slave column at x=6.0, points at y = 3.0, 1.8, 0.6
+    \begin{tikzpicture}[scale=0.65, transform shape,
+        every node/.style={font=\small}]
+      \node[font=\scriptsize] at (0,4.0) {Master};
+      \node[font=\scriptsize] at (6.0,3.4) {Slave};
+      \draw[thick, primary-blue] (0,3.6) -- (0,-0.4);
+      \draw[thick, primary-gold] (6.0,3.0) -- (6.0,0.2);
+      \draw[dashed, thick, ->] (0,3.6) -- (6.0,3.0)
+            node[midway, above] {\scriptsize \textcircled{\scriptsize 1}};
+      \draw[dashed, thick, ->] (6.0,3.0) -- (0,2.4)
+            node[midway, below] {\scriptsize \textcircled{\scriptsize 2}};
+      \draw[dashed, thick, ->] (0,2.4) -- (6.0,1.8)
+            node[midway, above] {\scriptsize \textcircled{\scriptsize 3}};
+      \draw[dashed, thick, ->] (6.0,1.8) -- (0,1.2)
+            node[midway, below] {\scriptsize \textcircled{\scriptsize 4}};
+    \end{tikzpicture}
+  \end{center}
+  \begin{center}
+  \footnotesize
+  \begin{tabular}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
+    \textcircled{\scriptsize 1} Master-ready asserted &
+    \textcircled{\scriptsize 2} Slave-ready (data valid) \\
+    \textcircled{\scriptsize 3} Master-ready withdrawn (latched) &
+    \textcircled{\scriptsize 4} Slave-ready withdrawn \\
+  \end{tabular}
+  \end{center}
+  \muted{Each step waits for the previous one --- \key{bus skew} (wires
+  arriving at slightly different times) never causes a false sample, unlike
+  a synchronous bus's single fixed clock edge \cite{Hamacher2002_computer_organization}.}
+\end{frame}
+
+\begin{frame}{Synchronous vs.\ Asynchronous: Trade-offs}
+  \footnotesize
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    & \textbf{Synchronous} & \textbf{Asynchronous} \\
+    \midrule
+    Timing reference & Shared bus clock & Explicit handshake, no clock \\
+    Slow-device handling & Extra wait-state clock cycles & Handshake simply takes longer \\
+    Skew sensitivity & Sensitive --- must beat clock period & Immune --- self-timed \\
+    Per-transfer overhead & Low (one clock edge) & Higher (two round trips) \\
+    Best fit & Devices of similar, known speed & Mixed-speed / unpredictable devices \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.3cm}
+  \key{Same coordination problem, opposite mechanism} --- a shared clock
+  everyone trusts, or an explicit conversation that trusts nothing.
+\end{frame}
+
+\begin{frame}{Socratic Check: Why Not Always Use Asynchronous?}
+  \begin{alertblock}{Question}
+    Asynchronous handshaking tolerates skew and adapts automatically to any
+    device speed. Why do most high-speed processor buses use synchronous
+    protocols instead?
+  \end{alertblock}
+  \begin{itemize}
+    \item Every asynchronous transfer pays \emph{two full round-trip delays}
+      (steps 1--2 and 3--4) --- for devices that are consistently fast, this
+      is pure overhead a synchronous bus does not pay.
+    \item Synchronous buses only lose when a device is unusually slow (extra
+      wait states) or the clock period must shrink to accommodate skew ---
+      exactly the trade-off the comparison table names.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Interrupts still cost one instruction per word transferred --- what if the CPU left the loop entirely?}
+
+% =============================================================================
+% ACT 4 --- DIRECT MEMORY ACCESS AND I/O PROCESSORS
+% =============================================================================
+\section{DMA and I/O Processors}
+
+\begin{frame}{The Cost Interrupts Still Pay}
+  \begin{block}{Socratic question}
+    A disk transfer moves a 4096-byte block, one 4-byte word at a time. With
+    interrupt-driven I/O, the ISR executes on \emph{every word}: read status,
+    read/write data, update a memory pointer, decrement a counter, return.
+    What does this cost at 4096 bytes, one interrupt per word?
+  \end{block}
+  $4096 / 4 = 1024$ ISR invocations for a \emph{single} block transfer ---
+  interrupts removed the CPU's \emph{waiting}, but not its involvement in
+  \emph{moving} the data. The next step removes the CPU from the data path
+  itself.
+\end{frame}
+
+\begin{frame}{Bus Arbitration: A Third Role for a Device}
+  \begin{center}
+    % Diagram: 3 candidate bus masters send bus-request (BR) lines into an
+    % arbiter; arbiter grants bus-grant (BG) to exactly one at a time based
+    % on priority, shown as a daisy-chained priority order.
+    % Coordinates: (x, y)
+    %   Master 1 (highest) at (0, 2.6); Master 2 at (0, 1.3); Master 3 at (0, 0)
+    %   Arbiter box at (5.4, 1.3), w=2.6, h=3.6
+    %   Bus (granted) output at (9.6, 1.3)
+    %   BG feedback routed BELOW all boxes (y=-2.0, well clear of M3's
+    %   bottom edge at y=-0.4) and back up outside M1/M2/M3's left edge
+    %   (x=-1.8, clear of their west edge at x=-1.1) -- avoids both a
+    %   box crossing (P7a) and colliding with the frame title above.
+    \begin{tikzpicture}[scale=0.62, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.2cm, minimum height=0.8cm, align=center]
+            (M1) at (0,2.6) {Master 1 (highest)};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.2cm, minimum height=0.8cm, align=center]
+            (M2) at (0,1.3) {Master 2};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.2cm, minimum height=0.8cm, align=center]
+            (M3) at (0,0) {Master 3 (lowest)};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=2.6cm, minimum height=3.6cm, align=center]
+            (ARB) at (5.4,1.3) {\textbf{Arbiter}};
+      \node[draw=positive, fill=light-bg, rounded corners, text width=2.6cm,
+            minimum height=0.9cm, align=center]
+            (BUS) at (9.6,1.3) {Bus (granted to one master)};
+      \draw[->, thick] (M1.east) -- (ARB.west |- 0,2.3)
+            node[midway, above] {\scriptsize \texttt{BR}};
+      \draw[->, thick] (M2.east) -- (ARB.west |- 0,1.3);
+      \draw[->, thick] (M3.east) -- (ARB.west |- 0,0.3);
+      \draw[->, thick, primary-gold] (ARB.south) -- (5.4,-2.0) -- (-1.8,-2.0) -- (-1.8,2.6) -- (M1.west);
+      \node[font=\scriptsize, primary-gold] at (1.8,-2.35)
+            {\texttt{BG} (to the winning master, here Master 1)};
+      \draw[->, thick] (ARB.east) -- (BUS.west);
+    \end{tikzpicture}
+  \end{center}
+  Any device connected via \texttt{BR}/\texttt{BG} can become bus
+  \textbf{master}, not just the CPU --- the arbiter grants the bus to
+  exactly one requester, by priority, each time
+  \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{From Arbitration to Direct Memory Access}
+  \begin{block}{The functional idea, stated plainly}
+    Once a device can become bus master, it can transfer data
+    \emph{directly to or from memory} --- no CPU instruction touches the
+    data at all. The CPU is interrupted \emph{once}, when the whole block
+    finishes, not once per word.
+  \end{block}
+  \muted{This edition of Hamacher's text (Ch.~7, arbitration) describes
+  exactly this mechanism but never names it ``DMA'' --- the term and its
+  standard treatment below follow Stallings Ch.~7 \cite{Stallings2015_computer_organization},
+  per the syllabus and \texttt{.claude/rules/textbook-grounding.md}.}
+\end{frame}
+
+\begin{frame}{Definition: Direct Memory Access (DMA)}
+  \begin{block}{DMA (general/standard treatment --- Stallings Ch.~7)}
+    A \textbf{DMA controller} is given a source/destination address and a
+    word count by the CPU, then becomes bus master (via arbitration) and
+    transfers the entire block directly to/from memory, interrupting the CPU
+    only when the \emph{block} --- not each word --- is complete
+    \cite{Stallings2015_computer_organization}.
+  \end{block}
+  \begin{itemize}
+    \item \good{Pro}: CPU involvement drops from ``one ISR per word'' ---
+      1024 of them for our 4096-byte block --- to ``one setup, one
+      completion interrupt'' --- a constant cost regardless of block size.
+    \item \bad{Con}: DMA controller and CPU now compete for the same memory
+      bus (\textbf{cycle stealing}); extra hardware required.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Definition: I/O Processor (IOP)}
+  \begin{block}{IOP (general/standard treatment --- Stallings Ch.~7)}
+    An \textbf{I/O processor} generalizes DMA one step further: a dedicated
+    processor, given a whole \emph{channel program} (a short program
+    describing several transfers, formats, and simple decisions), executes
+    it independently --- interrupting the main CPU only when the entire
+    program completes, not per block.
+  \end{block}
+  \muted{Where DMA offloads \emph{moving} data, an IOP offloads \emph{managing}
+  a sequence of I/O operations --- the difference is how much decision-making
+  is delegated away from the CPU, not just how the data moves.}
+\end{frame}
+
+\begin{frame}{Four I/O Techniques, Head to Head}
+  \tiny
+  \begin{center}
+  \begin{tabular}{@{}lllll@{}}
+    \toprule
+    & \textbf{Polling} & \textbf{Interrupts} & \textbf{DMA} & \textbf{IOP} \\
+    \midrule
+    CPU cost / word & Every poll & Every word (ISR) & None (setup only) & None \\
+    CPU cost / block & --- & Thousands of ISRs & One interrupt & One interrupt \\
+    Extra hardware & None & Vector table, \texttt{IE} & DMA controller & Dedicated processor \\
+    Best fit & One slow device & Multiple/sporadic devices & Bulk block transfer & Complex I/O subsystems \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \normalsize
+  \key{Same core question, four answers}: who watches the device, and how
+  much of the CPU does watching cost?
+\end{frame}
+
+\begin{frame}{Socratic Check: Choosing a Technique}
+  \begin{alertblock}{Question}
+    A system reads one temperature sensor value per second (low rate,
+    latency-tolerant) and separately copies a 10~MB file from disk to
+    memory (high rate, throughput-critical). Which technique fits each?
+  \end{alertblock}
+  \begin{itemize}
+    \item Temperature sensor: \key{interrupts} --- rate is low, so ISR
+      overhead per event is negligible, and the CPU is free the rest of the
+      time.
+    \item Disk copy: \key{DMA} --- per-word CPU involvement at that data
+      rate would dominate CPU time; DMA reduces it to one setup, one
+      completion interrupt.
+  \end{itemize}
+\end{frame}
+
+% =============================================================================
+% ACT 5 --- SYNTHESIS
+% =============================================================================
+\section{Synthesis}
+
+\begin{frame}{The Four Threads Meet}
+  \begin{block}{Every design choice moves the waiting cost somewhere else}
+    \begin{itemize}
+      \item \textbf{Polling vs.\ interrupts (programmer's view):} polling
+        wastes CPU cycles asking; interrupts let the device ask instead, at
+        the cost of vector-table/priority hardware.
+      \item \textbf{Synchronous vs.\ asynchronous (bus hardware):} a shared
+        clock is cheap per transfer but skew-sensitive; a handshake is
+        skew-immune but pays two round trips every time.
+      \item \textbf{Interrupts vs.\ DMA/IOP (who moves the data):}
+        interrupts still touch every word; DMA and IOP remove the CPU from
+        the data path, trading extra hardware for near-zero per-word cost.
+    \end{itemize}
+  \end{block}
+  None of these is free --- exactly the pattern Weeks 5--7 established for
+  buses and control units, now applied to the world outside the chip.
+\end{frame}
+
+\begin{frame}{Bridge to Week 9}
+  \begin{exampleblock}{From moving data to storing it efficiently}
+    Weeks 1--8 built a CPU that computes, controls itself, and now moves data
+    to and from slow devices. Week 9 asks: once data is in memory, how do we
+    make \emph{memory itself} fast enough to keep up with the CPU?
+  \end{exampleblock}
+  \begin{itemize}
+    \item DRAM is far slower than the CPU --- the same speed-mismatch problem
+      this week solved for devices reappears for memory itself.
+    \item Cache memory, mapping functions, and replacement policies are
+      Week 9's answer.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item \key{Memory-mapped I/O}: device registers (data/status/control)
+      live in the normal address space; \key{program-controlled I/O
+      (polling)} repeatedly tests a status flag (\texttt{KIN}, \texttt{DOUT}).
+    \item \key{Interrupts}: the device signals readiness; \texttt{PS.IE} and
+      per-device enables (\texttt{KIRQ}/\texttt{DIRQ}) gate delivery;
+      \key{vectored interrupts} use \texttt{IPENDING}/\texttt{IENABLE} plus
+      an interrupt-vector table for constant-time dispatch.
+    \item \key{Synchronous bus}: shared clock, wait states for slow slaves.
+      \key{Asynchronous bus}: \texttt{Master-ready}/\texttt{Slave-ready} full
+      handshake, skew-immune but higher per-transfer overhead.
+    \item \key{Bus arbitration} (\texttt{BR}/\texttt{BG}) lets a device
+      become bus master --- the functional basis for \key{DMA} (block
+      transfer, one completion interrupt) and \key{IOP} (whole channel
+      programs, general/standard treatment per Stallings Ch.~7).
+    \item \key{Four techniques, one trade-off axis}: how much of the CPU does
+      watching and moving the data cost, and how much hardware buys that
+      cost down.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

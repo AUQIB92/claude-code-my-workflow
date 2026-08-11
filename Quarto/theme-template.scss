@@ -445,6 +445,47 @@ $selection-bg: $primary-gold !default;
 }
 
 // ==============================================================================
+// SECTION DIVIDER SLIDES (Quarto equivalent of Beamer \sectiondivider)
+// ==============================================================================
+// Near-black (jet) background, small white label line, larger gold title,
+// thin gold rule along the bottom edge. Mirrors \sectiondivider in header.tex.
+
+.reveal .slides section.section-divider {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  height: 100% !important;
+  text-align: left !important;
+  background-color: $jet !important;
+  position: relative;
+
+  .section-divider-label {
+    font-family: monospace;
+    font-size: 1.1em;
+    color: white;
+    margin-bottom: 0.5em;
+  }
+
+  .section-divider-title {
+    font-size: 2.2em;
+    color: $primary-gold;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2.5pt;
+    background-color: $primary-gold;
+  }
+}
+
+// ==============================================================================
 // FONT SIZE UTILITIES
 // ==============================================================================
 
