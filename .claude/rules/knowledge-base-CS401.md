@@ -109,6 +109,9 @@ paths:
 | IPENDING / IENABLE | Processor control registers for vectored, priority interrupt dispatch: `IPENDING` latches which device(s) currently have a request pending; `IENABLE` masks which of those are allowed through to the priority encoder | **Week 8 (new)** |
 | Master-ready / Slave-ready | Asynchronous-bus full-handshake signals: each changes only in response to the other, giving a skew-immune 4-step interlocked exchange (vs. a synchronous bus's shared clock edge) | **Week 8 (new)** |
 | BR / BG | Bus-request / bus-grant arbitration lines: a candidate bus master asserts `BR`; the arbiter asserts `BG` to the winning requester (by priority), letting that device become bus master — the functional basis for DMA | **Week 8 (new)** |
+| Exception | Any event that suspends normal control flow — I/O interrupt, divide-by-zero, illegal instruction, page fault, timer tick. Same jump-to-handler machinery as an interrupt; only the source differs (P&H Ch. 4; Hamacher §3.2.6) | **Week 8 (new)** |
+| DMA controller registers | Source address, destination address, word count, control/status — written once by the CPU at setup; the DMA controller owns them through the transfer | **Week 8 (new)** |
+| Burst / cycle-stealing / transparent (DMA modes) | Burst: DMA holds the bus for the entire block (fastest, starves CPU). Cycle stealing: one word per grant, bus released between words (slower, CPU keeps running). Transparent: transfers only during CPU cycles that don't use the bus (slowest, CPU never notices) | **Week 8 (new)** |
 
 ## Lecture Progression
 

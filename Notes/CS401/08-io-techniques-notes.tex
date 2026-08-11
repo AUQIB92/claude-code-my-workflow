@@ -18,9 +18,13 @@
 %                 page-verified via direct visual Read). DMA and IOP are NOT
 %                 named in this edition (verified in the same index pass) --
 %                 SS7.3 Arbitration is the functional analogue of DMA but the
-%                 term is never used, so DMA/IOP content below is phrased as
-%                 general/standard treatment citing Stallings Ch. 7, per
-%                 .claude/rules/textbook-grounding.md.
+%                 term is never used, so DMA/IOP content is phrased as
+%                 general/standard treatment citing Stallings Ch. 8 (11th-ed.
+%                 I/O chapter, confirmed in knowledge-base-CS401.md; chapter-
+%                 level only, no page index yet), per
+%                 .claude/rules/textbook-grounding.md. Mano Ch. 11 (chapter-level)
+%                 supplies the isolated-I/O contrast; P&H (ARM ed.) Ch. 4
+%                 supplies the exceptions-as-interrupts framing.
 %
 % Compile with: cd Notes/CS401 &&
 %   TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode 08-io-techniques-notes.tex
@@ -59,7 +63,7 @@
 
 Weeks 6 and 7 built two different implementations of the same control unit --- hardwired (Week 6) and microprogrammed (Week 7) --- and both answered the same question: how does the CPU generate its own control-step sequence, cycle by cycle? Both designs quietly assumed the CPU is the only thing that matters: registers, an ALU, and an internal bus. Neither design said anything about what happens when the CPU needs data from, or must send data to, something \emph{outside} the chip --- a keyboard, a disk, a printer.
 
-That gap matters because of a raw speed mismatch. A CPU executes roughly one instruction per nanosecond. A keyboard produces roughly one keystroke every hundred million nanoseconds. If the CPU is responsible for reading every keystroke the instant it arrives, and it does nothing else in between, it is wasting an enormous number of cycles waiting. This chapter is organized around four different answers to the same underlying question --- \emph{who watches the device, and how much of the CPU does the watching cost?} --- moving from a purely software answer to a purely hardware one:
+That gap matters because of a raw speed mismatch. A CPU executes roughly one instruction per nanosecond --- about $10^9$ instructions per second. A keyboard produces roughly one keystroke every 200 milliseconds --- about 5 keystrokes per second. The CPU is roughly \emph{200 million times} faster than the typist; the two operate on completely different time scales. If the CPU is responsible for reading every keystroke the instant it arrives, and it does nothing else in between, it wastes an enormous number of cycles waiting. I/O design is therefore really the question of \emph{who does the waiting}, and \emph{what the waiting costs}. This chapter is organized around four different answers to that one underlying question --- \emph{who watches the device, and how much of the CPU does the watching cost?} --- moving from a purely software answer to a purely hardware one:
 
 \begin{enumerate}
   \item \textbf{Program-controlled I/O (polling)} (Section~\ref{sec:polling}) --- the CPU repeatedly asks a device ``are you ready?'' in a loop.
@@ -81,7 +85,7 @@ The simplest possible way to let software talk to a device is to make the device
 In \textbf{memory-mapped I/O}, a device's data, status, and control registers occupy addresses in the CPU's normal address space. The CPU reads and writes them with ordinary load/store instructions --- no special I/O instructions are needed (Hamacher, 6th ed., \S3.1, p.96--97) \cite{Hamacher2002_computer_organization}.
 \end{definitionbox}
 
-Every I/O device in this chapter connects to the CPU through a \textbf{device interface}: a small block of hardware supplying six functions in every case --- a data register, a status register, a control register, address decoding (so the interface recognizes when the CPU addresses \emph{it}), timing generation, and format conversion between the CPU's internal representation and whatever the device physically needs (Hamacher, 6th ed., \S3.1.1/\S7.4, p.97, p.238--239) \cite{Hamacher2002_computer_organization}. Figure~\ref{fig:device-interface} shows this three-stage path: the CPU talks to the device interface over the address/data bus, and the interface in turn talks to the physical device using whatever signals that device needs.
+Every I/O device in this chapter connects to the CPU through a \textbf{device interface}: a small block of hardware supplying six functions in every case --- a data register, a status register, a control register, address decoding (so the interface recognizes when the CPU addresses \emph{it}), timing generation, and format conversion between the CPU's internal representation and whatever the device physically needs (Hamacher, 6th ed., \S3.1.1/\S7.4, p.97, p.238--239) \cite{Hamacher2002_computer_organization}. Figure~\ref{fig:device-interface} shows this three-stage path: the CPU talks to the device interface over the address/data bus, and the interface in turn talks to the physical device using whatever signals that device needs. Concretely, the three registers the CPU actually sees are the \textbf{data register} (the byte actually transferred, e.g.\ \texttt{KBD\_DATA} for the keyboard or \texttt{DISP\_DATA} for the display), the \textbf{status register} (flags such as \texttt{KIN} or \texttt{DOUT}), and the \textbf{control register} (settings such as interrupt-enable bits).
 
 \begin{figure}[h]
   \centering
@@ -105,6 +109,24 @@ Every I/O device in this chapter connects to the CPU through a \textbf{device in
   \caption{The device-interface model: a CPU reads/writes a device interface's data/status/control registers over the shared bus exactly as it would ordinary memory; the interface converts these transactions into whatever signals the physical device needs --- cf.\ Hamacher, \textit{Computer Organization and Embedded Systems}, 6th ed., Fig.~3.1--3.2, \S3.1/\S3.1.1, p.96--97 \cite{Hamacher2002_computer_organization}.}
   \label{fig:device-interface}
 \end{figure}
+
+\subsection{Isolated vs.\ Memory-Mapped I/O}
+
+Memory-mapped I/O is one of two standard ways of reaching a device's registers; the other is worth naming so the choice is explicit. In \textbf{isolated I/O}, devices live in a \emph{separate} address space, reached only by dedicated I/O instructions rather than ordinary loads and stores --- the classic IBM mainframe approach, and the standard alternative described in Mano Ch.~11 (chapter-level treatment; no page index for that chapter yet). Memory-mapped I/O, by contrast, needs no special instructions and uses the same load/store machinery the CPU already has; that simplicity is why the Hamacher examples in this chapter assume it. The trade-off between the two is summarized below.
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Memory-mapped I/O} & \textbf{Isolated I/O} \\
+\midrule
+Address space & Devices share the memory space & Separate I/O space \\
+Instructions & Ordinary \texttt{Load}/\texttt{Store} & Dedicated I/O instructions \\
+Simplicity & Simpler for the programmer & Extra hardware/instructions \\
+Typical use & Most modern processors & Classic IBM mainframes \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsection{Program-Controlled I/O (Polling)}
 
@@ -149,7 +171,7 @@ A typist produces roughly 5 keystrokes per second, i.e.\ one keystroke every 0.2
 \[
 0.2~\text{s} \times 2\times10^9~\text{instr/s} = 4\times10^8~\text{instructions},
 \]
-which at 2 instructions per failed iteration is on the order of $2\times10^8$ (hundreds of millions) of \texttt{READWAIT} iterations. Every single one of them re-reads a status flag that has not changed since the last check, accomplishing \emph{nothing} useful. Polling is simple --- it requires no extra hardware beyond the status register itself --- but it wastes CPU time in direct proportion to how much slower the device is than the CPU. It is a reasonable design when a single slow device has nothing else competing for the CPU's attention, and a poor one at any larger scale.
+which at 2 instructions per failed iteration is on the order of $2\times10^8$ (hundreds of millions) of \texttt{READWAIT} iterations. Every single one of them re-reads a status flag that has not changed since the last check, accomplishing \emph{nothing} useful. Put another way, the fraction of the CPU consumed by polling this one keyboard is $2\times10^8~\text{ns} \div 2\times10^8~\text{ns} = 1.0$ --- \emph{100\%} of the CPU's time is spent waiting on this single device. Polling is simple --- it requires no extra hardware beyond the status register itself --- but it wastes CPU time in direct proportion to how much slower the device is than the CPU. It is a reasonable design when a single slow device has nothing else competing for the CPU's attention, and a poor one at any larger scale.
 \end{example}
 
 \section{Interrupt-Driven I/O}
@@ -193,7 +215,7 @@ An interrupt request from a device does not automatically suspend the CPU; two i
   \item A per-device interrupt-enable bit inside that specific device's own control register --- \texttt{KIRQ} for the keyboard, \texttt{DIRQ} for the display. This bit controls whether \emph{this particular} device is allowed to request an interrupt at all.
 \end{itemize}
 
-A request reaches the CPU only when both switches agree: the device's own enable bit \emph{and} \texttt{PS.IE} must both be set. This two-level gating means a programmer can globally mask all interrupts with one bit (useful, for instance, while updating shared data structures that an ISR must not see half-updated) while separately deciding, device by device, which sources are even allowed to ask.
+A request reaches the CPU only when both switches agree: the device's own enable bit \emph{and} \texttt{PS.IE} must both be set. Plainly: \texttt{IE} is the master switch; each device also has its own little switch, and both must be on for the request to arrive. For example, \texttt{KIRQ}$=1$ and \texttt{IE}$=1$ means a keystroke will interrupt; \texttt{IE}$=0$ means it waits. This two-level gating means a programmer can globally mask all interrupts with one bit (useful, for instance, while updating shared data structures that an ISR must not see half-updated) while separately deciding, device by device, which sources are even allowed to ask.
 
 \subsection{Worked Example: A Five-Step Interrupt-Handling Scenario}
 
@@ -208,7 +230,7 @@ Hamacher's 6th edition works through interrupt handling as a five-step scenario 
   \item \textbf{ISR services the device.} The keyboard ISR executes \texttt{MoveByte KBD\_DATA, R} to read the pending keystroke, which as a side effect clears \texttt{KIN} back to 0, and then executes a return-from-interrupt instruction.
   \item \textbf{Return-from-interrupt restores the original program.} \texttt{RTI} restores the saved \texttt{PC} from the shadow register and re-enables interrupts (\texttt{PS.IE}$\gets1$). The interrupted program resumes at exactly the instruction it would have executed next, with no memory of having been interrupted.
 \end{enumerate}
-Compared to Example~\ref{ex:polling}'s \texttt{READWAIT} loop, the CPU here does zero work while waiting for a keystroke --- it only spends time on the interrupt \emph{after} \texttt{KIN} actually becomes 1.
+Compared to Example~\ref{ex:polling}'s \texttt{READWAIT} loop, the CPU here does zero work while waiting for a keystroke --- it only spends time on the interrupt \emph{after} \texttt{KIN} actually becomes 1. The CPU never polls; it goes on computing until the device rings the bell.
 \end{example}
 
 \subsection{Handling Multiple Devices}
@@ -220,7 +242,7 @@ A single interrupt-request line tells the CPU \emph{that} something needs attent
   \item \textbf{Vectored interrupts.} Each device supplies its own identifying code as part of the interrupt request. Hardware uses that code to index directly into an \textbf{interrupt-vector table} --- a table of ISR starting addresses, one entry per device --- and jumps straight to the correct ISR.
 \end{itemize}
 
-Vectored interrupts trade a small amount of extra hardware (the vector table itself, plus the lookup logic) for constant-time dispatch, regardless of how many devices are attached --- the CPU jumps directly to the right ISR instead of walking a checklist.
+Vectored interrupts trade a small amount of extra hardware (the vector table itself, plus the lookup logic) for constant-time dispatch, regardless of how many devices are attached --- the CPU jumps directly to the right ISR instead of walking a checklist. Plainly: polling-the-sources asks everyone ``was it you?'' in order; a vector table skips the asking and goes straight to the right ISR.
 
 \subsection{Interrupt Nesting and Priority}
 
@@ -258,7 +280,7 @@ When more than one device can interrupt, and interrupts can themselves be interr
   \label{fig:nesting}
 \end{figure}
 
-When two devices request simultaneously, the priority encoder grants the higher-priority one first; \texttt{IPENDING} keeps the other device's request latched --- not lost --- until that device is eventually serviced.
+What the diagram shows: \texttt{IPENDING} latches \emph{which} devices currently want an interrupt; \texttt{IENABLE} decides \emph{which of those} are allowed through; the priority encoder picks the highest-priority allowed one; the vector table gives its ISR address. When two devices request simultaneously, the priority encoder grants the higher-priority one first; \texttt{IPENDING} keeps the other device's request latched --- not lost --- until that device is eventually serviced.
 
 \begin{example}[Simultaneous Requests and Nesting]
 \label{ex:nesting}
@@ -268,6 +290,16 @@ Device~1 has higher priority than Device~2. Both request an interrupt on the sam
   \item \textbf{Nesting disabled, or Device~2 is lower priority than Device~1's currently-running ISR.} Device~2's request stays latched in \texttt{IPENDING}. It is not lost or re-requested; it simply waits until Device~1's ISR finishes and re-enables interrupts (\texttt{PS.IE}$\gets1$ via \texttt{RTI}), at which point the priority encoder re-evaluates \texttt{IPENDING} and grants Device~2.
 \end{itemize}
 \end{example}
+
+\subsection{Exceptions: The General Form of an Interrupt}
+
+The interrupt mechanism is not special to I/O devices; it is the same machinery the CPU uses for any event that must suspend the current program. Naming this generalization matters because it lets one mechanism serve many different sources.
+
+\begin{definitionbox}{Exception}
+An \textbf{exception} is any event that interrupts the normal flow of control --- an I/O interrupt, but also divide-by-zero, an illegal instruction, a page fault, or a timer tick. The interrupt mechanism is the same; only the \emph{source} differs (Hamacher, 6th ed., \S3.2.6, p.116--119; P\&H, ARM ed., Ch.~4, chapter-level) \cite{Hamacher2002_computer_organization,PattersonHennessy2017_computer_organization_design}.
+\end{definitionbox}
+
+Plainly, an interrupt is just one kind of exception --- the ``a device needs me'' kind. The CPU handles all of them with the same jump-to-handler machinery from Figure~\ref{fig:interrupt-transfer}: save state, service, restore. This is also the bridge later lectures will reuse --- exceptions are how the operating system gets control back from user programs.
 
 \subsection{Polling vs.\ Interrupts: Trade-offs}
 
@@ -462,29 +494,118 @@ DMA depends on a capability not yet introduced: an I/O device, not just the CPU,
 
 \begin{example}[Three-Master Priority Arbitration]
 \label{ex:arbitration}
-Suppose Masters~1, 2, and~3 (priority highest to lowest, as in Figure~\ref{fig:arbitration}) all assert \texttt{BR} on the same cycle, competing for the bus. The arbiter examines all three requests simultaneously and grants \texttt{BG} to Master~1, the highest-priority requester --- Masters~2 and~3 continue holding \texttt{BR} asserted, waiting. Once Master~1 finishes its transfer and releases the bus, the arbiter re-evaluates the still-pending requests from Masters~2 and~3 and grants \texttt{BG} to Master~2 next, by the same priority rule; Master~3 is served last, once both higher-priority masters have released the bus. Any device wired into the \texttt{BR}/\texttt{BG} scheme can become bus master this way --- not only the CPU --- which is exactly the capability DMA needs.
+Suppose Masters~1, 2, and~3 (priority highest to lowest, as in Figure~\ref{fig:arbitration}) all assert \texttt{BR} on the same cycle, competing for the bus. The arbiter examines all three requests simultaneously and grants \texttt{BG} to Master~1, the highest-priority requester --- Masters~2 and~3 continue holding \texttt{BR} asserted, waiting. Once Master~1 finishes its transfer and releases the bus, the arbiter re-evaluates the still-pending requests from Masters~2 and~3 and grants \texttt{BG} to Master~2 next, by the same priority rule; Master~3 is served last, once both higher-priority masters have released the bus. Any device wired into the \texttt{BR}/\texttt{BG} scheme can become bus master this way --- not only the CPU --- which is exactly the capability DMA needs. Being bus master is how a device talks to memory \emph{directly}.
 \end{example}
 
 \subsection{From Arbitration to Direct Memory Access}
 
-Once a device can become bus master via arbitration, it can transfer data \emph{directly to or from memory}, with no CPU instruction ever touching the data. The CPU is interrupted only \emph{once}, when the entire block finishes, not once per word as in Example~\ref{ex:isr-count}. This edition of Hamacher's text describes exactly this mechanism in \S7.3 (Arbitration) but never names it ``DMA'' --- the term and its standard treatment below follow Stallings Ch.~7, per the syllabus and the project's textbook-grounding rule, since this book's index does not cover DMA/IOP by name \cite{Hamacher2002_computer_organization}.
+Once a device can become bus master via arbitration, it can transfer data \emph{directly to or from memory}, with no CPU instruction ever touching the data. The CPU is interrupted only \emph{once}, when the entire block finishes, not once per word as in Example~\ref{ex:isr-count}. This edition of Hamacher's text describes exactly this mechanism in \S7.3 (Arbitration) but never names it ``DMA'' --- the term and its standard treatment below follow Stallings Ch.~8, per the syllabus and the project's textbook-grounding rule, since this book's index does not cover DMA/IOP by name \cite{Hamacher2002_computer_organization}.
 
-\begin{definitionbox}{Direct Memory Access (DMA) --- general/standard treatment, Stallings Ch.~7}
-A \textbf{DMA controller} is given a source/destination address and a word count by the CPU, then becomes bus master (via the arbitration mechanism of Figure~\ref{fig:arbitration}) and transfers the entire block directly to/from memory, interrupting the CPU only when the \emph{block} --- not each word --- is complete.
+\begin{definitionbox}{Direct Memory Access (DMA) --- general/standard treatment, Stallings Ch.~8}
+A \textbf{DMA controller} is given a source/destination address and a word count by the CPU, then becomes bus master (via the arbitration mechanism of Figure~\ref{fig:arbitration}) and transfers the entire block directly to/from memory, interrupting the CPU only when the \emph{block} --- not each word --- is complete \cite{Stallings2015_computer_organization}.
 \end{definitionbox}
+
+Plainly: the CPU says ``copy this block,'' then goes back to work; the DMA controller does the copying and rings the bell when done.
+
+\subsection{The DMA Controller: What's Inside}
+
+To do its job, the DMA controller carries four registers, all written once by the CPU at setup and owned by the controller for the rest of the transfer. Figure~\ref{fig:dma-regs} shows where they live: the DMA controller sits between the CPU and the I/O device on the bus, and can become bus master to reach memory directly.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.78, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-blue, fill=light-bg, rounded corners,
+          minimum width=2.0cm, minimum height=1.0cm, align=center]
+          (CPU) at (0,0) {CPU};
+    \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+          minimum width=3.6cm, minimum height=2.6cm, align=center]
+          (DMA) at (5.5,0) {\textbf{DMA Controller}\\[0.15cm]
+            \footnotesize
+            Source address\\ Destination address\\ Word count\\
+            Control/status};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=1.0cm, align=center]
+          (DEV) at (10.5,0) {I/O Device};
+    \node[draw=positive, fill=light-bg, rounded corners,
+          minimum width=2.6cm, minimum height=1.0cm, align=center]
+          (MEM) at (5.5,3.2) {Memory};
+    \draw[<->, thick] (CPU.east) -- (DMA.west)
+          node[midway, above] {\scriptsize bus};
+    \draw[<->, thick] (DMA.east) -- (DEV.west)
+          node[midway, above] {\scriptsize device data};
+    \draw[<->, thick] (DMA.north) -- (MEM.south)
+          node[midway, right] {\scriptsize bus master $\to$ memory};
+  \end{tikzpicture}
+  \caption{The DMA controller and its four registers: source/destination address, word count, and control/status. The CPU writes them once at setup; the controller becomes bus master to move data directly between the device and memory --- general/standard treatment, Stallings Ch.~8 \cite{Stallings2015_computer_organization}.}
+  \label{fig:dma-regs}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Source / destination address} --- where the data comes from and goes to (memory address and device, or vice versa).
+  \item \textbf{Word count} --- how many words remain to transfer; decremented after every word.
+  \item \textbf{Control/status} --- transfer direction, mode, and the ``block done'' flag that interrupts the CPU.
+\end{itemize}
+
+\subsection{How a DMA Transfer Runs: Step by Step}
+
+\begin{example}[The Six-Step DMA Transfer Sequence]
+\label{ex:dma-seq}
+Copying the running 4096-byte block from disk to memory, the CPU appears exactly twice --- at setup and at completion --- and never touches the data itself \cite{Stallings2015_computer_organization}:
+\begin{enumerate}
+  \item \textbf{Setup.} The CPU writes the DMA controller's registers: source address (disk), destination address (memory), word count (1024), and direction (read).
+  \item \textbf{Request.} The DMA controller asks for the bus by asserting \texttt{BR} (bus request).
+  \item \textbf{Grant.} The arbiter answers with \texttt{BG} (bus grant); the DMA controller becomes bus master (Hamacher, 6th ed., \S7.3, p.237--238) \cite{Hamacher2002_computer_organization}.
+  \item \textbf{Transfer one word.} The DMA controller reads one word from the device and writes it to memory (or the reverse), using one or two bus cycles.
+  \item \textbf{Decrement.} It subtracts 1 from the word count and, if the count is still $>0$, returns to step 2 for the next word.
+  \item \textbf{Done.} When the count reaches 0, the DMA controller drops \texttt{BR} and raises a \emph{completion interrupt} --- the CPU's only involvement after setup.
+\end{enumerate}
+Compare with polling and interrupts: the CPU now appears exactly twice, at the start and the end.
+\end{example}
+
+\subsection{DMA Transfer Modes}
+
+The DMA controller can choose how aggressively it holds the bus. The trade-off is always the same --- speed of the transfer versus how much it starves the CPU --- and three standard modes span the range (general/standard treatment, Stallings Ch.~8) \cite{Stallings2015_computer_organization}:
+
+\begin{description}
+  \item[\textbf{Burst (block) mode.}] The DMA controller holds the bus for the \emph{entire} block --- all 1024 words in one continuous burst, then releases the bus and interrupts the CPU. Fastest possible block transfer, but the CPU cannot reach memory at all for the duration of the burst.
+  \item[\textbf{Cycle-stealing (single) mode.}] The DMA controller grabs the bus for \emph{one word}, releases it, and re-requests --- so the CPU can use the bus between DMA words. Slower per block, but the CPU keeps running between transfers.
+  \item[\textbf{Transparent (hidden) mode.}] The DMA controller transfers \emph{only during CPU cycles that do not use the bus at all} --- the CPU never even notices the DMA happening. Slowest transfer rate, but zero effect on the CPU.
+\end{description}
+
+Plainly: burst = ``whole job now, don't bother me''; cycle stealing = ``one word, then back off''; transparent = ``only when you're not looking.''
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}llll@{}}
+\toprule
+& \textbf{Burst} & \textbf{Cycle stealing} & \textbf{Transparent} \\
+\midrule
+Bus held & Whole block & One word & Only idle CPU cycles \\
+Transfer speed & Fastest & Medium & Slowest \\
+Effect on CPU & Starved for the block & Brief pauses per word & None \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{DMA's Cost Reduction on the Running Block Transfer}
 
 \begin{example}[DMA's Cost Reduction on the Running Block Transfer]
 \label{ex:dma-cost}
-Revisiting Example~\ref{ex:isr-count}'s 4096-byte transfer under DMA: the CPU's only involvement is a single setup step (write the source/destination address and the word count of 1024 into the DMA controller's registers) and a single completion interrupt once the DMA controller has moved all 1024 words. This is a reduction from 1024 ISR invocations to 2 CPU events total (1 setup $+$ 1 completion interrupt) --- a constant cost regardless of block size, in contrast to interrupt-driven I/O's cost, which grows linearly with the number of words transferred. The trade-off is that the DMA controller and the CPU now compete for the same memory bus while the transfer is in progress (\textbf{cycle stealing}: the DMA controller occasionally takes a memory cycle the CPU would otherwise have used), and a physical DMA controller is extra hardware neither polling nor plain interrupts require.
+Revisiting Example~\ref{ex:isr-count}'s 4096-byte transfer under DMA: the CPU's only involvement is a single setup step (write the source/destination address and the word count of 1024 into the DMA controller's registers) and a single completion interrupt once the DMA controller has moved all 1024 words. This is a reduction from 1024 ISR invocations to 2 CPU events total (1 setup $+$ 1 completion interrupt) --- a constant cost regardless of block size, in contrast to interrupt-driven I/O's cost, which grows linearly with the number of words transferred.
+
+Putting instruction counts on it makes the saving concrete: if one ISR takes 200 CPU instructions, interrupt-driven I/O spends $1024\times200 = 204{,}800$ instructions moving the block, while DMA spends one setup plus one completion ISR --- roughly 400 instructions --- about \emph{500$\times$ less} CPU work. The CPU that used to spend its whole time servicing the disk can now run the user's program instead.
+
+The trade-off is that the DMA controller and the CPU now compete for the same memory bus while the transfer is in progress (the bus is occupied for the same 1024 transfer cycles either way), and a physical DMA controller is extra hardware neither polling nor plain interrupts require.
 \end{example}
 
 \subsection{I/O Processors (IOP)}
 
-\begin{definitionbox}{I/O Processor (IOP) --- general/standard treatment, Stallings Ch.~7}
-An \textbf{I/O processor} generalizes DMA one step further: a dedicated processor, given a whole \emph{channel program} (a short program describing several transfers, data formats, and simple decisions), executes it independently --- interrupting the main CPU only when the \emph{entire program} completes, not per block.
+\begin{definitionbox}{I/O Processor (IOP) --- general/standard treatment, Stallings Ch.~8}
+An \textbf{I/O processor} generalizes DMA one step further: a dedicated processor, given a whole \emph{channel program} (a short program describing several transfers, data formats, and simple decisions), executes it independently --- interrupting the main CPU only when the \emph{entire program} completes, not per block \cite{Stallings2015_computer_organization}.
 \end{definitionbox}
 
-Where DMA offloads only the \emph{moving} of data, an IOP offloads \emph{managing a sequence} of I/O operations. The distinction is how much decision-making is delegated away from the main CPU, not merely how the data physically moves: a DMA controller executes one pre-configured block transfer and stops; an IOP can execute a whole program of transfers, formats, and conditional decisions on its own, reporting back to the CPU only when that entire program is done.
+Plainly: DMA copies one block; an IOP runs a whole to-do list of I/O jobs and reports back when the list is done. Where DMA offloads only the \emph{moving} of data, an IOP offloads \emph{managing a sequence} of I/O operations. The distinction is how much decision-making is delegated away from the main CPU, not merely how the data physically moves: a DMA controller executes one pre-configured block transfer and stops; an IOP can execute a whole program of transfers, formats, and conditional decisions on its own, reporting back to the CPU only when that entire program is done.
 
 \subsection{Four I/O Techniques, Head to Head}
 
@@ -511,6 +632,7 @@ A system reads one temperature-sensor value per second (a low rate, and the appl
   \item \textbf{Temperature sensor: interrupts.} At one event per second, the ISR overhead per event (a handful of instructions, per Example~\ref{ex:5step}) is utterly negligible relative to the CPU's billions of instructions per second, and the CPU remains completely free to do other work the rest of the time. Polling would waste cycles for no benefit (as in Example~\ref{ex:polling-waste}); DMA/IOP hardware would be pure overkill for a single value per second.
   \item \textbf{Disk copy: DMA.} At 10~MB moved in 4-byte words, interrupt-driven I/O would need on the order of $2.5\times10^6$ ISR invocations (following the arithmetic of Example~\ref{ex:isr-count} scaled up), which would dominate CPU time entirely. DMA reduces the CPU's involvement to one setup and one completion interrupt regardless of the block's size, exactly the trade-off Example~\ref{ex:dma-cost} quantified.
 \end{itemize}
+The rule of thumb: match the technique to the \emph{rate} and \emph{size} of the transfer, not to habit.
 \end{example}
 
 \section{Synthesis: The Four Threads Meet}
@@ -530,7 +652,7 @@ Weeks 1--8 together built a CPU that computes, controls itself, and now moves da
 
 \subsection{Summary}
 
-\textbf{Memory-mapped I/O} places a device's data/status/control registers directly in the normal address space; \textbf{program-controlled I/O (polling)} repeatedly tests a status flag (\texttt{KIN}, \texttt{DOUT}) until it changes. \textbf{Interrupts} let the device signal readiness instead: \texttt{PS.IE} and per-device enables (\texttt{KIRQ}/\texttt{DIRQ}) gate delivery, and \textbf{vectored interrupts} use \texttt{IPENDING}/\texttt{IENABLE} plus an interrupt-vector table for constant-time dispatch regardless of device count. On the hardware side, a \textbf{synchronous bus} uses a shared clock and wait states for slow slaves, while an \textbf{asynchronous bus} uses a \texttt{Master-ready}/\texttt{Slave-ready} full handshake --- skew-immune, but at a higher per-transfer overhead of two round trips. \textbf{Bus arbitration} (\texttt{BR}/\texttt{BG}) lets any device become bus master, which is the functional basis for \textbf{DMA} (one setup, one block-completion interrupt) and the \textbf{IOP} (a whole channel program executed independently, general/standard treatment per Stallings Ch.~7). All four techniques answer the same underlying question --- how much of the CPU does watching and moving the data cost, and how much hardware buys that cost down?
+\textbf{Memory-mapped I/O} places a device's data/status/control registers directly in the normal address space (the \textbf{isolated-I/O} alternative needs separate I/O instructions and a separate address space); \textbf{program-controlled I/O (polling)} repeatedly tests a status flag (\texttt{KIN}, \texttt{DOUT}) until it changes. \textbf{Interrupts} let the device signal readiness instead: \texttt{PS.IE} and per-device enables (\texttt{KIRQ}/\texttt{DIRQ}) gate delivery, and \textbf{vectored interrupts} use \texttt{IPENDING}/\texttt{IENABLE} plus an interrupt-vector table for constant-time dispatch regardless of device count; an \textbf{exception} generalizes the same mechanism to non-I/O events. On the hardware side, a \textbf{synchronous bus} uses a shared clock and wait states for slow slaves, while an \textbf{asynchronous bus} uses a \texttt{Master-ready}/\texttt{Slave-ready} full handshake --- skew-immune, but at a higher per-transfer overhead of two round trips. \textbf{Bus arbitration} (\texttt{BR}/\texttt{BG}) lets any device become bus master, which is the functional basis for \textbf{DMA} --- a controller with source/destination address, word count, and control/status registers, running a six-step transfer in burst, cycle-stealing, or transparent mode, one setup plus one block-completion interrupt --- and the \textbf{IOP} (a whole channel program executed independently, general/standard treatment per Stallings Ch.~8). All four techniques answer the same underlying question --- how much of the CPU does watching and moving the data cost, and how much hardware buys that cost down?
 
 \subsection*{Exercises}
 
@@ -540,16 +662,18 @@ Weeks 1--8 together built a CPU that computes, controls itself, and now moves da
   \item A synchronous bus transfer (as in Figure~\ref{fig:sync-bus}) needs 3 wait-state clock cycles at a 200~MHz bus clock before \texttt{Slave-ready} rises. Compute the total time, in nanoseconds, from the first clock edge until the transfer completes (the edge at which the master samples valid data), counting the wait states plus the one clock period needed to actually sample.
   \item Following Example~\ref{ex:arbitration}, suppose a fourth master (lowest priority, below Master~3) also asserts \texttt{BR} on the same cycle as Masters~1--3. In what order are all four masters granted the bus, assuming each releases the bus promptly after its own transfer and no new requests arrive in the meantime?
   \item Using Example~\ref{ex:dma-cost}'s method, compute the number of ISR invocations interrupt-driven I/O would need, and the number of CPU events DMA would need, to transfer an 8192-byte block, again 4 bytes per word. Compare the two totals and state, in one sentence, which technique's cost is scale-independent and which is not.
+  \item A DMA controller is configured to copy a 2048-word block in cycle-stealing mode, one word per bus grant, on a bus where each one-word grant lasts 2~ns. In the time the DMA controller takes to move the whole block, how many total nanoseconds of bus time does it occupy? Would burst mode occupy more, less, or the same total bus time --- and what is the difference in the two modes' effect on the CPU?
 \end{enumerate}
 
 \subsection*{Solutions}
 \begingroup\small
 \begin{enumerate}
   \item As the CPU's clock rate rises, the number of instructions the CPU can execute during one printer inter-character interval grows proportionally (Example~\ref{ex:polling-waste} showed $\sim2\times10^8$ wasted iterations already at 2~GHz for a 5~Hz keyboard). A faster CPU polling the same fixed-speed printer wastes proportionally \emph{more} absolute CPU cycles per printed character, even though the printer's own speed and the fraction of "useful" polls stays the same. Interrupts' cost, in contrast, is fixed at one ISR invocation per printer-ready event regardless of CPU clock rate, so interrupts' relative advantage over polling grows as CPU speed grows.
-  \item Step 1: mouse sets its status flag and, since its own enable bit is set, raises an interrupt-request line; \texttt{IPENDING} latches the mouse's request bit. Step 2: the CPU is currently inside the keyboard's ISR, which set \texttt{PS.IE}$=0$ upon entry (per Example~\ref{ex:5step}, step 3) — so the CPU is not currently checking \texttt{PS.IE} for new requests at all; even if it were, \texttt{IE}$=0$ would mask every request. Step 3: because nesting is disabled (and even if it weren't, the mouse is lower priority than the keyboard), the mouse's request simply stays latched in \texttt{IPENDING}, unserviced. Step 4: the keyboard's ISR finishes and executes \texttt{RTI}, which restores \texttt{PC} and sets \texttt{PS.IE}$\gets1$ again. Step 5: with interrupts now re-enabled, the priority encoder (Figure~\ref{fig:nesting}) re-evaluates \texttt{IPENDING}, finds the mouse's still-latched request, and only now grants it — the mouse's five-step scenario begins at this point, using the main program (not the keyboard's ISR) as the program being suspended.
+  \item Step 1: mouse sets its status flag and, since its own enable bit is set, raises an interrupt-request line; \texttt{IPENDING} latches the mouse's request bit. Step 2: the CPU is currently inside the keyboard's ISR, which set \texttt{PS.IE}$=0$ upon entry (per Example~\ref{ex:5step}, step 3) --- so the CPU is not currently checking \texttt{PS.IE} for new requests at all; even if it were, \texttt{IE}$=0$ would mask every request. Step 3: because nesting is disabled (and even if it weren't, the mouse is lower priority than the keyboard), the mouse's request simply stays latched in \texttt{IPENDING}, unserviced. Step 4: the keyboard's ISR finishes and executes \texttt{RTI}, which restores \texttt{PC} and sets \texttt{PS.IE}$\gets1$ again. Step 5: with interrupts now re-enabled, the priority encoder (Figure~\ref{fig:nesting}) re-evaluates \texttt{IPENDING}, finds the mouse's still-latched request, and only now grants it --- the mouse's five-step scenario begins at this point, using the main program (not the keyboard's ISR) as the program being suspended.
   \item One clock period at 200~MHz is $1/(200\times10^6) = 5$~ns. Three wait-state cycles cost $3\times5=15$~ns, and the final sampling edge occurs one more clock period after \texttt{Slave-ready} rises, adding another 5~ns. Total: $15+5=20$~ns from the first edge to the completed transfer (equivalently, 4 clock periods total).
-  \item Priority is Master~1 $>$ Master~2 $>$ Master~3 $>$ Master~4 (lowest). Following Example~\ref{ex:arbitration}'s reasoning directly: the arbiter grants the highest-priority \emph{still-pending} request each time a master releases the bus, so the order is Master~1, then Master~2, then Master~3, then Master~4 — strict priority order, since all four requests were pending simultaneously from the start and no new requests arrive to reorder the queue.
-  \item Interrupt-driven I/O: $8192 \div 4 = 2048$ ISR invocations — exactly double Example~\ref{ex:isr-count}'s count for the 4096-byte block, since the ISR count scales linearly with block size. DMA: still 2 CPU events total (1 setup $+$ 1 completion interrupt) — identical to the 4096-byte case, because the DMA controller's cost to the CPU does not depend on how large the word count in its setup registers is. DMA's cost is scale-independent (constant in block size); interrupt-driven I/O's cost is not (linear in block size) — this is exactly the gap Example~\ref{ex:dma-cost} identified, now confirmed to hold at a different block size too.
+  \item Priority is Master~1 $>$ Master~2 $>$ Master~3 $>$ Master~4 (lowest). Following Example~\ref{ex:arbitration}'s reasoning directly: the arbiter grants the highest-priority \emph{still-pending} request each time a master releases the bus, so the order is Master~1, then Master~2, then Master~3, then Master~4 --- strict priority order, since all four requests were pending simultaneously from the start and no new requests arrive to reorder the queue.
+  \item Interrupt-driven I/O: $8192 \div 4 = 2048$ ISR invocations --- exactly double Example~\ref{ex:isr-count}'s count for the 4096-byte block, since the ISR count scales linearly with block size. DMA: still 2 CPU events total (1 setup $+$ 1 completion interrupt) --- identical to the 4096-byte case, because the DMA controller's cost to the CPU does not depend on how large the word count in its setup registers is. DMA's cost is scale-independent (constant in block size); interrupt-driven I/O's cost is not (linear in block size) --- this is exactly the gap Example~\ref{ex:dma-cost} identified, now confirmed to hold at a different block size too.
+  \item The DMA controller occupies $2048 \times 2~\text{ns} = 4096$~ns of bus time total, regardless of mode --- burst and cycle stealing both move 2048 words at one 2~ns grant per word. The difference is \emph{when} that bus time is taken: burst takes all 4096~ns in one continuous stretch (starving the CPU for the whole transfer), while cycle stealing interleaves the same 4096~ns of bus time with CPU bus accesses one word at a time, so the CPU keeps running between grants. Total bus occupancy is identical; the modes differ only in whether that occupancy is continuous or interleaved.
 \end{enumerate}
 \endgroup
 

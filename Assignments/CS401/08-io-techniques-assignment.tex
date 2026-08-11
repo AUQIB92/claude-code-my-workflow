@@ -60,7 +60,7 @@
 \begin{enumerate}
   \item[(a)] State the value that must be written into the DMA controller's word-count register.
   \item[(b)] Describe the sequence of events after the CPU starts the DMA: who becomes bus master and via what mechanism, how the block is moved, and exactly how many times the CPU is interrupted for the whole transfer.
-  \item[(c)] Explain what \textbf{cycle stealing} is, why it is a necessary consequence of DMA sharing the memory bus with the CPU, and what the CPU loses during the transfer.
+  \item[(c)] Compare the three DMA transfer modes --- \textbf{burst}, \textbf{cycle stealing}, and \textbf{transparent} --- in terms of how long each holds the bus, and state what the CPU loses (or does not lose) in each mode.
 \end{enumerate}
 
 \end{document}
