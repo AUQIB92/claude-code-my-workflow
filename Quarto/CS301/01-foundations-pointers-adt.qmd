@@ -22,6 +22,70 @@ bibliography: ../../Bibliography_base.bib
 **Plan.** First draw the memory. Then use one pointer. Then write one simple contract.
 :::
 
+## Motivation: Correct Is Not Always Fast Enough
+
+::: {.keybox}
+**A correct program can still be unusable.** A loop that scans student records one by one always finds the right student --- and with 5 records it is instant.
+:::
+
+- With 10 million records and a query every millisecond, the *same* correct loop is far too slow.
+- The answer is the same; the *arrangement* of the data is the difference.
+- This course is the catalogue of arrangements and the judgement to choose between them [@HorowitzSahni2008_fundamentals_data_structures; @AhoHopcroftUllman1983_data_structures_algorithms].
+
+[Data structures keep a correct program useful as the data grows.]{.hi-gold}
+
+## Motivation: "It Felt Fast" Is Not an Argument
+
+::: {.quotebox}
+*"How long will my program take? Why does my program run out of memory?"* --- questions far too vague to answer precisely without a model [@Sedgewick2011_algorithms].
+:::
+
+- "It felt fast in my test" tells us nothing about tomorrow's input.
+- Week 2 gives us the model: count the operations as a function of the amount of data, then compress the count into $O$/$\Omega$/$\Theta$.
+- Week 1's job is the raw material that analysis counts --- how data is laid out and reached in memory.
+
+[By the end of Week 12 you will say *why* a structure is fast, not just that it felt fast.]{.neutral}
+
+## The Course in One Roadmap
+
+1. **Weeks 1--2: Foundations** --- memory, pointers, and the cost of work.
+2. **Weeks 3--5: Linear structures** --- arrays, stacks, queues, expression processing.
+3. **Weeks 6--7: Linked structures** --- singly/doubly linked lists, their applications.
+4. **Weeks 8--9: Finding and ordering** --- searching, elementary and efficient sorting.
+5. **Week 10: Files and hashing** --- file organization, hash tables.
+6. **Weeks 11--12: Connected data** --- trees, BSTs, AVL, graphs, MSTs, shortest paths.
+
+[Each week repeats one shape: *state the contract, then implement it, then analyse what it costs*.]{.neutral}
+
+## One Running Thread Through the Whole Course
+
+::: {.alertbox}
+**Our running example.** A small expression processor reads `(a+b)*c` and must check its brackets, convert it, evaluate it, and look up its identifiers.
+:::
+
+- A **stack** checks the brackets and drives the conversion (Weeks 3--4).
+- A **symbol table** --- first a list (Week 6), later a hash table (Week 10) --- stores the identifiers.
+- An **expression tree** gives the evaluation (Week 11).
+- Every new structure arrives as the fix for something this program cannot yet do.
+
+[This is not twelve unrelated topics; it is one program learning new tricks each week.]{.neutral}
+
+## What You Already Know
+
+- Variables store values.
+- Arrays store several values in a row.
+- Functions divide a program into manageable pieces.
+- Loops repeat work.
+- C gives you `struct` for grouping fields.
+
+::: {.highlightbox}
+**What this course adds.** We ask: *what arrangement of data fits this job?* --- and we answer with a contract, an implementation, and a cost.
+:::
+
+## {.transition-slide}
+
+Before any structure: where does a program even put its data?
+
 ## A Variable Has a Place
 
 ::: {.methodbox}
@@ -114,6 +178,10 @@ Memory
 
 [The exact call for this --- `malloc` and `sizeof` --- comes in a few slides.]{.neutral}
 
+## {.transition-slide}
+
+To use the heap, we need a handle on it --- a pointer.
+
 ## {.section-divider}
 
 ::: {.section-divider-label}
@@ -177,6 +245,10 @@ struct node {
 ::: {.highlightbox}
 **Picture.** `struct node *head = NULL;` means "the list is empty".
 :::
+
+## {.transition-slide}
+
+Now let us actually request a block of heap memory and use it.
 
 ## {.section-divider}
 
@@ -310,6 +382,10 @@ p = NULL;
 ::: {.highlightbox}
 **Simple habit.** Keep track of who requested the memory and who will return it.
 :::
+
+## {.transition-slide}
+
+Memory and pointers are the machinery. The contract is the map.
 
 ## {.section-divider}
 

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Structures (CS-301) — Course Hub</title>
+  <meta name="description" content="Lecture slides, notes, assignments, and competitive-exam practice for PCC CS-301 Data Structures — B.Tech CSE, Semester 3.">
+  <meta name="keywords" content="CS-301, data structures, B.Tech, CSE, lecture slides, pointers, linked lists, trees, graphs, sorting, hashing, GATE CS">
+  <meta name="author" content="Dr. Auqib Hamid Lone">
+  <meta name="theme-color" content="#2c5e2a">
+
+  <!-- Favicon (inline) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c5e2a'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-weight='700' fill='%23d4a464' text-anchor='middle'%3EAL%3C/text%3E%3C/svg%3E">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Data Structures (CS-301)">
+  <meta property="og:description" content="Course hub for PCC CS-301: 12-week lecture slides, notes, assignments, and GATE practice sets.">
+  <meta property="og:url" content="https://auqib92.github.io/claude-code-my-workflow/courses/cs301/">
+
+  <!-- Structured data for Google rich snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Data Structures (PCC CS-301)",
+    "description": "How a program lays out data in memory, what it costs to operate on it, and how to choose the right structure for a problem — from pointers and dynamic memory in C through linear ADTs, searching and sorting, to trees, balanced trees, hashing, and graphs.",
+    "provider": { "@type": "Organization", "name": "B.Tech CSE, Semester 3" },
+    "numberOfCredits": "4",
+    "occupationalCredential": "B.Tech CSE",
+    "teaches": "Pointers and dynamic memory in C, abstract data types, asymptotic complexity, stacks and queues, linked lists, searching and sorting, hashing, trees and AVL trees, graph traversal and shortest paths"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,400;0,700;1,400&family=Inria+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="navbar" id="topnav">
+    <div class="container navbar-inner">
+      <a class="brand" href="../../index.html"><span class="mark">AL</span>CS-301 &middot; Course Hub</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <div class="nav-links" id="navLinks">
+        <a href="../../index.html">Portfolio</a>
+        <a href="#lectures">Lectures</a>
+        <a href="#assignments">Assignments</a>
+        <a href="#practice">Practice</a>
+        <a href="#assessment">Assessment</a>
+        <a href="../../slides/CS301/" class="cta">Slide decks</a>
+      </div>
+    </div>
+    <div class="nav-progress" id="navProgress"></div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <!-- No course photo yet — plain gradient hero (base .hero styling) rather
+       than a hero-photo--cs301 variant. Add one later per the pattern
+       documented above .hero-photo--cs401 in assets/site.css if a photo
+       becomes available. -->
+  <header class="hero hero-compact">
+    <div class="hero-frame" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">PCC CS-301 &middot; B.Tech CSE, Semester 3</p>
+      <h1>Data Structures</h1>
+      <p class="hero-tagline">Where your data lives, what it costs to operate on it, and how to choose the right arrangement for the job.</p>
+      <div class="hero-chips">
+        <span class="chip-glass">12 teaching weeks</span>
+        <span class="chip-glass">4 credits</span>
+        <span class="chip-glass">3-0-2 L-T-P</span>
+        <span class="chip-glass">1 / 12 lectures published</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#lectures" class="btn btn-glass">Browse the weekly lectures</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container" style="padding-top: 2.2rem">
+
+    <!-- ================= PROGRESS ================= -->
+    <div class="ribbon">
+      <div class="row">
+        <span><strong>Course progress</strong> &mdash; week 1 published in full</span>
+        <strong>8%</strong>
+      </div>
+      <div class="track"><div class="fill" data-fill="8"></div></div>
+      <p>Weeks 2&ndash;12 are in progress. Each published week links its slide deck, prose notes, assignment(s), and GATE practice set.</p>
+    </div>
+
+    <div class="alert">
+      <p><strong>Open materials.</strong> Every published week ships four freely reusable PDFs: the slide deck, the prose lecture notes, the graded assignment, and a GATE practice set with answers. Week 1 additionally ships a programming assignment with an autograder. Solution keys and reference solutions are never published.</p>
+    </div>
+
+    <!-- ================= PREREQUISITES ================= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 00 &middot; Before you begin</p>
+        <h2 class="section-title">Prerequisites</h2>
+      </div>
+      <div class="prose">
+        <p>Programming in C (functions, arrays, <code>struct</code>, recursion, basic file I/O). Basic discrete mathematics &mdash; sets, logarithms, summations, and proof by induction &mdash; is assumed for the complexity analysis from Week 2 onward. No prior exposure to data structures is assumed.</p>
+      </div>
+    </section>
+
+    <!-- ================= WEEKLY LECTURES ================= -->
+    <section id="lectures" class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 01 &middot; Session schedule</p>
+        <h2 class="section-title">Weekly lectures</h2>
+      </div>
+
+      <div class="rail">
+
+        <div class="rail-item">
+          <span class="badge">Week 00</span>
+          <span class="badge badge-accent">Published</span>
+          <div class="rail-actions">
+            <a class="btn-sm" href="../../slides/CS301/00-course-motivation-overview.pdf">Slides &darr;</a>
+          </div>
+          <div class="rail-body">
+            <h3 class="rail-title">Course Motivation &amp; Overview</h3>
+            <p class="rail-text">Why data organization is the subject; the course roadmap; how to learn this course. No assignment or practice set for the orientation session.</p>
+          </div>
+        </div>
+
+        <div class="rail-item">
+          <span class="badge">Week 01</span>
+          <span class="badge badge-accent">Published</span>
+          <div class="rail-actions">
+            <a class="btn-sm" href="../../slides/CS301/01-foundations-pointers-adt.pdf">Slides &darr;</a>
+            <a class="btn-sm ghost" href="../../notes/CS301/01-foundations-pointers-adt-notes.pdf">Notes &darr;</a>
+            <a class="btn-sm ghost" href="../../assignments/CS301/01-foundations-pointers-adt-assignment.pdf">Assignment &darr;</a>
+            <a class="btn-sm ghost" href="../../competitive-exam/CS301/01-foundations-pointers-adt-questions.pdf">Practice &darr;</a>
+          </div>
+          <div class="rail-body">
+            <h3 class="rail-title">Foundations, Pointers &amp; ADTs</h3>
+            <p class="rail-text">Structured programming; pointers and dynamic memory management in C (<code>malloc</code>/<code>free</code>); the stack and the heap; the abstract data type.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Wirth &sect;4.2, p.111; Sedgewick &amp; Wayne &sect;1.2&ndash;1.4, pp.64/120/172; Karumanchi Ch. 1, p.18</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 02</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Algorithm Analysis</h3>
+            <p class="rail-text">Space and time complexity; asymptotic notation and orders of growth; best-, worst-, and average-case efficiency.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 1; Neapolitan &amp; Naimipour Ch. 1&ndash;2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 03</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Arrays &amp; Stacks</h3>
+            <p class="rail-text">1D/2D array address arithmetic; the Stack ADT and its array implementation; balanced-parenthesis checking, postfix evaluation.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 2&ndash;3; Aho&ndash;Hopcroft&ndash;Ullman Ch. 2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 04</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Expression Evaluation &amp; Recursion</h3>
+            <p class="rail-text">Infix/postfix/prefix conversion; Tower of Hanoi; recursion and the runtime stack.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 3; Aho&ndash;Hopcroft&ndash;Ullman Ch. 2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 05</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Queues</h3>
+            <p class="rail-text">Circular queues, double-ended queues; priority queues over arrays.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 3; Aho&ndash;Hopcroft&ndash;Ullman Ch. 2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 06</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Singly Linked Lists</h3>
+            <p class="rail-text">Linked vs. array representation; insertion, deletion, search, display, and reverse in singly linked lists.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 4; Aho&ndash;Hopcroft&ndash;Ullman Ch. 2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 07</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Doubly Linked Lists &amp; Applications</h3>
+            <p class="rail-text">Doubly and circular linked lists; stack/queue over a linked list; polynomial manipulation.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 4; Aho&ndash;Hopcroft&ndash;Ullman Ch. 2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 08</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Searching &amp; Elementary Sorting</h3>
+            <p class="rail-text">Linear and binary search; insertion, selection, bubble, and counting sort with their analysis.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 7; Neapolitan &amp; Naimipour Ch. 2</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 09</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Efficient Sorting</h3>
+            <p class="rail-text">Quick, merge, shell, radix, and heap sort; the comparison-sort lower bound.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 7; Aho&ndash;Hopcroft&ndash;Ullman Ch. 8</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 10</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">File Organization &amp; Hashing</h3>
+            <p class="rail-text">Sequential, direct, indexed-sequential, and hashed file organization; open and closed hashing.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 8; Aho&ndash;Hopcroft&ndash;Ullman Ch. 4</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 11</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Trees, BSTs &amp; AVL</h3>
+            <p class="rail-text">Binary tree traversals and expression trees; BST insertion/deletion/min/max; AVL rotations.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 5; Aho&ndash;Hopcroft&ndash;Ullman Ch. 3, 5</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-item dim">
+          <span class="badge badge-muted">Week 12</span>
+          <span class="badge badge-muted">In progress</span>
+          <div class="rail-body">
+            <h3 class="rail-title">Graphs: Traversal, MST, Shortest Paths</h3>
+            <p class="rail-text">Adjacency list/matrix; BFS/DFS; Prim&rsquo;s and Kruskal&rsquo;s MST algorithms; Dijkstra&rsquo;s shortest path.</p>
+            <div class="rail-readings">
+              <h5>Anchor readings</h5>
+              <ul><li>Horowitz &amp; Sahni Ch. 6; Aho&ndash;Hopcroft&ndash;Ullman Ch. 6&ndash;7</li></ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= ASSIGNMENTS ================= -->
+    <section id="assignments" class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 02 &middot; Problem sets</p>
+        <h2 class="section-title">Assignments</h2>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr><th>Week</th><th>Topic</th><th>Written</th><th>Coding</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge">1</span></td>
+              <td>Pointers, dynamic memory, stack vs. heap, the ADT contract</td>
+              <td><a href="../../assignments/CS301/01-foundations-pointers-adt-assignment.pdf">01-assignment</a></td>
+              <td><a href="../../assignments/CS301/01-foundations-pointers-adt-coding-assignment.pdf">01-coding</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-muted" style="font-size:.9rem">Solution keys and reference solutions are never published &mdash; contact the instructor if you need a worked set. The Week 1 coding assignment ships with an autograder over a hidden test suite.</p>
+    </section>
+
+    <!-- ================= COMPETITIVE EXAM PRACTICE ================= -->
+    <section id="practice" class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 03 &middot; GATE &amp; competitive practice</p>
+        <h2 class="section-title">Competitive exam practice</h2>
+      </div>
+      <p class="prose" style="max-width:76ch">Week-by-week GATE CS practice sets built for this course. Each set mixes verified past-year questions with original exam-pattern questions; attempt the set <em>after</em> the corresponding lecture, then check the answers.</p>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr><th>Week</th><th>Set</th><th>Questions</th><th>Answers</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge">1</span></td>
+              <td>Foundations, Pointers &amp; ADTs</td>
+              <td><a href="../../competitive-exam/CS301/01-foundations-pointers-adt-questions.pdf">01-questions</a></td>
+              <td><a href="../../competitive-exam/CS301/01-foundations-pointers-adt-answers.pdf">01-answers</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-muted" style="font-size:.9rem">Practice sets for weeks 2&ndash;12 will appear here as lectures are published. Source registry: <code>CompetitiveExam/Books/index.md</code>.</p>
+    </section>
+
+    <!-- ================= ASSESSMENT ================= -->
+    <section id="assessment" class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 04 &middot; Evaluation</p>
+        <h2 class="section-title">Assessment</h2>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr><th>Component</th><th class="num">Weight</th><th>Maps to objectives</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Class Tests 1&ndash;3 (internal theory)</td><td class="num">25%</td><td>All Unit I&ndash;III objectives</td></tr>
+            <tr><td>Assignments 1&ndash;4 (internal, continuous)</td><td class="num">included in Theory-50</td><td>All objectives, applied practice</td></tr>
+            <tr><td>Practical / lab &mdash; P1&ndash;P13, continuous + lab exam</td><td class="num">25%</td><td>Implementation objectives, Weeks 3&ndash;12</td></tr>
+            <tr><td>External (end-semester) exam</td><td class="num">50%</td><td>All course objectives, cumulative</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= REPOSITORY ================= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-eyebrow">&sect; 05 &middot; Colophon</p>
+        <h2 class="section-title">Repository layout</h2>
+      </div>
+      <div class="card">
+        <p>For each lecture the single source of truth is the Beamer deck (<code>Slides/CS301/&lt;lecture&gt;.tex</code>); derived materials &mdash; prose <em>Notes</em>, graded <em>Assignments</em>, <em>Instructor Handouts</em>, and <em>CompetitiveExam</em> GATE practice sets &mdash; mirror the same numbering. Textbook indexes for the anchor texts (Horowitz &amp; Sahni, Aho&ndash;Hopcroft&ndash;Ullman, Sedgewick &amp; Wayne, Wirth, Karumanchi) live in <code>master_supporting_docs/</code>.</p>
+        <p>Source: <a href="https://github.com/AUQIB92/claude-code-my-workflow">github.com/AUQIB92/claude-code-my-workflow</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="footer-wordmark">CS-301 &middot; Data Structures</p>
+          <p class="footer-tagline">Open course materials from Dr. Auqib Hamid Lone, GCET Kashmir. Published via GitHub Pages from the <code>docs/</code> folder.</p>
+        </div>
+        <div>
+          <p class="footer-heading">This course</p>
+          <ul class="footer-nav">
+            <li><a href="#lectures">Weekly lectures</a></li>
+            <li><a href="#assignments">Assignments</a></li>
+            <li><a href="#practice">Competitive exam practice</a></li>
+            <li><a href="#assessment">Assessment</a></li>
+            <li><a href="../../slides/CS301/">Slide decks</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-heading">Elsewhere</p>
+          <ul class="footer-nav">
+            <li><a href="../../index.html">Portfolio</a></li>
+            <li><a href="../../CV/Auqib-Hamid-Lone-CV.pdf">Curriculum vitae</a></li>
+            <li><a href="https://github.com/AUQIB92/claude-code-my-workflow">Source repository</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> Dr. Auqib Hamid Lone.</p>
+        <p>Slides compiled from Beamer source with XeLaTeX.</p>
+      </div>
+    </div>
+  </footer>
+
+  <a class="to-top" href="#" aria-label="Back to top">&uarr;</a>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile menu
+    const toggle = document.getElementById('menuToggle');
+    const links = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('active');
+      toggle.classList.toggle('active', open);
+      toggle.setAttribute('aria-expanded', open);
+      document.body.classList.toggle('menu-open', open);
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      links.classList.remove('active');
+      toggle.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
+    }));
+
+    // Navbar shadow, reading progress, back-to-top
+    const nav = document.getElementById('topnav');
+    const progress = document.getElementById('navProgress');
+    const totop = document.querySelector('.to-top');
+    addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', scrollY > 8);
+      totop.classList.toggle('visible', scrollY > 520);
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(scrollY / max, 1) : 0) + ')';
+    }, { passive: true });
+    totop.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: 'smooth' }); });
+
+    // Animate the progress ribbon when it enters view
+    const fill = document.querySelector('.ribbon .fill');
+    if (fill) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { fill.style.width = fill.dataset.fill + '%'; io.unobserve(e.target); }
+        });
+      }, { threshold: 0.4 });
+      io.observe(fill.closest('.ribbon'));
+    }
+  </script>
+
+</body>
+</html>

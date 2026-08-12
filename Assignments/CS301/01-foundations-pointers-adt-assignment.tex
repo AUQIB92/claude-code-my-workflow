@@ -1,0 +1,90 @@
+% =============================================================================
+% Assignments/CS301/01-foundations-pointers-adt-assignment.tex
+% Assignment 1: Foundations, Pointers & ADTs — written problem set
+%
+% Student set — NO answers. Solution key: 01-foundations-pointers-adt-solutions.tex
+% (gitignored, never published). Sourced from Slides/CS301/01-foundations-pointers-adt.tex
+% and Notes/CS301/01-foundations-pointers-adt-notes.tex.
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-foundations-pointers-adt-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Assignment 1: Foundations, Pointers \& ADTs}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. Late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions.
+
+\section{Conceptual}
+
+\textbf{Q1.} A running C program keeps data in two different regions: the \textbf{stack} and the \textbf{heap}. Explain, using a concrete example, why \emph{both} are needed rather than keeping everything in one region. Give one scenario where a value must live on the heap because it would not survive on the stack, and one scenario where the stack is clearly the right choice.
+
+\textbf{Q2.} Distinguish between a \textbf{contract} statement and an \textbf{implementation} statement for the bag ADT introduced in class. For each of the following, say whether it is part of the contract or of one implementation, and justify in one sentence:
+\begin{enumerate}
+  \item[(a)] ``\texttt{member(7)} answers yes or no.''
+  \item[(b)] ``The values are stored in an array.''
+  \item[(c)] ``\texttt{insert(x)} puts \texttt{x} into the bag.''
+  \item[(d)] ``\texttt{size()} reports the number of values present.''
+\end{enumerate}
+
+\section{Numerical}
+
+\textbf{Q3.} On a 64-bit machine, consider the C declaration
+\begin{verbatim}
+struct node {
+    int   data;
+    struct node *next;
+};
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] State how many bytes \texttt{sizeof(struct node)} reports, assuming \texttt{sizeof(int) == 4} and a pointer is 8 bytes, with no padding.
+  \item[(b)] A program executes \texttt{struct node *p = malloc(sizeof(struct node));}. Draw (in words or a small diagram) what lives on the stack and what lives on the heap after this line, and what \texttt{p} itself holds.
+  \item[(c)] If \texttt{malloc} returns \texttt{NULL}, what must the program do before it dereferences \texttt{p}, and why?
+\end{enumerate}
+
+\textbf{Q4.} A function allocates a heap block and returns a pointer to it:
+\begin{verbatim}
+int *make_block(void) {
+    int *p = malloc(sizeof(int));
+    *p = 80;
+    return p;
+}
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] After \texttt{make\_block} returns, does the value \texttt{80} still exist? Which region is it in, and why does it survive the function's return?
+  \item[(b)] If the caller never calls \texttt{free(p)}, what is the name of the mistake, and what are its consequences?
+  \item[(c)] If the caller calls \texttt{free(p)} and then tries to read \texttt{*p}, what is the name of the mistake, and what is the safe pattern to avoid it?
+\end{enumerate}
+
+\section{Design}
+
+\textbf{Q5.} Write a complete C function \texttt{create\_node} that:
+\begin{enumerate}
+  \item[(a)] Takes an integer \texttt{data} as its only parameter.
+  \item[(b)] Allocates one \texttt{struct node} (with fields \texttt{data} and \texttt{next}) on the heap using \texttt{malloc}.
+  \item[(c)] Checks the result of \texttt{malloc} against \texttt{NULL} and returns \texttt{NULL} on failure (the caller can then decide how to recover).
+  \item[(d)] Initialises both fields --- \texttt{data} to the parameter, \texttt{next} to \texttt{NULL} --- and returns the pointer.
+\end{enumerate}
+State the function's return type and write the body. Your solution must follow the pointer discipline from the lecture: check \texttt{malloc}, initialise every field, and use \texttt{p->field} form.
+
+\textbf{Q6.} The bag ADT from the lecture has the contract ``\texttt{insert(x)}, \texttt{member(x)}, \texttt{size()}.''
+\begin{enumerate}
+  \item[(a)] Write the ADT's contract as a C header file: a \texttt{struct node} typedef and four function prototypes (\texttt{bag\_insert}, \texttt{bag\_member}, \texttt{bag\_size}, \texttt{free\_bag}) that together honour the contract, using a head pointer and \texttt{NULL} for the empty bag.
+  \item[(b)] State two different implementations that could honour this same contract, and explain in one sentence what the caller gains from coding against the contract rather than against one specific implementation.
+\end{enumerate}
+
+\end{document}

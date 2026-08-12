@@ -49,7 +49,7 @@
 
 \begin{itemize}
   \item \textbf{Wirth, \textit{Algorithms and Data Structures}, \S4.2, p.111} --- the pointer / dynamic-allocation anchor. \S4.1 (p.109) gives the recursive-variability motivation. \emph{Page-cited}; index built 2026-08-11. Read the \S4.2 opening paragraph if you only read one thing.
-  \item \textbf{Sedgewick \& Wayne, \textit{Algorithms}, \S1.2, p.64} --- the ADT/data-type definition; \S1.3, p.120 --- the bag as a collection type. \emph{Page-cited}. Both are in Java; covert syntax to C per the notation registry, never present it as C.
+  \item \textbf{Sedgewick \& Wayne, \textit{Algorithms}, \S1.2, p.64} --- the ADT/data-type definition; \S1.3, p.120 --- the bag as a collection type; \S1.4, p.172 --- the ``how long will my program take'' motivation for cost analysis. \emph{Page-cited}. All are in Java; convert syntax to C per the notation registry, never present it as C.
   \item \textbf{Karumanchi, \textit{Data Structures And Algorithms Made Easy}, Ch.~1, p.18--19 (PDF)} --- the ADT definition (``a declaration of data'' plus ``a declaration of operations'') and its list of commonly used ADTs, used here to preview the Weeks~3--12 roadmap. \emph{Page-cited}; index built 2026-08-11. \textbf{Not} a source for this lecture's pointer/\texttt{malloc} content --- indexing found zero coverage of structured programming or \texttt{malloc}/\texttt{calloc}/\texttt{realloc}/\texttt{free} in this book.
   \item \textbf{Horowitz \& Sahni, \textit{Fundamentals of Data Structures}, Ch.~1} and \textbf{Aho--Hopcroft--Ullman, Ch.~1} --- \emph{not page-indexed}. Cite at chapter level for structured programming / the ADT framing.
   \item \textbf{Scope notice:} this lecture deliberately defers \texttt{calloc} and \texttt{realloc}. Allocation vocabulary is only \texttt{malloc}, \texttt{sizeof}, \texttt{free}, \texttt{NULL}. Do not introduce the other two here even if students ask --- it dilutes the one-block story.
@@ -69,6 +69,24 @@ The trap to avoid on the first frame is jumping straight into vocabulary. The ``
 \end{teachingaside}
 
 \textbf{Board: a variable and its place.} Draw one box for \texttt{marks}, put \texttt{80} inside it, and write an invented address (say \texttt{0x7FFC}) above the box. Ask: ``if we only knew the value, could we tell the box from its neighbour? What else do we need?'' Answer: the address --- which is exactly what a pointer stores.
+
+\section{Motivation and the Overall Syllabus (new Act 0)}
+
+This rebuilt deck opens with a short Act 0 that answers \emph{why} before \emph{what}. Its job is motivational, not technical --- nothing here is examined directly, but it sets the frame the rest of the term leans on.
+
+\textbf{Motivation: correct is not always fast enough.} Use the student-record story from the Notes: a loop that scans records is correct at 5 records and unusable at 10 million. The point to land: \emph{the answer is the same; the arrangement of the data is the difference}. This is the single sentence that justifies the whole course. \textbf{Board:} write ``5 records --- instant'' and ``10{,}000{,}000 records, a query every millisecond --- unusable'' on two lines, then draw an arrow between them labelled ``same correct loop.'' Ask: ``what changed?'' --- not the loop, the arrangement.
+
+\textbf{Motivation: ``it felt fast'' is not an argument.} Sedgewick's \S1.4 opener (p.172) poses the two questions ``how long will my program take?'' and ``why does my program run out of memory?'' as too vague to answer precisely without a model. Land the contrast: Week 1 gives the raw material (memory layout, pointers), Week 2 gives the model (counting operations, $O$/$\Omega$/$\Theta$). This frame makes Week 2 feel like the payoff of Week 1 rather than a new topic.
+
+\textbf{The course in one roadmap.} Walk the six clusters: Weeks 1--2 foundations; 3--5 linear structures (arrays, stacks, queues, expression processing); 6--7 linked structures; 8--9 searching and sorting; 10 files and hashing; 11--12 trees, BSTs, AVL, graphs, MSTs, shortest paths. Emphasise the recurring shape: \emph{state the contract, then implement it, then analyse what it costs} --- the same three beats every week repeats.
+
+\begin{teachingaside}
+Students commonly ask ``why are we learning memory stuff in a data-structures course?'' The roadmap slide is the honest answer: every later structure is a claim about \emph{where data lives and how it is reached}, so the memory model is not a prerequisite --- it is the subject. Keep this slide to under two minutes and come back to it at the Week 1 summary.
+\end{teachingaside}
+
+\textbf{The running thread: the expression processor.} Introduce the small program that reads \texttt{(a+b)*c} and must check its brackets, convert it, evaluate it, and look up its identifiers. Map each future week onto a deficiency it fixes: a stack checks the brackets (Weeks 3--4); a symbol table, first a list (Week 6) then a hash table (Week 10), stores the identifiers; an expression tree evaluates it (Week 11). This is the same ``one program learning new tricks'' thread the Week 0 deck previewed; state it once here and it pays off all term.
+
+\textbf{What you already know.} The bridge slide: variables, arrays, functions, loops, \texttt{struct} --- all from prior courses. The single new thing this course adds is the question ``what arrangement of data fits this job?'' and the discipline of answering it with a contract, an implementation, and a cost.
 
 \section{Memory: The Stack and the Heap}
 

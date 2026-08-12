@@ -486,6 +486,32 @@ $selection-bg: $primary-gold !default;
 }
 
 // ==============================================================================
+// TRANSITION SLIDES (Quarto equivalent of Beamer \transitionslide)
+// ==============================================================================
+// Full-bleed primary-blue background, single large centered white statement.
+// Distinct from .section-divider above (which mirrors \sectiondivider, the
+// darker two-line label+title variant) — \transitionslide is one centered
+// question/statement marking a conceptual pivot, not a section boundary.
+
+.reveal .slides section.transition-slide {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+  text-align: center !important;
+  background-color: $primary-blue !important;
+
+  p, h1, h2, h3 {
+    color: white;
+    font-size: 1.6em;
+    font-weight: 600;
+    max-width: 85%;
+    margin: 0 auto;
+  }
+}
+
+// ==============================================================================
 // FONT SIZE UTILITIES
 // ==============================================================================
 

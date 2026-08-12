@@ -1,0 +1,53 @@
+% =============================================================================
+% CompetitiveExam/CS301/01-foundations-pointers-adt-answers.tex
+% Answer key for 01-foundations-pointers-adt-questions.tex.
+%
+% Q1-Q4 are real GATE past-year questions sourced from the local GATEOverflow
+% Volume 2 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability), which
+% authenticates each question (year + question number printed on the page).
+% The book's own answer keys are collapsed and not extractable, so each answer
+% was independently cross-checked against 2+ web sources in the build session
+% (2026-08-12): GATEOverflow online question pages, GeeksforGeeks, Testbook,
+% and Electrical4u. Only answers confirmed by those sources carry the
+% [verified] tag. Q5-Q10 are original GATE-pattern questions; their answers are
+% derived from the course material (Slides/Notes Week 1), which page-verify
+% against Wirth 2004 p.111, Sedgewick 2011 pp.64/120, and Karumanchi p.18 (PDF).
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Competitive Exam Practice 1 --- Answer Key\\\large Foundations, Pointers \& ADTs}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(C).} P1 returns the address of its local variable \texttt{x} (a dangling pointer --- the stack frame dies when \texttt{g} returns), P2 dereferences the uninitialized pointer \texttt{px} before any \texttt{malloc}, while P3 requests a heap block first and is safe; hence only P1 and P2 cause problems.
+
+\item[\textbf{Q2}] \textbf{(D).} \texttt{pi == \&i}, so \texttt{scanf} writes the entered value into \texttt{i} through the pointer; the printout is \texttt{i + 5}, exactly 5 more than the integer value entered, so the program compiles, runs, and prints ``more than the integer value entered.''
+
+\item[\textbf{Q3}] \textbf{(D).} The first block from \texttt{malloc} is overwritten when \texttt{x = (int *)malloc(...)} executes inside the \texttt{if} --- the old address is lost and can never be freed, so the code compiles but leaks memory; the final \texttt{free(x)} only releases the second block, and no dangling pointer is ever used.
+
+\item[\textbf{Q4}] \textbf{25.} \texttt{z = \&a} makes \texttt{z} point at \texttt{a}; inside \texttt{foo}, \texttt{*p = x} writes the value of \texttt{b} (25) into \texttt{a} through the pointer, so the printed \texttt{a} is 25.
+
+\item[\textbf{Q5}] \textbf{(B).} A local variable declared inside a function is automatic storage on the \key{stack}; \texttt{malloc} requests bytes from the \key{heap} at run time.
+
+\item[\textbf{Q6}] \textbf{TRUE.} A local variable lives in its function call's stack frame and dies on return, while a heap block requested by \texttt{malloc} remains until the program releases it with \texttt{free} --- the heap's whole point is size and lifetime decided at run time.
+
+\item[\textbf{Q7}] \textbf{TRUE.} \texttt{NULL} is the agreed ``points to nothing'' pointer value, and reading through it is undefined behaviour --- in practice, a crash.
+
+\item[\textbf{Q8}] \textbf{(B).} \texttt{malloc(n)} asks for \texttt{n} bytes and returns their address, or \texttt{NULL} if the request cannot be met --- which is why the result is always checked against \texttt{NULL} before use.
+
+\item[\textbf{Q9}] \textbf{16.} \texttt{data} occupies 4 bytes (aligned at offset 0), \texttt{next} needs 8-byte alignment so 4 padding bytes follow \texttt{data}, and the pointer occupies bytes 8--15; total \texttt{4 + 4 + 8 = 16} bytes, which is also a multiple of the 8-byte alignment of the struct.
+
+\item[\textbf{Q10}] \textbf{(B).} The bag's contract names the operations (\texttt{insert}, \texttt{member}, \texttt{size}) --- a set of values and a set of operations --- and deliberately withholds the storage scheme; ``dynamic array'' and ``linked list'' are two interchangeable \emph{implementations} of that same contract, and code and costs are implementation details, not contract.
+\end{enumerate}
+
+\end{document}
