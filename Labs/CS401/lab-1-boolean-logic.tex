@@ -1,0 +1,265 @@
+% =============================================================================
+% lab-1-boolean-logic.tex — Lab 1: Boolean Logic & Elementary Gates
+% CS401 — Computer Architecture and Organization — Practical Component
+% Nand2Tetris Project 1 (Nisan & Schocken), weeks 1-2 of the lab schedule.
+%
+% Source of truth: syllabi/CS401_Lab_Syllabus_Nand2Tetris.pdf (uploaded
+% 2026-08-12). This manual reproduces that document's Lab 1 section in full
+% (aim, tasks, deliverables, rubric verbatim) with added pre-lab theory
+% citations and worked schematic figures. Not a derived artifact in the
+% Beamer-source sense (no Slides/CS401 lecture maps 1:1 to this lab) —
+% hand-authored per quality_reports/plans/peaceful-greeting-riddle.md.
+%
+% Instructor-only reference solutions: lab-1-boolean-logic-reference/
+% (Python truth-table oracle) — never synced to docs/ by /deploy.
+%
+% Compile with (Windows/MiKTeX, ; not : between paths):
+%   cd Labs/CS401 &&
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-1-boolean-logic.tex
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-1-boolean-logic.tex  (x2 total, no bibtex needed)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\usepackage{microtype}
+\usetikzlibrary{circuits.logic.US}
+\coursecode{CS401}
+
+% Lab-number-style numbering: this is Lab 1 (distinct axis from lecture-week
+% numbering used in Notes/Assignments — no collision, separate document).
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\newenvironment{aimbox}{%
+  \par\noindent\begin{minipage}{\linewidth}\vspace{0.4em}
+  \textcolor{primary-blue}{\rule{\linewidth}{0.8pt}}\\[0.3em]
+  \textbf{\textcolor{primary-blue}{Aim.}}\ \itshape
+}{%
+  \end{minipage}\vspace{0.4em}\par
+}
+
+\newenvironment{tocitebox}{%
+  \par\noindent\textbf{\textcolor{primary-gold}{Pre-Lab Reading.}}\
+}{\par\vspace{0.3em}}
+
+\title{Boolean Logic \& Elementary Gates\\\large Lab 1 --- Nand2Tetris Project 1}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{aimbox}
+To design and simulate the elementary logic gates of a computer system --- starting from a single primitive Nand gate --- using the Hardware Description Language (HDL) and the Nand2Tetris Hardware Simulator.
+\end{aimbox}
+
+\section{Learning Outcomes}
+
+On completing this lab, a student will be able to:
+\begin{itemize}
+  \item State the functional (truth-table) specification of \texttt{Not}, \texttt{And}, \texttt{Or}, \texttt{Xor}, \texttt{Mux} and \texttt{DMux} gates.
+  \item Compose complex gates purely from \texttt{Nand}, using gate-level composition in HDL.
+  \item Extend single-bit gates to 16-bit buses and multi-way variants.
+  \item Verify a chip's correctness independently of its internal implementation, using supplied test scripts.
+\end{itemize}
+
+\section{Pre-Lab Reading}
+
+\begin{tocitebox}
+\textbf{Boolean algebra and gate-level logic} --- this lab's prerequisite theory (AND/OR/NOT/XOR truth tables, De Morgan's laws, Boolean minimization) is not covered by any CS401 lecture; it is assumed prerequisite knowledge from Digital Logic Design (see \texttt{syllabi/CS401.md}'s Prerequisites). For a page-verified refresher:
+\begin{itemize}
+  \item Patterson \& Hennessy, \emph{Computer Organization and Design, ARM Edition}, Appendix A --- \S A.2 \emph{Gates, Truth Tables, and Logic Equations} (p.\,A-4), \S A.3 \emph{Combinational Logic} (p.\,A-9), \S A.4 \emph{Using a Hardware Description Language} (p.\,A-20). Page-cited against this course's PattersonHennessy2017 textbook index.
+  \item Nisan \& Schocken, \emph{The Elements of Computing Systems} (MIT Press), Chapter 1 --- \emph{Boolean Logic}. Not indexed here (chapter-level citation only, per the textbook-grounding rule).
+  \item The \emph{HDL Survival Guide} (Nand2Tetris, Appendix 2, \url{nand2tetris.org}) --- the syntax reference for this lab's \texttt{.hdl} files.
+\end{itemize}
+Also review: the concept of a \key{primitive} gate and the \key{functional completeness} of \texttt{Nand} (every Boolean function can be built from \texttt{Nand} alone) --- this is the single idea the whole lab demonstrates.
+\end{tocitebox}
+
+\section{Toolchain Setup}
+
+\begin{enumerate}
+  \item Install a Java Runtime Environment (JRE), version 8 or later, if not already present.
+  \item Download the Nand2Tetris software suite (free, \url{nand2tetris.org}) --- this lab uses the \textbf{Hardware Simulator} only; the CPU Emulator and Assembler are needed from Lab 4 onward.
+  \item Extract the suite and locate the \texttt{projects/01/} folder --- it contains one subfolder per chip, pre-populated with a \texttt{ChipName.hdl} stub (to be completed) and the supplied \texttt{ChipName.tst} / \texttt{ChipName.cmp} test/comparison scripts. These scripts are standard Nand2Tetris project files and are \emph{not} redistributed here --- obtain them from the official suite.
+  \item Open the Hardware Simulator, load a chip's \texttt{.tst} script (\textsc{File} $\to$ \textsc{Load Script}), and run it (\textsc{Simulation} $\to$ \textsc{Run}). A correct chip prints \texttt{End of script --- comparison ended successfully} in the script's output pane; a wrong one reports the first mismatching row.
+  \item For a full walkthrough of the Hardware Simulator's interface (loading a chip, interactive pin testing, exploring \texttt{PARTS}, running scripts, debugging with breakpoints), see the official \emph{Hardware Simulator Tutorial} (Nand2Tetris, \url{nand2tetris.org}).
+\end{enumerate}
+
+Every chip's \texttt{.hdl} file must follow the CHIP/IN/OUT/PARTS syntax specified in Appendix A of the Nand2Tetris book: a part is invoked as \texttt{PartName(pin=value, ...)}, where each \texttt{value} is either another pin/bus in the current chip or a new internal pin created on first use; a bus pin \texttt{b[16]} is indexed \texttt{b[i]} for a single bit or sliced \texttt{b[lo..hi]} for a sub-range. Only \texttt{Nand} is a true primitive (\texttt{BUILTIN Nand;}) --- every other chip in this lab must be built from \texttt{Nand} and/or previously-built chips.
+
+\section{Tasks}
+
+Implement the following 15 chips \textbf{in order} --- each later chip may reuse any chip already built earlier in the list, and several depend on it (e.g. \texttt{Not16} is 16 parallel copies of \texttt{Not}). Only \texttt{Nand} itself is a supplied primitive; every other chip below must be composed from \texttt{Nand} and/or previously-built chips --- never from a built-in gate.
+
+\begin{enumerate}
+  \item \textbf{\texttt{Not(in)} $\to$ \texttt{out}} --- $out = \overline{in}$. Hint: a \texttt{Nand} gate with both inputs tied to the same signal is a \texttt{Not} gate.
+  \item \textbf{\texttt{And(a,b)} $\to$ \texttt{out}} --- $out = a \cdot b$. Hint: \texttt{Nand} then \texttt{Not} the result.
+  \item \textbf{\texttt{Or(a,b)} $\to$ \texttt{out}} --- $out = a + b$. Hint: De Morgan --- \texttt{Not} each input, \texttt{Nand} the results.
+  \item \textbf{\texttt{Xor(a,b)} $\to$ \texttt{out}} --- $out = a \oplus b$. Hint: $a\oplus b = (a \cdot \overline{b}) + (\overline{a} \cdot b)$; needs \texttt{And}, \texttt{Not}, \texttt{Or}.
+  \item \textbf{\texttt{Mux(a,b,sel)} $\to$ \texttt{out}} --- $out = a$ if $sel=0$, else $out=b$. A 2-to-1 multiplexer.
+  \item \textbf{\texttt{DMux(in,sel)} $\to$ \texttt{(a,b)}} --- routes \texttt{in} to output \texttt{a} if $sel=0$, to \texttt{b} if $sel=1$; the unselected output is 0. A 1-to-2 demultiplexer, the mirror image of \texttt{Mux}.
+  \item \textbf{\texttt{Not16(in[16])} $\to$ \texttt{out[16]}} --- 16 independent \texttt{Not} gates, one per bit.
+  \item \textbf{\texttt{And16(a[16],b[16])} $\to$ \texttt{out[16]}} --- 16 independent \texttt{And} gates.
+  \item \textbf{\texttt{Or16(a[16],b[16])} $\to$ \texttt{out[16]}} --- 16 independent \texttt{Or} gates.
+  \item \textbf{\texttt{Mux16(a[16],b[16],sel)} $\to$ \texttt{out[16]}} --- one \texttt{sel} bit chooses between two 16-bit buses, bit-by-bit.
+  \item \textbf{\texttt{Or8Way(in[8])} $\to$ \texttt{out}} --- $out = in_0 + in_1 + \cdots + in_7$ (OR-reduce 8 single bits to 1). Hint: a 7-deep \texttt{Or} tree, or a chain.
+  \item \textbf{\texttt{Mux4Way16(a,b,c,d[16] each, sel[2])} $\to$ \texttt{out[16]}} --- selects one of 4 sixteen-bit inputs via a 2-bit selector. Hint: compose from \texttt{Mux16}.
+  \item \textbf{\texttt{Mux8Way16(a..h[16] each, sel[3])} $\to$ \texttt{out[16]}} --- selects one of 8 sixteen-bit inputs via a 3-bit selector. Hint: two \texttt{Mux4Way16}s plus one more \texttt{Mux16}.
+  \item \textbf{\texttt{DMux4Way(in,sel[2])} $\to$ \texttt{(a,b,c,d)}} --- routes \texttt{in} to exactly one of 4 outputs.
+  \item \textbf{\texttt{DMux8Way(in,sel[3])} $\to$ \texttt{(a,b,c,d,e,f,g,h)}} --- routes \texttt{in} to exactly one of 8 outputs.
+\end{enumerate}
+
+Load each chip's supplied \texttt{.tst} script in the Hardware Simulator and confirm the comparison against the \texttt{.cmp} file succeeds before moving to the next chip in the list.
+
+\section{Figures}
+
+\begin{figure}[h]
+  \centering
+  % Diagram: NOT and AND composed purely from NAND gates.
+  % Coordinates: (x, y), scale 1.0
+  %   NAND1 (for NOT): gate at (2.2, 1.6), input A fans to both pins
+  %   NAND2 + NAND3 (for AND): NAND2 at (2.2,-0.4), NAND3 at (5.2,-0.4) —
+  %     NAND2's output feeds both inputs of NAND3 (the "tie together" trick)
+  %   Labels sit above/left of wires, never on them (P4/P7b); junction dots
+  %   mark every fan-out point (P7a clearance maintained throughout).
+  \begin{tikzpicture}[scale=1.0, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    % ---- NOT from NAND (top) ----
+    \node[font=\small, left] at (-0.1, 1.9) {$A$};
+    \node[nand gate, inputs={nn}, anchor=input 1] (N1) at (2.2, 2.0) {};
+    \node[junction] (Aj) at (0.9, 1.9) {};
+    \draw[wire] (0.1, 1.9) -- (N1.input 1);
+    \draw[wire] (Aj) -- (0.9, 1.3) -- (N1.input 2);
+    \draw[wire] (N1.output) -- node[above, font=\small] {$\overline{A}$ = \texttt{Not(A)}} ++(2.8, 0);
+    \node[font=\scriptsize, primary-gold, text=primary-gold] at (2.2, 0.85) {tie both inputs to $A$};
+
+    % ---- AND from two NANDs (bottom) ----
+    \node[font=\small, left] at (-0.1, -0.1) {$A$};
+    \node[font=\small, left] at (-0.1, -0.9) {$B$};
+    \node[nand gate, inputs={nn}, anchor=input 1] (N2) at (2.2, -0.4) {};
+    \draw[wire] (0.1, -0.1) -- (N2.input 1);
+    \draw[wire] (0.1, -0.9) -- (N2.input 2);
+    \node[nand gate, inputs={nn}, anchor=input 1] (N3) at (5.2, -0.4) {};
+    \node[junction] (Nj) at (3.6, -0.4) {};
+    \draw[wire] (N2.output) -- (Nj);
+    \draw[wire] (Nj) -- (3.6, 0.2) -- (N3.input 1);
+    \draw[wire] (Nj) -- (3.6, -1.0) -- (N3.input 2);
+    \draw[wire] (N3.output) -- node[above, font=\small] {$A\cdot B$ = \texttt{And(a,b)}} ++(3.2, 0);
+    \node[font=\scriptsize, text=primary-gold] at (3.6, -1.5) {\texttt{Nand} output tied to itself $\Rightarrow$ acts as \texttt{Not}};
+
+  \end{tikzpicture}
+  \caption{\texttt{Not} and \texttt{And} composed entirely from the \texttt{Nand} primitive --- the pattern every other chip in this lab extends. \texttt{Not(A)} ties both \texttt{Nand} inputs to $A$; \texttt{And(a,b)} feeds \texttt{Nand(a,b)} into a second \texttt{Nand} wired as \texttt{Not}.}
+  \label{fig:not-and-from-nand}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % Diagram: Mux and DMux as labelled I/O blocks (block-diagram style,
+  % matching the Full-Adder block convention used in the CS401 Notes files).
+  % Coordinates: (x, y), scale 1.0
+  %   Mux box at (0,0), 2.0w x 1.4h -> spans x -1.0..1.0, y -0.7..0.7
+  %   DMux box at (5.5,0), same size
+  %   Input/output labels 1.5cm clear of each box edge (P7c)
+  \begin{tikzpicture}[scale=1.0, transform shape,
+      every node/.style={font=\small}]
+
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=1.4cm, align=center] (MUX) at (0,0) {Mux};
+    \node[font=\scriptsize] at (-1.8, 0.45) {$a$};
+    \node[font=\scriptsize] at (-1.8, -0.45) {$b$};
+    \node[font=\scriptsize] at (-1.1, -1.15) {$sel$};
+    \node[font=\scriptsize] at (1.8, 0) {$out$};
+    \draw[->, thick] (-1.5, 0.45) -- (-1.0, 0.45);
+    \draw[->, thick] (-1.5, -0.45) -- (-1.0, -0.45);
+    \draw[->, thick] (-1.0, -1.0) -- (0, -1.0) -- (0, -0.7);
+    \draw[->, thick] (1.0, 0) -- (1.5, 0);
+    \node[font=\scriptsize, text=primary-gold, align=center] at (0, -1.9) {\small $out = a$ if $sel{=}0$\\$out = b$ if $sel{=}1$};
+
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=1.4cm, align=center] (DMUX) at (5.5,0) {DMux};
+    \node[font=\scriptsize] at (3.7, 0) {$in$};
+    \node[font=\scriptsize] at (4.6, -1.15) {$sel$};
+    \node[font=\scriptsize] at (7.3, 0.45) {$a$};
+    \node[font=\scriptsize] at (7.3, -0.45) {$b$};
+    \draw[->, thick] (4.0, 0) -- (4.5, 0);
+    \draw[->, thick] (4.6, -1.0) -- (5.5, -1.0) -- (5.5, -0.7);
+    \draw[->, thick] (6.5, 0.45) -- (7.0, 0.45);
+    \draw[->, thick] (6.5, -0.45) -- (7.0, -0.45);
+    \node[font=\scriptsize, text=primary-gold, align=center] at (5.5, -1.9) {\small $sel{=}0{:}\ a{=}in,\,b{=}0$\\$sel{=}1{:}\ a{=}0,\,b{=}in$};
+
+  \end{tikzpicture}
+  \caption{\texttt{Mux} (2-to-1 selector) and \texttt{DMux} (1-to-2 router) as black-box I/O contracts --- \texttt{DMux} is exactly \texttt{Mux} with its data flow reversed. Internal gate-level composition (from \texttt{And}/\texttt{Or}/\texttt{Not}) is Task 5/6's exercise.}
+  \label{fig:mux-dmux-block}
+\end{figure}
+
+\section{Observation / Journal Table}
+
+Record, for each chip, the gates used in your composition and whether it passed its supplied test script.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}l l c@{}}
+\toprule
+Chip & Gates used (internal composition) & Pass / Fail \\
+\midrule
+\texttt{Not} & & \\
+\texttt{And} & & \\
+\texttt{Or} & & \\
+\texttt{Xor} & & \\
+\texttt{Mux} & & \\
+\texttt{DMux} & & \\
+\texttt{Not16} & & \\
+\texttt{And16} & & \\
+\texttt{Or16} & & \\
+\texttt{Mux16} & & \\
+\texttt{Or8Way} & & \\
+\texttt{Mux4Way16} & & \\
+\texttt{Mux8Way16} & & \\
+\texttt{DMux4Way} & & \\
+\texttt{DMux8Way} & & \\
+\bottomrule
+\end{tabular}
+\caption{Lab 1 observation table --- one row per chip.}
+\label{tab:lab1-observations}
+\end{table}
+
+\noindent\textbf{Journal instruction (separate from the table above):} for \emph{two} chips of your choice, hand-draw the gate-level schematic and write out the full truth table in your lab journal (the syllabus's own Deliverable 2).
+
+\section{Viva-Voce Questions}
+
+\begin{enumerate}
+  \item Why is \texttt{Nand} \emph{functionally complete} --- i.e. why can every Boolean function be built from \texttt{Nand} alone?
+  \item Derive \texttt{Or(a,b)} from \texttt{Nand} using De Morgan's law. Which gates does your derivation use, and why can't you use a plain \texttt{Or} primitive?
+  \item Trace \texttt{Mux(1,0,1)} by hand through your composition. What is \texttt{out}?
+  \item Why does \texttt{Or8Way} need 7 \texttt{Or} gates for 8 inputs, not 8?
+  \item What would go wrong if \texttt{DMux}'s unselected output were left floating instead of driven to 0?
+\end{enumerate}
+
+\section{Rubric}
+
+Reproduced verbatim from \texttt{syllabi/CS401\_Lab\_Syllabus\_Nand2Tetris.pdf}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}l r@{}}
+\toprule
+Criterion & Marks \\
+\midrule
+All 15 chips pass their test scripts without error & 5 \\
+Correct, minimal gate-level composition (no redundant gates) & 2 \\
+Journal: truth tables and schematics complete and accurate & 2 \\
+Viva: can explain why \texttt{Nand} is functionally complete & 1 \\
+\midrule
+\textbf{Total} & \textbf{10} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

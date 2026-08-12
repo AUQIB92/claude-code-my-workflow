@@ -145,6 +145,21 @@ while IFS= read -r pdf; do
     cp "$pdf" "$outdir/"
 done < <(find "$REPO_ROOT/CompetitiveExam" -type f -name '*.pdf')
 
+# 9. Sync Lab manuals to docs/labs/<CourseCode>/ (recursive).
+#    Instructor-only reference solutions (Labs/<CODE>/lab-N-*-reference/)
+#    are NEVER published — excluded here, same discipline as Assignments'
+#    solution keys and CompetitiveExam's Books/.
+echo "Syncing Lab manuals (reference solutions excluded)..."
+while IFS= read -r pdf; do
+    relpdf="${pdf#"$REPO_ROOT/Labs"/}"
+    reldir="$(dirname "$relpdf")"
+    [ "$reldir" = "." ] && reldir=""
+    outdir="$DOCS_DIR/labs/$reldir"
+    mkdir -p "$outdir"
+    echo "  Copying $relpdf..."
+    cp "$pdf" "$outdir/"
+done < <(find "$REPO_ROOT/Labs" -type f -name '*.pdf' ! -path '*-reference/*')
+
 echo ""
 echo "=== Sync complete! ==="
 echo "Files synced to: $DOCS_DIR/slides/"
