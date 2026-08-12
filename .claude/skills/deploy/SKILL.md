@@ -11,6 +11,12 @@ Render Quarto slides and sync all files to `docs/` for GitHub Pages deployment.
 
 ## Steps
 
+0. **Pre-flight: confirm Quarto is on PATH before running anything.**
+   ```bash
+   command -v quarto >/dev/null 2>&1 || echo "quarto not found"
+   ```
+   If missing, `sync_to_docs.sh` will still run — but it fails silently per-file (`quarto render ... || { echo Warning; continue; }`), so a whole-course deploy can look like it "worked" while every HTML render was skipped. Stop and tell the user, pointing at `./scripts/validate-setup.sh` (which now prints an OS-aware auto-install hint, e.g. `winget install --id Posit.Quarto -e` on Windows) rather than letting them discover it from a wall of `Warning: Failed to render` lines.
+
 1. **Run the sync script:**
    - Whole course (e.g., "CS401"): `./scripts/sync_to_docs.sh CS401`
    - One lecture (e.g., "CS401/05-addressing-cpu-bus"): `./scripts/sync_to_docs.sh CS401/05-addressing-cpu-bus`

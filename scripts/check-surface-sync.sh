@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs three pre-commit gates:
+# Runs four pre-commit gates:
 #   1. check-surface-sync.py — count assertions (skills/agents/rules/hooks)
 #      agree across README, CLAUDE.md, guide source + rendered HTML,
 #      landing page, skill template.
@@ -13,10 +13,15 @@
 #      presented as current in user-facing surfaces.
 #      SSoT: .claude/references/model-versions.md.
 #      Exit codes: 0 = clean, 1 = drift, 2 = internal error.
+#   4. check-tikz-freshness.py — every Figures/<CODE>/<lecture>/extract_tikz.tex
+#      still matches the TikZ blocks in its Beamer source. Catches the class
+#      of bug where a Beamer diagram is fixed but the Quarto-embedded SVG
+#      (extracted earlier) silently keeps the old, broken version.
+#      Exit codes: 0 = fresh (or nothing to check), 1 = drift, 2 = internal error.
 #
 # All tools run to completion even if one fails — the user sees the full
 # picture on a single invocation. The wrapper's final exit code is the max
-# of the three (any failure propagates).
+# of the four (any failure propagates).
 #
 # We deliberately do NOT use `set -e` because that would abort after the
 # first gate fails, hiding the second gate's output. We use `set -uo
@@ -44,8 +49,14 @@ echo "── check-model-versions ──"
 "$SCRIPT_DIR/check-model-versions.sh"
 MODELS_RC=$?
 
-# Final exit code is the max of all three gates (any failure propagates).
+echo ""
+echo "── check-tikz-freshness ──"
+python3 "$SCRIPT_DIR/check-tikz-freshness.py"
+TIKZ_RC=$?
+
+# Final exit code is the max of all four gates (any failure propagates).
 RC="$SYNC_RC"
 [ "$INTEGRITY_RC" -gt "$RC" ] && RC="$INTEGRITY_RC"
 [ "$MODELS_RC" -gt "$RC" ] && RC="$MODELS_RC"
+[ "$TIKZ_RC" -gt "$RC" ] && RC="$TIKZ_RC"
 exit "$RC"

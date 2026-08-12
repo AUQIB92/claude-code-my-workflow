@@ -19,6 +19,26 @@ pass=0
 warn=0
 fail=0
 
+# OS-aware auto-install hint. winget is Windows-only; on macOS/Linux we point
+# at brew/apt instead of guessing a package name that may not exist there.
+is_windows="false"
+case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*) is_windows="true" ;;
+esac
+has_winget="false"
+[ "$is_windows" = "true" ] && command -v winget >/dev/null 2>&1 && has_winget="true"
+
+# $1 = winget package ID (e.g. "Posit.Quarto"); prints one line if an
+# auto-install path exists for this platform, otherwise nothing.
+auto_install_hint() {
+    local winget_id="$1"
+    if [ "$has_winget" = "true" ] && [ -n "$winget_id" ]; then
+        echo -e "    Auto-install (Windows): winget install --id ${winget_id} -e"
+    elif [ "$is_windows" = "true" ] && [ -n "$winget_id" ]; then
+        echo -e "    Auto-install: install winget first (https://aka.ms/getwinget), then: winget install --id ${winget_id} -e"
+    fi
+}
+
 echo ""
 echo -e "${BOLD}Validating Claude Code Academic Workflow setup...${RESET}"
 echo ""
@@ -27,11 +47,13 @@ check_required() {
     local name="$1"
     local cmd="$2"
     local install_url="$3"
+    local winget_id="${4:-}"
     if command -v "$cmd" >/dev/null 2>&1; then
         echo -e "  ${GREEN}✓${RESET} $name found: $("$cmd" --version 2>&1 | head -n1)"
         pass=$((pass + 1))
     else
         echo -e "  ${RED}✗${RESET} $name NOT FOUND — install: ${install_url}"
+        auto_install_hint "$winget_id"
         fail=$((fail + 1))
     fi
 }
@@ -40,11 +62,13 @@ check_optional() {
     local name="$1"
     local cmd="$2"
     local install_url="$3"
+    local winget_id="${4:-}"
     if command -v "$cmd" >/dev/null 2>&1; then
         echo -e "  ${GREEN}✓${RESET} $name found: $("$cmd" --version 2>&1 | head -n1)"
         pass=$((pass + 1))
     else
         echo -e "  ${YELLOW}⚠${RESET} $name not found (optional) — install: ${install_url}"
+        auto_install_hint "$winget_id"
         warn=$((warn + 1))
     fi
 }
@@ -52,14 +76,14 @@ check_optional() {
 echo -e "${BOLD}Required tools:${RESET}"
 check_required "Claude Code"  "claude"   "https://claude.ai/install"
 check_required "XeLaTeX"      "xelatex"  "https://tug.org/texlive/ (or MacTeX: https://tug.org/mactex/)"
-check_required "Quarto"       "quarto"   "https://quarto.org/docs/get-started/"
+check_required "Quarto"       "quarto"   "https://quarto.org/docs/get-started/" "Posit.Quarto"
 check_required "git"          "git"      "https://git-scm.com/downloads"
 check_required "Python 3"     "python3"  "https://python.org (needed for hooks)"
 echo ""
 
 echo -e "${BOLD}Recommended tools:${RESET}"
 check_optional "R"            "R"        "https://www.r-project.org/"
-check_optional "GitHub CLI"   "gh"       "https://cli.github.com/"
+check_optional "GitHub CLI"   "gh"       "https://cli.github.com/" "GitHub.cli"
 echo ""
 
 echo -e "${BOLD}Git configuration:${RESET}"

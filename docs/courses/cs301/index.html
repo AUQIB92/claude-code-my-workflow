@@ -74,7 +74,9 @@
         <span class="chip-glass">12 teaching weeks</span>
         <span class="chip-glass">4 credits</span>
         <span class="chip-glass">3-0-2 L-T-P</span>
+        <!-- publish-course-hub:hero-chips:start -->
         <span class="chip-glass">1 / 12 lectures published</span>
+        <!-- publish-course-hub:hero-chips:end -->
       </div>
       <div class="hero-cta">
         <a href="#lectures" class="btn btn-glass">Browse the weekly lectures</a>
@@ -85,6 +87,7 @@
   <main id="main" class="container" style="padding-top: 2.2rem">
 
     <!-- ================= PROGRESS ================= -->
+    <!-- publish-course-hub:ribbon:start -->
     <div class="ribbon">
       <div class="row">
         <span><strong>Course progress</strong> &mdash; week 1 published in full</span>
@@ -93,6 +96,7 @@
       <div class="track"><div class="fill" data-fill="8"></div></div>
       <p>Weeks 2&ndash;12 are in progress. Each published week links its slide deck, prose notes, assignment(s), and GATE practice set.</p>
     </div>
+    <!-- publish-course-hub:ribbon:end -->
 
     <div class="alert">
       <p><strong>Open materials.</strong> Every published week ships four freely reusable PDFs: the slide deck, the prose lecture notes, the graded assignment, and a GATE practice set with answers. Week 1 additionally ships a programming assignment with an autograder. Solution keys and reference solutions are never published.</p>
@@ -116,6 +120,7 @@
         <h2 class="section-title">Weekly lectures</h2>
       </div>
 
+      <!-- publish-course-hub:rail:start -->
       <div class="rail">
 
         <div class="rail-item">
@@ -293,6 +298,7 @@
         </div>
 
       </div>
+      <!-- publish-course-hub:rail:end -->
     </section>
 
     <!-- ================= ASSIGNMENTS ================= -->
@@ -301,6 +307,7 @@
         <p class="section-eyebrow">&sect; 02 &middot; Problem sets</p>
         <h2 class="section-title">Assignments</h2>
       </div>
+      <!-- publish-course-hub:assignments-table:start -->
       <div class="table-card">
         <table>
           <thead>
@@ -316,6 +323,7 @@
           </tbody>
         </table>
       </div>
+      <!-- publish-course-hub:assignments-table:end -->
       <p class="text-muted" style="font-size:.9rem">Solution keys and reference solutions are never published &mdash; contact the instructor if you need a worked set. The Week 1 coding assignment ships with an autograder over a hidden test suite.</p>
     </section>
 
@@ -326,6 +334,7 @@
         <h2 class="section-title">Competitive exam practice</h2>
       </div>
       <p class="prose" style="max-width:76ch">Week-by-week GATE CS practice sets built for this course. Each set mixes verified past-year questions with original exam-pattern questions; attempt the set <em>after</em> the corresponding lecture, then check the answers.</p>
+      <!-- publish-course-hub:practice-table:start -->
       <div class="table-card">
         <table>
           <thead>
@@ -341,6 +350,7 @@
           </tbody>
         </table>
       </div>
+      <!-- publish-course-hub:practice-table:end -->
       <p class="text-muted" style="font-size:.9rem">Practice sets for weeks 2&ndash;12 will appear here as lectures are published. Source registry: <code>CompetitiveExam/Books/index.md</code>.</p>
     </section>
 
@@ -457,6 +467,10 @@
       io.observe(fill.closest('.ribbon'));
     }
   </script>
+
+  <!-- Cloudflare Web Analytics -->
+  <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a1fe2658b43b4757be5204e3c4812746"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 
 </body>
 </html>

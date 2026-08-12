@@ -26,14 +26,14 @@ Spawn the **verifier** agent (via `Task` with `subagent_type=verifier`) to run c
 
 ### Step 0b: Surface-Sync Gate (Pre-Commit)
 
-**Runs unconditionally.** Enforces that count claims (`"14 agents, 28 skills, 24 rules, 6 hooks"` and siblings) across README.md, CLAUDE.md, the guide source + rendered HTML, the landing page, and the skill template all agree with the on-disk counts of `.claude/{skills,agents,rules,hooks}`:
+**Runs unconditionally.** Four chained checks — count claims (`"14 agents, 28 skills, 24 rules, 6 hooks"` and siblings) across README.md, CLAUDE.md, the guide source + rendered HTML, the landing page, and the skill template all agree with the on-disk counts of `.claude/{skills,agents,rules,hooks}`; skill frontmatter/body integrity; Claude model-version currency; and TikZ-extraction freshness — every `Figures/<CODE>/<lecture>/extract_tikz.tex` still matches the `\begin{tikzpicture}` blocks in its Beamer source, so a diagram fix in `Slides/` can never silently leave a stale, broken diagram embedded in the Quarto mirror:
 
 ```bash
 ./scripts/check-surface-sync.sh
 ```
 
-- **Exit 0:** all counts consistent — continue.
-- **Exit 1:** drift detected — print the diff and halt. Fix the stale counts, then re-run. Do NOT proceed past this gate on drift, even with "commit anyway" — the purpose is to catch the exact class of issue that produced PRs #70, #76, and #78.
+- **Exit 0:** all four gates clean — continue.
+- **Exit 1:** drift detected in any gate — print the diff and halt. Fix the stale counts / integrity finding / model reference / TikZ drift, then re-run. Do NOT proceed past this gate on drift, even with "commit anyway" — the purpose is to catch the exact class of issue that produced PRs #70, #76, and #78 (count drift) and a same-session near-miss (a Beamer diagram fix that never propagated to its Quarto-embedded SVG).
 - **Exit 2:** script error (missing surface file, unreadable directory) — investigate before proceeding.
 
 ### Step 1: Check current state
@@ -75,29 +75,48 @@ EOF
 
 ```bash
 git push -u origin <branch-name>
-gh pr create --title "<short title>" --body "$(cat <<'EOF'
-## Summary
-<1-3 bullet points>
-
-## Test plan
-<checklist>
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-EOF
-)"
 ```
+
+**Check for `gh` before depending on it** — don't let a missing CLI silently stall the whole step:
+
+```bash
+command -v gh >/dev/null 2>&1 && echo "gh available" || echo "gh NOT available"
+```
+
+- **`gh` available:**
+  ```bash
+  gh pr create --title "<short title>" --body "$(cat <<'EOF'
+  ## Summary
+  <1-3 bullet points>
+
+  ## Test plan
+  <checklist>
+
+  🤖 Generated with [Claude Code](https://claude.com/claude-code)
+  EOF
+  )"
+  ```
+- **`gh` NOT available:** don't fail the step. `git push` on a new branch already prints a `https://github.com/<owner>/<repo>/pull/new/<branch>` URL in its own output (GitHub prints this on every push of a branch with no open PR) — surface that exact link to the user as the next action, along with a one-line note that installing `gh` (`winget install --id GitHub.cli -e` on Windows, `brew install gh` on macOS) would let this step create the PR automatically next time. Do not attempt to install `gh` yourself mid-task without asking — package installers can require elevation this session can't grant, and retrying a failed install in a loop wastes the user's time; ask once, let them retry themselves if they want it, and move on with the manual-link fallback either way.
 
 ### Step 6: Merge and clean up
 
-```bash
-gh pr merge <pr-number> --merge --delete-branch
-git checkout main
-git pull
-```
+- **`gh` available:**
+  ```bash
+  gh pr merge <pr-number> --merge --delete-branch
+  git checkout main
+  git pull
+  ```
+- **`gh` NOT available:** this step can't be automated without it. Tell the user the branch is pushed and ready, give them the PR link from Step 5, and wait — once they report the PR is merged (via the web UI), verify it landed (`git fetch origin && git log origin/main --oneline -3`) before syncing local `main`:
+  ```bash
+  git checkout main
+  git pull
+  git branch -d <branch-name>
+  ```
+  Never assume a merge happened just because time has passed — confirm it on the remote first.
 
 ### Step 7: Report
 
-Report the PR URL and what was merged.
+Report the PR URL (or the manual `pull/new` link if `gh` was unavailable) and what was merged.
 
 ## Important
 

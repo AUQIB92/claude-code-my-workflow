@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>20 agents, 63 skills, 38 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>20 agents, 64 skills, 38 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -285,6 +285,7 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/lab-manual` (v2.3) | Per-week practical/lab sheet — objective, apparatus/toolchain, procedure, expected output, an observation table, viva-voce questions, and a rubric; closes the documented CS401 L-T-P practical gap (25% of the grade, previously zero tooling) |
 | `/coding-assignment` (v2.3) | Programming assignment with a hidden test suite and autograder harness — problem statement, reference solution (run through `/verify-algorithm` first), visible + hidden tests, autograder script; the CS-native sibling to `/create-assignment`'s written problems |
 | `/trace-execution` (v2.3) | Step-by-step execution trace as a sequence of coordinate-consistent TikZ diagrams (memory/stack/heap, pointer mutation, data-structure operations) — automates the pattern hand-built for CS301 Week 1's stack/heap traces |
+| `/publish-course-hub` (v2.4) | Regenerate a course hub page's data-driven regions (lecture rail, progress ribbon, assignments/practice tables) from the syllabus + what's actually published in `docs/`, instead of hand-editing `docs/courses/<code>/index.html` every time a new week ships |
 
 ### Research Workflow
 

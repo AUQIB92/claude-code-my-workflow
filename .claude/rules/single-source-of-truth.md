@@ -40,6 +40,8 @@ Notes are still never co-drafted and never edited independently of a Beamer chan
 
 **Before using ANY TikZ SVG in a Quarto slide, verify it matches the current Beamer source.**
 
+**This is now mechanically enforced, not just manually followed.** `scripts/check-tikz-freshness.py` (chained into `scripts/check-surface-sync.sh`, which runs on every `/commit` and every direct `git commit` once the pre-commit hook is installed) diffs every `\begin{tikzpicture}...\end{tikzpicture}` block between a Beamer source and its `Figures/<CODE>/<lecture>/extract_tikz.tex`, comment-stripped and whitespace-normalized. Added after a real near-miss: a Beamer diagram's label/border overlap got fixed in `Slides/`, but the already-extracted SVG kept the old, broken coordinate, and nothing caught it until a user explicitly asked to check. The manual procedure below is still the right way to *fix* a drift the gate flags — the gate only tells you *that* something drifted, not what changed.
+
 ### Diff-Check Procedure
 
 1. Read the TikZ block from the Beamer `.tex` file
