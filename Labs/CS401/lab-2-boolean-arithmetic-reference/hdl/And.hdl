@@ -1,0 +1,12 @@
+/**
+ * And gate: out = a and b.
+ * And(a,b) = Not(Nand(a,b)).
+ */
+CHIP And {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    Nand(a=a, b=b, out=w1);
+    Not(in=w1, out=out);
+}
