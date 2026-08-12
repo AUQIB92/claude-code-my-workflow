@@ -47,6 +47,14 @@ _cv.txt
 **/*-solutions.pdf
 Assignments/CS401/*-solutions.*
 
+# Coding-assignment instructor-only files — reference solutions, hidden test
+# suites, and autograder harnesses must never reach the public repo or the
+# GitHub Pages site. The student-facing pieces (bag.h, starter_*.c,
+# test_visible.c, and the problem-statement PDF) remain tracked.
+Assignments/**/*-coding/reference_*
+Assignments/**/*-coding/test_hidden.*
+Assignments/**/*-coding/autograder.*
+
 # Claude Code local files (not shared across machines)
 .claude/settings.local.json
 .claude/state/

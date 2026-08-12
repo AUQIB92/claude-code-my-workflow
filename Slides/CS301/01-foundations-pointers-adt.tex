@@ -1,5 +1,7 @@
-% CS301 Week 1 -- a gentle introduction to memory, pointers, and ADTs
-% Difficulty: core-lite (engineering reasoning, with guided traces)
+% CS301 Week 1 -- where your data lives: pointers, dynamic memory, and ADTs
+% Difficulty: core (medium-easy), self-explanatory slides, page-grounded in
+% Wirth2004 p.111, Sedgewick2011 pp.64/120/172, Karumanchi2017 p.18 (PDF).
+% Rebuilt 2026-08-12: added a Motivation + Overall-Syllabus opener (Act 0).
 
 \documentclass[aspectratio=169]{beamer}
 \input{header}
@@ -15,7 +17,10 @@
 
 \frame{\titlepage}
 
-\section{Starting Point}
+% =============================================================================
+% ACT 0 --- MOTIVATION AND OVERALL SYLLABUS
+% =============================================================================
+\section{Motivation and the Course Plan}
 
 \begin{frame}{Today's Three Questions}
   \begin{enumerate}
@@ -28,6 +33,93 @@
     First draw the memory. Then use one pointer. Then write one simple contract.
   \end{exampleblock}
 \end{frame}
+
+\begin{frame}{Motivation: Correct Is Not Always Fast Enough}
+  \begin{block}{A correct program can still be unusable}
+    A loop that scans student records one by one always finds the right student
+    --- and with 5 records it is instant.
+  \end{block}
+  \begin{itemize}
+    \item With 10 million records and a query every millisecond, the \emph{same}
+      correct loop is far too slow.
+    \item The answer is the same; the \emph{arrangement} of the data is the
+      difference.
+    \item This course is the catalogue of arrangements and the judgement to
+      choose between them
+      \cite{HorowitzSahni2008_fundamentals_data_structures,AhoHopcroftUllman1983_data_structures_algorithms}.
+  \end{itemize}
+  \key{Data structures keep a correct program useful as the data grows.}
+\end{frame}
+
+\begin{frame}{Motivation: ``It Felt Fast'' Is Not an Argument}
+  \begin{block}{Sedgewick's opening question}
+    \emph{``How long will my program take? Why does my program run out of
+    memory?''} --- questions far too vague to answer precisely without a model
+    \cite{Sedgewick2011_algorithms}.
+  \end{block}
+  \begin{itemize}
+    \item ``It felt fast in my test'' tells us nothing about tomorrow's input.
+    \item Week 2 gives us the model: count the operations as a function of
+      the amount of data, then compress the count into $O$/$\Omega$/$\Theta$.
+    \item Week 1's job is the raw material that analysis counts --- how data
+      is laid out and reached in memory.
+  \end{itemize}
+  \muted{By the end of Week 12 you will say \emph{why} a structure is fast,
+    not just that it felt fast.}
+\end{frame}
+
+\begin{frame}{The Course in One Roadmap}
+  \begin{enumerate}
+    \item \key{Weeks 1--2: Foundations} --- memory, pointers, and the cost of work.
+    \item \key{Weeks 3--5: Linear structures} --- arrays, stacks, queues, expression processing.
+    \item \key{Weeks 6--7: Linked structures} --- singly/doubly linked lists, their applications.
+    \item \key{Weeks 8--9: Finding and ordering} --- searching, elementary and efficient sorting.
+    \item \key{Week 10: Files and hashing} --- file organization, hash tables.
+    \item \key{Weeks 11--12: Connected data} --- trees, BSTs, AVL, graphs, MSTs, shortest paths.
+  \end{enumerate}
+  \vspace{0.2cm}
+  \muted{Each week repeats one shape: \emph{state the contract, then implement
+    it, then analyse what it costs}.}
+\end{frame}
+
+\begin{frame}{One Running Thread Through the Whole Course}
+  \begin{alertblock}{Our running example}
+    A small expression processor reads \texttt{(a+b)*c} and must check its
+    brackets, convert it, evaluate it, and look up its identifiers.
+  \end{alertblock}
+  \begin{itemize}
+    \item A \key{stack} checks the brackets and drives the conversion (Weeks 3--4).
+    \item A \key{symbol table} --- first a list (Week 6), later a hash table
+      (Week 10) --- stores the identifiers.
+    \item An \key{expression tree} gives the evaluation (Week 11).
+    \item Every new structure arrives as the fix for something this program
+      cannot yet do.
+  \end{itemize}
+  \muted{This is not twelve unrelated topics; it is one program learning new
+    tricks each week.}
+\end{frame}
+
+\begin{frame}{What You Already Know (from prior courses)}
+  \begin{itemize}
+    \item Variables store values.
+    \item Arrays store several values in a row.
+    \item Functions divide a program into manageable pieces.
+    \item Loops repeat work.
+    \item C gives you \texttt{struct} for grouping fields.
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{exampleblock}{What this course adds}
+    We ask: \emph{what arrangement of data fits this job?} --- and we answer
+    with a contract, an implementation, and a cost.
+  \end{exampleblock}
+\end{frame}
+
+\transitionslide{Before any structure: where does a program even put its data?}
+
+% =============================================================================
+% ACT 1 --- STARTING POINT
+% =============================================================================
+\section{Starting Point}
 
 \begin{frame}{A Variable Has a Place}
   \begin{block}{Example}
@@ -42,12 +134,20 @@
   \muted{An address is like a house number. It tells us where to look.}
 \end{frame}
 
+% =============================================================================
+% ACT 2 --- MEMORY
+% =============================================================================
 \section{Memory}
 
 \sectiondivider{Section 1}{Memory}
 
 \begin{frame}{Two Places to Remember}
   \begin{center}
+    % Diagram: the two-region memory picture reused across the whole course
+    % (Weeks 6-7, 11 redraw this). Coordinates: (x,y)
+    %   Stack box at (0, 1.7), width 5cm, height 1.2cm
+    %   Heap box at (0, -0.1), width 5cm, height 1.2cm
+    %   Arrow stack.south -> heap.north (vertical, x=0, clear of both boxes)
     \begin{tikzpicture}[every node/.style={font=\small}]
       \node[draw, fill=primary-blue!15, minimum width=5cm, minimum height=1.2cm,
         align=center]
@@ -62,15 +162,23 @@
   \begin{itemize}
     \item Local variables usually live in the stack.
     \item Dynamic memory lives in the heap.
+    \item \muted{Every later diagram in the course keeps this orientation:
+      stack up, heap down.}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{How the Stack Grows --- Step 1: \texttt{main} starts}
   \begin{center}
   \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    % Diagram: one stack frame (main) with room below.
+    % Coordinates: (x, y)
+    %   outer region at (0,-1.5), width 7.2cm, height 4.6cm
+    %   main frame at (0,0.2), width 6.4cm, height 1.1cm
+    %   dashed "next frame" placeholder at (0,-1.7), width 6.4cm, height 1.1cm
+    %   growth arrow x=4.1 from y=0.6 to y=-3.2
     \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
           rounded corners=2pt] at (0,-1.5) {};
-    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[font=\scriptsize, text=neutral] at (0,1.1) {high addresses};
     \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
           align=center, font=\small] at (0,0.2)
           {\texttt{main} frame\\ \texttt{int a = 5;}};
@@ -91,9 +199,16 @@
 \begin{frame}{How the Stack Grows --- Step 2: \texttt{add} is called}
   \begin{center}
   \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    % Diagram: main frame plus a second (add) frame pushed below.
+    % Coordinates: (x, y)
+    %   outer region at (0,-1.5), width 7.2cm, height 4.6cm
+    %   main frame at (0,0.2), width 6.4cm, height 1.1cm
+    %   add frame at (0,-1.4), width 6.4cm, height 1.5cm
+    %   dashed "room" placeholder at (0,-3.0), width 6.4cm, height 1.1cm
+    %   growth arrow x=4.1 from y=0.6 to y=-3.2
     \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
           rounded corners=2pt] at (0,-1.5) {};
-    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[font=\scriptsize, text=neutral] at (0,1.1) {high addresses};
     \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
           align=center, font=\small] at (0,0.2)
           {\texttt{main} frame\\ \texttt{int a = 5;}};
@@ -117,9 +232,15 @@
 \begin{frame}{How the Stack Grows --- Step 3: \texttt{add} returns}
   \begin{center}
   \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    % Diagram: main frame only; add frame shown as popped (dashed).
+    % Coordinates: (x, y)
+    %   outer region at (0,-1.5), width 7.2cm, height 4.6cm
+    %   main frame at (0,0.2), width 6.4cm, height 1.1cm (now with s = 8)
+    %   popped add frame at (0,-1.4), width 6.4cm, height 1.5cm (dashed)
+    %   growth arrow x=4.1 from y=0.6 to y=-3.2
     \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
           rounded corners=2pt] at (0,-1.5) {};
-    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[font=\scriptsize, text=neutral] at (0,1.1) {high addresses};
     \node[draw, fill=primary-blue!15, minimum width=6.4cm, minimum height=1.1cm,
           align=center, font=\small] at (0,0.2)
           {\texttt{main} frame\\ \texttt{int a = 5; int s = 8;}};
@@ -158,9 +279,13 @@
   \begin{itemize}
     \item We may need space for 3 records today and 300 tomorrow.
     \item We may want the records to remain after a helper function returns.
-    \item The heap gives us memory whose size and lifetime we can request at run time.
+    \item A structure that can vary in size cannot be given a fixed amount of
+      storage at compile time
+      \cite{Wirth2004_algorithms_data_structures}.
   \end{itemize}
-  \key{The heap is useful when the data must be flexible.}
+  \key{The heap gives us memory whose size and lifetime we request at run time.}
+  \muted{Wirth's argument, p.111: if the size is only known at run time, the
+    storage must also be allocated at run time.}
 \end{frame}
 
 \begin{frame}{Check Your Prediction}
@@ -178,6 +303,11 @@
   \muted{The exact call for this --- \texttt{malloc} and \texttt{sizeof} --- comes in a few slides.}
 \end{frame}
 
+\transitionslide{To use the heap, we need a handle on it --- a pointer.}
+
+% =============================================================================
+% ACT 3 --- POINTERS
+% =============================================================================
 \section{Pointers}
 
 \sectiondivider{Section 2}{Pointers}
@@ -196,10 +326,17 @@
   \begin{exampleblock}{One declaration}
     \texttt{int *p;} means: \texttt{p} can point to an \texttt{int}.
   \end{exampleblock}
+  \muted{Wirth (p.111): when a component's address must outlive the current
+    scope, the compiler reserves fixed storage that holds the \emph{address} of
+    the component --- not the component itself.}
 \end{frame}
 
 \begin{frame}{A Pointer Picture}
   \begin{center}
+    % Diagram: pointer box pointing to value box. Coordinates: (x,y)
+    %   p box at (-2.5,0), w=3.0 h=1.0
+    %   value box at (2.5,0), w=3.0 h=1.0
+    %   arrow p.east -> x.west (horizontal, y=0, clear)
     \begin{tikzpicture}[every node/.style={font=\small}]
       \node[draw, fill=primary-blue!15, minimum width=3.0cm, minimum height=1cm,
         align=center]
@@ -231,7 +368,9 @@ struct node \{
     \item \texttt{next} stores the address of another node.
     \item If there is no next node, set \texttt{next = NULL}.
   \end{itemize}
-  \muted{This is the basic building block for a linked list in a later week.}
+  \muted{This is the basic building block for a linked list in a later week.
+    (The list handle will be called \texttt{head}; here the node is just
+    \texttt{p}.)}
 \end{frame}
 
 \begin{frame}{The Safe Empty Pointer}
@@ -244,10 +383,15 @@ struct node \{
     \item Never try to read through an empty pointer.
   \end{itemize}
   \begin{exampleblock}{Picture}
-    \texttt{struct node *head = NULL;} means ``the list is empty''.
+    \texttt{struct node *p = NULL;} means ``this pointer reaches nothing yet''.
   \end{exampleblock}
 \end{frame}
 
+\transitionslide{Now let us actually request a block of heap memory and use it.}
+
+% =============================================================================
+% ACT 4 --- ONE HEAP BLOCK
+% =============================================================================
 \section{One Heap Block}
 
 \sectiondivider{Section 3}{One Heap Block}
@@ -264,6 +408,7 @@ if (p == NULL) return 1;
     \item \texttt{malloc} requests bytes from the heap.
     \item \texttt{sizeof(int)} asks C for the right number of bytes.
     \item \texttt{p} stores the address of the requested space.
+    \item \muted{Check the result against \texttt{NULL} before using it.}
   \end{itemize}
 \end{frame}
 
@@ -318,6 +463,10 @@ int *p = malloc(sizeof(int));
 
 \begin{frame}{What Happened?}
   \begin{center}
+    % Diagram: stack pointer box pointing to heap value box. Coordinates: (x,y)
+    %   p box at (-2.5,0), w=3cm h=1cm
+    %   heap box at (2.5,0), w=3cm h=1cm
+    %   arrow p.east -> box.west
     \begin{tikzpicture}[every node/.style={font=\small}]
       \node[draw, fill=primary-blue!15, minimum width=3cm, minimum height=1cm]
         (p) at (-2.5,0) {stack: \texttt{p}};
@@ -337,9 +486,15 @@ int *p = malloc(sizeof(int));
 \begin{frame}{How the Heap Grows --- Step 1: a block of three ints}
   \begin{center}
   \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    % Diagram: one heap block (p) with free space below.
+    % Coordinates: (x, y)
+    %   outer region at (0,-1.5), width 7.2cm, height 4.6cm
+    %   p block at (0,-0.3), width 6.0cm, height 1.3cm
+    %   dashed "free heap space" at (0,-2.4), width 6.0cm, height 1.1cm
+    %   growth arrow x=-4.1 from y=-3.4 to y=0.0
     \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
           rounded corners=2pt] at (0,-1.5) {};
-    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[font=\scriptsize, text=neutral] at (0,1.1) {high addresses};
     \node[draw, fill=primary-gold!25, minimum width=6.0cm, minimum height=1.3cm,
           align=center, font=\small] at (0,-0.3)
           {\texttt{p = malloc(3 * sizeof(int));}\\ \texttt{10} \quad \texttt{20} \quad \texttt{30}};
@@ -360,9 +515,15 @@ int *p = malloc(sizeof(int));
 \begin{frame}{How the Heap Grows --- Step 2: a second block}
   \begin{center}
   \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    % Diagram: two heap blocks, q above p.
+    % Coordinates: (x, y)
+    %   outer region at (0,-1.5), width 7.2cm, height 4.6cm
+    %   q block at (0,0.0), width 6.0cm, height 1.2cm
+    %   p block at (0,-1.5), width 6.0cm, height 1.2cm
+    %   growth arrow x=-4.1 from y=-3.4 to y=0.0
     \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
           rounded corners=2pt] at (0,-1.5) {};
-    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[font=\scriptsize, text=neutral] at (0,1.1) {high addresses};
     \node[draw, fill=primary-gold!25, minimum width=6.0cm, minimum height=1.2cm,
           align=center, font=\small] at (0,-1.5)
           {\texttt{p = malloc(3 * sizeof(int));}\\ \texttt{10} \quad \texttt{20} \quad \texttt{30}};
@@ -383,9 +544,15 @@ int *p = malloc(sizeof(int));
 \begin{frame}{How the Heap Grows --- Step 3: \texttt{free} returns a block}
   \begin{center}
   \begin{tikzpicture}[scale=0.95, every node/.style={scale=0.95}]
+    % Diagram: q block remains; p block shown freed (dashed).
+    % Coordinates: (x, y)
+    %   outer region at (0,-1.5), width 7.2cm, height 4.6cm
+    %   q block at (0,0.0), width 6.0cm, height 1.2cm
+    %   freed p block at (0,-1.5), width 6.0cm, height 1.2cm (dashed)
+    %   growth arrow x=-4.1 from y=-3.4 to y=0.0
     \node[draw, fill=light-bg, minimum width=7.2cm, minimum height=4.6cm,
           rounded corners=2pt] at (0,-1.5) {};
-    \node[font=\scriptsize, text=neutral] at (0,0.85) {high addresses};
+    \node[font=\scriptsize, text=neutral] at (0,1.1) {high addresses};
     \node[draw, dashed, minimum width=6.0cm, minimum height=1.2cm,
           align=center, font=\scriptsize, text=neutral] at (0,-1.5)
           {\texttt{free(p)} --- block returned\\ (no longer usable)};
@@ -429,23 +596,31 @@ p = NULL;
   \end{exampleblock}
 \end{frame}
 
+\transitionslide{Memory and pointers are the machinery. The contract is the map.}
+
+% =============================================================================
+% ACT 5 --- SIMPLE CONTRACTS
+% =============================================================================
 \section{Simple Contracts}
 
 \sectiondivider{Section 4}{Simple Contracts}
 
 \begin{frame}{What Is an ADT?}
   \begin{block}{Abstract Data Type}
-    An ADT describes what we can do with data, without saying how it is stored
-    \cite{Sedgewick2011_algorithms,Karumanchi2017_data_structures_algorithms_made_easy}.
+    An ADT describes what we can do with data, without saying how it is stored.
   \end{block}
   \begin{itemize}
-    \item It is a promise about operations.
+    \item Sedgewick (p.64): a data type is ``a set of values and a set of
+      operations on those values''
+      \cite{Sedgewick2011_algorithms}.
+    \item Karumanchi (p.18, PDF): an ADT has two parts --- a declaration of
+      data and a declaration of operations
+      \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
     \item The implementation is the code and memory arrangement behind the promise.
-    \item Different implementations can follow the same promise.
   \end{itemize}
   \vspace{0.1cm}
-  \muted{An ADT has two parts: a declaration of data, and a declaration of operations
-    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.}
+  \muted{The two framings agree: ``set of values and operations'' is exactly
+    ``declaration of data and declaration of operations.''}
 \end{frame}
 
 \begin{frame}{This Course Is a Tour of ADTs}
@@ -473,11 +648,20 @@ p = NULL;
     \item \texttt{size()} --- report how many items are present.
   \end{enumerate}
   \vspace{0.15cm}
-  \muted{The contract does not yet say whether the bag uses an array or a list.}
+  \muted{The contract does not yet say whether the bag uses an array or a list.
+    A bag is one of Sedgewick's three collection types (p.120) --- the other two
+    (queue, stack) simply change which object is removed next
+    \cite{Sedgewick2011_algorithms}.}
 \end{frame}
 
 \begin{frame}{One Contract, Two Possible Implementations}
   \begin{center}
+    % Diagram: contract box on top, two implementation boxes below.
+    % Coordinates: (x,y)
+    %   contract (0,2), w=5cm h=1cm
+    %   array (-2.5,0), w=3.5cm h=0.9cm
+    %   list (2.5,0), w=3.5cm h=0.9cm
+    %   arrows contract -> array / contract -> list (vertical/angled, clear)
     \begin{tikzpicture}[every node/.style={font=\small}]
       \node[draw, thick, fill=light-bg, minimum width=5cm, minimum height=1cm]
         (adt) at (0,2) {Bag contract: insert, member, size};
@@ -490,7 +674,8 @@ p = NULL;
     \end{tikzpicture}
   \end{center}
   \begin{block}{The key distinction}
-    Same operations, different internal arrangement.
+    Same operations, different internal arrangement --- the caller's code does
+    not change when the bottom box does.
   \end{block}
 \end{frame}
 
@@ -504,21 +689,28 @@ p = NULL;
     \item ``\texttt{size()} reports the number of values.''
   \end{enumerate}
   \vspace{0.15cm}
-  \muted{The first and third describe what users can ask. The second describes how.}
+  \muted{The first and third describe what users can ask (contract). The second
+    describes how (implementation). State the contract before writing a line of
+    the implementation.}
 \end{frame}
 
 \begin{frame}{Week 1 Summary}
   \begin{itemize}
-    \item The stack holds ordinary short-lived local variables.
-    \item The heap holds memory requested while the program runs.
-    \item A pointer stores an address; \texttt{NULL} means ``points to nothing''.
-    \item Use \texttt{malloc}, check the result, use the block, and call \texttt{free}.
-    \item An ADT describes operations; a data structure implements them.
-    \item The rest of this course is a tour of ADTs: contract first, implementation second.
+    \item \key{Memory:} the stack holds short-lived local variables; the heap
+      holds memory requested while the program runs.
+    \item \key{Pointers:} a pointer stores an address; \texttt{NULL} means
+      ``points to nothing.''
+    \item \key{Dynamic memory:} request with \texttt{malloc}, check the result,
+      use the block, and call \texttt{free}.
+    \item \key{ADTs:} describe operations first (a contract); a data structure
+      is the implementation that honours it.
+    \item The rest of this course is a tour of ADTs: contract first,
+      implementation second, cost analysis third.
   \end{itemize}
   \vspace{0.15cm}
   \begin{exampleblock}{Next week}
-    We will learn how to talk about the amount of work an operation needs.
+    We learn how to talk about the amount of work an operation needs ---
+    $T(n)$, $O$/$\Omega$/$\Theta$, and best/worst/average case.
   \end{exampleblock}
 \end{frame}
 

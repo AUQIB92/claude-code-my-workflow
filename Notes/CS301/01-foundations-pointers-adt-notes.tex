@@ -57,7 +57,7 @@
 
 \section{Why Data Organization Is the Subject}
 
-\textbf{Read alongside:} Horowitz \& Sahni, \textit{Fundamentals of Data Structures}, Ch.~1 (chapter-level); Aho, Hopcroft \& Ullman, \textit{Data Structures and Algorithms}, Ch.~1 (chapter-level).
+\textbf{Read alongside:} Horowitz \& Sahni, \textit{Fundamentals of Data Structures}, Ch.~1 (chapter-level); Aho, Hopcroft \& Ullman, \textit{Data Structures and Algorithms}, Ch.~1 (chapter-level) \cite{AhoHopcroftUllman1983_data_structures_algorithms}.
 
 You already know how to write a loop, a function, and a \texttt{struct}. It is
 worth asking, then, why one program answers a query instantly while another,
@@ -101,8 +101,10 @@ judged on exactly these two axes. The first asks where the data lives: who
 allocates the memory a structure occupies, how large is it, and who is
 responsible for giving it back. That question is the subject of the rest of this
 chapter. The second asks what an operation on the structure costs --- not
-``it felt fast,'' which is not an argument, but a number expressed as a function
-of the amount of data. That question is the subject of Week 2.
+``it felt fast,'' which is not an argument (Sedgewick's opening question,
+``how long will my program take?,'' is too vague to answer precisely without
+a model \cite{Sedgewick2011_algorithms}, \S1.4, p.172), but a number
+expressed as a function of the amount of data. That question is the subject of Week 2.
 
 The course answers these two questions over twelve weeks. Weeks 1 and 2 ask
 where data lives and what an operation costs --- pointers, memory, and
@@ -415,7 +417,8 @@ The name \texttt{p} is not the heap block; the block is at the address
 \begin{example}[Allocate a complete node: the safer engineering pattern]
 {\footnotesize
 \begin{verbatim}
-struct node *p = malloc(sizeof(struct node));
+struct node *p =
+    malloc(sizeof(struct node));
 if (p == NULL) return 1;
 p->data = 42;
 p->next = NULL;
@@ -504,10 +507,12 @@ addresses, opposite to the stack.
 \begin{example}[Heap growth, Step 1: one \texttt{malloc} for three integers]
 {\footnotesize
 \begin{verbatim}
-int *p = malloc(3 * sizeof(int));
+int *p =
+    malloc(3 * sizeof(int));
 p[0] = 10; p[1] = 20; p[2] = 30;
 \end{verbatim}
 }
+
 One \texttt{malloc} request with room for three integers grew the used heap
 upward, placing a block that holds \texttt{10}, \texttt{20}, \texttt{30}
 (Figure~\ref{fig:heap1}). The block survives after the allocating function

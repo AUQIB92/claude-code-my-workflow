@@ -1,0 +1,184 @@
+% =============================================================================
+% CompetitiveExam/CS301/01-foundations-pointers-adt-questions.tex
+% Competitive Exam Practice 1 — GATE (Computer Science) Pattern
+% Foundations, Pointers & ADTs (Week 1: stack vs heap, pointers, malloc/free/
+% NULL/sizeof, the ADT contract with the bag example)
+%
+% Student-facing — NO answers. Answer key: 01-foundations-pointers-adt-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book): Q1-Q4 are real GATE
+% past-year questions sourced from the local GATEOverflow Volume 2 PYQ book
+% (CompetitiveExam/Books/index.md: Pointer cluster, PDF pp. 293-298). Question
+% headings and code/option text were recovered via pdftotext from the text layer,
+% plus Ghostscript render + Tesseract OCR for the option letters that the book
+% prints as embedded images (GATE 2001 Q2.18). The book authenticates each
+% question (year + question number printed on the page), so the
+% "— GATEOverflow V2 p.<page>" tag certifies source authenticity.
+%
+% Verification note for answers: the book's own answer keys are collapsed and
+% not extractable (see CompetitiveExam/Books/index.md), so every answer was
+% independently cross-checked against 2+ web sources in the build session
+% (2026-08-12): GATEOverflow online question pages, GeeksforGeeks, Testbook,
+% and Electrical4u. Only answers confirmed by those sources carry the
+% [verified] tag. Q5-Q10 are original GATE-pattern questions filling the
+% stack/heap, NULL, malloc/sizeof, and ADT subtopics that the local volume does
+% not cover at the lecture's level of specificity.
+%
+% Compile with: cd CompetitiveExam/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-foundations-pointers-adt-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Competitive Exam Practice 1: Foundations, Pointers \& ADTs\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type; TF = True/False. C is the language.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2001 Q2.18, verified --- GATEOverflow V2 p.293]} \textbf{[MCQ, 2 marks]} Consider the following three C functions:
+\begin{verbatim}
+/* P1 */
+int *g(void) {
+    int x = 10;
+    return (&x);
+}
+/* P2 */
+int *g(void) {
+    int *px;
+    *px = 10;
+    return px;
+}
+/* P3 */
+int *g(void) {
+    int *px;
+    px = (int *) malloc(sizeof(int));
+    *px = 10;
+    return px;
+}
+\end{verbatim}
+Which of the above three functions are likely to cause problems with pointers?
+\begin{enumerate}
+  \item[(A)] Only P3
+  \item[(B)] Only P1 and P3
+  \item[(C)] Only P1 and P2
+  \item[(D)] P1, P2 and P3
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CS 2014 Set 1 Q10, verified --- GATEOverflow V2 p.295]} \textbf{[MCQ, 1 mark]} Consider the following program in C language:
+\begin{verbatim}
+#include <stdio.h>
+main() {
+    int i;
+    int *pi = &i;
+    scanf("%d", pi);
+    printf("%d\n", i + 5);
+}
+\end{verbatim}
+Which one of the following statements is TRUE?
+\begin{enumerate}
+  \item[(A)] Compilation fails.
+  \item[(B)] Execution results in a run-time error.
+  \item[(C)] On execution, the value printed is more than the address of variable \texttt{i}.
+  \item[(D)] On execution, the value printed is more than the integer value entered.
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CS 2017 Set 1 Q13, verified --- GATEOverflow V2 p.296]} \textbf{[MCQ, 1 mark]} Consider the following C code:
+\begin{verbatim}
+#include <stdio.h>
+int *assignval(int *x, int val) {
+    *x = val;
+    return x;
+}
+void main() {
+    int *x = malloc(sizeof(int));
+    if (NULL == x) return;
+    x = assignval(x, 0);
+    if (x) {
+        x = (int *)malloc(sizeof(int));
+        if (NULL == x) return;
+        x = assignval(x, 10);
+    }
+    printf("%d\n", *x);
+    free(x);
+}
+\end{verbatim}
+The code suffers from which one of the following problems:
+\begin{enumerate}
+  \item[(A)] compiler error as the return of \texttt{malloc} is not typecast appropriately.
+  \item[(B)] compiler error because the comparison should be made as \texttt{x == NULL}.
+  \item[(C)] compiles successfully but execution may result in dangling pointer.
+  \item[(D)] compiles successfully but execution may result in memory leak.
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CS 2025 Set 1 Q24, verified --- GATEOverflow V2 p.297]} \textbf{[NAT, 1 mark]} What is the output of the given C program?
+\begin{verbatim}
+#include <stdio.h>
+void foo(int *p, int x) {
+    *p = x;
+}
+int main() {
+    int *z;
+    int a = 20, b = 25;
+    z = &a;
+    foo(z, b);
+    printf("%d", a);
+    return 0;
+}
+\end{verbatim}
+The output of the given program is \_\_\_\_\_\_\_\_\_. (Answer in integer)
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a running C program, where does a local variable declared inside a function live, and where does memory requested by \texttt{malloc} live, respectively?
+\begin{enumerate}
+  \item[(A)] heap; stack
+  \item[(B)] stack; heap
+  \item[(C)] stack; stack
+  \item[(D)] heap; heap
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
+
+A block of memory obtained by \texttt{malloc} inside a function survives the return of that function, whereas a local variable of the same function does not.
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
+
+\texttt{NULL} is a pointer value meaning ``points to nothing,'' and dereferencing a \texttt{NULL} pointer is undefined behaviour --- in practice, a crash.
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Which of the following statements about \texttt{malloc} is TRUE?
+\begin{enumerate}
+  \item[(A)] On success \texttt{malloc} returns the number of bytes allocated.
+  \item[(B)] On success \texttt{malloc} returns the address of the requested block; on failure it returns \texttt{NULL}.
+  \item[(C)] \texttt{malloc} always returns \texttt{NULL} once the program has used more than half of its memory.
+  \item[(D)] A pointer obtained from \texttt{malloc} must be dereferenced immediately or the program crashes.
+\end{enumerate}
+
+\item[\textbf{Q9}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} On a 64-bit machine where an \texttt{int} occupies 4 bytes and a pointer occupies 8 bytes (alignment: fields are aligned to their own size), how many bytes does the following structure occupy?
+\begin{verbatim}
+struct node {
+    int data;
+    struct node *next;
+};
+\end{verbatim}
+The number of bytes occupied is \_\_\_\_\_\_\_\_\_.
+
+\item[\textbf{Q10}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Recall Sedgewick's definition of a data type as ``a set of values and a set of operations on those values,'' and the Week 1 \key{bag} ADT supporting \texttt{insert(x)}, \texttt{member(x)}, and \texttt{size()}. Which statement is TRUE?
+\begin{enumerate}
+  \item[(A)] ``The values are stored in a dynamic array'' is part of the bag's contract.
+  \item[(B)] \texttt{insert(x)}, \texttt{member(x)}, and \texttt{size()} name the operations of the contract, which does not say whether the bag is implemented with an array or a linked list.
+  \item[(C)] An ADT is one particular implementation of a data structure.
+  \item[(D)] The contract must also specify the C code for every operation.
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

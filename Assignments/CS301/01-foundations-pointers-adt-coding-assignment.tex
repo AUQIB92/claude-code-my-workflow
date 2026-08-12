@@ -1,0 +1,95 @@
+% =============================================================================
+% Assignments/CS301/01-foundations-pointers-adt-coding-assignment.tex
+% Coding Assignment 1: The Bag ADT as a Linked Chain
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/01-foundations-pointers-adt-coding/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+%   bag.h, starter_bag.c, test_visible.c
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-foundations-pointers-adt-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{1.\arabic{section}}
+
+\title{Coding Assignment 1: The Bag ADT as a Linked Chain}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. Late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Week 1 introduced the course's central abstraction --- the abstract data type (ADT) --- with a running example: a \key{bag of integers} whose contract is exactly three operations, \texttt{insert(x)}, \texttt{member(x)}, and \texttt{size()} (Sedgewick \& Wayne, \S1.3, p.120; Karumanchi, \S1.4, p.18). The lecture drew the two possible implementations --- a dynamic array and a chain of linked nodes --- but left the \emph{code} for the linked version unwritten. This assignment is that code.
+
+The point is not the code itself; it is the \key{pointer discipline} the lecture drilled: every \texttt{malloc} returns a pointer you must check against \texttt{NULL}; every \texttt{malloc} must eventually be matched by a \texttt{free}; and you never dereference \texttt{NULL}. A linked chain is the smallest program that forces you to practice all three at once.
+
+\section{Your task}
+
+Implement the Bag ADT in C as a \textbf{singly-linked chain of nodes on the heap}. The bag is represented by a pointer to its first node; the empty bag is \texttt{NULL}.
+
+The contract is given to you in \texttt{bag.h} --- \emph{do not modify it}. Implement the four functions in \texttt{bag.c}:
+
+\begin{verbatim}
+Node *bag_insert(Node *head, int x);   /* add x; return the new head      */
+int   bag_member(const Node *head, int x); /* 1 if present, else 0        */
+int   bag_size(const Node *head);      /* number of items                 */
+void  free_bag(Node *head);            /* free every node (no-op on NULL) */
+\end{verbatim}
+
+\textbf{Insertion goes at the front.} Allocate one new node with \texttt{malloc(sizeof(Node))}; if \texttt{malloc} returns \texttt{NULL}, leave the bag unchanged and return the original \texttt{head}. Otherwise set the node's \texttt{data} to \texttt{x}, its \texttt{next} to the old \texttt{head}, and return the new node.
+
+\textbf{Membership and size walk the chain.} \texttt{member} returns 1 the moment it finds a node whose \texttt{data} equals \texttt{x}, and 0 if it reaches the end; \texttt{size} counts nodes until it reaches \texttt{NULL}.
+
+\textbf{Freeing must visit every node.} In \texttt{free\_bag}, save \texttt{p->next} \emph{before} calling \texttt{free(p)} --- otherwise you read freed memory. Loop until \texttt{p} is \texttt{NULL}. Called on \texttt{NULL} (the empty bag), it must do nothing and not crash.
+
+\section{Constraints}
+
+\begin{itemize}
+  \item Representation must be a linked chain of heap nodes --- no arrays, no global variables, no recursion.
+  \item Correctness is graded against the contract, not against a particular coding style; but your code must compile with \texttt{gcc -Wall -Wextra} without errors.
+  \item Memory discipline is part of the grade: every allocated node freed on \texttt{free\_bag}; no use-after-free; no unchecked \texttt{malloc}.
+  \item Complexity: \texttt{insert} should be $O(1)$ (front insertion needs no traversal); \texttt{member} and \texttt{size} are $O(n)$ by nature of a chain.
+\end{itemize}
+
+\section{Worked examples (these are the visible tests)}
+
+\textbf{Example 1 --- the empty bag.} Start with \texttt{head = NULL}: \texttt{size} is 0, \texttt{member(7)} is 0.
+
+\textbf{Example 2 --- insert three values.} After \texttt{insert(3)}, \texttt{insert(5)}, \texttt{insert(7)}: \texttt{size} is 3. \texttt{member(3)}, \texttt{member(5)}, and \texttt{member(7)} each return 1, while \texttt{member(9)} returns 0.
+
+\textbf{Example 3 --- free and rebuild.} After \texttt{free\_bag}, the bag is empty again: \texttt{size} is 0. Insert 42: \texttt{member(42)} is 1 and \texttt{size} is 1.
+
+\section{What to submit}
+
+\begin{enumerate}
+  \item \texttt{bag.c} --- your completed implementation (edit \texttt{starter\_bag.c}).
+  \item \texttt{bag.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+\section{Getting started}
+
+\begin{enumerate}
+  \item Copy \texttt{starter\_bag.c} to \texttt{bag.c} and fill in the four function bodies.
+  \item Sanity-check locally:
+\begin{verbatim}
+gcc -Wall -Wextra -o test_visible test_visible.c bag.c
+./test_visible
+\end{verbatim}
+    All three worked examples should pass.
+  \item Submit \texttt{bag.c} and \texttt{bag.h}. The autograder compiles your \texttt{bag.c} against a \emph{hidden} test suite and reports pass/fail. The hidden suite covers empty/single-element boundaries, front/middle/tail positions, duplicates, negatives, a 10{,}000-node chain, and reuse after \texttt{free}.
+\end{enumerate}
+
+\end{document}
