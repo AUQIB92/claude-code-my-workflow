@@ -12,7 +12,9 @@
 # It runs two gates against the STAGED changes and aborts the commit on
 # failure:
 #   1. Surface-sync (ALWAYS): count + enumerative-table-row consistency,
-#      skill integrity, model-version currency — deterministic and fast.
+#      skill integrity, model-version currency, TikZ-extraction freshness
+#      (Beamer diagrams vs. their Quarto-embedded SVG source) — deterministic
+#      and fast.
 #   2. Quality score (>= 80) on staged .qmd / .tex / .R files with rubrics.
 #
 # Escape hatches (use sparingly; record the reason in the commit message):

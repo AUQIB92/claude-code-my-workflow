@@ -8,6 +8,11 @@ format:
     theme: [default, ../theme-template.scss]
     slide-number: true
     incremental: false
+    include-after-body:
+      text: |
+        <!-- Cloudflare Web Analytics -->
+        <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a1fe2658b43b4757be5204e3c4812746"}'></script>
+        <!-- End Cloudflare Web Analytics -->
 footer: "CS301"
 bibliography: ../../Bibliography_base.bib
 ---
