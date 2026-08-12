@@ -1,0 +1,15 @@
+/**
+ * DMux4Way: routes in to exactly one of 4 outputs, selected by sel[2].
+ * sel==00 -> a, sel==01 -> b, sel==10 -> c, sel==11 -> d; all others 0.
+ * sel[1] splits in into an {a,b} group vs a {c,d} group; sel[0] splits
+ * each group into its final output.
+ */
+CHIP DMux4Way {
+    IN in, sel[2];
+    OUT a, b, c, d;
+
+    PARTS:
+    DMux(in=in, sel=sel[1], a=abIn, b=cdIn);
+    DMux(in=abIn, sel=sel[0], a=a, b=b);
+    DMux(in=cdIn, sel=sel[0], a=c, b=d);
+}

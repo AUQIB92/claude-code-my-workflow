@@ -126,6 +126,24 @@ paths:
 | 7 | Microprogrammed Control | How does a control unit driven by stored microinstructions work? | Control word, microaddress | Horizontal/vertical microcode |
 | 8 | I/O Techniques | Who watches an I/O device, and how much of the CPU does watching cost? | KIN/DOUT, IE/KIRQ/DIRQ, IPENDING/IENABLE, Master-ready/Slave-ready, BR/BG | Polling vs. interrupts vs. DMA vs. IOP head-to-head; synchronous vs. asynchronous bus timing |
 
+## Practical / Lab Component (Nand2Tetris Track)
+
+**Source of truth:** `syllabi/CS401_Lab_Syllabus_Nand2Tetris.pdf` (uploaded 2026-08-12) — the institute's official lab syllabus for CS401's L-T-P practical component (25% / 50 marks), previously undocumented anywhere in this workflow. Follows Nisan & Schocken's Nand2Tetris hardware track (*The Elements of Computing Systems*, Projects 1-5): five practicals building a full computer from a single Nand gate upward.
+
+| Lab | Weeks (own schedule) | Chips/Tasks | Real source lecture for pre-lab theory | Status |
+|---|---|---|---|---|
+| 1 — Boolean Logic & Elementary Gates | 1-2 | 15 chips (Not..DMux8Way), all from Nand | *(none — gate-level Boolean algebra is a course prerequisite, not covered by any CS401 lecture; cite P&H App. A.2-A.4 directly, see below)* | Built |
+| 2 — Boolean Arithmetic & the ALU | 3-4 | HalfAdder, FullAdder, Add16, Inc16, ALU (18 ops) | Week 2 (`02-number-systems-arithmetic` — two's complement, ripple-carry adders, ALU) | Planned |
+| 3 — Sequential Logic & Memory | 5-7 | Bit, Register, RAM8→RAM16K (recursive), PC | Week 4 (`04-registers-instructions` — register organization) | Planned |
+| 4 — Machine Language Programming | 8-9 | Hand-assembly; Mult.asm; Fill.asm | Week 4 (`04-registers-instructions` — instruction formats/cycle) | Planned |
+| 5 — CPU & Computer (capstone) | 10-12 | CPU, Memory, Computer | Weeks 5-7 (`05-addressing-cpu-bus`, `06-hardwired-control`, `07-microprogrammed-control` — CPU organization, control-unit design) | Planned |
+
+**Week-offset note:** the source PDF's own "CoA Unit Mapped" column names lecture *topics*, not the lecture's actual scheduled week — each lab runs 3-5 weeks after the CS401 lecture that actually teaches its prerequisite theory (e.g. Lab 4's "Instruction Set Architecture" theory is Week 4's content, but Lab 4 itself runs weeks 8-9). Confirmed with the instructor (2026-08-12) as intentional: Nand2Tetris has its own internal build-order (gates → arithmetic → memory → assembly → CPU) that doesn't need to lockstep with the lecture's chapter pacing. Every lab manual's Pre-Lab Reading section cites the lecture that **actually** covers the concept, not the lecture nominally running in the lab's own scheduled week.
+
+**Toolchain:** the free Nand2Tetris software suite (Hardware Simulator, CPU Emulator, Assembler) + JRE 8+, from nand2tetris.org — entirely student-side. Nothing in this repo's own toolchain runs Java or executes `.hdl`/`.asm` files.
+
+**Verification approach:** each lab ships **instructor-only reference solutions** (`Labs/CS401/lab-N-*-reference/`, never synced to `docs/` by `/deploy`) in the actual submission format — real `.hdl` files (`hdl/*.hdl`), written in the syntax confirmed against `syllabi/Hardware_Simulator_Tutorial.pdf` — plus a parallel Python design reference (`chips.py`). Since the real grading tool (the Java Hardware Simulator) can't run in this environment, a small custom HDL interpreter (`hdl_simulator.py`) parses and executes the actual `.hdl` files, and both the `.hdl` and Python references are checked against the same independent oracle (Python's native bitwise operators) via `test_hdl.py` / `test_chips.py` — not against each other, so a shared bug in one implementation wouldn't silently validate the other.
+
 ## Empirical Applications
 
 | Application | Paper | Dataset | Lecture(s) | Purpose |

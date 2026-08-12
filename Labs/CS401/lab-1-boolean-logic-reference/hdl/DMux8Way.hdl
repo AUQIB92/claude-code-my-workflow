@@ -1,0 +1,15 @@
+/**
+ * DMux8Way: routes in to exactly one of 8 outputs, selected by sel[3].
+ * sel==000 -> a, ..., sel==111 -> h; all others 0.
+ * sel[2] splits in into an {a..d} group vs an {e..h} group; sel[0..1]
+ * splits each group into its final output via DMux4Way.
+ */
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    DMux(in=in, sel=sel[2], a=abcdIn, b=efghIn);
+    DMux4Way(in=abcdIn, sel=sel[0..1], a=a, b=b, c=c, d=d);
+    DMux4Way(in=efghIn, sel=sel[0..1], a=e, b=f, c=g, d=h);
+}
