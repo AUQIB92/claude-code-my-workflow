@@ -1,0 +1,121 @@
+course: CS301
+lab_mode: coding-assignment   # P1-P13 C programming practicals map to weeks -> /coding-assignment
+last_updated: 2026-08-13
+weeks:
+  "00":
+    deck: "00-course-motivation-overview"
+    stages:
+      slides:     { status: deployed, score: null, note: "Motivation/overview deck; not in the syllabus work-list" }
+      notes:      { status: absent,   score: null, note: "" }
+      assignment: { status: absent,   score: null, note: "" }
+      lab:        { status: absent,   score: null, note: "" }
+      gate:       { status: absent,   score: null, note: "" }
+      quarto:     { status: deployed, score: null, note: "" }
+  "01":
+    deck: "01-foundations-pointers-adt"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: deployed, score: null, note: "coding-assignment (pointer/dynamic-memory warm-up)" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: deployed, score: null, note: "" }
+  "02":
+    deck: "02-algorithm-analysis"
+    stages:
+      slides:     { status: compiled, score: null, note: "3-pass compile clean; 0 overfull, 0 undefined citations; 44 frames; 4 growth-curve TikZ diagrams (Big O/Omega/Theta + orders-of-growth)" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "instructor-supplied (empirical timing vs predicted growth)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "03":
+    deck: "03-arrays-stacks"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P1 (parenthesis check), P2 (postfix evaluation)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "04":
+    deck: "04-expression-evaluation"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P3 (infix->postfix/prefix), P4 (prefix->postfix)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "05":
+    deck: "05-queues"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P5 (circular queue), P6 (priority queue)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "06":
+    deck: "06-linked-lists-singly"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "instructor-supplied (singly-linked-list operations)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "07":
+    deck: "07-linked-lists-doubly-applications"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P7 (doubly-linked-list operations)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "08":
+    deck: "08-searching-elementary-sorting"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "instructor-supplied (binary search and variants)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "09":
+    deck: "09-efficient-sorting"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P9 (quick sort), P10 (shell sort), P11 (merge sort)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "10":
+    deck: "10-file-organization-hashing"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "instructor-supplied (hash-table construction/collision handling)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "11":
+    deck: "11-trees-bst-avl"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P8 (sort via BST), P12 (BST and traversals)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "12":
+    deck: "12-graphs-traversal-mst-shortest-path"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: absent, score: null, note: "P13 (graphs and graph traversals)" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
