@@ -1,0 +1,71 @@
+# Course Progress Registry — schema
+
+A per-course execution-state file, colocated with the syllabus it derives from
+(`syllabi/<CODE>.progress.yaml`). The **syllabus** is the plan (weeks, topics,
+readings, deck names); this file is the **execution state** (what stage is done,
+what passed which gate, what's next). Committed so collaborators/forkers see the
+"what's done" signal; per-course so two courses edited in parallel don't collide.
+
+`/build-week` is the primary reader/writer. Disk is authoritative for *existence*
+(the same scan `/publish-course-hub` runs over `Slides/`, `Notes/`, `Assignments/`,
+`Labs/`, `Quarto/`, `docs/`); this file adds what disk can't hold — gate scores,
+notes, and the `lab_mode`/deck mapping.
+
+## Top-level fields
+
+| Field | Values | Meaning |
+|---|---|---|
+| `course` | `CS401`, … | Course code; must match `syllabi/<CODE>.md`. |
+| `lab_mode` | `none` · `lab-manual` · `coding-assignment` | Which skill the `/build-week` `lab` stage delegates to. `none` = no per-week lab stage (labs are a separate numbered track run directly). |
+| `last_updated` | `YYYY-MM-DD` | Last registry reconcile. |
+
+## `weeks` map
+
+Keyed by two-digit week string (`"01"` … `"12"`, plus `"00"` if an intro deck
+exists that is not in the syllabus work-list). Each week:
+
+| Field | Meaning |
+|---|---|
+| `deck` | Deck/lecture stem, e.g. `01-intro-performance` (the `NN-topic-slug` convention; `Slides/<CODE>/<deck>.tex`). |
+| `stages` | Map of the 7 canonical stage names → `{status, score, note}`. |
+
+## Stage status
+
+| `status` | Meaning |
+|---|---|
+| `absent` | No source artifact on disk for this stage. |
+| `present` | Source exists (`.tex`/`.qmd`) but no compiled/rendered output. |
+| `compiled` | Local compiled/rendered output exists (`.pdf`/HTML) but not in `docs/`. |
+| `deployed` | Published output exists in `docs/`. |
+| `skipped` | Stage not applicable to this week/course (e.g. `lab` on CS401, whose Nand2Tetris labs are a separate numbered track). |
+
+`score` is a nullable int (0–100, from `quality_score.py` or the stage's gate);
+`note` carries the gate verdict string or free text.
+
+## Starter
+
+```yaml
+course: <CODE>
+lab_mode: none            # none | lab-manual | coding-assignment
+last_updated: YYYY-MM-DD
+weeks:
+  "01":
+    deck: "01-<topic-slug>"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: skipped, score: null, note: "" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+```
+
+## The 7 canonical stages (order is load-bearing)
+
+1. `slides` — `/create-lecture` + `/compile-latex`
+2. `notes` — `/lecture-notes` + `/qa-notes`
+3. `assignment` — `/create-assignment` (+ compile)
+4. `lab` — `/lab-manual` **or** `/coding-assignment`, per `lab_mode` (`none` = skip)
+5. `gate` — `/competitive-exam-questions` (default GATE-CS)
+6. `quarto` — `/translate-to-quarto` + `/qa-quarto` + `/deploy`
+7. `hub` — `/publish-course-hub <CODE>` (final, once per course after deploy)
