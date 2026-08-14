@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>20 agents, 64 skills, 38 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>20 agents, 66 skills, 38 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -286,6 +286,8 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/coding-assignment` (v2.3) | Programming assignment with a hidden test suite and autograder harness — problem statement, reference solution (run through `/verify-algorithm` first), visible + hidden tests, autograder script; the CS-native sibling to `/create-assignment`'s written problems |
 | `/trace-execution` (v2.3) | Step-by-step execution trace as a sequence of coordinate-consistent TikZ diagrams (memory/stack/heap, pointer mutation, data-structure operations) — automates the pattern hand-built for CS301 Week 1's stack/heap traces |
 | `/publish-course-hub` (v2.4) | Regenerate a course hub page's data-driven regions (lecture rail, progress ribbon, assignments/practice tables) from the syllabus + what's actually published in `docs/`, instead of hand-editing `docs/courses/<code>/index.html` every time a new week ships |
+| `/accreditation` (v2.4) | NBA-style Course Outcome → Program Outcome mapping and attainment-calculation template — numbers the syllabus's learning objectives as COs, Bloom-tags them, drafts a CO-PO-PSO correlation matrix against NBA's 12 fixed POs (faculty-review draft, never auto-filed), maps each CO to its assessment tool, and emits the attainment formulas with `[FILL]` placeholders instead of fabricated scores |
+| `/build-week` (v2.5) | Semester autopilot — resolve a `<CourseCode>/<week>` from the syllabus work-list and run the 7-stage pipeline (slides → notes → assignment → lab → GATE set → Quarto/deploy → hub), delegating each stage to its owning skill via `Task` and reconciling a per-course `syllabi/<CODE>.progress.yaml` registry, with checkpoint approval between stages |
 
 ### Research Workflow
 

@@ -1,8 +1,8 @@
-# Literature Review: From Prompt to Render — Architectures, Benchmarks, and Evaluation Gaps in LLM-Based Educational Video Generation
+# Literature Review: From Prompt to Render — A Systematic Literature Review on LLMs for Educational Video/Animation Generation
 
-**Date:** 2026-08-06
-**Query:** From Prompt to Render: Architectures, Benchmarks and Evaluation Gaps in LLM-Based Educational Video Generation — comprehensive survey, organized around three pillars: (1) architectures of LLM-based/generative pipelines for educational video generation, (2) benchmarks and datasets used to evaluate these systems, (3) evaluation gaps between what's measured and what matters pedagogically.
-**Verification status:** Post-Flight (CoVe) run — see block at the end of this document.
+**Date:** 2026-08-06 (Round 1) / 2026-08-13 (Round 2 — SLR expansion)
+**Query:** From Prompt to Render: A Systematic Literature Review on Large Language Models for Educational Video/Animation Generation — expanded from a narrative survey (Round 1, 15 sources) into a full SLR with search strategy, inclusion/exclusion criteria, PRISMA-style selection flow, and an animation-specific literature thread (Round 2, +10 primary sources, +2 methodology references, +2 related-work secondary studies).
+**Verification status:** Two independent Post-Flight (CoVe) runs — Round 1 block and Round 2 blocks at the end of this document.
 
 ---
 
@@ -269,6 +269,102 @@ This is where the review's title's third pillar concentrates the most consequent
 
 ---
 
+## Round 2 — SLR Expansion (2026-08-13)
+
+Round 1 (above) was a narrative survey. Per user request, Round 2 adds: (a) formal SLR machinery (RQs, search strategy, inclusion/exclusion criteria, PRISMA-style selection counts — now implemented directly in the manuscript's Methodology section, not duplicated here), (b) an animation-specific literature thread the Round 1 search under-covered, and (c) a wider search for human-subject learning-outcome studies. This section documents the *content* additions; the formal SLR apparatus lives in `Papers/prompt-to-render-educational-video-generation.tex` §Methodology.
+
+### New Key Papers (animation-specific thread)
+
+### Silva, Lotfi, Ihianle, Shahtahmassebi & Bird (2026) — Training and Agentic Inference Strategies for LLM-based Manim Animation Generation
+- **Main contribution:** ManimTrainer (SFT + GRPO reinforcement learning) and ManimAgent (renderer-in-the-loop inference strategies) for generating Manim animation code.
+- **Method:** Evaluates 17 open-source sub-30B LLMs across nine training/inference combinations on a new benchmark, ManimBench.
+- **Key finding:** Qwen 3 Coder 30B reaches 94% Render Success Rate and 85.7% Visual Similarity, +3 percentage points over a GPT-4.1 baseline.
+- **Relevance:** The first systematic training-strategy comparison for LLM-based Manim generation — complements Code2Video's Planner-Coder-Critic architecture with an orthogonal question (how do you *train* the coder, not just orchestrate it).
+
+### Li, He, Li, Chen, Xia, Su, Zhang & Ye (2026) — See Before You Code: Learning Visual Priors for Spatially Aware Educational Animation Generation
+- **Main contribution:** OmniManim, a render-feedback-aware framework with a Vision Agent that predicts sparse keyframe layouts before code generation, addressing the layout/overlap defects that only surface after rendering.
+- **Method:** Introduces two datasets, ManimLayout-1K and EduRequire-500 (the latter used as the evaluation benchmark).
+- **Key finding:** Outperforms single-model and multi-agent baselines on layout-related metrics.
+- **Relevance:** Directly targets a failure mode (spatial/layout defects) none of the Round 1 architecture papers evaluate explicitly.
+
+### Liao, Ma, Lin, Zeng, Zheng & Ji (2026) — ALGOGEN: Tool-Generated Verifiable Traces for Reliable Algorithm Visualization
+- **Main contribution:** Decouples algorithm execution from rendering via a "Visualization Trace Algebra" (VTA) and a "Rendering Style Language" (RSL), rather than having an LLM generate animation code end-to-end.
+- **Method:** Python trackers produce verifiable VTA-JSON traces; a deterministic renderer compiles them.
+- **Key finding:** 99.8% vs. 82.5% success rate against end-to-end baselines; 17.3% average improvement on a 200-task LeetCode algorithm-visualization benchmark.
+- **Relevance:** The clearest algorithm-visualization-specific instance of this survey's central architectural claim (decomposition beats end-to-end generation) — here decomposing all the way down to a verifiable intermediate trace format, one level more granular than Code2Video's "generate correct code" approach.
+
+### Samarth, Jain, Golugula & Sathvik (2025) — Manimator: Transforming Research Papers into Visual Explanations
+- **Main contribution:** An open-source two-stage LLM pipeline (paper/prompt → structured scene description → Manim Python code) for turning research papers into animated explanations.
+- **Relevance:** A simpler, earlier (July 2025) instance of the "paper-to-animation" pattern that Code2Video and ManimAgent (below) later extend with critics and memory.
+
+### Joshi, Ke, Gajjar, Christian, Wang & Chen (2026) — LLM2Manim: Pedagogy-Aware AI Generation of STEM Animations
+- **Main contribution:** A human-in-the-loop pipeline embedding multimedia-learning principles (segmentation, signaling, dual coding) directly into constrained prompt templates for Manim generation.
+- **Method:** Within-subject A-B study, 100 undergraduate students.
+- **Key finding:** Animation-based instruction produced modestly higher post-test scores (83% vs. 78%, p < .001, authors characterize this as a "slight" improvement), with a larger engagement effect (d = 0.94) and a moderate learning-gains effect (d = 0.67) and cognitive-load reduction (d = 0.41).
+- **Relevance:** **The third genuine controlled human-learning-outcome study found across the full corpus** (after Stavrinou et al. and Leinonen et al. in Round 1) — and the first one specific to generated *animation* rather than video or slides. This directly updates this survey's central finding (see Round 2 gap re-analysis below).
+
+### Jiang, Cai, Shao, Wang, Han, Song, Chen, An, Yang & Yang (2026) — ManimAgent: Self-Evolving Multimodal Agents for Visual Education
+- **Main contribution:** A self-evolving agent (project name Paper2Manim) that carries reflection experience across tasks via a dual-channel Episodic Memory Bank (positive: success rationales; negative: validated failure patterns), built entirely from its own task stream with no weight updates.
+- **Key finding:** Blind human Pass@1 rises and reflection rounds fall as memory size grows, versus no-memory and shuffled-memory controls.
+- **Relevance:** **Name collision warning:** this is a *different* system from Silva et al.'s "ManimAgent" (both 2026, both Manim-focused, unrelated). Disambiguated in the manuscript by author + arXiv ID.
+
+### Prasad & Mahapatra (2026) — Speech-Synchronized Whiteboard Generation via VLM-Driven Structured Drawing Representations
+- **Main contribution:** The first dataset (24 paired Excalidraw demonstrations with narrated audio, millisecond-precision stroke timestamps, 8 STEM domains) for whiteboard-style educational video generation, plus a fine-tuned Qwen2-VL-7B (LoRA) that predicts stroke sequences synchronized to speech.
+- **Relevance:** A structurally distinct decomposition strategy — the "intermediate representation" here is a stroke-sequence/drawing representation, not code or a script, extending this survey's architecture taxonomy to a new modality (whiteboard/freehand illustration).
+
+### Ku, Chong, Leung, Shah, Yu & Chen (2025) — TheoremExplainAgent: Towards Video-based Multimodal Explanations for LLM Theorem Understanding
+- **Main contribution:** An agent-based system generating 5+ minute Manim videos explaining mathematical theorems; introduces TheoremExplainBench (240 theorems, 5 automated evaluation metrics).
+- **Key finding:** An o3-mini-based agent reaches 93.8% success rate and an overall score of 0.77; the authors also show multimodal (video) explanations expose LLM reasoning failures that text-only evaluation misses.
+- **Relevance:** One of the earliest (Feb 2025) and largest-benchmark instances of the Manim-code-intermediate pattern; also a rare case where the generated artifact is used to *probe the generating model itself*, not just to teach a human.
+
+### Jo, Zhao, Liu & Suzuki (2025) — Generative Lecture: Making Lecture Videos Interactive with LLMs and AI Clone Instructors
+- **Main contribution:** Converts existing lecture videos into interactive experiences via an AI-cloned instructor (HeyGen avatar + ElevenLabs voice + GPT-5), supporting on-demand clarification, adaptive quizzes, personalized explanation, and six other features.
+- **Method:** Design elicitation study (N=8), user evaluation study (N=12), expert feedback (N=5).
+- **Relevance:** A genuine (if small-N) human-evaluation study, extending Round 1's "avatar/narration synthesis" architecture family (ALIVE) toward post-hoc interactivity rather than generation from scratch.
+
+### Pellas (2025) — The Impact of AI-Generated Instructional Videos on Problem-Based Learning in Science Teacher Education
+- **Main contribution:** A controlled comparison of two AI-generated instructional video formats (with vs. without an embedded preview feature) on self-efficacy, task performance, and knowledge retention/transfer.
+- **Method:** 55 Greek pre-service science teachers (mean age 27.3, range 22–35).
+- **Key finding:** Both video formats effectively supported self-efficacy, task performance, and retention; no significant difference between preview conditions.
+- **Relevance:** **The fourth genuine controlled human-learning-outcome study** in the full corpus, and — unlike LLM2Manim, Stavrinou et al., and Leinonen et al. — evaluates AI-generated instructional *video* (not animation or slides) with a real classroom-adjacent population (pre-service teachers), published in a peer-reviewed journal (*Education Sciences*) rather than as an arXiv preprint.
+- **Citation:** Pellas, N. (2025). *Education Sciences*, 15(1), 102. https://doi.org/10.3390/educsci15010102
+
+### Related-Work secondary studies (NOT part of the primary corpus — discussed for positioning, per Related Work protocol)
+
+### Zhang & Shukor (2025) — Role of AI-Generated Instructional Videos: A Systematic Literature Review
+- PRISMA-based SLR: 3,271 initial records across six databases → 21 included. Scope: educational theories and the role of AI-generated instructional video in higher education.
+- **Why it doesn't substitute for this SLR:** covers pedagogical role/theory, not generation *architectures* or *benchmarks* — the two pillars this survey's title promises.
+- **Citation:** Zhang, J. & Shukor, N.A. (2025). *International Journal of Academic Research in Progressive Education and Development*, 14(4), 31–42.
+
+### Shu, Kou, Zhang, Zhang, Zhang, Xu & Zhou (2025) — AI-Generated Instructional Videos: A Systematic Review of Learning Impacts, Applications, and Research Perspectives
+- SLR: 143 initial records across four databases (Web of Science, ERIC, IEEE Xplore, Google Scholar) → 12 included.
+- **Key finding (corrected — see Round 2 Post-Flight discrepancy below):** AI-generated instructional video quality is "sufficient for educational use" but the authors conclude it "cannot yet replace traditionally produced videos," citing limitations in learning motivation and social presence.
+- **Why it doesn't substitute for this SLR:** learning-impact/applications focused; does not review generation architectures, code/script/trace intermediates, or technical benchmarks (VBench-style or education-specific).
+- **Citation:** Shu, J., Kou, H., Zhang, J., Zhang, T., Zhang, H., Xu, T., & Zhou, Y. (2025). Proceedings of CSTE 2025 (7th Intl. Conf. on Computer Science and Technologies in Education), pp. 877–881. https://doi.org/10.1109/CSTE64638.2025.11091997
+
+### Methodology references (cited in the manuscript's Methodology section only — not part of the surveyed-systems corpus)
+
+- Page, M.J. et al. (2021). "The PRISMA 2020 statement: an updated guideline for reporting systematic reviews." *BMJ*, 372, n71.
+- Kitchenham, B. & Charters, S. (2007). "Guidelines for performing Systematic Literature Reviews in Software Engineering." EBSE 2007-001, Keele University and Durham University Joint Report.
+
+### Screened-and-excluded examples (illustrative, not exhaustive — full PRISMA counts are in the manuscript)
+
+| Record | Reason excluded |
+|---|---|
+| ViMax (arXiv:2606.07649) | General-purpose long-form video generation; no education-specific framing (retained only as brief narrative context, like Sora/CogVideoX, not counted in the included corpus) |
+| ViviDoc (arXiv:2603.27991) | Generates interactive documents, not video/animation; not education-specific |
+| Data Playwright (arXiv:2410.03093) | LLM-powered, but generates data-journalism videos, not educational content |
+| "AI instructional agent…RCT" (arXiv:2505.22526) | Real-time live-taught agent; produces no pre-rendered video/animation/slide artifact |
+| "Faster Completion, Less Learning" (arXiv:2605.21629) | About general genAI use on math problems (ALEKS); no video/animation generation system involved |
+| VideoWeaver, Co-Director, Crayotter, OmniShow, CausalCine | General-purpose video generation/editing systems, no education-specific framing |
+| AnimatedLLM (arXiv:2601.04213), VISTA (arXiv:2411.05423) | Adjacent LLM+visualization work, but not educational-content animation generation (LLM-internals visualization; math problem generation, respectively) |
+
+### Round 2 gap re-analysis
+
+With the animation-specific thread and wider human-subject search added, the corpus grows to **25 included systems/benchmarks/studies** (15 Round 1 + 10 Round 2). The central finding is **updated, not overturned**: the count of papers reporting a genuine controlled human-learning-outcome study rises from **2 of 19** (Round 1) to **4 of 25** (Round 1 + 2) — Stavrinou et al. (ReelsEd), Leinonen et al. (AI slides), LLM2Manim (animation), and Pellas (instructional video). Two of the four new-thread additions (LLM2Manim, Generative Lecture) do include human evaluation, suggesting the newer (2026) wave of animation/interactivity-focused systems is somewhat more likely to report human data than the 2025 wave of end-to-end video pipelines — but at 4/25 (16%), the field's evaluation practice still overwhelmingly measures the generated artifact, not the learner.
+
+---
+
 ## Post-Flight Verification
 
 **Claims extracted:** 15 (one per cited paper: title, authors, and the specific factual assertion attributed to it)
@@ -308,3 +404,62 @@ None.
 - Code2Video's "executable Manim code" detail is confirmed but comes from the paper's method section, not its abstract — cite accordingly if you pull this into a formal manuscript.
 - VBench's and EvalCrafter's CVPR 2024 venue is correct but not stated in either paper's arXiv "comments" field — cite the CVF proceedings version, not the bare arXiv ID, if venue precision matters for a submission.
 - PASS's evaluation dimensions (relevance/coherence/redundancy) are distinct from PPTAgent's PPTEval dimensions (Content/Design/Coherence) — easy to conflate; kept distinct in this draft.
+
+---
+
+## Round 2 Post-Flight Verification (Batch 1 — new primary-corpus claims)
+
+**Claims extracted:** 13
+**Verified independently:** 13 (forked `claim-verifier` agent, fresh context)
+**Outcome:** **PASS** — 0 HIGH-WARN, 0 MED-WARN, 0 discrepancies. All 11 author lists (5, 8, 6, 4, 6, 10, 2, 6, 6, 4, 5 authors respectively) matched exactly.
+
+### Verified
+
+| ID | Claim | Evidence |
+|----|-------|----------|
+| N1 | Silva et al. (arXiv:2604.18364): 5 authors, ManimTrainer/ManimAgent, ManimBench, Qwen 3 Coder 30B 94% RSR / 85.7% VS, +3pp over GPT-4.1 | arXiv abstract, verbatim |
+| N2 | Li et al. (arXiv:2605.15585): 8 authors, OmniManim, Vision Agent, ManimLayout-1K + EduRequire-500 | arXiv abstract, verbatim |
+| N3 | Liao et al. (arXiv:2605.12159): 6 authors, VTA+RSL, 200-task LeetCode, 17.3% improvement, 99.8% vs 82.5% | arXiv abstract, verbatim |
+| N4 | Samarth et al. (arXiv:2507.14306): 4 authors, two-stage LLM pipeline | arXiv abstract |
+| N5 | Joshi et al. (arXiv:2604.05266): 6 authors, 100 UG students, 83% vs 78% p<.001, d=0.67/0.94/0.41 | arXiv abstract, verbatim |
+| N6 | Jiang et al. (arXiv:2606.30296): 10 authors, dual-channel Episodic Memory Bank, Paper2Manim (confirmed via arXiv comments/code field, not abstract) | arXiv abstract + comments field |
+| N7 | Prasad & Mahapatra (arXiv:2603.25870): 2 authors, 24 Excalidraw demos, 8 STEM domains, Qwen2-VL-7B+LoRA | arXiv abstract, verbatim |
+| N8 | Ku et al. (arXiv:2502.19400): 6 authors, TheoremExplainBench 240 theorems, o3-mini 93.8%/0.77 | arXiv abstract, verbatim |
+| N9 | Huang et al. (arXiv:2606.07649, ViMax): 6 authors, general-purpose, no education framing | arXiv abstract |
+| N10 | Jo et al. (arXiv:2512.21796): 4 authors, N=8/12/5 studies, HeyGen+ElevenLabs+GPT-5 | arXiv abstract |
+| N11 | Qin et al. (arXiv:2505.22526): 5 authors, real-time live agent (not a generated artifact) — confirms exclusion rationale | arXiv abstract |
+| N12 | Page et al., PRISMA 2020, BMJ 2021;372:n71 | PMC8005924 + PLOS Med + PMC8008539, cross-confirmed |
+| N13 | Kitchenham & Charters (2007), EBSE 2007-001 | Retrieved report cover page |
+
+### Advisory notes (non-blocking, applied in the manuscript)
+
+- N1: "percentage points," not "points" (VS is itself a %); the 17-model set is specifically sub-30B.
+- N2: ManimLayout-1K and EduRequire-500 are both "datasets"; only EduRequire-500 is the evaluation benchmark.
+- N5: authors themselves call the 83%-vs-78% gap a "slight" improvement — manuscript should not overstate it.
+- N1/N6: genuine name collision — two unrelated 2026 papers both name a system "ManimAgent." Disambiguated in the manuscript by author name + arXiv ID at first use.
+- N13: report-number variant exists ("EBSE-2007-01" vs "EBSE 2007-001"); used the more common form consistently.
+
+---
+
+## Round 2 Post-Flight Verification (Batch 2 — Related Work secondary studies)
+
+**Claims extracted:** 5
+**Verified independently:** 5 (forked `claim-verifier` agent, fresh context)
+**Outcome:** **FAIL → regenerated.** 1 HIGH-WARN caught and corrected before use; 1 MED-WARN qualified; 3 PASS.
+
+### Discrepancy (HIGH-WARN, corrected)
+
+- **M3** — Draft claim (from an uncorroborated web-search summary) attributed "134 publications from EBSCO, EI Compendex, Scopus, and Web of Science" to Shu et al. (2025, CSTE). The verifier traced this to a **different paper** — Chen, X., Hu, Z., & Wang, C. (2024), "Empowering education development through AIGC: A systematic literature review," *Educational and Information Technologies*, 29(13), 17485–17537 (DOI 10.1007/s10639-024-12549-7). Shu et al.'s actual numbers, confirmed via OpenAlex/Crossref/Semantic Scholar: **143 initial records** across **Web of Science, ERIC, IEEE Xplore, and Google Scholar**, **12 included** in the final analysis. **Corrected in the manuscript and in this document** (see "Related-Work secondary studies" above) — the erroneous 134/EBSCO/EI-Compendex figures do not appear anywhere in the final output.
+
+### Qualified (MED-WARN)
+
+- **M3 finding statement** — original draft phrasing ("no significant performance difference between human and AI-generated instructors") drops a caveat present in the abstract ("cannot yet replace traditionally produced videos... limitations in learning motivation and social presence"). Manuscript uses the fuller, caveated phrasing.
+
+### Verified
+
+| ID | Claim | Evidence |
+|----|-------|----------|
+| M1 | Pellas (2025), *Educ. Sci.* 15(1):102, DOI 10.3390/educsci15010102; 55 Greek pre-service teachers, mean age 27.3 | Crossref + OpenAlex + Semantic Scholar abstract, verbatim |
+| M2 | Zhang & Shukor (2025), IJARPED 14(4):31–42; 3,271 records / 6 databases → 21 included | Publisher article page, verbatim |
+| M4 | ViviDoc (arXiv:2603.27991): interactive documents, not video; 101-topic/11-domain benchmark (corrected framing — 11 domains describe topic provenance, not 11 separate evaluations) | arXiv abstract |
+| M5 | Data Playwright (arXiv:2410.03093): LLM-powered, data-journalism focus, not education-specific; year corrected to 2024 (OpenAlex), accepted at IEEE TVCG | arXiv abstract + OpenAlex |

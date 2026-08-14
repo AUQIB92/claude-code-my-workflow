@@ -36,6 +36,10 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 ├── Slides/<CODE>/               # Beamer .tex files, one subfolder per course
 ├── Quarto/<CODE>/                # RevealJS .qmd mirrors, same course subfolders
 ├── Notes/<CODE>/                # Prose Lecture Notes, derived from Slides/ (see single-source-of-truth.md)
+├── Assignments/<CODE>/           # Graded assignments: <lecture>-assignment.tex + -solutions.tex (never deployed)
+├── InstructorHandouts/<CODE>/    # Instructor-only teaching prep, derived from Slides/+Notes
+├── Labs/<CODE>/                  # Lab manuals: <lecture>-lab.tex + <lecture>-reference/ (instructor-only, never deployed)
+├── Accreditation/<CODE>/         # NBA/AICTE CO-PO-PSO mapping + attainment templates (see /accreditation)
 ├── syllabi/<CODE>.md            # One syllabus per course
 ├── docs/                        # GitHub Pages (auto-generated, mirrors Slides/Quarto nesting)
 ├── scripts/                     # Utility scripts + R code
@@ -102,7 +106,7 @@ Enforced by `/commit` (halts + asks for override) **and** — once you run `./sc
 
 The full table of all skills lives in [README.md](README.md#skills-claudeskills). Most-used, by workflow:
 
-- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises` `/lecture-notes` `/qa-notes` `/index-textbook`
+- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises` `/lecture-notes` `/qa-notes` `/index-textbook` `/build-week`
 - **Papers / review:** `/review-paper` (`--peer`) `/seven-pass-review` `/respond-to-referees` `/verify-claims` `/proofread` `/humanize` `/submission-disclosures`
 - **Data / reproducibility:** `/data-analysis` `/did-event-study` `/simulation-study` `/audit-reproducibility` `/diagnose` `/replication-package` `/capture-environment` `/power-analysis` `/disclosure-check`
 - **Research / writing:** `/interview-me` `/lit-review` `/research-ideation` `/preregister` `/grant-proposal` `/data-management-plan`

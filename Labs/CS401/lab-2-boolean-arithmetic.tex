@@ -1,0 +1,262 @@
+% =============================================================================
+% lab-2-boolean-arithmetic.tex — Lab 2: Boolean Arithmetic & the ALU
+% CS401 — Computer Architecture and Organization — Practical Component
+% Nand2Tetris Project 2 (Nisan & Schocken), weeks 3-4 of the lab schedule.
+%
+% Source of truth: syllabi/CS401_Lab_Syllabus_Nand2Tetris.pdf. This manual
+% reproduces that document's Lab 2 section in full (aim, tasks, deliverables,
+% rubric verbatim) with added pre-lab theory citations and worked schematic
+% figures. Hand-authored per quality_reports/plans/peaceful-greeting-riddle.md,
+% following Lab 1's validated pattern.
+%
+% Instructor-only reference solutions: lab-2-boolean-arithmetic-reference/
+% (Python + real .hdl, both checked against the same independent oracle) —
+% never synced to docs/ by /deploy.
+%
+% Compile with (Windows/MiKTeX, ; not : between paths):
+%   cd Labs/CS401 &&
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-2-boolean-arithmetic.tex
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-2-boolean-arithmetic.tex  (x2 total, no bibtex needed)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\usepackage{microtype}
+\coursecode{CS401}
+
+% Lab-number-style numbering: this is Lab 2 (distinct axis from lecture-week
+% numbering used in Notes/Assignments — no collision, separate document).
+\renewcommand{\thesection}{2.\arabic{section}}
+
+\newenvironment{aimbox}{%
+  \par\noindent\begin{minipage}{\linewidth}\vspace{0.4em}
+  \textcolor{primary-blue}{\rule{\linewidth}{0.8pt}}\\[0.3em]
+  \textbf{\textcolor{primary-blue}{Aim.}}\ \itshape
+}{%
+  \end{minipage}\vspace{0.4em}\par
+}
+
+\newenvironment{tocitebox}{%
+  \par\noindent\textbf{\textcolor{primary-gold}{Pre-Lab Reading.}}\
+}{\par\vspace{0.3em}}
+
+\title{Boolean Arithmetic \& the ALU\\\large Lab 2 --- Nand2Tetris Project 2}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{aimbox}
+To design half-adder, full-adder and multi-bit adder circuits, and to build the 16-bit Arithmetic-Logic Unit (ALU) that lies at the heart of the Hack CPU, entirely as combinational HDL circuits.
+\end{aimbox}
+
+\section{Learning Outcomes}
+
+On completing this lab, a student will be able to:
+\begin{itemize}
+  \item Explain binary addition and two's-complement representation of negative numbers.
+  \item Build a ripple-carry adder from half-adders and full-adders.
+  \item Interpret the ALU's six control bits (\texttt{zx}, \texttt{nx}, \texttt{zy}, \texttt{ny}, \texttt{f}, \texttt{no}) and derive the function they select.
+  \item Design and test a 16-bit ALU that performs 18 distinct arithmetic/logical operations from one circuit.
+\end{itemize}
+
+\section{Pre-Lab Reading}
+
+\begin{tocitebox}
+This lab's prerequisite theory was already introduced in \textbf{Week 2} --- review that lecture's treatment of two's-complement addition/subtraction, the half-adder (HA) and full-adder (FA) Boolean equations $S = A\oplus B$, $C = A\cdot B$ (HA) and $S = A\oplus B\oplus C_{in}$, $C_{out} = A\cdot B + C_{in}(A\oplus B)$ (FA), the 4-bit ripple-carry adder, and the ``subtraction is free'' idea (compute $A-B$ as $A+\overline{B}+1$ via a MUX plus a forced carry-in) --- the last of these directly foreshadows this lab's \texttt{f}/\texttt{no} control bits. Page-verified source for that lecture's citations: Patterson \& Hennessy, \emph{Computer Organization and Design, ARM Edition}, \S 2.4 \emph{Signed and Unsigned Numbers} (p.\,75), \S 3.2 \emph{Addition and Subtraction} (p.\,188).
+
+\smallskip
+\noindent What this lab adds that Week 2 does not cover: the Nand2Tetris ALU's specific 6-control-bit API and 18-operation selection table (Section~\ref{sec:tasks} below). For general background on multifunction-ALU construction from an adder, see Patterson \& Hennessy Appendix A --- \S A.5 \emph{Constructing a Basic Arithmetic Logic Unit} (p.\,A-26, Fig.\ A.5.6) and \S A.6 \emph{Faster Addition: Carry Lookahead} (p.\,A-37); this is general treatment of ALU design, not a page-precise description of Nand2Tetris's own zx/nx/zy/ny/f/no scheme. Hamacher Ch.\,9 and Mano Ch.\,1 (both cited for Week 2) are not page-indexed here --- chapter-level citation only, per the textbook-grounding rule.
+
+\smallskip
+\noindent Also review the Lab 1 gate library (\texttt{Not}, \texttt{And}, \texttt{Or}, \texttt{Xor}, \texttt{Mux}, \texttt{Not16}, \texttt{And16}, \texttt{Or8Way}) --- every chip in this lab reuses it.
+\end{tocitebox}
+
+\section{Toolchain Setup}
+
+\begin{enumerate}
+  \item Install a Java Runtime Environment (JRE), version 8 or later, if not already present.
+  \item Download the Nand2Tetris software suite (free, \url{nand2tetris.org}) --- this lab uses the \textbf{Hardware Simulator} only; the CPU Emulator and Assembler are needed from Lab 4 onward.
+  \item Extract the suite and locate the \texttt{projects/02/} folder --- it contains one subfolder per chip, pre-populated with a \texttt{ChipName.hdl} stub (to be completed) and the supplied \texttt{ChipName.tst} / \texttt{ChipName.cmp} test/comparison scripts. These scripts are standard Nand2Tetris project files and are \emph{not} redistributed here --- obtain them from the official suite.
+  \item Open the Hardware Simulator, load a chip's \texttt{.tst} script (\textsc{File} $\to$ \textsc{Load Script}), and run it (\textsc{Simulation} $\to$ \textsc{Run}). A correct chip prints \texttt{End of script --- comparison ended successfully} in the script's output pane; a wrong one reports the first mismatching row.
+  \item For a full walkthrough of the Hardware Simulator's interface, see the official \emph{Hardware Simulator Tutorial} (Nand2Tetris, \url{nand2tetris.org}).
+\end{enumerate}
+
+\section{Tasks}
+\label{sec:tasks}
+
+Implement the following 5 chips \textbf{in order} --- each depends on the ones before it, and all reuse Lab 1's gate library.
+
+\begin{enumerate}
+  \item \textbf{\texttt{HalfAdder(a,b)} $\to$ \texttt{(sum,carry)}} --- $sum = a\oplus b$, $carry = a\cdot b$. Built from \texttt{Xor} and \texttt{And}.
+  \item \textbf{\texttt{FullAdder(a,b,c)} $\to$ \texttt{(sum,carry)}} --- adds three bits ($a$, $b$, and carry-in $c$). Hint: two \texttt{HalfAdder}s plus an \texttt{Or} on the two carry outputs.
+  \item \textbf{\texttt{Add16(a[16],b[16])} $\to$ \texttt{out[16]}} --- a 16-bit adder: a ripple-carry chain of 16 full adders (bit 0 uses a \texttt{HalfAdder}, since there is no carry-in at the least-significant bit). The carry-out of bit 15 is discarded (two's-complement overflow is not flagged by this chip).
+  \item \textbf{\texttt{Inc16(in[16])} $\to$ \texttt{out[16]}} --- $out = in + 1$. Hint: this is exactly \texttt{Add16} with the constant $1$ as the second operand; a ripple chain of \texttt{HalfAdder}s (bit 0 adds the constant \texttt{true}, every later bit adds the previous bit's carry) is the standard implementation.
+  \item \textbf{\texttt{ALU(x[16],y[16],zx,nx,zy,ny,f,no)} $\to$ \texttt{(out[16],zr,ng)}} --- the 16-bit Arithmetic-Logic Unit. Six control bits select among 18 operations:
+  \begin{enumerate}
+    \item If \texttt{zx}: zero out $x$.
+    \item If \texttt{nx}: bitwise-negate $x$.
+    \item If \texttt{zy}: zero out $y$.
+    \item If \texttt{ny}: bitwise-negate $y$.
+    \item If \texttt{f}: $out = x + y$ (via \texttt{Add16}); else $out = x \;\&\; y$ (via \texttt{And16}).
+    \item If \texttt{no}: bitwise-negate $out$.
+    \item $zr = 1$ iff $out = 0$ (all 16 bits zero); $ng = 1$ iff $out$'s sign bit (bit 15) is set.
+  \end{enumerate}
+\end{enumerate}
+
+\noindent Table~\ref{tab:alu-ops} shows how the six control bits select all 18 required operations --- this is the ALU's complete functional specification.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}cccccc|l@{}}
+\toprule
+\texttt{zx} & \texttt{nx} & \texttt{zy} & \texttt{ny} & \texttt{f} & \texttt{no} & $out$ \\
+\midrule
+1 & 0 & 1 & 0 & 1 & 0 & $0$ \\
+1 & 1 & 1 & 1 & 1 & 1 & $1$ \\
+1 & 1 & 1 & 0 & 1 & 0 & $-1$ \\
+0 & 0 & 1 & 1 & 0 & 0 & $x$ \\
+1 & 1 & 0 & 0 & 0 & 0 & $y$ \\
+0 & 0 & 1 & 1 & 0 & 1 & $\overline{x}$ \\
+1 & 1 & 0 & 0 & 0 & 1 & $\overline{y}$ \\
+0 & 0 & 1 & 1 & 1 & 1 & $-x$ \\
+1 & 1 & 0 & 0 & 1 & 1 & $-y$ \\
+0 & 1 & 1 & 1 & 1 & 1 & $x+1$ \\
+1 & 1 & 0 & 1 & 1 & 1 & $y+1$ \\
+0 & 0 & 1 & 1 & 1 & 0 & $x-1$ \\
+1 & 1 & 0 & 0 & 1 & 0 & $y-1$ \\
+0 & 0 & 0 & 0 & 1 & 0 & $x+y$ \\
+0 & 1 & 0 & 0 & 1 & 1 & $x-y$ \\
+0 & 0 & 0 & 1 & 1 & 1 & $y-x$ \\
+0 & 0 & 0 & 0 & 0 & 0 & $x \;\&\; y$ \\
+0 & 1 & 0 & 1 & 0 & 1 & $x \;|\; y$ \\
+\bottomrule
+\end{tabular}
+\caption{The 18 ALU operations selected by the six control bits (the ALU's official Nand2Tetris specification).}
+\label{tab:alu-ops}
+\end{table}
+
+Load each chip's supplied \texttt{.tst} script in the Hardware Simulator; for \texttt{ALU} run \emph{both} \texttt{ALU.tst} and the stricter \texttt{ALU-nostat.tst} (which disallows shortcuts such as detecting the control-bit pattern and returning a hard-coded constant).
+
+\section{Figures}
+
+\begin{figure}[h]
+  \centering
+  % Diagram: full adder block — inputs A,B,Cin; outputs S,Cout.
+  % Reused from Notes/CS401/02-number-systems-arithmetic-notes.tex fig:fa-block
+  % (P1-P7-clean, no changes to coordinates).
+  % Coordinates: (x, y), scale 1.0
+  %   FA box at (0,0), 1.8w x 1.2h -> spans x -0.9..0.9, y -0.6..0.6
+  %   A/B labels at x=-1.6, arrows into left edge at x=-0.9 (y=+-0.45)
+  %   Cin label BELOW its line at (-0.45,-1.35); line enters box bottom
+  %   S/Cout labels at x=+1.6, arrows out of right edge at x=+0.9
+  \begin{tikzpicture}[scale=1.0, transform shape,
+      every node/.style={font=\small}]
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.8cm, minimum height=1.2cm, align=center] (FA) at (0,0) {Full\\Adder};
+    \node[font=\scriptsize] at (-1.6,0.45) {$A$};
+    \node[font=\scriptsize] at (-1.6,-0.45) {$B$};
+    \node[font=\scriptsize] at (-0.45,-1.35) {$C_{in}$};
+    \node[font=\scriptsize] at (1.6,0.45) {$S$};
+    \node[font=\scriptsize] at (1.6,-0.45) {$C_{out}$};
+    \draw[->, thick] (-1.1,0.45) -- (-0.9,0.45);
+    \draw[->, thick] (-1.1,-0.45) -- (-0.9,-0.45);
+    \draw[->, thick] (-0.9,-1.0) -- (0,-1.0) -- (0,-0.6);
+    \draw[->, thick] (0.9,0.45) -- (1.2,0.45);
+    \draw[->, thick] (0.9,-0.45) -- (1.2,-0.45);
+  \end{tikzpicture}
+  \caption{The full adder as a block: $A$, $B$ and $C_{in}$ in, $S$ and $C_{out}$ out --- \texttt{FullAdder}'s I/O contract (\texttt{a},\texttt{b},\texttt{c} $\to$ \texttt{sum},\texttt{carry} in the HDL).}
+  \label{fig:lab2-fa-block}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % Diagram: ripple-carry adder — 4 full adders chained by carry.
+  % Reused from Notes/CS401/02-number-systems-arithmetic-notes.tex fig:ripple
+  % (P1-P7-clean, no changes to coordinates). Add16 chains 16, not 4, of
+  % these; this 4-bit illustration is the same pattern at a legible scale.
+  \begin{tikzpicture}[scale=0.9, transform shape,
+      every node/.style={font=\small}]
+    \foreach \i in {0,1,2,3} {
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.4cm, minimum height=0.9cm, align=center]
+            (FA\i) at (2.6*\i, 0) {FA\i};
+      \node[font=\scriptsize] at (2.6*\i - 1.2, 0.35) {$A_\i$};
+      \node[font=\scriptsize] at (2.6*\i - 1.2, -0.35) {$B_\i$};
+      \draw[->, thick] (2.6*\i - 0.9, 0.35) -- (2.6*\i - 0.72, 0.35);
+      \draw[->, thick] (2.6*\i - 0.9, -0.35) -- (2.6*\i - 0.72, -0.35);
+      \node[font=\scriptsize] at (2.6*\i + 0.9, 0.6) {$S_\i$};
+      \draw[->, thick] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 1.1, 0.35);
+    }
+    \draw[->, thick] (0.7,-0.55) -- (0.7,-1.0) -- (2.1,-1.0) -- (2.1,-0.55);
+    \draw[->, thick] (3.3,-0.55) -- (3.3,-1.0) -- (4.7,-1.0) -- (4.7,-0.55);
+    \draw[->, thick] (5.9,-0.55) -- (5.9,-1.0) -- (7.3,-1.0) -- (7.3,-0.55);
+    \node[font=\scriptsize] at (0.0,-1.2) {$C_{in}=0$};
+    \node[font=\scriptsize] at (10.4,0.0) {$C_{out}$};
+    \draw[->, thick] (FA3.east |- 0,-0.45) -- (10.0,-0.45);
+    \node[font=\scriptsize, align=left] at (10.4,-1.3) {carry-out\\$\Rightarrow$ overflow\\\scriptsize (unsigned)};
+  \end{tikzpicture}
+  \caption{The ripple-carry adder: full adders chained by their carry signals. \texttt{Add16} is this same pattern extended to 16 bits, with bit 0 using a \texttt{HalfAdder} (no carry-in) instead of an \texttt{FA0}.}
+  \label{fig:lab2-ripple}
+\end{figure}
+
+\section{Observation / Journal Table}
+
+Record, for each chip, the gates used in your composition and whether it passed its supplied test script.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}l l c@{}}
+\toprule
+Chip & Gates used (internal composition) & Pass / Fail \\
+\midrule
+\texttt{HalfAdder} & & \\
+\texttt{FullAdder} & & \\
+\texttt{Add16} & & \\
+\texttt{Inc16} & & \\
+\texttt{ALU} (\texttt{ALU.tst}) & & \\
+\texttt{ALU} (\texttt{ALU-nostat.tst}) & & \\
+\bottomrule
+\end{tabular}
+\caption{Lab 2 observation table --- one row per chip (ALU tested against both scripts).}
+\label{tab:lab2-observations}
+\end{table}
+
+\noindent\textbf{Journal instruction (separate from the table above):} tabulate, for at least \emph{six} control-bit combinations of your choice (drawn from or beyond Table~\ref{tab:alu-ops}), the operation each performs --- e.g.\ \texttt{0101010} $\to$ $out = x - y$. This is the syllabus's own Deliverable 2.
+
+\section{Viva-Voce Questions}
+
+\begin{enumerate}
+  \item Explain binary addition and how two's-complement handles negative numbers without a separate subtractor circuit.
+  \item Why does \texttt{Inc16} not need a full \texttt{Add16} internally? What does it reuse instead?
+  \item Trace \texttt{ALU} by hand for \texttt{zx=0,nx=0,zy=1,ny=1,f=0,no=0} ($x$ AND $y$'s zeroed value). What is $out$?
+  \item Why is \texttt{Add16}'s carry-out from bit 15 simply discarded rather than reported as an overflow flag?
+  \item What would happen to \texttt{zr} if \texttt{Or8Way} were applied to only 8 of the 16 output bits instead of all 16?
+\end{enumerate}
+
+\section{Rubric}
+
+Reproduced verbatim from \texttt{syllabi/CS401\_Lab\_Syllabus\_Nand2Tetris.pdf}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}l r@{}}
+\toprule
+Criterion & Marks \\
+\midrule
+ALU passes \texttt{ALU-nostat.tst} (strict, no shortcuts) & 5 \\
+Add16 / Inc16 / adders correctly reused inside the ALU & 2 \\
+Control-bit truth table complete and correct & 2 \\
+Viva: can trace \texttt{out} for a given control-bit combination by hand & 1 \\
+\midrule
+\textbf{Total} & \textbf{10} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

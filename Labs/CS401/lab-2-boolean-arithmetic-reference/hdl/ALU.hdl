@@ -1,0 +1,43 @@
+/**
+ * ALU (Arithmetic Logic Unit): computes one of 18 functions of x, y,
+ * selected by the six control bits. See Lab 2's manual, Table 1, for
+ * the full operation table.
+ *
+ * if (zx == 1) sets x = 0
+ * if (nx == 1) sets x = !x
+ * if (zy == 1) sets y = 0
+ * if (ny == 1) sets y = !y
+ * if (f == 1)  sets out = x + y (integer 2's complement addition)
+ * if (f == 0)  sets out = x & y (bitwise and)
+ * if (no == 1) sets out = !out
+ * if (out == 0) sets zr = 1
+ * if (out < 0)  sets ng = 1
+ */
+CHIP ALU {
+    IN
+        x[16], y[16],
+        zx, nx, zy, ny, f, no;
+    OUT
+        out[16], zr, ng;
+
+    PARTS:
+    Mux16(a=x, b=false, sel=zx, out=zxOut);
+    Not16(in=zxOut, out=notZxOut);
+    Mux16(a=zxOut, b=notZxOut, sel=nx, out=xOut);
+
+    Mux16(a=y, b=false, sel=zy, out=zyOut);
+    Not16(in=zyOut, out=notZyOut);
+    Mux16(a=zyOut, b=notZyOut, sel=ny, out=yOut);
+
+    Add16(a=xOut, b=yOut, out=addOut);
+    And16(a=xOut, b=yOut, out=andOut);
+    Mux16(a=andOut, b=addOut, sel=f, out=fOut);
+
+    Not16(in=fOut, out=notFOut);
+    Mux16(a=fOut, b=notFOut, sel=no, out=out, out[0..7]=outLow, out[8..15]=outHigh, out[15]=ng);
+
+    Or8Way(in=outLow, out=orLow);
+    Or8Way(in=outHigh, out=orHigh);
+    Or(a=orLow, b=orHigh, out=orAll);
+    Not(in=orAll, out=zr);
+}

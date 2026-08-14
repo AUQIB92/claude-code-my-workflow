@@ -1,0 +1,112 @@
+course: CS401
+lab_mode: none            # Nand2Tetris labs (5) are a separate numbered track — run /lab-manual by lab number, not per-week via /build-week
+last_updated: 2026-08-13
+weeks:
+  "01":
+    deck: "01-intro-performance"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 1 (weeks 1-2), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "No Quarto mirror (PDF-only deploy for CS401)" }
+  "02":
+    deck: "02-number-systems-arithmetic"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 1 (weeks 1-2), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "03":
+    deck: "03-ieee754-floating-point"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 2 (weeks 3-4), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "04":
+    deck: "04-registers-instructions"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 2 (weeks 3-4), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "05":
+    deck: "05-addressing-cpu-bus"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 3 (weeks 5-7), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "06":
+    deck: "06-hardwired-control"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 3 (weeks 5-7), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "07":
+    deck: "07-microprogrammed-control"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 3 (weeks 5-7), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "08":
+    deck: "08-io-techniques"
+    stages:
+      slides:     { status: deployed, score: null, note: "" }
+      notes:      { status: deployed, score: null, note: "" }
+      assignment: { status: deployed, score: null, note: "" }
+      lab:        { status: skipped,  score: null, note: "Nand2Tetris Lab 4 (weeks 8-9), separate track" }
+      gate:       { status: deployed, score: null, note: "" }
+      quarto:     { status: absent,   score: null, note: "" }
+  "09":
+    deck: "09-cache-memory"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 4 (weeks 8-9), separate track" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "10":
+    deck: "10-virtual-memory-storage"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 5 (weeks 10-12), separate track" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "11":
+    deck: "11-parallel-pipeline-hazards"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 5 (weeks 10-12), separate track" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
+  "12":
+    deck: "12-pipelining-risc-cisc"
+    stages:
+      slides:     { status: absent, score: null, note: "" }
+      notes:      { status: absent, score: null, note: "" }
+      assignment: { status: absent, score: null, note: "" }
+      lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 5 (weeks 10-12), separate track" }
+      gate:       { status: absent, score: null, note: "" }
+      quarto:     { status: absent, score: null, note: "" }
