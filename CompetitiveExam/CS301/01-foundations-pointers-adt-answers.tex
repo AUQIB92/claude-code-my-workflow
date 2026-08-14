@@ -2,16 +2,20 @@
 % CompetitiveExam/CS301/01-foundations-pointers-adt-answers.tex
 % Answer key for 01-foundations-pointers-adt-questions.tex.
 %
-% Q1-Q4 are real GATE past-year questions sourced from the local GATEOverflow
-% Volume 2 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability), which
-% authenticates each question (year + question number printed on the page).
-% The book's own answer keys are collapsed and not extractable, so each answer
-% was independently cross-checked against 2+ web sources in the build session
-% (2026-08-12): GATEOverflow online question pages, GeeksforGeeks, Testbook,
-% and Electrical4u. Only answers confirmed by those sources carry the
-% [verified] tag. Q5-Q10 are original GATE-pattern questions; their answers are
-% derived from the course material (Slides/Notes Week 1), which page-verify
-% against Wirth 2004 p.111, Sedgewick 2011 pp.64/120, and Karumanchi p.18 (PDF).
+% REGENERATED 2026-08-13 alongside the questions file — see that file's header
+% comment for the full provenance rationale (why Q1/Q14 are newly added real
+% PYQs, why Q11/Q12 are original rather than a local-book real question, etc).
+%
+% Real GATE PYQs (Q1, Q5-Q8, Q14) are sourced from the local GATEOverflow
+% Volume 2 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability),
+% which authenticates each question (year + question number printed on the
+% page). The book's own answer keys are collapsed and not extractable, so
+% each real-PYQ answer was independently cross-checked against 2+ web sources
+% in the build session (2026-08-13): GATEOverflow online question pages,
+% GeeksforGeeks, Testbook, and Electrical4u. Original questions (Q2-Q4, Q9-Q13,
+% Q15) have answers derived directly from the course material (Slides/Notes
+% Week 1), which page-verify against Wirth 2004 p.111, Sedgewick 2011
+% pp.64/120, and Karumanchi p.18 (PDF).
 % =============================================================================
 
 \documentclass[11pt]{article}
@@ -29,25 +33,35 @@
 \maketitle
 
 \begin{enumerate}
-\item[\textbf{Q1}] \textbf{(C).} P1 returns the address of its local variable \texttt{x} (a dangling pointer --- the stack frame dies when \texttt{g} returns), P2 dereferences the uninitialized pointer \texttt{px} before any \texttt{malloc}, while P3 requests a heap block first and is safe; hence only P1 and P2 cause problems.
+\item[\textbf{Q1}] \textbf{(C).} Structured programming's point is readability of the \emph{source}: using only sequence, selection, and iteration (never unrestricted \texttt{GOTO}) means a reader can trace the flow of control directly from the program text, without needing to look at what the compiler produced or worry about jumps landing anywhere. Confirmed against GeeksforGeeks and GATEOverflow (2026-08-13).
 
-\item[\textbf{Q2}] \textbf{(D).} \texttt{pi == \&i}, so \texttt{scanf} writes the entered value into \texttt{i} through the pointer; the printout is \texttt{i + 5}, exactly 5 more than the integer value entered, so the program compiles, runs, and prints ``more than the integer value entered.''
+\item[\textbf{Q2}] \textbf{(B).} The parameter list and the assignment \texttt{int m = a;} are \emph{sequence}; the two \texttt{if} statements are \emph{selection} (each independently may or may not execute); no \texttt{for}/\texttt{while} appears, so there is no \emph{iteration} --- comparing a fixed count of three values needs only sequence and selection, exactly as the two-mark version in the deck needed only sequence and selection for two marks.
 
-\item[\textbf{Q3}] \textbf{(D).} The first block from \texttt{malloc} is overwritten when \texttt{x = (int *)malloc(...)} executes inside the \texttt{if} --- the old address is lost and can never be freed, so the code compiles but leaks memory; the final \texttt{free(x)} only releases the second block, and no dangling pointer is ever used.
+\item[\textbf{Q3}] \textbf{(B).} A local variable declared inside a function is automatic storage on the \key{stack}; \texttt{malloc} requests bytes from the \key{heap} at run time.
 
-\item[\textbf{Q4}] \textbf{25.} \texttt{z = \&a} makes \texttt{z} point at \texttt{a}; inside \texttt{foo}, \texttt{*p = x} writes the value of \texttt{b} (25) into \texttt{a} through the pointer, so the printed \texttt{a} is 25.
+\item[\textbf{Q4}] \textbf{TRUE.} A local variable lives in its function call's stack frame and dies on return, while a heap block requested by \texttt{malloc} remains until the program releases it with \texttt{free} --- the heap's whole point is size and lifetime decided at run time.
 
-\item[\textbf{Q5}] \textbf{(B).} A local variable declared inside a function is automatic storage on the \key{stack}; \texttt{malloc} requests bytes from the \key{heap} at run time.
+\item[\textbf{Q5}] \textbf{(C).} P1 returns the address of its local variable \texttt{x} (a dangling pointer --- the stack frame dies when \texttt{g} returns), P2 dereferences the uninitialized pointer \texttt{px} before any \texttt{malloc}, while P3 requests a heap block first and is safe; hence only P1 and P2 cause problems.
 
-\item[\textbf{Q6}] \textbf{TRUE.} A local variable lives in its function call's stack frame and dies on return, while a heap block requested by \texttt{malloc} remains until the program releases it with \texttt{free} --- the heap's whole point is size and lifetime decided at run time.
+\item[\textbf{Q6}] \textbf{(D).} \texttt{pi == \&i}, so \texttt{scanf} writes the entered value into \texttt{i} through the pointer; the printout is \texttt{i + 5}, exactly 5 more than the integer value entered, so the program compiles, runs, and prints ``more than the integer value entered.''
 
-\item[\textbf{Q7}] \textbf{TRUE.} \texttt{NULL} is the agreed ``points to nothing'' pointer value, and reading through it is undefined behaviour --- in practice, a crash.
+\item[\textbf{Q7}] \textbf{(D).} The first block from \texttt{malloc} is overwritten when \texttt{x = (int *)malloc(...)} executes inside the \texttt{if} --- the old address is lost and can never be freed, so the code compiles but leaks memory; the final \texttt{free(x)} only releases the second block, and no dangling pointer is ever used.
 
-\item[\textbf{Q8}] \textbf{(B).} \texttt{malloc(n)} asks for \texttt{n} bytes and returns their address, or \texttt{NULL} if the request cannot be met --- which is why the result is always checked against \texttt{NULL} before use.
+\item[\textbf{Q8}] \textbf{25.} \texttt{z = \&a} makes \texttt{z} point at \texttt{a}; inside \texttt{foo}, \texttt{*p = x} writes the value of \texttt{b} (25) into \texttt{a} through the pointer, so the printed \texttt{a} is 25.
 
-\item[\textbf{Q9}] \textbf{16.} \texttt{data} occupies 4 bytes (aligned at offset 0), \texttt{next} needs 8-byte alignment so 4 padding bytes follow \texttt{data}, and the pointer occupies bytes 8--15; total \texttt{4 + 4 + 8 = 16} bytes, which is also a multiple of the 8-byte alignment of the struct.
+\item[\textbf{Q9}] \textbf{TRUE.} \texttt{NULL} is the agreed ``points to nothing'' pointer value, and reading through it is undefined behaviour --- in practice, a crash.
 
-\item[\textbf{Q10}] \textbf{(B).} The bag's contract names the operations (\texttt{insert}, \texttt{member}, \texttt{size}) --- a set of values and a set of operations --- and deliberately withholds the storage scheme; ``dynamic array'' and ``linked list'' are two interchangeable \emph{implementations} of that same contract, and code and costs are implementation details, not contract.
+\item[\textbf{Q10}] \textbf{(B).} \texttt{malloc(n)} asks for \texttt{n} bytes and returns their address, or \texttt{NULL} if the request cannot be met --- which is why the result is always checked against \texttt{NULL} before use.
+
+\item[\textbf{Q11}] \textbf{(B).} \texttt{calloc} zero-initializes every byte of the block it hands back; \texttt{malloc} hands back the same number of bytes but leaves their contents unspecified (whatever was left over from a previous use of that memory) --- same request size, different starting content.
+
+\item[\textbf{Q12}] \textbf{(B).} \texttt{realloc} preserves the block's existing content up to the smaller of the old and new sizes, copying it to the new location when the block moves --- so \texttt{q[0..2]} equal \texttt{10, 20, 30}. It does \emph{not} zero the newly added space (only \texttt{calloc} zeros space), so \texttt{q[3..5]} are unspecified. The original block at \texttt{p} is automatically released by \texttt{realloc} when it moves the block, so it must not be freed separately, and \texttt{realloc} gives no zero-initialization guarantee for the new slots.
+
+\item[\textbf{Q13}] \textbf{16.} \texttt{data} occupies 4 bytes (aligned at offset 0), \texttt{next} needs 8-byte alignment so 4 padding bytes follow \texttt{data}, and the pointer occupies bytes 8--15; total \texttt{4 + 4 + 8 = 16} bytes, which is also a multiple of the 8-byte alignment of the struct.
+
+\item[\textbf{Q14}] \textbf{(C).} An ADT is defined by the operations available on it --- the interface --- and nothing about its internal representation is exposed or usable directly; this is exactly the ``set of values and set of operations'' framing (Sedgewick, p.64) and the ``declaration of data plus declaration of operations'' framing (Karumanchi, p.18) the course uses. It is not the same as an abstract class (A) and instantiability (B) is a separate, unrelated property. Confirmed against GeeksforGeeks and GATEOverflow (2026-08-13).
+
+\item[\textbf{Q15}] \textbf{(B).} The bag's contract names the operations (\texttt{insert}, \texttt{member}, \texttt{size}) --- a set of values and a set of operations --- and deliberately withholds the storage scheme; ``dynamic array'' and ``linked list'' are two interchangeable \emph{implementations} of that same contract, and code and costs are implementation details, not contract.
 \end{enumerate}
 
 \end{document}

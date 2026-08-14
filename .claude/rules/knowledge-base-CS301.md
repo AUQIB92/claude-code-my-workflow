@@ -21,7 +21,7 @@ paths:
 |---|---|
 | Audience level | `undergrad` (B.Tech CSE, semester 3) |
 | Programme position | semester 3 of 8 |
-| Default difficulty | **`core`** — derived from `undergrad` + semester 3 per `.claude/rules/difficulty-levels.md` |
+| Default difficulty | **`intro`** — explicit override (derived default would be `core` from `undergrad` + semester 3 per `.claude/rules/difficulty-levels.md`); set 2026-08-13 per instructor request |
 | Exam target | GATE CS (via `/competitive-exam-questions`) |
 | Implementation language | **C** — the notation registry below overrides any anchor book's language (Sedgewick is Java, Wirth is Oberon) |
 

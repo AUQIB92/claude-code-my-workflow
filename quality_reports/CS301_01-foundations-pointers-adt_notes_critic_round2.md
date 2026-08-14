@@ -1,47 +1,52 @@
-# Notes vs Beamer Parity Audit — CS301/01-foundations-pointers-adt (Round 2)
+# Notes vs Beamer Parity Audit: CS301/01-foundations-pointers-adt
 
-**Date:** 2026-08-11
-**Verdict:** REJECTED — 1 Critical, 1 Major, 1 Minor (6 of 7 round-1 fixes confirmed)
+**Beamer source:** `Slides/CS301/01-foundations-pointers-adt.tex`
+**Notes:** `Notes/CS301/01-foundations-pointers-adt-notes.tex`
+**Round:** 2  **Date:** 2026-08-13
 
-## Status of Round-1 Fixes
+## Verdict: NEEDS REVISION
 
-| Item | Status |
-|------|--------|
-| C1 — no Horowitz & Sahni cite on `fig:memlayout` caption | CONFIRMED FIXED |
-| C2 — no Aho/Hopcroft/Ullman cite on `fig:adt` caption | CONFIRMED FIXED |
-| M1 — roadmap + expression-processor paragraph in Section 1 | CONFIRMED FIXED (traces item-for-item to Beamer 59–78, no added facts) |
-| M2 — "Weeks 6, 7, and 11" forward-reference removed | CONFIRMED FIXED |
-| M3 — five memory regions named in prose | **PARTIAL** — regions named, but two unsourced properties introduced (see C-NEW1) |
-| m1 — LaTeX quotes around "it felt fast" | CONFIRMED FIXED |
-| m2 — `\label{sec:memory}` + `\ref` | CONFIRMED FIXED |
+0 Critical, 2 Major, 5 Minor. All 4 Critical + 2 Major findings from round 1 confirmed genuinely fixed (not superficial) against the specific Beamer frames they cite.
 
-## Critical
+## Hard Gate Status
 
-### C-NEW1 — Invented properties in the Figure 1.1 lead-in
-- **Notes:** 109–114 — "the code (text) region, holding the compiled instructions; static storage for globals, fixed at load time"
-- **Beamer:** frame "The Memory of a Running Program" (144–182) contains only bare TikZ box labels ("Code (text)", "Static / globals") plus the orientation note. Neither "compiled instructions" nor "fixed at load time" appears anywhere in the deck.
-- **Fix:** trim to region names and low-to-high ordering only.
-- **Resolution:** FIXED — lead-in now reads "the code (text) region; static storage for globals; the heap; free space between the two; and the stack, with the heap growing up and the stack growing down toward each other."
+| Gate | Status | Evidence |
+|------|--------|----------|
+| Content parity | Pass | Every Beamer frame's core idea traces to a Notes section. |
+| No invention | Pass | C1-C4 from round 1 confirmed fixed: motivation example restored verbatim, no `int a[1000000]`, "Disjoint Sets" removed (both occurrences), NULL-pointer example restored to `p` with the p-now/head-later clarification intact. |
+| Citation parity | Pass | 5/5 `\cite{}` keys match, no extra keys. |
+| Notation fidelity | **Major flag** | M3 below — Exercise 2/Solution 2 used `head` instead of `p` for the Week-1 pointer, contradicting the deck's explicit "here the node is just `p`; `head` starts Week 6" convention (now fixed). |
+| Textbook-page honesty | Pass | Wirth p.111, Sedgewick p.64/p.120, Karumanchi p.18 all verified against `supporting_books/*/index.md`; section numbers cross-checked. |
 
-## Major
+## Major Issues (fixed this round)
 
-### M-NEW1 — Dropped "catalogue of arrangements / judgement to choose" framing
-- **Beamer:** 54–56 — "This course is a catalogue of those arrangements --- and, more importantly, the judgement to choose between them."
-- **Notes:** absent from Section 1 entirely.
-- **Fix:** restore the framing sentence in the opening paragraph.
-- **Resolution:** FIXED — added at Notes line 55–56.
+### M3: Exercise 2 and Solution 2 used `head` instead of Week 1's actual variable `p`
+- **Beamer frame:** "A Pointer Can Reach a Node" (lines ~396-398) explicitly states the list handle is called `head` starting Week 6; "here the node is just `p`." The Notes' own restated rule (Section on the safe empty pointer) preserves this.
+- **Notes (pre-fix):** Exercise 2 ("If `head` lives on the stack...") and its Solution ("held `head`, the only pointer to the node") both used `head`, contradicting the Week-1 convention used everywhere else in the file.
+- **Fix applied:** Both occurrences changed to `p`.
 
-## Minor
+### M4: Dropped Sedgewick "three collection types" attribution on the bag example
+- **Beamer frame:** "Worked Example: A Very Small Bag" muted line: "A bag is one of Sedgewick's three collection types (p.120) \cite{Sedgewick2011_algorithms}."
+- **Notes (pre-fix):** The claim survived only as an unattached page reference in the section's "Read alongside" line; the worked-example prose itself dropped it.
+- **Fix applied:** Restored the attribution inline in the `example` environment's opening sentence.
 
-### m-NEW1 — Vague "see figure" lead-ins for Figures 1.2 and 1.3
-- Non-blocking; captions themselves carry adequate description. Not actioned.
+## Minor Issues (not fixed — reasonable derived expansions, same judgment as round 1)
 
-## Gate Status
+- Slightly inexact paraphrase of the Wirth quotation vs. the verified index.md anchor wording.
+- "more importantly" editorializing not present in the Beamer roadmap frame.
+- `(*p).data` aside — grounded in the Notation Registry, not the Beamer frame itself.
+- "not a hand-counted `8` or `12`" — specific numbers not in the Beamer frame.
+- "This is precisely why returning a pointer to a local variable is a bug" — reasonable derived corollary, not explicitly stated in the Beamer source.
 
-| Gate | Status |
-|------|--------|
-| Content parity | Pass (1 Major note) |
-| No invention | **Fail** (C-NEW1) |
-| Citation parity | Pass — 2/2 keys, attached to the same claims as Beamer |
-| Notation fidelity | Pass |
-| Textbook-page honesty | Pass |
+## Positive Findings
+
+- All round-1 Critical (C1-C4) and Major (M1-M2) fixes verified genuine against the named Beamer frame line ranges, not just superficially patched.
+- The two edited heap-growth `example` environments (Step 1, Step 2) read cleanly as prose after the invented-code removal — no dangling references, no orphaned formatting.
+- The ADT-implementation diagram section reads correctly after removing the fabricated "labelled implements" claim.
+- Citation parity remains full (5/5) after all edits.
+
+## Summary Statistics
+
+| Metric | Value |
+|--------|-------|
+| Critical / Major / Minor | 0 / 2 (both fixed this round) / 5 (unfixed, non-blocking) |

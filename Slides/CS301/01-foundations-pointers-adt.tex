@@ -1,14 +1,22 @@
-% CS301 Week 1 -- where your data lives: pointers, dynamic memory, and ADTs
-% Difficulty: core (medium-easy), self-explanatory slides, page-grounded in
-% Wirth2004 p.111, Sedgewick2011 pp.64/120/172, Karumanchi2017 p.18 (PDF).
-% Rebuilt 2026-08-12: added a Motivation + Overall-Syllabus opener (Act 0).
+% CS301 Week 1 -- where your data lives: structured programming, pointers,
+% dynamic memory, and ADTs
+% Difficulty: intro (rebuilt 2026-08-13 per instructor's course-wide default
+% change in .claude/rules/knowledge-base-CS301.md). Motivation-heavy; a worked
+% example sits within 1 slide of every definition; one new symbol per frame;
+% more, shorter frames than the prior core-tier deck. Proofs/derivations are
+% not applicable to this lecture's content, so the "proofs omitted" intro-tier
+% clause has no bite here -- everything below is definition + trace, matching
+% intro's "results stated with intuition" spirit.
+% Page-grounded in Wirth2004 p.111, Sedgewick2011 pp.64/120, Karumanchi2017
+% p.18 (PDF); Horowitz & Sahni and Aho-Hopcroft-Ullman cited at chapter level
+% only (not yet page-indexed -- see knowledge-base-CS301.md Anchor Textbooks).
 
 \documentclass[aspectratio=169]{beamer}
 \input{header}
 \coursecode{CS301}
 
 \title{Where Does Your Data Live?}
-\subtitle{Week 1 --- Pointers, Dynamic Memory, and Simple Contracts}
+\subtitle{Week 1 --- Structure, Pointers, Dynamic Memory, and Simple Contracts}
 \author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
 \institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
 \date[Week 1]{\small Week 1}
@@ -22,104 +30,141 @@
 % =============================================================================
 \section{Motivation and the Course Plan}
 
-\begin{frame}{Today's Three Questions}
+\begin{frame}{Today's Four Questions}
   \begin{enumerate}
+    \item How do we organise a program's \emph{logic} before we organise its data?
     \item Where does a running C program keep its data?
     \item How can we use memory that we request while the program runs?
     \item How can we describe a data structure before implementing it?
   \end{enumerate}
   \vspace{0.2cm}
   \begin{exampleblock}{Plan}
-    First draw the memory. Then use one pointer. Then write one simple contract.
+    Structure the logic. Draw the memory. Use one pointer. Write one simple
+    contract.
   \end{exampleblock}
 \end{frame}
 
 \begin{frame}{Motivation: Correct Is Not Always Fast Enough}
   \begin{block}{A correct program can still be unusable}
-    A loop that scans student records one by one always finds the right student
-    --- and with 5 records it is instant.
+    A loop that scans student records one by one always finds the right
+    student --- and with 5 records it is instant.
   \end{block}
   \begin{itemize}
-    \item With 10 million records and a query every millisecond, the \emph{same}
-      correct loop is far too slow.
-    \item The answer is the same; the \emph{arrangement} of the data is the
+    \item With 10 million records, the \emph{same} correct loop is far too slow.
+    \item The answer stays right; the \emph{arrangement} of the data is the
       difference.
-    \item This course is the catalogue of arrangements and the judgement to
+    \item This course is the catalogue of arrangements, and the judgement to
       choose between them
       \cite{HorowitzSahni2008_fundamentals_data_structures,AhoHopcroftUllman1983_data_structures_algorithms}.
   \end{itemize}
   \key{Data structures keep a correct program useful as the data grows.}
 \end{frame}
 
-\begin{frame}{Motivation: ``It Felt Fast'' Is Not an Argument}
-  \begin{block}{Sedgewick's opening question}
-    \emph{``How long will my program take? Why does my program run out of
-    memory?''} --- questions far too vague to answer precisely without a model
-    \cite{Sedgewick2011_algorithms}.
-  \end{block}
-  \begin{itemize}
-    \item ``It felt fast in my test'' tells us nothing about tomorrow's input.
-    \item Week 2 gives us the model: count the operations as a function of
-      the amount of data, then compress the count into $O$/$\Omega$/$\Theta$.
-    \item Week 1's job is the raw material that analysis counts --- how data
-      is laid out and reached in memory.
-  \end{itemize}
-  \muted{By the end of Week 12 you will say \emph{why} a structure is fast,
-    not just that it felt fast.}
-\end{frame}
-
 \begin{frame}{The Course in One Roadmap}
   \begin{enumerate}
-    \item \key{Weeks 1--2: Foundations} --- memory, pointers, and the cost of work.
-    \item \key{Weeks 3--5: Linear structures} --- arrays, stacks, queues, expression processing.
-    \item \key{Weeks 6--7: Linked structures} --- singly/doubly linked lists, their applications.
-    \item \key{Weeks 8--9: Finding and ordering} --- searching, elementary and efficient sorting.
+    \item \key{Weeks 1--2: Foundations} --- structure, memory, pointers, cost.
+    \item \key{Weeks 3--5: Linear structures} --- arrays, stacks, queues.
+    \item \key{Weeks 6--7: Linked structures} --- singly/doubly linked lists.
+    \item \key{Weeks 8--9: Finding and ordering} --- searching, sorting.
     \item \key{Week 10: Files and hashing} --- file organization, hash tables.
-    \item \key{Weeks 11--12: Connected data} --- trees, BSTs, AVL, graphs, MSTs, shortest paths.
+    \item \key{Weeks 11--12: Connected data} --- trees, AVL, graphs.
   \end{enumerate}
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \muted{Each week repeats one shape: \emph{state the contract, then implement
     it, then analyse what it costs}.}
 \end{frame}
 
 \begin{frame}{One Running Thread Through the Whole Course}
   \begin{alertblock}{Our running example}
-    A small expression processor reads \texttt{(a+b)*c} and must check its
-    brackets, convert it, evaluate it, and look up its identifiers.
+    A small expression processor reads \texttt{(a+b)*c}: check its brackets,
+    convert it, evaluate it, look up its identifiers.
   \end{alertblock}
   \begin{itemize}
-    \item A \key{stack} checks the brackets and drives the conversion (Weeks 3--4).
-    \item A \key{symbol table} --- first a list (Week 6), later a hash table
-      (Week 10) --- stores the identifiers.
+    \item A \key{stack} checks the brackets (Weeks 3--4).
+    \item A \key{symbol table} stores the identifiers (Weeks 6, 10).
     \item An \key{expression tree} gives the evaluation (Week 11).
-    \item Every new structure arrives as the fix for something this program
-      cannot yet do.
   \end{itemize}
-  \muted{This is not twelve unrelated topics; it is one program learning new
-    tricks each week.}
+  \muted{Not twelve unrelated topics --- one program learning new tricks each
+    week.}
 \end{frame}
 
 \begin{frame}{What You Already Know (from prior courses)}
   \begin{itemize}
     \item Variables store values.
     \item Arrays store several values in a row.
-    \item Functions divide a program into manageable pieces.
+    \item Functions divide a program into pieces.
     \item Loops repeat work.
     \item C gives you \texttt{struct} for grouping fields.
   \end{itemize}
   \vspace{0.2cm}
   \begin{exampleblock}{What this course adds}
-    We ask: \emph{what arrangement of data fits this job?} --- and we answer
-    with a contract, an implementation, and a cost.
+    We ask: \emph{what arrangement of data fits this job?}
   \end{exampleblock}
+\end{frame}
+
+\transitionslide{Before any structure: how do we organise the program itself?}
+
+% =============================================================================
+% ACT 1 --- STRUCTURED PROGRAMMING
+% =============================================================================
+\section{Structured Programming}
+
+\sectiondivider{Section 1}{Structured Programming}
+
+\begin{frame}{What Is Structured Programming?}
+  \begin{block}{Definition}
+    Structured programming builds a program from exactly three control
+    patterns --- sequence, selection, and iteration --- instead of
+    unrestricted jumps.
+  \end{block}
+  \begin{itemize}
+    \item \key{Sequence}: do this, then that.
+    \item \key{Selection}: choose one branch (\texttt{if}/\texttt{else}).
+    \item \key{Iteration}: repeat while a condition holds (\texttt{for},
+      \texttt{while}).
+  \end{itemize}
+  \muted{Standard treatment; see Horowitz \& Sahni Ch. 1
+    \cite{HorowitzSahni2008_fundamentals_data_structures}.}
+\end{frame}
+
+\begin{frame}[fragile]{Worked Example: One Task, Three Patterns}
+  \begin{block}{Task: print the larger of two exam marks}
+\begin{semiverbatim}
+int larger(int a, int b) \{     \textcolor{neutral}{// sequence: read a, b}
+  if (a > b)                   \textcolor{neutral}{// selection}
+    return a;
+  return b;
+\}
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item No loop needed here --- just sequence and selection.
+    \item A loop appears the moment we compare more than two marks.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why Structure the Program Before Structuring the Data}
+  \begin{itemize}
+    \item A function is a \key{named, reusable block} --- the same idea we
+      will apply to data: name a contract, then implement it.
+    \item Top-down design: state the goal, break it into smaller functions,
+      then fill each one in.
+    \item Well-structured code is what makes pointer and memory bugs
+      \emph{findable} --- a tangled program hides them.
+  \end{itemize}
+  \vspace{0.15cm}
+  \muted{This course reuses that same discipline for data: state the
+    contract (the ADT) before choosing the implementation.}
 \end{frame}
 
 \transitionslide{Before any structure: where does a program even put its data?}
 
 % =============================================================================
-% ACT 1 --- STARTING POINT
+% ACT 2 --- MEMORY
 % =============================================================================
-\section{Starting Point}
+\section{Memory}
+
+\sectiondivider{Section 2}{Memory}
 
 \begin{frame}{A Variable Has a Place}
   \begin{block}{Example}
@@ -130,16 +175,8 @@
     \item It has a value: \texttt{80}.
     \item It also has an address: its place in memory.
   \end{itemize}
-  \vspace{0.2cm}
   \muted{An address is like a house number. It tells us where to look.}
 \end{frame}
-
-% =============================================================================
-% ACT 2 --- MEMORY
-% =============================================================================
-\section{Memory}
-
-\sectiondivider{Section 1}{Memory}
 
 \begin{frame}{Two Places to Remember}
   \begin{center}
@@ -162,9 +199,9 @@
   \begin{itemize}
     \item Local variables usually live in the stack.
     \item Dynamic memory lives in the heap.
-    \item \muted{Every later diagram in the course keeps this orientation:
-      stack up, heap down.}
   \end{itemize}
+  \muted{Every later diagram in the course keeps this orientation: stack up,
+    heap down.}
 \end{frame}
 
 \begin{frame}{How the Stack Grows --- Step 1: \texttt{main} starts}
@@ -259,16 +296,13 @@
 \end{frame}
 
 \begin{frame}{The Stack: Automatic Storage}
-  \begin{block}{Local variable}
-    A variable declared inside a function is created when the function starts.
+  \begin{block}{Definition}
+    A local variable is created when its function starts and destroyed when
+    the function returns --- the program manages this automatically.
   \end{block}
-  \begin{itemize}
-    \item It is available while that function is running.
-    \item It disappears when the function returns.
-    \item The program manages this basic lifetime automatically.
-  \end{itemize}
   \begin{exampleblock}{Example}
-    \texttt{int score = 80;} inside a function is a local variable.
+    \texttt{int score = 80;} inside a function is a local variable: it is
+    gone the moment that function returns.
   \end{exampleblock}
 \end{frame}
 
@@ -279,13 +313,13 @@
   \begin{itemize}
     \item We may need space for 3 records today and 300 tomorrow.
     \item We may want the records to remain after a helper function returns.
-    \item A structure that can vary in size cannot be given a fixed amount of
-      storage at compile time
+    \item A structure whose size is known only at run time cannot be given a
+      fixed amount of storage at compile time
       \cite{Wirth2004_algorithms_data_structures}.
   \end{itemize}
   \key{The heap gives us memory whose size and lifetime we request at run time.}
-  \muted{Wirth's argument, p.111: if the size is only known at run time, the
-    storage must also be allocated at run time.}
+  \muted{Wirth's argument, p.111: if the size is known only at run time, the
+    storage must be allocated at run time too.}
 \end{frame}
 
 \begin{frame}{Check Your Prediction}
@@ -293,14 +327,11 @@
     \texttt{int score = 80;}\hfill or\hfill \texttt{int *p = malloc(sizeof(int));}
   \end{block}
   \begin{itemize}
-    \item The local variable \texttt{score} belongs to its function call.
-    \item The heap block remains until the program releases it with \texttt{free}.
-    \item The pointer is only the handle; the block is the data storage.
+    \item \texttt{score} belongs to its function call --- gone on return.
+    \item The heap block remains until released with \texttt{free}.
   \end{itemize}
-  \begin{exampleblock}{Turn and talk}
-    What must remain available if another function needs the record later?
-  \end{exampleblock}
-  \muted{The exact call for this --- \texttt{malloc} and \texttt{sizeof} --- comes in a few slides.}
+  \muted{The exact call for this --- \texttt{malloc} and \texttt{sizeof} ---
+    is next.}
 \end{frame}
 
 \transitionslide{To use the heap, we need a handle on it --- a pointer.}
@@ -310,7 +341,7 @@
 % =============================================================================
 \section{Pointers}
 
-\sectiondivider{Section 2}{Pointers}
+\sectiondivider{Section 3}{Pointers}
 
 \begin{frame}{What Is a Pointer?}
   \begin{block}{Definition}
@@ -320,15 +351,10 @@
   \begin{itemize}
     \item An ordinary variable stores a value such as \texttt{80}.
     \item A pointer stores a place such as ``where the score lives''.
-    \item The type tells C what kind of value is at that place.
   \end{itemize}
-  \vspace{0.15cm}
   \begin{exampleblock}{One declaration}
     \texttt{int *p;} means: \texttt{p} can point to an \texttt{int}.
   \end{exampleblock}
-  \muted{Wirth (p.111): when a component's address must outlive the current
-    scope, the compiler reserves fixed storage that holds the \emph{address} of
-    the component --- not the component itself.}
 \end{frame}
 
 \begin{frame}{A Pointer Picture}
@@ -365,26 +391,24 @@ struct node \{
   \end{block}
   \begin{itemize}
     \item \texttt{data} stores the value.
-    \item \texttt{next} stores the address of another node.
-    \item If there is no next node, set \texttt{next = NULL}.
+    \item \texttt{next} stores the address of another node, or \texttt{NULL}.
   \end{itemize}
-  \muted{This is the basic building block for a linked list in a later week.
-    (The list handle will be called \texttt{head}; here the node is just
+  \muted{This is the building block for a linked list in a later week. (The
+    list handle will be called \texttt{head}; here the node is just
     \texttt{p}.)}
 \end{frame}
 
 \begin{frame}{The Safe Empty Pointer}
-  \begin{block}{\texttt{NULL}}
-    \texttt{NULL} means that a pointer is not pointing to a valid object.
+  \begin{block}{Definition}
+    \texttt{NULL} means a pointer is not pointing to a valid object.
   \end{block}
-  \begin{itemize}
-    \item Use it to show that a pointer is currently empty.
-    \item Check a pointer before using the object it should point to.
-    \item Never try to read through an empty pointer.
-  \end{itemize}
-  \begin{exampleblock}{Picture}
+  \begin{exampleblock}{Example}
     \texttt{struct node *p = NULL;} means ``this pointer reaches nothing yet''.
   \end{exampleblock}
+  \begin{itemize}
+    \item Check a pointer against \texttt{NULL} before using what it points to.
+    \item Never read through an empty pointer.
+  \end{itemize}
 \end{frame}
 
 \transitionslide{Now let us actually request a block of heap memory and use it.}
@@ -394,22 +418,102 @@ struct node \{
 % =============================================================================
 \section{One Heap Block}
 
-\sectiondivider{Section 3}{One Heap Block}
+\sectiondivider{Section 4}{One Heap Block}
 
-\begin{frame}[fragile]{Requesting One Integer}
-  \begin{block}{The basic pattern}
+\begin{frame}[fragile]{Requesting Memory: \texttt{malloc}}
+  \begin{block}{Definition}
+    \texttt{malloc(n)} asks the heap for \texttt{n} bytes and returns their
+    address, or \texttt{NULL} if the request fails.
+  \end{block}
 \begin{semiverbatim}
 int *p = malloc(sizeof(int));
 if (p == NULL) return 1;
 *p = 80;
 \end{semiverbatim}
+  \muted{Always check the result against \texttt{NULL} before using it.}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{sizeof}: the Unit of Every Request}
+  \begin{block}{Definition}
+    \texttt{sizeof(T)} is the compile-time size, in bytes, of type \texttt{T}.
   \end{block}
+\begin{semiverbatim}
+sizeof(int)          \textcolor{neutral}{// typically 4}
+sizeof(struct node)  \textcolor{neutral}{// data field + next field}
+\end{semiverbatim}
   \begin{itemize}
-    \item \texttt{malloc} requests bytes from the heap.
-    \item \texttt{sizeof(int)} asks C for the right number of bytes.
-    \item \texttt{p} stores the address of the requested space.
-    \item \muted{Check the result against \texttt{NULL} before using it.}
+    \item \texttt{malloc} never knows how big an \texttt{int} is on its own.
+    \item \texttt{sizeof} is what tells it --- every allocation request uses it.
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Zero-Initialized Memory: \texttt{calloc}}
+  \begin{block}{Definition}
+    \texttt{calloc(n, size)} allocates space for \texttt{n} items of
+    \texttt{size} bytes each, and sets every byte to \texttt{0}.
+  \end{block}
+\begin{semiverbatim}
+int *counts = calloc(5, sizeof(int));
+if (counts == NULL) return 1;
+\end{semiverbatim}
+  \key{calloc} zero-initializes; \key{malloc} does not.
+\end{frame}
+
+\begin{frame}{Worked Example: \texttt{malloc} vs.\ \texttt{calloc}}
+  \begin{center}
+    % Diagram: two 4-byte blocks side by side, malloc (garbage) vs calloc (zeros).
+    % Coordinates: (x,y) -- no lines, no bends; two independent boxes.
+    %   malloc box at (-2.4, 0), w=3.8cm h=1.1cm
+    %   calloc box at (2.4, 0), w=3.8cm h=1.1cm
+    \begin{tikzpicture}[every node/.style={font=\small}]
+      % Diagram: two independent 4-byte blocks, no connecting lines.
+      % Coordinates: (x,y)
+      %   malloc label at (-2.4, 1.0); malloc box at (-2.4, 0), w=3.8cm h=1.1cm
+      %     (box top edge at y=0.55; label at y=1.0 clears it by 0.45cm >= 0.4cm)
+      %   calloc label at (2.4, 1.0); calloc box at (2.4, 0), w=3.8cm h=1.1cm
+      \node[font=\scriptsize, text=neutral] at (-2.4,1.0) {malloc(4*sizeof(int))};
+      \node[draw, fill=negative!12, minimum width=3.8cm, minimum height=1.1cm,
+        align=center, font=\ttfamily\small]
+        (m) at (-2.4,0) {? \quad ? \quad ? \quad ?};
+      \node[font=\scriptsize, text=neutral] at (2.4,1.0) {calloc(4, sizeof(int))};
+      \node[draw, fill=positive!12, minimum width=3.8cm, minimum height=1.1cm,
+        align=center, font=\ttfamily\small]
+        (c) at (2.4,0) {0 \quad\; 0 \quad\; 0 \quad\; 0};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item \texttt{malloc} hands back four \key{unspecified} bytes --- reading
+      them before writing is undefined behaviour.
+    \item \texttt{calloc} hands back four bytes already \key{set to zero}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Resizing a Block: \texttt{realloc}}
+  \begin{block}{Definition}
+    \texttt{realloc(p, newsize)} resizes the block \texttt{p} points to,
+    preserving its existing content up to the smaller of the old and new
+    sizes. The block \key{may move} --- always keep the returned pointer.
+  \end{block}
+\begin{semiverbatim}
+int *bigger = realloc(p, 10 * sizeof(int));
+if (bigger == NULL) return 1;  \textcolor{neutral}{// p is still valid here}
+p = bigger;
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}{Worked Example: Growing an Array with \texttt{realloc}}
+  \begin{block}{Trace}
+    Start with \texttt{p = malloc(3 * sizeof(int))} holding \texttt{10 20 30}.
+  \end{block}
+  \begin{enumerate}
+    \item \texttt{p = realloc(p, 5 * sizeof(int));}
+    \item The first three ints (\texttt{10 20 30}) are copied to the new block.
+    \item The two new slots are \key{unspecified} --- \texttt{realloc} does
+      not zero new space, only \texttt{calloc} zeros space.
+  \end{enumerate}
+  \muted{If \texttt{realloc} returns \texttt{NULL}, the original block at
+    \texttt{p} is untouched and still valid --- never overwrite \texttt{p}
+    with the raw result before checking it.}
 \end{frame}
 
 \begin{frame}[fragile]{Allocate a Complete Node}
@@ -423,8 +527,8 @@ p->next = NULL;
   \end{block}
   \begin{itemize}
     \item \texttt{sizeof(struct node)} asks for exactly one node's bytes.
-    \item \texttt{p->data} means: the \texttt{data} field of the node \texttt{p} points at.
-    \item Initialising every field makes the node's state predictable.
+    \item \texttt{p->data} means: the \texttt{data} field of the node \texttt{p}
+      points at.
     \item This node has a clear end: \texttt{p->next == NULL}.
   \end{itemize}
 \end{frame}
@@ -439,17 +543,11 @@ p->next = NULL;
     \item Is there exactly one clear owner responsible for \texttt{free(p)}?
     \item Can the program reach the node later, or has its pointer been lost?
   \end{enumerate}
-  \begin{exampleblock}{Engineering habit}
-    Test the normal path and the allocation-failure path.
-  \end{exampleblock}
 \end{frame}
 
 \begin{frame}{Trace It Before Running It}
   \begin{block}{After these lines, what is true?}
-\begin{semiverbatim}
-int *p = malloc(sizeof(int));
-*p = 80;
-\end{semiverbatim}
+    \texttt{int *p = malloc(sizeof(int)); *p = 80;}
   \end{block}
   \begin{enumerate}
     \item \texttt{p} contains an address.
@@ -570,27 +668,25 @@ int *p = malloc(sizeof(int));
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Returning the Memory}
-  \begin{block}{When the block is no longer needed}
+\begin{frame}[fragile]{Returning the Memory: \texttt{free}}
+  \begin{block}{Definition}
+    \texttt{free(p)} returns the heap block \texttt{p} points to back to the
+    system. Every \texttt{malloc}/\texttt{calloc}/\texttt{realloc} needs a
+    matching \texttt{free}.
+  \end{block}
 \begin{semiverbatim}
 free(p);
 p = NULL;
 \end{semiverbatim}
-  \end{block}
-  \begin{itemize}
-    \item \texttt{free(p)} gives the heap block back to the system.
-    \item Setting \texttt{p} to \texttt{NULL} makes the old pointer visibly empty.
-    \item A block requested with \texttt{malloc} should eventually be freed.
-  \end{itemize}
   \good{Request memory, use it, return it.}
 \end{frame}
 
 \begin{frame}{Two Beginner Mistakes}
   \begin{itemize}
-    \item \bad{Memory leak}: forget to call \texttt{free}; the block stays reserved.
+    \item \bad{Memory leak}: forget to call \texttt{free}; the block stays
+      reserved forever.
     \item \bad{Dangling pointer}: use a pointer after its block was freed.
   \end{itemize}
-  \vspace{0.2cm}
   \begin{exampleblock}{Simple habit}
     Keep track of who requested the memory and who will return it.
   \end{exampleblock}
@@ -603,42 +699,21 @@ p = NULL;
 % =============================================================================
 \section{Simple Contracts}
 
-\sectiondivider{Section 4}{Simple Contracts}
+\sectiondivider{Section 5}{Simple Contracts}
 
 \begin{frame}{What Is an ADT?}
-  \begin{block}{Abstract Data Type}
-    An ADT describes what we can do with data, without saying how it is stored.
+  \begin{block}{Definition}
+    An ADT describes \emph{what} we can do with data, without saying
+    \emph{how} it is stored --- ``a set of values and a set of operations on
+    those values'' (Sedgewick, p.64)
+    \cite{Sedgewick2011_algorithms}.
   \end{block}
-  \begin{itemize}
-    \item Sedgewick (p.64): a data type is ``a set of values and a set of
-      operations on those values''
-      \cite{Sedgewick2011_algorithms}.
-    \item Karumanchi (p.18, PDF): an ADT has two parts --- a declaration of
-      data and a declaration of operations
-      \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
-    \item The implementation is the code and memory arrangement behind the promise.
-  \end{itemize}
-  \vspace{0.1cm}
-  \muted{The two framings agree: ``set of values and operations'' is exactly
-    ``declaration of data and declaration of operations.''}
+  \muted{Karumanchi (p.18, PDF) frames the same idea as a declaration of data
+    plus a declaration of operations
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.}
 \end{frame}
 
-\begin{frame}{This Course Is a Tour of ADTs}
-  \begin{block}{The pattern you will see every week}
-    Linked Lists, Stacks, Queues, Priority Queues, Binary Trees, Disjoint Sets,
-    Hash Tables, and Graphs are all commonly used ADTs
-    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
-  \end{block}
-  \begin{itemize}
-    \item Each one starts the same way: state the contract, \emph{then} implement it.
-    \item Weeks 3--12 work through this list one ADT at a time.
-    \item Today's ``bag'' is a warm-up for that pattern, not a one-off example.
-  \end{itemize}
-  \muted{Watch for this shape: ``What is a Stack?'' then ``Stack ADT'' then
-    ``Implementation'' --- every week, same order.}
-\end{frame}
-
-\begin{frame}{Example: A Very Small Bag}
+\begin{frame}{Worked Example: A Very Small Bag}
   \begin{block}{The contract}
     A bag of integers supports three operations:
   \end{block}
@@ -647,11 +722,19 @@ p = NULL;
     \item \texttt{member(x)} --- answer whether \texttt{x} is present.
     \item \texttt{size()} --- report how many items are present.
   \end{enumerate}
-  \vspace{0.15cm}
-  \muted{The contract does not yet say whether the bag uses an array or a list.
-    A bag is one of Sedgewick's three collection types (p.120) --- the other two
-    (queue, stack) simply change which object is removed next
+  \muted{The contract does not yet say whether the bag uses an array or a
+    list. A bag is one of Sedgewick's three collection types (p.120)
     \cite{Sedgewick2011_algorithms}.}
+\end{frame}
+
+\begin{frame}{This Course Is a Tour of ADTs}
+  \begin{block}{The pattern you will see every week}
+    Linked Lists, Stacks, Queues, Priority Queues, Binary Trees, Hash Tables,
+    and Graphs are all commonly used ADTs
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+  \end{block}
+  \muted{Watch for this shape every week: ``What is a Stack?'' then
+    ``Stack ADT'' then ``Implementation.''}
 \end{frame}
 
 \begin{frame}{One Contract, Two Possible Implementations}
@@ -673,10 +756,10 @@ p = NULL;
       \draw[->, thick] (adt) -- (list);
     \end{tikzpicture}
   \end{center}
-  \begin{block}{The key distinction}
-    Same operations, different internal arrangement --- the caller's code does
-    not change when the bottom box does.
-  \end{block}
+  \begin{itemize}
+    \item Same operations, different internal arrangement.
+    \item The caller's code does not change when the bottom box does.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Contract or Implementation?}
@@ -688,26 +771,22 @@ p = NULL;
     \item ``The values are stored in an array.''
     \item ``\texttt{size()} reports the number of values.''
   \end{enumerate}
-  \vspace{0.15cm}
-  \muted{The first and third describe what users can ask (contract). The second
-    describes how (implementation). State the contract before writing a line of
-    the implementation.}
+  \muted{The first and third describe what users can ask (contract). The
+    second describes how (implementation).}
 \end{frame}
 
 \begin{frame}{Week 1 Summary}
   \begin{itemize}
-    \item \key{Memory:} the stack holds short-lived local variables; the heap
-      holds memory requested while the program runs.
+    \item \key{Structure:} sequence, selection, iteration build every program.
+    \item \key{Memory:} the stack holds short-lived locals; the heap holds
+      memory requested while the program runs.
     \item \key{Pointers:} a pointer stores an address; \texttt{NULL} means
       ``points to nothing.''
-    \item \key{Dynamic memory:} request with \texttt{malloc}, check the result,
-      use the block, and call \texttt{free}.
-    \item \key{ADTs:} describe operations first (a contract); a data structure
+    \item \key{Dynamic memory:} \texttt{malloc}/\texttt{calloc}/\texttt{realloc}
+      request, \texttt{free} returns.
+    \item \key{ADTs:} state operations first (a contract); a data structure
       is the implementation that honours it.
-    \item The rest of this course is a tour of ADTs: contract first,
-      implementation second, cost analysis third.
   \end{itemize}
-  \vspace{0.15cm}
   \begin{exampleblock}{Next week}
     We learn how to talk about the amount of work an operation needs ---
     $T(n)$, $O$/$\Omega$/$\Theta$, and best/worst/average case.

@@ -6,8 +6,18 @@
 % (gitignored, never published). Sourced from Slides/CS301/01-foundations-pointers-adt.tex
 % and Notes/CS301/01-foundations-pointers-adt-notes.tex.
 %
-% Compile with: cd Assignments/CS301 &&
-%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-foundations-pointers-adt-assignment.tex
+% FULL REGENERATION 2026-08-13: the deck was rebuilt at --difficulty intro
+% (course-wide default, knowledge-base-CS301.md) and gained a new standalone
+% "Structured Programming" Act plus dedicated calloc/realloc Definition and
+% worked-example frames that the prior core-tier deck lacked. This is a full
+% regeneration against the new source, not an incremental edit of the old
+% core-tier problem set (which covered only malloc/free, not the full
+% malloc/calloc/realloc/free family, and had no structured-programming
+% question at all). Weighted to the `intro` tier per difficulty-levels.md:
+% recall/apply-weighted, single-concept problems, multi-part steps scaffolded.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 01-foundations-pointers-adt-assignment.tex
 %   (Windows/MiKTeX uses ; not : as the path separator)
 % =============================================================================
 
@@ -27,13 +37,36 @@
 
 \noindent\textbf{Due:} two weeks from issue. Late submissions lose 10\% per day unless a documented excuse is provided in advance (see the course policy in the syllabus).
 
-\noindent Answer every question. Show all working for Numerical and Design questions.
+\noindent Answer every question. Show all working for Numerical and Design questions. Each question tests one idea from Week 1 --- read it fully before answering; every sub-part follows directly from the wording of the part before it.
 
 \section{Conceptual}
 
-\textbf{Q1.} A running C program keeps data in two different regions: the \textbf{stack} and the \textbf{heap}. Explain, using a concrete example, why \emph{both} are needed rather than keeping everything in one region. Give one scenario where a value must live on the heap because it would not survive on the stack, and one scenario where the stack is clearly the right choice.
+\textbf{Q1.} A program is built from exactly three control patterns: \key{sequence}, \key{selection}, and \key{iteration}. Consider the function below.
+\begin{verbatim}
+int classify(int score) {
+    int grade = 0;               // line A
+    if (score >= 40)             // line B
+        grade = 1;
+    for (int i = 0; i < grade; i++)   // line C
+        grade = grade + 0;
+    return grade;                // line D
+}
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] Which control pattern does line A illustrate?
+  \item[(b)] Which control pattern does line B illustrate?
+  \item[(c)] Which control pattern does line C illustrate?
+  \item[(d)] The lecture's own example (\texttt{larger(int a, int b)}) treats a function's \emph{parameter list} as an instance of sequence --- the values simply arrive, one after the other, before anything else happens. Applying that same reading here: which control pattern does \texttt{classify}'s parameter list \texttt{(int score)}, together with line D's \texttt{return grade;}, illustrate, and why?
+\end{enumerate}
 
-\textbf{Q2.} Distinguish between a \textbf{contract} statement and an \textbf{implementation} statement for the bag ADT introduced in class. For each of the following, say whether it is part of the contract or of one implementation, and justify in one sentence:
+\textbf{Q2.} A running C program keeps data in two different regions: the \textbf{stack} and the \textbf{heap}.
+\begin{enumerate}
+  \item[(a)] State, in one sentence each, what determines \emph{when} a stack variable's storage is reclaimed, and what determines \emph{when} a heap block's storage is reclaimed.
+  \item[(b)] Give one scenario where a value must live on the heap because it would not survive on the stack.
+  \item[(c)] Give one scenario where the stack is clearly the right choice, and say why using the heap there would be wasteful.
+\end{enumerate}
+
+\textbf{Q3.} Distinguish between a \textbf{contract} statement and an \textbf{implementation} statement for the bag ADT introduced in class (operations \texttt{insert(x)}, \texttt{member(x)}, \texttt{size()}). For each of the following, say whether it is part of the contract or of one implementation, and justify in one sentence:
 \begin{enumerate}
   \item[(a)] ``\texttt{member(7)} answers yes or no.''
   \item[(b)] ``The values are stored in an array.''
@@ -43,7 +76,7 @@
 
 \section{Numerical}
 
-\textbf{Q3.} On a 64-bit machine, consider the C declaration
+\textbf{Q4.} On a 64-bit machine, consider the C declaration
 \begin{verbatim}
 struct node {
     int   data;
@@ -52,27 +85,36 @@ struct node {
 \end{verbatim}
 \begin{enumerate}
   \item[(a)] State how many bytes \texttt{sizeof(struct node)} reports, assuming \texttt{sizeof(int) == 4} and a pointer is 8 bytes, with no padding.
-  \item[(b)] A program executes \texttt{struct node *p = malloc(sizeof(struct node));}. Draw (in words or a small diagram) what lives on the stack and what lives on the heap after this line, and what \texttt{p} itself holds.
+  \item[(b)] A program executes \texttt{struct node *p = malloc(sizeof(struct node));}. State what lives on the stack and what lives on the heap after this line, and what \texttt{p} itself holds.
   \item[(c)] If \texttt{malloc} returns \texttt{NULL}, what must the program do before it dereferences \texttt{p}, and why?
 \end{enumerate}
 
-\textbf{Q4.} A function allocates a heap block and returns a pointer to it:
+\textbf{Q5.} Consider the two independent requests below, each on a fresh, previously-unused region of heap memory:
 \begin{verbatim}
-int *make_block(void) {
-    int *p = malloc(sizeof(int));
-    *p = 80;
-    return p;
-}
+int *a = malloc(3 * sizeof(int));
+int *b = calloc(3, sizeof(int));
 \end{verbatim}
 \begin{enumerate}
-  \item[(a)] After \texttt{make\_block} returns, does the value \texttt{80} still exist? Which region is it in, and why does it survive the function's return?
-  \item[(b)] If the caller never calls \texttt{free(p)}, what is the name of the mistake, and what are its consequences?
-  \item[(c)] If the caller calls \texttt{free(p)} and then tries to read \texttt{*p}, what is the name of the mistake, and what is the safe pattern to avoid it?
+  \item[(a)] State the content of the three integers at \texttt{a} immediately after the \texttt{malloc} call, before anything is written to them. Justify from the definition of \texttt{malloc}.
+  \item[(b)] State the content of the three integers at \texttt{b} immediately after the \texttt{calloc} call, before anything is written to them. Justify from the definition of \texttt{calloc}.
+  \item[(c)] Both calls request the same number of bytes. Name the one guarantee that distinguishes \texttt{calloc} from \texttt{malloc}, and state what it costs \texttt{calloc} to provide that guarantee.
+\end{enumerate}
+
+\textbf{Q6.} A program holds \texttt{p = calloc(4, sizeof(int))}, and the four slots currently hold \texttt{5, 10, 15, 20}. It then executes:
+\begin{verbatim}
+int *q = realloc(p, 7 * sizeof(int));
+if (q == NULL) return 1;
+p = q;
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] After this succeeds, state the values in slots 0--3 of the block \texttt{p} now points to, and justify from the definition of \texttt{realloc}.
+  \item[(b)] State what can be said about the values in the three new slots (4--6), and justify --- is this the same guarantee \texttt{calloc} gives, or a different one?
+  \item[(c)] Suppose instead \texttt{realloc} had failed and returned \texttt{NULL}. Explain why the code checks \texttt{q} rather than reassigning \texttt{p} directly, and what would go wrong with the idiom \texttt{p = realloc(p, 7 * sizeof(int));} written as a single line with no check.
 \end{enumerate}
 
 \section{Design}
 
-\textbf{Q5.} Write a complete C function \texttt{create\_node} that:
+\textbf{Q7.} Write a complete C function \texttt{create\_node} that:
 \begin{enumerate}
   \item[(a)] Takes an integer \texttt{data} as its only parameter.
   \item[(b)] Allocates one \texttt{struct node} (with fields \texttt{data} and \texttt{next}) on the heap using \texttt{malloc}.
@@ -81,10 +123,16 @@ int *make_block(void) {
 \end{enumerate}
 State the function's return type and write the body. Your solution must follow the pointer discipline from the lecture: check \texttt{malloc}, initialise every field, and use \texttt{p->field} form.
 
-\textbf{Q6.} The bag ADT from the lecture has the contract ``\texttt{insert(x)}, \texttt{member(x)}, \texttt{size()}.''
+\textbf{Q8.} Write a complete C function
+\begin{verbatim}
+int *grow_scores(int *scores, int old_count, int new_count);
+\end{verbatim}
+that manages a dynamically-sized array of exam scores, following the allocation discipline from the lecture. Your function must:
 \begin{enumerate}
-  \item[(a)] Write the ADT's contract as a C header file: a \texttt{struct node} typedef and four function prototypes (\texttt{bag\_insert}, \texttt{bag\_member}, \texttt{bag\_size}, \texttt{free\_bag}) that together honour the contract, using a head pointer and \texttt{NULL} for the empty bag.
-  \item[(b)] State two different implementations that could honour this same contract, and explain in one sentence what the caller gains from coding against the contract rather than against one specific implementation.
+  \item[(a)] If \texttt{scores} is \texttt{NULL} (no array exists yet) and \texttt{old\_count} is \texttt{0}, allocate a fresh block for \texttt{new\_count} integers using \texttt{calloc}, so that every slot starts at a well-defined value. Return \texttt{NULL} if this allocation fails.
+  \item[(b)] Otherwise (an array already exists), use \texttt{realloc} to grow the existing block from \texttt{old\_count} to \texttt{new\_count} integers, following the check-before-overwrite idiom from Q6(c) --- never assign a possibly-\texttt{NULL} result directly into \texttt{scores} before checking it. Return \texttt{NULL} if this reallocation fails, leaving the original block untouched.
+  \item[(c)] On success, return the (possibly moved) pointer to the caller.
 \end{enumerate}
+In one or two sentences beneath your function, state what --- if anything --- your function guarantees about the content of the newly added slots (index \texttt{old\_count} through \texttt{new\_count}$-1$) in each of the two branches (a) and (b), and explain why the two branches differ on this point.
 
 \end{document}

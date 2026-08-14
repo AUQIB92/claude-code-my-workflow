@@ -1,28 +1,52 @@
 % =============================================================================
 % CompetitiveExam/CS301/01-foundations-pointers-adt-questions.tex
 % Competitive Exam Practice 1 — GATE (Computer Science) Pattern
-% Foundations, Pointers & ADTs (Week 1: stack vs heap, pointers, malloc/free/
-% NULL/sizeof, the ADT contract with the bag example)
+% Foundations, Pointers & ADTs (Week 1: structured programming, stack vs heap,
+% pointers, malloc/calloc/realloc/free, the ADT contract with the bag example)
 %
 % Student-facing — NO answers. Answer key: 01-foundations-pointers-adt-answers.tex.
 %
-% Provenance (availability-first, Tier 1 = local PYQ book): Q1-Q4 are real GATE
-% past-year questions sourced from the local GATEOverflow Volume 2 PYQ book
-% (CompetitiveExam/Books/index.md: Pointer cluster, PDF pp. 293-298). Question
-% headings and code/option text were recovered via pdftotext from the text layer,
-% plus Ghostscript render + Tesseract OCR for the option letters that the book
-% prints as embedded images (GATE 2001 Q2.18). The book authenticates each
-% question (year + question number printed on the page), so the
-% "— GATEOverflow V2 p.<page>" tag certifies source authenticity.
+% REGENERATED 2026-08-13 against the rebuilt (--difficulty intro) deck, which
+% added a standalone Structured Programming act and dedicated calloc/realloc
+% frames the prior 2026-08-12 build of this set did not cover. Provenance
+% (availability-first, Tier 1 = local PYQ book):
+%   - Q1  [GATE CSE 2004 Q1, verified] — re-scanned from local GATEOverflow
+%     Volume 2 (5.12 Programming Paradigms, PDF p.308); NOT in
+%     CompetitiveExam/Books/index.md's published topic map (one of the
+%     "smallest/rare topics folded into the rows above" the map's own note
+%     warns about) — found by re-scanning the heading regex per Phase 0's
+%     instruction to re-scan before concluding a topic is missing.
+%   - Q2  [Original, GATE-pattern] — structured-programming pattern
+%     classification; no second real PYQ on this narrow a topic was found.
+%   - Q3, Q4 [Original, GATE-pattern] — stack vs heap (carried from the prior
+%     build; deck's memory-model content is conceptual, not GATE's usual
+%     code-output style, so no strong real-PYQ match was pursued here).
+%   - Q5-Q8 [real GATE PYQs, verified — GATEOverflow V2 pp.293-297] — carried
+%     from the prior build (Pointer cluster, PDF pp.293-298 per index.md).
+%   - Q9 [Original, GATE-pattern] — NULL pointer (carried).
+%   - Q10 [Original, GATE-pattern] — malloc semantics (carried).
+%   - Q11, Q12 [Original, GATE-pattern] — calloc and realloc specifically; the
+%     local volume's only calloc/realloc hits (checked via pdftotext across
+%     the full 403-page text layer) are a "Formulas/Common Pitfalls" study
+%     appendix (around PDF p.17374), not a real numbered GATE PYQ heading, so
+%     no Tier-1 or Tier-2 real question exists for these two calls — original
+%     questions fill the gap per Phase 2.
+%   - Q13 [Original, GATE-pattern] — sizeof(struct) (carried).
+%   - Q14 [GATE CSE 2005 Q2, verified] — re-scanned from local GATEOverflow
+%     Volume 2 (3.2 Abstract Data Type, PDF p.198); also not in index.md's
+%     published topic map, found the same way as Q1.
+%   - Q15 [Original, GATE-pattern] — ADT contract-vs-implementation
+%     classification (carried).
 %
-% Verification note for answers: the book's own answer keys are collapsed and
-% not extractable (see CompetitiveExam/Books/index.md), so every answer was
-% independently cross-checked against 2+ web sources in the build session
-% (2026-08-12): GATEOverflow online question pages, GeeksforGeeks, Testbook,
-% and Electrical4u. Only answers confirmed by those sources carry the
-% [verified] tag. Q5-Q10 are original GATE-pattern questions filling the
-% stack/heap, NULL, malloc/sizeof, and ADT subtopics that the local volume does
-% not cover at the lecture's level of specificity.
+% Question headings/options for Q1 and Q14 were fully recoverable via
+% pdftotext alone (pure text, no embedded-image math values), so no
+% render+OCR pass was needed for either. Verification note for answers: the
+% book's own answer keys are collapsed and not extractable (see
+% CompetitiveExam/Books/index.md), so every real-PYQ answer — including the
+% two newly added ones — was independently cross-checked against 2+ web
+% sources in the build session (2026-08-13): GATEOverflow online question
+% pages, GeeksforGeeks, Testbook, and Electrical4u. Only answers confirmed by
+% those sources carry the [verified] tag.
 %
 % Compile with: cd CompetitiveExam/CS301 &&
 %   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 01-foundations-pointers-adt-questions.tex
@@ -46,7 +70,44 @@
 \noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type; TF = True/False. C is the language.
 
 \begin{enumerate}
-\item[\textbf{Q1}] \textit{[GATE CS 2001 Q2.18, verified --- GATEOverflow V2 p.293]} \textbf{[MCQ, 2 marks]} Consider the following three C functions:
+\item[\textbf{Q1}] \textit{[GATE CSE 2004 Q1, verified --- GATEOverflow V2 p.308]} \textbf{[MCQ, 1 mark]} The goal of structured programming is to:
+\begin{enumerate}
+  \item[(A)] have well indented programs.
+  \item[(B)] be able to infer the flow of control from the compiled code.
+  \item[(C)] be able to infer the flow of control from the program text.
+  \item[(D)] avoid the use of GOTO statements.
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Consider the following C function:
+\begin{verbatim}
+int largest3(int a, int b, int c) {
+  int m = a;
+  if (b > m) m = b;
+  if (c > m) m = c;
+  return m;
+}
+\end{verbatim}
+Which control patterns appear in this function?
+\begin{enumerate}
+  \item[(A)] Sequence and iteration only.
+  \item[(B)] Sequence and selection only.
+  \item[(C)] Selection and iteration only.
+  \item[(D)] Sequence, selection, and iteration.
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a running C program, where does a local variable declared inside a function live, and where does memory requested by \texttt{malloc} live, respectively?
+\begin{enumerate}
+  \item[(A)] heap; stack
+  \item[(B)] stack; heap
+  \item[(C)] stack; stack
+  \item[(D)] heap; heap
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
+
+A block of memory obtained by \texttt{malloc} inside a function survives the return of that function, whereas a local variable of the same function does not.
+
+\item[\textbf{Q5}] \textit{[GATE CS 2001 Q2.18, verified --- GATEOverflow V2 p.293]} \textbf{[MCQ, 2 marks]} Consider the following three C functions:
 \begin{verbatim}
 /* P1 */
 int *g(void) {
@@ -75,7 +136,7 @@ Which of the above three functions are likely to cause problems with pointers?
   \item[(D)] P1, P2 and P3
 \end{enumerate}
 
-\item[\textbf{Q2}] \textit{[GATE CS 2014 Set 1 Q10, verified --- GATEOverflow V2 p.295]} \textbf{[MCQ, 1 mark]} Consider the following program in C language:
+\item[\textbf{Q6}] \textit{[GATE CS 2014 Set 1 Q10, verified --- GATEOverflow V2 p.295]} \textbf{[MCQ, 1 mark]} Consider the following program in C language:
 \begin{verbatim}
 #include <stdio.h>
 main() {
@@ -93,7 +154,7 @@ Which one of the following statements is TRUE?
   \item[(D)] On execution, the value printed is more than the integer value entered.
 \end{enumerate}
 
-\item[\textbf{Q3}] \textit{[GATE CS 2017 Set 1 Q13, verified --- GATEOverflow V2 p.296]} \textbf{[MCQ, 1 mark]} Consider the following C code:
+\item[\textbf{Q7}] \textit{[GATE CS 2017 Set 1 Q13, verified --- GATEOverflow V2 p.296]} \textbf{[MCQ, 1 mark]} Consider the following C code:
 \begin{verbatim}
 #include <stdio.h>
 int *assignval(int *x, int val) {
@@ -121,7 +182,7 @@ The code suffers from which one of the following problems:
   \item[(D)] compiles successfully but execution may result in memory leak.
 \end{enumerate}
 
-\item[\textbf{Q4}] \textit{[GATE CS 2025 Set 1 Q24, verified --- GATEOverflow V2 p.297]} \textbf{[NAT, 1 mark]} What is the output of the given C program?
+\item[\textbf{Q8}] \textit{[GATE CS 2025 Set 1 Q24, verified --- GATEOverflow V2 p.297]} \textbf{[NAT, 1 mark]} What is the output of the given C program?
 \begin{verbatim}
 #include <stdio.h>
 void foo(int *p, int x) {
@@ -138,23 +199,11 @@ int main() {
 \end{verbatim}
 The output of the given program is \_\_\_\_\_\_\_\_\_. (Answer in integer)
 
-\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} In a running C program, where does a local variable declared inside a function live, and where does memory requested by \texttt{malloc} live, respectively?
-\begin{enumerate}
-  \item[(A)] heap; stack
-  \item[(B)] stack; heap
-  \item[(C)] stack; stack
-  \item[(D)] heap; heap
-\end{enumerate}
-
-\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
-
-A block of memory obtained by \texttt{malloc} inside a function survives the return of that function, whereas a local variable of the same function does not.
-
-\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
+\item[\textbf{Q9}] \textit{[Original, GATE-pattern]} \textbf{[TF, 1 mark]} State whether the following statement is TRUE or FALSE:
 
 \texttt{NULL} is a pointer value meaning ``points to nothing,'' and dereferencing a \texttt{NULL} pointer is undefined behaviour --- in practice, a crash.
 
-\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Which of the following statements about \texttt{malloc} is TRUE?
+\item[\textbf{Q10}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Which of the following statements about \texttt{malloc} is TRUE?
 \begin{enumerate}
   \item[(A)] On success \texttt{malloc} returns the number of bytes allocated.
   \item[(B)] On success \texttt{malloc} returns the address of the requested block; on failure it returns \texttt{NULL}.
@@ -162,7 +211,28 @@ A block of memory obtained by \texttt{malloc} inside a function survives the ret
   \item[(D)] A pointer obtained from \texttt{malloc} must be dereferenced immediately or the program crashes.
 \end{enumerate}
 
-\item[\textbf{Q9}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} On a 64-bit machine where an \texttt{int} occupies 4 bytes and a pointer occupies 8 bytes (alignment: fields are aligned to their own size), how many bytes does the following structure occupy?
+\item[\textbf{Q11}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} Consider the C statement \texttt{int *p = calloc(4, sizeof(int));}, executed successfully, and compare it with the same-sized request \texttt{int *q = malloc(4 * sizeof(int));}. Which of the following is TRUE?
+\begin{enumerate}
+  \item[(A)] Both \texttt{calloc} and \texttt{malloc} initialize the block to zero.
+  \item[(B)] \texttt{calloc} initializes every byte of the block to zero; \texttt{malloc} leaves the contents unspecified.
+  \item[(C)] \texttt{calloc} leaves the contents unspecified; \texttt{malloc} initializes every byte to zero.
+  \item[(D)] Neither call initializes the block; both leave the contents unspecified.
+\end{enumerate}
+
+\item[\textbf{Q12}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A program executes:
+\begin{verbatim}
+int *p = malloc(3 * sizeof(int));   /* p[0]=10, p[1]=20, p[2]=30 */
+int *q = realloc(p, 6 * sizeof(int));
+\end{verbatim}
+Suppose \texttt{realloc} succeeds and returns a block at a \emph{different} address than \texttt{p}. Which of the following is TRUE?
+\begin{enumerate}
+  \item[(A)] The values \texttt{10, 20, 30} are lost; the new block's first three slots are unspecified.
+  \item[(B)] \texttt{q[0..2]} equal \texttt{10, 20, 30} (copied from \texttt{p[0..2]}); \texttt{q[3..5]} are unspecified.
+  \item[(C)] The original block at \texttt{p} remains valid and must still be freed separately from \texttt{q}.
+  \item[(D)] \texttt{realloc} guarantees \texttt{q[3..5]} are initialized to zero, just like \texttt{calloc}.
+\end{enumerate}
+
+\item[\textbf{Q13}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]} On a 64-bit machine where an \texttt{int} occupies 4 bytes and a pointer occupies 8 bytes (alignment: fields are aligned to their own size), how many bytes does the following structure occupy?
 \begin{verbatim}
 struct node {
     int data;
@@ -171,7 +241,15 @@ struct node {
 \end{verbatim}
 The number of bytes occupied is \_\_\_\_\_\_\_\_\_.
 
-\item[\textbf{Q10}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Recall Sedgewick's definition of a data type as ``a set of values and a set of operations on those values,'' and the Week 1 \key{bag} ADT supporting \texttt{insert(x)}, \texttt{member(x)}, and \texttt{size()}. Which statement is TRUE?
+\item[\textbf{Q14}] \textit{[GATE CSE 2005 Q2, verified --- GATEOverflow V2 p.198]} \textbf{[MCQ, 1 mark]} An Abstract Data Type (ADT) is:
+\begin{enumerate}
+  \item[(A)] same as an abstract class.
+  \item[(B)] a data type that cannot be instantiated.
+  \item[(C)] a data type for which only the operations defined on it can be used, but none else.
+  \item[(D)] all of the above.
+\end{enumerate}
+
+\item[\textbf{Q15}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Recall Sedgewick's definition of a data type as ``a set of values and a set of operations on those values,'' and the Week 1 \key{bag} ADT supporting \texttt{insert(x)}, \texttt{member(x)}, and \texttt{size()}. Which statement is TRUE?
 \begin{enumerate}
   \item[(A)] ``The values are stored in a dynamic array'' is part of the bag's contract.
   \item[(B)] \texttt{insert(x)}, \texttt{member(x)}, and \texttt{size()} name the operations of the contract, which does not say whether the bag is implemented with an array or a linked list.

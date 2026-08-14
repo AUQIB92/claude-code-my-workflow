@@ -1,46 +1,49 @@
-# Notes vs Beamer Parity Audit — CS301/01-foundations-pointers-adt (Round 3, final)
+# Notes vs Beamer Parity Audit: CS301/01-foundations-pointers-adt
 
-**Date:** 2026-08-11
-**Verdict:** **APPROVED** — 0 Critical, 0 Major, 2 Minor (within the ≤3-minor tolerance)
+**Beamer source:** `Slides/CS301/01-foundations-pointers-adt.tex` (48 frames incl. title/refs)
+**Notes:** `Notes/CS301/01-foundations-pointers-adt-notes.tex`
+**Round:** 3  **Date:** 2026-08-13
+
+## Verdict: APPROVED
+
+0 Critical, 0 Major, 2 Minor. Independent frame-by-frame re-audit (not a diff against round 2) confirms M3 and M4 are genuinely fixed and finds no new Critical/Major issues.
 
 ## Hard Gate Status
 
 | Gate | Status | Evidence |
 |------|--------|----------|
-| Content parity | **Pass** | All 21 substantive frames walked; every core idea traces into a Notes section. The 4 `\transitionslide` pacing beats are correctly dropped per the textbook-chapter convention. |
-| No invention | **Pass** | No facts, examples, or forward-references beyond the Beamer deck. Two cross-frame phrase blends noted as Minor. |
-| Citation parity | **Pass** | Beamer 2 keys (lines 119, 389) ↔ Notes 2 keys (lines 81, 340). Exact match, same claims, no extras, no figure-caption attributions. |
-| Notation fidelity | **Pass** | `struct node *p`, `p->data`, `p->next`, `NULL`, `malloc`/`calloc`/`realloc`/`free`/`sizeof`, `$n$`, `$O/\Omega/\Theta$`, both code listings identical to Beamer. Registry conventions in `knowledge-base-CS301.md` honored (0-based indexing, `\texttt{}` identifiers, uppercase `NULL`, `head`/`root`). |
-| Textbook-page honesty | **Pass** | No page number anywhere. Chapter-level attribution only, consistent with no index built for either anchor text. |
+| Content parity | Pass | All 48 frames traced to a Notes section/subsection; Week 1 Summary frame's 5 bullets + "next week" hook both covered (Notes §Summary + §What We Cannot Yet Answer). |
+| No invention | Pass | See Minor-2 below for the one borderline case (forward curriculum detail sourced from the course KB, not fabricated). |
+| Citation parity | Pass | `grep \cite{}` on both files: identical 5-key set (HorowitzSahni2008, AhoHopcroftUllman1983, Wirth2004, Sedgewick2011, Karumanchi2017), same combinations (e.g. Horowitz+Aho jointly cited in both at the motivation claim). |
+| Notation fidelity | Pass | `$T(n)$`, `$O$`/`$\Omega$`/`$\Theta$` identical in both; `\texttt{}` code identifiers match; `NULL`/`->`/`head`/`p` convention preserved. |
+| Textbook-page honesty | Pass | Wirth p.111, Sedgewick p.64/p.120, Karumanchi p.18(PDF) all cross-checked against `index.md` verified-anchor tables — every page number in Notes already appears in the corresponding Beamer frame (none invented during expansion). |
 
-## Fixes Verified This Round
+## M3 re-verification (stray `head` usage)
+`grep -n head` on the full Notes file returns exactly 2 hits, both correct: line 412 ("the list handle will be called `head` starting Week 6; here the node is just `p`") and line 433 (the same rule restated). Exercise 2 and Solution 2 both use `p` throughout. No stray Week-1 use of `head` remains. **Confirmed fixed.**
 
-- **Figure 1.1 lead-in** — names all five regions in low→high order matching the TikZ coordinate map; `holding the compiled instructions` and `fixed at load time` both gone (zero grep matches).
-- **Section 1.1 "Welcome" framing** — catalogue-of-arrangements / judgement-to-choose sentence restored, near-verbatim to Beamer 54–56.
-- **Earlier fixes still hold** — no `\cite{}` on any of the three figure captions; roadmap + expression-processor paragraph intact with no invented facts; no "Weeks 6, 7, and 11" forward-reference; LaTeX quotes correct; `\label{sec:memory}` used via `\ref`, no hardcoded "1.2".
+## M4 re-verification (Sedgewick "three collection types" attribution)
+The attribution now appears twice by design — once in the section's "Read alongside" line (798, the reading-guide convention used identically in every section of this file) and once inline in the `example` environment's opening sentence (824-826: "one of Sedgewick \& Wayne's three collection types (p.~120) \cite{Sedgewick2011_algorithms}"). This is the file's established house style (every section repeats its Read-alongside citation in body prose), not a confusing duplication. The sentence is grammatically correct. **Confirmed fixed, no residual issue.**
 
-## Minor (accepted, not actioned)
+## Minor Issues (non-blocking)
 
-### m1 — Cross-frame phrase splice on "it felt fast"
-Notes 92–94 merges the Beamer "Two Questions" frame's quote (line 129) with the justifying clause "which is not an argument" from the later "What We Cannot Yet Answer" frame (467–469). Both phrases exist verbatim in the deck; the blend is connective tissue, not a fabricated claim. Accepted.
+### m1: Wirth quotation is a paraphrase presented with quotation marks
+- Notes (line ~335-340) uses quote marks around "cannot be assigned a fixed amount of storage" / "cannot associate specific addresses with them," but the verified `Wirth2004/index.md` anchor (p.111) reads "it is impossible to assign a fixed amount of storage" / "cannot associate specific addresses **to their components**." Close paraphrase, not exact.
+- Fix (optional): either drop the quotation marks (make it indirect prose) or match the index.md wording exactly.
 
-### m2 — "noisier" characterization of `(*p).data`
-Notes 193–194 calls `(*p).data` "equivalent but noisier"; Beamer line 224 says only "the equivalent". **Grounded on review:** `knowledge-base-CS301.md`'s notation registry lists `\texttt{(*p).data}` in slides as "correct C, but noise" — the characterization traces to the course knowledge base, so it is course-sanctioned rather than invented. Accepted.
+### m2: Forward curriculum specifics not traceable to this Beamer frame
+- Notes §"One contract, two possible implementations" (lines ~861-867) states "Weeks 3 and 7 both implement a stack, once over an array and once over a chain of nodes. Weeks 5 and 7 do the same for a queue." This detail is accurate and sourced from `knowledge-base-CS301.md`'s Design Principles table, but the Beamer deck's own roadmap frame only says Weeks 3-5 are "linear structures" and Weeks 6-7 are "linked structures" — it does not itself specify that stack/queue get reimplemented in Week 7. Low-risk (verifiably correct per the course KB, doesn't contradict anything), but strictly not traceable to this specific Beamer file.
+- Fix (optional): soften to "a later week revisits this same contract over a linked implementation" or add the KB as an explicit forward-reference source.
 
-## Compile Verification
+## Positive Findings (re-examined, not counted as issues)
+- The "more importantly" editorial connector, the `(*p).data` aside, "not a hand-counted `8` or `12`," and "returning a pointer to a local variable is a bug" (all flagged as minors in round 2) are, on independent re-reading, legitimate derivation/expansion — exactly what Notes exists to add — not invented facts or padding. Downgraded from "issue" to "expansion working as intended."
+- All 12 TikZ diagrams (stack x3, heap x3, pointer, two-places, malloc/calloc, happened, adt) are narrated in prose immediately before/after their figure, drawn from each diagram's coordinate-map comment -- no "see figure" placeholders.
+- Citation-instance count matches near-exactly (8 in Beamer, 8 in Notes), same key combinations.
 
-3-pass XeLaTeX + BibTeX from `Notes/CS301/`, MiKTeX at `%LOCALAPPDATA%\Programs\MiKTeX\miktex\bin\x64` (`;`-joined `TEXINPUTS`/`BIBINPUTS` per the Windows/MiKTeX note in CLAUDE.md):
+## Summary Statistics
 
-- All 4 passes exit 0
-- 0 undefined citations, 0 undefined references
-- 0 overfull hbox
-- `\ref{sec:memory}` resolves to 1.2
-- Output: 6 pages, `01-foundations-pointers-adt-notes.pdf`
-
-## Round History
-
-| Round | Critical | Major | Minor | Verdict |
-|-------|----------|-------|-------|---------|
-| 1 | 2 | 3 | 2 | REJECTED |
-| 2 | 1 | 1 | 1 | REJECTED |
-| 3 | 0 | 0 | 2 | **APPROVED** |
+| Metric | Value |
+|--------|-------|
+| Beamer frames | 48 (incl. title + references) |
+| Notes sections | 6 numbered sections + Exercises/Solutions/Summary |
+| Citation keys: Beamer / Notes | 5 / 5 |
+| Critical / Major / Minor | 0 / 0 / 2 |
