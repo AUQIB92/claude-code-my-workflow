@@ -1,0 +1,255 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\begin{document}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: CPU -- bus -- device interface (data/status/control registers)
+    % -- I/O device. Establishes the register model the polling and interrupt
+    % worked examples build on for the rest of the deck.
+    % Coordinates: (x, y)
+    %   CPU box at (0, 0), width 2.2, height 1.2
+    %   Device Interface box at (6.0, 0), width 3.8, height 2.4
+    %   I/O Device box at (11.5, 0), width 2.0, height 1.2
+    \begin{tikzpicture}[scale=0.95, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.2cm, minimum height=1.2cm, align=center]
+            (CPU) at (0,0) {CPU};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=3.8cm, minimum height=2.4cm, align=center]
+            (IFACE) at (6.0,0) {\textbf{Device Interface}\\[0.15cm]
+              \footnotesize Data register\\ Status register\\ Control register};
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=2.0cm, minimum height=1.2cm, align=center]
+            (DEV) at (11.5,0) {I/O Device};
+      \draw[<->, thick] (CPU.east) -- (IFACE.west)
+            node[midway, above] {\scriptsize address/data bus};
+      \draw[<->, thick] (IFACE.east) -- (DEV.west)
+            node[midway, above] {\scriptsize device signals};
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: time-flow of control transfer. Main program timeline on the
+    % left (time increasing downward); a dashed diagonal arrow at the point
+    % of interrupt jumps right to the ISR timeline; a second dashed diagonal
+    % arrow returns control to the main program below the interrupt point.
+    % Coordinates: (x, y)
+    %   Main program line from (0, 3.2) to (0, -2.2)
+    %   Interrupt point on main line at (0, 1.6)
+    %   ISR line from (6.4, 1.0) to (6.4, -0.8)
+    %   Resume point on main line at (0, -1.4)
+    \begin{tikzpicture}[scale=0.44, transform shape,
+        every node/.style={font=\small}]
+      \draw[thick, primary-blue] (0,3.2) -- (0,-2.2);
+      \node[font=\scriptsize, anchor=east] at (-0.55,2.8) {Main program};
+      \draw[thick, primary-gold] (6.4,1.0) -- (6.4,-0.8);
+      \node[font=\scriptsize, anchor=west] at (6.95,0.70) {ISR};
+      \filldraw[primary-blue] (0,1.6) circle (2pt);
+      \filldraw[primary-blue] (0,-1.4) circle (2pt);
+      \draw[dashed, thick, ->] (0,1.6) -- (6.4,1.0)
+            node[midway, above, yshift=0.25cm] {\scriptsize interrupt accepted};
+      \draw[dashed, thick, ->] (6.4,-0.8) -- (0,-1.4)
+            node[midway, below, yshift=-0.28cm] {\scriptsize return (RTI)};
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: two devices' IRQ lines feed IPENDING (a bit per device);
+    % IENABLE supplies the per-device mask; both converge on a priority
+    % encoder + vector-table lookup that produces the ISR starting address.
+    % Coordinates: (x, y)
+    %   Device 1 IRQ at (0, 2.6); Device 2 IRQ at (0, 0.8)
+    %   IPENDING box (tall, receives both) at (4.4, 1.7), w=2.4, h=2.8
+    %   IENABLE box at (4.4, -1.6), w=2.4, h=0.9
+    %   Priority + vector lookup at (9.2, 1.7), w=2.8, h=1.8
+    %   ISR start address output at (13.4, 1.7)
+    \begin{tikzpicture}[scale=0.78, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.4cm, minimum height=0.8cm, align=center]
+            (D1) at (0,2.6) {Device 1 IRQ};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.4cm, minimum height=0.8cm, align=center]
+            (D2) at (0,0.8) {Device 2 IRQ};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=2.4cm, minimum height=2.8cm, align=center]
+            (IPEND) at (4.4,1.7) {\textbf{IPENDING}};
+      \node[draw=primary-blue, fill=light-bg, rounded corners, text width=2.2cm,
+            minimum height=0.9cm, align=center]
+            (IENABLE) at (4.4,-1.6) {\textbf{IENABLE} (mask)};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=2.8cm, minimum height=1.8cm, align=center]
+            (PRI) at (9.2,1.7) {Priority $+$\\vector-table\\lookup};
+      \node[draw=positive, fill=light-bg, rounded corners, text width=2.6cm,
+            minimum height=0.9cm, align=center]
+            (OUT) at (13.4,1.7) {ISR start address $\to$ \texttt{PC}};
+      \draw[->, thick] (D1.east) -- (IPEND.west |- 0,2.4);
+      \draw[->, thick] (D2.east) -- (IPEND.west |- 0,1.0);
+      \draw[->, thick] (IPEND.east) -- (PRI.west |- 0,2.3);
+      \draw[->, thick] (IENABLE.east) -- (7.0,-1.6) -- (7.0,1.1) -- (PRI.west |- 0,1.1);
+      \node[font=\scriptsize, anchor=east] at (6.6,-0.25) {mask};
+      \draw[->, thick] (PRI.east) -- (OUT.west);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: 3-row digital timing diagram -- Clock (square wave), Address/
+    % Data valid (asserted through the transfer), Slave-ready (low during
+    % wait states, then high once data is valid). Shows the multi-cycle
+    % transfer used for a slow device.
+    % Coordinates: (x, y) -- time axis in cm, 1 cm = 1 clock half-period
+    %   Clock row at y=2.6; Address/Data row at y=1.3; Slave-ready row at y=0
+    %   Clock edges at x = 0,1,2,3,4,5,6,7,8 (four full periods)
+    \begin{tikzpicture}[scale=0.85, transform shape,
+        every node/.style={font=\scriptsize}]
+      \draw[dashed, gray!50] (6.0,-0.8) -- (6.0,3.0);
+      \draw[dashed, gray!50] (8.0,-0.8) -- (8.0,3.0);
+      \node[anchor=east] at (-0.45,2.6) {Clock};
+      \draw[thick, primary-blue]
+        (0,2.4) -- (0,2.8) -- (1,2.8) -- (1,2.4) -- (2,2.4) -- (2,2.8) --
+        (3,2.8) -- (3,2.4) -- (4,2.4) -- (4,2.8) -- (5,2.8) -- (5,2.4) --
+        (6,2.4) -- (6,2.8) -- (7,2.8) -- (7,2.4) -- (8,2.4);
+      \node[anchor=east] at (-0.45,1.3) {Address/Data};
+      \draw[thick, primary-gold]
+        (0.2,1.1) -- (0.2,1.5) -- (7.6,1.5) -- (7.6,1.1);
+      \node[anchor=east] at (-0.45,0) {Slave-ready};
+      \draw[thick, positive]
+        (0.2,-0.2) -- (5.8,-0.2) -- (5.8,0.2) -- (7.6,0.2) -- (7.6,-0.2);
+      \node[font=\scriptsize] at (3.0,-0.80) {wait states (slave not ready)};
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: 4-step interlocked ladder, Master column left, Slave column
+    % right, alternating diagonal arrows. Step numbers are placed OUTSIDE the
+    % two columns (not at the arrow midpoints) next to the column point where
+    % that step's signal actually changes -- the arrow midpoints all share the
+    % same x-midpoint and a pitch of only 0.6 units, too tight for a circled
+    % digit; the column points are 1.2 units apart and clear with margin.
+    % Coordinates: (x, y)
+    %   Master column at x=0, points at y = 3.6, 2.4, 1.2, 0.0
+    %   Slave column at x=6.0, points at y = 3.0, 1.8, 0.6
+    \begin{tikzpicture}[scale=0.60, transform shape,
+        every node/.style={font=\scriptsize}]
+      \node at (0,4.6) {Master};
+      \node at (6.0,4.0) {Slave};
+      \draw[thick, primary-blue] (0,3.6) -- (0,-0.4);
+      \draw[thick, primary-gold] (6.0,3.0) -- (6.0,0.2);
+      \draw[dashed, thick, ->] (0,3.6) -- (6.0,3.0);
+      \draw[dashed, thick, ->] (6.0,3.0) -- (0,2.4);
+      \draw[dashed, thick, ->] (0,2.4) -- (6.0,1.8);
+      \draw[dashed, thick, ->] (6.0,1.8) -- (0,1.2);
+      \node[anchor=east] at (-0.5,3.6) {\textcircled{\scriptsize 1}};
+      \node[anchor=west] at (6.5,3.0) {\textcircled{\scriptsize 2}};
+      \node[anchor=east] at (-0.5,2.4) {\textcircled{\scriptsize 3}};
+      \node[anchor=west] at (6.5,1.8) {\textcircled{\scriptsize 4}};
+    \end{tikzpicture}
+  \end{center}
+  \begin{center}
+  \footnotesize
+  \begin{tabular}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
+    \textcircled{\scriptsize 1} Master-ready asserted &
+    \textcircled{\scriptsize 2} Slave-ready (data valid) \\
+    \textcircled{\scriptsize 3} Master-ready withdrawn (latched) &
+    \textcircled{\scriptsize 4} Slave-ready withdrawn \\
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: 3 candidate bus masters send bus-request (BR) lines into an
+    % arbiter; arbiter grants bus-grant (BG) to exactly one at a time based
+    % on priority, shown as a daisy-chained priority order.
+    % Coordinates: (x, y)
+    %   Master 1 (highest) at (0, 2.6); Master 2 at (0, 1.3); Master 3 at (0, 0)
+    %   Master boxes are minimum width=3.2cm (binds on all three, including
+    %   the longest labels "Master 1 (highest)"/"Master 3 (lowest)"), so
+    %   their west edge is at x=-1.6, not -1.1.
+    %   Arbiter box at (5.4, 1.3), w=2.6, h=3.6
+    %   Bus (granted) output at (9.6, 1.3)
+    %   BG feedback routed BELOW all boxes (y=-2.0, well clear of M3's
+    %   bottom edge at y=-0.4) and back up outside M1/M2/M3's left edge
+    %   (x=-2.4, clear of their west edge at x=-1.6) -- avoids both a
+    %   box crossing (P7a) and colliding with the frame title above.
+    \begin{tikzpicture}[scale=0.62, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=3.2cm, minimum height=0.8cm, align=center]
+            (M1) at (0,2.6) {Master 1 (highest)};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=3.2cm, minimum height=0.8cm, align=center]
+            (M2) at (0,1.3) {Master 2};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=3.2cm, minimum height=0.8cm, align=center]
+            (M3) at (0,0) {Master 3 (lowest)};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=2.6cm, minimum height=3.6cm, align=center]
+            (ARB) at (5.4,1.3) {\textbf{Arbiter}};
+      \node[draw=positive, fill=light-bg, rounded corners, text width=2.6cm,
+            minimum height=0.9cm, align=center]
+            (BUS) at (9.6,1.3) {Bus (granted to one master)};
+      \draw[->, thick] (M1.east) -- (ARB.west |- 0,2.3)
+            node[midway, above] {\scriptsize \texttt{BR}};
+      \draw[->, thick] (M2.east) -- (ARB.west |- 0,1.3)
+            node[midway, above] {\scriptsize \texttt{BR}};
+      \draw[->, thick] (M3.east) -- (ARB.west |- 0,0.3)
+            node[midway, above] {\scriptsize \texttt{BR}};
+      \draw[->, thick, primary-gold] (ARB.south) -- (5.4,-2.0) -- (-2.4,-2.0) -- (-2.4,2.6) -- (M1.west);
+      \node[font=\scriptsize, primary-gold] at (1.8,-2.75)
+            {\texttt{BG} (to the winning master, here Master 1)};
+      \draw[->, thick] (ARB.east) -- (BUS.west);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    % Diagram: CPU (left) and I/O device (right) both connect to a DMA
+    % controller box (center) that lists its four registers; the DMA
+    % controller sits on the bus and can become master to reach memory (top).
+    % Coordinates: (x, y)
+    %   CPU box at (0, 0), width 2.0, height 1.0
+    %   DMA controller box at (5.5, 0), width 3.6, height 2.6 (holds 4 regs)
+    %   I/O device box at (11.0, 0), width 2.0, height 1.0
+    %   Memory box at (5.5, 3.2), width 2.6, height 1.0
+    %   Arrows: CPU.east -> DMA.west; DMA.east -> Device.west;
+    %           DMA.north -> Memory.south (vertical, x=5.5, clear of boxes)
+    \begin{tikzpicture}[scale=0.59, transform shape,
+        every node/.style={font=\small}]
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.0cm, minimum height=1.0cm, align=center]
+            (CPU) at (0,0) {CPU};
+      \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
+            minimum width=3.6cm, minimum height=2.6cm, align=center]
+            (DMA) at (5.5,0) {\textbf{DMA Controller}\\[0.15cm]
+              \footnotesize
+              Source address\\ Destination address\\ Word count\\
+              Control/status};
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=2.0cm, minimum height=1.0cm, align=center]
+            (DEV) at (11.0,0) {I/O Device};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
+            minimum width=2.6cm, minimum height=1.0cm, align=center]
+            (MEM) at (5.5,3.2) {Memory};
+      \draw[<->, thick] (CPU.east) -- (DMA.west)
+            node[midway, above] {\scriptsize bus};
+      \draw[<->, thick] (DMA.east) -- (DEV.west)
+            node[midway, above] {\scriptsize device data};
+      \draw[<->, thick] (DMA.north) -- (MEM.south)
+            node[midway, right] {\scriptsize DMA as bus master};
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\end{document}

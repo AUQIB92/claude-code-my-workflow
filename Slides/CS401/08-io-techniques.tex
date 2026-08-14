@@ -136,7 +136,7 @@
     %   CPU box at (0, 0), width 2.2, height 1.2
     %   Device Interface box at (6.0, 0), width 3.8, height 2.4
     %   I/O Device box at (11.5, 0), width 2.0, height 1.2
-    \begin{tikzpicture}[scale=1.0, transform shape,
+    \begin{tikzpicture}[scale=0.95, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=2.2cm, minimum height=1.2cm, align=center]
@@ -148,9 +148,9 @@
       \node[draw=primary-gold, fill=white, rounded corners,
             minimum width=2.0cm, minimum height=1.2cm, align=center]
             (DEV) at (11.5,0) {I/O Device};
-      \draw[->, thick] (CPU.east) -- (IFACE.west)
+      \draw[<->, thick] (CPU.east) -- (IFACE.west)
             node[midway, above] {\scriptsize address/data bus};
-      \draw[->, thick] (IFACE.east) -- (DEV.west)
+      \draw[<->, thick] (IFACE.east) -- (DEV.west)
             node[midway, above] {\scriptsize device signals};
     \end{tikzpicture}
   \end{center}
@@ -316,18 +316,18 @@ WRITEWAIT: Test DOUT
     %   Interrupt point on main line at (0, 1.6)
     %   ISR line from (6.4, 1.0) to (6.4, -0.8)
     %   Resume point on main line at (0, -1.4)
-    \begin{tikzpicture}[scale=0.62, transform shape,
+    \begin{tikzpicture}[scale=0.44, transform shape,
         every node/.style={font=\small}]
       \draw[thick, primary-blue] (0,3.2) -- (0,-2.2);
-      \node[font=\scriptsize, anchor=east] at (-0.2,2.8) {Main program};
+      \node[font=\scriptsize, anchor=east] at (-0.55,2.8) {Main program};
       \draw[thick, primary-gold] (6.4,1.0) -- (6.4,-0.8);
-      \node[font=\scriptsize, anchor=west] at (6.6,0.85) {ISR};
+      \node[font=\scriptsize, anchor=west] at (6.95,0.70) {ISR};
       \filldraw[primary-blue] (0,1.6) circle (2pt);
       \filldraw[primary-blue] (0,-1.4) circle (2pt);
       \draw[dashed, thick, ->] (0,1.6) -- (6.4,1.0)
-            node[midway, above] {\scriptsize interrupt accepted};
+            node[midway, above, yshift=0.25cm] {\scriptsize interrupt accepted};
       \draw[dashed, thick, ->] (6.4,-0.8) -- (0,-1.4)
-            node[midway, below] {\scriptsize return (RTI)};
+            node[midway, below, yshift=-0.28cm] {\scriptsize return (RTI)};
     \end{tikzpicture}
   \end{center}
   \begin{itemize}
@@ -414,20 +414,20 @@ WRITEWAIT: Test DOUT
     %   Device 1 IRQ at (0, 2.6); Device 2 IRQ at (0, 0.8)
     %   IPENDING box (tall, receives both) at (4.4, 1.7), w=2.4, h=2.8
     %   IENABLE box at (4.4, -1.6), w=2.4, h=0.9
-    %   Priority + vector lookup at (9.0, 1.7), w=2.8, h=1.8
-    %   ISR start address output at (13.2, 1.7)
+    %   Priority + vector lookup at (9.2, 1.7), w=2.8, h=1.8
+    %   ISR start address output at (13.4, 1.7)
     \begin{tikzpicture}[scale=0.78, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
-            minimum width=2.0cm, minimum height=0.8cm, align=center]
+            minimum width=2.4cm, minimum height=0.8cm, align=center]
             (D1) at (0,2.6) {Device 1 IRQ};
       \node[draw=primary-blue, fill=light-bg, rounded corners,
-            minimum width=2.0cm, minimum height=0.8cm, align=center]
+            minimum width=2.4cm, minimum height=0.8cm, align=center]
             (D2) at (0,0.8) {Device 2 IRQ};
       \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
             minimum width=2.4cm, minimum height=2.8cm, align=center]
             (IPEND) at (4.4,1.7) {\textbf{IPENDING}};
-      \node[draw=primary-gold, fill=white, rounded corners, text width=2.2cm,
+      \node[draw=primary-blue, fill=light-bg, rounded corners, text width=2.2cm,
             minimum height=0.9cm, align=center]
             (IENABLE) at (4.4,-1.6) {\textbf{IENABLE} (mask)};
       \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
@@ -440,6 +440,7 @@ WRITEWAIT: Test DOUT
       \draw[->, thick] (D2.east) -- (IPEND.west |- 0,1.0);
       \draw[->, thick] (IPEND.east) -- (PRI.west |- 0,2.3);
       \draw[->, thick] (IENABLE.east) -- (7.0,-1.6) -- (7.0,1.1) -- (PRI.west |- 0,1.1);
+      \node[font=\scriptsize, anchor=east] at (6.6,-0.25) {mask};
       \draw[->, thick] (PRI.east) -- (OUT.west);
     \end{tikzpicture}
   \end{center}
@@ -545,20 +546,20 @@ WRITEWAIT: Test DOUT
     %   Clock edges at x = 0,1,2,3,4,5,6,7,8 (four full periods)
     \begin{tikzpicture}[scale=0.85, transform shape,
         every node/.style={font=\scriptsize}]
-      \node[anchor=east] at (-0.3,2.6) {Clock};
+      \draw[dashed, gray!50] (6.0,-0.8) -- (6.0,3.0);
+      \draw[dashed, gray!50] (8.0,-0.8) -- (8.0,3.0);
+      \node[anchor=east] at (-0.45,2.6) {Clock};
       \draw[thick, primary-blue]
         (0,2.4) -- (0,2.8) -- (1,2.8) -- (1,2.4) -- (2,2.4) -- (2,2.8) --
         (3,2.8) -- (3,2.4) -- (4,2.4) -- (4,2.8) -- (5,2.8) -- (5,2.4) --
         (6,2.4) -- (6,2.8) -- (7,2.8) -- (7,2.4) -- (8,2.4);
-      \node[anchor=east] at (-0.3,1.3) {Address/Data};
+      \node[anchor=east] at (-0.45,1.3) {Address/Data};
       \draw[thick, primary-gold]
         (0.2,1.1) -- (0.2,1.5) -- (7.6,1.5) -- (7.6,1.1);
-      \node[anchor=east] at (-0.3,0) {Slave-ready};
+      \node[anchor=east] at (-0.45,0) {Slave-ready};
       \draw[thick, positive]
         (0.2,-0.2) -- (5.8,-0.2) -- (5.8,0.2) -- (7.6,0.2) -- (7.6,-0.2);
-      \node[font=\scriptsize] at (2.9,-0.65) {wait states (slave not ready)};
-      \draw[dashed, gray!50] (5.8,-0.5) -- (5.8,3.0);
-      \draw[dashed, gray!50] (7.6,-0.5) -- (7.6,3.0);
+      \node[font=\scriptsize] at (3.0,-0.80) {wait states (slave not ready)};
     \end{tikzpicture}
   \end{center}
   \muted{A slow slave stretches the transfer by holding \texttt{Slave-ready}
@@ -574,30 +575,28 @@ WRITEWAIT: Test DOUT
   \end{block}
   \begin{center}
     % Diagram: 4-step interlocked ladder, Master column left, Slave column
-    % right, alternating diagonal arrows carrying ONLY a circled step number
-    % (no descriptive text on the diagram itself -- the legend below spells
-    % each step out). Keeping the on-diagram labels to a single glyph is
-    % what gives reliable P7b clearance here: two long text labels sharing
-    % the same x-midpoint (both arrows span the full x=0..6 width) would
-    % need several cm of vertical room even at wide pitch; a circled digit
-    % needs only a few mm, which the 1.2-unit pitch clears with margin.
+    % right, alternating diagonal arrows. Step numbers are placed OUTSIDE the
+    % two columns (not at the arrow midpoints) next to the column point where
+    % that step's signal actually changes -- the arrow midpoints all share the
+    % same x-midpoint and a pitch of only 0.6 units, too tight for a circled
+    % digit; the column points are 1.2 units apart and clear with margin.
     % Coordinates: (x, y)
     %   Master column at x=0, points at y = 3.6, 2.4, 1.2, 0.0
     %   Slave column at x=6.0, points at y = 3.0, 1.8, 0.6
-    \begin{tikzpicture}[scale=0.65, transform shape,
-        every node/.style={font=\small}]
-      \node[font=\scriptsize] at (0,4.0) {Master};
-      \node[font=\scriptsize] at (6.0,3.4) {Slave};
+    \begin{tikzpicture}[scale=0.60, transform shape,
+        every node/.style={font=\scriptsize}]
+      \node at (0,4.6) {Master};
+      \node at (6.0,4.0) {Slave};
       \draw[thick, primary-blue] (0,3.6) -- (0,-0.4);
       \draw[thick, primary-gold] (6.0,3.0) -- (6.0,0.2);
-      \draw[dashed, thick, ->] (0,3.6) -- (6.0,3.0)
-            node[midway, above] {\scriptsize \textcircled{\scriptsize 1}};
-      \draw[dashed, thick, ->] (6.0,3.0) -- (0,2.4)
-            node[midway, below] {\scriptsize \textcircled{\scriptsize 2}};
-      \draw[dashed, thick, ->] (0,2.4) -- (6.0,1.8)
-            node[midway, above] {\scriptsize \textcircled{\scriptsize 3}};
-      \draw[dashed, thick, ->] (6.0,1.8) -- (0,1.2)
-            node[midway, below] {\scriptsize \textcircled{\scriptsize 4}};
+      \draw[dashed, thick, ->] (0,3.6) -- (6.0,3.0);
+      \draw[dashed, thick, ->] (6.0,3.0) -- (0,2.4);
+      \draw[dashed, thick, ->] (0,2.4) -- (6.0,1.8);
+      \draw[dashed, thick, ->] (6.0,1.8) -- (0,1.2);
+      \node[anchor=east] at (-0.5,3.6) {\textcircled{\scriptsize 1}};
+      \node[anchor=west] at (6.5,3.0) {\textcircled{\scriptsize 2}};
+      \node[anchor=east] at (-0.5,2.4) {\textcircled{\scriptsize 3}};
+      \node[anchor=west] at (6.5,1.8) {\textcircled{\scriptsize 4}};
     \end{tikzpicture}
   \end{center}
   \begin{center}
@@ -679,22 +678,25 @@ WRITEWAIT: Test DOUT
     % on priority, shown as a daisy-chained priority order.
     % Coordinates: (x, y)
     %   Master 1 (highest) at (0, 2.6); Master 2 at (0, 1.3); Master 3 at (0, 0)
+    %   Master boxes are minimum width=3.2cm (binds on all three, including
+    %   the longest labels "Master 1 (highest)"/"Master 3 (lowest)"), so
+    %   their west edge is at x=-1.6, not -1.1.
     %   Arbiter box at (5.4, 1.3), w=2.6, h=3.6
     %   Bus (granted) output at (9.6, 1.3)
     %   BG feedback routed BELOW all boxes (y=-2.0, well clear of M3's
     %   bottom edge at y=-0.4) and back up outside M1/M2/M3's left edge
-    %   (x=-1.8, clear of their west edge at x=-1.1) -- avoids both a
+    %   (x=-2.4, clear of their west edge at x=-1.6) -- avoids both a
     %   box crossing (P7a) and colliding with the frame title above.
     \begin{tikzpicture}[scale=0.62, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
-            minimum width=2.2cm, minimum height=0.8cm, align=center]
+            minimum width=3.2cm, minimum height=0.8cm, align=center]
             (M1) at (0,2.6) {Master 1 (highest)};
       \node[draw=primary-blue, fill=light-bg, rounded corners,
-            minimum width=2.2cm, minimum height=0.8cm, align=center]
+            minimum width=3.2cm, minimum height=0.8cm, align=center]
             (M2) at (0,1.3) {Master 2};
       \node[draw=primary-blue, fill=light-bg, rounded corners,
-            minimum width=2.2cm, minimum height=0.8cm, align=center]
+            minimum width=3.2cm, minimum height=0.8cm, align=center]
             (M3) at (0,0) {Master 3 (lowest)};
       \node[draw=primary-blue, thick, fill=light-bg, rounded corners,
             minimum width=2.6cm, minimum height=3.6cm, align=center]
@@ -704,10 +706,12 @@ WRITEWAIT: Test DOUT
             (BUS) at (9.6,1.3) {Bus (granted to one master)};
       \draw[->, thick] (M1.east) -- (ARB.west |- 0,2.3)
             node[midway, above] {\scriptsize \texttt{BR}};
-      \draw[->, thick] (M2.east) -- (ARB.west |- 0,1.3);
-      \draw[->, thick] (M3.east) -- (ARB.west |- 0,0.3);
-      \draw[->, thick, primary-gold] (ARB.south) -- (5.4,-2.0) -- (-1.8,-2.0) -- (-1.8,2.6) -- (M1.west);
-      \node[font=\scriptsize, primary-gold] at (1.8,-2.35)
+      \draw[->, thick] (M2.east) -- (ARB.west |- 0,1.3)
+            node[midway, above] {\scriptsize \texttt{BR}};
+      \draw[->, thick] (M3.east) -- (ARB.west |- 0,0.3)
+            node[midway, above] {\scriptsize \texttt{BR}};
+      \draw[->, thick, primary-gold] (ARB.south) -- (5.4,-2.0) -- (-2.4,-2.0) -- (-2.4,2.6) -- (M1.west);
+      \node[font=\scriptsize, primary-gold] at (1.8,-2.75)
             {\texttt{BG} (to the winning master, here Master 1)};
       \draw[->, thick] (ARB.east) -- (BUS.west);
     \end{tikzpicture}
@@ -753,25 +757,6 @@ WRITEWAIT: Test DOUT
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Definition: Direct Memory Access (DMA)}
-  \begin{block}{DMA (general/standard treatment --- Stallings Ch.~8)}
-    A \textbf{DMA controller} is given a source/destination address and a
-    word count by the CPU, then becomes bus master (via arbitration) and
-    transfers the entire block directly to/from memory, interrupting the CPU
-    only when the \emph{block} --- not each word --- is complete
-    \cite{Stallings2015_computer_organization}.
-  \end{block}
-  \begin{itemize}
-    \item Plain English: \muted{the CPU says ``copy this block,'' then goes
-      back to work; the DMA controller does the copying and rings the bell
-      when done.}
-    \item \good{Pro}: CPU cost drops from 1024 ISRs to ``one setup, one
-      completion interrupt'' --- a constant cost regardless of block size.
-    \item \bad{Con}: the DMA controller and CPU now compete for the same
-      memory bus (\textbf{cycle stealing}); extra hardware required.
-  \end{itemize}
-\end{frame}
-
 \begin{frame}{The DMA Controller: What's Inside}
   \begin{center}
     % Diagram: CPU (left) and I/O device (right) both connect to a DMA
@@ -780,11 +765,11 @@ WRITEWAIT: Test DOUT
     % Coordinates: (x, y)
     %   CPU box at (0, 0), width 2.0, height 1.0
     %   DMA controller box at (5.5, 0), width 3.6, height 2.6 (holds 4 regs)
-    %   I/O device box at (10.5, 0), width 2.0, height 1.0
+    %   I/O device box at (11.0, 0), width 2.0, height 1.0
     %   Memory box at (5.5, 3.2), width 2.6, height 1.0
     %   Arrows: CPU.east -> DMA.west; DMA.east -> Device.west;
     %           DMA.north -> Memory.south (vertical, x=5.5, clear of boxes)
-    \begin{tikzpicture}[scale=0.78, transform shape,
+    \begin{tikzpicture}[scale=0.59, transform shape,
         every node/.style={font=\small}]
       \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=2.0cm, minimum height=1.0cm, align=center]
@@ -797,8 +782,8 @@ WRITEWAIT: Test DOUT
               Control/status};
       \node[draw=primary-gold, fill=white, rounded corners,
             minimum width=2.0cm, minimum height=1.0cm, align=center]
-            (DEV) at (10.5,0) {I/O Device};
-      \node[draw=positive, fill=light-bg, rounded corners,
+            (DEV) at (11.0,0) {I/O Device};
+      \node[draw=primary-blue, fill=light-bg, rounded corners,
             minimum width=2.6cm, minimum height=1.0cm, align=center]
             (MEM) at (5.5,3.2) {Memory};
       \draw[<->, thick] (CPU.east) -- (DMA.west)
@@ -806,7 +791,7 @@ WRITEWAIT: Test DOUT
       \draw[<->, thick] (DMA.east) -- (DEV.west)
             node[midway, above] {\scriptsize device data};
       \draw[<->, thick] (DMA.north) -- (MEM.south)
-            node[midway, right] {\scriptsize bus master $\to$ memory};
+            node[midway, right] {\scriptsize DMA as bus master};
     \end{tikzpicture}
   \end{center}
   \textbf{What each register does:}

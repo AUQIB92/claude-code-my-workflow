@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="08-io-techniques_files/libs/clipboard/clipboard.min.js"></script>
+<script src="08-io-techniques_files/libs/quarto-html/tabby.min.js"></script>
+<script src="08-io-techniques_files/libs/quarto-html/popper.min.js"></script>
+<script src="08-io-techniques_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="08-io-techniques_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="08-io-techniques_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="08-io-techniques_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr.&nbsp;Auqib Hamid Lone">
+  <title>I/O Techniques</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="08-io-techniques_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="08-io-techniques_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="08-io-techniques_files/libs/revealjs/dist/theme/quarto-463ba0fe91094e57f5f7b5ee1e3fd893.css">
+  <link href="08-io-techniques_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="08-io-techniques_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="08-io-techniques_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="08-io-techniques_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">I/O Techniques</h1>
+  <p class="subtitle">Week 8 — How a CPU Talks to the Outside World</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr.&nbsp;Auqib Hamid Lone
+</div>
+        <p class="quarto-title-affiliation">
+            GCET Ganderbal
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="where-we-left-off-week-7" class="slide level2">
+<h2>Where We Left Off (Week 7)</h2>
+<div class="methodbox">
+<p><strong>Last week: how the CPU controls <em>itself</em>.</strong> Hardwired control (Week 6) and microprogrammed control (Week 7) both answered the same question: how does the CPU generate its own control-step sequence, cycle by cycle? Both designs looked <em>inward</em> — registers, ALU, and an internal bus.</p>
+</div>
+<div class="highlightbox">
+<p><strong>The gap Week 7 left open.</strong> Keyboards, disks, and printers are far slower than the CPU. How does the CPU get data from them — and what does the <em>waiting</em> cost?</p>
+</div>
+</section>
+<section id="roadmap-four-questions-one-thread" class="slide level2">
+<h2>Roadmap: Four Questions, One Thread</h2>
+<ol type="1">
+<li><span class="hi-gold"><strong>Program-controlled I/O (polling)</strong></span> — the CPU keeps asking “are you ready?” until the device says yes.</li>
+<li><span class="hi-gold"><strong>Interrupt-driven I/O</strong></span> — the device asks the CPU instead.</li>
+<li><span class="hi-gold"><strong>Synchronous vs.&nbsp;asynchronous buses</strong></span> — what “ready” looks like on the wires between CPU and device.</li>
+<li><span class="hi-gold"><strong>DMA and I/O processors</strong></span> — removing the CPU from the data path entirely.</li>
+</ol>
+<div class="resultbox">
+<p><strong>Running thread for today.</strong> One keyboard-input / display-output pair (<code>KIN</code>/<code>DOUT</code>) follows us through polling and interrupts; a 4096-byte disk block follows us through bus timing and into DMA/IOP.</p>
+</div>
+</section>
+<section id="section" class="slide level2 transition-slide">
+<h2></h2>
+<p>Before any technique: what is the problem they all solve?</p>
+</section>
+<section id="section-1" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 2</p>
+</div>
+<div class="section-divider-title">
+<p>The I/O Problem and the I/O Unit</p>
+</div>
+</section>
+<section id="socratic-question-the-speed-mismatch" class="slide level2">
+<h2>Socratic Question: The Speed Mismatch</h2>
+<div class="methodbox">
+<p><strong>Question.</strong> A CPU runs one instruction about every nanosecond (<span class="math inline">\(10^9\)</span> instructions per second). A keyboard produces one keystroke about every 200 milliseconds (about 5 keystrokes per second). If the CPU must read every keystroke, what should it do during the 200 ms between two keystrokes?</p>
+</div>
+<ul>
+<li>The CPU is roughly <span class="hi-gold"><strong>200 million times</strong></span> faster than the typist — the two operate on completely different time scales.</li>
+<li>Waiting wastes the CPU, so I/O design is really the question: <em>who does the waiting</em>, and <em>what does the waiting cost</em>?</li>
+<li>Today’s four techniques are four answers to that one question.</li>
+</ul>
+</section>
+<section id="the-simplest-way-in-memory-mapped-io" class="slide level2">
+<h2>The Simplest Way In: Memory-Mapped I/O</h2>
+<div class="methodbox">
+<p><strong>Memory-mapped I/O.</strong> A device’s <strong>data</strong>, <strong>status</strong>, and <strong>control</strong> registers are given addresses in the <em>normal</em> memory space. The CPU reads and writes a device exactly like it reads and writes memory — no special I/O instructions needed <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</p>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">a device pretends to be a few memory locations.</span></li>
+<li>The alternative — <span class="hi-gold"><strong>isolated I/O</strong></span> — needs separate I/O instructions and a separate address space (the classic IBM approach, Mano Ch. 11). Memory-mapped I/O is simpler for this course.</li>
+</ul>
+</section>
+<section id="the-io-device-interface-three-registers" class="slide level2">
+<h2>The I/O Device Interface: Three Registers</h2>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_00.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:70.0%"><p><strong>What this diagram shows:</strong> the CPU never talks to the device directly. It talks to three registers inside the device’s interface, over the ordinary bus:</p>
+<ul>
+<li><span class="hi-gold"><strong>Data register</strong></span> — the byte actually being transferred (e.g.&nbsp;<code>KBD_DATA</code> for the keyboard, <code>DISP_DATA</code> for the display).</li>
+<li><span class="hi-gold"><strong>Status register</strong></span> — flags such as <code>KIN</code> (a keystroke is waiting) or <code>DOUT</code> (display is ready for the next character).</li>
+<li><span class="hi-gold"><strong>Control register</strong></span> — settings such as interrupt-enable bits.</li>
+</ul>
+<p><span class="neutral">The interface also performs address decoding, timing, and format conversion — the “six functions” of an interface circuit, Hamacher Ch. 7 §7.4, p.&nbsp;238.</span></p>
+</section>
+<section id="memory-mapped-vs.-isolated-io-the-trade-off" class="slide level2">
+<h2>Memory-Mapped vs.&nbsp;Isolated I/O: The Trade-off</h2>
+<div class="smaller">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Memory-mapped I/O</strong></th>
+<th><strong>Isolated I/O</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Address space</td>
+<td>Devices share the memory space</td>
+<td>Separate I/O space</td>
+</tr>
+<tr class="even">
+<td>Instructions</td>
+<td>Ordinary <code>Load</code>/<code>Store</code></td>
+<td>Dedicated I/O instructions</td>
+</tr>
+<tr class="odd">
+<td>Simplicity</td>
+<td>Simpler for the programmer</td>
+<td>Extra hardware/instructions</td>
+</tr>
+<tr class="even">
+<td>Typical use</td>
+<td>Most modern processors</td>
+<td>Classic IBM mainframes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="neutral">We use memory-mapped I/O for the rest of the deck — it is what the Hamacher examples assume <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>. The isolated form is the standard alternative (Mano Ch. 11).</span></p>
+</section>
+<section id="section-2" class="slide level2 transition-slide">
+<h2></h2>
+<p>Technique 1: the CPU does all the asking — polling.</p>
+</section>
+<section id="section-3" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 3</p>
+</div>
+<div class="section-divider-title">
+<p>Program-Controlled I/O (Polling)</p>
+</div>
+</section>
+<section id="definition-program-controlled-io-polling" class="slide level2">
+<h2>Definition: Program-Controlled I/O (Polling)</h2>
+<div class="methodbox">
+<p><strong>Polling.</strong> In <strong>program-controlled I/O</strong> (also called <strong>polling</strong>), the CPU runs a loop that repeatedly reads the device’s <em>status register</em> and checks a ready flag. When the flag says the device is ready, the CPU stops the loop and performs the data transfer itself.</p>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">the CPU keeps asking “are you ready yet?” in a loop until the answer is “yes,” then does the work.</span></li>
+<li>The device never initiates anything — it only answers questions.</li>
+<li>Two new status flags, one per device direction: <span class="hi-gold"><strong><code>KIN</code></strong></span> (a keyboard keystroke is ready in <code>KBD_DATA</code>) and <span class="hi-gold"><strong><code>DOUT</code></strong></span> (the display is ready for the next character in <code>DISP_DATA</code>).</li>
+</ul>
+</section>
+<section id="worked-example-two-polling-loops" class="slide level2">
+<h2>Worked Example: Two Polling Loops</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>Keyboard input</strong></p>
+<p>Read one keystroke into register <code>R</code>.</p>
+<div class="methodbox">
+<p><strong><code>READWAIT</code> loop</strong></p>
+<pre><code>READWAIT: Test KIN
+          Branch=0 READWAIT
+          MoveByte KBD_DATA, R</code></pre>
+</div>
+</div><div class="column" style="width:48%;">
+<p><strong>Display output</strong></p>
+<p>Send register <code>R</code> to the display.</p>
+<div class="methodbox">
+<p><strong><code>WRITEWAIT</code> loop</strong></p>
+<pre><code>WRITEWAIT: Test DOUT
+           Branch=0 WRITEWAIT
+           MoveByte R, DISP_DATA</code></pre>
+</div>
+</div></div>
+<p><strong>How to read these loops:</strong></p>
+<ul>
+<li><code>Test KIN</code> reads the status flag; <code>Branch=0</code> jumps back while the flag is still <code>0</code> (not ready).</li>
+<li>Only when the flag turns <code>1</code> does the loop fall through to the single transfer instruction.</li>
+</ul>
+<p><span class="neutral">Each pass runs the same two-test instructions again — the CPU is spinning, doing no useful work between keystrokes <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</span></p>
+</section>
+<section id="worked-example-the-cost-of-polling-in-numbers" class="slide level2">
+<h2>Worked Example: The Cost of Polling, in Numbers</h2>
+<div class="methodbox">
+<p><strong>The setup.</strong> A 2 GHz CPU (one instruction every 0.5 ns) polls a keyboard that produces 5 keystrokes per second. Each poll takes one 2-instruction pass (about 1 ns). Between two keystrokes, how many polls run, and how much CPU time do they waste?</p>
+</div>
+<ul>
+<li>Gap between keystrokes: <span class="math inline">\(1/5 = 0.2\)</span> s <span class="math inline">\(= 2\times10^8\)</span> ns.</li>
+<li>Polls per gap: <span class="math inline">\(2\times10^8\)</span> ns <span class="math inline">\(\div\)</span> 1 ns/poll <span class="math inline">\(= 2\times10^8\)</span> <span class="hi-gold"><strong>polls wasted</strong></span> per keystroke.</li>
+<li>Fraction of CPU consumed by polling: <span class="math inline">\(2\times10^8\)</span> ns <span class="math inline">\(\div\)</span> <span class="math inline">\(2\times10^8\)</span> ns <span class="math inline">\(= 1.0\)</span> — the CPU spends <span class="hi-gold"><strong>100%</strong></span> of its time waiting on this one keyboard.</li>
+</ul>
+<p><span class="neutral">Moral: polling is trivially simple but hands the CPU over to the slowest device in the system.</span></p>
+</section>
+<section id="polling-trade-offs" class="slide level2">
+<h2>Polling: Trade-offs</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Advantage</strong></th>
+<th><strong>Disadvantage</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No extra hardware needed</td>
+<td>Wastes CPU time while waiting</td>
+</tr>
+<tr class="even">
+<td>Trivial to implement</td>
+<td>CPU cannot do other work during the wait</td>
+</tr>
+<tr class="odd">
+<td>Works for any device</td>
+<td>Cost grows with device slowness</td>
+</tr>
+</tbody>
+</table>
+<div class="methodbox">
+<p><strong>When polling is (and isn’t) a good fit.</strong> <strong>Good fit:</strong> one slow device and a CPU with nothing else to do. <strong>Bad fit:</strong> a fast device, or several devices — the CPU spends its life asking questions instead of computing.</p>
+</div>
+</section>
+<section id="section-4" class="slide level2 transition-slide">
+<h2></h2>
+<p>Technique 2: what if the device asked the CPU, instead of the CPU asking the device?</p>
+</section>
+<section id="section-5" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 4</p>
+</div>
+<div class="section-divider-title">
+<p>Interrupt-Driven I/O</p>
+</div>
+</section>
+<section id="definition-interrupt-and-interrupt-service-routine" class="slide level2">
+<h2>Definition: Interrupt and Interrupt-Service Routine</h2>
+<div class="methodbox">
+<p><strong>Interrupt.</strong> An <strong>interrupt</strong> is a signal from a device that suspends the CPU’s current program and forces it to jump to a fixed handler — the <strong>interrupt-service routine (ISR)</strong> — which services the device. When the ISR finishes, the CPU resumes the original program exactly where it left off.</p>
+</div>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_01.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:60.0%"><ul>
+<li><span class="hi-gold"><strong>Interrupt latency</strong></span>: the gap between the device’s request and the CPU’s jump — time during which the device waits.</li>
+<li><span class="hi-gold"><strong>Shadow registers</strong></span>: registers where the CPU saves state so the ISR can use them freely <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</li>
+</ul>
+</section>
+<section id="enabling-and-disabling-interrupts-two-switches" class="slide level2">
+<h2>Enabling and Disabling Interrupts: Two Switches</h2>
+<div class="methodbox">
+<p><strong>A request reaches the CPU only if <em>both</em> switches are on.</strong></p>
+<ul>
+<li><span class="hi-gold"><strong><code>IE</code></strong></span> — one interrupt-enable bit inside the processor status register (<code>PS</code>). When <code>IE</code><span class="math inline">\(=0\)</span>, the CPU ignores <em>every</em> interrupt request, from any device.</li>
+<li>A <em>per-device</em> interrupt-enable bit in that device’s control register — <span class="hi-gold"><strong><code>KIRQ</code></strong></span> for the keyboard, <span class="hi-gold"><strong><code>DIRQ</code></strong></span> for the display — decides whether <em>this</em> device may request an interrupt at all.</li>
+</ul>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">the master switch is <code>IE</code>; each device also has its own little switch. Both must be on for the request to arrive.</span></li>
+<li>Example: <code>KIRQ</code><span class="math inline">\(=1\)</span> and <code>IE</code><span class="math inline">\(=1\)</span> means a keystroke will interrupt; <code>IE</code><span class="math inline">\(=0\)</span> means it waits.</li>
+</ul>
+</section>
+<section id="worked-example-a-5-step-interrupt-scenario" class="slide level2">
+<h2>Worked Example: A 5-Step Interrupt Scenario</h2>
+<div class="smaller">
+<p><strong>The story:</strong> a keystroke arrives while the CPU is busy running a program. Here is exactly what happens, step by step.</p>
+<ol type="1">
+<li>The device sets its status flag (<code>KIN</code><span class="math inline">\(=1\)</span>) and, if its enable bit <code>KIRQ</code> is on, raises an interrupt-request line.</li>
+<li>The CPU finishes its <em>current instruction</em> (never interrupting mid-instruction), then checks the master switch <code>PS.IE</code>.</li>
+<li>If <code>IE</code><span class="math inline">\(=1\)</span>: the CPU saves <code>PC</code> (and any registers the ISR will overwrite) into shadow registers, disables further interrupts, and loads <code>PC</code> with the ISR’s starting address.</li>
+<li>The ISR services the device — here, it reads <code>KBD_DATA</code> (which clears <code>KIN</code>) — then executes a return-from-interrupt instruction.</li>
+<li>Return-from-interrupt restores the saved <code>PC</code> and re-enables interrupts. The interrupted program resumes as if nothing happened <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</li>
+</ol>
+</div>
+<p><span class="neutral">Notice what the CPU did <em>not</em> do: it did not poll. It went on computing until the device rang the bell.</span></p>
+</section>
+<section id="handling-multiple-devices-who-interrupted" class="slide level2">
+<h2>Handling Multiple Devices: Who Interrupted?</h2>
+<div class="methodbox">
+<p><strong>Two designs for answering “which device interrupted?”</strong></p>
+<ul>
+<li><strong>Polling the sources</strong>: on any interrupt, the ISR checks each device’s status flag in turn to find the one that rang — simple, but the check order costs time proportional to the number of devices.</li>
+<li><strong>Vectored interrupts</strong>: each device supplies a small identifying code; hardware uses it to index straight into an <span class="hi-gold"><strong>interrupt-vector table</strong></span> — one ISR starting address per device — and jumps directly there.</li>
+</ul>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">polling-the-sources asks everyone “was it you?” in order; a vector table skips the asking and goes straight to the right ISR.</span></li>
+<li>Trade-off: a little extra hardware (the table + lookup) buys <span class="hi-gold"><strong>constant-time dispatch</strong></span>, no matter how many devices <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</li>
+</ul>
+</section>
+<section id="interrupt-nesting-and-priority-two-devices-one-cpu" class="slide level2">
+<h2>Interrupt Nesting and Priority: Two Devices, One CPU</h2>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_02.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:70.0%"><p><strong>What this diagram shows:</strong> <code>IPENDING</code> latches <em>which</em> devices currently want an interrupt; <code>IENABLE</code> decides <em>which of those</em> are allowed through; the priority encoder picks the highest-priority allowed one; the vector table gives its ISR address.</p>
+<p><span class="neutral">If the lower-priority device’s request stays pending while the higher one is being serviced, it waits until interrupts are re-enabled — or, with <span class="hi-gold"><strong>nesting</strong></span>, a higher-priority request can interrupt the ISR itself.</span></p>
+</section>
+<section id="exceptions-the-general-form-of-an-interrupt" class="slide level2">
+<h2>Exceptions: The General Form of an Interrupt</h2>
+<div class="methodbox">
+<p><strong>Exception.</strong> An <strong>exception</strong> is any event that interrupts the normal flow of control — an I/O interrupt, but also divide-by-zero, an illegal instruction, a page fault, or a timer tick. The interrupt mechanism is the same; only the <em>source</em> differs <span class="citation" data-cites="Hamacher2002_computer_organization PattersonHennessy2017_computer_organization_design">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>; <a href="#/references" role="doc-biblioref" onclick="">Patterson and Hennessy 2017</a>)</span>.</p>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">an interrupt is just one kind of exception — the “a device needs me” kind.</span></li>
+<li>Thinking of them together matters because the CPU handles them with the same jump-to-handler machinery: save state, service, restore.</li>
+<li>This is the bridge the next lectures will reuse: exceptions are how the OS gets control back from user programs.</li>
+</ul>
+</section>
+<section id="socratic-check-simultaneous-interrupt-requests" class="slide level2">
+<h2>Socratic Check: Simultaneous Interrupt Requests</h2>
+<div class="resultbox">
+<p><strong>Question.</strong> Device 1 (higher priority) and Device 2 both request an interrupt on the same cycle. Device 1’s ISR is still running when Device 2’s request would normally be granted. What happens?</p>
+</div>
+<ul>
+<li>If <strong>nesting</strong> is allowed and Device 2 outranks whatever priority level Device 1’s ISR is running at, Device 2 can interrupt <em>that ISR</em> — the same 5-step scenario applies recursively.</li>
+<li>If nesting is disabled (or Device 2 is lower priority), Device 2’s request stays latched in <code>IPENDING</code> until Device 1’s ISR re-enables interrupts.</li>
+</ul>
+</section>
+<section id="polling-vs.-interrupts-the-trade-off" class="slide level2">
+<h2>Polling vs.&nbsp;Interrupts: The Trade-off</h2>
+<div class="smaller">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Polling</strong></th>
+<th><strong>Interrupts</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Who initiates</td>
+<td>CPU (asks repeatedly)</td>
+<td>Device (signals once, when ready)</td>
+</tr>
+<tr class="even">
+<td>CPU cost while waiting</td>
+<td>Wasted spin cycles</td>
+<td>Zero — CPU runs other code</td>
+</tr>
+<tr class="odd">
+<td>Extra hardware</td>
+<td>None</td>
+<td><code>IE</code>, per-device enables, vector table</td>
+</tr>
+<tr class="even">
+<td>Response latency</td>
+<td>Depends on poll rate</td>
+<td>Interrupt latency (usually smaller)</td>
+</tr>
+<tr class="odd">
+<td>Best fit</td>
+<td>One slow device, nothing else to do</td>
+<td>Multiple/unpredictable devices</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="hi-gold"><strong>Same problem, opposite direction of initiative</strong></span> — interrupts move the waiting cost from the CPU to the hardware that detects readiness.</p>
+</section>
+<section id="section-6" class="slide level2 transition-slide">
+<h2></h2>
+<p>One level down: what does “the device is ready” look like on the wires?</p>
+</section>
+<section id="section-7" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 5</p>
+</div>
+<div class="section-divider-title">
+<p>Synchronous vs.&nbsp;Asynchronous Bus</p>
+</div>
+</section>
+<section id="bus-structure-master-and-slave-roles" class="slide level2">
+<h2>Bus Structure: Master and Slave Roles</h2>
+<div class="methodbox">
+<p><strong>One shared bus, many devices.</strong> Every I/O interface from Act 1 hangs off a single shared <strong>bus</strong> — address, data, and control lines that every device listens to. A <strong>bus protocol</strong> is the rulebook for how a <strong>master</strong> (the device driving a transfer, usually the CPU) and a <strong>slave</strong> (the device responding) coordinate one data transfer without colliding.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>This Act’s question</strong></span>: when the master says “take this data” or “give me that data,” how does the slave say “not ready yet” or “here it is”?</li>
+<li>Two different answers: <span class="hi-gold"><strong>synchronous</strong></span> (everyone shares a clock) and <span class="hi-gold"><strong>asynchronous</strong></span> (an explicit handshake, no clock) <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</li>
+</ul>
+</section>
+<section id="definition-synchronous-bus" class="slide level2">
+<h2>Definition: Synchronous Bus</h2>
+<div class="methodbox">
+<p><strong>Synchronous bus.</strong> All devices share a common <strong>bus clock</strong>. The master places the address and data on the bus at a fixed clock edge; every slave samples the bus at the <em>same</em> edge, with no per-transfer negotiation.</p>
+</div>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_03.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:65.0%"><p><span class="neutral">A slow slave stretches the transfer by holding <code>Slave-ready</code> low for extra clock cycles — the master simply waits, still synchronized to the shared clock <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</span></p>
+</section>
+<section id="definition-asynchronous-bus-full-handshake" class="slide level2">
+<h2>Definition: Asynchronous Bus (Full Handshake)</h2>
+<div class="methodbox">
+<p><strong>Asynchronous bus.</strong> No shared clock. Master and slave exchange explicit <strong>Master-ready</strong>/<strong>Slave-ready</strong> signals, each one changing only <em>in response to</em> the other — a <span class="hi-gold"><strong>full handshake</strong></span>.</p>
+</div>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_04.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:40.0%"><div class="smaller">
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>① Master-ready asserted</td>
+<td>② Slave-ready (data valid)</td>
+</tr>
+<tr class="even">
+<td>③ Master-ready withdrawn (latched)</td>
+<td>④ Slave-ready withdrawn</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="neutral">Each step waits for the previous one — <span class="hi-gold"><strong>bus skew</strong></span> (wires arriving at slightly different times) never causes a false sample, unlike a synchronous bus’s single fixed clock edge <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</span></p>
+</section>
+<section id="synchronous-vs.-asynchronous-the-trade-off" class="slide level2">
+<h2>Synchronous vs.&nbsp;Asynchronous: The Trade-off</h2>
+<div class="smaller">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Synchronous</strong></th>
+<th><strong>Asynchronous</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Timing reference</td>
+<td>Shared bus clock</td>
+<td>Explicit handshake, no clock</td>
+</tr>
+<tr class="even">
+<td>Slow-device handling</td>
+<td>Extra wait-state clock cycles</td>
+<td>Handshake simply takes longer</td>
+</tr>
+<tr class="odd">
+<td>Skew sensitivity</td>
+<td>Sensitive — must beat clock period</td>
+<td>Immune — self-timed</td>
+</tr>
+<tr class="even">
+<td>Per-transfer overhead</td>
+<td>Low (one clock edge)</td>
+<td>Higher (two round trips)</td>
+</tr>
+<tr class="odd">
+<td>Best fit</td>
+<td>Devices of similar, known speed</td>
+<td>Mixed-speed / unpredictable devices</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="hi-gold"><strong>Same coordination problem, opposite mechanism</strong></span> — a shared clock everyone trusts, or an explicit conversation that trusts nothing.</p>
+</section>
+<section id="socratic-check-why-not-always-use-asynchronous" class="slide level2">
+<h2>Socratic Check: Why Not Always Use Asynchronous?</h2>
+<div class="resultbox">
+<p><strong>Question.</strong> Asynchronous handshaking tolerates skew and adapts automatically to any device speed. Why do most high-speed processor buses use synchronous protocols instead?</p>
+</div>
+<ul>
+<li>Every asynchronous transfer pays <em>two full round-trip delays</em> (steps 1–2 and 3–4) — for consistently fast devices this is pure overhead a synchronous bus does not pay.</li>
+<li>Synchronous buses only lose when a device is unusually slow (extra wait states) or the clock must shrink to accommodate skew — exactly the trade-off the comparison table names.</li>
+</ul>
+</section>
+<section id="section-8" class="slide level2 transition-slide">
+<h2></h2>
+<p>Interrupts still cost one instruction per word transferred — what if the CPU left the loop entirely?</p>
+</section>
+<section id="section-9" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 6</p>
+</div>
+<div class="section-divider-title">
+<p>DMA and I/O Processors</p>
+</div>
+</section>
+<section id="the-cost-interrupts-still-pay" class="slide level2">
+<h2>The Cost Interrupts Still Pay</h2>
+<div class="methodbox">
+<p><strong>Socratic question.</strong> A disk transfer moves a 4096-byte block, one 4-byte word at a time. With interrupt-driven I/O, the ISR executes on <em>every</em> word: read status, read/write data, update a memory pointer, decrement a counter, return. What does this cost for one block?</p>
+</div>
+<ul>
+<li>Words per block: $4096 = $ <span class="hi-gold"><strong>1024</strong></span> words.</li>
+<li>That means <span class="hi-gold"><strong>1024 ISR invocations</strong></span> for a single block transfer — one interrupt per word.</li>
+<li>Interrupts removed the CPU’s <em>waiting</em>, but not its <em>involvement in moving every byte</em>. The next step removes the CPU from the data path itself.</li>
+</ul>
+</section>
+<section id="bus-arbitration-a-third-role-for-a-device" class="slide level2">
+<h2>Bus Arbitration: A Third Role for a Device</h2>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_05.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:55.0%"><p>Any device connected via <code>BR</code>/<code>BG</code> can become bus <strong>master</strong>, not just the CPU — the arbiter grants the bus to exactly one requester, by priority, each time <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</p>
+<p><span class="neutral">Being bus master is how a device can talk to memory <em>directly</em> — the key idea the next slide builds on.</span></p>
+</section>
+<section id="from-arbitration-to-direct-memory-access" class="slide level2">
+<h2>From Arbitration to Direct Memory Access</h2>
+<div class="methodbox">
+<p><strong>The functional idea, stated plainly.</strong> Once a device can become bus master, it can transfer data <em>directly to or from memory</em> — no CPU instruction touches the data at all. The CPU is interrupted <em>once</em>, when the whole block finishes, not once per word.</p>
+</div>
+<p><span class="neutral">This edition of Hamacher’s text (Ch. 7, arbitration) describes exactly this mechanism but never names it “DMA” — the term and its standard treatment below follow Stallings Ch. 8 <span class="citation" data-cites="Stallings2015_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Stallings 2015</a>)</span>, per the syllabus and <code>.claude/rules/textbook-grounding.md</code>.</span></p>
+</section>
+<section id="definition-direct-memory-access-dma" class="slide level2">
+<h2>Definition: Direct Memory Access (DMA)</h2>
+<div class="methodbox">
+<p><strong>DMA (general/standard treatment — Stallings Ch. 8).</strong> A <strong>DMA controller</strong> is given a source/destination address and a word count by the CPU, then becomes bus master (via arbitration) and transfers the entire block directly to/from memory, interrupting the CPU only when the <em>block</em> — not each word — is complete <span class="citation" data-cites="Stallings2015_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Stallings 2015</a>)</span>.</p>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">the CPU says “copy this block,” then goes back to work; the DMA controller does the copying and rings the bell when done.</span></li>
+<li><span class="positive"><strong>Pro</strong></span>: CPU cost drops from 1024 ISRs to “one setup, one completion interrupt” — a constant cost regardless of block size.</li>
+<li><span class="negative"><strong>Con</strong></span>: the DMA controller and CPU now compete for the same memory bus (<strong>cycle stealing</strong>); extra hardware required.</li>
+</ul>
+</section>
+<section id="the-dma-controller-whats-inside" class="slide level2">
+<h2>The DMA Controller: What’s Inside</h2>
+
+<img data-src="../../Figures/CS401/08-io-techniques/tikz_exact_06.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"><p><strong>What each register does:</strong></p>
+<ul>
+<li><span class="hi-gold"><strong>Source / destination address</strong></span> — where the data comes from and goes to (memory address and device, or vice versa).</li>
+<li><span class="hi-gold"><strong>Word count</strong></span> — how many words remain to transfer; decremented after every word.</li>
+<li><span class="hi-gold"><strong>Control/status</strong></span> — transfer direction, mode, and the “block done” flag that interrupts the CPU.</li>
+</ul>
+<p><span class="neutral">The CPU writes all four registers once at setup; the DMA controller owns them from then on.</span></p>
+</section>
+<section id="how-a-dma-transfer-runs-step-by-step" class="slide level2">
+<h2>How a DMA Transfer Runs: Step by Step</h2>
+<div class="smaller">
+<p><strong>The story:</strong> copy the 4096-byte block from the disk to memory. The CPU appears twice — at setup and at completion — and never touches the data itself.</p>
+<ol type="1">
+<li><strong>Setup:</strong> the CPU writes the DMA controller’s registers — source address (disk), destination address (memory), word count (1024), and direction (read) <span class="citation" data-cites="Stallings2015_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Stallings 2015</a>)</span>.</li>
+<li><strong>Request:</strong> the DMA controller asks for the bus by asserting <code>BR</code> (bus request).</li>
+<li><strong>Grant:</strong> the arbiter answers with <code>BG</code> (bus grant); the DMA controller becomes bus master <span class="citation" data-cites="Hamacher2002_computer_organization">(<a href="#/references" role="doc-biblioref" onclick="">Hamacher et al. 2012</a>)</span>.</li>
+<li><strong>Transfer one word:</strong> the DMA controller reads one word from the device and writes it to memory (or the reverse), using one or two bus cycles.</li>
+<li><strong>Decrement:</strong> it subtracts 1 from the word count and, if the count is still <span class="math inline">\(&gt;0\)</span>, returns to step 2 for the next word.</li>
+<li><strong>Done:</strong> when the count reaches 0, the DMA controller drops <code>BR</code> and raises a <em>completion interrupt</em> — the CPU’s only involvement after setup.</li>
+</ol>
+</div>
+<p><span class="neutral">Compare with polling/interrupts: the CPU now appears exactly twice, at the start and the end.</span></p>
+</section>
+<section id="dma-transfer-modes-three-ways-to-use-the-bus" class="slide level2">
+<h2>DMA Transfer Modes: Three Ways to Use the Bus</h2>
+<div class="methodbox">
+<p><strong>How long does the DMA controller keep the bus?</strong></p>
+<ul>
+<li><span class="hi-gold"><strong>Burst (block) mode</strong></span>: holds the bus for the <em>entire</em> block — all 1024 words in one continuous burst, then releases and interrupts the CPU.</li>
+<li><span class="hi-gold"><strong>Cycle-stealing (single) mode</strong></span>: grabs the bus for <em>one word</em>, releases it, re-requests — the CPU can use the bus between DMA words.</li>
+<li><span class="hi-gold"><strong>Transparent (hidden) mode</strong></span>: transfers <em>only during CPU cycles that do not use the bus at all</em> — the CPU never even notices the DMA happening.</li>
+</ul>
+</div>
+<div class="smaller">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Burst</strong></th>
+<th><strong>Cycle stealing</strong></th>
+<th><strong>Transparent</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bus held</td>
+<td>Whole block</td>
+<td>One word</td>
+<td>Only idle CPU cycles</td>
+</tr>
+<tr class="even">
+<td>Transfer speed</td>
+<td>Fastest</td>
+<td>Medium</td>
+<td>Slowest</td>
+</tr>
+<tr class="odd">
+<td>Effect on CPU</td>
+<td>Starved for the block</td>
+<td>Brief pauses per word</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="neutral">Plain English: burst = “whole job now, don’t bother me”; cycle stealing = “one word, then back off”; transparent = “only when you’re not looking.”</span></p>
+</section>
+<section id="worked-example-how-much-cpu-does-dma-save" class="slide level2">
+<h2>Worked Example: How Much CPU Does DMA Save?</h2>
+<div class="methodbox">
+<p><strong>The comparison.</strong> Same 4096-byte block as the interrupt example. Interrupt-driven I/O: 1024 ISRs. DMA: one setup + one completion interrupt. Suppose one ISR takes 200 CPU instructions; how many instructions does each technique spend?</p>
+</div>
+<ul>
+<li>Interrupts: $1024 = $ <span class="hi-gold"><strong>204,800</strong></span> instructions.</li>
+<li>DMA: one setup + one completion ISR <span class="math inline">\(\approx 400\)</span> instructions — roughly <span class="hi-gold"><strong>500<span class="math inline">\(\times\)</span> less</strong></span> CPU work.</li>
+<li>The CPU that used to spend its whole time servicing the disk can now run the user’s program instead.</li>
+</ul>
+</section>
+<section id="definition-io-processor-iop" class="slide level2">
+<h2>Definition: I/O Processor (IOP)</h2>
+<div class="methodbox">
+<p><strong>IOP (general/standard treatment — Stallings Ch. 8).</strong> An <strong>I/O processor</strong> generalizes DMA one step further: a dedicated processor, given a whole <em>channel program</em> (a short program describing several transfers, formats, and simple decisions), executes it independently — interrupting the main CPU only when the entire program completes, not per block.</p>
+</div>
+<ul>
+<li>Plain English: <span class="neutral">DMA copies one block; an IOP runs a whole to-do list of I/O jobs and reports back when the list is done.</span></li>
+<li>The difference is <em>how much decision-making is delegated</em> away from the CPU, not just how the data moves.</li>
+</ul>
+</section>
+<section id="four-io-techniques-head-to-head" class="slide level2">
+<h2>Four I/O Techniques, Head to Head</h2>
+<div class="smallest">
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Polling</strong></th>
+<th><strong>Interrupts</strong></th>
+<th><strong>DMA</strong></th>
+<th><strong>IOP</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CPU cost / word</td>
+<td>Every poll</td>
+<td>Every word (ISR)</td>
+<td>None (setup only)</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>CPU cost / block</td>
+<td>—</td>
+<td>Thousands of ISRs</td>
+<td>One interrupt</td>
+<td>One interrupt</td>
+</tr>
+<tr class="odd">
+<td>Extra hardware</td>
+<td>None</td>
+<td>Vector table, <code>IE</code></td>
+<td>DMA controller</td>
+<td>Dedicated processor</td>
+</tr>
+<tr class="even">
+<td>Best fit</td>
+<td>One slow device</td>
+<td>Multiple/sporadic devices</td>
+<td>Bulk block transfer</td>
+<td>Complex I/O subsystems</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="hi-gold"><strong>Same core question, four answers</strong></span>: who watches the device, and how much of the CPU does watching cost?</p>
+</section>
+<section id="socratic-check-choosing-a-technique" class="slide level2">
+<h2>Socratic Check: Choosing a Technique</h2>
+<div class="resultbox">
+<p><strong>Question.</strong> A system reads one temperature sensor value per second (low rate, latency-tolerant) and separately copies a 10 MB file from disk to memory (high rate, throughput-critical). Which technique fits each?</p>
+</div>
+<ul>
+<li>Temperature sensor: <span class="hi-gold"><strong>interrupts</strong></span> — rate is low, so ISR overhead per event is negligible, and the CPU is free the rest of the time.</li>
+<li>Disk copy: <span class="hi-gold"><strong>DMA</strong></span> — per-word CPU involvement at that data rate would dominate CPU time; DMA reduces it to one setup, one completion interrupt.</li>
+<li><span class="neutral">Rule of thumb: match the technique to the <em>rate</em> and <em>size</em> of the transfer, not to habit.</span></li>
+</ul>
+</section>
+<section id="section-10" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 7</p>
+</div>
+<div class="section-divider-title">
+<p>Synthesis</p>
+</div>
+</section>
+<section id="the-four-threads-meet" class="slide level2">
+<h2>The Four Threads Meet</h2>
+<div class="methodbox">
+<p><strong>Every design choice moves the waiting cost somewhere else.</strong></p>
+<ul>
+<li><strong>Polling vs.&nbsp;interrupts (programmer’s view):</strong> polling wastes CPU cycles asking; interrupts let the device ask instead, at the cost of vector-table/priority hardware.</li>
+<li><strong>Synchronous vs.&nbsp;asynchronous (bus hardware):</strong> a shared clock is cheap per transfer but skew-sensitive; a handshake is skew-immune but pays two round trips every time.</li>
+<li><strong>Interrupts vs.&nbsp;DMA/IOP (who moves the data):</strong> interrupts still touch every word; DMA and IOP remove the CPU from the data path, trading extra hardware for near-zero per-word cost.</li>
+</ul>
+</div>
+<p>None of these is free — exactly the pattern Weeks 5–7 established for buses and control units, now applied to the world outside the chip.</p>
+</section>
+<section id="bridge-to-week-9" class="slide level2">
+<h2>Bridge to Week 9</h2>
+<div class="highlightbox">
+<p><strong>From moving data to storing it efficiently.</strong> Weeks 1–8 built a CPU that computes, controls itself, and now moves data to and from slow devices. Week 9 asks: once data is in memory, how do we make <em>memory itself</em> fast enough to keep up with the CPU?</p>
+</div>
+<ul>
+<li>DRAM is far slower than the CPU — the same speed-mismatch problem this week solved for devices reappears for memory itself.</li>
+<li>Cache memory, mapping functions, and replacement policies are Week 9’s answer.</li>
+</ul>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<ul>
+<li><span class="hi-gold"><strong>Memory-mapped I/O</strong></span>: device registers (data/status/control) live in the normal address space; <span class="hi-gold"><strong>polling</strong></span> repeatedly tests a status flag (<code>KIN</code>, <code>DOUT</code>).</li>
+<li><span class="hi-gold"><strong>Interrupts</strong></span>: the device signals readiness; <code>PS.IE</code> and per-device enables (<code>KIRQ</code>/<code>DIRQ</code>) gate delivery; <span class="hi-gold"><strong>vectored interrupts</strong></span> use <code>IPENDING</code>/<code>IENABLE</code> plus an interrupt-vector table for constant-time dispatch.</li>
+<li><span class="hi-gold"><strong>Synchronous bus</strong></span>: shared clock, wait states for slow slaves. <span class="hi-gold"><strong>Asynchronous bus</strong></span>: <code>Master-ready</code>/<code>Slave-ready</code> full handshake, skew-immune but higher per-transfer overhead.</li>
+<li><span class="hi-gold"><strong>Bus arbitration</strong></span> (<code>BR</code>/<code>BG</code>) lets a device become bus master — the functional basis for <span class="hi-gold"><strong>DMA</strong></span> (block transfer, one completion interrupt) and <span class="hi-gold"><strong>IOP</strong></span> (whole channel programs, general/standard treatment per Stallings Ch. 8).</li>
+<li><span class="hi-gold"><strong>Four techniques, one trade-off axis</strong></span>: how much of the CPU does watching and moving the data cost, and how much hardware buys that cost down.</li>
+</ul>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Hamacher2002_computer_organization" class="csl-entry" role="listitem">
+Hamacher, V. Carl, Zvonko G. Vranesic, Safwat G. Zaky, and Naraig Manjikian. 2012. <em>Computer Organization and Embedded Systems</em>. 6th ed. McGraw-Hill.
+</div>
+<div id="ref-PattersonHennessy2017_computer_organization_design" class="csl-entry" role="listitem">
+Patterson, David A., and John L. Hennessy. 2017. <em>Computer Organization and Design: The Hardware/Software Interface</em>. ARM Edition (5th). Morgan Kaufmann.
+</div>
+<div id="ref-Stallings2015_computer_organization" class="csl-entry" role="listitem">
+Stallings, William. 2015. <em>Computer Organization and Architecture: Designing for Performance</em>. 10th ed. Pearson.
+</div>
+</div>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>CS401</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="08-io-techniques_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="08-io-techniques_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="08-io-techniques_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="08-io-techniques_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;: &quot;a1fe2658b43b4757be5204e3c4812746&quot;}"></script>
+    
+
+</body></html>
