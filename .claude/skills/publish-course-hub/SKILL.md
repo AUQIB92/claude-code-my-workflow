@@ -66,6 +66,14 @@ For each of the five regions, generate fresh HTML from the Phase 1 scan and repl
 
 **`assignments-table`** — one `<tr>` per week with a published written and/or coding assignment, linking each that exists.
 
+Every row must end with a **Submit cell** linking to the hand-owned `#submit` section on the same page, and the `<thead>` must carry a matching final `<th>Submit</th>`:
+
+```html
+<td><a class="btn-sm ghost" href="#submit">Submit &uarr;</a></td>
+```
+
+This cell is generated, not hand-typed, precisely because the table is regenerated wholesale — a Submit button added by hand inside the markers would be silently wiped on the next run. The `#submit` section it points at lives *outside* every marker pair and is never touched by this skill. If a course hub has no `#submit` section yet, omit the cell and the header rather than emitting a dead anchor.
+
 **`practice-table`** — one `<tr>` per week with a published GATE practice set, linking questions + answers.
 
 ## Phase 3: Write and verify
