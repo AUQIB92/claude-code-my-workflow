@@ -19,10 +19,6 @@
 %                 isolated-vs.-memory-mapped I/O contrast.
 %                 P&H (ARM ed.) Ch. 4 supplies the exceptions-as-interrupts framing.
 %
-% Difficulty target: medium-easy. Every definition carries a plain-English
-% line; every worked example uses single-digit arithmetic; one running thread
-% (keyboard/display pair + a 4096-byte disk block) ties the acts together.
-%
 % Compile with: /compile-latex CS401/08-io-techniques
 % =============================================================================
 
@@ -95,7 +91,7 @@
 % =============================================================================
 \section{The I/O Problem and the I/O Unit}
 
-\begin{frame}{Socratic Question: The Speed Mismatch}
+\begin{frame}{Socratic Check: The Speed Mismatch}
   \begin{block}{Question}
     A CPU runs one instruction about every nanosecond ($10^9$ instructions
     per second). A keyboard produces one keystroke about every 200
@@ -119,8 +115,6 @@
     I/O instructions needed \cite{Hamacher2002_computer_organization}.
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{a device pretends to be a few memory
-      locations.}
     \item The alternative --- \key{isolated I/O} --- needs separate I/O
       instructions and a separate address space (the classic IBM
       approach, Mano Ch.~11). Memory-mapped I/O is simpler for this course.
@@ -162,12 +156,13 @@
       (e.g.\ \texttt{KBD\_DATA} for the keyboard, \texttt{DISP\_DATA} for the
       display).
     \item \key{Status register} --- flags such as \texttt{KIN} (a keystroke is
-      waiting) or \texttt{DOUT} (display is ready for the next character).
+      waiting) or \texttt{DOUT} (the display is ready for the next
+      character).
     \item \key{Control register} --- settings such as interrupt-enable bits.
+    \item The interface also performs address decoding, timing, and format
+      conversion --- the ``six functions'' of an interface circuit, Hamacher
+      Ch.~7 \S7.4 \cite[p.~238]{Hamacher2002_computer_organization}.
   \end{itemize}
-  \muted{The interface also performs address decoding, timing, and format
-  conversion --- the ``six functions'' of an interface circuit, Hamacher
-  Ch.~7 \S7.4, p.~238.}
 \end{frame}
 
 \begin{frame}{Memory-Mapped vs.\ Isolated I/O: The Trade-off}
@@ -184,9 +179,9 @@
   \end{tabular}
   \vspace{0.3cm}
   \normalsize
-  \muted{We use memory-mapped I/O for the rest of the deck --- it is what the
+  We use memory-mapped I/O for the rest of the deck --- it is what the
   Hamacher examples assume \cite{Hamacher2002_computer_organization}. The
-  isolated form is the standard alternative (Mano Ch.~11).}
+  isolated form is the standard alternative (Mano Ch.~11).
 \end{frame}
 
 \transitionslide{Technique 1: the CPU does all the asking --- polling.}
@@ -204,8 +199,6 @@
     stops the loop and performs the data transfer itself.
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{the CPU keeps asking ``are you ready yet?'' in
-      a loop until the answer is ``yes,'' then does the work.}
     \item The device never initiates anything --- it only answers questions.
     \item Two new status flags, one per device direction:
       \key{\texttt{KIN}} (a keyboard keystroke is ready in
@@ -241,17 +234,17 @@ WRITEWAIT: Test DOUT
       \end{block}
     \end{column}
   \end{columns}
-  \vspace{0.2cm}
+  \vspace{-0.05cm}
   \textbf{How to read these loops:}
   \begin{itemize}
     \item \texttt{Test KIN} reads the status flag; \texttt{Branch=0} jumps
       back while the flag is still \texttt{0} (not ready).
     \item Only when the flag turns \texttt{1} does the loop fall through to
       the single transfer instruction.
+    \item Each pass runs the same two-test instructions again --- the CPU is
+      spinning, doing no useful work between keystrokes
+      \cite{Hamacher2002_computer_organization}.
   \end{itemize}
-  \muted{Each pass runs the same two-test instructions again --- the CPU is
-  spinning, doing no useful work between keystrokes
-  \cite{Hamacher2002_computer_organization}.}
 \end{frame}
 
 \begin{frame}{Worked Example: The Cost of Polling, in Numbers}
@@ -284,7 +277,7 @@ WRITEWAIT: Test DOUT
     \bottomrule
   \end{tabular}
   \vspace{0.3cm}
-  \begin{block}{When polling is (and isn't) a good fit}
+  \begin{block}{When polling is (and is not) a good fit}
     \textbf{Good fit:} one slow device and a CPU with nothing else to do.
     \textbf{Bad fit:} a fast device, or several devices --- the CPU spends
     its life asking questions instead of computing.
@@ -299,13 +292,6 @@ WRITEWAIT: Test DOUT
 \section{Interrupt-Driven I/O}
 
 \begin{frame}{Definition: Interrupt and Interrupt-Service Routine}
-  \begin{block}{Interrupt}
-    An \textbf{interrupt} is a signal from a device that suspends the CPU's
-    current program and forces it to jump to a fixed handler --- the
-    \textbf{interrupt-service routine (ISR)} --- which services the device.
-    When the ISR finishes, the CPU resumes the original program exactly where
-    it left off.
-  \end{block}
   \begin{center}
     % Diagram: time-flow of control transfer. Main program timeline on the
     % left (time increasing downward); a dashed diagonal arrow at the point
@@ -316,7 +302,7 @@ WRITEWAIT: Test DOUT
     %   Interrupt point on main line at (0, 1.6)
     %   ISR line from (6.4, 1.0) to (6.4, -0.8)
     %   Resume point on main line at (0, -1.4)
-    \begin{tikzpicture}[scale=0.44, transform shape,
+    \begin{tikzpicture}[scale=0.35, transform shape,
         every node/.style={font=\small}]
       \draw[thick, primary-blue] (0,3.2) -- (0,-2.2);
       \node[font=\scriptsize, anchor=east] at (-0.55,2.8) {Main program};
@@ -330,7 +316,16 @@ WRITEWAIT: Test DOUT
             node[midway, below, yshift=-0.28cm] {\scriptsize return (RTI)};
     \end{tikzpicture}
   \end{center}
+  \vspace{-0.15cm}
+  \begin{block}{Interrupt}
+    An \textbf{interrupt} suspends the CPU's current program and forces a
+    jump to a fixed handler --- the \textbf{interrupt-service routine
+    (ISR)} --- which services the device, then returns control exactly where
+    it left off.
+  \end{block}
   \begin{itemize}
+    \item Unlike polling, the device now signals \emph{once},
+      unprompted --- the direction of initiative reverses.
     \item \key{Interrupt latency}: the gap between the device's request and
       the CPU's jump --- time during which the device waits.
     \item \key{Shadow registers}: registers where the CPU saves state so the
@@ -351,9 +346,6 @@ WRITEWAIT: Test DOUT
     \end{itemize}
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{the master switch is \texttt{IE}; each device
-      also has its own little switch. Both must be on for the request to
-      arrive.}
     \item Example: \texttt{KIRQ}$=1$ and \texttt{IE}$=1$ means a keystroke
       will interrupt; \texttt{IE}$=0$ means it waits.
   \end{itemize}
@@ -396,12 +388,12 @@ WRITEWAIT: Test DOUT
     \end{itemize}
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{polling-the-sources asks everyone ``was it
-      you?'' in order; a vector table skips the asking and goes straight to
-      the right ISR.}
     \item Trade-off: a little extra hardware (the table + lookup) buys
       \key{constant-time dispatch}, no matter how many devices
       \cite{Hamacher2002_computer_organization}.
+    \item \muted{Quantified: 8 devices cost up to \key{8 sequential checks}
+      under polling-the-sources, but exactly \key{1 lookup} under a vector
+      table, regardless of device count.}
   \end{itemize}
 \end{frame}
 
@@ -447,10 +439,10 @@ WRITEWAIT: Test DOUT
   \textbf{What this diagram shows:} \texttt{IPENDING} latches \emph{which}
   devices currently want an interrupt; \texttt{IENABLE} decides \emph{which of
   those} are allowed through; the priority encoder picks the highest-priority
-  allowed one; the vector table gives its ISR address.
-  \muted{If the lower-priority device's request stays pending while the higher
-  one is being serviced, it waits until interrupts are re-enabled --- or, with
-  \key{nesting}, a higher-priority request can interrupt the ISR itself.}
+  allowed one; the vector table gives its ISR address. If the
+  lower-priority device's request stays pending while the higher one is
+  being serviced, it waits until interrupts are re-enabled --- or, with
+  \key{nesting}, a higher-priority request can interrupt the ISR itself.
 \end{frame}
 
 \begin{frame}{Exceptions: The General Form of an Interrupt}
@@ -462,13 +454,36 @@ WRITEWAIT: Test DOUT
     \cite{Hamacher2002_computer_organization,PattersonHennessy2017_computer_organization_design}.
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{an interrupt is just one kind of exception ---
-      the ``a device needs me'' kind.}
     \item Thinking of them together matters because the CPU handles them with
       the same jump-to-handler machinery: save state, service, restore.
     \item This is the bridge the next lectures will reuse: exceptions are how
       the OS gets control back from user programs.
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: An Exception in Action}
+  \begin{block}{The scenario}
+    A running program executes \texttt{DIV R1, R2, R3} where \texttt{R3}
+    holds \texttt{0} --- not an I/O event, but the CPU handles it with
+    exactly the same machinery Act 3 already built.
+  \end{block}
+  \vspace{-0.1cm}
+  \begin{enumerate}
+    \item The ALU detects the divide-by-zero and raises a fixed internal
+      exception signal --- no external device, no interrupt-request line
+      needed.
+    \item The CPU finishes what it can of the current instruction, then
+      forces a jump; unlike an ordinary interrupt, this jump is
+      \textbf{not} gated by \texttt{PS.IE} --- exceptions cannot be masked.
+    \item \texttt{PC} and status are saved into shadow registers; \texttt{PC}
+      loads the divide-by-zero handler's fixed address.
+    \item The handler runs (report the error, or hand control to the OS)
+      --- the same save/service/restore shape as an ISR, just a different
+      table entry.
+  \end{enumerate}
+  Same machinery, different trigger: a page fault, an illegal opcode,
+  and a timer tick all follow this identical path, each with its own
+  starting address in step 3 \cite{Hamacher2002_computer_organization,PattersonHennessy2017_computer_organization_design}.
 \end{frame}
 
 \begin{frame}{Socratic Check: Simultaneous Interrupt Requests}
@@ -527,15 +542,14 @@ WRITEWAIT: Test DOUT
     \item Two different answers: \key{synchronous} (everyone shares a clock)
       and \key{asynchronous} (an explicit handshake, no clock)
       \cite{Hamacher2002_computer_organization}.
+    \item \muted{Running example for this Act: our 4096-byte disk block's
+      controller is today's slave --- every timing diagram below is the CPU
+      (master) and that disk interface negotiating one word of the
+      transfer.}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Definition: Synchronous Bus}
-  \begin{block}{Synchronous bus}
-    All devices share a common \textbf{bus clock}. The master places the
-    address and data on the bus at a fixed clock edge; every slave samples
-    the bus at the \emph{same} edge, with no per-transfer negotiation.
-  \end{block}
   \begin{center}
     % Diagram: 3-row digital timing diagram -- Clock (square wave), Address/
     % Data valid (asserted through the transfer), Slave-ready (low during
@@ -562,17 +576,38 @@ WRITEWAIT: Test DOUT
       \node[font=\scriptsize] at (3.0,-0.80) {wait states (slave not ready)};
     \end{tikzpicture}
   \end{center}
-  \muted{A slow slave stretches the transfer by holding \texttt{Slave-ready}
-  low for extra clock cycles --- the master simply waits, still synchronized
-  to the shared clock \cite{Hamacher2002_computer_organization}.}
+  \vspace{-0.15cm}
+  \begin{block}{Synchronous bus}
+    All devices share a common \textbf{bus clock}: the master places
+    address/data at a fixed clock edge, and every slave samples that
+    \emph{same} edge, no per-transfer negotiation.
+  \end{block}
+  If our disk controller is slower than the clock, it holds
+  \texttt{Slave-ready} low for extra clock cycles while the CPU simply
+  waits, still synchronized to the shared clock
+  \cite{Hamacher2002_computer_organization}.
+\end{frame}
+
+\begin{frame}{Worked Example: How Many Wait States?}
+  \begin{block}{The setup}
+    Our disk controller takes 100~ns to place a word on the bus. The
+    synchronous bus clock runs at 500~MHz (one clock cycle $=2$~ns). How many
+    wait-state cycles does the master insert for one word?
+  \end{block}
+  \begin{itemize}
+    \item Clock cycle time: $1/500\text{MHz} = 2$~ns.
+    \item Cycles needed to cover the disk's 100~ns response:
+      $100 \div 2 = \key{50}$ clock cycles.
+    \item One cycle is the ``normal'' data cycle, so the master inserts
+      \key{49 wait-state cycles} --- the slave holds \texttt{Slave-ready}
+      low for all 49 before the transfer completes.
+  \end{itemize}
+  \muted{Compare with Act 2's polling cost ($2\times10^8$ wasted polls for
+  one keystroke): a slow device is expensive under every technique --- the
+  question is only \emph{who} pays and \emph{how much}.}
 \end{frame}
 
 \begin{frame}{Definition: Asynchronous Bus (Full Handshake)}
-  \begin{block}{Asynchronous bus}
-    No shared clock. Master and slave exchange explicit
-    \textbf{Master-ready}/\textbf{Slave-ready} signals, each one changing only
-    \emph{in response to} the other --- a \key{full handshake}.
-  \end{block}
   \begin{center}
     % Diagram: 4-step interlocked ladder, Master column left, Slave column
     % right, alternating diagonal arrows. Step numbers are placed OUTSIDE the
@@ -599,7 +634,12 @@ WRITEWAIT: Test DOUT
       \node[anchor=west] at (6.5,1.8) {\textcircled{\scriptsize 4}};
     \end{tikzpicture}
   \end{center}
-  \begin{center}
+  \vspace{-0.2cm}
+  \begin{block}{Asynchronous bus}
+    No shared clock. Master and slave exchange explicit
+    \textbf{Master-ready}/\textbf{Slave-ready} signals, each changing only
+    \emph{in response to} the other --- a \key{full handshake}.
+  \end{block}
   \footnotesize
   \begin{tabular}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
     \textcircled{\scriptsize 1} Master-ready asserted &
@@ -607,10 +647,11 @@ WRITEWAIT: Test DOUT
     \textcircled{\scriptsize 3} Master-ready withdrawn (latched) &
     \textcircled{\scriptsize 4} Slave-ready withdrawn \\
   \end{tabular}
-  \end{center}
-  \muted{Each step waits for the previous one --- \key{bus skew} (wires
+  \normalsize
+  Each step waits for the previous one, so \key{bus skew} (wires
   arriving at slightly different times) never causes a false sample, unlike
-  a synchronous bus's single fixed clock edge \cite{Hamacher2002_computer_organization}.}
+  a synchronous bus's single fixed clock edge
+  \cite{Hamacher2002_computer_organization}.
 \end{frame}
 
 \begin{frame}{Synchronous vs.\ Asynchronous: The Trade-off}
@@ -655,7 +696,7 @@ WRITEWAIT: Test DOUT
 \section{DMA and I/O Processors}
 
 \begin{frame}{The Cost Interrupts Still Pay}
-  \begin{block}{Socratic question}
+  \begin{block}{Question}
     A disk transfer moves a 4096-byte block, one 4-byte word at a time. With
     interrupt-driven I/O, the ISR executes on \emph{every word}: read status,
     read/write data, update a memory pointer, decrement a counter, return.
@@ -719,9 +760,9 @@ WRITEWAIT: Test DOUT
   Any device connected via \texttt{BR}/\texttt{BG} can become bus
   \textbf{master}, not just the CPU --- the arbiter grants the bus to exactly
   one requester, by priority, each time
-  \cite{Hamacher2002_computer_organization}.
-  \muted{Being bus master is how a device can talk to memory \emph{directly}
-  --- the key idea the next slide builds on.}
+  \cite{Hamacher2002_computer_organization}. Being bus master is how a
+  device can talk to memory \emph{directly} --- the key idea the next slide
+  builds on.
 \end{frame}
 
 \begin{frame}{From Arbitration to Direct Memory Access}
@@ -747,9 +788,6 @@ WRITEWAIT: Test DOUT
     \cite{Stallings2015_computer_organization}.
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{the CPU says ``copy this block,'' then goes
-      back to work; the DMA controller does the copying and rings the bell
-      when done.}
     \item \good{Pro}: CPU cost drops from 1024 ISRs to ``one setup, one
       completion interrupt'' --- a constant cost regardless of block size.
     \item \bad{Con}: the DMA controller and CPU now compete for the same
@@ -757,7 +795,7 @@ WRITEWAIT: Test DOUT
   \end{itemize}
 \end{frame}
 
-\begin{frame}{The DMA Controller: What's Inside}
+\begin{frame}{The DMA Controller: What Is Inside}
   \begin{center}
     % Diagram: CPU (left) and I/O device (right) both connect to a DMA
     % controller box (center) that lists its four registers; the DMA
@@ -802,9 +840,9 @@ WRITEWAIT: Test DOUT
       after every word.
     \item \key{Control/status} --- transfer direction, mode, and the
       ``block done'' flag that interrupts the CPU.
+    \item The CPU writes all four registers once at setup; the DMA
+      controller owns them from then on.
   \end{itemize}
-  \muted{The CPU writes all four registers once at setup; the DMA controller
-  owns them from then on.}
 \end{frame}
 
 \begin{frame}{How a DMA Transfer Runs: Step by Step}
@@ -831,8 +869,8 @@ WRITEWAIT: Test DOUT
       involvement after setup.
   \end{enumerate}
   \vspace{0.2cm}
-  \muted{Compare with polling/interrupts: the CPU now appears exactly twice,
-  at the start and the end.}
+  Compare with polling/interrupts: the CPU now appears exactly twice,
+  at the start and the end.
 \end{frame}
 
 \begin{frame}{DMA Transfer Modes: Three Ways to Use the Bus}
@@ -861,9 +899,9 @@ WRITEWAIT: Test DOUT
   \end{tabular}
   \vspace{0.2cm}
   \normalsize
-  \muted{Plain English: burst = ``whole job now, don't bother me''; cycle
+  In short: burst = ``whole job now, do not bother me''; cycle
   stealing = ``one word, then back off''; transparent = ``only when you're not
-  looking.''}
+  looking.''
 \end{frame}
 
 \begin{frame}{Worked Example: How Much CPU Does DMA Save?}
@@ -890,11 +928,33 @@ WRITEWAIT: Test DOUT
     completes, not per block.
   \end{block}
   \begin{itemize}
-    \item Plain English: \muted{DMA copies one block; an IOP runs a whole
-      to-do list of I/O jobs and reports back when the list is done.}
     \item The difference is \emph{how much decision-making is delegated} away
       from the CPU, not just how the data moves.
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: A Channel Program for IOP}
+  \begin{block}{The scenario}
+    A print job needs three things done in order: read a 4096-byte record
+    from disk, convert it to the printer's character format, then send it to
+    the printer --- and interrupt the CPU only when all three finish.
+  \end{block}
+  \begin{enumerate}
+    \item \textbf{Setup:} the CPU writes a short \emph{channel program} into
+      memory --- three steps: \texttt{READ disk} $\to$ \texttt{buffer},
+      \texttt{CONVERT buffer} $\to$ \texttt{buffer2}, \texttt{WRITE buffer2}
+      $\to$ \texttt{printer} --- then hands the IOP its starting address.
+    \item \textbf{Execution:} the IOP runs all three steps itself, becoming
+      bus master as needed (exactly like DMA), with \emph{no} CPU
+      involvement between steps.
+    \item \textbf{Completion:} only after \texttt{WRITE} finishes does the
+      IOP raise one interrupt --- the CPU never sees the intermediate
+      \texttt{READ}/\texttt{CONVERT} steps at all.
+  \end{enumerate}
+  Compare with DMA: DMA's ``program'' is always the same one step
+  (copy this block); an IOP's channel program can chain several different
+  operations --- exactly the extra delegation Stallings Ch.~8 describes
+  \cite{Stallings2015_computer_organization}.
 \end{frame}
 
 \begin{frame}{Four I/O Techniques, Head to Head}
@@ -940,18 +1000,24 @@ WRITEWAIT: Test DOUT
 % =============================================================================
 \section{Synthesis}
 
+\transitionslide{Four techniques, one trade-off. What is the pattern underneath?}
+
 \begin{frame}{The Four Threads Meet}
   \begin{block}{Every design choice moves the waiting cost somewhere else}
     \begin{itemize}
       \item \textbf{Polling vs.\ interrupts (programmer's view):} polling
-        wastes CPU cycles asking; interrupts let the device ask instead, at
-        the cost of vector-table/priority hardware.
+        wastes CPU cycles asking (recall: $2\times10^8$ wasted polls for one
+        keystroke); interrupts let the device ask instead, at the cost of
+        vector-table/priority hardware.
       \item \textbf{Synchronous vs.\ asynchronous (bus hardware):} a shared
-        clock is cheap per transfer but skew-sensitive; a handshake is
-        skew-immune but pays two round trips every time.
+        clock is cheap per transfer but skew-sensitive (recall: 49 wait
+        states for one slow disk word); a handshake is skew-immune but pays
+        two round trips every time.
       \item \textbf{Interrupts vs.\ DMA/IOP (who moves the data):}
-        interrupts still touch every word; DMA and IOP remove the CPU from
-        the data path, trading extra hardware for near-zero per-word cost.
+        interrupts still touch every word (recall: 204{,}800 instructions
+        for one disk block); DMA and IOP remove the CPU from the data path,
+        trading extra hardware for near-zero per-word cost ($\approx 400$
+        instructions for the same block).
     \end{itemize}
   \end{block}
   None of these is free --- exactly the pattern Weeks 5--7 established for
@@ -991,6 +1057,8 @@ WRITEWAIT: Test DOUT
     \item \key{Four techniques, one trade-off axis}: how much of the CPU does
       watching and moving the data cost, and how much hardware buys that
       cost down.
+    \item \muted{Every number today was one bill for the same speed
+      mismatch --- the techniques differ only in who pays it.}
   \end{itemize}
 \end{frame}
 

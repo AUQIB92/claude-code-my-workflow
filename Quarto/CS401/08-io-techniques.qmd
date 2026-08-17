@@ -68,7 +68,6 @@ The I/O Problem and the I/O Unit
 **Memory-mapped I/O.** A device's **data**, **status**, and **control** registers are given addresses in the *normal* memory space. The CPU reads and writes a device exactly like it reads and writes memory --- no special I/O instructions needed [@Hamacher2002_computer_organization].
 :::
 
-- Plain English: [a device pretends to be a few memory locations.]{.neutral}
 - The alternative --- [**isolated I/O**]{.hi-gold} --- needs separate I/O instructions and a separate address space (the classic IBM approach, Mano Ch. 11). Memory-mapped I/O is simpler for this course.
 
 ## The I/O Device Interface: Three Registers
@@ -80,8 +79,7 @@ The I/O Problem and the I/O Unit
 - [**Data register**]{.hi-gold} --- the byte actually being transferred (e.g. `KBD_DATA` for the keyboard, `DISP_DATA` for the display).
 - [**Status register**]{.hi-gold} --- flags such as `KIN` (a keystroke is waiting) or `DOUT` (display is ready for the next character).
 - [**Control register**]{.hi-gold} --- settings such as interrupt-enable bits.
-
-[The interface also performs address decoding, timing, and format conversion --- the "six functions" of an interface circuit, Hamacher Ch. 7 §7.4, p. 238.]{.neutral}
+- The interface also performs address decoding, timing, and format conversion --- the "six functions" of an interface circuit, Hamacher Ch. 7 §7.4, p. 238.
 
 ## Memory-Mapped vs. Isolated I/O: The Trade-off
 
@@ -94,7 +92,7 @@ The I/O Problem and the I/O Unit
 | Typical use | Most modern processors | Classic IBM mainframes |
 :::
 
-[We use memory-mapped I/O for the rest of the deck --- it is what the Hamacher examples assume [@Hamacher2002_computer_organization]. The isolated form is the standard alternative (Mano Ch. 11).]{.neutral}
+We use memory-mapped I/O for the rest of the deck --- it is what the Hamacher examples assume [@Hamacher2002_computer_organization]. The isolated form is the standard alternative (Mano Ch. 11).
 
 ## {.transition-slide}
 
@@ -116,7 +114,6 @@ Program-Controlled I/O (Polling)
 **Polling.** In **program-controlled I/O** (also called **polling**), the CPU runs a loop that repeatedly reads the device's *status register* and checks a ready flag. When the flag says the device is ready, the CPU stops the loop and performs the data transfer itself.
 :::
 
-- Plain English: [the CPU keeps asking "are you ready yet?" in a loop until the answer is "yes," then does the work.]{.neutral}
 - The device never initiates anything --- it only answers questions.
 - Two new status flags, one per device direction: [**`KIN`**]{.hi-gold} (a keyboard keystroke is ready in `KBD_DATA`) and [**`DOUT`**]{.hi-gold} (the display is ready for the next character in `DISP_DATA`).
 
@@ -160,8 +157,7 @@ WRITEWAIT: Test DOUT
 
 - `Test KIN` reads the status flag; `Branch=0` jumps back while the flag is still `0` (not ready).
 - Only when the flag turns `1` does the loop fall through to the single transfer instruction.
-
-[Each pass runs the same two-test instructions again --- the CPU is spinning, doing no useful work between keystrokes [@Hamacher2002_computer_organization].]{.neutral}
+- Each pass runs the same two-test instructions again --- the CPU is spinning, doing no useful work between keystrokes [@Hamacher2002_computer_organization].
 
 ## Worked Example: The Cost of Polling, in Numbers
 
@@ -203,12 +199,13 @@ Interrupt-Driven I/O
 
 ## Definition: Interrupt and Interrupt-Service Routine
 
+![](../../Figures/CS401/08-io-techniques/tikz_exact_01.svg){fig-align="center" width="60%"}
+
 ::: {.methodbox}
 **Interrupt.** An **interrupt** is a signal from a device that suspends the CPU's current program and forces it to jump to a fixed handler --- the **interrupt-service routine (ISR)** --- which services the device. When the ISR finishes, the CPU resumes the original program exactly where it left off.
 :::
 
-![](../../Figures/CS401/08-io-techniques/tikz_exact_01.svg){fig-align="center" width="60%"}
-
+- Unlike polling, the device now signals *once*, unprompted --- the direction of initiative reverses.
 - [**Interrupt latency**]{.hi-gold}: the gap between the device's request and the CPU's jump --- time during which the device waits.
 - [**Shadow registers**]{.hi-gold}: registers where the CPU saves state so the ISR can use them freely [@Hamacher2002_computer_organization].
 
@@ -221,7 +218,6 @@ Interrupt-Driven I/O
 - A *per-device* interrupt-enable bit in that device's control register --- [**`KIRQ`**]{.hi-gold} for the keyboard, [**`DIRQ`**]{.hi-gold} for the display --- decides whether *this* device may request an interrupt at all.
 :::
 
-- Plain English: [the master switch is `IE`; each device also has its own little switch. Both must be on for the request to arrive.]{.neutral}
 - Example: `KIRQ`$=1$ and `IE`$=1$ means a keystroke will interrupt; `IE`$=0$ means it waits.
 
 ## Worked Example: A 5-Step Interrupt Scenario
@@ -247,8 +243,8 @@ Interrupt-Driven I/O
 - **Vectored interrupts**: each device supplies a small identifying code; hardware uses it to index straight into an [**interrupt-vector table**]{.hi-gold} --- one ISR starting address per device --- and jumps directly there.
 :::
 
-- Plain English: [polling-the-sources asks everyone "was it you?" in order; a vector table skips the asking and goes straight to the right ISR.]{.neutral}
 - Trade-off: a little extra hardware (the table + lookup) buys [**constant-time dispatch**]{.hi-gold}, no matter how many devices [@Hamacher2002_computer_organization].
+- [Quantified: 8 devices cost up to [**8 sequential checks**]{.hi-gold} under polling-the-sources, but exactly [**1 lookup**]{.hi-gold} under a vector table, regardless of device count.]{.neutral}
 
 ## Interrupt Nesting and Priority: Two Devices, One CPU
 
@@ -256,7 +252,7 @@ Interrupt-Driven I/O
 
 **What this diagram shows:** `IPENDING` latches *which* devices currently want an interrupt; `IENABLE` decides *which of those* are allowed through; the priority encoder picks the highest-priority allowed one; the vector table gives its ISR address.
 
-[If the lower-priority device's request stays pending while the higher one is being serviced, it waits until interrupts are re-enabled --- or, with [**nesting**]{.hi-gold}, a higher-priority request can interrupt the ISR itself.]{.neutral}
+If the lower-priority device's request stays pending while the higher one is being serviced, it waits until interrupts are re-enabled --- or, with [**nesting**]{.hi-gold}, a higher-priority request can interrupt the ISR itself.
 
 ## Exceptions: The General Form of an Interrupt
 
@@ -264,9 +260,21 @@ Interrupt-Driven I/O
 **Exception.** An **exception** is any event that interrupts the normal flow of control --- an I/O interrupt, but also divide-by-zero, an illegal instruction, a page fault, or a timer tick. The interrupt mechanism is the same; only the *source* differs [@Hamacher2002_computer_organization; @PattersonHennessy2017_computer_organization_design].
 :::
 
-- Plain English: [an interrupt is just one kind of exception --- the "a device needs me" kind.]{.neutral}
 - Thinking of them together matters because the CPU handles them with the same jump-to-handler machinery: save state, service, restore.
 - This is the bridge the next lectures will reuse: exceptions are how the OS gets control back from user programs.
+
+## Worked Example: An Exception in Action
+
+::: {.methodbox}
+**The scenario.** A running program executes `DIV R1, R2, R3` where `R3` holds `0`. The divide-by-zero condition is not an I/O event --- but the CPU handles it with exactly the same machinery Act 3 already built.
+:::
+
+1. The ALU detects the divide-by-zero and raises a fixed internal exception signal --- no external device, no interrupt-request line needed.
+2. The CPU finishes what it can of the current instruction, then forces a jump; unlike an ordinary interrupt, this jump is **not** gated by `PS.IE` --- exceptions cannot be masked.
+3. `PC` and status are saved into shadow registers; `PC` loads the divide-by-zero handler's fixed address.
+4. The handler runs (report the error, or hand control to the OS) --- the same save/service/restore shape as an ISR, just a different table entry.
+
+Same machinery, different trigger: a page fault, an illegal opcode, and a timer tick all follow this identical path, each with its own starting address in step 3 [@Hamacher2002_computer_organization; @PattersonHennessy2017_computer_organization_design].
 
 ## Socratic Check: Simultaneous Interrupt Requests
 
@@ -313,24 +321,37 @@ Synchronous vs. Asynchronous Bus
 
 - [**This Act's question**]{.hi-gold}: when the master says "take this data" or "give me that data," how does the slave say "not ready yet" or "here it is"?
 - Two different answers: [**synchronous**]{.hi-gold} (everyone shares a clock) and [**asynchronous**]{.hi-gold} (an explicit handshake, no clock) [@Hamacher2002_computer_organization].
+- [Running example for this Act: our 4096-byte disk block's controller is today's slave --- every timing diagram below is the CPU (master) and that disk interface negotiating one word of the transfer.]{.neutral}
 
 ## Definition: Synchronous Bus
+
+![](../../Figures/CS401/08-io-techniques/tikz_exact_03.svg){fig-align="center" width="65%"}
 
 ::: {.methodbox}
 **Synchronous bus.** All devices share a common **bus clock**. The master places the address and data on the bus at a fixed clock edge; every slave samples the bus at the *same* edge, with no per-transfer negotiation.
 :::
 
-![](../../Figures/CS401/08-io-techniques/tikz_exact_03.svg){fig-align="center" width="65%"}
+If our disk controller is slower than the clock, it holds `Slave-ready` low for extra clock cycles while the CPU simply waits, still synchronized to the shared clock [@Hamacher2002_computer_organization].
 
-[A slow slave stretches the transfer by holding `Slave-ready` low for extra clock cycles --- the master simply waits, still synchronized to the shared clock [@Hamacher2002_computer_organization].]{.neutral}
+## Worked Example: How Many Wait States?
+
+::: {.methodbox}
+**The setup.** Our disk controller takes 100 ns to place a word on the bus. The synchronous bus clock runs at 500 MHz (one clock cycle $=2$ ns). How many wait-state cycles does the master insert for one word?
+:::
+
+- Clock cycle time: $1/500\text{MHz} = 2$ ns.
+- Cycles needed to cover the disk's 100 ns response: $100 \div 2 = $ [**50**]{.hi-gold} clock cycles.
+- One cycle is the "normal" data cycle, so the master inserts [**49 wait-state cycles**]{.hi-gold} --- the slave holds `Slave-ready` low for all 49 before the transfer completes.
+
+[Compare with Act 2's polling cost ($2\times10^8$ wasted polls for one keystroke): a slow device is expensive under every technique --- the question is only *who* pays and *how much*.]{.neutral}
 
 ## Definition: Asynchronous Bus (Full Handshake)
+
+![](../../Figures/CS401/08-io-techniques/tikz_exact_04.svg){fig-align="center" width="40%"}
 
 ::: {.methodbox}
 **Asynchronous bus.** No shared clock. Master and slave exchange explicit **Master-ready**/**Slave-ready** signals, each one changing only *in response to* the other --- a [**full handshake**]{.hi-gold}.
 :::
-
-![](../../Figures/CS401/08-io-techniques/tikz_exact_04.svg){fig-align="center" width="40%"}
 
 ::: {.smaller}
 | | |
@@ -339,7 +360,7 @@ Synchronous vs. Asynchronous Bus
 | ③ Master-ready withdrawn (latched) | ④ Slave-ready withdrawn |
 :::
 
-[Each step waits for the previous one --- [**bus skew**]{.hi-gold} (wires arriving at slightly different times) never causes a false sample, unlike a synchronous bus's single fixed clock edge [@Hamacher2002_computer_organization].]{.neutral}
+Each step waits for the previous one, so [**bus skew**]{.hi-gold} (wires arriving at slightly different times) never causes a false sample, unlike a synchronous bus's single fixed clock edge [@Hamacher2002_computer_organization].
 
 ## Synchronous vs. Asynchronous: The Trade-off
 
@@ -392,9 +413,7 @@ DMA and I/O Processors
 
 ![](../../Figures/CS401/08-io-techniques/tikz_exact_05.svg){fig-align="center" width="55%"}
 
-Any device connected via `BR`/`BG` can become bus **master**, not just the CPU --- the arbiter grants the bus to exactly one requester, by priority, each time [@Hamacher2002_computer_organization].
-
-[Being bus master is how a device can talk to memory *directly* --- the key idea the next slide builds on.]{.neutral}
+Any device connected via `BR`/`BG` can become bus **master**, not just the CPU --- the arbiter grants the bus to exactly one requester, by priority, each time [@Hamacher2002_computer_organization]. Being bus master is how a device can talk to memory *directly* --- the key idea the next slide builds on.
 
 ## From Arbitration to Direct Memory Access
 
@@ -410,7 +429,6 @@ Any device connected via `BR`/`BG` can become bus **master**, not just the CPU -
 **DMA (general/standard treatment --- Stallings Ch. 8).** A **DMA controller** is given a source/destination address and a word count by the CPU, then becomes bus master (via arbitration) and transfers the entire block directly to/from memory, interrupting the CPU only when the *block* --- not each word --- is complete [@Stallings2015_computer_organization].
 :::
 
-- Plain English: [the CPU says "copy this block," then goes back to work; the DMA controller does the copying and rings the bell when done.]{.neutral}
 - [**Pro**]{.positive}: CPU cost drops from 1024 ISRs to "one setup, one completion interrupt" --- a constant cost regardless of block size.
 - [**Con**]{.negative}: the DMA controller and CPU now compete for the same memory bus (**cycle stealing**); extra hardware required.
 
@@ -423,8 +441,7 @@ Any device connected via `BR`/`BG` can become bus **master**, not just the CPU -
 - [**Source / destination address**]{.hi-gold} --- where the data comes from and goes to (memory address and device, or vice versa).
 - [**Word count**]{.hi-gold} --- how many words remain to transfer; decremented after every word.
 - [**Control/status**]{.hi-gold} --- transfer direction, mode, and the "block done" flag that interrupts the CPU.
-
-[The CPU writes all four registers once at setup; the DMA controller owns them from then on.]{.neutral}
+- The CPU writes all four registers once at setup; the DMA controller owns them from then on.
 
 ## How a DMA Transfer Runs: Step by Step
 
@@ -439,7 +456,7 @@ Any device connected via `BR`/`BG` can become bus **master**, not just the CPU -
 6. **Done:** when the count reaches 0, the DMA controller drops `BR` and raises a *completion interrupt* --- the CPU's only involvement after setup.
 :::
 
-[Compare with polling/interrupts: the CPU now appears exactly twice, at the start and the end.]{.neutral}
+Compare with polling/interrupts: the CPU now appears exactly twice, at the start and the end.
 
 ## DMA Transfer Modes: Three Ways to Use the Bus
 
@@ -459,7 +476,7 @@ Any device connected via `BR`/`BG` can become bus **master**, not just the CPU -
 | Effect on CPU | Starved for the block | Brief pauses per word | None |
 :::
 
-[Plain English: burst = "whole job now, don't bother me"; cycle stealing = "one word, then back off"; transparent = "only when you're not looking."]{.neutral}
+In short: burst = "whole job now, do not bother me"; cycle stealing = "one word, then back off"; transparent = "only when you're not looking."
 
 ## Worked Example: How Much CPU Does DMA Save?
 
@@ -477,8 +494,19 @@ Any device connected via `BR`/`BG` can become bus **master**, not just the CPU -
 **IOP (general/standard treatment --- Stallings Ch. 8).** An **I/O processor** generalizes DMA one step further: a dedicated processor, given a whole *channel program* (a short program describing several transfers, formats, and simple decisions), executes it independently --- interrupting the main CPU only when the entire program completes, not per block.
 :::
 
-- Plain English: [DMA copies one block; an IOP runs a whole to-do list of I/O jobs and reports back when the list is done.]{.neutral}
 - The difference is *how much decision-making is delegated* away from the CPU, not just how the data moves.
+
+## Worked Example: A Channel Program for IOP
+
+::: {.methodbox}
+**The scenario.** A print job needs three things done in order: read a 4096-byte record from disk, convert it to the printer's character format, then send it to the printer --- and interrupt the CPU only when all three finish.
+:::
+
+1. **Setup:** the CPU writes a short *channel program* into memory --- three steps: `READ disk` $\to$ `buffer`, `CONVERT buffer` $\to$ `buffer2`, `WRITE buffer2` $\to$ `printer` --- then hands the IOP its starting address.
+2. **Execution:** the IOP runs all three steps itself, becoming bus master as needed (exactly like DMA), with *no* CPU involvement between steps.
+3. **Completion:** only after `WRITE` finishes does the IOP raise one interrupt --- the CPU never sees the intermediate `READ`/`CONVERT` steps at all.
+
+Compare with DMA: DMA's "program" is always the same one step (copy this block); an IOP's channel program can chain several different operations --- exactly the extra delegation Stallings Ch. 8 describes [@Stallings2015_computer_organization].
 
 ## Four I/O Techniques, Head to Head
 
@@ -513,14 +541,18 @@ Section 7
 Synthesis
 :::
 
+## {.transition-slide}
+
+Four techniques, one trade-off. What's the pattern underneath?
+
 ## The Four Threads Meet
 
 ::: {.methodbox}
 **Every design choice moves the waiting cost somewhere else.**
 
-- **Polling vs. interrupts (programmer's view):** polling wastes CPU cycles asking; interrupts let the device ask instead, at the cost of vector-table/priority hardware.
-- **Synchronous vs. asynchronous (bus hardware):** a shared clock is cheap per transfer but skew-sensitive; a handshake is skew-immune but pays two round trips every time.
-- **Interrupts vs. DMA/IOP (who moves the data):** interrupts still touch every word; DMA and IOP remove the CPU from the data path, trading extra hardware for near-zero per-word cost.
+- **Polling vs. interrupts (programmer's view):** polling wastes CPU cycles asking (recall: $2\times10^8$ wasted polls for one keystroke); interrupts let the device ask instead, at the cost of vector-table/priority hardware.
+- **Synchronous vs. asynchronous (bus hardware):** a shared clock is cheap per transfer but skew-sensitive (recall: 49 wait states for one slow disk word); a handshake is skew-immune but pays two round trips every time.
+- **Interrupts vs. DMA/IOP (who moves the data):** interrupts still touch every word (recall: 204,800 instructions for one disk block); DMA and IOP remove the CPU from the data path, trading extra hardware for near-zero per-word cost ($\approx 400$ instructions for the same block).
 :::
 
 None of these is free --- exactly the pattern Weeks 5--7 established for buses and control units, now applied to the world outside the chip.
@@ -541,6 +573,7 @@ None of these is free --- exactly the pattern Weeks 5--7 established for buses a
 - [**Synchronous bus**]{.hi-gold}: shared clock, wait states for slow slaves. [**Asynchronous bus**]{.hi-gold}: `Master-ready`/`Slave-ready` full handshake, skew-immune but higher per-transfer overhead.
 - [**Bus arbitration**]{.hi-gold} (`BR`/`BG`) lets a device become bus master --- the functional basis for [**DMA**]{.hi-gold} (block transfer, one completion interrupt) and [**IOP**]{.hi-gold} (whole channel programs, general/standard treatment per Stallings Ch. 8).
 - [**Four techniques, one trade-off axis**]{.hi-gold}: how much of the CPU does watching and moving the data cost, and how much hardware buys that cost down.
+- [Every number today was one bill for the same speed mismatch --- the techniques differ only in who pays it.]{.neutral}
 
 ## References
 

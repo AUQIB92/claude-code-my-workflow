@@ -73,6 +73,11 @@ CLAUDE.local.md
 
 # Quarto rendering artifacts
 .quarto/
+# In-place renders next to the .qmd source. Only the .qmd (and theme .scss) are
+# tracked under Quarto/ — the published HTML lives in docs/, put there by
+# scripts/sync_to_docs.sh. A stray render beside the source is a build artifact.
+Quarto/**/*.html
+Quarto/**/*_files/
 
 # quality_reports/ — per-project session logs, plans, specs, merges, audits,
 # diagnoses. The directory structure ships in the template (via .gitkeep), but

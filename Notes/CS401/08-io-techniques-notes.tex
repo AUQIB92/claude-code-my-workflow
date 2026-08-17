@@ -301,6 +301,20 @@ An \textbf{exception} is any event that interrupts the normal flow of control --
 
 Plainly, an interrupt is just one kind of exception --- the ``a device needs me'' kind. The CPU handles all of them with the same jump-to-handler machinery from Figure~\ref{fig:interrupt-transfer}: save state, service, restore. This is also the bridge later lectures will reuse --- exceptions are how the operating system gets control back from user programs.
 
+Tracing one non-I/O exception through that machinery makes the generalization concrete, and shows exactly which step differs from an ordinary device interrupt.
+
+\begin{example}[An Exception in Action: Divide-by-Zero]
+\label{ex:exception-trace}
+A running program executes \texttt{DIV R1, R2, R3} with \texttt{R3} holding \texttt{0}. No device is involved at all, yet the CPU services it with precisely the machinery built up in Section~\ref{sec:interrupts}:
+\begin{enumerate}
+  \item The ALU detects the divide-by-zero and raises a fixed \emph{internal} exception signal. There is no external device and no interrupt-request line --- the trigger originates inside the CPU itself.
+  \item The CPU completes what it can of the current instruction and then forces a jump. This is the one step that differs from an ordinary interrupt: the jump is \emph{not} gated by \texttt{PS.IE}, because an exception of this kind cannot be masked. A program cannot elect to ignore its own divide-by-zero the way it can disable a keyboard interrupt.
+  \item \texttt{PC} and the status register are saved into shadow registers, and \texttt{PC} is loaded with the fixed starting address of the divide-by-zero handler --- the same save-state step as Example~\ref{ex:5step}, reading a different entry of the same table.
+  \item The handler runs (reporting the error, or handing control to the operating system), and the sequence closes with the same restore step an ISR uses.
+\end{enumerate}
+Same machinery, different trigger. A page fault, an illegal opcode, and a timer tick each follow this identical path, differing only in which starting address step 3 loads (Hamacher, 6th ed., \S3.2.6, p.116--119; P\&H, ARM ed., Ch.~4, chapter-level) \cite{Hamacher2002_computer_organization,PattersonHennessy2017_computer_organization_design}.
+\end{example}
+
 \subsection{Polling vs.\ Interrupts: Trade-offs}
 
 \begin{center}
@@ -363,6 +377,21 @@ Figure~\ref{fig:sync-bus} shows the timing diagram for a synchronous transfer th
 \begin{example}[Reading the Synchronous-Bus Wait-State Timeline]
 \label{ex:sync-trace}
 Following Figure~\ref{fig:sync-bus} left to right against the running 4096-byte block-transfer example: at the first clock edge (time 0), the master places the target address on the address/data lines and they remain valid there for the rest of the diagram. \texttt{Slave-ready} starts low, meaning the slave has not yet placed (or accepted) valid data. For several full clock periods --- the ``wait states'' region --- the clock continues to toggle every half-period, but \texttt{Slave-ready} stays low each time, because the slow device physically has not finished. Only at the clock edge marked by the first dashed vertical line does \texttt{Slave-ready} finally rise; the master samples the bus at the \emph{next} clock edge (the second dashed line) and the transfer of that one word completes. A fast device would need zero wait states --- \texttt{Slave-ready} would already be high at the very first edge --- while a slower device simply holds \texttt{Slave-ready} low for as many extra clock cycles as it needs; the master's logic does not otherwise change.
+\end{example}
+
+The timeline above is qualitative --- ``several'' wait states. Putting a device speed and a clock rate on it turns the picture into a number, and shows how directly the wait-state count follows from the mismatch between the two.
+
+\begin{example}[How Many Wait States Does a Slow Device Cost?]
+\label{ex:wait-states}
+Take the running block transfer's disk controller, and suppose it needs 100~ns to place a word on the bus. The synchronous bus clock runs at 500~MHz. How many wait states does the master insert for one word?
+
+The clock period is $1/(500 \times 10^6) = 2$~ns. Covering the disk's 100~ns response therefore takes
+\[
+  \frac{100~\text{ns}}{2~\text{ns/cycle}} = 50 \text{ clock cycles.}
+\]
+One of those 50 is the ``normal'' data cycle the transfer would have needed even from an instantly-ready device, so the master inserts \textbf{49 wait-state cycles}: the slave holds \texttt{Slave-ready} low for all 49, exactly as in the wait-state region of Figure~\ref{fig:sync-bus}, and the transfer completes on the 50th.
+
+The comparison with Section~\ref{sec:polling} is worth drawing explicitly. Example~\ref{ex:polling-waste} found roughly $2\times10^8$ wasted polls for a single keystroke; here a slow device costs 49 idle bus cycles per word. A slow device is expensive under \emph{every} technique in this chapter --- what changes between techniques is only \emph{who} pays the cost and \emph{how much} of the CPU it consumes.
 \end{example}
 
 \subsection{Asynchronous Bus (Full Handshake)}
@@ -606,6 +635,19 @@ An \textbf{I/O processor} generalizes DMA one step further: a dedicated processo
 \end{definitionbox}
 
 Plainly: DMA copies one block; an IOP runs a whole to-do list of I/O jobs and reports back when the list is done. Where DMA offloads only the \emph{moving} of data, an IOP offloads \emph{managing a sequence} of I/O operations. The distinction is how much decision-making is delegated away from the main CPU, not merely how the data physically moves: a DMA controller executes one pre-configured block transfer and stops; an IOP can execute a whole program of transfers, formats, and conditional decisions on its own, reporting back to the CPU only when that entire program is done.
+
+What a channel program actually looks like is easiest to see on a job that chains several unlike operations together.
+
+\begin{example}[A Channel Program for an IOP]
+\label{ex:channel-program}
+A print job needs three things done in order: read a 4096-byte record from disk, convert it to the printer's character format, and send it to the printer --- with the CPU interrupted only once, when all three have finished.
+\begin{enumerate}
+  \item \textbf{Setup.} The CPU writes a short channel program into memory --- three steps, \texttt{READ disk} $\to$ \texttt{buffer}, \texttt{CONVERT buffer} $\to$ \texttt{buffer2}, \texttt{WRITE buffer2} $\to$ \texttt{printer} --- and hands the IOP that program's starting address.
+  \item \textbf{Execution.} The IOP runs all three steps itself, becoming bus master as needed by exactly the arbitration mechanism of Section~\ref{sec:dma}, with no CPU involvement between steps.
+  \item \textbf{Completion.} Only once the \texttt{WRITE} step finishes does the IOP raise a single interrupt. The CPU never observes the intermediate \texttt{READ} and \texttt{CONVERT} steps at all.
+\end{enumerate}
+The contrast with DMA is the point. A DMA controller's ``program'' is always the same single step --- copy this block --- so a job like this one would cost the CPU three separate setup-and-completion cycles, one per operation. An IOP's channel program chains several \emph{different} operations, including a format conversion that is not a data transfer at all, which is precisely the additional delegation described in Stallings Ch.~8 (general/standard treatment) \cite{Stallings2015_computer_organization}.
+\end{example}
 
 \subsection{Four I/O Techniques, Head to Head}
 
