@@ -1,6 +1,6 @@
 course: CS401
 lab_mode: none            # Nand2Tetris labs (5) are a separate numbered track — run /lab-manual by lab number, not per-week via /build-week
-last_updated: 2026-08-13
+last_updated: 2026-08-18
 weeks:
   "01":
     deck: "01-intro-performance"
@@ -77,12 +77,13 @@ weeks:
   "09":
     deck: "09-cache-memory"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
+      slides:     { status: deployed, score: null, note: "3-pass compile clean, 65 pp; audit fixed LFU-frame off-by-one (LRU evicts block 0 at ref 10, not 11)" }
+      notes:      { status: deployed, score: null, note: "3-pass compile clean, 19 pp; same off-by-one fixed (derived from deck)" }
+      assignment: { status: deployed, score: null, note: "assignment + solutions key present; solutions gitignored and excluded from docs/" }
       lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 4 (weeks 8-9), separate track" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      gate:       { status: deployed, score: null, note: "13 Q (Q1-Q10 PYQ, Q11-Q13 original); all 10 PYQ attributions CoVe-verified 2026-08-18 vs GATE Overflow + >=1 mirror; all 13 answers re-derived independently" }
+      quarto:     { status: absent, score: null, note: "skipped via --skip quarto (PDF-only deploy for this week)" }
+      handout:    { status: built,    score: null, note: "InstructorHandouts/CS401/09-cache-memory-instructor-handout.tex, 14 pp, 0 overfull; instructor-only, never deployed to docs/" }
   "10":
     deck: "10-virtual-memory-storage"
     stages:

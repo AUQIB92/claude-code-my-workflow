@@ -1,0 +1,81 @@
+% =============================================================================
+% CompetitiveExam/CS401/09-cache-memory-answers.tex
+% Answer key for 09-cache-memory-questions.tex.
+%
+% Q1-Q10 are real GATE past-year questions sourced from the local GATEOverflow
+% Volume 3 PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability),
+% which authenticates each question (year + question number printed on the
+% page). The book's own answer keys are collapsed and not extractable, so the
+% answers below are independently derived and then web cross-checked.
+%
+%   All ten PYQ attributions (year + question number) were re-verified on
+%   2026-08-18 against GATE Overflow's canonical question pages plus at least
+%   one independent mirror each (GeeksforGeeks, ExamSIDE, Electrical4u,
+%   Testbook, EduRev). Every year/number label below is confirmed:
+%
+%     Q1  GATE CSE 1995 Q1.6      gateoverflow.in/2593    ans (D) Cache Memory
+%     Q2  GATE CSE 2019 Q1        gateoverflow.in         ans (D) 28 and 0
+%     Q3  GATE CSE 2005 Q67       gateoverflow.in/1390    ans (A) 10, 17
+%     Q4  GATE CSE 2014 S2 Q9     gateoverflow.in/1963    ans 20
+%     Q5  GATE CSE 1995 Q2.25     gateoverflow.in/2638    ans (D) 4, 6
+%     Q6  GATE CSE 2004 Q65       gateoverflow.in         ans (C) 4
+%     Q7  GATE CSE 2015 S2 Q24    gateoverflow.in/8119    ans 14
+%     Q8  GATE CSE 2014 S3 Q44    gateoverflow.in/2078    ans 1.68
+%     Q9  GATE CSE 1992 Q5-a      gateoverflow.in/584     ans 176
+%     Q10 GATE CSE 2025 S1 Q43    gateoverflow.in/460037  ans 11.85
+%
+%   Note on Q10: the original GATE paper presents the hit rates and access
+%   times in a figure rather than inline prose. The transcription below states
+%   them in text; the derived answer 11.85 ns falls inside the official GATE
+%   answer-key range of 11.83-11.87, which corroborates the transcription.
+%
+%   The answers are independently derived (each derivation is shown in full
+%   below) and were re-checked arithmetically in the 2026-08-18 audit pass.
+%
+% Q11-Q13 are original GATE-pattern questions on FIFO/LFU/OPT replacement and
+% Belady's anomaly; their traces are reproduced from Week 9's slides (Act 5).
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{9.\arabic{section}}
+
+\title{Competitive Exam Practice 9 --- Answer Key\\\large Cache Memory}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(D).} Locality — temporal (a location referenced now is likely referenced again soon) and spatial (nearby locations are likely referenced soon) — is the property that lets a small, fast cache stand in for a large, slow main memory. Interrupts, DMA and polling are I/O techniques; none is justified by locality.
+
+\item[\textbf{Q2}] \textbf{(D).} Fully associative mapping has \emph{no index field} ($0$ index bits): a block may go in any line, identified purely by tag comparison. The block size $16$~B $= 2^4$ fixes the offset at $4$ bits, so tag $= 32 - 4 = 28$ bits. (The cache holds $16\,\mathrm{kB}/16\,\mathrm{B}=1024$ lines, but a line is selected by comparison, never by an index.)
+
+\item[\textbf{Q3}] \textbf{(A).} Block $=32$~B $=2^5 \Rightarrow$ word field $5$ bits. Lines $=32\,\mathrm{KB}/32\,\mathrm{B}=1024=2^{10} \Rightarrow$ index $10$ bits. Tag $=32-10-5=17$ bits. Check $10+5+17=32$ \checkmark.
+
+\item[\textbf{Q4}] \textbf{20.} Block $=8$ words $\times 4$~B $=32$~B $=2^5 \Rightarrow$ offset $5$ bits. Lines $=16\,\mathrm{KB}/32\,\mathrm{B}=512=2^9$. Sets $=512/4=128=2^7 \Rightarrow$ index $7$ bits. Address $=4\,\mathrm{GB}=2^{32} \Rightarrow 32$ bits. Tag $=32-7-5=20$ bits.
+
+\item[\textbf{Q5}] \textbf{(D).} Blocks $=4\,\mathrm{K}$ words $/64$ words $=64$ blocks. Sets $=64/4=16=2^4 \Rightarrow$ SET field $4$ bits. WORD field $=\log_2 64=6$ bits. So SET, WORD $=4,6$.
+
+\item[\textbf{Q6}] \textbf{(C).} Two-way, four blocks $\Rightarrow 2$ sets of $2$ lines each; set $=\mathrm{block}\bmod 2$. Trace: $8$ (set $0$, miss), $12$ (set $0$, miss), $0$ (set $0$, miss — evict LRU $8$), $12$ (hit), $8$ (miss — evict LRU $0$). Total $=4$ misses.
+
+\item[\textbf{Q7}] \textbf{14.} Average read time $=0.8\times 5 + 0.2\times 50 = 4 + 10 = 14$~ns. (Here the miss time $50$~ns is the total time on a miss, not a penalty added to the hit time.)
+
+\item[\textbf{Q8}] \textbf{1.68.} Instruction fetches: $90\times1 + 10\times5 = 140$~ns. Reads: $54\times1 + 6\times5 = 84$~ns. Writes: $36\times2 + 4\times10 = 112$~ns. Total $=140+84+112=336$~ns over $100+60+40=200$ accesses $\Rightarrow 336/200=1.68$~ns.
+
+\item[\textbf{Q9}] \textbf{176.} Read-hit: $0.8\times0.9\times50=36$. Read-miss: $0.8\times0.1\times500=40$. Write (write-through updates both memories simultaneously, so every write costs the full main-memory time): $0.2\times500=100$. Total $=36+40+100=176$~ns.
+
+\item[\textbf{Q10}] \textbf{11.85.} Hierarchical: $0.95\times10 + 0.05\times0.85\times20 + 0.05\times0.15\times200 = 9.5 + 0.85 + 1.5 = 11.85$~ns. (Weight check: $0.95+0.0425+0.0075=1$ \checkmark.)
+
+\item[\textbf{Q11}] \textbf{9 and 10.} FIFO with $3$ lines: misses at references $1,2,3,4,1,2,5$, then hits at $1,2$, misses at $3,4$, hit at $5$ $\Rightarrow 9$ misses, $3$ hits. FIFO with $4$ lines: misses at $1,2,3,4$, hits at $1,2$, then misses at $5,1,2,3,4,5$ $\Rightarrow 10$ misses, $2$ hits. The larger cache misses \emph{more} — this is Belady's anomaly.
+
+\item[\textbf{Q12}] \textbf{6.} OPT evicts the resident block whose \emph{next} reference is furthest in the future. On the Week 9 trace, OPT scores $6$ hits / $7$ misses (hit ratio $6/13=46.2\%$), the ceiling no real policy can beat.
+
+\item[\textbf{Q13}] \textbf{5.} LFU evicts the line with the smallest reference count (ties broken by age). On the same string it scores $5$ hits / $8$ misses ($38.5\%$), beating LRU ($4$ hits) and FIFO ($3$ hits) but below OPT's $6$.
+\end{enumerate}
+
+\end{document}
