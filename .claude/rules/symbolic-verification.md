@@ -4,6 +4,7 @@ paths:
   - "Assignments/**/*-solutions.tex"
   - "CompetitiveExam/**/*-answers.tex"
   - "InstructorHandouts/**/*.tex"
+  - "Minors/**/*-solutions.tex"
 ---
 
 # Symbolic Verification Standards

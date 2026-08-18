@@ -1,6 +1,6 @@
 ---
 name: create-assignment
-description: Scaffold a graded assignment (LaTeX PDF, course-organized) for a finished lecture — Conceptual, Numerical, and Design problems, sourced from the Beamer deck and Notes, with a clean student set and a separate solution key. Use when user says "make an assignment for this lecture", "create a problem set for week N", "build an assignment course-wise", "generate homework with an answer key" for a CS401-style engineering course. NOT for economics/empirical coursework (use `/scaffold-exercises` for that — analytical/empirical/coding problem types, R/Stata solutions).
+description: Scaffold a graded assignment (LaTeX PDF, course-organized) for a finished lecture — Conceptual, Numerical, and Design problems, sourced from the Beamer deck and Notes, with a clean student set and a separate solution key. Use when user says "make an assignment for this lecture", "create a problem set for week N", "build an assignment course-wise", "generate homework with an answer key" for a CS401-style engineering course. NOT for economics/empirical coursework (use `/scaffold-exercises` for that — analytical/empirical/coding problem types, R/Stata solutions) and NOT for a multi-week internal sessional exam (use `/create-minor-paper`).
 argument-hint: "[CourseCode/lecture], e.g. CS401/06-hardwired-control (Slides/CourseCode/lecture.tex must already exist and compile)"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash"]
 context: fork

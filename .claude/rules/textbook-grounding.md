@@ -3,6 +3,7 @@ paths:
   - "Slides/**/*.tex"
   - "Notes/**/*.tex"
   - "master_supporting_docs/**"
+  - "Minors/**/*.tex"
 ---
 
 # Textbook Grounding (page-cited or honestly general)

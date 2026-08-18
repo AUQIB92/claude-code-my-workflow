@@ -47,6 +47,15 @@ _cv.txt
 **/*-solutions.pdf
 Assignments/CS401/*-solutions.*
 
+# Minor exam papers — internal institutional sessional exams. Unlike
+# Assignments/CompetitiveExam (whose student-facing questions ARE public
+# study material and only the solution keys are gitignored), a Minor paper
+# is a real, live exam given to real students — the question paper itself
+# must never leak via this public GitHub repo. Both the paper and its
+# solution key are gitignored wholesale, never committed, never synced to
+# docs/. See .claude/skills/create-minor-paper/SKILL.md.
+Minors/**
+
 # Coding-assignment instructor-only files — reference solutions, hidden test
 # suites, and autograder harnesses must never reach the public repo or the
 # GitHub Pages site. The student-facing pieces (bag.h, starter_*.c,

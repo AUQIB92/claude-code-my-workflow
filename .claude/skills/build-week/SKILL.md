@@ -130,3 +130,4 @@ Next pending week(s): [list]
 - **Commit.** Branch / PR / merge is [`/commit`](../commit/SKILL.md)'s job.
 - **Grade or compute attainment.** Grading is `/grade`'s job (standalone, once submissions exist); `/accreditation` owns CO-PO mapping, and reads `/grade --tally`'s output when present.
 - **Build a course from scratch.** It needs a syllabus work-list (`/syllabus`); it only executes weeks the syllabus already defines.
+- **Generate a Minor exam paper.** `/create-minor-paper` is a standalone, multi-week artifact outside this skill's per-week 7-stage pipeline — it does not resolve to a single `<CODE>/<week>`, so it is invoked directly once the relevant weeks' stages are already built.

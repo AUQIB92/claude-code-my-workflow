@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>23 agents, 70 skills, 39 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>23 agents, 71 skills, 39 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -295,6 +295,7 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/course-arc-audit` (v2.6) | Fan out reviewers across consecutive week-pairs plus one whole-arc pass to check semester-level pedagogical continuity — handoff-line accuracy, notation reuse-drift, forward-reference payoff |
 | `/student-simulator` (v2.6) | Playtest a deck by simulated execution: a blind "cold student" persona works through its Socratic Checks before seeing the answers, then diffs its stumbles against the instructor handout's predicted misconceptions |
 | `/grade` (v2.6) | Score student submissions against a rubric — LLM judgment plus the same SymPy/algorithm verification methods `/verify-symbolic`/`/verify-algorithm` use; draft-only by default, with separate `--approve` and `--tally` modes feeding `/accreditation` |
+| `/create-minor-paper` (v2.7) | Assemble an internal sessional "Minor" exam paper spanning a range of weeks (Section A: 3x10 marks attempt-any-2; Section B: 3x5 marks attempt-any-2) — largest-remainder apportionment across weeks, freshness-checked against that week's assignment/GATE bank, solutions verified via the same `/verify-symbolic`/`/verify-algorithm` methods; both paper and solutions gitignored end-to-end (a live exam, not public study material) |
 
 ### Research Workflow
 
