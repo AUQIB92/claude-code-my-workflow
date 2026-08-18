@@ -5,6 +5,7 @@ paths:
   - "Assignments/**/*.tex"
   - "InstructorHandouts/**/*.tex"
   - "CompetitiveExam/**/*.tex"
+  - "Minors/**/*.tex"
 ---
 
 # Difficulty Levels (derived from audience level + semester)
