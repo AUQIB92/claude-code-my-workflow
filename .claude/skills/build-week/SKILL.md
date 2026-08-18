@@ -1,6 +1,6 @@
 ---
 name: build-week
-description: Chain the entire per-lecture pipeline for one course week under a single plan and quality gate — resolve a <CourseCode>/<week> to its deck from the syllabus work-list, then run the 7 canonical stages (slides → notes → assignment → lab → GATE practice set → Quarto/deploy → course hub), delegating each to the existing skill via Task, reconciling a per-course syllabi/<CODE>.progress.yaml registry after every stage, and pausing for checkpoint approval between stages. Use when user says "build this week", "build-week", "run the full pipeline for week N", "generate everything for CS401/09", "autopilot week 9", "produce all materials for this lecture", or after adding a week to a syllabus. NOT for a single stage (invoke /create-lecture, /lecture-notes, etc. directly) and NOT for grading or attainment (no gradebook integration).
+description: Chain the entire per-lecture pipeline for one course week under a single plan and quality gate — resolve a <CourseCode>/<week> to its deck from the syllabus work-list, then run the 7 canonical stages (slides → notes → assignment → lab → GATE practice set → Quarto/deploy → course hub), delegating each to the existing skill via Task, reconciling a per-course syllabi/<CODE>.progress.yaml registry after every stage, and pausing for checkpoint approval between stages. Use when user says "build this week", "build-week", "run the full pipeline for week N", "generate everything for CS401/09", "autopilot week 9", "produce all materials for this lecture", or after adding a week to a syllabus. NOT for a single stage (invoke /create-lecture, /lecture-notes, etc. directly) and NOT for grading or attainment — grading a shipped assignment is `/grade`'s job, standalone, once real student submissions exist; it is not one of this skill's 7 stages.
 argument-hint: "[CourseCode/week], e.g. CS401/09 [--stages slides,notes,assignment] [--skip gate,quarto] [--no-pause] [--dry-run]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 disable-model-invocation: true
@@ -37,7 +37,7 @@ The `lab` stage delegates by the registry's `lab_mode`: `lab-manual` (supervised
 
 - One stage only — invoke `/create-lecture`, `/lecture-notes`, `/create-assignment`, `/lab-manual`, `/coding-assignment`, `/competitive-exam-questions`, or `/translate-to-quarto` directly.
 - A course with no syllabus work-list yet — run `/syllabus` first; this skill resolves weeks from it.
-- Grading, attendance, or CO-PO attainment — no gradebook integration exists (that is `/accreditation` + a future grade skill).
+- Grading, attendance, or CO-PO attainment — grading is `/grade`'s job (standalone, once submissions exist, not a pipeline stage); attainment mapping is `/accreditation`'s.
 
 ## Phase 0: Resolve + load the registry
 
@@ -128,5 +128,5 @@ Next pending week(s): [list]
 - **Re-implement a stage.** Every stage delegates to its owning skill; this skill only sequences, gates, and records.
 - **Run unattended on a schedule.** No daemon; it is user/skill-invoked (the documented non-goal in `orchestrator-protocol.md`).
 - **Commit.** Branch / PR / merge is [`/commit`](../commit/SKILL.md)'s job.
-- **Grade or compute attainment.** No gradebook integration; `/accreditation` owns CO-PO mapping.
+- **Grade or compute attainment.** Grading is `/grade`'s job (standalone, once submissions exist); `/accreditation` owns CO-PO mapping, and reads `/grade --tally`'s output when present.
 - **Build a course from scratch.** It needs a syllabus work-list (`/syllabus`); it only executes weeks the syllabus already defines.

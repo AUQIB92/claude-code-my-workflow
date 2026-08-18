@@ -1,6 +1,6 @@
 ---
 name: accreditation
-description: Generate NBA-style Course Outcome (CO) to Program Outcome (PO) mapping and an attainment-calculation template for a course — numbers the syllabus's existing learning objectives as COs, Bloom-tags them, drafts a CO-PO-PSO correlation matrix against NBA's fixed 12 POs, maps each CO to the assessment tool that tests it, and emits the standard attainment formulas with [FILL] placeholders for real scores. Use when user says "run accreditation", "CO-PO mapping", "NBA attainment", "generate the course file", "map outcomes to POs", or when preparing an NBA/AICTE self-assessment report. NOT for computing real attainment numbers from actual student scores (no gradebook integration exists yet — a future /grade skill would supply that data) and NOT an authoritative filing on its own — the CO-PO correlation matrix is a faculty-review draft, never a final submission without instructor sign-off.
+description: Generate NBA-style Course Outcome (CO) to Program Outcome (PO) mapping and an attainment-calculation template for a course — numbers the syllabus's existing learning objectives as COs, Bloom-tags them, drafts a CO-PO-PSO correlation matrix against NBA's fixed 12 POs, maps each CO to the assessment tool that tests it, and emits the standard attainment formulas, substituting real per-CO percentages wherever `/grade --tally` has already produced `Accreditation/<CODE>/attainment-data.yaml` and leaving `[FILL]` elsewhere. Use when user says "run accreditation", "CO-PO mapping", "NBA attainment", "generate the course file", "map outcomes to POs", or when preparing an NBA/AICTE self-assessment report. NOT for grading student submissions or producing attainment data itself (use `/grade`, whose `--tally` output this skill reads) and NOT an authoritative filing on its own — the CO-PO correlation matrix is a faculty-review draft, never a final submission without instructor sign-off.
 argument-hint: "[CourseCode]"
 allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob"]
 effort: high
@@ -87,7 +87,7 @@ Emit the standard NBA attainment-calculation methodology, with every numeric slo
 - **Overall CO attainment**: a weighted blend, typically `0.8 × direct + 0.2 × indirect` (weights are institute policy — state them as `[FILL]` if not already fixed elsewhere).
 - **PO attainment**: for each PO, the weighted average of the overall CO attainments mapped to it, using the Phase 2 correlation levels as weights.
 
-Include a short "how to fill this in" note: once real assessment scores exist (per-student, per-question, mapped to the CO each question tests), the direct-attainment percentages can be computed and substituted for the `[FILL]` cells. A future `/grade` skill would be the natural source for that data — not built in this pass, out of scope here.
+Include a short "how to fill this in" note: once real assessment scores exist (per-student, per-question, mapped to the CO each question tests), the direct-attainment percentages can be computed and substituted for the `[FILL]` cells. Before emitting `[FILL]`, check whether `Accreditation/<CODE>/attainment-data.yaml` already exists — that file is `/grade --tally`'s output (built only from instructor-approved scores, per `.claude/rules/grading-protocol.md`), and if present, its per-CO direct-attainment percentages replace the corresponding `[FILL]` cells directly. This still carries the same "faculty-review draft, needs sign-off" framing verbatim — a real number from `/grade --tally` is not itself an authoritative filing any more than a `[FILL]` placeholder was.
 
 ### Phase 5: Emit deliverable
 
@@ -123,7 +123,7 @@ Deliverable: Accreditation/<CODE>/co-po-attainment.tex (compiled, N pages)
 
 ## What this skill does NOT do
 
-- It does **not** compute real attainment percentages — no gradebook/scores data source exists in this repository yet.
+- It does **not** compute real attainment percentages itself — it reads `/grade --tally`'s output when present; without it, cells stay `[FILL]`.
 - It does **not** present the CO-PO-PSO matrix as an authoritative, submission-ready filing — every emission is marked as a faculty-review draft.
 - It does **not** invent Program-Specific Outcomes (PSOs) — those are department-defined and left as `[FILL]`.
-- It does **not** grade student submissions or generate assessment items — that is a distinct, not-yet-built capability (a future `/grade` skill).
+- It does **not** grade student submissions or generate assessment items — that is `/grade`'s job, a distinct skill this one only consumes the tally output of.

@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>20 agents, 66 skills, 38 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>23 agents, 70 skills, 39 rules, 7 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -216,6 +216,9 @@ This workflow is designed as a **single hub for an entire research program** —
 | `r-package-reviewer` (v1.10.0) | R package-source reviewer — DESCRIPTION/NAMESPACE hygiene, roxygen completeness, testthat coverage, CRAN-policy red flags |
 | `notes-critic` | Beamer↔Lecture-Notes parity audit — content/citation completeness, no invention, derivation completeness |
 | `notes-fixer` | Implements fixes from `notes-critic` onto the Lecture Notes file |
+| `arc-continuity-reviewer` (v2.1.0) | Semester-level pedagogical continuity — handoff accuracy, notation drift, forward-reference payoff |
+| `student-persona` (v2.1.0) | Blind "cold student" persona that works through a redacted deck's Socratic Checks before seeing the answers |
+| `grader` (v2.1.0) | Per-student draft scoring — LLM judgment plus reused symbolic/algorithm verification methods |
 
 ### Skills (`.claude/skills/`)
 
@@ -288,6 +291,10 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/publish-course-hub` (v2.4) | Regenerate a course hub page's data-driven regions (lecture rail, progress ribbon, assignments/practice tables) from the syllabus + what's actually published in `docs/`, instead of hand-editing `docs/courses/<code>/index.html` every time a new week ships |
 | `/accreditation` (v2.4) | NBA-style Course Outcome → Program Outcome mapping and attainment-calculation template — numbers the syllabus's learning objectives as COs, Bloom-tags them, drafts a CO-PO-PSO correlation matrix against NBA's 12 fixed POs (faculty-review draft, never auto-filed), maps each CO to its assessment tool, and emits the attainment formulas with `[FILL]` placeholders instead of fabricated scores |
 | `/build-week` (v2.5) | Semester autopilot — resolve a `<CourseCode>/<week>` from the syllabus work-list and run the 7-stage pipeline (slides → notes → assignment → lab → GATE set → Quarto/deploy → hub), delegating each stage to its owning skill via `Task` and reconciling a per-course `syllabi/<CODE>.progress.yaml` registry, with checkpoint approval between stages |
+| `/textbook-edition-diff` (v2.6) | Diff a swapped textbook edition against its old `index.md` chapter mapping, then grep every citation of that book across the whole course into one consolidated re-verification report — read-only, no auto-fix |
+| `/course-arc-audit` (v2.6) | Fan out reviewers across consecutive week-pairs plus one whole-arc pass to check semester-level pedagogical continuity — handoff-line accuracy, notation reuse-drift, forward-reference payoff |
+| `/student-simulator` (v2.6) | Playtest a deck by simulated execution: a blind "cold student" persona works through its Socratic Checks before seeing the answers, then diffs its stumbles against the instructor handout's predicted misconceptions |
+| `/grade` (v2.6) | Score student submissions against a rubric — LLM judgment plus the same SymPy/algorithm verification methods `/verify-symbolic`/`/verify-algorithm` use; draft-only by default, with separate `--approve` and `--tally` modes feeding `/accreditation` |
 
 ### Research Workflow
 
@@ -346,6 +353,7 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 | `confidential-data` (v2.0) | `data/**`, `**/*.dta`, `**/restricted/**`, `**/confidential/**` | Restricted/IRB-data protocol: never commit raw data, disclosure clearance before release, restricted-data-safe multi-author git topology |
 | `did-conventions` (v2.0) | `**/*did*.R`, `**/*event*study*.R`, `**/*att_gt*`, `**/*csdid*.do`, `**/*drdid*` | DiD/event-study standards (Sant'Anna): LONG data + gname coding, doubly-robust default, control-group rule, uniform-band inference, mandatory pre-trend/HonestDiD/didFF diagnostics, replicate-and-verify-to-1e-6 |
 | `inference-robustness` (v2.0) | `scripts/**/*.R`, `**/*.do`, `**/*.py` | Multiple-testing (FWER/Romano-Wolf vs FDR/Anderson sharpened-q, pre-register the family) + specification-curve / leave-one-out / wild-cluster-bootstrap robustness |
+| `grading-protocol` (v2.6) | `Submissions/**`, `Assignments/**/*-scores-approved.yaml`, `Accreditation/**/attainment-data.yaml` | Never-auto-finalize gate for `/grade`: draft-only default, explicit `--approve`/`--tally` steps, PII gitignore posture, reused verification vocabulary |
 
 ### Templates (`templates/`)
 

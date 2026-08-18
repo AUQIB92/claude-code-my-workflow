@@ -52,6 +52,15 @@ Assignments/CS401/*-solutions.*
 # GitHub Pages site. The student-facing pieces (bag.h, starter_*.c,
 # test_visible.c, and the problem-statement PDF) remain tracked.
 Assignments/**/*-coding/reference_*
+
+# Grading data — real student submissions, draft grading reports, approved
+# score ledgers, and computed attainment numbers all carry PII. Never commit
+# or publish (same posture as the solution keys above). See
+# .claude/rules/grading-protocol.md for the full contract.
+Submissions/
+quality_reports/grading/
+Assignments/**/*-scores-approved.yaml
+Accreditation/**/attainment-data.yaml
 Assignments/**/*-coding/test_hidden.*
 Assignments/**/*-coding/autograder.*
 
