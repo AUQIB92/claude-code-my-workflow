@@ -343,6 +343,7 @@
       <div class="footer-bottom">
         <p>&copy; <span id="year"></span> Dr. Auqib Hamid Lone.</p>
         <p>Built with care &middot; course materials open for reuse.</p>
+        <p id="visit-count-line" style="display:none;">This page has had <span id="visit-count">&mdash;</span> unique visits.</p>
       </div>
     </div>
   </footer>
@@ -393,6 +394,33 @@
   <script data-goatcounter="https://academic-workflow.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
   <!-- End GoatCounter Analytics -->
+
+  <!-- GoatCounter visible visitor count (footer). Requires "Allow adding
+       visitor counts on your website" enabled in GoatCounter site settings
+       -- https://academic-workflow.goatcounter.com/settings -- otherwise
+       this request 403s and the line silently stays hidden. Response is
+       cached up to ~4h by GoatCounter, so the number won't update live. -->
+  <script>
+    (function () {
+      var line = document.getElementById('visit-count-line');
+      var el = document.getElementById('visit-count');
+      if (!line || !el) return;
+      var xhr = new XMLHttpRequest();
+      xhr.addEventListener('load', function () {
+        if (xhr.status !== 200) return;
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (data && data.count_unique) {
+            el.textContent = data.count_unique;
+            line.style.display = '';
+          }
+        } catch (e) { /* malformed response -- leave hidden */ }
+      });
+      xhr.open('GET', 'https://academic-workflow.goatcounter.com/counter/' +
+        encodeURIComponent(location.pathname) + '.json');
+      xhr.send();
+    })();
+  </script>
 
 </body>
 </html>
