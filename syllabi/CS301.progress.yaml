@@ -1,6 +1,6 @@
 course: CS301
 lab_mode: coding-assignment   # P1-P13 C programming practicals map to weeks -> /coding-assignment
-last_updated: 2026-08-13
+last_updated: 2026-08-24
 weeks:
   "00":
     deck: "00-course-motivation-overview"
@@ -24,9 +24,9 @@ weeks:
     deck: "02-algorithm-analysis"
     stages:
       slides:     { status: compiled, score: null, note: "3-pass compile clean; 0 overfull, 0 undefined citations; 44 frames; 4 growth-curve TikZ diagrams (Big O/Omega/Theta + orders-of-growth)" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
-      lab:        { status: absent, score: null, note: "instructor-supplied (empirical timing vs predicted growth)" }
+      notes:      { status: compiled, score: null, note: "reconciled from disk 2026-08-24: 02-algorithm-analysis-notes.pdf present, not yet in docs/" }
+      assignment: { status: deployed, score: null, note: "6 problems (2 Conceptual/2 Numerical/2 Design); solutions key 1:1 parity; 3-pass compile clean, 0 errors" }
+      lab:        { status: deployed, score: null, note: "coding-assignment (empirical timing vs predicted growth); linear/binary search + has_duplicate; 127/127 hidden tests pass; verify-algorithm PASS (all 3 complexity claims empirically consistent)" }
       gate:       { status: absent, score: null, note: "" }
       quarto:     { status: absent, score: null, note: "" }
   "03":

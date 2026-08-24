@@ -23,6 +23,7 @@
 \usepackage[margin=1in]{geometry}
 \input{../../Preambles/header}
 \usepackage{microtype}
+\usetikzlibrary{circuits.logic.US}
 \coursecode{CS401}
 
 % Lab-number-style numbering: this is Lab 2 (distinct axis from lecture-week
@@ -146,6 +147,87 @@ Load each chip's supplied \texttt{.tst} script in the Hardware Simulator; for \t
 
 \begin{figure}[h]
   \centering
+  % Half adder gate-level: sum = a XOR b, carry = a AND b.
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    \node[xor gate, inputs={nn}, anchor=input 1] (X) at (5.0,3.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A) at (5.0,1.4) {};
+    \node[junction] (Ja) at (0.3,3.4) {};
+    \node[junction] (Jb) at (1.2,3.195) {};
+    \node[font=\small, left] at (-1.7,3.4) {$a$};
+    \node[font=\small, left] at (-1.1,3.195) {$b$};
+    \draw[wire] (-1.6,3.4) -- (Ja) -- (X.input 1);
+    \draw[wire] (Ja) -- (0.3,1.195) -- (A.input 2);
+    \draw[wire] (-1.0,3.195) -- (Jb) -- (X.input 2);
+    \draw[wire] (Jb) -- (1.2,1.4) -- (A.input 1);
+    \draw[wire] (X.output) -- (6.4,3.2975);
+    \draw[wire] (A.output) -- (6.4,1.2975);
+    \node[font=\small, right] at (6.5,3.2975) {$sum$};
+    \node[font=\small, right] at (6.5,1.2975) {$carry$};
+  \end{tikzpicture}
+  \caption{\texttt{HalfAdder} at gate level: $sum=a\oplus b$ (\texttt{Xor}), $carry=a\cdot b$ (\texttt{And}). Exactly two gates --- this is the module \texttt{FullAdder} reuses twice.}
+  \label{fig:lab2-ha-gates}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % Full adder = two half adders + one OR gate (Task 2's own hint).
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick}]
+
+    % HA1 block
+    \draw[draw=primary-gold, thick, fill=white] (0.6,1.5) rectangle (2.0,2.1);
+    \node[font=\small] at (1.3,1.8) {HA};
+    % HA2 block
+    \draw[draw=primary-gold, thick, fill=white] (4.3,1.5) rectangle (5.7,2.1);
+    \node[font=\small] at (5.0,1.8) {HA};
+    % OR gate moved below and to the right of HA2, well clear of every
+    % HA box and every other wire, so c1/c2 approach it from above without
+    % ever crossing through its body (the old placement between the two
+    % HA boxes forced c2's wire straight through the OR gate).
+    \node[or gate, inputs={nn}, anchor=input 1] (O) at (6.9,-1.0) {};
+
+    % a/b rails widened to 0.4 apart (was 0.2 -- the labels used to touch)
+    \node[font=\small, left] at (-0.5,2.0) {$a$};
+    \node[font=\small, left] at (-0.5,1.6) {$b$};
+    \draw[wire] (-0.3,2.0) -- (0.6,2.0);
+    \draw[wire] (-0.3,1.6) -- (0.6,1.6);
+    % s1 (HA1 sum, top rail): terminates exactly at each box edge
+    \draw[wire] (2.0,2.0) -- (4.3,2.0);
+    \node[font=\scriptsize, above] at (3.15,2.0) {$s_1$};
+    % sum (HA2 output, top rail) -- right-anchored so the label starts
+    % clear of the wire's own tip instead of centred on top of it
+    \draw[wire] (5.7,2.0) -- (6.9,2.0);
+    \node[font=\small, right] at (6.9,2.0) {$sum$};
+    % carry-in c enters HA2's bottom edge on its own corridor (x=5.0),
+    % clear of both c1's and c2's columns
+    \draw[wire] (5.0,-0.6) -- (5.0,1.5);
+    \node[font=\small, right] at (5.15,-0.6) {$c$};
+    % c1 -> OR.input1, terminating at HA1's own edge, not 0.2cm inside it
+    \draw[wire] (2.0,1.6) -- (2.0,-1.0) -- (O.input 1);
+    \node[font=\scriptsize, left] at (1.9,0.3) {$c_1$};
+    % c2 -> OR.input2 -- crosses c1's horizontal once, in open space, well
+    % clear of every gate/box (standard "no dot = no connection" reading)
+    \draw[wire] (5.7,1.6) -- (5.7,-1.205) -- (O.input 2);
+    \node[font=\scriptsize, right] at (5.8,0.3) {$c_2$};
+    % carry
+    \draw[wire] (O.output) -- (8.5,-1.1025);
+    \node[font=\small, right] at (8.5,-1.1025) {$carry$};
+  \end{tikzpicture}
+  \caption{\texttt{FullAdder} = two \texttt{HalfAdder}s plus one \texttt{Or}: $s_1=a\oplus b$, $c_1=a\cdot b$; then $sum=s_1\oplus c$, $c_2=s_1\cdot c$; finally $carry=c_1+c_2$. Each \texttt{HA} block expands to Figure~\ref{fig:lab2-ha-gates}.}
+  \label{fig:lab2-fa-gates}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
   % Diagram: full adder block — inputs A,B,Cin; outputs S,Cout.
   % Reused from Notes/CS401/02-number-systems-arithmetic-notes.tex fig:fa-block
   % (P1-P7-clean, no changes to coordinates).
@@ -161,8 +243,8 @@ Load each chip's supplied \texttt{.tst} script in the Hardware Simulator; for \t
     \node[font=\scriptsize] at (-1.6,0.45) {$A$};
     \node[font=\scriptsize] at (-1.6,-0.45) {$B$};
     \node[font=\scriptsize] at (-0.45,-1.35) {$C_{in}$};
-    \node[font=\scriptsize] at (1.6,0.45) {$S$};
-    \node[font=\scriptsize] at (1.6,-0.45) {$C_{out}$};
+    \node[font=\scriptsize, right] at (1.3,0.45) {$S$};
+    \node[font=\scriptsize, right] at (1.3,-0.45) {$C_{out}$};
     \draw[->, thick] (-1.1,0.45) -- (-0.9,0.45);
     \draw[->, thick] (-1.1,-0.45) -- (-0.9,-0.45);
     \draw[->, thick] (-0.9,-1.0) -- (0,-1.0) -- (0,-0.6);
@@ -185,24 +267,98 @@ Load each chip's supplied \texttt{.tst} script in the Hardware Simulator; for \t
       \node[draw=primary-gold, fill=white, rounded corners,
             minimum width=1.4cm, minimum height=0.9cm, align=center]
             (FA\i) at (2.6*\i, 0) {FA\i};
-      \node[font=\scriptsize] at (2.6*\i - 1.2, 0.35) {$A_\i$};
-      \node[font=\scriptsize] at (2.6*\i - 1.2, -0.35) {$B_\i$};
-      \draw[->, thick] (2.6*\i - 0.9, 0.35) -- (2.6*\i - 0.72, 0.35);
-      \draw[->, thick] (2.6*\i - 0.9, -0.35) -- (2.6*\i - 0.72, -0.35);
-      \node[font=\scriptsize] at (2.6*\i + 0.9, 0.6) {$S_\i$};
-      \draw[->, thick] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 1.1, 0.35);
+      % A_i/B_i labels left-anchored with their own arrows shortened to a
+      % 0.15-unit shaft (was 0.3 units), so the label's *own* leftward
+      % text span still clears the PREVIOUS box's S arrowhead by ~0.35
+      % units in the cramped 1.2-unit inter-box gap.
+      \node[font=\scriptsize, left] at (2.6*\i - 1.0, 0.35) {$A_\i$};
+      \node[font=\scriptsize, left] at (2.6*\i - 1.0, -0.35) {$B_\i$};
+      \draw[->, thick] (2.6*\i - 0.85, 0.35) -- (2.6*\i - 0.7, 0.35);
+      \draw[->, thick] (2.6*\i - 0.85, -0.35) -- (2.6*\i - 0.7, -0.35);
+      % S_i raised above its own arrow via an `above` anchor instead of
+      % sitting on the shaft, AND that arrow shortened to match (0.15
+      % units) so its own arrowhead doesn't reach into the next box's
+      % A label -- this exact pairing struck through "A" leaving only
+      % "1" visible before this fix.
+      \node[font=\scriptsize, above] at (2.6*\i + 0.9, 0.42) {$S_\i$};
+      \draw[->, thick] (2.6*\i + 0.7, 0.35) -- (2.6*\i + 0.85, 0.35);
     }
-    \draw[->, thick] (0.7,-0.55) -- (0.7,-1.0) -- (2.1,-1.0) -- (2.1,-0.55);
-    \draw[->, thick] (3.3,-0.55) -- (3.3,-1.0) -- (4.7,-1.0) -- (4.7,-0.55);
-    \draw[->, thick] (5.9,-0.55) -- (5.9,-1.0) -- (7.3,-1.0) -- (7.3,-0.55);
-    \node[font=\scriptsize] at (0.0,-1.2) {$C_{in}=0$};
-    \node[font=\scriptsize] at (10.4,0.0) {$C_{out}$};
-    \draw[->, thick] (FA3.east |- 0,-0.45) -- (10.0,-0.45);
-    \node[font=\scriptsize, align=left] at (10.4,-1.3) {carry-out\\$\Rightarrow$ overflow\\\scriptsize (unsigned)};
+    % carry chain now lands exactly on each box's own left/right edge
+    % (x = 2.6i+0.7 / 2.6(i+1)-0.7), not 0.1 units short of it in free space
+    \draw[->, thick] (0.7,-0.45) -- (0.7,-1.0) -- (1.9,-1.0) -- (1.9,-0.45);
+    \draw[->, thick] (3.3,-0.45) -- (3.3,-1.0) -- (4.5,-1.0) -- (4.5,-0.45);
+    \draw[->, thick] (5.9,-0.45) -- (5.9,-1.0) -- (7.1,-1.0) -- (7.1,-0.45);
+    % FA0's carry-in is now a real drawn connection (was a floating,
+    % unattached label) matching the other three stages' wire convention
+    \draw[->, thick] (-1.3,-1.0) -- (0,-1.0) -- (0,-0.45);
+    \node[font=\scriptsize, left] at (-1.4,-1.0) {$C_{in}=0$};
+    % C_out routed through the same carry-chain lane (y=-1.0) instead of
+    % landing on FA3's rounded bottom-right corner, and the label is now
+    % attached to the wire's own end instead of floating near y=0
+    \draw[->, thick] (8.3,-0.45) -- (8.3,-1.0) -- (9.8,-1.0);
+    \node[font=\scriptsize, right] at (9.8,-1.0) {$C_{out}$};
+    \node[font=\scriptsize, align=left] at (9.8,-1.7) {carry-out\\$\Rightarrow$ overflow\\\scriptsize (unsigned)};
   \end{tikzpicture}
   \caption{The ripple-carry adder: full adders chained by their carry signals. \texttt{Add16} is this same pattern extended to 16 bits, with bit 0 using a \texttt{HalfAdder} (no carry-in) instead of an \texttt{FA0}.}
   \label{fig:lab2-ripple}
 \end{figure}
+
+\section{Truth Tables \& Boolean Expressions (step by step)}
+
+\textbf{\texttt{HalfAdder}} (Figure~\ref{fig:lab2-ha-gates}) --- one bit of addition with no carry-in:
+\begin{align}
+  sum = a\oplus b, \qquad carry = a\cdot b \nonumber
+\end{align}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}c c | c c@{}}
+\toprule
+\multicolumn{2}{c}{inputs} & \multicolumn{2}{c}{outputs} \\
+$a$ & $b$ & $sum=a\oplus b$ & $carry=a\cdot b$ \\
+\midrule
+0 & 0 & 0 & 0 \\
+0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\caption{\texttt{HalfAdder} truth table.}
+\label{tab:lab2-ha-tt}
+\end{table}
+
+\noindent\textbf{\texttt{FullAdder}} --- two half adders plus an \texttt{Or} (Figure~\ref{fig:lab2-fa-gates}). Step by step:
+\begin{align}
+  \text{(HA1)}\qquad s_1 &= a\oplus b, \qquad c_1 = a\cdot b \nonumber\\
+  \text{(HA2)}\qquad sum &= s_1\oplus c = a\oplus b\oplus c \nonumber\\
+  \qquad\qquad c_2 &= s_1\cdot c = (a\oplus b)\cdot c \nonumber\\
+  \text{(Or)}\qquad carry &= c_1 + c_2 = a\cdot b + (a\oplus b)\cdot c \nonumber
+\end{align}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}c c c | c c@{}}
+\toprule
+\multicolumn{3}{c}{inputs} & \multicolumn{2}{c}{outputs} \\
+$a$ & $b$ & $c_{in}$ & $sum$ & $carry$ \\
+\midrule
+0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 & 0 \\
+0 & 1 & 0 & 1 & 0 \\
+0 & 1 & 1 & 0 & 1 \\
+1 & 0 & 0 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1 \\
+1 & 1 & 0 & 0 & 1 \\
+1 & 1 & 1 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\caption{\texttt{FullAdder} truth table ($sum$ is the XOR of the three inputs; $carry$ is set whenever two or more inputs are 1).}
+\label{tab:lab2-fa-tt}
+\end{table}
+
+\noindent\textbf{\texttt{Add16} / \texttt{Inc16}} are 16 parallel copies of the adder above: $out = a+b$ (carry-out of bit 15 discarded), and $out = in+1$ (the constant-$1$ ripple chain). Two's-complement subtraction is ``free'': $x-y = x+\overline{y}+1$, which the ALU realises via the \texttt{nx}/\texttt{ny} (\texttt{no}) negate bits and a forced carry-in --- see Table~\ref{tab:alu-ops}.
 
 \section{Observation / Journal Table}
 

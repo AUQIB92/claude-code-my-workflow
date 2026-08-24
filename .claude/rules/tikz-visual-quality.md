@@ -1,6 +1,9 @@
 ---
 paths:
   - "Slides/**/*.tex"
+  - "Notes/**/*.tex"
+  - "InstructorHandouts/**/*.tex"
+  - "Labs/**/*.tex"
   - "Figures/**/*.tex"
 ---
 

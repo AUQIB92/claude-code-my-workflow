@@ -1,0 +1,422 @@
+% =============================================================================
+% lab-3-sequential-logic-memory.tex — Lab 3: Sequential Logic & Memory
+% CS401 — Computer Architecture and Organization — Practical Component
+% Nand2Tetris Project 3 (Nisan & Schocken), weeks 5-7 of the lab schedule.
+%
+% Source of truth: syllabi/CS401_Lab_Syllabus_Nand2Tetris.pdf. This manual
+% reproduces that document's Lab 3 section in full (aim, tasks, deliverables,
+% rubric verbatim) with added pre-lab theory citations and worked schematic
+% figures, following Lab 1/Lab 2's validated pattern.
+%
+% Instructor-only reference solutions: lab-3-sequential-logic-memory-reference/
+% (Python behavioural model, tick/tock-simulated, checked against an
+% independent oracle) — never synced to docs/ by /deploy.
+%
+% Compile with (Windows/MiKTeX, ; not : between paths):
+%   cd Labs/CS401 &&
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-3-sequential-logic-memory.tex
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-3-sequential-logic-memory.tex  (x2 total, no bibtex needed)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\usepackage{microtype}
+\usepackage{float}
+\usetikzlibrary{circuits.logic.US}
+\coursecode{CS401}
+
+% Lab-number-style numbering: this is Lab 3 (distinct axis from lecture-week
+% numbering used in Notes/Assignments — no collision, separate document).
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\newenvironment{aimbox}{%
+  \par\noindent\begin{minipage}{\linewidth}\vspace{0.4em}
+  \textcolor{primary-blue}{\rule{\linewidth}{0.8pt}}\\[0.3em]
+  \textbf{\textcolor{primary-blue}{Aim.}}\ \itshape
+}{%
+  \end{minipage}\vspace{0.4em}\par
+}
+
+\newenvironment{tocitebox}{%
+  \par\noindent\textbf{\textcolor{primary-gold}{Pre-Lab Reading.}}\
+}{\par\vspace{0.3em}}
+
+\title{Sequential Logic \& Memory\\\large Lab 3 --- Nand2Tetris Project 3}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{aimbox}
+To move from combinational to clocked sequential design: building a 1-bit register from the primitive DFF gate, and composing it upward into byte-, word- and block-addressable RAM arrays, plus the Program Counter.
+\end{aimbox}
+
+\section{Learning Outcomes}
+
+On completing this lab, a student will be able to:
+\begin{itemize}
+  \item Distinguish combinational circuits (no state) from sequential circuits (state + clock).
+  \item Explain how a D flip-flop (DFF) stores one bit across a clock cycle.
+  \item Build multi-bit registers and hierarchically-addressed RAM (\texttt{RAM8} $\to$ \texttt{RAM64} $\to$ \texttt{RAM512} $\to$ \texttt{RAM4K} $\to$ \texttt{RAM16K}) using the same recursive pattern at every level.
+  \item Build a Program Counter (\texttt{PC}) supporting load, increment and reset, as used in instruction fetch.
+\end{itemize}
+
+\section{Pre-Lab Reading}
+
+\begin{tocitebox}
+The DFF itself is prerequisite material: this course's stated prerequisite, Digital Logic Design, already covers the D flip-flop's clocked storage behaviour (state holds between clock edges; a new value is latched only on the active edge) --- this lab treats \texttt{DFF} as the supplied sequential primitive and does \emph{not} re-derive its internal transistor/gate-level design.
+
+\smallskip
+\noindent What CS401 itself contributes here is register-level organization: \textbf{Week 4} introduced the CPU's program-visible registers as named, addressable storage elements on a common bus (Mano, \emph{Computer System Architecture}, 3rd ed., Sec.~8-2, p.242, and the common-bus system of Sec.~5-2, p.127-129) --- this lab builds that same idea (a register: load a value, hold it, read it back) bottom-up from a single \texttt{DFF} rather than top-down from an architectural block diagram. Chapter-level only for Hamacher Ch.~7 (register/operand treatment), per the textbook-grounding rule.
+
+\smallskip
+\noindent New in this lab, not covered by any CS401 lecture: the Nand2Tetris \emph{recursive RAM pattern} --- $\mathrm{RAM}(n)$ is built from 8 $\mathrm{RAM}(n/8)$ units plus a \texttt{DMux8Way}/\texttt{Mux8Way16} pair (Nisan \& Schocken, \emph{The Elements of Computing Systems}, Ch.~3, \emph{Sequential Logic}) --- read that chapter before attempting \texttt{RAM64} and above.
+\end{tocitebox}
+
+\section{Toolchain Setup}
+
+\begin{enumerate}
+  \item Install a Java Runtime Environment (JRE), version 8 or later, if not already present.
+  \item Download the Nand2Tetris software suite (free, \url{nand2tetris.org}) --- this lab uses the \textbf{Hardware Simulator} only.
+  \item Extract the suite and locate the \texttt{projects/03/} folder --- it contains \texttt{a/} (Bit, Register, RAM8, RAM64) and \texttt{b/} (RAM512, RAM4K, RAM16K, PC) subfolders, each pre-populated with a \texttt{ChipName.hdl} stub and the supplied \texttt{ChipName.tst} / \texttt{ChipName.cmp} test/comparison scripts. These scripts are standard Nand2Tetris project files and are \emph{not} redistributed here --- obtain them from the official suite.
+  \item Open the Hardware Simulator, load a chip's \texttt{.tst} script (\textsc{File} $\to$ \textsc{Load Script}), and run it (\textsc{Simulation} $\to$ \textsc{Run}). A correct chip prints \texttt{End of script --- comparison ended successfully} in the script's output pane; a wrong one reports the first mismatching row. Sequential chips only update their output \emph{after} a clock pulse (\textsc{tick}, then \textsc{tock}) --- the \texttt{.tst} script drives this for you.
+  \item \texttt{RAM4K} and \texttt{RAM16K} simulations run visibly slower than the combinational chips from Labs 1-2 --- this is expected (thousands of internal \texttt{DFF}s), not a sign of a broken chip.
+\end{enumerate}
+
+\section{Tasks}
+\label{sec:tasks}
+
+Implement the following 7 chips \textbf{in order} --- \texttt{Bit} $\to$ \texttt{Register} $\to$ \texttt{RAM8} establishes the recursive pattern; \texttt{RAM64} through \texttt{RAM16K} repeat it at increasing scale; \texttt{PC} is independent (built from \texttt{Register}, \texttt{Inc16}, and \texttt{Mux16} from Labs 1-2).
+
+\begin{enumerate}
+  \item \textbf{\texttt{Bit(in,load)} $\to$ \texttt{out}} --- a 1-bit register. On a clock edge, if \texttt{load} is asserted, \texttt{out} takes the value of \texttt{in}; otherwise \texttt{out} holds its previous value. Built from one \texttt{DFF} and one \texttt{Mux} feeding the DFF's input from either \texttt{in} (if loading) or the DFF's own current \texttt{out} (feedback, if holding).
+  \item \textbf{\texttt{Register(in[16],load)} $\to$ \texttt{out[16]}} --- sixteen \texttt{Bit} chips in parallel, sharing one \texttt{load} line.
+  \item \textbf{\texttt{RAM8(in[16],load,address[3])} $\to$ \texttt{out[16]}} --- 8 registers, address-selected. A \texttt{DMux8Way} routes \texttt{load} to exactly one of 8 \texttt{Register}s (selected by \texttt{address}); a \texttt{Mux8Way16} selects that same register's output onto \texttt{out} every cycle (read is combinational; write is clocked).
+  \item \textbf{\texttt{RAM64(in[16],load,address[6])} $\to$ \texttt{out[16]}} --- 8 \texttt{RAM8} units, address-selected identically: the top 3 bits of \texttt{address} pick a \texttt{RAM8}, the bottom 3 bits pass through to it unchanged.
+  \item \textbf{\texttt{RAM512}, \texttt{RAM4K}, \texttt{RAM16K}} --- the same recursive pattern, one level deeper each time (8 $\times$ \texttt{RAM64}, 8 $\times$ \texttt{RAM512}, 4 $\times$ \texttt{RAM4K} respectively --- \texttt{RAM16K} uses \texttt{DMux4Way}/\texttt{Mux4Way16} instead of the 8-way variants, since 16K needs only a 2-bit top address split across 4, not 8, children).
+  \item \textbf{\texttt{PC(in[16],load,inc,reset)} $\to$ \texttt{out[16]}} --- the Program Counter, built from one \texttt{Register} plus an \texttt{Inc16} and \texttt{Mux16} chain. On each clock edge: if \texttt{reset}, load 0; else if \texttt{load}, load \texttt{in}; else if \texttt{inc}, load \texttt{out}+1; else hold. \textbf{Priority order matters}: \texttt{reset} $>$ \texttt{load} $>$ \texttt{inc} $>$ hold.
+\end{enumerate}
+
+\section{Figures}
+
+\begin{figure}[H]
+  \centering
+  % Bit at gate level: a Mux (2 AND + NOT + OR) chooses `in` (if load)
+  % or the DFF's own output fed back (hold); the DFF latches on the edge.
+  \begin{tikzpicture}[scale=0.85, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    \node[not gate] (Ns) at (2.0,2.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A1) at (5.0,3.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A2) at (5.0,1.4) {};
+    \node[or gate, inputs={nn}, anchor=input 1] (O) at (8.0,2.3) {};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.2cm, minimum height=0.8cm, align=center] (DFF) at (10.2,2.2) {DFF};
+    \node[junction] (Js) at (0.9,2.4) {};
+    \node[font=\small, left] at (-0.65,1.195) {$in$};
+    \node[font=\small, left] at (-0.65,2.4) {$load$};
+    \draw[wire] (-0.4,1.195) -- (A2.input 2);
+    \draw[wire] (-0.4,2.4) -- (Js) -- (Ns.input);
+    % load's branch to A2.input1 drops well clear of the `in` rail (y=0.55)
+    % before turning right, instead of running 0.17cm parallel to it for
+    % 3.5cm (the two used to read as one doubled line)
+    \draw[wire] (Js) -- (0.9,0.55) -- (4.4,0.55) -- (4.4,1.4) -- (A2.input 1);
+    \draw[wire] (Ns.output) -- (4.2,2.4) -- (4.2,3.195) -- (A1.input 2);
+    % feedback: DFF's tap point is 0.35 units clear of its own border (was
+    % drawn exactly on DFF.east, clipping the box's gold corner), with a
+    % real junction dot marking the 3-way split to `out` and back to A1
+    \draw[wire] (DFF.east) -- (11.6,2.2);
+    \node[junction] at (11.15,2.2) {};
+    \draw[wire] (11.15,2.2) -- (11.15,4.0) -- (4.55,4.0) -- (4.55,3.4) -- (A1.input 1);
+    \node[font=\small, right] at (11.6,2.2) {$out$};
+    % OR gate's two input wires now elbow at different x (6.6 / 7.0) so
+    % they never run collinear -- they used to share one vertical with
+    % only a 0.17cm break, reading as a single shorted line
+    \draw[wire] (A1.output) -- (6.6,3.2975) -- (6.6,2.3) -- (O.input 1);
+    \draw[wire] (A2.output) -- (7.0,1.2975) -- (7.0,2.095) -- (O.input 2);
+    \draw[wire] (O.output) -- (9.6,2.2);
+    \node[font=\scriptsize] at (3.3,2.95) {$\overline{load}$};
+    \node[font=\scriptsize] at (7.8,4.3) {feedback $=out$};
+  \end{tikzpicture}
+  \caption{\texttt{Bit} at gate level: the \texttt{Mux} is $out_{next}=(load\cdot in)+(\overline{load}\cdot out)$ --- the top \texttt{And} holds the current value, the bottom \texttt{And} captures a new value when \texttt{load} is asserted, and the \texttt{DFF} latches the result on the clock edge.}
+  \label{fig:lab3-bit}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.46\linewidth}
+    \centering
+    \small
+    \begin{tabular}[t]{@{}cc c c@{}}
+    \toprule
+    \texttt{load} & \texttt{in} & $out$ (before) & $out$ (after) \\
+    \midrule
+    0 & 0 & 0 & 0 \\
+    0 & 0 & 1 & 1 \\
+    0 & 1 & 0 & 0 \\
+    0 & 1 & 1 & 1 \\
+    1 & 0 & 0 & 0 \\
+    1 & 0 & 1 & 0 \\
+    1 & 1 & 0 & 1 \\
+    1 & 1 & 1 & 1 \\
+    \bottomrule
+    \end{tabular}
+    \caption{\texttt{Bit} behaviour table (after a clock edge).}
+    \label{fig:lab3-bit-tt}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.5\linewidth}
+    \small
+    Step-by-step Boolean expression of \texttt{Bit}:
+    \begin{align}
+      \text{Mux select:}\quad d_{in} &= \texttt{load}\,?\,in : out \nonumber\\
+      \text{expand Mux:}\quad d_{in} &= (\overline{\texttt{load}}\cdot out) + (\texttt{load}\cdot in) \nonumber\\
+      \text{DFF latch:}\quad out_{next} &= d_{in} = \overline{\texttt{load}}\cdot out + \texttt{load}\cdot in \nonumber
+    \end{align}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  % Diagram: RAM8 — DMux8Way(load,address) fans the write pulse to exactly
+  % one Register's load line via a vertical bus; Mux8Way16 collects every
+  % Register's output via a second vertical bus and selects one onto out.
+  % Coordinates: (x, y), scale=0.85 (nodes scaled too via transform shape)
+  %   DM (DMux8Way)  at (-3.0, 0)  -- w=2.0 h=0.8 -> x:[-4.0,-2.0] y:[-0.4,0.4]
+  %     (widened from an earlier 1.6cm draft: "DMux8Way" at \scriptsize
+  %     still needed >1.6cm and silently grew the box into the bus at
+  %     x=-1.8 -- 2.0cm plus \scriptsize is the measured-safe width)
+  %   MX (Mux8Way16) at (3.0, 0)   -- w=2.0 h=0.8 -> x:[2.0,4.0]  y:[-0.4,0.4]
+  %   R0..R7 at (0, 3.15-0.9*i)    -- w=1.2 h=0.55, centers 0.9 apart, i=0..7
+  %   load -> DM upper-left input (-4.0,0.15); arrow starts (-5.2,0.4)
+  %   address[3] -> DM bottom edge (-3.4,-0.4); routed clear of the load arrow
+  %   load-select bus: DM right edge (-2.0,0) -> vertical bus at x=-1.6
+  %     (0.4 clear of DM's right edge; spans y=3.15..-3.15) -> one tap per
+  %     register at (-1.6,y_i)-(-0.6,y_i)
+  %   in[16]: single representative tap into R0's top edge only (same signal
+  %     is wired identically into every register — R1-R7 taps omitted here
+  %     to avoid 7 additional bus lines in a compact diagram; noted in caption)
+  %   output bus: each register's right edge (0.6,y_i) -> vertical bus at
+  %     x=1.6 (0.4 clear of MX's left edge 2.0) -> MX left edge (2.0,0);
+  %     MX -> out[16] arrow at (4.0,0)-(4.4,0)
+  \begin{tikzpicture}[scale=0.85, transform shape,
+      every node/.style={font=\small}]
+    % DM/MX labels set font=\scriptsize explicitly (not the default \small)
+    % AND a widened minimum width -- "DMux8Way"/"Mux8Way16" need more than
+    % 1.6cm even at \scriptsize; box width is measured, not eyeballed.
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=0.8cm, font=\scriptsize] (DM) at (-3.0,0) {DMux8Way};
+    \foreach \i in {0,...,7} {
+      \node[draw=primary-gold, fill=white, rounded corners,
+            minimum width=1.2cm, minimum height=0.55cm, font=\scriptsize]
+            (R\i) at (0, 3.15-0.9*\i) {Reg\i};
+    }
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=2.0cm, minimum height=0.8cm, font=\scriptsize] (MX) at (3.0,0) {Mux8Way16};
+
+    % load -> DM (upper-left input)
+    \node[font=\scriptsize] at (-5.9,0.55) {$load$};
+    \draw[->, thick] (-5.2,0.4) -- (-4.0,0.15);
+
+    % address[3] -> DM (bottom input) -- routed well clear of the load arrow
+    \node[font=\scriptsize] at (-6.4,-1.1) {$address[3]$};
+    \draw[->, thick] (-5.6,-1.1) -- (-3.4,-1.1) -- (-3.4,-0.4);
+
+    % DM -> per-register load-select bus (right edge -> vertical trunk -> taps)
+    \draw[thick] (-2.0,0) -- (-1.6,0);
+    \draw[thick] (-1.6,3.15) -- (-1.6,-3.15);
+    \foreach \i in {0,...,7} {
+      \draw[->, thin] (-1.6,3.15-0.9*\i) -- (-0.6,3.15-0.9*\i);
+    }
+
+    % in[16] -> R0's data input (representative tap; see caption)
+    \draw[thick] (-0.6,3.8) -- (0.6,3.8);
+    \draw[->, thick] (0,3.8) -- (0,3.425);
+    \node[font=\scriptsize] at (0,4.15) {$in[16]$};
+
+    % Ri -> output bus -> MX
+    \foreach \i in {0,...,7} {
+      \draw[->, thin] (0.6,3.15-0.9*\i) -- (1.6,3.15-0.9*\i);
+    }
+    \draw[thick] (1.6,3.15) -- (1.6,-3.15);
+    \draw[thick] (1.6,0) -- (2.0,0);
+
+    % MX -> out[16] -- right-anchored so the label starts clear of the
+    % arrowhead instead of being centred on top of it (used to render as
+    % "ut[16]", the leading "o" hidden under the arrow tip)
+    \draw[->, thick] (4.0,0) -- (4.4,0);
+    \node[font=\scriptsize, right] at (4.7,0) {$out[16]$};
+  \end{tikzpicture}
+  \caption{\texttt{RAM8}: \texttt{DMux8Way} routes the write pulse to exactly one \texttt{Register}'s \texttt{load} line via a vertical fan-out bus; \texttt{Mux8Way16} collects every register's output on a second bus and continuously selects one onto \texttt{out}. \texttt{in[16]} is wired identically into every register (only \texttt{Reg0}'s tap is drawn, to keep the diagram legible). \texttt{RAM64} and above repeat this exact wiring pattern with the child being another \texttt{RAM(n/8)} instead of a bare \texttt{Register}.}
+  \label{fig:lab3-ram8}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  % Diagram: PC priority cascade — reset > load > inc > hold. A chain of
+  % three Mux16s feeding a Register; Inc16 and the hold path both read the
+  % register's own output, so the "next" value is computed combinationally
+  % then latched on the clock edge.
+  % Coordinates: (x, y), scale=0.85 (nodes scaled too via transform shape)
+  %   Minc  at (1.5, 0)  -- w=1.8 h=1.1 -> x:[0.6,2.4]  y:[-0.55,0.55]
+  %   Mload at (4.2, 0)  -- w=1.8 h=1.1 -> x:[3.3,5.1]  y:[-0.55,0.55]
+  %   Mrst  at (6.9, 0)  -- w=1.8 h=1.1 -> x:[6.0,7.8]  y:[-0.55,0.55]
+  %   REG   at (9.5, 0)  -- w=1.6 h=1.1 -> x:[8.7,10.3] y:[-0.55,0.55]
+  %   INC   at (9.5,-2.4)-- w=1.6 h=1.1 -> x:[8.7,10.3] y:[-2.95,-1.85]
+  %   hold-feedback rail at y=1.5 (0.95 clear of every mux top edge 0.55)
+  %   out+1 rail at y=2.2 (0.7 clear of the hold rail at y=1.5); its label
+  %     sits at y=2.55 (0.35 clear of the y=2.2 rail)
+  \begin{tikzpicture}[scale=0.85, transform shape,
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    % Mux blocks (horizontal row)
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=1.8cm, minimum height=1.1cm, align=center] (Minc) at (1.5,0) {Mux16};
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=1.8cm, minimum height=1.1cm, align=center] (Mload) at (4.2,0) {Mux16};
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=1.8cm, minimum height=1.1cm, align=center] (Mrst) at (6.9,0) {Mux16};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.6cm, minimum height=1.1cm, align=center] (REG) at (9.5,0) {Register};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.6cm, minimum height=1.1cm, align=center] (INC) at (9.5,-2.4) {Inc16};
+
+    % cascade: inc -> load -> reset -> register
+    \draw[->, thick] (2.4,0) -- (2.9,0) -- (2.9,0.3) -- (3.3,0.3);
+    \draw[->, thick] (5.1,0) -- (5.5,0) -- (5.5,0.3) -- (6.0,0.3);
+    \draw[->, thick] (7.8,0) -- (8.7,0);
+    % select lines (below each mux) -- arrows now point INTO the mux
+    % (were drawn <-, i.e. away from the mux and toward the label, the
+    % opposite of "arrow points from annotation TO feature")
+    \draw[<-, thick] (1.5,-0.55) -- (1.5,-0.75);
+    \draw[<-, thick] (4.2,-0.55) -- (4.2,-0.75);
+    \draw[<-, thick] (6.9,-0.55) -- (6.9,-0.75);
+    \node[font=\scriptsize] at (1.5,-1.05) {$inc$};
+    \node[font=\scriptsize] at (4.2,-1.05) {$load$};
+    \node[font=\scriptsize] at (6.9,-1.05) {$reset$};
+    % data inputs: `in` -> MUXload.b, `0` -> MUXreset.b
+    \draw[->, thick] (2.85,-1.5) -- (2.85,-0.3) -- (3.3,-0.3);
+    \node[font=\scriptsize] at (2.85,-1.75) {$in$};
+    \draw[->, thick] (5.55,-1.5) -- (5.55,-0.3) -- (6.0,-0.3);
+    \node[font=\scriptsize] at (5.55,-1.75) {$0$};
+    % register output `out` -- a real junction 0.45 units clear of REG's
+    % own border (was three separate wires all starting exactly on
+    % REG.east, one of them running straight down that same border with
+    % no dot marking the 3-way split)
+    \node[junction] at (10.75,0) {};
+    \draw[wire] (REG.east) -- (10.75,0);
+    \draw[->, thick] (10.75,0) -- (11.35,0);
+    \node[font=\small, right] at (11.45,0) {$out$};
+    % feedback `out` -> MUXinc.a (hold) via a rail at y=1.5, approaching
+    % Minc from x=0.3 (not straight down its own left border at x=0.6)
+    \draw[->, thick] (10.75,0) -- (10.75,1.5) -- (0.3,1.5) -- (0.3,0.3) -- (0.6,0.3);
+    \node[font=\scriptsize] at (5.0,1.85) {feedback $out$ (hold)};
+    % out -> Inc16 input (down the right side)
+    \draw[->, thick] (10.75,0) -- (10.75,-1.0) -- (8.7,-1.0) -- (8.7,-2.4);
+    % out+1 -> MUXinc.b via its own rail (y=2.2), routed through x=12.4 so
+    % the riser never comes near the `out` label at x=11.45 -- the old
+    % riser at x=11.2 ran straight through that label's letters
+    \draw[->, thick] (10.75,-2.4) -- (12.4,-2.4) -- (12.4,2.2) -- (0.2,2.2) -- (0.2,-0.3) -- (0.6,-0.3);
+    \node[font=\scriptsize] at (12.7,2.55) {$out{+}1$};
+  \end{tikzpicture}
+  \caption{\texttt{PC}: a three-stage \texttt{Mux16} cascade enforces the priority \texttt{reset} $>$ \texttt{load} $>$ \texttt{inc} $>$ hold. The right-most mux (\texttt{reset}) can override everything; the left-most (\texttt{inc}) only wins if neither \texttt{reset} nor \texttt{load} is asserted. \texttt{Inc16} and the hold path both read the register's own \texttt{out}.}
+  \label{fig:lab3-pc}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.5\linewidth}
+    \centering
+    \small
+    \begin{tabular}[t]{@{}c c c l@{}}
+    \toprule
+    \texttt{reset} & \texttt{load} & \texttt{inc} & $out_{next}$ \\
+    \midrule
+    1 & -- & -- & $0$ \\
+    0 & 1 & -- & $in$ \\
+    0 & 0 & 1 & $out+1$ \\
+    0 & 0 & 0 & $out$ \\
+    \bottomrule
+    \end{tabular}
+    \caption{\texttt{PC} priority table (``--'' = don't care).}
+    \label{fig:lab3-pc-tt}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.46\linewidth}
+    \small
+    Step-by-step \texttt{PC} Boolean expression:
+    \begin{align}
+      s_{inc}  &= inc\,?\,(out{+}1) : out \nonumber\\
+      s_{load} &= load\,?\,in : s_{inc} \nonumber\\
+      out_{next} &= reset\,?\,0 : s_{load} \nonumber
+    \end{align}
+    \smallskip
+    i.e.\ \texttt{reset} checked first, then \texttt{load}, then \texttt{inc}, else hold.
+  \end{minipage}
+\end{figure}
+
+\section{Observation / Journal Table}
+
+Record, for each chip, its internal composition and whether it passed its supplied test script.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}l l c@{}}
+\toprule
+Chip & Internal composition & Pass / Fail \\
+\midrule
+\texttt{Bit} & & \\
+\texttt{Register} & & \\
+\texttt{RAM8} & & \\
+\texttt{RAM64} & & \\
+\texttt{RAM512} & & \\
+\texttt{RAM4K} & & \\
+\texttt{RAM16K} & & \\
+\texttt{PC} & & \\
+\bottomrule
+\end{tabular}
+\caption{Lab 3 observation table --- one row per chip.}
+\label{tab:lab3-observations}
+\end{table}
+
+\noindent\textbf{Journal instruction (separate from the table above):} draw the block diagram showing how \texttt{RAM64} is composed from 8 $\times$ \texttt{RAM8} (Figure~\ref{fig:lab3-ram8} shows the pattern one level down --- reproduce it one level up, in your own hand, for the journal). This is the syllabus's own Deliverable 2.
+
+\section{Viva-Voce Questions}
+
+\begin{enumerate}
+  \item What distinguishes a combinational circuit (Labs 1-2) from a sequential one (this lab)? Where does "state" physically live in \texttt{Bit}?
+  \item Trace \texttt{Bit} by hand: if \texttt{out} currently holds 1 and \texttt{load=0}, what value does the \texttt{Mux} feed to the \texttt{DFF}'s input, and why does \texttt{out} stay 1 after the next clock edge?
+  \item Explain why \texttt{RAM8}'s \texttt{load} line needs a \texttt{DMux8Way} but its \texttt{out} line needs a \texttt{Mux8Way16} instead --- why not the same chip for both directions?
+  \item Explain the \texttt{reset} $>$ \texttt{load} $>$ \texttt{inc} priority order in \texttt{PC}. What would go wrong at instruction fetch if \texttt{inc} could override \texttt{load}?
+  \item Why does \texttt{RAM16K} use \texttt{DMux4Way}/\texttt{Mux4Way16} instead of the 8-way chips used everywhere else in the recursion?
+\end{enumerate}
+
+\section{Rubric}
+
+Reproduced verbatim from \texttt{syllabi/CS401\_Lab\_Syllabus\_Nand2Tetris.pdf}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}l r@{}}
+\toprule
+Criterion & Marks \\
+\midrule
+All chips pass their test scripts, including \texttt{RAM16K} and \texttt{PC} & 5 \\
+Correct load/store timing (value updates only on next clock edge) & 2 \\
+Journal: recursive RAM block diagram correct & 2 \\
+Viva: can explain \texttt{reset} $>$ \texttt{load} $>$ \texttt{inc} priority in \texttt{PC} & 1 \\
+\midrule
+\textbf{Total} & \textbf{10} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

@@ -1,0 +1,332 @@
+% =============================================================================
+% lab-5-cpu-computer.tex — Lab 5: Computer Architecture — Building the CPU & Computer
+% CS401 — Computer Architecture and Organization — Practical Component
+% Nand2Tetris Project 5 (Nisan & Schocken), weeks 10-12 of the lab schedule.
+% Capstone lab — integrates Labs 2-4 (ALU, registers/PC, ISA) into a working
+% stored-program computer.
+%
+% Source of truth: syllabi/CS401_Lab_Syllabus_Nand2Tetris.pdf. This manual
+% reproduces that document's Lab 5 section in full (aim, tasks, deliverables,
+% rubric verbatim) with added pre-lab theory citations and worked schematic
+% figures, following Labs 1-4's validated pattern.
+%
+% Instructor-only reference solutions: lab-5-cpu-computer-reference/
+% (reference CPU.hdl/Memory.hdl/Computer.hdl composition plus a Python
+% instruction-level behavioural model, cross-checked against Lab 4's
+% Mult.asm/Fill.asm traces) — never synced to docs/ by /deploy.
+%
+% Compile with (Windows/MiKTeX, ; not : between paths):
+%   cd Labs/CS401 &&
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-5-cpu-computer.tex
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode lab-5-cpu-computer.tex  (x2 total, no bibtex needed)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\usepackage{microtype}
+\usetikzlibrary{circuits.logic.US}
+\coursecode{CS401}
+
+% Lab-number-style numbering: this is Lab 5 (distinct axis from lecture-week
+% numbering used in Notes/Assignments — no collision, separate document).
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\newenvironment{aimbox}{%
+  \par\noindent\begin{minipage}{\linewidth}\vspace{0.4em}
+  \textcolor{primary-blue}{\rule{\linewidth}{0.8pt}}\\[0.3em]
+  \textbf{\textcolor{primary-blue}{Aim.}}\ \itshape
+}{%
+  \end{minipage}\vspace{0.4em}\par
+}
+
+\newenvironment{tocitebox}{%
+  \par\noindent\textbf{\textcolor{primary-gold}{Pre-Lab Reading.}}\
+}{\par\vspace{0.3em}}
+
+\title{Computer Architecture --- Building the CPU \& the Computer\\\large Lab 5 (Capstone) --- Nand2Tetris Project 5}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{aimbox}
+To integrate the ALU (Lab 2) and registers/PC (Lab 3) with instruction-decoding control logic into a complete Central Processing Unit, and to assemble the CPU, Memory and ROM into a full stored-program computer --- the capstone of the hardware track.
+\end{aimbox}
+
+\section{Learning Outcomes}
+
+On completing this lab, a student will be able to:
+\begin{itemize}
+  \item Explain the fetch--decode--execute cycle as realised in hardware, not just in theory.
+  \item Design control logic that decodes a 16-bit instruction into the ALU control bits and register load signals.
+  \item Compose the CPU, Memory (\texttt{RAM16K} + Screen + Keyboard) and \texttt{ROM32K} into the top-level \texttt{Computer} chip.
+  \item Reason about a von Neumann-style architecture end-to-end: instruction fetch, execution, and memory-mapped I/O.
+\end{itemize}
+
+\section{Pre-Lab Reading}
+
+\begin{tocitebox}
+This lab's CPU-organization prerequisites span three CS401 weeks. \textbf{Week 5} introduced the CPU's internal datapath --- the register file feeding a common ALU across multiple internal buses (Mano, \emph{Computer System Architecture}, 3rd ed., Fig.~8-2, p.243, ``Registers with common ALU''; the same three-bus principle in Hamacher Ch.~7, chapter-level) --- \texttt{CPU.hdl} is a concrete, minimal instance of exactly this: an ALU (Lab 2), an A-register and D-register (Lab 3's \texttt{Register}), and a \texttt{PC} (Lab 3), wired together. \textbf{Week 6} introduced hardwired control-unit design: a step counter feeding a decoder that produces timed control signals from the current instruction (Mano, Fig.~5-6, p.137) --- \texttt{CPU.hdl}'s instruction-decoding logic is the same idea specialised to Hack's single-cycle (no multi-step sequence counter needed) instruction format. \textbf{Week 7} (microprogrammed control, Mano Ch.~7; Stallings Ch.~16, chapter-level) is useful contrast reading --- Hack's CPU is hardwired, not microprogrammed, and seeing why that choice is viable for a minimal ISA sharpens the Week 6/7 comparison from the lecture itself.
+
+\smallskip
+\noindent New in this lab, not covered by any CS401 lecture: the specific bit-to-control-signal mapping for the Hack C-instruction (re-derive which \texttt{comp} bits feed the ALU's \texttt{zx/nx/zy/ny/f/no} vs.\ which \texttt{dest}/\texttt{jump} bits drive register-load and PC-load logic) --- see Nisan \& Schocken, \emph{The Elements of Computing Systems}, Ch.~5, \emph{Computer Architecture}, and the CPU/Memory chip APIs supplied in the project scaffold.
+\end{tocitebox}
+
+\section{Toolchain Setup}
+
+\begin{enumerate}
+  \item Install a Java Runtime Environment (JRE), version 8 or later, if not already present.
+  \item Download the Nand2Tetris software suite (free, \url{nand2tetris.org}) --- this lab uses the Hardware Simulator (for \texttt{CPU.hdl}/\texttt{Memory.hdl}/\texttt{Computer.hdl}) and the CPU Emulator (to re-run Lab 4's \texttt{Mult.asm}/\texttt{Fill.asm} on your own \texttt{Computer.hdl}).
+  \item Locate \texttt{projects/05/} --- it contains \texttt{CPU.hdl}, \texttt{Memory.hdl}, and \texttt{Computer.hdl} stubs plus their supplied \texttt{.tst}/\texttt{.cmp} scripts, and reuses every chip built in Labs 1-4 (place copies of, or path-reference, your prior labs' \texttt{.hdl} files as the toolchain's built-in-chips search path requires).
+  \item Load each \texttt{.tst} script in the Hardware Simulator and run it; a correct chip prints \texttt{End of script --- comparison ended successfully}.
+  \item To demonstrate the full computer, load \texttt{Computer.hdl} in the Hardware Simulator, load one of Lab 4's compiled \texttt{.hack} programs (\texttt{Mult.hack} or \texttt{Fill.hack}) into its \texttt{ROM32K}, and run --- confirm \texttt{RAM[2]} ends up correct for \texttt{Mult}, and that \texttt{Fill}'s screen behaviour is unchanged from Lab 4's CPU-Emulator demo, now running on hardware you built yourself rather than the reference implementation.
+\end{enumerate}
+
+\section{Tasks}
+\label{sec:tasks}
+
+\begin{enumerate}
+  \item \textbf{\texttt{CPU(inM[16],instruction[16],reset)} $\to$ \texttt{(outM[16],writeM,addressM[15],pc[15])}} --- implement by wiring together an ALU (Lab 2), an A-register and a D-register (Lab 3's \texttt{Register}), and a \texttt{PC} (Lab 3), with instruction-decoding logic built from Lab 1 gates:
+  \begin{enumerate}
+    \item If \texttt{instruction[15]=0} (A-instruction), load the A-register with \texttt{instruction} directly; do not touch the ALU or D-register.
+    \item If \texttt{instruction[15]=1} (C-instruction), route \texttt{instruction[6]} (the \texttt{a} bit) to select the ALU's \texttt{y} input as \texttt{A} or \texttt{inM} (\texttt{M}); route \texttt{instruction[11..6]} (the \texttt{comp} bits) directly as the ALU's \texttt{zx,nx,zy,ny,f,no} control bits (this is Lab 2's ALU control-bit table, reused verbatim, not reinvented); use \texttt{instruction[5..3]} (the \texttt{dest} bits) to gate whether the ALU's result loads into A, D, and/or is written to \texttt{outM} (\texttt{writeM}); use \texttt{instruction[2..0]} (the \texttt{jump} bits) together with the ALU's \texttt{zr}/\texttt{ng} outputs to decide whether \texttt{PC} loads the A-register's value (jump taken) or increments (no jump).
+    \item \texttt{addressM} is always the A-register's low 15 bits; \texttt{pc} is the \texttt{PC}'s current value (for instruction fetch next cycle).
+  \end{enumerate}
+  \item \textbf{\texttt{Memory(in[16],load,address[15])} $\to$ \texttt{out[16]}} --- route addresses \texttt{0--16383} to \texttt{RAM16K} (Lab 3), \texttt{16384--24575} to \texttt{Screen}, and \texttt{24576} to \texttt{Keyboard}, using the address's top bits to select the region (a \texttt{DMux}/\texttt{Mux} pair on \texttt{address[14]}, then a further split on \texttt{address[13]} for Screen vs.\ Keyboard within the upper half --- the exact split follows the memory map's address ranges).
+  \item \textbf{\texttt{Computer(reset)}} --- connect a \texttt{ROM32K} (holding the program, loaded externally, read-only from the CPU's perspective), the \texttt{CPU}, and \texttt{Memory}: ROM's output feeds the CPU's \texttt{instruction} input at the PC's address; the CPU's \texttt{outM}/\texttt{writeM}/\texttt{addressM} drive \texttt{Memory}; \texttt{Memory}'s output feeds back to the CPU's \texttt{inM}.
+  \item Run \texttt{CPU.tst}, \texttt{Memory.tst} and \texttt{Computer.tst} in the Hardware Simulator; then load \texttt{Mult.asm} and \texttt{Fill.asm} from Lab 4 onto the built \texttt{Computer} and confirm they still run correctly on your own CPU.
+  \item In the journal, draw the full datapath diagram of your CPU showing every wire between the ALU, registers, PC and the instruction decoder.
+\end{enumerate}
+
+\section{Figures}
+
+\begin{figure}[h]
+  \centering
+  % Diagram: C-instruction jump decision logic —
+  %   jump_taken = (j1 & ng) | (j2 & zr) | (j3 & ~ng & ~zr)
+  % Coordinates: (x, y), scale=0.9 (nodes scaled too via transform shape)
+  %   Nng (NOT ng) at (2.0,2.6); Nzr (NOT zr) at (2.0,0.6)
+  %   A1 (j1 AND ng)        at (5.5,3.4)
+  %   A2 (j2 AND zr)        at (5.5,1.6)
+  %   Ag (~ng AND ~zr)      at (5.5,-0.4)
+  %   A3 (j3 AND Ag-output) at (8.5,-0.4)
+  %   O12 (A1 OR A2)        at (11.0,2.5)
+  %   Of  (O12 OR A3, final)at (11.0,1.0)
+  %   inputs j1,j2,j3,ng,zr enter at x=-0.2, y matching each gate's input row
+  %   "jump taken" label right-anchored at (13.0,0.8975), 0.4 clear of the
+  %     Of output wire's tip at x=12.6
+  \begin{tikzpicture}[scale=0.9, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    \node[not gate] (Nng) at (2.0,2.6) {};
+    \node[not gate] (Nzr) at (2.0,0.6) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A1) at (5.5,3.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A2) at (5.5,1.6) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (Ag) at (5.5,-0.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A3) at (8.5,-0.4) {};
+    \node[or gate, inputs={nn}, anchor=input 1] (O12) at (11.0,2.5) {};
+    \node[or gate, inputs={nn}, anchor=input 1] (Of) at (11.0,1.0) {};
+    \node[junction] (Jng) at (0.9,2.6) {};
+    \node[junction] (Jzr) at (0.9,0.6) {};
+
+    % inputs
+    \node[font=\small, left] at (-0.5,3.4) {$j_1$ (JLT)};
+    \node[font=\small, left] at (-0.5,1.6) {$j_2$ (JEQ)};
+    \node[font=\small, left] at (-0.5,-0.4) {$j_3$ (JGT)};
+    \node[font=\small, left] at (-0.5,2.6) {$ng$};
+    \node[font=\small, left] at (-0.5,0.6) {$zr$};
+    % j1/j2 into ANDs; j3 detours below Ag so it never crosses that gate's body
+    \draw[wire] (-0.2,3.4) -- (A1.input 1);
+    \draw[wire] (-0.2,1.6) -- (A2.input 1);
+    \draw[wire] (-0.2,-0.4) -- (3.6,-0.4) -- (3.6,-1.8) -- (7.9,-1.8) -- (7.9,-0.4) -- (A3.input 1);
+    % ng -> junction -> NOT (for ~ng, feeds Ag) AND directly -> AND1 (raw ng)
+    \draw[wire] (-0.2,2.6) -- (Jng) -- (Nng.input);
+    \draw[wire] (Jng) -- (0.9,3.195) -- (A1.input 2);
+    % zr -> junction -> NOT (for ~zr, feeds Ag) AND directly -> AND2 (raw zr)
+    \draw[wire] (-0.2,0.6) -- (Jzr) -- (Nzr.input);
+    \draw[wire] (Jzr) -- (0.9,1.395) -- (A2.input 2);
+    % ~ng, ~zr -> ANDg
+    \draw[wire] (Nng.output) -- (4.3,2.6) -- (4.3,-0.4) -- (Ag.input 1);
+    \draw[wire] (Nzr.output) -- (4.6,0.6) -- (4.6,-0.605) -- (Ag.input 2);
+    % ANDg out -> AND3.input2
+    \draw[wire] (Ag.output) -- (7.3,-0.5025) -- (7.3,-0.605) -- (A3.input 2);
+    % AND1, AND2 -> OR12
+    \draw[wire] (A1.output) -- (9.6,3.2975) -- (9.6,2.5) -- (O12.input 1);
+    \draw[wire] (A2.output) -- (9.9,1.4975) -- (9.9,2.295) -- (O12.input 2);
+    % OR12 -> ORfinal: lead clear to the right first, then down and back left
+    % well below OR12's body -- never re-enters the gate it just left
+    \draw[wire] (O12.output) -- (12.3,2.3975) -- (12.3,1.6) -- (10.3,1.6) -- (10.3,1.0) -- (Of.input 1);
+    \draw[wire] (A3.output) -- (10.6,-0.5025) -- (10.6,0.795) -- (Of.input 2);
+    \draw[wire] (Of.output) -- (12.6,0.8975);
+    % right-anchored so the label starts 0.4 clear of the wire tip at
+    % x=12.6, instead of being centered on top of it
+    \node[font=\small, right] at (13.0,0.8975) {jump taken};
+  \end{tikzpicture}
+  \caption{The C-instruction's jump logic at gate level. Three \texttt{jump} bits ($j_1{=}$JLT, $j_2{=}$JEQ, $j_3{=}$JGT) combine with the ALU's $ng$/$zr$ flags: $jump=(j_1\cdot ng)+(j_2\cdot zr)+(j_3\cdot\overline{ng}\cdot\overline{zr})$. When \emph{jump taken}, the \texttt{PC} loads the A-register value instead of incrementing.}
+  \label{fig:lab5-jump}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}l l l@{}}
+\toprule
+C-instruction field & bits & Control effect \\
+\midrule
+\texttt{instruction[15..13]} & \texttt{111} & opcode: this is a C-instruction \\
+\texttt{instruction[12]} ($a$) & 0/1 & ALU $y$ input $\leftarrow$ A-register / \texttt{inM} \\
+\texttt{instruction[11..6]} ($cccccc$) & 6 bits & $\leftarrow$ \texttt{zx,nx,zy,ny,f,no} (ALU control, Lab 2) \\
+\texttt{instruction[5..3]} ($ddd$) & 3 bits & \texttt{dest}: load A ($d_1$), load D ($d_2$), \texttt{writeM} ($d_3$) \\
+\texttt{instruction[2..0]} ($jjj$) & 3 bits & \texttt{jump}: JLT/JEQ/JGT $\to$ PC load (Figure~\ref{fig:lab5-jump}) \\
+\bottomrule
+\end{tabular}
+\caption{C-instruction decode: each bit field maps to one control signal, hardwired in \texttt{CPU.hdl}'s decode logic (no microcode, no sequence counter).}
+\label{tab:lab5-decode}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  % Diagram: Hack CPU datapath (block level) — ALU centre, A/D-regs left,
+  % PC right, instruction decoder bottom (dashed control fan-out).
+  % Coordinates: (x, y), scale=0.82 (nodes scaled too via transform shape)
+  %   ALU at (0,0)      -- w=1.6 h=1.0
+  %   A   at (-4.0,2.3)  -- w=1.3 h=0.8
+  %   D   at (-4.0,-2.3) -- w=1.3 h=0.8
+  %   PC  at (4.6,2.3)   -- w=1.3 h=0.8
+  %   DEC at (0,-3.6)    -- w=2.2 h=0.9
+  %   solid data wires all terminate at x=6.4 (addressM/pc/outM outputs);
+  %   labels for those three are right-anchored at x=6.7, giving 0.3cm
+  %   clearance from each wire's arrowhead (a centered label at the tip
+  %   would sit under the arrowhead itself)
+  %   dashed control wires fan out from DEC; writeM's vertical run sits at
+  %   x=6.4 -- its label is offset to x=6.6 (right-anchored) so it does not
+  %   sit ON that same vertical line
+  \begin{tikzpicture}[scale=0.82, transform shape,
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick, -{Latex[length=2.5mm]}},
+      ctrl/.style={draw=primary-gold, thick, dashed, -{Latex[length=2.5mm]}}]
+
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=1.6cm, minimum height=1.0cm, align=center] (ALU) at (0,0) {ALU\\(Lab 2)};
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=1.3cm, minimum height=0.8cm, align=center] (A) at (-4.0,2.3) {A-reg};
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=1.3cm, minimum height=0.8cm, align=center] (D) at (-4.0,-2.3) {D-reg};
+    \node[draw=primary-blue, fill=white, rounded corners,
+          minimum width=1.3cm, minimum height=0.8cm, align=center] (PC) at (4.6,2.3) {PC};
+    \node[draw=primary-gold, fill=white, rounded corners,
+          minimum width=2.2cm, minimum height=0.9cm, align=center] (DEC) at (0,-3.6) {Instruction\\decoder};
+
+    % data flow -- both operand wires now land exactly on the ALU's left
+    % edge (x=-0.8, not -1.2) so they visibly touch the box, not float
+    % 0.4 units short of it
+    \draw[wire] (-3.35,2.3) -- (-0.8,0.30);             % A -> ALU x
+    \draw[wire] (-3.35,-2.3) -- (-0.8,-0.30);           % D -> ALU y
+    \draw[wire] (-3.35,2.3) -- (-3.35,3.3) -- (6.4,3.3); % A -> addressM
+    \draw[wire] (5.25,2.3) -- (6.4,2.3);                % PC -> pc
+    % ALU's three right-side wires now start at x=0.8 (its actual right
+    % edge, not 0.9) and use staggered x for the two feedback loops so they
+    % no longer share one vertical that reads as a box drawn around the ALU
+    \draw[wire] (0.8,0) -- (6.4,0);                     % ALU -> outM
+    \draw[wire] (0.8,0.15) -- (1.35,0.15) -- (1.35,1.1) -- (-4.0,1.1) -- (-4.0,1.9);  % ALU -> A (load)
+    \draw[wire] (0.8,-0.15) -- (1.05,-0.15) -- (1.05,-1.1) -- (-4.0,-1.1) -- (-4.0,-1.9); % ALU -> D (load)
+    % inM into ALU y: crosses the D wire exactly once, far from any box or
+    % pin (a clean mid-field crossing reads as "no connection" by the usual
+    % convention), and lands on a third point on the ALU's left edge,
+    % distinct from both A's and D's landing points
+    \node[font=\scriptsize, left] at (-2.6,-1.8) {$inM$};
+    \draw[wire] (-2.4,-1.8) -- (-2.4,-0.05) -- (-0.8,-0.05);
+
+    % outputs labels -- right-anchored, 0.3cm clear of each wire's tip at
+    % x=6.4 (a centered label there would sit under the arrowhead itself,
+    % as it originally did for addressM: the leading "a" was swallowed by
+    % the Latex arrowhead)
+    \node[font=\scriptsize, right] at (6.7,3.3) {addressM};
+    \node[font=\scriptsize, right] at (6.7,2.3) {pc};
+    \node[font=\scriptsize, right] at (6.7,0) {outM};
+
+    % control (dashed) -- every wire now starts on DEC's own bottom edge
+    % (y=-4.05, its actual border) rather than its centre (y=-3.6), so none
+    % of the four cross through the box or its label; each drops into its
+    % own lane (y=-4.5/-4.9/-5.3) before diverging, so no two share a run
+    \draw[ctrl] (-0.5,-4.05) -- (-0.5,-0.6);                                % DEC -> ALU
+    \draw[ctrl] (-0.8,-4.05) -- (-0.8,-4.5) -- (-4.3,-4.5) -- (-4.3,-2.7);  % DEC -> D load
+    \draw[ctrl] (0.3,-4.05)  -- (0.3,-4.9)  -- (5.0,-4.9)  -- (5.0,1.9);    % DEC -> PC load/inc/reset
+    \draw[ctrl] (0.8,-4.05)  -- (0.8,-5.3)  -- (6.4,-5.3)  -- (6.4,-1.2);   % DEC -> writeM
+    \node[font=\scriptsize] at (-4.3,-4.85) {load D};
+    % placed ABOVE its own lane (in the gap between the D-load and PC
+    % lanes), not below -- below is where the writeM lane runs, only 0.4
+    % units under the PC lane, too tight for a label of this width
+    \node[font=\scriptsize] at (2.5,-4.65) {PC load/inc/reset};
+    % writeM label offset to the RIGHT of its own vertical riser (x=6.4) --
+    % placing it AT x=6.4 would sit directly on the line it labels
+    \node[font=\scriptsize, right] at (6.75,-1.5) {writeM};
+    % moved well clear of the ALU-input cluster and the ALU->D data wire
+    % (both used to run directly through this label)
+    \node[font=\scriptsize, right] at (-0.2,-2.6) {ALU control bits};
+  \end{tikzpicture}
+  \caption{The Hack CPU datapath (block level). Solid lines are data: A and D feed the ALU, the ALU result goes to \texttt{outM} and loads back into A/D, A drives \texttt{addressM}, PC drives \texttt{pc}. Dashed lines are the decoder's control signals (ALU bits, register load lines, PC load/inc/reset, \texttt{writeM}). This is the diagram to redraw, fully wired, for the journal deliverable.}
+  \label{fig:lab5-cpu}
+\end{figure}
+
+\section{Observation / Journal Table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}l l c@{}}
+\toprule
+Chip / demo & Notes & Pass / Fail \\
+\midrule
+\texttt{CPU} (\texttt{CPU.tst}) & & \\
+\texttt{Memory} (\texttt{Memory.tst}) & & \\
+\texttt{Computer} (\texttt{Computer.tst}) & & \\
+\texttt{Mult.asm} on own \texttt{Computer.hdl} & & \\
+\texttt{Fill.asm} on own \texttt{Computer.hdl} & & \\
+\bottomrule
+\end{tabular}
+\caption{Lab 5 observation table.}
+\label{tab:lab5-observations}
+\end{table}
+
+\noindent\textbf{Journal instruction (separate from the table above):} the full CPU datapath diagram (every wire between ALU, registers, PC and the instruction decoder --- Figure~\ref{fig:lab5-cpu} at block level, redrawn fully wired). This is the syllabus's own Deliverable 3.
+
+\section{Viva-Voce Questions}
+
+\begin{enumerate}
+  \item Trace one full fetch--decode--execute cycle for a given instruction (an instructor-supplied example will be given at the viva): which chip fetches it, which decodes it, which executes it, and in what order do the register/PC updates happen?
+  \item Why does the A-instruction case bypass the ALU entirely, while the C-instruction case routes through it?
+  \item Explain how \texttt{jump} bits combine with the ALU's \texttt{zr}/\texttt{ng} outputs to decide whether the \texttt{PC} loads or increments. Give one \texttt{jump} pattern and walk through the decision.
+  \item Why does \texttt{Memory.hdl} need address-range routing logic at all, rather than just wiring the CPU straight to \texttt{RAM16K}?
+  \item What breaks first if \texttt{ROM32K} were made writable by the CPU (i.e., programs could self-modify)? Why does the real Hack architecture keep it read-only?
+\end{enumerate}
+
+\section{Rubric}
+
+Reproduced verbatim from \texttt{syllabi/CS401\_Lab\_Syllabus\_Nand2Tetris.pdf}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}l r@{}}
+\toprule
+Criterion & Marks \\
+\midrule
+\texttt{CPU.hdl} passes \texttt{CPU.tst} & 3 \\
+\texttt{Memory.hdl} and \texttt{Computer.hdl} pass their test scripts & 3 \\
+\texttt{Mult.asm} / \texttt{Fill.asm} run correctly on the built \texttt{Computer} & 2 \\
+Datapath diagram complete and correct & 1 \\
+Viva: can trace one full fetch--decode--execute cycle for a given instruction & 1 \\
+\midrule
+\textbf{Total} & \textbf{10} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

@@ -189,7 +189,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>23 agents, 71 skills, 39 rules, 7 hooks</strong> (click to expand)</summary>
+<summary><strong>23 agents, 75 skills, 39 rules, 8 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -296,6 +296,10 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/student-simulator` (v2.6) | Playtest a deck by simulated execution: a blind "cold student" persona works through its Socratic Checks before seeing the answers, then diffs its stumbles against the instructor handout's predicted misconceptions |
 | `/grade` (v2.6) | Score student submissions against a rubric — LLM judgment plus the same SymPy/algorithm verification methods `/verify-symbolic`/`/verify-algorithm` use; draft-only by default, with separate `--approve` and `--tally` modes feeding `/accreditation` |
 | `/create-minor-paper` (v2.7) | Assemble an internal sessional "Minor" exam paper spanning a range of weeks (Section A: 3x10 marks attempt-any-2; Section B: 3x5 marks attempt-any-2) — largest-remainder apportionment across weeks, freshness-checked against that week's assignment/GATE bank, solutions verified via the same `/verify-symbolic`/`/verify-algorithm` methods; both paper and solutions gitignored end-to-end (a live exam, not public study material) |
+| `/feature-discovery` (v1.0) | Deeply analyze any software repository — 5-persona fan-out (Architect, Staff Engineer, PM, Security/Quality Reviewer, OSS Maintainer) over evidence-cited findings — and produce a prioritized, scored "what to build next" report; modes for quick/deep analysis, a roadmap, a per-feature build spec, and draft (never auto-filed) GitHub issues |
+| `/repo-innovator` (v1.0) | Discover the 2-3 innovations that could make a repository category-defining — deep repo intelligence, then a disciplined diverge (20+ ideas / 10 lenses) → combine → contrarian → converge pipeline, scored and cut hard via a 7-question "No. 1 Test"; explicitly refuses generic features unless strategically justified. Sibling to `/feature-discovery`, not a replacement — that skill covers the evidence-grounded backlog (quick wins, maintenance), this one refuses to |
+| `/accreditation-autopilot` (v1.0) | Roll up NBA/AICTE CO-PO-PSO accreditation data across every course in a program into one program-level Self-Assessment Report — generates any missing per-course draft via `/accreditation`, then combines all of them with a mechanically-computed (never hand-tallied) PO-coverage summary |
+| `/render-lecture-video` (v1.0) | Render an already-authored step-diagram sequence (from `/trace-execution` or a hand-authored Notes trace) into a silent, captioned animated GIF — every on-screen caption copied verbatim from the sequence's own `\caption{}` text, never LLM-generated |
 
 ### Research Workflow
 

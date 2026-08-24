@@ -131,72 +131,286 @@ Load each chip's supplied \texttt{.tst} script in the Hardware Simulator and con
       junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
 
     % ---- NOT from NAND (top) ----
-    \node[font=\small, left] at (-0.1, 1.9) {$A$};
-    \node[nand gate, inputs={nn}, anchor=input 1] (N1) at (2.2, 2.0) {};
+    % N1 sits at y=1.9 (not 2.0) so input 1 lands exactly on the $a$ rail --
+    % every wire in this figure is now orthogonal, none diagonal.
+    \node[font=\small, left] at (-0.1, 1.9) {$a$};
+    \node[nand gate, inputs={nn}, anchor=input 1] (N1) at (2.2, 1.9) {};
     \node[junction] (Aj) at (0.9, 1.9) {};
     \draw[wire] (0.1, 1.9) -- (N1.input 1);
-    \draw[wire] (Aj) -- (0.9, 1.3) -- (N1.input 2);
-    \draw[wire] (N1.output) -- node[above, font=\small] {$\overline{A}$ = \texttt{Not(A)}} ++(2.8, 0);
-    \node[font=\scriptsize, primary-gold, text=primary-gold] at (2.2, 0.85) {tie both inputs to $A$};
+    \draw[wire] (Aj) -- (0.9, 1.695) -- (N1.input 2);
+    \draw[wire] (N1.output) -- (4.4,1.7975);
+    \node[right, font=\small] at (4.55,1.7975) {$\overline{a}$ = \texttt{Not(a)}};
+    \node[font=\scriptsize, text=primary-gold] at (1.0, 1.3) {tie both inputs to $a$};
 
     % ---- AND from two NANDs (bottom) ----
-    \node[font=\small, left] at (-0.1, -0.1) {$A$};
-    \node[font=\small, left] at (-0.1, -0.9) {$B$};
-    \node[nand gate, inputs={nn}, anchor=input 1] (N2) at (2.2, -0.4) {};
+    % N2 sits at y=-0.1 (not -0.4) so input 1 lands on the $a$ rail; $b$'s
+    % rail moves to -0.305 to match N2's real input-2 pin (0.205 below
+    % input 1) instead of guessing at -0.9.
+    \node[font=\small, left] at (-0.1, -0.1) {$a$};
+    \node[font=\small, left] at (-0.1, -0.305) {$b$};
+    \node[nand gate, inputs={nn}, anchor=input 1] (N2) at (2.2, -0.1) {};
     \draw[wire] (0.1, -0.1) -- (N2.input 1);
-    \draw[wire] (0.1, -0.9) -- (N2.input 2);
-    \node[nand gate, inputs={nn}, anchor=input 1] (N3) at (5.2, -0.4) {};
-    \node[junction] (Nj) at (3.6, -0.4) {};
+    \draw[wire] (0.1, -0.305) -- (N2.input 2);
+    % N3's tie is two short orthogonal jogs straddling the driving net
+    % (Nj sits exactly on N2's output y) instead of one long triangle that
+    % rendered as a phantom third (buffer) gate.
+    \node[nand gate, inputs={nn}, anchor=input 1] (N3) at (5.2, -0.1025) {};
+    \node[junction] (Nj) at (3.6, -0.2025) {};
     \draw[wire] (N2.output) -- (Nj);
-    \draw[wire] (Nj) -- (3.6, 0.2) -- (N3.input 1);
-    \draw[wire] (Nj) -- (3.6, -1.0) -- (N3.input 2);
-    \draw[wire] (N3.output) -- node[above, font=\small] {$A\cdot B$ = \texttt{And(a,b)}} ++(3.2, 0);
-    \node[font=\scriptsize, text=primary-gold] at (3.6, -1.5) {\texttt{Nand} output tied to itself $\Rightarrow$ acts as \texttt{Not}};
+    \draw[wire] (Nj) -- (3.6, -0.1025) -- (N3.input 1);
+    \draw[wire] (Nj) -- (3.6, -0.3075) -- (N3.input 2);
+    \draw[wire] (N3.output) -- (6.7,-0.205);
+    \node[right, font=\small] at (6.85,-0.205) {$a\cdot b$ = \texttt{And(a,b)}};
+    \node[font=\scriptsize, text=primary-gold] at (3.6, -0.9) {\texttt{Nand} output tied to itself $\Rightarrow$ acts as \texttt{Not}};
 
   \end{tikzpicture}
-  \caption{\texttt{Not} and \texttt{And} composed entirely from the \texttt{Nand} primitive --- the pattern every other chip in this lab extends. \texttt{Not(A)} ties both \texttt{Nand} inputs to $A$; \texttt{And(a,b)} feeds \texttt{Nand(a,b)} into a second \texttt{Nand} wired as \texttt{Not}.}
+  \caption{\texttt{Not} and \texttt{And} composed entirely from the \texttt{Nand} primitive --- the pattern every other chip in this lab extends. \texttt{Not(a)} ties both \texttt{Nand} inputs to $a$; \texttt{And(a,b)} feeds \texttt{Nand(a,b)} into a second \texttt{Nand} wired as \texttt{Not}.}
   \label{fig:not-and-from-nand}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  % Diagram: Mux and DMux as labelled I/O blocks (block-diagram style,
-  % matching the Full-Adder block convention used in the CS401 Notes files).
-  % Coordinates: (x, y), scale 1.0
-  %   Mux box at (0,0), 2.0w x 1.4h -> spans x -1.0..1.0, y -0.7..0.7
-  %   DMux box at (5.5,0), same size
-  %   Input/output labels 1.5cm clear of each box edge (P7c)
-  \begin{tikzpicture}[scale=1.0, transform shape,
-      every node/.style={font=\small}]
+  % Or from three NAND gates (De Morgan): a+b = NAND(NAND(a,a), NAND(b,b)).
+  % Gate geometry (circuits.logic.US, verified): input2 = input1 - 0.205cm,
+  % output = (input1.x + 0.797, input1.y - 0.1025).
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
 
-    \node[draw=primary-blue, fill=white, rounded corners,
-          minimum width=2.0cm, minimum height=1.4cm, align=center] (MUX) at (0,0) {Mux};
-    \node[font=\scriptsize] at (-1.8, 0.45) {$a$};
-    \node[font=\scriptsize] at (-1.8, -0.45) {$b$};
-    \node[font=\scriptsize] at (-1.1, -1.15) {$sel$};
-    \node[font=\scriptsize] at (1.8, 0) {$out$};
-    \draw[->, thick] (-1.5, 0.45) -- (-1.0, 0.45);
-    \draw[->, thick] (-1.5, -0.45) -- (-1.0, -0.45);
-    \draw[->, thick] (-1.0, -1.0) -- (0, -1.0) -- (0, -0.7);
-    \draw[->, thick] (1.0, 0) -- (1.5, 0);
-    \node[font=\scriptsize, text=primary-gold, align=center] at (0, -1.9) {\small $out = a$ if $sel{=}0$\\$out = b$ if $sel{=}1$};
-
-    \node[draw=primary-blue, fill=white, rounded corners,
-          minimum width=2.0cm, minimum height=1.4cm, align=center] (DMUX) at (5.5,0) {DMux};
-    \node[font=\scriptsize] at (3.7, 0) {$in$};
-    \node[font=\scriptsize] at (4.6, -1.15) {$sel$};
-    \node[font=\scriptsize] at (7.3, 0.45) {$a$};
-    \node[font=\scriptsize] at (7.3, -0.45) {$b$};
-    \draw[->, thick] (4.0, 0) -- (4.5, 0);
-    \draw[->, thick] (4.6, -1.0) -- (5.5, -1.0) -- (5.5, -0.7);
-    \draw[->, thick] (6.5, 0.45) -- (7.0, 0.45);
-    \draw[->, thick] (6.5, -0.45) -- (7.0, -0.45);
-    \node[font=\scriptsize, text=primary-gold, align=center] at (5.5, -1.9) {\small $sel{=}0{:}\ a{=}in,\,b{=}0$\\$sel{=}1{:}\ a{=}0,\,b{=}in$};
-
+    \node[nand gate, inputs={nn}, anchor=input 1] (N1) at (1.5,1.6) {};
+    \node[nand gate, inputs={nn}, anchor=input 1] (N2) at (1.5,0.0) {};
+    \node[nand gate, inputs={nn}, anchor=input 1] (N3) at (5.0,0.8) {};
+    \node[junction] (Ja) at (0.5,1.6) {};
+    \node[junction] (Jb) at (0.5,0.0) {};
+    \node[font=\small, left] at (-0.4,1.6) {$a$};
+    \node[font=\small, left] at (-0.4,0.0) {$b$};
+    \draw[wire] (-0.2,1.6) -- (N1.input 1);
+    \draw[wire] (Ja) -- (0.5,1.395) -- (N1.input 2);
+    \draw[wire] (-0.2,0.0) -- (N2.input 1);
+    \draw[wire] (Jb) -- (0.5,-0.205) -- (N2.input 2);
+    \draw[wire] (N1.output) -- (3.8,1.4975) -- (3.8,0.8) -- (N3.input 1);
+    \draw[wire] (N2.output) -- (3.4,-0.1025) -- (3.4,0.595) -- (N3.input 2);
+    \draw[wire] (N3.output) -- (6.6,0.6975);
+    \node[anchor=south, font=\scriptsize] at (3.0,1.80) {$\overline{a}$};
+    \node[anchor=north, font=\scriptsize] at (3.0,-0.40) {$\overline{b}$};
+    \node[right, font=\small] at (6.9,0.6975) {$a+b$};
   \end{tikzpicture}
-  \caption{\texttt{Mux} (2-to-1 selector) and \texttt{DMux} (1-to-2 router) as black-box I/O contracts --- \texttt{DMux} is exactly \texttt{Mux} with its data flow reversed. Internal gate-level composition (from \texttt{And}/\texttt{Or}/\texttt{Not}) is Task 5/6's exercise.}
-  \label{fig:mux-dmux-block}
+  \caption{\texttt{Or} from three \texttt{Nand} gates (De Morgan): $a+b=\overline{\overline{a}\cdot\overline{b}}$. Each input \texttt{Nand} is wired with both inputs tied together, acting as an inverter; the third \texttt{Nand} combines the two negations.}
+  \label{fig:or-from-nand}
 \end{figure}
+
+\begin{figure}[h]
+  \centering
+  % Xor from Not/And/Or: a xor b = (a AND NOT b) OR (NOT a AND b).
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    % Na/Nb sit close to their OWN rail (not the far rail), so the fan-out
+    % branch to each is a short drop/rise instead of a long diagonal that
+    % used to cross the other rail right at its inverter's input pin.
+    \node[not gate] (Na) at (1.5,2.1) {};
+    \node[not gate] (Nb) at (1.5,1.0) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A1) at (5.0,2.6) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A2) at (5.0,0.4) {};
+    \node[or gate, inputs={nn}, anchor=input 1] (O) at (8.0,1.5) {};
+    \node[junction] (Ja) at (0.6,2.6) {};
+    \node[junction] (Jb) at (1.0,0.195) {};
+    \node[font=\small, left] at (-0.35,2.6) {$a$};
+    \node[font=\small, left] at (-0.35,0.195) {$b$};
+    % a rail -> AND1.input1, and a short drop to NOT(a)
+    \draw[wire] (-0.1,2.6) -- (Ja) -- (A1.input 1);
+    \draw[wire] (Ja) -- (0.6,2.1) -- (Na.input);
+    % b rail -> AND2.input2, and a short rise to NOT(b)
+    \draw[wire] (-0.1,0.195) -- (Jb) -- (A2.input 2);
+    \draw[wire] (Jb) -- (1.0,1.0) -- (Nb.input);
+    % NOT outputs cross ONCE, at two different x (3.4 / 3.8) so they never
+    % run collinear -- the one crossing lands in open space near (3.4,1.0),
+    % far from every pin, reading unambiguously as "no connection"
+    \draw[wire] (Na.output) -- (3.4,2.1) -- (3.4,0.4) -- (A2.input 1);
+    \draw[wire] (Nb.output) -- (3.8,1.0) -- (3.8,2.395) -- (A1.input 2);
+    % AND outputs -> OR (output-y corrected to match each gate's real pin:
+    % A1.output y = 2.6-0.1025 = 2.4975, not 2.8975; A2.output y =
+    % 0.4-0.1025 = 0.2975, not 0.4975 -- the old values sloped both wires
+    % upward on their way out of the gate)
+    \draw[wire] (A1.output) -- (6.6,2.4975) -- (6.6,1.5) -- (O.input 1);
+    \draw[wire] (A2.output) -- (6.6,0.2975) -- (6.6,1.295) -- (O.input 2);
+    % O.output y = 1.5-0.1025 = 1.3975, not 1.6975
+    \draw[wire] (O.output) -- (9.6,1.3975);
+    \node[anchor=north, font=\scriptsize] at (2.8,1.8) {$\overline{a}$};
+    \node[anchor=south, font=\scriptsize] at (3.2,1.3) {$\overline{b}$};
+    \node[right, font=\small] at (9.6,1.3975) {$a\oplus b$};
+  \end{tikzpicture}
+  \caption{\texttt{Xor} from \texttt{Not}/\texttt{And}/\texttt{Or}: $a\oplus b=(a\cdot\overline{b})+(\overline{a}\cdot b)$. Two inverters produce $\overline{a},\overline{b}$; the two \texttt{And} gates form the product terms; the \texttt{Or} sums them.}
+  \label{fig:xor-from-gates}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % Mux: out = (a AND NOT sel) OR (b AND sel).
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    \node[not gate] (Ns) at (2.0,2.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A1) at (5.0,3.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A2) at (5.0,1.4) {};
+    \node[or gate, inputs={nn}, anchor=input 1] (O) at (8.0,2.3) {};
+    \node[junction] (Js) at (0.7,2.4) {};
+    \node[font=\small, left] at (-0.4,3.4) {$a$};
+    \node[font=\small, left] at (-0.4,1.195) {$b$};
+    \node[font=\small, left] at (-0.4,2.4) {$sel$};
+    \draw[wire] (-0.2,3.4) -- (A1.input 1);
+    \draw[wire] (-0.2,1.195) -- (A2.input 2);
+    \draw[wire] (-0.2,2.4) -- (Js) -- (Ns.input);
+    \draw[wire] (Js) -- (0.7,1.4) -- (A2.input 1);
+    \draw[wire] (Ns.output) -- (4.2,2.4) -- (4.2,3.195) -- (A1.input 2);
+    \draw[wire] (A1.output) -- (6.6,3.2975) -- (6.6,2.3) -- (O.input 1);
+    \draw[wire] (A2.output) -- (6.6,1.2975) -- (6.6,2.095) -- (O.input 2);
+    \draw[wire] (O.output) -- (9.5,2.1975);
+    \node[anchor=south, font=\scriptsize] at (3.3,2.70) {$\overline{sel}$};
+    \node[right, font=\small] at (9.5,2.1975) {$out$};
+  \end{tikzpicture}
+  \caption{\texttt{Mux}: $out=(a\cdot\overline{sel})+(b\cdot sel)$. The inverter makes $\overline{sel}$; the top \texttt{And} passes $a$ when $sel{=}0$, the bottom passes $b$ when $sel{=}1$; the \texttt{Or} merges them.}
+  \label{fig:mux-from-gates}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % DMux: a = in AND NOT sel, b = in AND sel.
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      circuit logic US,
+      every circuit symbol/.style={draw=primary-blue, thick, fill=white},
+      every node/.style={font=\small},
+      wire/.style={draw=jet, thick},
+      junction/.style={circle, fill=jet, minimum size=3.2pt, inner sep=0pt}]
+
+    \node[not gate] (Ns) at (2.0,2.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A1) at (5.0,3.4) {};
+    \node[and gate, inputs={nn}, anchor=input 1] (A2) at (5.0,1.4) {};
+    \node[junction] (Ji) at (-0.8,3.4) {};
+    \node[junction] (Js) at (1.2,2.4) {};
+    % `in`'s label moved further left with a real 0.9-unit lead-in (matching
+    % the other figures' convention, not a 0.1-unit stub); `sel`'s label
+    % moved to the RIGHT of the `in` fan-out column at x=-0.8 instead of
+    % overlapping it -- the old x=-0.5 label used to have the `in` wire
+    % run straight through the middle of the word "sel".
+    \node[font=\small, left] at (-1.9,3.4) {$in$};
+    \node[font=\small, left] at (0.1,2.4) {$sel$};
+    % in fans to A1.input1 and A2.input2
+    \draw[wire] (-1.7,3.4) -- (Ji) -- (A1.input 1);
+    \draw[wire] (Ji) -- (-0.8,1.195) -- (A2.input 2);
+    % sel -> NOT, and down to A2.input1
+    \draw[wire] (0.3,2.4) -- (Js) -- (Ns.input);
+    \draw[wire] (Js) -- (1.2,1.4) -- (A2.input 1);
+    % NOT output -> A1.input2
+    \draw[wire] (Ns.output) -- (4.2,2.4) -- (4.2,3.195) -- (A1.input 2);
+    \draw[wire] (A1.output) -- (7.0,3.2975);
+    \draw[wire] (A2.output) -- (7.0,1.2975);
+    \node[anchor=south, font=\scriptsize] at (3.3,2.70) {$\overline{sel}$};
+    \node[right, font=\small] at (7.0,3.2975) {$a$};
+    \node[right, font=\small] at (7.0,1.2975) {$b$};
+  \end{tikzpicture}
+  \caption{\texttt{DMux}: $a=in\cdot\overline{sel}$, $b=in\cdot sel$. One inverter and two \texttt{And} gates; the unselected output is forced to 0 because its \texttt{And} input is gated off.}
+  \label{fig:dmux-from-gates}
+\end{figure}
+
+\section{Truth Tables \& Boolean Expressions (step by step)}
+
+Every chip in this lab is a pure Boolean function of its inputs. The tables below give each chip's truth table; the equations show the step-by-step Nand-only construction used in the Figures.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}c c | c c c c@{}}
+\toprule
+\multicolumn{2}{c}{Inputs} & \texttt{Not} & \texttt{And} & \texttt{Or} & \texttt{Xor} \\
+$a$ & $b$ & $\overline{a}$ & $a\cdot b$ & $a+b$ & $a\oplus b$ \\
+\midrule
+0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 1 & 1 & 0 & 1 & 1 \\
+1 & 0 & 0 & 0 & 1 & 1 \\
+1 & 1 & 0 & 1 & 1 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Truth tables for the four single-bit gates (one row per input combination).}
+\label{tab:lab1-gates-tt}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}c c c | c@{}}
+\toprule
+\multicolumn{3}{c}{\texttt{Mux} inputs} & \texttt{out} \\
+$a$ & $b$ & $sel$ & \\
+\midrule
+0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+1 & 0 & 0 & 1 \\
+1 & 1 & 0 & 1 \\
+0 & 0 & 1 & 0 \\
+0 & 1 & 1 & 1 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\quad
+\begin{tabular}{@{}c c | c c@{}}
+\toprule
+\multicolumn{2}{c}{\texttt{DMux} inputs} & \multicolumn{2}{c}{outputs} \\
+$in$ & $sel$ & $a$ & $b$ \\
+\midrule
+0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+1 & 1 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\caption{Truth tables for \texttt{Mux} ($out=sel\,?\,b:a$) and \texttt{DMux} (route $in$ to $a$ if $sel{=}0$, else to $b$).}
+\label{tab:lab1-mux-tt}
+\end{table}
+
+\noindent\textbf{Step-by-step Nand-only derivations.}
+
+\textbf{\texttt{Not} and \texttt{And}} (Figure~\ref{fig:not-and-from-nand}):
+\begin{align}
+  \overline{a} &= \textsc{Nand}(a,a) = \overline{a\cdot a} = \overline{a} \nonumber\\
+  a\cdot b &= \textsc{Nand}\big(\textsc{Nand}(a,b),\,\textsc{Nand}(a,b)\big)
+           = \overline{\overline{a\cdot b}} = a\cdot b \nonumber
+\end{align}
+
+\textbf{\texttt{Or}} via De Morgan (Figure~\ref{fig:or-from-nand}):
+\begin{align}
+  \overline{a} &= \textsc{Nand}(a,a),\qquad \overline{b} = \textsc{Nand}(b,b) \nonumber\\
+  a+b &= \textsc{Nand}(\overline{a},\overline{b}) = \overline{\overline{a}\cdot\overline{b}}
+       = a+b \quad\text{(De Morgan: }\overline{\overline{a}\cdot\overline{b}} = a+b\text{)} \nonumber
+\end{align}
+
+\textbf{\texttt{Xor}} as sum of minterms (Figure~\ref{fig:xor-from-gates}):
+\begin{align}
+  a\oplus b &= (a\cdot\overline{b}) + (\overline{a}\cdot b) \nonumber\\
+            &= \textsc{Or}\big(\textsc{And}(a,\textsc{Not}\, b),\,\textsc{And}(\textsc{Not}\, a, b)\big) \nonumber
+\end{align}
+
+\textbf{\texttt{Mux}} (Figure~\ref{fig:mux-from-gates}):
+\begin{align}
+  out = (a\cdot\overline{sel}) + (b\cdot sel) \nonumber
+\end{align}
+
+\textbf{\texttt{DMux}} (Figure~\ref{fig:dmux-from-gates}):
+\begin{align}
+  a = in\cdot\overline{sel},\qquad b = in\cdot sel \nonumber
+\end{align}
 
 \section{Observation / Journal Table}
 

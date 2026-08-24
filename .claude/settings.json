@@ -78,6 +78,11 @@
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/claim-reconcile.py",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/tikz-diagram-reminder.py",
+            "timeout": 5
           }
         ]
       }

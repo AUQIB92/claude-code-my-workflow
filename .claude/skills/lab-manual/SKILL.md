@@ -2,7 +2,7 @@
 name: lab-manual
 description: Generate a per-week lab sheet (LaTeX PDF, course-organized) for the practical/lab component of a course — objective, apparatus/toolchain, step-by-step procedure, expected output, an observation table for students to fill in, viva-voce questions, and a grading rubric. Use when user says "make a lab manual", "create a lab sheet for week N", "build the practical for this lecture", "generate a lab exercise" for a course with an L-T-P (lecture-tutorial-practical) or similar lab component. NOT for a graded written assignment (use /create-assignment) and NOT for a programming assignment with an autograder (use /coding-assignment) — a lab sheet is an in-session, apparatus-driven exercise a student performs and records, typically supervised.
 argument-hint: "[CourseCode/lecture], e.g. CS401/02-number-systems-arithmetic (Slides/CourseCode/lecture.tex must already exist and compile)"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash"]
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash", "Task"]
 context: fork
 model: sonnet
 effort: medium
@@ -61,13 +61,34 @@ A short table: criteria (procedure followed correctly / observation table comple
 \section{Objective}
 \section{Apparatus / Toolchain}
 \section{Procedure}
+\section{Figures}  % optional — only if the procedure needs a gate/block/circuit diagram
 \section{Observation Table}
 \section{Viva-Voce Questions}
 \section{Rubric}
 \end{document}
 ```
 
+The `Figures` section is optional — include it only when a diagram genuinely
+clarifies the apparatus or procedure (e.g. a gate-level TikZ diagram for a
+digital-logic lab). Follow `.claude/rules/tikz-prevention.md`'s P1/P2/P7
+rules while authoring it, same as any other TikZ-bearing file.
+
 Compile the same way as Notes/Assignments: `TEXINPUTS`/`BIBINPUTS` = `../../Preambles` / `../..` relative to `Labs/<CODE>/`; Windows/MiKTeX uses `;` not `:`.
+
+## Phase 4.5: Figures QA (only if the lab sheet contains any diagram)
+
+If Phase 4's `Figures` section is empty (no `\begin{tikzpicture}` anywhere in
+the file), skip this phase entirely — most lab sheets have none.
+
+Otherwise, before Phase 5:
+1. Compile the lab sheet (same 3-pass sequence as Phase 4).
+2. Spawn `tikz-reviewer` via `Task` (`subagent_type=tikz-reviewer`), passing
+   the `.tex` source and the compiled `.pdf` path — the reviewer rasterizes
+   and actually looks at the render (Pass 6) before reasoning from source.
+3. Apply any fixes, re-compile, re-invoke. Loop until **APPROVED**, max 5
+   rounds (same pattern `/new-diagram` and `/create-lecture` use). If still
+   not `APPROVED` after 5 rounds, surface the situation to the user rather
+   than shipping an unreviewed diagram.
 
 ## Phase 5: QA
 
@@ -76,6 +97,7 @@ Spot-check:
 - Every observation-table row maps to an actual procedure step.
 - Every viva question is answerable from the lecture's own Notes chapter.
 - Toolchain is named specifically enough that a student who has never used it can get started (link/version noted).
+- If the lab sheet contains any diagram, Phase 4.5's `tikz-reviewer` pass returned **APPROVED**.
 
 ## Report
 
@@ -87,3 +109,5 @@ State: apparatus/toolchain, learning objective, procedure step count, and the fi
 - `.claude/skills/coding-assignment/SKILL.md` — the autograded-program sibling, for take-home programming work rather than a supervised in-session lab.
 - `.claude/skills/syllabus/SKILL.md` — where the practical component's weighting and cadence are declared; read this before Phase 0 if the course's `syllabi/<CODE>.md` doesn't already state the lab schedule.
 - `.claude/rules/content-invariants.md` (INV-8) — motivation-before-mechanics discipline applied to the procedure, same as `/create-assignment`.
+- `.claude/agents/tikz-reviewer.md` — visual QA for any diagram in Phase 4's `Figures` section (Phase 4.5).
+- `.claude/rules/tikz-prevention.md` / `.claude/rules/tikz-measurement.md` — authoring rules and the reviewer's citation formulas.

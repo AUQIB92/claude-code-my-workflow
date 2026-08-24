@@ -101,7 +101,8 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 - R scripts following conventions
 - TikZ diagrams in Beamer source (single source of truth)
 - Save RDS for future Quarto integration
-- **TikZ overlap audit (MANDATORY):** before Phase 5, run the P7 clearance audit (`.claude/rules/tikz-prevention.md`) on every diagram — each boxed node must declare explicit dimensions (P1), every diagram with ≥3 nodes must have a coordinate map (P2), and the map must be checked for: no path crossing a box except at a connection point (P7a), no label sitting on a line (P7b), labels ≥0.15 cm clear of box edges (P7c), and no curve visibly crossing its own dashed asymptote (P7d). Fix any finding before compiling. This audit is what prevents bus-through-box and label-on-arrow overlaps from shipping.
+- **TikZ overlap audit (MANDATORY):** before compiling, run the P7 clearance audit (`.claude/rules/tikz-prevention.md`) on every diagram — each boxed node must declare explicit dimensions (P1), every diagram with ≥3 nodes must have a coordinate map (P2), and the map must be checked for: no path crossing a box except at a connection point (P7a), no label sitting on a line (P7b), labels ≥0.15 cm clear of box edges (P7c), and no curve visibly crossing its own dashed asymptote (P7d). Fix any finding before compiling. This audit is what prevents bus-through-box and label-on-arrow overlaps from shipping.
+- **tikz-reviewer pass (MANDATORY, before Phase 5):** compile the deck (3-pass `xelatex`, same as Phase 5), then for each diagram added or modified this session spawn `tikz-reviewer` via `Task` (`subagent_type=tikz-reviewer`), passing the compiled `.pdf` path — the reviewer rasterizes and actually looks at the render (Pass 6) before reasoning from source, catching the class of overlap the static P7 audit above cannot (font-metric/anchor-specific collisions invisible from coordinates alone). Apply fixes and re-invoke, looping until **APPROVED**, max 5 rounds — same pattern `/new-diagram` Step 5-6 uses. If a diagram is a straight port with no changes this session, it can be skipped (it already passed this gate when first authored).
 
 ### Phase 5: Polish & Compile
 - Full 3-pass compilation
@@ -129,6 +130,7 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 [ ] Lecture Notes generated (`/lecture-notes`) and `/qa-notes` parity check passed
 [ ] Textbook-attributed claims traced to an indexed page, or explicitly marked general/standard treatment (not invented page numbers)
 [ ] TikZ P7 audit passed: no box crossed by a path, no label on a line, labels clear of box edges, no curve crossing its dashed asymptote (see `.claude/rules/tikz-prevention.md`)
+[ ] tikz-reviewer APPROVED for every diagram added or modified this session
 ```
 
 ## Cross-references

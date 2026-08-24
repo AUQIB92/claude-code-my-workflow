@@ -36,7 +36,7 @@ Verify with `claude mcp list` — `stata-mcp` should appear with status `connect
 
 Default permission mode prompts on every `Bash`, `Edit`, `Write`. Two fixes:
 
-- **Auto-accept edits** — keybinding in Claude Code; see guide's [permission modes section](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#settings---permissions-and-hooks).
+- **Auto-accept edits** — keybinding in Claude Code; see guide's [permission modes section](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#settings---permissions-and-hooks).
 - **Bypass mode** — `claude --permission-mode acceptEdits` (auto-approves edits but still prompts for sensitive ops) or `claude --permission-mode bypassPermissions` (skips prompts entirely — use only on trusted repos).
 
 The template's `.claude/settings.json` pre-approves ~100 common patterns, so even at default most routine work is unattended.
@@ -176,6 +176,18 @@ Use `--r2` / `--r3` to continue a prior review. The editor agent reloads the pre
 
 Expected. The gate counts `.claude/skills/` on disk vs prose assertions. After adding a skill, update the counts in README.md, CLAUDE.md (if mentioned), `guide/workflow-guide.qmd`, `docs/index.html` og:description, and `templates/skill-template.md`. The script tells you which are stale.
 
+## Fork-identity gate
+
+### `check-fork-identity` fails with "still reference the upstream repo/contact"
+
+`scripts/check-fork-identity.py` (chained into `check-surface-sync.sh`, so it runs in the pre-commit hook and in CI) compares your `git remote get-url origin` owner against the upstream template's owner (`pedrohcgs`). If they differ, it flags any of `.github/SECURITY.md`, `.github/CODE_OF_CONDUCT.md`, `.github/CONTRIBUTING.md`, or `TROUBLESHOOTING.md` that still hardcode the upstream repo URL or contact — a real bug class, since a security report or CoC complaint filed through those files would otherwise silently route to the original template author instead of you. Fix: replace the flagged line(s) with your own repo URL / contact, matching what the other three files already use. `ACKNOWLEDGMENTS.md`, `CITATION.cff`, `LICENSE`, and `CHANGELOG.md` are intentionally exempt — they're supposed to credit the upstream author and are never scanned.
+
+## Concept-scope check (advisory)
+
+### `check-concept-scope` prints "USED-BEFORE-DECLARED violations found" — do I need to fix it?
+
+`scripts/check-concept-scope.py` (chained into `check-surface-sync.sh`) cross-checks each course's `.claude/rules/knowledge-base-<CODE>.md` Symbol Reference table (which week a term is declared "Introduced") against its actual first use in `Slides/<CODE>/*.tex`. **This gate is advisory only — it never blocks a commit.** Real testing found its live hits on this repo are legitimate roadmap/preview mentions ("coming up next week" teasers on a recap slide), not genuine prerequisite bugs, so it's deliberately excluded from the blocking exit-code chain. Read a finding, decide by eye whether it's a real early-teaching bug or a benign preview, and fix the slide only if it's the former. Detection is intentionally over-inclusive (see the script's own module docstring) — it can also match a bare TikZ node name, not just rendered label text a student reads, so a finding is a prompt to look, not proof of a bug.
+
 ## Pre-Flight Reports (v1.6.0)
 
 ### Skill halts at "Pre-Flight Report failed — inputs not readable"
@@ -274,5 +286,5 @@ You probably have `CLAUDE_PRECOMPACT_BLOCK_ON_DRAFT=1` set in your environment. 
 
 ## Still stuck?
 
-- Read the [guide's troubleshooting section](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#troubleshooting) for longer-form recovery scenarios.
-- Open an issue at <https://github.com/pedrohcgs/claude-code-my-workflow/issues> — the bug-report template asks for the environment details we need to help.
+- Read the [guide's troubleshooting section](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html#troubleshooting) for longer-form recovery scenarios.
+- Open an issue at <https://github.com/AUQIB92/claude-code-my-workflow/issues> — the bug-report template asks for the environment details we need to help.

@@ -1,0 +1,110 @@
+% =============================================================================
+% Assignments/CS301/02-algorithm-analysis-assignment.tex
+% Assignment 2: What Does an Operation Cost? -- written problem set
+%
+% Student set -- NO answers. Solution key: 02-algorithm-analysis-solutions.tex.
+% Sourced from Slides/CS301/02-algorithm-analysis.tex and
+% Notes/CS301/02-algorithm-analysis-notes.tex.
+%
+% Built at --difficulty intro (course-wide override, knowledge-base-CS301.md):
+% recall/apply-weighted, single-concept problems, multi-part steps scaffolded --
+% same tier and format precedent as Assignment 1
+% (01-foundations-pointers-adt-assignment.tex). 2 Conceptual, 2 Numerical,
+% 2 Design; every Numerical/Design problem applies the lecture's method to a
+% new array, new function, or new loop the lecture did not itself work
+% through (linear-search array [42,17,90,8,55,3]; binary-search array
+% [2,9,14,23,31,40,48,56,63,71]; array_max and the triangular double loop are
+% both new algorithms, not the linear_search/binary_search/duplicate-check
+% trio the deck traced).
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 02-algorithm-analysis-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{2.\arabic{section}}
+
+\title{Assignment 2: What Does an Operation Cost?}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions. Every question uses the array convention from lecture --- \texttt{A[0..n-1]}, 0-based indexing --- and every complexity claim you make must name its case (best/worst/average) and its operation, exactly as required in class.
+
+\section{Conceptual}
+
+\textbf{Q1.} A bound must always name its case, and $O(n)$ is a class of functions, not an exact step count --- two habits the lecture insisted on. For each statement below, say whether it is correctly stated (\good{good}) or incomplete/incorrect (\bad{bad}), and justify in one sentence.
+\begin{enumerate}
+  \item[(a)] ``Merge sort is $O(n \log n)$.''
+  \item[(b)] ``Linear search is $\Omega(1)$ in the best case.''
+  \item[(c)] ``Since $T(n) = O(n^2)$, the algorithm takes exactly $n^2$ steps on every input.''
+  \item[(d)] ``The nested-loop duplicate check from lecture is $\Theta(n^2)$ in every case.''
+\end{enumerate}
+
+\textbf{Q2.} Binary search is only \emph{correct} when the array is sorted --- this is a precondition, not an option to be checked later. Consider the \emph{unsorted} array \texttt{A = [30, 5, 47, 12, 68, 3, 90]} (so $n = 7$), and run \texttt{binary\_search} (as given in lecture) for \texttt{key = 47}, which \emph{is} present, at index $2$.
+\begin{enumerate}
+  \item[(a)] Trace the algorithm pass by pass, in the same \texttt{lo}/\texttt{hi}/\texttt{mid}/\texttt{A[mid]} table format used in lecture, until it terminates.
+  \item[(b)] State what the algorithm returns, and say whether this is the correct answer for \texttt{key = 47} on this array.
+  \item[(c)] In two or three sentences, explain \emph{why} this happens, in terms of what the sorted precondition is supposed to guarantee about discarding a half of the array at each step.
+\end{enumerate}
+
+\section{Numerical}
+
+\textbf{Q3.} The calculator's symbol table (this week's running example) is, for this question, the array \texttt{A = [42, 17, 90, 8, 55, 3]} (so $n = 6$). Counting the comparison \texttt{A[i] == key} as in lecture, run \texttt{linear\_search} on this array for each of the three keys below.
+\begin{enumerate}
+  \item[(a)] \texttt{key = 42}. State the number of comparisons performed, and which case (best/worst/average) this run witnesses.
+  \item[(b)] \texttt{key = 3}. State the number of comparisons performed, and which case this run witnesses.
+  \item[(c)] \texttt{key = 99} (not present in the array). State the number of comparisons performed, and which case this run witnesses.
+  \item[(d)] Using the average-case formula derived in lecture for a successful search with \texttt{key} equally likely at any position, compute the average-case comparison count for $n = 6$, and state in one sentence what this number represents.
+\end{enumerate}
+
+\textbf{Q4.} Consider the sorted array \texttt{A = [2, 9, 14, 23, 31, 40, 48, 56, 63, 71]} (so $n = 10$), and run \texttt{binary\_search} (as given in lecture) for \texttt{key = 40}.
+\begin{enumerate}
+  \item[(a)] Produce a pass-by-pass table (\texttt{pass}, \texttt{lo}, \texttt{hi}, \texttt{mid}, \texttt{A[mid]}, comparison result), exactly as in lecture, showing every step of \texttt{lo}, \texttt{hi}, and \texttt{mid} until the search terminates.
+  \item[(b)] State the number of passes the search takes.
+  \item[(c)] Compute $\lceil \log_2 10 \rceil$, and compare it to your answer in (b). In one or two sentences, explain the relationship between this number and the worst-case bound for binary search on an array of this size.
+\end{enumerate}
+
+\section{Design}
+
+\textbf{Q5.} Consider the following C function, which the lecture did \emph{not} analyse:
+\begin{verbatim}
+int array_max(int A[], int n) {
+    int max = A[0];
+    for (int i = 1; i < n; i++)
+        if (A[i] > max)
+            max = A[i];
+    return max;
+}
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] State the basic operation, and derive the \emph{exact} cost function $T(n)$ by counting how many times it executes. Your count should hold for \emph{every} input array of size $n$, not just one example --- explain why the comparison \texttt{A[i] > max} runs the same number of times regardless of what values are in \texttt{A}.
+  \item[(b)] State the best case, worst case, and average case of \texttt{array\_max}, each as a comparison count. In one or two sentences, explain why all three coincide here, in contrast to \texttt{linear\_search}, where they do not.
+  \item[(c)] Show that your $T(n)$ from part (a) is $\Theta(n)$: exhibit valid constants $c_1$, $c_2$, and $n_0$ for the lower and upper bounds respectively, and verify both inequalities, following the method used in lecture for $T(n) = 3n+2$.
+  \item[(d)] State the auxiliary space complexity $S(n)$ of \texttt{array\_max}, and justify it by naming every local variable the function uses.
+\end{enumerate}
+
+\textbf{Q6.} Consider the following C code, which counts something using a nested loop with \emph{different} bounds from the duplicate-check loop analysed in lecture:
+\begin{verbatim}
+int count = 0;
+for (int i = 0; i < n; i++)
+    for (int j = 0; j <= i; j++)
+        count++;
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] State the basic operation, and state how many times the inner loop executes for a fixed value of \texttt{i} (in terms of \texttt{i}).
+  \item[(b)] Derive the exact closed-form cost function $T(n)$ by summing your answer to (a) over every value of \texttt{i} from $0$ to $n-1$, showing the index-substitution step, in the same style as the lecture's derivation of $\sum_{i=0}^{n-2}(n-i-1)$.
+  \item[(c)] State the asymptotic class of $T(n)$ (as $\Theta(\cdot)$ of some function of $n$), and justify it by identifying the dominant term of your closed form from (b).
+  \item[(d)] State which case (best, worst, or average) this $\Theta$ bound applies to, and justify your answer by explaining whether \texttt{count}'s final value --- and therefore the number of loop iterations --- can ever differ between two runs with the same $n$.
+\end{enumerate}
+
+\end{document}

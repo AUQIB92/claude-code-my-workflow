@@ -53,16 +53,22 @@
   \node[and gate, inputs={nn}, anchor=input 1] (AND) at (4.0, 0.1) {};
 
   % ---- Input rails into the XOR gate --------------------------------------
-  \draw[wire] (0, 1.4) -- (XOR.input 1);
-  \draw[wire] (0, 0.6) -- (XOR.input 2);
+  % Routed with -| (horizontal-then-vertical) rather than a direct diagonal:
+  % the input rails are spaced 0.8cm apart (y=1.4/0.6) but circuits.logic.US's
+  % default 7pt symbol unit puts the gate's own input pins only ~0.205cm
+  % apart, so a straight `--` here draws a visibly diagonal line into each
+  % pin. `-|` always resolves squarely against the true anchor, regardless of
+  % pin spacing, so this stays correct even if the symbol unit changes later.
+  \draw[wire] (0, 1.4) -| (XOR.input 1);
+  \draw[wire] (0, 0.6) -| (XOR.input 2);
 
   % ---- Fan-out junctions ---------------------------------------------------
   \node[junction] (Ajoin) at (1.2, 1.4) {};
   \node[junction] (Bjoin) at (1.8, 0.6) {};
 
   % ---- Drop lines down to the AND gate ------------------------------------
-  \draw[wire] (Ajoin) -- (1.2, 0.1)  -- (AND.input 1);
-  \draw[wire] (Bjoin) -- (1.8, -0.5) -- (AND.input 2);
+  \draw[wire] (Ajoin) -- (1.2, 0.1)  -| (AND.input 1);
+  \draw[wire] (Bjoin) -- (1.8, -0.5) -| (AND.input 2);
 
   % ---- Outputs -------------------------------------------------------------
   \draw[wire] (XOR.output) -- node[above, pin-label] {$S$} ++(1.5, 0);

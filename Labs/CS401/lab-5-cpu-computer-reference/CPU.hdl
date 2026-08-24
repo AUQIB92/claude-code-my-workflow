@@ -1,0 +1,57 @@
+/**
+ * CPU — the Hack central processing unit (Nand2Tetris Project 5).
+ *
+ * Inputs:  inM[16] (data value read from memory at addressM),
+ *          instruction[16] (fetched by the computer from ROM),
+ *          reset (restart the current program when 1).
+ * Outputs: outM[16] (data value to write to memory),
+ *          writeM (write outM into memory?),
+ *          addressM[15] (memory address to access — always the A-register),
+ *          pc[15] (address of the next instruction to fetch).
+ *
+ * Control is hardwired from the instruction fields (see Lab 5 manual,
+ * Table `tab:lab5-decode`). The jump logic is built from Lab 1 gates.
+ */
+CHIP CPU {
+    IN  inM[16], instruction[16], reset;
+    OUT outM[16], writeM, addressM[15], pc[15];
+
+    PARTS:
+    // ---- A register: loads `instruction` (A-instruction) or the ALU
+    // result (C-instruction with dest bit d1). ----
+    Mux16(a=instruction, b=ALUout, sel=instruction[15], out=Ainput);
+    Not(in=instruction[15], out=notI15);
+    Or(a=notI15, b=instruction[5], out=loadA);
+    ARegister(in=Ainput, load=loadA, out=Aout, out[0..14]=addressM);
+
+    // ---- D register: loads the ALU result when dest bit d2 is set. ----
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    DRegister(in=ALUout, load=loadD, out=Dout);
+
+    // ---- ALU: x = D, y = A or inM (a-bit selects). ----
+    Mux16(a=Aout, b=inM, sel=instruction[12], out=ALUy);
+    ALU(x=Dout, y=ALUy,
+        zx=instruction[11], nx=instruction[10],
+        zy=instruction[9],  ny=instruction[8],
+        f=instruction[7],   no=instruction[6],
+        out=ALUout, out=outM, zr=zr, ng=ng);
+
+    // ---- writeM: dest bit d3 (write the ALU result to memory). ----
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    // ---- jump: taken if (j0 & ~zr & ~ng) | (j1 & zr) | (j2 & ng), where
+    // j0 = instruction[0] (JGT), j1 = instruction[1] (JEQ),
+    // j2 = instruction[2] (JLT) -- the Hack field order. ----
+    Not(in=ng, out=notng);
+    Not(in=zr, out=notzr);
+    And(a=instruction[0], b=notzr, out=gta);       // JGT: out > 0
+    And(a=gta, b=notng, out=gt);
+    And(a=instruction[1], b=zr, out=eq);           // JEQ: out = 0
+    And(a=instruction[2], b=ng, out=lt);           // JLT: out < 0
+    Or(a=lt, b=eq, out=le);
+    Or(a=le, b=gt, out=jump);
+    And(a=jump, b=instruction[15], out=loadPC);   // jump only on C-instructions
+
+    // ---- PC: loads A on a taken jump, otherwise increments. ----
+    PC(in=Aout, load=loadPC, inc=true, reset=reset, out[0..14]=pc);
+}

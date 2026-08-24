@@ -1,0 +1,109 @@
+% =============================================================================
+% self-assessment-report.tex — B.Tech CSE Program-Level NBA/AICTE Rollup
+%
+% PROOF OF CONCEPT for the "Accreditation Autopilot" bet (repo-innovator
+% Signature Feature, quality_reports/repo_innovator_academic-workload_2026-08-20/REPORT.md).
+% Hand-assembled per that report's own Phase 1 definition: "manually roll up
+% the existing course-level files into one hand-assembled program-level
+% document; confirms the rollup arithmetic and formatting before any
+% automation." This file is a manual rollup, not a script's output --
+% Phase 2 (an /accreditation-autopilot skill that automates this) is
+% explicitly deferred.
+%
+% Source files rolled up (read, never modified, by this document):
+%   Accreditation/CS401/co-po-attainment.tex
+%   Accreditation/CS301/co-po-attainment.tex
+%
+% This document is a FACULTY-REVIEW DRAFT, not an authoritative NBA
+% filing -- same discipline as its two source files.
+%
+% Compile with (Windows/MiKTeX, ; not : between paths):
+%   cd Accreditation/CSE &&
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode self-assessment-report.tex
+%   TEXINPUTS="../../Preambles;$TEXINPUTS" xelatex -interaction=nonstopmode self-assessment-report.tex  (x2 total, no bibtex needed)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{pdflscape}
+\input{../../Preambles/header}
+\usepackage{microtype}
+
+\newenvironment{noticebox}{%
+  \par\noindent\begin{minipage}{\linewidth}\vspace{0.4em}
+  \textcolor{negative}{\rule{\linewidth}{1.2pt}}\\[0.3em]
+  \textbf{\textcolor{negative}{Review required before filing.}}\ \itshape
+}{%
+  \end{minipage}\vspace{0.6em}\par
+}
+
+\title{Program-Level Self-Assessment Report\\\large B.Tech CSE --- CO-PO Attainment Rollup}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{noticebox}
+This is a \textbf{proof-of-concept} program-level rollup, hand-assembled from the two course-level CO-PO-PSO files that exist today (\texttt{Accreditation/CS401/}, \texttt{Accreditation/CS301/}). It is NOT an authoritative NBA/AICTE filing. NBA accredits the \emph{program} (the whole B.Tech CSE degree), not a single course -- this document is the first attempt at the actual filing unit, rolling up what currently exists rather than waiting for every course in the program to have accreditation output. Every numeric attainment value is \texttt{[FILL]}: no approved student assessment score data exists anywhere in this repository for either course. Both PSO columns are \texttt{[FILL]} program-wide: Program-Specific Outcomes are department-defined and not yet standardized anywhere in this repository. The instructor/program coordinator must review, correct, and sign off before any real submission.
+\end{noticebox}
+
+\section{Program Scope}
+
+\textbf{Program:} B.Tech Computer Science \& Engineering (CSE) --- stated independently and identically in both \texttt{syllabi/CS401.md} (line 1: ``B.Tech CSE, Semester 4'') and \texttt{syllabi/CS301.md} (line 1: ``B.Tech CSE, Semester 3'').
+
+\textbf{Courses rolled up in this draft:} CS401 (Computer Architecture and Organization, Semester 4) and CS301 (Data Structures, Semester 3) --- the only two courses with any \texttt{Accreditation/<CODE>/} output as of this document's generation. This is a partial rollup by construction: a full B.Tech CSE self-assessment report would need every course in all 8 semesters of the program to have run through the course-level accreditation step first. Extending coverage to the rest of the curriculum is Phase 4 (Platform) of this feature, not this proof of concept.
+
+\section{Course Outcomes, by Course}
+
+Copied verbatim from each course's own \texttt{co-po-attainment.tex} (Section 1 of each) -- no CO text is re-derived or altered here.
+
+\subsection{CS401 --- Computer Architecture and Organization (8 COs)}
+CO1--CO8, covering: performance/Amdahl's Law, number representation/arithmetic, instruction sets/addressing/CPU-bus organization, hardwired/microprogrammed control, I/O techniques, memory hierarchy/cache/virtual memory, Flynn's taxonomy/pipeline hazards, RISC vs.\ CISC. Full statements in \texttt{Accreditation/CS401/co-po-attainment.tex}, Table~1.
+
+\subsection{CS301 --- Data Structures (9 COs)}
+CO1--CO9, covering: dynamic memory/ADTs, complexity analysis, stacks/queues, linked lists, searching/elementary sorting, efficient sorting, hashing, trees/BST/AVL, graphs/MST/shortest-path. Full statements in \texttt{Accreditation/CS301/co-po-attainment.tex}, Table~1.
+
+\section{Program-Level PO Coverage Summary}
+\label{sec:coverage}
+
+Which Program Outcomes are touched by \emph{at least one} CO across both rolled-up courses, and by how many COs total (a coarse coverage signal, not a weighted attainment number -- see the caveat below the table). Counted directly from each course's own CO-PO correlation matrix (Section~3 of each source file); no new correlation judgment is made in this rollup.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+PO & COs touching it (CS401) & COs touching it (CS301) & Total COs \\
+\midrule
+PO1 (Engineering knowledge)      & 8 of 8 & 9 of 9 & 17 \\
+PO2 (Problem analysis)           & 8 of 8 & 9 of 9 & 17 \\
+PO3 (Design/development)         & 4 of 8 & 6 of 9 & 10 \\
+PO4 (Investigations)             & 0 of 8 & 0 of 9 & 0 \\
+PO5 (Modern tool usage)          & 3 of 8 & 1 of 9 & 4 \\
+PO6--PO11                        & 0 of 8 & 0 of 9 & 0 \\
+PO12 (Life-long learning)        & 3 of 8 & 2 of 9 & 5 \\
+\bottomrule
+\end{tabular}
+\caption{Raw CO-count coverage per PO, both rolled-up courses. \texttt{[FILL]}-caveat: this is a coverage count, not an attainment percentage -- computing a real program-level PO attainment number requires the weighted-average formula from each course's own Section~4, which in turn requires real per-student score data that does not exist yet. PO4 and PO6--PO11 show zero coverage from these two courses specifically; a full 8-semester rollup would very plausibly cover them from later/other courses (labs, projects, humanities/ethics electives) not yet built in this repository.}
+\label{tab:po-coverage}
+\end{table}
+
+\section{Regulatory Note}
+\label{sec:regulatory}
+
+The 12-PO table encoded in both source files (and reproduced by reference here) matches NBA's current standard UG engineering outcome set as encoded in \texttt{.claude/skills/accreditation/SKILL.md} at the time this rollup was generated. A full ``Regulatory Diff'' phase (checking this encoded table against a freshly-supplied NBA circular for drift, modeled on \texttt{/textbook-edition-diff}'s diff-against-prior-mapping pattern) is Phase 3 (Differentiation) of this feature and is explicitly out of scope for this proof of concept.
+
+\section{What This Proof of Concept Does Not Do}
+
+No cold-persona ``NBA assessor dry-run'' critique (Phase 3, modeled on \texttt{student-simulator}'s blind-persona pattern) has been run against this document. No attainment number is computed -- every course's own numbers are \texttt{[FILL]}, so a programme-level weighted average would itself be entirely \texttt{[FILL]}, which this rollup omits rather than showing a table of nothing but placeholders. This document only proves the \emph{rollup mechanism} -- combining two independently-generated course files under one program heading with a coverage summary -- works and reads sensibly; it does not yet automate that mechanism (no \texttt{/accreditation-autopilot} skill exists), and it does not extend beyond the two courses that happen to have output today.
+
+\section{Program Coordinator Sign-Off}
+
+I have reviewed the course-level CO-PO-PSO files rolled up above (CS401, CS301) and this program-level coverage summary, and confirm the rollup accurately reflects what each course-level file states.
+
+\bigskip
+\noindent Name: \underline{\hspace{6cm}} \hfill Date: \underline{\hspace{3cm}}
+
+\end{document}
