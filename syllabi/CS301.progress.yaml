@@ -23,12 +23,12 @@ weeks:
   "02":
     deck: "02-algorithm-analysis"
     stages:
-      slides:     { status: compiled, score: null, note: "3-pass compile clean; 0 overfull, 0 undefined citations; 44 frames; 4 growth-curve TikZ diagrams (Big O/Omega/Theta + orders-of-growth)" }
-      notes:      { status: compiled, score: null, note: "reconciled from disk 2026-08-24: 02-algorithm-analysis-notes.pdf present, not yet in docs/" }
+      slides:     { status: deployed, score: null, note: "3-pass compile clean; 0 overfull, 0 undefined citations; 44 frames; 4 growth-curve TikZ diagrams (Big O/Omega/Theta + orders-of-growth)" }
+      notes:      { status: deployed, score: null, note: "deployed to docs/notes/CS301/02-algorithm-analysis-notes.pdf" }
       assignment: { status: deployed, score: null, note: "6 problems (2 Conceptual/2 Numerical/2 Design); solutions key 1:1 parity; 3-pass compile clean, 0 errors" }
       lab:        { status: deployed, score: null, note: "coding-assignment (empirical timing vs predicted growth); linear/binary search + has_duplicate; 127/127 hidden tests pass; verify-algorithm PASS (all 3 complexity claims empirically consistent)" }
       gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      quarto:     { status: deployed, score: null, note: "deployed to docs/slides/CS301/02-algorithm-analysis.html" }
   "03":
     deck: "03-arrays-stacks"
     stages:

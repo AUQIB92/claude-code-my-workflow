@@ -1,0 +1,132 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\begin{document}
+
+\begin{frame}
+\begin{center}
+% Diagram: growth of log2 n, n, n log2 n, n^2 over n = 1..6.
+% Coordinates: x cm = n*0.75, y cm = value*0.12 (value 36 -> 4.32cm).
+% Endpoints at n=6: n^2=4.32, n log n=1.86, n=0.72, log n=0.31 (cm).
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[->] (0,0) -- (5.0,0) node[right] {$n$};
+  \draw[->] (0,0) -- (0,4.7) node[above] {cost};
+  \draw[very thick, color=negative, domain=1:6, samples=60, smooth]
+        plot (\x*0.75, {(\x)^2*0.12});
+  \draw[very thick, color=primary-gold, domain=1:6, samples=60, smooth]
+        plot (\x*0.75, {\x*ln(\x)/ln(2)*0.12});
+  \draw[very thick, color=primary-blue, domain=1:6, samples=60, smooth]
+        plot (\x*0.75, {\x*0.12});
+  \draw[very thick, color=positive, domain=1:6, samples=60, smooth]
+        plot (\x*0.75, {ln(\x)/ln(2)*0.12});
+  \foreach \i in {2,4,6} { \node[below] at (\i*0.75,0) {\i}; }
+  \foreach \y in {10,20,30} { \node[left] at (0,\y*0.12) {\y}; }
+  \draw[very thick, color=negative] (0.3,-0.9) -- (0.95,-0.9);
+  \node[color=jet, right] at (0.95,-0.9) {$n^2$};
+  \draw[very thick, color=primary-gold] (2.6,-0.9) -- (3.25,-0.9);
+  \node[color=jet, right] at (3.25,-0.9) {$n\log n$};
+  \draw[very thick, color=primary-blue] (0.3,-1.25) -- (0.95,-1.25);
+  \node[color=jet, right] at (0.95,-1.25) {$n$};
+  \draw[very thick, color=positive] (2.6,-1.25) -- (3.25,-1.25);
+  \node[color=jet, right] at (3.25,-1.25) {$\log n$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: Big-O upper bound. f(n)=3n+2 always at or below c*g(n)=4n for n>=n0=2.
+% Unified triad mapping: x cm = n*1.28, y cm = cost*0.30, domain n in [0,3].
+%   f(n)=3n+2 : (0,0.60) -> (3.84,3.30)  [n=3 -> 11*0.30=3.30]
+%   c*g(n)=4n : (0,0)    -> (3.84,3.60)  [n=3 -> 12*0.30=3.60]
+%   n0=2 -> x=2.56 (dashed), crossing at (2.56, 2.40).
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[->] (0,0) -- (4.15,0) node[right] {$n$};
+  \draw[->] (0,0) -- (0,4.0) node[above] {cost};
+  \draw[very thick, color=negative] (0,0) -- (3.84,3.60);
+  \draw[very thick, color=primary-blue] (0,0.60) -- (3.84,3.30);
+  \draw[dashed, color=neutral] (2.56,0) -- (2.56,2.75);
+  \node[color=neutral, below] at (2.56,-0.22) {$n_0$};
+  \node[color=jet, align=center] at (1.40,3.20) {$f(n)\le c\,g(n)$\\for $n\ge n_0$};
+  \draw[very thick, color=negative] (0.70,-0.9) -- (1.35,-0.9);
+  \node[color=jet, right] at (1.57,-0.9) {$c\,g(n)=4n$};
+  \draw[very thick, color=primary-blue] (0.70,-1.25) -- (1.35,-1.25);
+  \node[color=jet, right] at (1.57,-1.25) {$f(n)=3n+2$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: Big-Omega lower bound. f(n)=3n+2 always at or above c*g(n)=3n, n0=0.
+% Unified triad mapping: x cm = n*1.28, y cm = cost*0.30, domain n in [0,3].
+%   f(n)=3n+2 : (0,0.60) -> (3.84,3.30)
+%   c*g(n)=3n : (0,0)    -> (3.84,2.70)  [n=3 -> 9*0.30=2.70]
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[->] (0,0) -- (4.15,0) node[right] {$n$};
+  \draw[->] (0,0) -- (0,4.0) node[above] {cost};
+  \draw[very thick, color=positive] (0,0) -- (3.84,2.70);
+  \draw[very thick, color=primary-blue] (0,0.60) -- (3.84,3.30);
+  \node[color=neutral, below right] at (0.12,-0.25) {$n_0=0$};
+  \node[color=jet, align=center] at (1.40,3.20) {$f(n)\ge c\,g(n)$\\for $n\ge n_0$};
+  \draw[very thick, color=positive] (0.70,-0.9) -- (1.35,-0.9);
+  \node[color=jet, right] at (1.57,-0.9) {$c\,g(n)=3n$};
+  \draw[very thick, color=primary-blue] (0.70,-1.25) -- (1.35,-1.25);
+  \node[color=jet, right] at (1.57,-1.25) {$f(n)=3n+2$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: Big-Theta tight bound. f(n)=3n+2 sandwiched by c1*g=2n and c2*g=5n, n0=1.
+% Unified triad mapping: x cm = n*1.28, y cm = cost*0.30, domain n in [0,3].
+%   c2*g=5n  : (0,0) -> (3.84,4.50)  [n=3 -> 15*0.30=4.50]
+%   f(n)=3n+2: (0,0.60) -> (3.84,3.30)
+%   c1*g=2n  : (0,0) -> (3.84,1.80)  [n=3 -> 6*0.30=1.80]
+%   n0=1 -> x=1.28 (dashed), f meets c2*g at (1.28,1.50).
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[->] (0,0) -- (4.15,0) node[right] {$n$};
+  \draw[->] (0,0) -- (0,5.0) node[above] {cost};
+  \draw[very thick, color=negative] (0,0) -- (3.84,4.50);
+  \draw[very thick, color=primary-blue] (0,0.60) -- (3.84,3.30);
+  \draw[very thick, color=positive] (0,0) -- (3.84,1.80);
+  \draw[dashed, color=neutral] (1.28,0) -- (1.28,1.80);
+  \node[color=neutral, below] at (1.28,-0.22) {$n_0$};
+  \node[color=jet, align=center] at (1.75,4.35)
+        {$c_1 g(n)\le f(n)\le c_2 g(n)$\\for $n\ge n_0$};
+  \draw[very thick, color=negative] (0.65,-0.9) -- (1.30,-0.9);
+  \node[color=jet, right] at (1.52,-0.9) {$c_2\,g(n)=5n$};
+  \draw[very thick, color=primary-blue] (0.65,-1.25) -- (1.30,-1.25);
+  \node[color=jet, right] at (1.52,-1.25) {$f(n)=3n+2$};
+  \draw[very thick, color=positive] (0.65,-1.6) -- (1.30,-1.6);
+  \node[color=jet, right] at (1.52,-1.6) {$c_1\,g(n)=2n$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: sorted array A[0..8]; lo/mid/hi pointers; mid currently at index 4.
+% Coordinates: (x, y)
+%   cell i at x = 0.9*i (i = 0..8), y = 0, w = 0.78cm, h = 0.75cm (separated cells)
+%   pointer labels lo/mid/hi at y = 1.15, arrows down to cell tops
+%   index labels at y = -0.90 (0.4cm+ below the cell boundary, clear of them)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \foreach \i/\v in {0/3,1/7,2/12,3/20,4/30,5/44,6/50,7/68,8/81} {
+    \node[draw, minimum width=0.78cm, minimum height=0.75cm, fill=light-bg]
+      (\i) at (0.9*\i, 0) {\v};
+  }
+  \foreach \i in {0,...,8} {
+    \node[text=neutral] at (0.9*\i, -0.90) {\i};
+  }
+  \node[text=positive] (lo) at (0, 1.15) {\texttt{lo}};
+  \node[text=primary-gold] (mid) at (0.9*4, 1.15) {\texttt{mid}};
+  \node[text=negative] (hi) at (0.9*8, 1.15) {\texttt{hi}};
+  \draw[->, color=positive] (lo.south) -- (0.north);
+  \draw[->, color=primary-gold] (mid.south) -- (4.north);
+  \draw[->, color=negative] (hi.south) -- (8.north);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\end{document}
