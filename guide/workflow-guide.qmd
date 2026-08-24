@@ -180,13 +180,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 23 agents, 71 skills, and 39 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 23 agents, 75 skills, and 39 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 23 agents, 71 skills, 39 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 23 agents, 75 skills, 39 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -721,7 +721,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 71: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 75: `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` runs 3-agent code review and applies fixes, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -2413,7 +2413,7 @@ The template includes matching LaTeX and Quarto palettes. To customize:
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
-The guide includes 71 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
+The guide includes 75 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
 
 ### When to Create a Skill
 
@@ -2740,6 +2740,10 @@ Claude Code supports **plugins** --- bundled collections of skills, agents, hook
 | `/respond-to-eval` | `.claude/skills/respond-to-eval/` | Turn student course evaluations into a classified teaching-improvement plan (Keep/Change/Investigate/Out-of-scope) (v2.0) |
 | `/scaffold-exercises` | `.claude/skills/scaffold-exercises/` | Scaffold a graded problem set (analytical/empirical/coding) with worked solutions; clean student set + separate solution key (v2.0) |
 | `/new-skill` | `.claude/skills/new-skill/` | Scaffold a convention-compliant skill (interview → write `SKILL.md` with gate-passing frontmatter) (v2.0) |
+| `/feature-discovery` | `.claude/skills/feature-discovery/` | Analyze any software repository — 5-persona fan-out (Architect/Staff Engineer/PM/Security-Quality/OSS Maintainer) over evidence-cited findings — into a prioritized, scored "what to build next" report, with roadmap/spec/GitHub-issue-draft modes (v1.0) |
+| `/repo-innovator` | `.claude/skills/repo-innovator/` | Discover the 2-3 innovations that could make a repository category-defining — deep repo intelligence, then a diverge/combine/contrarian/converge pipeline scored and cut via a 7-question "No. 1 Test"; refuses generic features unless strategically justified (v1.0) |
+| `/accreditation-autopilot` | `.claude/skills/accreditation-autopilot/` | Roll up NBA/AICTE CO-PO-PSO accreditation data across every course in a program into one program-level Self-Assessment Report, filling any missing per-course draft via `/accreditation` first (v1.0) |
+| `/render-lecture-video` | `.claude/skills/render-lecture-video/` | Render an already-authored step-diagram sequence into a silent, captioned animated GIF — captions copied verbatim from the source `\caption{}` text, never LLM-generated (v1.0) |
 
 ## All Rules
 

@@ -84,7 +84,7 @@ Three levels back up to the repo root from `Figures/<CourseCode>/<lecture>/`.
 
 ### Step 8: Visual Quality Review (tikz-reviewer)
 
-Spawn the **tikz-reviewer** agent (via `Task` with `subagent_type=tikz-reviewer`) on the TikZ source blocks to catch label overlaps, geometric errors, and visual inconsistencies. The reviewer cites specific passes and formulas from [`.claude/rules/tikz-measurement.md`](../../rules/tikz-measurement.md). If it returns **NEEDS REVISION** or **REJECTED**, loop:
+Spawn the **tikz-reviewer** agent (via `Task` with `subagent_type=tikz-reviewer`), passing it the TikZ source blocks and the compiled multi-page PDF path (Step 5) — the reviewer rasterizes and actually looks at the pages (Pass 6) before reasoning from source, to catch label overlaps, geometric errors, and visual inconsistencies. The reviewer cites specific passes and formulas from [`.claude/rules/tikz-measurement.md`](../../rules/tikz-measurement.md). If it returns **NEEDS REVISION** or **REJECTED**, loop:
 
 1. Apply the recommended fixes to the Beamer `.tex` source (single source of truth).
 2. Re-copy the updated block to `extract_tikz.tex`.

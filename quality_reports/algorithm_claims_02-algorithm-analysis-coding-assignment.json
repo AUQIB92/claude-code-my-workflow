@@ -1,0 +1,43 @@
+{
+  "artifact": "Assignments/CS301/02-algorithm-analysis-coding/reference_solution.c",
+  "source_lecture": "Slides/CS301/02-algorithm-analysis.tex",
+  "claims": [
+    {
+      "algorithm_id": "linear_search",
+      "location": "reference_solution.c, function linear_search; matches Slides/CS301/02-algorithm-analysis.tex frame 'Linear Search: Count the Comparisons'",
+      "pseudocode_or_code": "for (i = 0; i < n; i++) { if (A[i] == key) return i; } return -1;",
+      "language_hint": "c",
+      "claimed_complexity": "O(n)",
+      "claimed_complexity_case": "worst-case",
+      "worked_example": {
+        "input": {"A": [42, 17, 99, 3, 56], "key": 3},
+        "claimed_output": 3
+      }
+    },
+    {
+      "algorithm_id": "binary_search",
+      "location": "reference_solution.c, function binary_search; matches Slides/CS301/02-algorithm-analysis.tex frame 'Binary Search'",
+      "pseudocode_or_code": "lo=0; hi=n-1; while (lo<=hi) { mid=lo+(hi-lo)/2; if (A[mid]==key) return mid; else if (A[mid]<key) lo=mid+1; else hi=mid-1; } return -1;",
+      "language_hint": "c",
+      "claimed_complexity": "O(log n)",
+      "claimed_complexity_case": "worst-case",
+      "worked_example": {
+        "input": {"A": [2, 9, 14, 23, 31, 40, 58], "key": 23},
+        "claimed_output": 3
+      },
+      "precondition": "A[0..n-1] sorted ascending (not checked by the function)"
+    },
+    {
+      "algorithm_id": "has_duplicate",
+      "location": "reference_solution.c, function has_duplicate; matches Slides/CS301/02-algorithm-analysis.tex frame 'A Nested Loop: Checking for Duplicates'",
+      "pseudocode_or_code": "for (i=0; i<n-1; i++) { for (j=i+1; j<n; j++) { if (A[i]==A[j]) return 1; } } return 0;",
+      "language_hint": "c",
+      "claimed_complexity": "O(n^2)",
+      "claimed_complexity_case": "worst-case (no duplicate present -- loop always runs to completion)",
+      "worked_example": {
+        "input": {"A": [5, 8, 1, 8, 3]},
+        "claimed_output": 1
+      }
+    }
+  ]
+}

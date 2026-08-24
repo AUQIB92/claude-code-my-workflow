@@ -1,6 +1,8 @@
 ---
 paths:
   - "Slides/**/*.tex"
+  - "Notes/**/*.tex"
+  - "Labs/**/*.tex"
   - "Figures/**/*.tex"
   - "Preambles/**/*.tex"
   - "scripts/**/*.py"
@@ -254,7 +256,20 @@ For Gaussian curves of the form `plot ({A*\x}, {B + C*exp(-\x*\x/2)})`:
 
 ### Pass 6 — Open the PDF, visually confirm
 
-Debug bounding boxes help: wrap suspect nodes in red outlines temporarily (`draw=red, very thin`) to see what's actually rendering. Remove before commit.
+This is a real, mechanical step, not a human-only caveat: compile the `.tex`
+(if not already compiled) and rasterize it with
+`python3 scripts/render-pdf-preview.py FILE.pdf --dpi 200`, then `Read` the
+resulting PNG(s). `tikz-reviewer` runs this pass **first**, before the
+formula-based passes below — overlaps caused by font-metric or
+library-specific anchor quirks (e.g. a TikZ circuit library's exact
+input-pin offset, or a word just long enough to run into a wire despite a
+"reasonable" coordinate gap) are frequently invisible to source-only
+reasoning and only show up once rendered. Use the render to *find* problems
+and the formulas below to *cite* them precisely.
+
+Debug bounding boxes still help for stubborn cases: wrap suspect nodes in
+red outlines temporarily (`draw=red, very thin`) to see what's actually
+rendering. Remove before commit.
 
 ---
 
@@ -278,5 +293,5 @@ After **any** TikZ fix, re-audit **every** TikZ figure in the deck. The same err
 ## Integration with the workflow
 
 - **`/extract-tikz` and `/new-diagram`** — both run a Step 1 prevention pre-check against the rules in [`tikz-prevention.md`](tikz-prevention.md) (P3 bare `scale=`, P4 missing directional keyword) before compiling. Both skills use identical grep patterns so behavior doesn't drift.
-- **`tikz-reviewer` agent** — runs the measurement passes here (Pass 1 Bézier, Pass 2 gaps, Pass 3 keywords, Pass 4 boundaries, Pass 4b arc3, Pass 4c text pairs, Pass 5 margins, Pass 5b plotted curves, Pass 6 visual). Must cite the specific pass and formula when reporting a collision.
+- **`tikz-reviewer` agent** — has `Bash` and runs Pass 6 (render + `Read` the PNG) first, then the measurement passes here (Pass 1 Bézier, Pass 2 gaps, Pass 3 keywords, Pass 4 boundaries, Pass 4b arc3, Pass 4c text pairs, Pass 5 margins, Pass 5b plotted curves) to pinpoint and cite what the render showed. Must cite the specific pass and formula when reporting a collision.
 - **`quality_score.py`** — see [`quality-gates.md`](quality-gates.md) for the authoritative TikZ rubric. A label/arrow overlap finding currently costs −5 in the Quarto and Beamer rubrics.

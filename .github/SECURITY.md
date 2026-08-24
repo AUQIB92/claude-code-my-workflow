@@ -4,7 +4,7 @@ This is a template for academic research workflows. It ships **hooks that execut
 
 ## Reporting a vulnerability
 
-- **Preferred:** open a [private security advisory](https://github.com/pedrohcgs/claude-code-my-workflow/security/advisories/new) on GitHub.
+- **Preferred:** open a [private security advisory](https://github.com/AUQIB92/claude-code-my-workflow/security/advisories/new) on GitHub.
 - Please do **not** open a public issue for anything that could expose a forker's data (e.g., a hook that leaks file contents, a guardrail bypass, an unattended-routine footgun).
 
 In scope, for example:

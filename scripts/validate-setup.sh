@@ -166,6 +166,22 @@ else
 fi
 echo ""
 
+echo -e "${BOLD}Fork identity (community-health files):${RESET}"
+if command -v python3 >/dev/null 2>&1; then
+    if python3 "$(dirname "$0")/check-fork-identity.py" >/dev/null 2>&1; then
+        echo -e "  ${GREEN}✓${RESET} SECURITY.md / CODE_OF_CONDUCT.md / CONTRIBUTING.md / TROUBLESHOOTING.md point at this fork, not upstream"
+        pass=$((pass + 1))
+    else
+        echo -e "  ${YELLOW}⚠${RESET} Some community-health files still point at the upstream template's repo/contact"
+        echo -e "    Run: python3 ./scripts/check-fork-identity.py  (for details, then fix the flagged lines)"
+        warn=$((warn + 1))
+    fi
+else
+    echo -e "  ${YELLOW}⚠${RESET} skipped — python3 not found"
+    warn=$((warn + 1))
+fi
+echo ""
+
 echo -e "${BOLD}Summary:${RESET} ${GREEN}${pass} passed${RESET}, ${YELLOW}${warn} warnings${RESET}, ${RED}${fail} failed${RESET}"
 echo ""
 

@@ -20,7 +20,7 @@ This repository is a **template** designed for academic researchers to fork and 
 ## Before you open a PR
 
 1. **Open an issue first** for new features or non-trivial changes. We may already be working on it or have a different design in mind.
-2. **Read [CLAUDE.md](../CLAUDE.md) and the [guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html)** so your contribution fits the existing patterns.
+2. **Read [CLAUDE.md](../CLAUDE.md) and the [guide](https://auqib92.github.io/claude-code-my-workflow/workflow-guide.html)** so your contribution fits the existing patterns.
 3. **Run the validate script** to confirm you don't break the onboarding path:
    ```bash
    ./scripts/validate-setup.sh

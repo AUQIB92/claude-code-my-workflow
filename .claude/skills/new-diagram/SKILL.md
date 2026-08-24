@@ -90,7 +90,7 @@ Check exit code and `*.pdf` file size. If compile fails, read `/tmp/tikz-compile
 
 ### Step 6: Visual review via tikz-reviewer
 
-Spawn the `tikz-reviewer` agent with `Task` (`subagent_type=tikz-reviewer`). Pass the `.tex` source and the compiled `.pdf` path. The reviewer is now required to cite the pass and formula from [`tikz-measurement.md`](../../rules/tikz-measurement.md) for every CRITICAL/MAJOR finding — vague reports are rejected.
+Spawn the `tikz-reviewer` agent with `Task` (`subagent_type=tikz-reviewer`). Pass the `.tex` source and the compiled `.pdf` path — the reviewer will rasterize and actually look at it (Pass 6) before reasoning from source. The reviewer is required to cite the pass and formula from [`tikz-measurement.md`](../../rules/tikz-measurement.md) for every CRITICAL/MAJOR finding — vague reports are rejected.
 
 Loop:
 

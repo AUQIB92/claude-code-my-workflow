@@ -1,0 +1,134 @@
+% =============================================================================
+% Assignments/CS301/02-algorithm-analysis-coding-assignment.tex
+% Coding Assignment 2: Empirical Timing vs. Predicted Growth
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/02-algorithm-analysis-coding/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+%   analysis.h, starter_analysis.c, test_visible.c, timing_harness.c,
+%   timing_report_template.md  (provided to students)
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 02-algorithm-analysis-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{2.\arabic{section}}
+
+\title{Coding Assignment 2: Empirical Timing vs. Predicted Growth}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Week 2 built a vocabulary --- $T(n)$, $O$, $\Omega$, $\Theta$, best/worst/average case --- and used it on three pieces of code: \texttt{linear\_search}, \texttt{binary\_search}, and a nested-loop duplicate check. Every claim in that lecture (``linear search is $O(n)$ worst case,'' ``binary search is $O(\log n)$ worst case,'' ``the nested loop is $\Theta(n^2)$'') was a \emph{prediction} derived on paper, never checked against a running program. This assignment closes that loop in two parts: first you \emph{implement} the three algorithms yourself (Part 1, autograded for correctness); then you \emph{time} your own implementations across growing input sizes and compare what you measure against what the lecture predicted (Part 2, written and instructor-graded). This is exactly the lecture's own closing exercise --- ``Before You Go: Predict'' --- except now you get to find out if your prediction was right.
+
+\section{Part 1: Implement the three functions}
+
+The contract is given to you in \texttt{analysis.h} --- \emph{do not modify it}. Implement the three functions in \texttt{analysis.c} (start from \texttt{starter\_analysis.c}):
+
+\begin{verbatim}
+int linear_search(const int A[], int n, int key);
+int binary_search(const int A[], int n, int key);
+int has_duplicate(const int A[], int n);
+\end{verbatim}
+
+\textbf{\texttt{linear\_search}} scans \texttt{A[0..n-1]} from the front, comparing \texttt{A[i]} to \texttt{key}. Return the index of the \emph{first} match, or $-1$ if \texttt{key} never appears. No precondition on the array's order.
+
+\textbf{\texttt{binary\_search}} assumes \texttt{A[0..n-1]} is \emph{already sorted in ascending order} --- this precondition is not checked by the function; calling it on an unsorted array is the exact anti-pattern the lecture warned against, and this assignment does not test that misuse. Use the lecture's own halving loop: \texttt{lo = 0}, \texttt{hi = n - 1}, \texttt{mid = lo + (hi - lo) / 2}, narrowing \texttt{[lo, hi]} to whichever half could still contain \texttt{key}. Return a matching index, or $-1$ if the interval becomes empty.
+
+\textbf{\texttt{has\_duplicate}} must use the \emph{pairwise nested-loop} method from lecture: for every \texttt{i}, compare \texttt{A[i]} against every \texttt{A[j]} with \texttt{j > i}, returning $1$ the instant a match is found and $0$ if the loops finish without one. \textbf{Do not sort first and do not use a hash-based lookup} --- the point of this problem is to produce, in your own code, the $\Theta(n^2)$ pattern from lecture, so that Part 2 has something real to measure. A cleverer duplicate check would defeat the purpose of the assignment.
+
+\subsection{Constraints}
+
+\begin{itemize}
+  \item $0 \leq n \leq 2000$ for correctness testing; your code must also run correctly on $n = 0$ (empty array) and $n = 1$.
+  \item Worst-case bounds --- \texttt{linear\_search}: $O(n)$. \texttt{binary\_search}: $O(\log n)$. \texttt{has\_duplicate}: $O(n^2)$. Part 2 asks you to confirm these empirically.
+  \item Your code must compile with \texttt{gcc -Wall -Wextra} without errors, with no global/static mutable state.
+\end{itemize}
+
+\subsection{Worked examples (these are the visible tests)}
+
+\begin{itemize}
+  \item \textbf{\texttt{linear\_search}} on \texttt{A = [42, 17, 99, 3, 56]} ($n = 5$):
+  \begin{itemize}
+    \item \texttt{linear\_search(A, 5, 3)} returns $3$.
+    \item \texttt{linear\_search(A, 5, 7)} returns $-1$ (absent).
+  \end{itemize}
+  \item \textbf{\texttt{binary\_search}} on the sorted array \texttt{A = [2, 9, 14, 23, 31, 40, 58]} ($n = 7$):
+  \begin{itemize}
+    \item \texttt{binary\_search(A, 7, 23)} returns $3$.
+    \item \texttt{binary\_search(A, 7, 15)} returns $-1$ (absent, falls between $14$ and $23$).
+  \end{itemize}
+  \item \textbf{\texttt{has\_duplicate}}:
+  \begin{itemize}
+    \item on \texttt{A = [5, 8, 1, 8, 3]} returns $1$ ($8$ repeats).
+    \item on \texttt{A = [5, 8, 1, 3]} returns $0$.
+  \end{itemize}
+\end{itemize}
+
+\subsection{What to submit for Part 1}
+
+\begin{enumerate}
+  \item \texttt{analysis.c} --- your completed implementation (edit \texttt{starter\_analysis.c}).
+  \item \texttt{analysis.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+Sanity-check locally before submitting:
+\begin{verbatim}
+gcc -Wall -Wextra -o test_visible test_visible.c analysis.c
+./test_visible
+\end{verbatim}
+All worked examples above should pass. The autograder then compiles your \texttt{analysis.c} against a \emph{hidden} test suite. It covers:
+\begin{itemize}
+  \item boundary sizes (empty, single element);
+  \item every position (front/middle/tail/absent) for the two searches;
+  \item all-duplicate, no-duplicate, and duplicate-at-the-last-pair arrays for \texttt{has\_duplicate}; and
+  \item a batch of random inputs checked against a brute-force oracle.
+\end{itemize}
+
+\section{Part 2: Time your own code}
+
+This part is \textbf{not} graded by the autograder --- it is graded by the instructor from what you submit in \texttt{timing\_report.md}.
+
+Once \texttt{analysis.c} passes the visible tests, compile and run the provided \texttt{timing\_harness.c} against it:
+
+\begin{verbatim}
+gcc -O2 -Wall -Wextra -o timing_harness timing_harness.c analysis.c
+./timing_harness
+\end{verbatim}
+
+\noindent\textbf{Do not use \texttt{-O0}} --- at low optimization the constant-factor overhead of an unoptimized build can swamp the very signal you are trying to measure.
+
+The harness runs each of your three functions in its \emph{worst case} (the case the lecture derived a bound for: \texttt{key} absent for both searches, a no-duplicate array for \texttt{has\_duplicate}) at several geometrically increasing values of $n$, and prints one timing table per function. It repeats each call enough times internally to get a measurement above your system clock's tick resolution --- you do not need to do anything about this, just run it.
+
+\subsection{What to submit for Part 2}
+
+Copy \texttt{timing\_report\_template.md} to \texttt{timing\_report.md}, paste in your three printed tables, and answer the three short questions there (2--4 sentences each):
+
+\begin{enumerate}
+  \item For \texttt{linear\_search}, what ratio does $O(n)$ predict when $n$ doubles? Is that roughly what you measured?
+  \item For \texttt{binary\_search}, what ratio does $O(\log n)$ predict when $n$ doubles (hint: it is far from $2$)? Compare to your table.
+  \item For \texttt{has\_duplicate}, what ratio does $O(n^2)$ predict when $n$ doubles? Compare to your table, and contrast against Question 1 --- this is the practical version of the lecture's ``Numbers Side by Side'' comparison.
+\end{enumerate}
+
+\section{What to submit, in total}
+
+\begin{enumerate}
+  \item \texttt{analysis.c}, \texttt{analysis.h} (Part 1 --- autograded).
+  \item \texttt{timing\_report.md} (Part 2 --- instructor-graded).
+\end{enumerate}
+
+\end{document}

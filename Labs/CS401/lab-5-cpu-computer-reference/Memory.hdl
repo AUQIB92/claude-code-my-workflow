@@ -1,0 +1,29 @@
+/**
+ * Memory — the complete data memory of the Hack computer
+ * (Nand2Tetris Project 5).
+ *
+ * Address map:
+ *   0..16383     RAM16K   (address[14] = 0)
+ *   16384..24575 Screen   (address[14] = 1, address[13] = 0)
+ *   24576        Keyboard (address[14] = 1, address[13] = 1)
+ *
+ * A two-stage DMux routes the write pulse; a matching Mux tree reads back.
+ */
+CHIP Memory {
+    IN  in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+    // Top split: address[14] chooses RAM vs. device (Screen/Keyboard).
+    DMux(in=load, sel=address[14], a=loadRam, b=loadDev);
+    RAM16K(in=in, load=loadRam, address=address[0..13], out=ramOut);
+
+    // Within the device half: address[13] chooses Screen vs. Keyboard.
+    DMux(in=loadDev, sel=address[13], a=loadScreen, b=loadKbd);
+    Screen(in=in, load=loadScreen, address=address[0..12], out=screenOut);
+    Keyboard(out=kbdOut);
+
+    // Read-back mux tree (mirrors the write DMux tree).
+    Mux16(a=screenOut, b=kbdOut, sel=address[13], out=devOut);
+    Mux16(a=ramOut, b=devOut, sel=address[14], out=out);
+}
