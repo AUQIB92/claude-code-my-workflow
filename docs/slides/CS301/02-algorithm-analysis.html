@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Auqib Hamid Lone">
+
+<title>What Does an Operation Cost?</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="02-algorithm-analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="02-algorithm-analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="02-algorithm-analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="02-algorithm-analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="02-algorithm-analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="02-algorithm-analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="02-algorithm-analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="02-algorithm-analysis_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="02-algorithm-analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="02-algorithm-analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="02-algorithm-analysis_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="02-algorithm-analysis.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">What Does an Operation Cost?</h1>
+<p class="subtitle lead">Week 2 — Running Time, Asymptotic Notation, and Best/Worst/Average Case</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Dr.&nbsp;Auqib Hamid Lone </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            GCET Ganderbal
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="todays-three-questions" class="level2">
+<h2 class="anchored" data-anchor-id="todays-three-questions">Today’s Three Questions</h2>
+<ol type="1">
+<li>How do we measure the work an operation does?</li>
+<li>How do we compare two correct solutions without running both on every input?</li>
+<li>How do we say how much memory a solution needs?</li>
+</ol>
+<div class="highlightbox">
+<p><strong>Plan.</strong> First count the work. Then compress the count into a simple class. Then apply it to our two searches.</p>
+</div>
+</section>
+<section id="the-calculators-growing-symbol-table" class="level2">
+<h2 class="anchored" data-anchor-id="the-calculators-growing-symbol-table">The Calculator’s Growing Symbol Table</h2>
+<div class="keybox">
+<p><strong>Our running example.</strong> The expression processor from Week 1 reads <code>(a+b)*c</code> and stores each identifier — <code>a</code>, <code>b</code>, <code>c</code> — in a symbol table it must look up by name.</p>
+</div>
+<ul>
+<li>A one-line expression has two or three identifiers; a real calculator session may hold thousands.</li>
+<li>Last week the table was “a list for now, a hash table later.”</li>
+<li><span class="hi-gold"><strong>This week’s question</strong></span>: as the table grows, how do we predict whether a lookup stays fast — before we build either one?</li>
+</ul>
+<p><span class="neutral">The answer cannot be “we will time it and see.” We need a model.</span></p>
+</section>
+<section id="same-answer-very-different-work" class="level2">
+<h2 class="anchored" data-anchor-id="same-answer-very-different-work">Same Answer, Very Different Work</h2>
+<div class="methodbox">
+<p><strong>Two ways to find the value bound to a name.</strong> (1) Scan the table from the top. (2) Keep the table sorted and jump to the middle.</p>
+</div>
+<ul>
+<li>Both are correct: both return the same value, or report “not found.”</li>
+<li>With 10 names, both finish before you notice.</li>
+<li>With 10 million names, the first is thousands of times slower — yet neither has changed a single line of its logic.</li>
+</ul>
+<p><span class="hi-gold"><strong>Correctness and cost are two different questions.</strong> Week 1 answered the first; this week we answer the second.</span></p>
+</section>
+<section id="it-felt-fast-is-not-an-argument" class="level2">
+<h2 class="anchored" data-anchor-id="it-felt-fast-is-not-an-argument">“It Felt Fast” Is Not an Argument</h2>
+<div class="methodbox">
+<p><strong>Sedgewick’s opening question.</strong> <em>“How long will my program take? Why does my program run out of memory?”</em> — questions too vague to answer without a mathematical model <span class="citation" data-cites="Sedgewick2011_algorithms">(<a href="#ref-Sedgewick2011_algorithms" role="doc-biblioref">Sedgewick and Wayne 2011</a>)</span>.</p>
+</div>
+<ul>
+<li>Timing one run on one machine measures that run, not the algorithm.</li>
+<li>A faster machine shifts the numbers but not the story.</li>
+<li>What we need is a model that counts the <em>work</em> as a function of the <em>size</em> of the data — independent of the clock.</li>
+</ul>
+<p><span class="neutral">Sedgewick poses these questions at the head of his analysis chapter (p.172).</span></p>
+</section>
+<section id="the-model-in-one-line" class="level2">
+<h2 class="anchored" data-anchor-id="the-model-in-one-line">The Model in One Line</h2>
+<div class="methodbox">
+<p><strong>Cost model.</strong> Count the basic operations as a function of <span class="math inline">\(n\)</span>, the number of elements; then compress the count into one asymptotic class <span class="citation" data-cites="HorowitzSahni2008_fundamentals_data_structures Neapolitan2010_foundations_of_algorithms">(<a href="#ref-HorowitzSahni2008_fundamentals_data_structures" role="doc-biblioref">Horowitz and Sahni 2008</a>; <a href="#ref-Neapolitan2010_foundations_of_algorithms" role="doc-biblioref">Neapolitan and Naimipour 2010</a>)</span>.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Measure</strong></span>: pick a basic operation and count how often it runs.</li>
+<li><span class="hi-gold"><strong>Compress</strong></span>: keep only the term that grows fastest.</li>
+<li><span class="hi-gold"><strong>State the case</strong></span>: best, worst, or average.</li>
+</ul>
+<p><span class="neutral">Both prescribed texts treat analysis this way — Horowitz &amp; Sahni (Ch. 1) and Neapolitan &amp; Naimipour (Ch. 1–2) — at chapter level.</span></p>
+</section>
+<section id="section" class="level2 transition-slide">
+<h2 class="transition-slide anchored" data-anchor-id="section"></h2>
+<p>To compare two solutions, we first have to count the work.</p>
+</section>
+<section id="section-1" class="level2 section-divider">
+<h2 class="section-divider anchored" data-anchor-id="section-1"></h2>
+<div class="section-divider-label">
+<p>Section 1</p>
+</div>
+<div class="section-divider-title">
+<p>Counting Work</p>
+</div>
+</section>
+<section id="what-is-a-basic-operation" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-basic-operation">What Is a Basic Operation?</h2>
+<div class="methodbox">
+<p><strong>Basic operation.</strong> A single step whose cost is roughly constant: a comparison, an assignment, an array access, or one arithmetic operation <span class="citation" data-cites="Sedgewick2011_algorithms">(<a href="#ref-Sedgewick2011_algorithms" role="doc-biblioref">Sedgewick and Wayne 2011</a>)</span>.</p>
+</div>
+<ul>
+<li>We do not count microseconds; we count steps.</li>
+<li>We choose the operation that <em>dominates</em> — for search, the comparison <code>A[i] == key</code>.</li>
+<li>Counting one well-chosen operation gives the right shape of growth.</li>
+</ul>
+<p><span class="neutral">The cost model is a simplification on purpose: exact machine time is unknowable, but the step count is not.</span></p>
+</section>
+<section id="the-cost-function-tn" class="level2">
+<h2 class="anchored" data-anchor-id="the-cost-function-tn">The Cost Function <span class="math inline">\(T(n)\)</span></h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> <span class="math inline">\(T(n)\)</span> is the number of basic operations the algorithm performs on an input of size <span class="math inline">\(n\)</span>.</p>
+</div>
+<ul>
+<li><span class="math inline">\(n\)</span> always counts the elements under discussion — here, the length of the array <code>A[0..n-1]</code>.</li>
+<li><span class="math inline">\(T(n)\)</span> is a <em>function</em>, not a single number: it answers “how many steps?” for every size at once.</li>
+</ul>
+<div class="highlightbox">
+<p><strong>Notation you already have.</strong> <span class="math inline">\(n\)</span> and arrays — both from Week 1. <span class="math inline">\(T(n)\)</span> is new today.</p>
+</div>
+</section>
+<section id="linear-search-count-the-comparisons" class="level2">
+<h2 class="anchored" data-anchor-id="linear-search-count-the-comparisons">Linear Search: Count the Comparisons</h2>
+<div class="methodbox">
+<p><strong>Scan the array for <code>key</code></strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> linear_search<span class="op">(</span><span class="dt">int</span> A<span class="op">[],</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">int</span> key<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>A<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> key<span class="op">)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> i<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>The basic operation is the comparison <code>A[i] == key</code>.</li>
+<li>The loop runs from <code>i = 0</code> up to <code>n - 1</code>.</li>
+<li>How many comparisons? It depends on <em>where</em> <code>key</code> sits — or whether it sits anywhere at all.</li>
+</ul>
+</section>
+<section id="tn-depends-on-the-input-not-just-on-n" class="level2">
+<h2 class="anchored" data-anchor-id="tn-depends-on-the-input-not-just-on-n"><span class="math inline">\(T(n)\)</span> Depends on the Input, Not Just on <span class="math inline">\(n\)</span></h2>
+<div class="methodbox">
+<p><strong>Same size, different cost.</strong> Search <code>A = [10, 20, 30, 40, 50]</code> (so <span class="math inline">\(n = 5\)</span>) for <code>key = 10</code> and then for <code>key = 99</code>.</p>
+</div>
+<ul>
+<li><code>key = 10</code>: the very first comparison succeeds — <span class="math inline">\(1\)</span> step.</li>
+<li><code>key = 99</code>: every element is checked — <span class="math inline">\(n = 5\)</span> steps.</li>
+</ul>
+<p><span class="neutral">Both inputs have size <span class="math inline">\(n = 5\)</span>. The cost is not a single number, so we describe it over the <em>kinds</em> of input.</span></p>
+</section>
+<section id="best-worst-and-average-case" class="level2">
+<h2 class="anchored" data-anchor-id="best-worst-and-average-case">Best, Worst, and Average Case</h2>
+<div class="methodbox">
+<p><strong>Three questions about the same algorithm.</strong> How does cost behave on the most favourable, the least favourable, and the typical input of size <span class="math inline">\(n\)</span>? <span class="citation" data-cites="Karumanchi2017_data_structures_algorithms_made_easy">(<a href="#ref-Karumanchi2017_data_structures_algorithms_made_easy" role="doc-biblioref">Karumanchi 2017</a>)</span></p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Best case</strong></span>: the minimum cost over all inputs of size <span class="math inline">\(n\)</span>.</li>
+<li><span class="hi-gold"><strong>Worst case</strong></span>: the maximum cost over all inputs of size <span class="math inline">\(n\)</span>.</li>
+<li><span class="hi-gold"><strong>Average case</strong></span>: the expected cost, given a distribution of inputs.</li>
+</ul>
+<p><span class="neutral">A <em>case</em> is a property of the input; a <em>bound</em> (<span class="math inline">\(O\)</span>/<span class="math inline">\(\Theta\)</span>) is a property of the function. They are orthogonal — we pair them, never confuse them.</span></p>
+</section>
+<section id="linear-search-all-three-cases" class="level2">
+<h2 class="anchored" data-anchor-id="linear-search-all-three-cases">Linear Search: All Three Cases</h2>
+<div class="methodbox">
+<p><strong>Counting the comparison <code>A[i] == key</code>.</strong> For an array <code>A[0..n-1]</code>:</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Best case</strong></span>: <code>key == A[0]</code> — exactly <span class="math inline">\(1\)</span> comparison.</li>
+<li><span class="hi-gold"><strong>Worst case</strong></span>: <code>key</code> absent, or at <code>A[n-1]</code> — <span class="math inline">\(n\)</span> comparisons.</li>
+<li><span class="hi-gold"><strong>Average case</strong></span>: successful search, key equally likely at each position — <span class="math inline">\(\frac{n+1}{2}\)</span> comparisons.</li>
+</ul>
+<p><span class="neutral">Average case derivation: <span class="math inline">\(\frac{1}{n}(1 + 2 + \dots + n) = \frac{n(n+1)}{2n} = \frac{n+1}{2}\)</span>.</span></p>
+</section>
+<section id="check-your-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="check-your-prediction">Check Your Prediction</h2>
+<div class="methodbox">
+<p><strong>Which input forces the most work?</strong> For <code>linear_search</code>, which <span class="math inline">\(5\)</span>-element input makes it do all <span class="math inline">\(5\)</span> comparisons?</p>
+</div>
+<ol type="1">
+<li><code>key</code> equal to <code>A[0]</code>.</li>
+<li><code>key</code> equal to <code>A[4]</code>.</li>
+<li><code>key</code> equal to a value not in the array.</li>
+</ol>
+<div class="highlightbox">
+<p><strong>Turn and talk.</strong> A value in the last position and a value nowhere in the array both cost <span class="math inline">\(n\)</span>. Which one tells us more about how bad it can get — and why?</p>
+</div>
+</section>
+<section id="section-2" class="level2 transition-slide">
+<h2 class="transition-slide anchored" data-anchor-id="section-2"></h2>
+<p>Exact counts are messy. We want the shape of the growth.</p>
+</section>
+<section id="section-3" class="level2 section-divider">
+<h2 class="section-divider anchored" data-anchor-id="section-3"></h2>
+<div class="section-divider-label">
+<p>Section 2</p>
+</div>
+<div class="section-divider-title">
+<p>Asymptotic Notation</p>
+</div>
+</section>
+<section id="why-ignore-the-constants" class="level2">
+<h2 class="anchored" data-anchor-id="why-ignore-the-constants">Why Ignore the Constants?</h2>
+<div class="methodbox">
+<p><strong>The doubling argument.</strong> If <span class="math inline">\(T(n) = 3n + 2\)</span> and we double the input, the cost roughly doubles — no matter how large the constant <span class="math inline">\(3\)</span> is.</p>
+</div>
+<ul>
+<li><span class="math inline">\(3n + 2\)</span> and <span class="math inline">\(7n - 5\)</span> both <em>grow like <span class="math inline">\(n\)</span></em>; they differ only by a constant factor.</li>
+<li>Constant factors matter to a machine, but not to <em>how the cost scales</em> as <span class="math inline">\(n\)</span> grows.</li>
+<li>Lower-order terms (<span class="math inline">\(+2\)</span>) disappear entirely when <span class="math inline">\(n\)</span> is large.</li>
+</ul>
+<p><span class="hi-gold"><strong>Asymptotic analysis keeps the dominant term and drops constants.</strong></span></p>
+</section>
+<section id="orders-of-growth" class="level2">
+<h2 class="anchored" data-anchor-id="orders-of-growth">Orders of Growth</h2>
+<div class="methodbox">
+<p><strong>Sedgewick’s classification (p.187).</strong> A handful of classes cover almost every algorithm we will meet <span class="citation" data-cites="Sedgewick2011_algorithms">(<a href="#ref-Sedgewick2011_algorithms" role="doc-biblioref">Sedgewick and Wayne 2011</a>)</span>.</p>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Order</th>
+<th>Name</th>
+<th>Typical of</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(1\)</span></td>
+<td>constant</td>
+<td>one statement</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\log n\)</span></td>
+<td>logarithmic</td>
+<td>binary search</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(n\)</span></td>
+<td>linear</td>
+<td>linear search</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(n \log n\)</span></td>
+<td>linearithmic</td>
+<td>mergesort</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(n^2\)</span></td>
+<td>quadratic</td>
+<td>nested loops</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(n^3\)</span></td>
+<td>cubic</td>
+<td>triple loops</td>
+</tr>
+</tbody>
+</table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../Figures/CS301/02-algorithm-analysis/tikz_exact_00.svg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="big-o-an-upper-bound" class="level2">
+<h2 class="anchored" data-anchor-id="big-o-an-upper-bound">Big-<span class="math inline">\(O\)</span>: an Upper Bound</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> <span class="math inline">\(T(n) = O(g(n))\)</span> if there exist constants <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(n_0 \geq 0\)</span> such that</p>
+<p><span class="math display">\[T(n) \leq c \cdot g(n) \quad\text{for all } n \geq n_0.\]</span></p>
+</div>
+<ul>
+<li>“<span class="math inline">\(T(n)\)</span> grows no faster than <span class="math inline">\(g(n)\)</span>, up to a constant.”</li>
+<li><span class="math inline">\(O\)</span> answers: <em>at worst, roughly how much work?</em></li>
+<li>A one-sided guarantee — an upper bound, possibly loose.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../Figures/CS301/02-algorithm-analysis/tikz_exact_01.svg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="big-o-at-work-tn-3n-2" class="level2">
+<h2 class="anchored" data-anchor-id="big-o-at-work-tn-3n-2">Big-<span class="math inline">\(O\)</span> at Work: <span class="math inline">\(T(n) = 3n + 2\)</span></h2>
+<div class="methodbox">
+<p><strong>Claim: <span class="math inline">\(T(n) = 3n + 2\)</span> is <span class="math inline">\(O(n)\)</span>.</strong> For every <span class="math inline">\(n \geq 2\)</span>, we have <span class="math inline">\(3n + 2 \leq 4n\)</span>.</p>
+</div>
+<ul>
+<li>Choose <span class="math inline">\(c = 4\)</span> and <span class="math inline">\(n_0 = 2\)</span>; then <span class="math inline">\(3n + 2 \leq 4n\)</span> holds.</li>
+<li>Therefore <span class="math inline">\(T(n) = O(n)\)</span>.</li>
+<li>The exact function was <span class="math inline">\(3n + 2\)</span>; the class is just <span class="math inline">\(O(n)\)</span>.</li>
+</ul>
+<div class="highlightbox">
+<p><strong>Reading it aloud.</strong> “The running time is of order <span class="math inline">\(n\)</span>.” — <span class="neutral">we have already thrown away the <span class="math inline">\(3\)</span> and the <span class="math inline">\(2\)</span>.</span></p>
+</div>
+</section>
+<section id="big-omega-a-lower-bound" class="level2">
+<h2 class="anchored" data-anchor-id="big-omega-a-lower-bound">Big-<span class="math inline">\(\Omega\)</span>: a Lower Bound</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> <span class="math inline">\(T(n) = \Omega(g(n))\)</span> if there exist <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(n_0 \geq 0\)</span> such that</p>
+<p><span class="math display">\[T(n) \geq c \cdot g(n) \quad\text{for all } n \geq n_0.\]</span></p>
+</div>
+<ul>
+<li>“<span class="math inline">\(T(n)\)</span> grows <em>at least</em> as fast as <span class="math inline">\(g(n)\)</span>, up to a constant.”</li>
+<li><span class="math inline">\(\Omega\)</span> answers: <em>at best, roughly how much work?</em></li>
+</ul>
+<div class="highlightbox">
+<p><strong>Example.</strong> <span class="math inline">\(3n + 2\)</span> is <span class="math inline">\(\Omega(n)\)</span>: take <span class="math inline">\(c = 3\)</span>, so <span class="math inline">\(3n + 2 \geq 3n\)</span> for all <span class="math inline">\(n \geq 0\)</span>.</p>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../Figures/CS301/02-algorithm-analysis/tikz_exact_02.svg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="big-theta-a-tight-bound" class="level2">
+<h2 class="anchored" data-anchor-id="big-theta-a-tight-bound">Big-<span class="math inline">\(\Theta\)</span>: a Tight Bound</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> <span class="math inline">\(T(n) = \Theta(g(n))\)</span> when <span class="math inline">\(T(n)\)</span> is <em>both</em> <span class="math inline">\(O(g(n))\)</span> and <span class="math inline">\(\Omega(g(n))\)</span>.</p>
+</div>
+<ul>
+<li>“<span class="math inline">\(T(n)\)</span> grows <em>exactly</em> like <span class="math inline">\(g(n)\)</span>, up to a constant.”</li>
+<li><span class="math inline">\(\Theta\)</span> squeezes the cost from above and below.</li>
+<li><span class="math inline">\(3n + 2\)</span> is <span class="math inline">\(\Theta(n)\)</span>: bounded below by <span class="math inline">\(2n\)</span>, above by <span class="math inline">\(5n\)</span>.</li>
+</ul>
+<p><span class="neutral"><span class="math inline">\(\Theta\)</span> is the strongest claim of the three — use it only when the two bounds actually meet.</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../Figures/CS301/02-algorithm-analysis/tikz_exact_03.svg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="the-strict-siblings-o-and-omega" class="level2">
+<h2 class="anchored" data-anchor-id="the-strict-siblings-o-and-omega">The Strict Siblings: <span class="math inline">\(o\)</span> and <span class="math inline">\(\omega\)</span></h2>
+<div class="methodbox">
+<p><strong>When the gap is strict, not just up to a constant.</strong> <span class="math inline">\(T(n) = o(g(n))\)</span> means <span class="math inline">\(T(n)/g(n) \to 0\)</span>; <span class="math inline">\(T(n) = \omega(g(n))\)</span> means <span class="math inline">\(T(n)/g(n) \to \infty\)</span>.</p>
+</div>
+<ul>
+<li><span class="math inline">\(o\)</span> is a strict upper bound: <span class="math inline">\(n = o(n^2)\)</span>, but <span class="math inline">\(2n\)</span> is <em>not</em> <span class="math inline">\(o(n)\)</span>.</li>
+<li><span class="math inline">\(\omega\)</span> is a strict lower bound: <span class="math inline">\(n^2 = \omega(n)\)</span>, but <span class="math inline">\(2n\)</span> is <em>not</em> <span class="math inline">\(\omega(n)\)</span>.</li>
+<li>The strict forms are rarely needed; we will mostly write <span class="math inline">\(O\)</span>, <span class="math inline">\(\Omega\)</span>, <span class="math inline">\(\Theta\)</span>.</li>
+</ul>
+</section>
+<section id="reading-notation-correctly" class="level2">
+<h2 class="anchored" data-anchor-id="reading-notation-correctly">Reading Notation Correctly</h2>
+<div class="methodbox">
+<p><strong>A bound must always name its case.</strong> “Linear search is <span class="math inline">\(O(n)\)</span>” is incomplete — <em>in which case?</em></p>
+</div>
+<ul>
+<li><span class="positive">Linear search is <span class="math inline">\(O(n)\)</span> in the worst case.</span></li>
+<li><span class="positive">Linear search is <span class="math inline">\(\Omega(1)\)</span> in the best case.</span></li>
+<li><span class="negative">Binary search is <span class="math inline">\(O(\log n)\)</span></span> — <span class="neutral">no case stated.</span></li>
+<li><span class="negative"><span class="math inline">\(T(n) = O(n)\)</span>, so exactly <span class="math inline">\(n\)</span> steps</span> — <span class="neutral">confuses a class with a count.</span></li>
+</ul>
+<p><span class="hi-gold"><strong>Pair every complexity claim with the case, and name the operation.</strong></span></p>
+</section>
+<section id="section-4" class="level2 transition-slide">
+<h2 class="transition-slide anchored" data-anchor-id="section-4"></h2>
+<p>Now apply the vocabulary to our two searches.</p>
+</section>
+<section id="section-5" class="level2 section-divider">
+<h2 class="section-divider anchored" data-anchor-id="section-5"></h2>
+<div class="section-divider-label">
+<p>Section 3</p>
+</div>
+<div class="section-divider-title">
+<p>Two Searches, Two Costs</p>
+</div>
+</section>
+<section id="linear-search-analysed" class="level2">
+<h2 class="anchored" data-anchor-id="linear-search-analysed">Linear Search, Analysed</h2>
+<div class="methodbox">
+<p><strong>Cost of <code>linear_search</code>.</strong> Basic operation: the comparison <code>A[i] == key</code>.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Worst case</strong></span>: <span class="math inline">\(n\)</span> comparisons — the trace: <code>key</code> absent, every <code>A[i]</code> examined once.</li>
+<li><span class="hi-gold"><strong>Best case</strong></span>: <span class="math inline">\(1\)</span> comparison — <code>key == A[0]</code>.</li>
+<li><span class="hi-gold"><strong>Average case</strong></span>: <span class="math inline">\(\frac{n+1}{2} = \Theta(n)\)</span> comparisons.</li>
+</ul>
+<p><span class="neutral">Every claim above names its case, and each is matched to the input that exhibits it.</span></p>
+</section>
+<section id="binary-search-needs-a-sorted-table" class="level2">
+<h2 class="anchored" data-anchor-id="binary-search-needs-a-sorted-table">Binary Search Needs a Sorted Table</h2>
+<div class="methodbox">
+<p><strong>Precondition (an invariant, not an option).</strong> Binary search is only correct when the array is sorted. On an unsorted array it can silently return a wrong answer.</p>
+</div>
+<ul>
+<li>The sorted order is <em>what makes halving valid</em>: after one comparison we can discard an entire half.</li>
+<li>Keeping the table sorted is itself a cost — the price we pay for fast lookups later.</li>
+<li><span class="neutral">This is the anti-pattern to guard: never apply binary search without first stating the sorted precondition.</span></li>
+</ul>
+</section>
+<section id="binary-search" class="level2">
+<h2 class="anchored" data-anchor-id="binary-search">Binary Search</h2>
+<div class="methodbox">
+<p><strong>Jump to the middle, then discard a half</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> binary_search<span class="op">(</span><span class="dt">int</span> A<span class="op">[],</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">int</span> key<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> lo <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> hi <span class="op">=</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>lo <span class="op">&lt;=</span> hi<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> mid <span class="op">=</span> lo <span class="op">+</span> <span class="op">(</span>hi <span class="op">-</span> lo<span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>A<span class="op">[</span>mid<span class="op">]</span> <span class="op">==</span> key<span class="op">)</span> <span class="cf">return</span> mid<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>A<span class="op">[</span>mid<span class="op">]</span> <span class="op">&lt;</span> key<span class="op">)</span> lo <span class="op">=</span> mid <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>                  hi <span class="op">=</span> mid <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Each pass compares <code>A[mid]</code> and shrinks <code>[lo, hi]</code> by half.</li>
+<li><code>A</code> must already be sorted, in ascending order.</li>
+</ul>
+</section>
+<section id="binary-search-the-halving-picture" class="level2">
+<h2 class="anchored" data-anchor-id="binary-search-the-halving-picture">Binary Search: the Halving Picture</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../Figures/CS301/02-algorithm-analysis/tikz_exact_04.svg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<ul>
+<li><code>mid = lo + (hi - lo) / 2</code> lands on index <span class="math inline">\(4\)</span> (value <span class="math inline">\(30\)</span>).</li>
+<li><span class="math inline">\(30 &lt; 68\)</span>, so the left half is discarded and <code>lo</code> jumps to <span class="math inline">\(5\)</span>.</li>
+</ul>
+</section>
+<section id="binary-search-trace-key-68" class="level2">
+<h2 class="anchored" data-anchor-id="binary-search-trace-key-68">Binary Search Trace (key = 68)</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>pass</th>
+<th><code>lo</code></th>
+<th><code>hi</code></th>
+<th><code>mid</code></th>
+<th><code>A[mid]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0</td>
+<td>8</td>
+<td>4</td>
+<td><span class="math inline">\(30 &lt; 68\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>5</td>
+<td>8</td>
+<td>6</td>
+<td><span class="math inline">\(50 &lt; 68\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>7</td>
+<td>8</td>
+<td>7</td>
+<td><span class="math inline">\(68 = 68\)</span> — found</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Three passes to find <code>key = 68</code> among <span class="math inline">\(n = 9\)</span> values.</li>
+<li>A linear scan would check <span class="math inline">\(7\)</span> of the <span class="math inline">\(9\)</span> cells (worst case: all <span class="math inline">\(9\)</span>).</li>
+</ul>
+<p><span class="neutral">Each pass discards half the remaining interval — that is the engine of the logarithmic bound.</span></p>
+</section>
+<section id="binary-search-analysed" class="level2">
+<h2 class="anchored" data-anchor-id="binary-search-analysed">Binary Search, Analysed</h2>
+<div class="methodbox">
+<p><strong>Cost of <code>binary_search</code>.</strong> Basic operation: the comparison <code>A[mid] == key</code>.</p>
+</div>
+<ul>
+<li>Each pass halves the interval <span class="math inline">\([\,\texttt{lo}, \texttt{hi}\,]\)</span>; after <span class="math inline">\(k\)</span> passes at most <span class="math inline">\(\lceil n/2^k \rceil\)</span> elements remain.</li>
+<li>The loop stops when the interval is empty, so the number of passes is about <span class="math inline">\(\log_2 n\)</span>.</li>
+</ul>
+<p><span class="hi-gold"><strong>Binary search is <span class="math inline">\(O(\log n)\)</span> in the worst case — and <span class="math inline">\(\Omega(1)\)</span> in the best case (key at <code>A[mid]</code> on the first pass).</strong></span></p>
+<p><span class="neutral"><span class="math inline">\(\log\)</span> is the base-2 logarithm here; its base is a constant factor, which asymptotic notation drops anyway.</span></p>
+</section>
+<section id="a-nested-loop-checking-for-duplicates" class="level2">
+<h2 class="anchored" data-anchor-id="a-nested-loop-checking-for-duplicates">A Nested Loop: Checking for Duplicates</h2>
+<div class="methodbox">
+<p><strong>Does the symbol table hold the same name twice?</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> j<span class="op">++)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>A<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> A<span class="op">[</span>j<span class="op">])</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span>  <span class="co">/* duplicate found */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>The inner loop runs <span class="math inline">\(n - i - 1\)</span> times for each <span class="math inline">\(i\)</span>.</li>
+<li>Total comparisons: <span class="math inline">\(\sum_{i=0}^{n-2}(n-i-1) = \frac{n(n-1)}{2}\)</span>.</li>
+<li>This is <span class="math inline">\(\Theta(n^2)\)</span> — <em>in every case</em>, since the loop always runs to completion unless a duplicate is found.</li>
+</ul>
+</section>
+<section id="the-numbers-side-by-side" class="level2">
+<h2 class="anchored" data-anchor-id="the-numbers-side-by-side">The Numbers Side by Side</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(n\)</span></th>
+<th><span class="math inline">\(\log_2 n\)</span></th>
+<th><span class="math inline">\(n\)</span></th>
+<th><span class="math inline">\(n \log_2 n\)</span></th>
+<th><span class="math inline">\(n^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(10\)</span></td>
+<td><span class="math inline">\(\approx 3\)</span></td>
+<td><span class="math inline">\(10\)</span></td>
+<td><span class="math inline">\(\approx 33\)</span></td>
+<td><span class="math inline">\(10^2\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(10^3\)</span></td>
+<td><span class="math inline">\(\approx 10\)</span></td>
+<td><span class="math inline">\(10^3\)</span></td>
+<td><span class="math inline">\(\approx 10^4\)</span></td>
+<td><span class="math inline">\(10^6\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(10^6\)</span></td>
+<td><span class="math inline">\(\approx 20\)</span></td>
+<td><span class="math inline">\(10^6\)</span></td>
+<td><span class="math inline">\(\approx 2\cdot10^7\)</span></td>
+<td><span class="math inline">\(10^{12}\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="methodbox">
+<p><strong>What the table says.</strong> As <span class="math inline">\(n\)</span> grows, <span class="math inline">\(\log n\)</span> barely moves while <span class="math inline">\(n^2\)</span> explodes — the difference between a search that is practical and one that is not.</p>
+</div>
+</section>
+<section id="the-symbol-table-payoff" class="level2">
+<h2 class="anchored" data-anchor-id="the-symbol-table-payoff">The Symbol Table Payoff</h2>
+<div class="methodbox">
+<p><strong>The same table, three later homes.</strong> Our calculator’s identifier lookup, analysed as <span class="math inline">\(n\)</span> grows:</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Unsorted list</strong></span> (Week 6): lookup is <span class="math inline">\(O(n)\)</span> worst case — scan it all.</li>
+<li><span class="hi-gold"><strong>Sorted array</strong></span>: lookup is <span class="math inline">\(O(\log n)\)</span> worst case — but keeping it sorted costs on every insert.</li>
+<li><span class="hi-gold"><strong>Hash table</strong></span> (Week 10): lookup is <span class="math inline">\(O(1)\)</span> expected — the whole reason we will want one.</li>
+</ul>
+<p><span class="neutral">Week 2 gives us the vocabulary to make this trade-off precise; Weeks 6 and 10 will act on it.</span></p>
+</section>
+<section id="section-6" class="level2 transition-slide">
+<h2 class="transition-slide anchored" data-anchor-id="section-6"></h2>
+<p>Time is only half the bill — memory matters too.</p>
+</section>
+<section id="section-7" class="level2 section-divider">
+<h2 class="section-divider anchored" data-anchor-id="section-7"></h2>
+<div class="section-divider-label">
+<p>Section 4</p>
+</div>
+<div class="section-divider-title">
+<p>Space</p>
+</div>
+</section>
+<section id="space-complexity-sn" class="level2">
+<h2 class="anchored" data-anchor-id="space-complexity-sn">Space Complexity <span class="math inline">\(S(n)\)</span></h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> <span class="math inline">\(S(n)\)</span> is the amount of memory an algorithm uses beyond its input — its <em>auxiliary</em> space — as a function of <span class="math inline">\(n\)</span>.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Input space</strong></span>: the <span class="math inline">\(n\)</span> elements themselves — counted separately.</li>
+<li><span class="hi-gold"><strong>Auxiliary space</strong></span>: the extra working memory the algorithm needs.</li>
+<li><span class="math inline">\(S(n)\)</span> is stated the same way as <span class="math inline">\(T(n)\)</span>, in asymptotic classes.</li>
+</ul>
+<p><span class="neutral">We separate the two because “uses <span class="math inline">\(n\)</span> cells” is uninteresting when the input already has <span class="math inline">\(n\)</span> cells; the extra is the real question.</span></p>
+</section>
+<section id="space-of-our-examples" class="level2">
+<h2 class="anchored" data-anchor-id="space-of-our-examples">Space of Our Examples</h2>
+<div class="methodbox">
+<p><strong>Auxiliary space, one constant at a time.</strong> Each of today’s algorithms keeps only a handful of local variables.</p>
+</div>
+<ul>
+<li><code>linear_search</code>: one index <code>i</code> — auxiliary space <span class="math inline">\(O(1)\)</span>.</li>
+<li><code>binary_search</code>: three indices <code>lo</code>, <code>hi</code>, <code>mid</code> — auxiliary space <span class="math inline">\(O(1)\)</span>.</li>
+<li>A <em>recursive</em> binary search would instead use <span class="math inline">\(O(\log n)\)</span> stack frames — the recursion depth.</li>
+</ul>
+<div class="highlightbox">
+<p><strong>Why it matters.</strong> <span class="math inline">\(O(1)\)</span> auxiliary space means the extra memory does not grow with <span class="math inline">\(n\)</span> — a property we will price carefully when Week 9 compares in-place and merge-sort. <span class="neutral">The pointer intuition is Week 1’s: each variable is one cell, wherever it lives.</span></p>
+</div>
+</section>
+<section id="three-common-mistakes" class="level2">
+<h2 class="anchored" data-anchor-id="three-common-mistakes">Three Common Mistakes</h2>
+<ul>
+<li><span class="negative">Treating <span class="math inline">\(T(n) = O(n)\)</span> as an exact count</span> — <span class="math inline">\(O(n)\)</span> is a class, not “<span class="math inline">\(n\)</span> steps.”</li>
+<li><span class="negative">Stating a bound with no case</span> — “<span class="math inline">\(O(n)\)</span>” without worst/best/average leaves the claim unfalsifiable.</li>
+<li><span class="negative">Mixing up <span class="math inline">\(O\)</span> and <span class="math inline">\(\Theta\)</span></span> — <span class="math inline">\(O\)</span> is an upper bound; only <span class="math inline">\(\Theta\)</span> says the growth matches exactly.</li>
+</ul>
+<div class="highlightbox">
+<p><strong>The habit.</strong> Name the operation, give the bound, state the case, and point to the input that exhibits it.</p>
+</div>
+</section>
+<section id="week-2-summary" class="level2">
+<h2 class="anchored" data-anchor-id="week-2-summary">Week 2 Summary</h2>
+<ul>
+<li><span class="hi-gold"><strong>Cost model</strong></span>: count a basic operation as a function of <span class="math inline">\(n\)</span>.</li>
+<li><span class="hi-gold"><strong><span class="math inline">\(T(n)\)</span></strong></span>: the exact cost function; <span class="hi-gold"><strong><span class="math inline">\(S(n)\)</span></strong></span>: the auxiliary space.</li>
+<li><span class="hi-gold"><strong>Asymptotic classes</strong></span>: <span class="math inline">\(O\)</span> (upper), <span class="math inline">\(\Omega\)</span> (lower), <span class="math inline">\(\Theta\)</span> (tight), with <span class="math inline">\(o\)</span> and <span class="math inline">\(\omega\)</span> as the strict forms.</li>
+<li><span class="hi-gold"><strong>Cases</strong></span>: best, worst, average — orthogonal to the bound, always stated with it.</li>
+<li><span class="hi-gold"><strong>Our two searches</strong></span>: linear <span class="math inline">\(O(n)\)</span> worst case vs.&nbsp;binary <span class="math inline">\(O(\log n)\)</span> worst case; a nested loop is <span class="math inline">\(\Theta(n^2)\)</span>.</li>
+</ul>
+<div class="highlightbox">
+<p><strong>Next week.</strong> Arrays and the Stack ADT — the first structure we will analyse end to end.</p>
+</div>
+</section>
+<section id="before-you-go-predict" class="level2">
+<h2 class="anchored" data-anchor-id="before-you-go-predict">Before You Go: Predict</h2>
+<div class="methodbox">
+<p><strong>Doubling the table.</strong> The calculator’s symbol table doubles from <span class="math inline">\(n\)</span> to <span class="math inline">\(2n\)</span> names. Which lookup grows how?</p>
+</div>
+<ol type="1">
+<li>A linear scan: roughly how much slower?</li>
+<li>A binary search: roughly how much slower?</li>
+<li>A duplicate check with the nested loop: roughly how much slower?</li>
+</ol>
+<p><span class="neutral">Your answers — “doubles”, “one extra pass”, “four times” — are the whole point of the asymptotic vocabulary.</span></p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-HorowitzSahni2008_fundamentals_data_structures" class="csl-entry" role="listitem">
+Horowitz, Ellis, and Sartaj Sahni. 2008. <em>Fundamentals of Data Structures</em>. 2nd ed. Galgotia Booksource.
+</div>
+<div id="ref-Karumanchi2017_data_structures_algorithms_made_easy" class="csl-entry" role="listitem">
+Karumanchi, Narasimha. 2017. <em>Data Structures and Algorithms Made Easy</em>. CareerMonk Publications.
+</div>
+<div id="ref-Neapolitan2010_foundations_of_algorithms" class="csl-entry" role="listitem">
+Neapolitan, Richard E., and Kumarss Naimipour. 2010. <em>Foundations of Algorithms</em>. 4th ed. Jones; Bartlett.
+</div>
+<div id="ref-Sedgewick2011_algorithms" class="csl-entry" role="listitem">
+Sedgewick, Robert, and Kevin Wayne. 2011. <em>Algorithms</em>. 4th ed. Addison-Wesley.
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
