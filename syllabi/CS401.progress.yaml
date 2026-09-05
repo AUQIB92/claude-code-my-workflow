@@ -1,6 +1,6 @@
 course: CS401
 lab_mode: none            # Nand2Tetris labs (5) are a separate numbered track — run /lab-manual by lab number, not per-week via /build-week
-last_updated: 2026-08-18
+last_updated: 2026-09-05
 weeks:
   "01":
     deck: "01-intro-performance"
@@ -82,32 +82,32 @@ weeks:
       assignment: { status: deployed, score: null, note: "assignment + solutions key present; solutions gitignored and excluded from docs/" }
       lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 4 (weeks 8-9), separate track" }
       gate:       { status: deployed, score: null, note: "13 Q (Q1-Q10 PYQ, Q11-Q13 original); all 10 PYQ attributions CoVe-verified 2026-08-18 vs GATE Overflow + >=1 mirror; all 13 answers re-derived independently" }
-      quarto:     { status: absent, score: null, note: "skipped via --skip quarto (PDF-only deploy for this week)" }
+      quarto:     { status: skipped, score: null, note: "Explicitly skipped per user request; Quarto left untouched" }
       handout:    { status: built,    score: null, note: "InstructorHandouts/CS401/09-cache-memory-instructor-handout.tex, 14 pp, 0 overfull; instructor-only, never deployed to docs/" }
   "10":
     deck: "10-virtual-memory-storage"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
+      slides:     { status: deployed, score: null, note: "34 pp; XeLaTeX 3-pass clean; no errors, undefined citations, or overfull boxes" }
+      notes:      { status: deployed, score: null, note: "9 pp; parity approved; corrected 1 KiB paging offset example and recompiled cleanly" }
+      assignment: { status: deployed, score: null, note: "assignment + solutions key present; numerical/algorithmic verification PASS" }
       lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 5 (weeks 10-12), separate track" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      gate:       { status: deployed, score: null, note: "8 questions; 1 verified real PYQ and 7 original GATE-pattern; all answers independently verified" }
+      quarto:     { status: skipped, score: null, note: "Explicitly skipped per user request; Quarto left untouched" }
   "11":
     deck: "11-parallel-pipeline-hazards"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
+      slides:     { status: deployed, score: null, note: "34 pp; XeLaTeX 3-pass clean; no errors, undefined citations, or overfull boxes" }
+      notes:      { status: deployed, score: null, note: "9 pp; Beamer-to-Notes parity approved round 1; clean diagnostics" }
+      assignment: { status: deployed, score: null, note: "assignment + solutions key present; hazard/timing/Flynn verification PASS" }
       lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 5 (weeks 10-12), separate track" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      gate:       { status: deployed, score: null, note: "8 questions; 2 verified local-source PYQs and 6 original GATE-pattern; all answers independently verified" }
+      quarto:     { status: skipped, score: null, note: "Explicitly skipped per user request; Quarto left untouched" }
   "12":
     deck: "12-pipelining-risc-cisc"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
+      slides:     { status: deployed, score: null, note: "28 pp; XeLaTeX 3-pass clean; no errors, undefined citations, or overfull boxes" }
+      notes:      { status: deployed, score: null, note: "8 pp; Beamer-to-Notes parity approved round 4; clean diagnostics" }
+      assignment: { status: deployed, score: null, note: "assignment + solutions key present; timing/speedup/hazard/RISC-CISC verification PASS" }
       lab:        { status: skipped, score: null, note: "Nand2Tetris Lab 5 (weeks 10-12), separate track" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      gate:       { status: deployed, score: null, note: "8 original GATE-pattern questions; all answers independently verified; no unsupported PYQ claims" }
+      quarto:     { status: skipped, score: null, note: "Explicitly skipped per user request; Quarto left untouched" }
