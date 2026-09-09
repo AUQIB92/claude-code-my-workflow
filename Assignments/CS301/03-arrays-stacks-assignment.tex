@@ -1,0 +1,99 @@
+% =============================================================================
+% Assignments/CS301/03-arrays-stacks-assignment.tex
+% Assignment 3: Arrays and the Simplest Useful ADT — written problem set
+%
+% Student set — NO answers. Solution key: 03-arrays-stacks-solutions.tex
+% (gitignored, never published). Sourced from Slides/CS301/03-arrays-stacks.tex
+% and Notes/CS301/03-arrays-stacks-notes.tex.
+%
+% Fresh instances throughout: no problem re-asks a deck/notes worked example
+% verbatim (deck: base=2000/A[3], 3x4 A[1][2]=1024/1028, push(10/20/30),
+% ([]) vs ([)], 2 3 4 + *; notes: 4x5 A[2][3]=5052/5056, push(5/7/9),
+% 5 1 2 + 4 * + 3 -). The deck's Q3 key ("{[( )]}") is deliberately NOT
+% reused — Q5 uses fresh bracket strings with mechanically-checked traces.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 03-arrays-stacks-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Assignment 3: Arrays and the Simplest Useful ADT}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions. Each problem states its own assumptions; everything you need is in Week~3's Notes chapter alone. Notation matches the lecture exactly: $n$ counts elements, \texttt{base} is the address of \texttt{A[0]}, $w$ is bytes per element, \texttt{top} $= -1$ means empty, \texttt{MAX} is the array capacity.
+
+\section{Conceptual}
+
+\textbf{Q1.} An operand table holds $n$ values in an array. Accessing \texttt{A[i]} costs $O(1)$ worst case whatever $i$ is, yet inserting a new value at position $0$ costs $O(n)$ worst case.
+\begin{enumerate}
+  \item[(a)] In one or two sentences, explain why the \emph{position} $i$ never affects access cost (name the mechanism that locates \texttt{A[i]}).
+  \item[(b)] In one or two sentences, explain why the \emph{position} of an insert decides its cost, and why position $0$ is the most expensive case (state how many elements move when $n = 1000$).
+  \item[(c)] A classmate claims ``the address formula makes room for the new element, so nothing needs to shift.'' In one sentence, state the confusion behind this claim (locating a cell vs.\ freeing a cell).
+\end{enumerate}
+Why this matters: the calculator stores operands in order and wants the $i$-th one instantly --- this question pins down exactly what arrays promise (instant reads) and what they do not (cheap splices).
+
+\textbf{Q2.} The stack contract names three operations --- \texttt{push(x)}, \texttt{pop()}, \texttt{peek()} --- with last-in-first-out discipline (one of Sedgewick's three collection types, p.120) \cite{Sedgewick2011_algorithms}; the lecture implements them over one array and one index \texttt{top} (Karumanchi Ch.~4) \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] State which of the three operations remove an item, which only inspect it, and what each one reports or returns on an empty stack in the lecture's implementation (name \bad{underflow}).
+  \item[(b)] State the exact condition under which \texttt{push} must refuse in this implementation, and name the error (\bad{overflow}).
+  \item[(c)] In one or two sentences, explain why fixed capacity is the price of this implementation --- what must happen when the array fills, and which later structure (Week~6) removes the ceiling.
+\end{enumerate}
+Why this matters: naming the contract before coding it is the shape every week repeats --- this question checks you can tell the promise (LIFO) from one particular way of keeping it (an array plus \texttt{top}).
+
+\section{Numerical}
+
+\textbf{Q3.} A program declares \texttt{int A[12]} with \texttt{base} $= 3000$ and $w = 4$, and separately \texttt{int B[5][6]} with \texttt{base} $= 4000$ and $w = 4$. All indices are 0-based and every access below is in range.
+\begin{enumerate}
+  \item[(a)] Compute $\text{addr}(A[7])$ using $\text{addr}(A[i]) = \text{base} + i \times w$. Show the multiply and the add as separate steps.
+  \item[(b)] Compute the \emph{row-major} address of \texttt{B[3][4]} using $\text{addr}(B[i][j]) = \text{base} + ((i \times c) + j) \times w$ with $c = 6$. Show the flat index $k = (i \times c) + j$ and the byte offset as separate steps.
+  \item[(c)] Compute the \emph{column-major} address of \texttt{B[3][4]} on the same array using $\text{addr}(B[i][j]) = \text{base} + ((j \times r) + i) \times w$ with $r = 5$. Show $k = (j \times r) + i$ and the byte offset as separate steps, then state in one sentence why (b) and (c) differ (row-major skips rows; column-major skips columns).
+\end{enumerate}
+Why this matters: C lays rows out first while Fortran/MATLAB lay columns out first --- mixing the two up places the same indices in different bytes, a classic porting bug.
+
+\section*{Q4 carries over to the next page.}
+
+\textbf{Q4.} Evaluate the postfix string \texttt{9 5 2 + - 4 *} with the lecture's one-stack algorithm (numbers are pushed; on an operator \texttt{op}, \texttt{b} $=$ \texttt{pop()}, \texttt{a} $=$ \texttt{pop()}, then push $\text{apply}(\text{op}, a, b)$):
+\begin{enumerate}
+  \item[(a)] Give the stack contents after \emph{every} token (six tokens: \texttt{9}, \texttt{5}, \texttt{2}, \texttt{+}, \texttt{-}, \texttt{*}), presented as a small table with one row per token.
+  \item[(b)] State the final answer (the last \texttt{pop()}).
+  \item[(c)] In one sentence, explain why the pop order (\texttt{b} first, \texttt{a} second) matters for the \texttt{-} step in this string --- what would go wrong if the two popped values were combined in the other order?
+\end{enumerate}
+Why this matters: postfix needs no parentheses and no precedence rules --- one left-to-right pass with a stack remembers the pending operands, which is exactly what the expression processor exploits.
+
+\section{Design}
+
+\textbf{Q5.} Run the lecture's bracket-checking algorithm (openers are pushed; on a closer, report unbalanced if the stack is empty or the top is not its match, else pop; at the end, balanced iff the stack is empty) on each string below. For each string, give a token-by-token trace (token, stack after the step) and the verdict.
+\begin{enumerate}
+  \item[(a)] \texttt{\{[()()]\}}
+  \item[(b)] \texttt{([\{[\}])}
+\end{enumerate}
+For the unbalanced string, name the first step that disagrees (the token, the stack contents at that step, and why it is a mismatch). For the balanced string, confirm the stack is empty at the end.
+Why this matters: the last-opened bracket must close first --- exactly LIFO --- so one stack decides nesting correctness in a single pass at $O(n)$ time.
+
+\textbf{Q6.} A stack is implemented exactly as in the lecture with \texttt{MAX} $= 4$ and \texttt{top} $= -1$ (empty). Starting from empty, execute this sequence:
+\begin{verbatim}
+push(11), push(22), pop(), push(33), push(44), push(55), push(66)
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] Trace \texttt{top} after every step (the index path), state what \texttt{pop()} returns, and state which \texttt{push} --- if any --- reports overflow (\texttt{top + 1 == MAX}).
+  \item[(b)] State the final \texttt{top} and the value \texttt{peek()} returns.
+  \item[(c)] In one sentence, state the cost of each of \texttt{push}, \texttt{pop}, \texttt{peek} in this implementation (bound plus case, in Week~2's vocabulary) and the one array access plus one index update that buys it.
+\end{enumerate}
+Why this matters: \texttt{top} is the whole discipline --- tracing the index rather than just the values is what lets you predict overflow, underflow, and the final state before running anything.
+
+\bibliography{../../Bibliography_base}
+\bibliographystyle{plain}
+\end{document}

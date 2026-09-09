@@ -1,0 +1,95 @@
+% =============================================================================
+% Assignments/CS301/03-arrays-stacks-coding-assignment.tex
+% Coding Assignment 3: Stack over Array + Bracket Check + Postfix Evaluation
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/03-arrays-stacks-coding/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+%   stack.h, starter_stack.c, test_visible.c
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 03-arrays-stacks-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Coding Assignment 3: One Array, One Index, Two Jobs}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Week 3 gave the calculator two things: a row of cells that finds \texttt{A[i]} by arithmetic, and a nesting discipline --- \texttt{push}, \texttt{pop}, \texttt{peek} over one array and one index \texttt{top} --- that checks brackets and evaluates postfix in a single left-to-right pass each. The lecture stated the contract but left the \emph{code} for you to write, with one deliberate simplification you must now unlearn: on the slides, \texttt{pop} on an empty stack returns $-1$ to keep the slide readable. That sentinel cannot tell ``the stack held $-1$'' from ``the stack was empty'' --- a real stack must say which happened. This assignment is that real stack, plus the two jobs the lecture promised it could do: Lab P1 (parenthesis check) and Lab P2 (postfix evaluation), both running on your array implementation.
+
+\section{Your task}
+
+Implement the Stack ADT in C as a \textbf{fixed array of \texttt{int} with an explicit status code on every fallible operation}. The contract is given to you in \texttt{stack.h} --- \emph{do not modify it}. Copy \texttt{starter\_stack.c} to \texttt{stack.c} and fill in all eight functions:
+
+\begin{verbatim}
+void        stack_init(IntStack *s);
+int         stack_is_empty(const IntStack *s);
+int         stack_size(const IntStack *s);
+StackStatus stack_push(IntStack *s, int x);      /* STACK_OK / STACK_OVERFLOW */
+StackStatus stack_pop(IntStack *s, int *out);    /* STACK_OK / STACK_UNDERFLOW */
+StackStatus stack_peek(const IntStack *s, int *out);
+int         is_balanced(const char *s);          /* P1: 1 if balanced, else 0 */
+EvalStatus  eval_postfix(const char *expr, int *out);  /* P2: status + answer */
+\end{verbatim}
+
+\textbf{The stack is one array plus \texttt{top}.} \texttt{stack\_init} sets \texttt{top} to $-1$ (empty). \texttt{push} refuses with \texttt{STACK\_OVERFLOW} when \texttt{top + 1 == STACK\_MAX} and changes nothing; \texttt{pop} and \texttt{peek} report \texttt{STACK\_UNDERFLOW} on an empty stack and leave \texttt{*out} unchanged. \texttt{peek} never removes anything. P1 pushes openers as their character codes into the same \texttt{int} cells --- no second stack needed.
+
+\textbf{P1 checks nesting, not content.} Push every \texttt{(}, \texttt{[}, \texttt{\{}; on a closer, return $0$ if the stack is empty or the top is not its match, else pop; every other character (letters, digits, spaces, operators) is ignored, so \texttt{(a+b)*[c]} is checked as \texttt{()[]}. Balanced iff the stack ends empty. The empty string is balanced; \texttt{NULL} returns $0$.
+
+\textbf{P2 evaluates left to right.} Integer literals (optional leading \texttt{-}, no leading \texttt{+}, must fit in \texttt{int}) are pushed; on an operator, \texttt{b} pops \emph{first} and \texttt{a} second, then push $\text{apply}(\text{op}, a, b)$ --- swapping the order breaks \texttt{-}, \texttt{/}, and \texttt{\%}. Tokens are separated by spaces or tabs. On \emph{any} non-\texttt{OK} status, \texttt{*out} is left unchanged. Read the six \texttt{EvalStatus} codes in \texttt{stack.h} before coding --- each error in the table below maps to exactly one of them.
+
+\section{Constraints}
+
+\begin{itemize}
+  \item Representation must be the \texttt{IntStack} array in \texttt{stack.h} --- no linked lists, no heap allocation, no global/static mutable state, no \texttt{strtok} shortcuts that hide the token scan.
+  \item Error paths use the explicit status codes --- never the lecture's $-1$ sentinel. A submission whose \texttt{pop} returns $-1$-as-error fails the hidden suite's sentinel-trap tests (pushing the \emph{value} $-1$ and popping it back must succeed with \texttt{STACK\_OK}).
+  \item Correctness is graded against the contract; your code must compile with \texttt{gcc -Wall -Wextra} without errors or warnings.
+  \item Complexity: \texttt{push}, \texttt{pop}, \texttt{peek} are $O(1)$ worst case each; \texttt{is\_balanced} and \texttt{eval\_postfix} each make one left-to-right pass at $O(n)$ time worst case, holding at most \texttt{STACK\_MAX} integers.
+\end{itemize}
+
+\section{Worked examples (these are the visible tests)}
+
+\textbf{Example 1 --- the stack itself.} After \texttt{init}: empty, size $0$. \texttt{push(10)}, \texttt{push(20)} both return \texttt{STACK\_OK}; \texttt{peek} gives $20$ and size stays $2$; \texttt{pop} gives $20$, then $10$; \texttt{pop} on the empty stack returns \texttt{STACK\_UNDERFLOW}.
+
+\textbf{Example 2 --- P1.} \texttt{is\_balanced("")} is $1$. \texttt{is\_balanced("(\{[]\})")} is $1$. \texttt{is\_balanced("(\{[\})")} is $0$ (the \texttt{\}} meets \texttt{[}). \texttt{is\_balanced("((())")} is $0$ (an opener never closes).
+
+\textbf{Example 3 --- P2.} \texttt{eval\_postfix("6 2 3 + * 4 -")} returns \texttt{EVAL\_OK} with answer $26$ ($2+3=5$, $6\times5=30$, $30-4=26$). \texttt{eval\_postfix("20 4 / 3 -")} returns \texttt{EVAL\_OK} with answer $2$. \texttt{eval\_postfix("5 0 /")} returns \texttt{EVAL\_DIV\_BY\_ZERO}. \texttt{eval\_postfix("2 +")} returns \texttt{EVAL\_TOO\_FEW\_OPERANDS}.
+
+\section{What to submit}
+
+\begin{enumerate}
+  \item \texttt{stack.c} --- your completed implementation (edit \texttt{starter\_stack.c}).
+  \item \texttt{stack.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+\section{Getting started}
+
+\begin{enumerate}
+  \item Copy \texttt{starter\_stack.c} to \texttt{stack.c} and fill in the eight function bodies.
+  \item Sanity-check locally:
+\begin{verbatim}
+gcc -Wall -Wextra -o test_visible test_visible.c stack.c
+./test_visible
+\end{verbatim}
+    All three worked examples should pass.
+  \item Submit \texttt{stack.c} and \texttt{stack.h}. The autograder compiles your \texttt{stack.c} against a \emph{hidden} test suite and reports pass/fail. The hidden suite covers: the $-1$ sentinel trap; filling the stack to exactly \texttt{STACK\_MAX} and one past it; \texttt{peek} purity and \texttt{NULL}-out calls; empty/single-bracket inputs, every bracket type, $100$-deep (fits) vs.\ $101$-deep (capacity) nesting, ignored non-bracket characters, and \texttt{NULL}; single-number, negative, and multi-digit postfix; division truncation and division-by-zero; too-few-operands and leftover-operand inputs; bad tokens; empty/whitespace input; a $101$-operand overflow; and seeded random batches of bracket strings and postfix expressions checked against an oracle.
+\end{enumerate}
+
+\end{document}

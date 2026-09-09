@@ -1,6 +1,6 @@
 course: CS301
 lab_mode: coding-assignment   # P1-P13 C programming practicals map to weeks -> /coding-assignment
-last_updated: 2026-08-24
+last_updated: 2026-09-09
 weeks:
   "00":
     deck: "00-course-motivation-overview"
@@ -32,17 +32,21 @@ weeks:
   "03":
     deck: "03-arrays-stacks"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
-      lab:        { status: absent, score: null, note: "P1 (parenthesis check), P2 (postfix evaluation)" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      slides:     { status: compiled, score: null, note: "39 frames/42 pages; 3-pass XeLaTeX clean, 0 errors/overfull/undefined; 3 TikZ (1D array, 2x3 row-major, stack top=2)" }
+      notes:      { status: compiled, score: null, note: "qa-notes APPROVED (2 rounds); 7pp; 3 TikZ reused; cites 5/5 parity. Flag: deck Q3 key inconsistent with deck algorithm — notes preserve deck, deck errata suggested" }
+      assignment: { status: compiled, score: null, note: "6 problems (2C/2N/2D); solutions key present (gitignored); verify-symbolic 4/4 PASS + traces mechanical PASS" }
+      lab:        { status: compiled, score: null, note: "coding-assignment P1+P2 (stack.h/starter/visible tests); hidden 207/207 PASS; verify-algorithm PASS (225/225, O(n) consistent)" }
+      gate:       { status: compiled, score: null, note: "10Q (7 verified PYQ CoVe CONFIRMED + 3 original); questions+answers PDFs clean" }
+      quarto:     { status: deployed, score: null, note: "qmd + TikZ SVGs; PDFs deployed to docs/ (slides/notes/assignment/coding/GATE Q+A); qa-quarto CONDITIONAL PASS (no quarto binary, no HTML yet)" }
   "04":
     deck: "04-expression-evaluation"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
+      slides:     { status: compiled, score: null, note: "41 frames/41 pages; 3-pass XeLaTeX clean, 0 overfull/undefined/warnings; 4 TikZ (pipeline, runtime stack, Hanoi pegs, expr tree)" }
+      notes:      { status: compiled, score: null, note: "qa-notes APPROVED (2 rounds); 9pp; 4 TikZ reused; cites 3/3 parity" }
+      assignment: { status: compiled, score: null, note: "Assignment 2; 6 problems (2C/2N/2D); solutions key present; verify-symbolic 10/10 PASS" }
+      lab:        { status: compiled, score: null, note: "coding-assignment P3+P4 (expr.h/starter/visible); hidden 144/144 PASS; verify-algorithm PASS" }
+      gate:       { status: compiled, score: null, note: "8Q (4 verified PYQ CoVe PASS/PARTIAL + 4 original); questions+answers PDFs clean" }
+      quarto:     { status: deployed, score: null, note: "qmd + 4 TikZ SVGs; PDFs deployed to docs/; qa-quarto APPROVED source-parity (no quarto binary, no HTML yet)" }
       assignment: { status: absent, score: null, note: "" }
       lab:        { status: absent, score: null, note: "P3 (infix->postfix/prefix), P4 (prefix->postfix)" }
       gate:       { status: absent, score: null, note: "" }
