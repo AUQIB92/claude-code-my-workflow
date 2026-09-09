@@ -1,0 +1,161 @@
+% =============================================================================
+% CompetitiveExam/CS301/04-expression-evaluation-questions.tex
+% Competitive Exam Practice 4 — GATE (Computer Science) Pattern
+% Expression evaluation and conversion (Week 4: infix to postfix and prefix,
+% prefix to postfix, postfix-evaluation traces, recursion and the runtime
+% stack, Tower of Hanoi moves/recurrence/depth)
+%
+% Student-facing — NO answers. Answer key: 04-expression-evaluation-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book
+% CompetitiveExam/Books/GATE-PYQs/filter1_volume2.pdf):
+%   - Q1  [GATE CS, verified text — year differs across sources] — what is
+%     essential for infix-to-postfix conversion (operator stack). Local book
+%     (GATEOverflow V2 p.231) heads it "GATE CSE 1997 | Question: 1.7" with
+%     options (A) operator stack / (B) operand stack / (C) both / (D) parse
+%     tree (p.231 text layer); ExamSIDE's stacks-and-queues topic page lists
+%     the same question text under GATE CSE 2004. Text + options + answer
+%     agree everywhere; only the year tag conflicts, so no single year is
+%     claimed. Answer (A) is also deterministic from the deck algorithm
+%     (operators wait on the stack; operands never touch it).
+%   - Q2  [GATE CSE 2004 Q38, verified — GATEOverflow V2 p.231] — postfix of
+%     a+b×c-d^e^f with ^ right-associative. Infix confirmed on ExamSIDE's
+%     GATE-2004 page; all four options recovered from the SlideShare scan of
+%     the official GATE CS 2004 solved paper ("(a) abc×+def^^- (b)
+%     abc×+de^f^- (c) ab+c×d-e^f^ (d) -+a×bc^^def"); correct option (a)
+%     confirmed by the gatecse.in GATE-2004 key (Q38 = a) and by exact
+%     re-derivation with the deck algorithm (verified by execution,
+%     2026-09-09). (ExamSIDE's internal topic index numbers it 43; the
+%     official paper number Q38 from the book is used.)
+%   - Q3  [GATE CSE 2007 Q38, verified — GATEOverflow V2 p.232] — postfix
+%     trace "8 2 3 ^ / 2 3 * + 5 1 * -", top two stack elements after the
+%     first *. Expression + options confirmed on ExamSIDE's GATE-2007
+%     stacks-and-queues page; answer (A) 6, 1 confirmed on the GATEOverflow
+%     question page (accepted answer, 23.9k views) and the Electrical4U
+%     GATE-2007 solutions, plus exact re-trace by execution (2026-09-09).
+%   - Q4  [GATE CSE 2002 (descriptive), single-source — GATEOverflow V2
+%     p.310] — Towers-of-Hanoi move() fill-in-the-blanks. Heading exists
+%     only in the local book (no independent web confirmation of the year,
+%     so the descriptive number is not claimed); the skeleton is the
+%     canonical Hanoi recursion and the completion is derived deterministically
+%     (condition must admit n = 0 as the silent base: n >= 1; recursive calls
+%     move n-1 src->aux then aux->dst). Shipped as verified-text,
+%     partially-verified year.
+%   - Q5  [Original, GATE-pattern] — infix-to-prefix by reversal, fresh
+%     instance (a+b)*(c-d) -> *+ab-cd (deck's worked prefix example is
+%     a*(b+c)-d; deck's exit ticket asks prefix of a+b*c, so neither is
+%     reused). Verified by execution 2026-09-09.
+%   - Q6  [Original, GATE-pattern] — prefix-to-postfix, fresh instance
+%     +*ab-cd -> ab*cd-+ (deck's own trace uses *+ab-cd -> ab+cd-*; the
+%     stem differs by one operator, and that deck answer is planted as a
+%     distractor). Verified by execution 2026-09-09.
+%   - Q7  [Original, GATE-pattern] — Hanoi NAT move count, n = 6 -> 63
+%     (deck's exit ticket uses n = 5 -> 31, so a fresh instance).
+%   - Q8  [Original, GATE-pattern] — Hanoi moves + max live frames, n = 6
+%     (deck's check-your-prediction uses n = 4 with options 8/4, 15/4,
+%     16/16, so a fresh instance with fresh distractors).
+%
+% Considered and dropped: GATE CSE 1995 Q2.21 and GATE CSE 1998 Q19b
+% (Infix-Prefix cluster, V2 pp.231-232) — expressions are embedded images,
+% dropped from the text layer, and no second web source confirming exact
+% text/options was found; per the skill's discipline they are not shipped
+% as verified. Stack-permutation questions (1994 Q1.14, IT 2004 Q52) are
+% out of Week 4 scope (permutations are not in the deck).
+%
+% No render+OCR pass was possible (no Ghostscript/Tesseract in this
+% environment); image-dropped values above were recovered via Tier-2 web
+% search + CoVe instead, per the skill's sourcing ladder. No forked
+% claim-verifier subagent exists in this environment, so CoVe was executed
+% inline (each claim checked against 2+ independent sources, verdicts in
+% the session report).
+%
+% Compile with: cd CompetitiveExam/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-expression-evaluation-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Competitive Exam Practice 4: Expression Notation, Recursion, and Tower of Hanoi\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type. Descriptive = write the missing code/text.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS, verified text --- year uncertain: GATEOverflow V2 p.231 heads it 1997 Q1.7; ExamSIDE lists it under 2004]} \textbf{[MCQ, 1 mark]} Which of the following is essential for converting an infix expression to the postfix form efficiently?
+\begin{enumerate}
+  \item[(A)] An operator stack
+  \item[(B)] An operand stack
+  \item[(C)] An operand stack and an operator stack
+  \item[(D)] A parse tree
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2004 Q38, verified --- GATEOverflow V2 p.231]} \textbf{[MCQ, 2 marks]} Assume that the operators \texttt{+}, \texttt{-}, \texttt{*} are left-associative and \texttt{\^{}} is right-associative. The order of precedence (from highest to lowest) is \texttt{\^{}}, \texttt{*}, \texttt{+}, \texttt{-}. (Below, \texttt{*} stands for $\times$.) The postfix expression corresponding to the infix expression \texttt{a+b*c-d\^{}e\^{}f} is
+\begin{enumerate}
+  \item[(A)] \texttt{abc*+def\^{}\^{}-}
+  \item[(B)] \texttt{abc*+de\^{}f\^{}-}
+  \item[(C)] \texttt{ab+c*d-e\^{}f\^{}}
+  \item[(D)] \texttt{-+a*bc\^{}\^{}def}
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CSE 2007 Q38, verified --- GATEOverflow V2 p.232]} \textbf{[MCQ, 2 marks]} The following postfix expression with single digit operands is evaluated using a stack:
+\begin{verbatim}
+8 2 3 ^ / 2 3 * + 5 1 * -
+\end{verbatim}
+Note that \texttt{\^{}} is the exponentiation operator. The top two elements of the stack after the first \texttt{*} is evaluated are:
+\begin{enumerate}
+  \item[(A)] \texttt{6, 1}
+  \item[(B)] \texttt{5, 7}
+  \item[(C)] \texttt{3, 2}
+  \item[(D)] \texttt{1, 5}
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CSE 2002 (descriptive), verified text / single-source year --- GATEOverflow V2 p.310]} \textbf{[Descriptive, 2 marks]} The following recursive function in C is a solution to the Towers of Hanoi problem. Fill in the dotted parts of the solution.
+\begin{verbatim}
+void move(int n, char A, char B, char C) {
+    if (......................) {
+        move (.............................);
+        printf("Move disk %d from pole %c to pole %c\n", n, A, C);
+        move (.....................);
+    }
+}
+\end{verbatim}
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} The prefix expression corresponding to the infix expression \texttt{(a+b)*(c-d)} (usual precedence; \texttt{+} and \texttt{-} left-associative) is:
+\begin{enumerate}
+  \item[(A)] \texttt{*+ab-cd}
+  \item[(B)] \texttt{*-ab+cd}
+  \item[(C)] \texttt{+*ab-cd}
+  \item[(D)] \texttt{*+ab+cd}
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} The postfix expression corresponding to the prefix expression \texttt{+*ab-cd} is:
+\begin{enumerate}
+  \item[(A)] \texttt{ab+cd-*}
+  \item[(B)] \texttt{ab*cd-+}
+  \item[(C)] \texttt{ab*cd+-}
+  \item[(D)] \texttt{cd-ab*+}
+\end{enumerate}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} The Tower of Hanoi problem with $6$ disks is solved by the standard recursive algorithm (move $n-1$ disks out of the way, move the largest disk, restack the $n-1$ disks). Counting one disk move as one step, the total number of moves is \_\_\_\_\_\_\_\_\_. (Answer in integer)
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} For the Tower of Hanoi problem with $n = 6$ disks solved by the standard recursive algorithm, let $M$ be the total number of disk moves and $D$ be the maximum number of simultaneously live activation frames of the recursive procedure. Then $(M, D)$ equals:
+\begin{enumerate}
+  \item[(A)] $(64, 6)$
+  \item[(B)] $(63, 6)$
+  \item[(C)] $(63, 63)$
+  \item[(D)] $(31, 5)$
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

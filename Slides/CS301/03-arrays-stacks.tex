@@ -1,0 +1,559 @@
+% CS301 Week 3 -- arrays (1D/2D, row-/column-major addresses) and the
+% Stack ADT with its array implementation; applications to balanced
+% parentheses and postfix evaluation.
+% Difficulty: intro (course-wide default per knowledge-base-CS301.md).
+% Page-grounded in Sedgewick2011 p.120 (stack as a collection ADT) and
+% Karumanchi2017 Ch.4 (Stacks, pp.163-204 PDF); Wirth Ch.1 Secs.1.5/1.7.1
+% (array structure and representation) and Horowitz & Sahni Ch.2-3 /
+% Aho-Hopcroft-Ullman Ch.2 cited at chapter level only (not page-indexed).
+% Continues the expression-processor thread: the calculator needs a fast
+% store for operands (arrays) and a checker/evaluator for its brackets and
+% postfix forms (stacks). Sets up Week 4 (conversion, Hanoi, recursion).
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{Arrays and the Simplest Useful ADT}
+\subtitle{Week 3 --- Array Addresses, the Stack, and Two Things Stacks Do}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 3]{\small Week 3}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- MOTIVATION
+% =============================================================================
+\section{Motivation and the Question}
+
+\begin{frame}{Today's Three Questions}
+  \begin{enumerate}
+    \item How does the machine find \texttt{A[i]} without scanning for it?
+    \item How do we describe a ``last in, first out'' store before coding it?
+    \item What do brackets and postfix expressions have to do with that store?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Plan}
+    First lay out memory in a row. Then name the stack contract. Then use one
+    stack to check brackets and evaluate postfix.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Calculator Needs Two Things}
+  \begin{alertblock}{Our running example}
+    The expression processor reads \texttt{(a+b)*c}: it stores operands
+    somewhere, and it must check the brackets and evaluate the expression.
+  \end{alertblock}
+  \begin{itemize}
+    \item Week 1 gave it heap blocks; Week 2 gave it a way to price lookups.
+    \item Operands arrive in order --- we want the $i$-th one \emph{instantly}.
+    \item Brackets nest --- the \emph{last} opened bracket must close
+      \emph{first}.
+  \end{itemize}
+  \muted{One need is positional (arrays); the other is nested (stacks).}
+\end{frame}
+
+\begin{frame}{Positional vs.\ Nested Needs}
+  \begin{itemize}
+    \item \key{Positional}: ``give me element number $i$'' --- marks list,
+      pixel row, operand table.
+    \item \key{Nested}: ``undo the most recent thing first'' --- brackets,
+      function calls, backtracking.
+    \item A linked walk gives neither instantly; a row of cells gives the
+      first, and a disciplined pointer over that row gives the second.
+  \end{itemize}
+  \begin{exampleblock}{The deal}
+    Arrays buy $O(1)$ worst-case access by laying elements side by side; a
+    stack buys nesting discipline with one index, \texttt{top}.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Where This Week Sits}
+  \begin{itemize}
+    \item Week 2 ended with: linear scan $O(n)$ worst case vs.\ binary search
+      $O(\log n)$ worst case --- \emph{if} the table supports instant access.
+    \item This week builds the structure that makes ``instant access'' true.
+    \item Week 4 then spends the stack on full expression conversion, Hanoi,
+      and recursion.
+  \end{itemize}
+  \muted{The arc: state the contract (stack ADT), implement it once over an
+    array, analyse what it costs --- the same shape every week repeats.}
+\end{frame}
+
+\transitionslide{First: the row of cells and how the machine addresses it.}
+
+% =============================================================================
+% ACT 1 --- 1D ARRAYS
+% =============================================================================
+\section{One-Dimensional Arrays}
+
+\sectiondivider{Section 1}{One-Dimensional Arrays}
+
+\begin{frame}{What Is an Array?}
+  \begin{block}{Definition}
+    An array holds a fixed number of elements of one type in contiguous
+    memory, reached by index --- the standard treatment (see Horowitz \&
+    Sahni Ch.~2; Wirth \S1.5)
+    \cite{HorowitzSahni2008_fundamentals_data_structures,Wirth2004_algorithms_data_structures}.
+  \end{block}
+  \begin{itemize}
+    \item \key{Contiguous}: element $i+1$ starts where element $i$ ends.
+    \item \key{0-based} in C: \texttt{A[0]} is first, \texttt{A[n-1]} is last.
+    \item $n$ counts the elements of \texttt{A} --- our Week 1--2 convention.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A Row of Five Cells}
+  \begin{center}
+    % Diagram: 1D array A[0..4] with values; indices below.
+    % Coordinates: (x, y)
+    %   cell i at x = 0.9*i (i = 0..4), y = 0, w = 0.78cm, h = 0.75cm
+    %   index labels at y = -0.90 (clear of cell bottoms at y = -0.375)
+    %   "base" arrow from below-left to cell 0 (ends at cell edge, no crossing)
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \foreach \i/\v in {0/10,1/20,2/30,3/40,4/50} {
+        \node[draw, minimum width=0.78cm, minimum height=0.75cm, fill=light-bg]
+          (c\i) at (0.9*\i, 0) {\v};
+      }
+      \foreach \i in {0,...,4} {
+        \node[text=neutral] at (0.9*\i, -0.90) {\i};
+      }
+      \node[text=neutral] (base) at (-1.35, -0.90) {base};
+      \draw[->, color=neutral] (base.east) -- (c0.south west);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Five \texttt{int} cells, side by side; index $i$ names the $i$-th cell.
+    \item \texttt{base} is the address of \texttt{A[0]} --- everything else is
+      arithmetic from there.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Finding \texttt{A[i]} Is Arithmetic}
+  \begin{block}{1D address formula}
+    If each element takes $w$ bytes,
+    \[ \text{addr}(A[i]) = \text{base} + i \times w. \]
+  \end{block}
+  \begin{itemize}
+    \item No scan, no search --- one multiply and one add.
+    \item That is why access is $O(1)$ worst case: the work does not grow
+      with $n$.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    \texttt{base} $= 2000$, $w = 4$: \texttt{A[3]} lives at
+    $2000 + 3 \times 4 = 2012$.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Bounds Are the Contract You Enforce}
+  \begin{block}{Valid range}
+    For \texttt{int A[n]}, only \texttt{A[0..n-1]} exists. C does not check
+    --- reading \texttt{A[n]} is undefined behaviour.
+  \end{block}
+  \begin{itemize}
+    \item \bad{Off by one}: looping \texttt{i <= n} instead of \texttt{i < n}.
+    \item \bad{Unchecked index}: trusting user input as an index directly.
+  \end{itemize}
+  \key{Every array access on this course carries an explicit range check in
+    the reasoning, even when C omits it at run time.}
+\end{frame}
+
+\begin{frame}{What Arrays Cost}
+  \begin{block}{Priced with Week 2's vocabulary}
+    Name the operation, give the bound, state the case.
+  \end{block}
+  \begin{itemize}
+    \item \key{Access} \texttt{A[i]}: $O(1)$ worst case --- the formula above.
+    \item \key{Search} (unsorted): $O(n)$ worst case --- nothing beats a scan.
+    \item \key{Insert/delete} at position $i$: $O(n)$ worst case --- up to
+      $n - i$ elements shift.
+  \end{itemize}
+  \muted{Fast to read, slow to splice in the middle --- the deficiency Week 6's
+    linked lists will answer.}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{An array holds $n = 1000$ marks; insert one at position $0$}
+    How many elements move?
+  \end{block}
+  \begin{enumerate}
+    \item None --- the formula makes room.
+    \item One --- only the neighbour shifts.
+    \item About $1000$ --- everything shifts one slot right.
+  \end{enumerate}
+  \begin{exampleblock}{Turn and talk}
+    Why does the \emph{position} of the insert decide the cost, when access
+    cost never depends on position?
+  \end{exampleblock}
+\end{frame}
+
+\transitionslide{One dimension is a row. Two dimensions are rows of rows.}
+
+% =============================================================================
+% ACT 2 --- 2D ARRAYS
+% =============================================================================
+\section{Two-Dimensional Arrays}
+
+\sectiondivider{Section 2}{Two-Dimensional Arrays}
+
+\begin{frame}{A 2D Array Is an Array of Arrays}
+  \begin{block}{C's view (row-major)}
+    \texttt{int A[r][c]} is $r$ rows, each a 1D array of $c$ elements; row
+    $0$ sits first in memory, then row $1$, and so on.
+  \end{block}
+  \begin{itemize}
+    \item Declaration says the shape: $r$ rows, $c$ columns.
+    \item Element \texttt{A[i][j]}: row $i$, column $j$, both 0-based.
+    \item Memory still holds one flat row of $r \times c$ cells --- the
+      mapping is pure arithmetic.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Row-Major Layout: $2 \times 3$}
+  \begin{center}
+    % Diagram: 2x3 grid; each cell shows A[i][j] and its flat offset k.
+    % Coordinates: (x, y)
+    %   cell (i,j) at x = 1.7*j, y = -1.0*i, w = 1.55cm, h = 0.85cm
+    %   no edges; labels live inside their own boxes (P7-safe)
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a00) at (0, 0) {\texttt{A[0][0]}\\{\scriptsize $k = 0$}};
+      \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a01) at (1.7, 0) {\texttt{A[0][1]}\\{\scriptsize $k = 1$}};
+      \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a02) at (3.4, 0) {\texttt{A[0][2]}\\{\scriptsize $k = 2$}};
+      \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a10) at (0, -1.0) {\texttt{A[1][0]}\\{\scriptsize $k = 3$}};
+      \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a11) at (1.7, -1.0) {\texttt{A[1][1]}\\{\scriptsize $k = 4$}};
+      \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a12) at (3.4, -1.0) {\texttt{A[1][2]}\\{\scriptsize $k = 5$}};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Row $0$ occupies flat slots $k = 0, 1, 2$; row $1$ takes $k = 3, 4, 5$.
+    \item Flat position: $k = i \times c + j$ --- skip $i$ whole rows, then $j$ cells.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Row-Major Address Formula}
+  \begin{block}{Row-major address ($r \times c$, $w$ bytes per element)}
+    \[ \text{addr}(A[i][j]) = \text{base} + ((i \times c) + j) \times w. \]
+  \end{block}
+  \begin{exampleblock}{Worked example}
+    $3 \times 4$ \texttt{int} array, \texttt{base} $= 1000$, $w = 4$:
+    \texttt{A[1][2]} is at $1000 + ((1 \times 4) + 2) \times 4 = 1024$.
+  \end{exampleblock}
+  \muted{C, C++, and Python (NumPy by default) all lay rows out this way.}
+\end{frame}
+
+\begin{frame}{Column-Major: the Transposed Twin}
+  \begin{block}{Column-major address ($r \times c$, $w$ bytes per element)}
+    \[ \text{addr}(A[i][j]) = \text{base} + ((j \times r) + i) \times w. \]
+  \end{block}
+  \begin{itemize}
+    \item Column $0$ sits first in memory, then column $1$ --- rows are
+      interleaved, not contiguous.
+    \item Same $3 \times 4$ example: \texttt{A[1][2]} is at
+      $1000 + ((2 \times 3) + 1) \times 4 = 1028$.
+    \item Fortran and MATLAB use this order; mixing the two layouts up is a
+      classic porting bug.
+  \end{itemize}
+  \key{Row-major skips rows ($i \times c$); column-major skips columns
+    ($j \times r$).}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{A $3 \times 4$ array, row-major, \texttt{base} $= 1000$, $w = 4$}
+    Where is \texttt{A[2][0]}?
+  \end{block}
+  \begin{enumerate}
+    \item $1000 + 2 \times 4 = 1008$.
+    \item $1000 + 8 \times 4 = 1032$.
+    \item $1000 + 6 \times 4 = 1024$.
+  \end{enumerate}
+  \muted{Two full rows of $4$ precede it: $k = 2 \times 4 + 0 = 8$.}
+\end{frame}
+
+\transitionslide{Rows give us storage. Now the discipline for nested work.}
+
+% =============================================================================
+% ACT 3 --- STACK ADT + ARRAY IMPLEMENTATION
+% =============================================================================
+\section{The Stack ADT}
+
+\sectiondivider{Section 3}{The Stack ADT}
+
+\begin{frame}{What Is a Stack?}
+  \begin{block}{Definition (LIFO)}
+    A stack is a collection from which we remove the most recently added
+    item first --- last in, first out. One of Sedgewick's three collection
+    types (p.120) \cite{Sedgewick2011_algorithms}.
+  \end{block}
+  \begin{itemize}
+    \item Think of a pile of trays: you add to the top and take from the top.
+    \item The contract says nothing about arrays yet --- arrays come next.
+  \end{itemize}
+  \muted{Stacks, queues, and bags differ only in which item leaves next
+    (Sedgewick, p.120).}
+\end{frame}
+
+\begin{frame}{The Stack Contract}
+  \begin{block}{Stack ADT}
+    Values plus three operations (Karumanchi Ch.~4, pp.163--204 PDF)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}:
+  \end{block}
+  \begin{enumerate}
+    \item \texttt{push(x)} --- place \texttt{x} on the top.
+    \item \texttt{pop()} --- remove and return the top item; an error if empty.
+    \item \texttt{peek()} --- return the top item without removing it.
+  \end{enumerate}
+  \muted{Week 1's shape again: name the operations first, then implement them.}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing the Stack over an Array}
+  \begin{block}{One array, one index}
+\begin{semiverbatim}
+#define MAX 100
+int stack[MAX];
+int top = -1;   /* -1 means empty */
+\end{semiverbatim}
+  \end{block}
+\begin{semiverbatim}
+void push(int x) \{ if (top + 1 < MAX) stack[++top] = x; \}
+int pop(void)  \{ if (top >= 0) return stack[top--]; return -1; \}
+int peek(void) \{ if (top >= 0) return stack[top]; return -1; \}
+\end{semiverbatim}
+  \muted{Production code would signal errors explicitly; the $-1$ sentinel
+    here keeps the slide readable.}
+\end{frame}
+
+\begin{frame}{Seeing \texttt{top} Move}
+  \begin{center}
+    % Diagram: vertical stack array, indices 0..4 bottom-to-top layout;
+    % filled cells 0..2, empty dashed 3..4; top arrow points at cell 2.
+    % Coordinates: (x, y)
+    %   cell k at (0, -0.9*k), w = 3.2cm, h = 0.75cm
+    %   index labels at x = -2.2, same y as their cell (clear of box edge)
+    %   top label at (3.1, -1.8); arrow top.west -> cell2.east (horizontal)
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, minimum width=3.2cm, minimum height=0.75cm, fill=primary-blue!15] (s0) at (0, 0) {\texttt{10}};
+      \node[draw, minimum width=3.2cm, minimum height=0.75cm, fill=primary-blue!15] (s1) at (0, -0.9) {\texttt{20}};
+      \node[draw, minimum width=3.2cm, minimum height=0.75cm, fill=primary-blue!15] (s2) at (0, -1.8) {\texttt{30}};
+      \node[draw, dashed, minimum width=3.2cm, minimum height=0.75cm, text=neutral] (s3) at (0, -2.7) {empty};
+      \node[draw, dashed, minimum width=3.2cm, minimum height=0.75cm, text=neutral] (s4) at (0, -3.6) {empty};
+      \node[text=neutral] at (-2.2, 0) {0};
+      \node[text=neutral] at (-2.2, -0.9) {1};
+      \node[text=neutral] at (-2.2, -1.8) {2};
+      \node[text=neutral] at (-2.2, -2.7) {3};
+      \node[text=neutral] at (-2.2, -3.6) {4};
+      \node[text=primary-gold] (toplab) at (3.1, -1.8) {\texttt{top = 2}};
+      \draw[->, thick, color=primary-gold] (toplab.west) -- (s2.east);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item \texttt{push(40)} writes cell $3$ and moves \texttt{top} to $3$.
+    \item \texttt{pop()} returns \texttt{30} and moves \texttt{top} back to $1$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Two Errors and the Cost}
+  \begin{itemize}
+    \item \bad{Overflow}: \texttt{push} onto a full stack (\texttt{top + 1 == MAX}).
+    \item \bad{Underflow}: \texttt{pop} or \texttt{peek} on an empty stack
+      (\texttt{top == -1}).
+  \end{itemize}
+  \begin{exampleblock}{Cost of each stack operation}
+    \texttt{push}, \texttt{pop}, \texttt{peek} are each $O(1)$ worst case ---
+    one array access plus one index update.
+  \end{exampleblock}
+  \muted{Fixed capacity is the price: when the array fills, this implementation
+    must refuse or grow (Week 6 removes the ceiling with links).}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{After \texttt{push(10)}, \texttt{push(20)}, \texttt{pop()},
+    \texttt{push(30)} --- what is \texttt{top}, and what does \texttt{peek()}
+    return?}
+  \end{block}
+  \begin{enumerate}
+    \item \texttt{top = 1}, \texttt{peek()} returns $30$.
+    \item \texttt{top = 2}, \texttt{peek()} returns $20$.
+    \item \texttt{top = 1}, \texttt{peek()} returns $20$.
+  \end{enumerate}
+  \muted{Trace the index, not just the values: $0 \to 1 \to 0 \to 1$.}
+\end{frame}
+
+\transitionslide{The contract is set. Now watch one stack do real work.}
+
+% =============================================================================
+% ACT 4 --- APPLICATIONS
+% =============================================================================
+\section{Two Things Stacks Do}
+
+\sectiondivider{Section 4}{Two Things Stacks Do}
+
+\begin{frame}{Application 1: Are the Brackets Balanced?}
+  \begin{block}{Problem (Lab P1)}
+    Given a string of brackets \texttt{( ) [ ] \{ \}}, decide whether every
+    opener is closed, in the right order.
+  \end{block}
+  \begin{itemize}
+    \item \good{\texttt{([])}} --- nested correctly.
+    \item \bad{\texttt{([)]}} --- closed in the wrong order.
+    \item \bad{\texttt{((()}} --- an opener never closed.
+  \end{itemize}
+  \muted{The last-opened bracket must close first --- exactly LIFO.}
+\end{frame}
+
+\begin{frame}[fragile]{Checking with One Stack}
+  \begin{block}{Algorithm}
+\begin{semiverbatim}
+for each character ch in the string:
+    if ch is an opener: push(ch)
+    if ch is a closer:
+        if stack empty or top is not its match: report unbalanced
+        else pop()
+at the end: balanced iff stack is empty
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Time $O(n)$ worst case, auxiliary space $O(n)$ worst case.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trace: \texttt{([])} vs.\ \texttt{([)]}}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{next} & \textbf{stack after step} & \textbf{note} \\
+    \midrule
+    \texttt{(} & \texttt{(} & push opener \\
+    \texttt{[} & \texttt{( [} & push opener \\
+    \texttt{]} & \texttt{(} & matches \texttt{[}: pop \\
+    \texttt{)} & empty & matches \texttt{(}: pop --- balanced \\
+    \midrule
+    \texttt{(} & \texttt{(} & push opener \\
+    \texttt{[} & \texttt{( [} & push opener \\
+    \texttt{)} & --- & top is \texttt{[}: \textbf{unbalanced} \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item Success empties the stack; the first mismatch stops the scan.
+  \end{itemize}
+  \muted{Try it on \texttt{\{(()\}[} before the lab --- where does it fail?}
+\end{frame}
+
+\begin{frame}{Application 2: Evaluating Postfix}
+  \begin{block}{Postfix in one line}
+    The operator follows its operands: \texttt{2 3 4 + *} means
+    $2 \times (3 + 4)$. No parentheses, no precedence rules.
+  \end{block}
+  \begin{itemize}
+    \item Infix (\texttt{2 * (3 + 4)}) is for humans; postfix is for stacks.
+    \item Full conversion between the forms is Week 4's job --- today we
+      only \emph{evaluate} a postfix string that is already given.
+  \end{itemize}
+  \muted{Standard treatment (see Horowitz \& Sahni Ch.~3; Aho et al.\ Ch.~2)
+    \cite{HorowitzSahni2008_fundamentals_data_structures,AhoHopcroftUllman1983_data_structures_algorithms}.}
+\end{frame}
+
+\begin{frame}[fragile]{Evaluating with One Stack (Lab P2)}
+  \begin{block}{Algorithm}
+\begin{semiverbatim}
+for each token t in the postfix string:
+    if t is a number: push(t)
+    if t is an operator op:
+        b = pop(); a = pop()
+        push(apply(op, a, b))
+at the end: answer is pop()
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Time $O(n)$ worst case, auxiliary space $O(n)$ worst case.
+    \item Order matters: \texttt{b} is popped first, \texttt{a} second.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trace: \texttt{2 3 4 + *}}
+  \begin{center}
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{token} & \textbf{stack after step} \\
+    \midrule
+    \texttt{2} & \texttt{2} \\
+    \texttt{3} & \texttt{2 3} \\
+    \texttt{4} & \texttt{2 3 4} \\
+    \texttt{+} & \texttt{2 7} \\
+    \texttt{*} & \texttt{14} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item \texttt{+} pops $4$ then $3$, pushes $7$; \texttt{*} pops $7$ then
+      $2$, pushes $14$.
+    \item One left-to-right pass, no backtracking --- the stack remembers the
+      pending operands.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Two applications, one pattern: the stack remembers what is pending.}
+
+% =============================================================================
+% ACT 5 --- WRAP UP
+% =============================================================================
+\section{Summary}
+
+\begin{frame}{Three Common Mistakes}
+  \begin{itemize}
+    \item \bad{Starting indices at $1$ in C code} --- \texttt{A[1..n]} alongside
+      C silently drops \texttt{A[0]} and reads past the end.
+    \item \bad{Forgetting \texttt{top == -1} means empty} --- then \texttt{pop}
+      reads garbage instead of reporting underflow.
+    \item \bad{Swapping row- and column-major} --- $1024$ vs.\ $1028$ in our
+      example; same indices, different bytes.
+  \end{itemize}
+  \begin{exampleblock}{The habit}
+    Name the operation, give the bound, state the case --- and point at the
+    index or trace that exhibits it.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 3 Summary}
+  \begin{itemize}
+    \item \key{Arrays}: contiguous cells; \texttt{addr}$(A[i]) = $ \texttt{base}
+      $+ i \times w$; 2D row-major adds $(i \times c) + j$.
+    \item \key{Costs}: access $O(1)$; search and mid-insert $O(n)$ --- all
+      worst case.
+    \item \key{Stack ADT}: \texttt{push}/\texttt{pop}/\texttt{peek}, LIFO;
+      array implementation with \texttt{top} ($-1$ = empty), each $O(1)$.
+    \item \key{Applications}: bracket checking and postfix evaluation, each
+      one pass at $O(n)$ time.
+  \end{itemize}
+  \begin{exampleblock}{Next week}
+    From postfix to prefix and back, Hanoi, and recursion with the runtime
+    stack --- the stack starts calling functions, not just holding numbers.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Before You Go: Predict}
+  \begin{block}{Three one-line predictions}
+    Answer from the formulas, then check in the lab.
+  \end{block}
+  \begin{enumerate}
+    \item A $4 \times 5$ \texttt{int} array ($w = 4$, \texttt{base} $= 5000$):
+      row-major address of \texttt{A[2][3]}?
+    \item \texttt{push(5)}, \texttt{push(7)}, \texttt{pop()},
+      \texttt{push(9)}: final \texttt{top} and \texttt{peek()}?
+    \item Is \texttt{\{[( )]\}} balanced? Which step first disagrees?
+  \end{enumerate}
+  \muted{Answers: $5052$; \texttt{top} $= 1$, \texttt{peek()} $= 9$; no ---
+    the \texttt{(} meets \texttt{]}.}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

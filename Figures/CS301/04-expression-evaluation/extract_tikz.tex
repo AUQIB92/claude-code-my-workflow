@@ -1,0 +1,116 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\begin{document}
+
+\begin{frame}
+\begin{center}
+% Diagram: 4-stage pipeline boxes left-to-right with arrows.
+% Coordinates: (x, y)
+%   tokenize at (0,0); check at (3.2,0); convert at (6.4,0);
+%   evaluate at (9.6,0); each w = 2.7cm, h = 0.95cm
+%   arrows join east->west anchors of neighbours (no box crossings)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \node[draw, fill=light-bg, minimum width=2.7cm, minimum height=0.95cm,
+    text width=2.5cm, align=center] (tok) at (0, 0)
+    {tokenize\\\texttt{(a+b)*c}};
+  \node[draw, fill=light-bg, minimum width=2.7cm, minimum height=0.95cm,
+    text width=2.5cm, align=center] (chk) at (3.2, 0)
+    {check (Wk 3)\\brackets};
+  \node[draw, fill=primary-gold!25, minimum width=2.7cm, minimum height=0.95cm,
+    text width=2.5cm, align=center] (conv) at (6.4, 0)
+    {convert (Wk 4)\\infix to postfix};
+  \node[draw, fill=light-bg, minimum width=2.7cm, minimum height=0.95cm,
+    text width=2.5cm, align=center] (ev) at (9.6, 0)
+    {evaluate (Wk 3)\\postfix};
+  \draw[->, thick, color=jet] (tok.east) -- (chk.west);
+  \draw[->, thick, color=jet] (chk.east) -- (conv.west);
+  \draw[->, thick, color=jet] (conv.east) -- (ev.west);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: expression tree for *+ab-cd.
+% Coordinates: (x, y)
+%   root * at (3.0, 2.5); + at (1.5, 1.2); - at (4.5, 1.2)
+%   leaves a (0.7, 0), b (2.3, 0), c (3.7, 0), d (5.3, 0)
+%   edges join parent.south to child.north (no box crossings)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm,
+    fill=light-bg] (root) at (3.0, 2.5) {\texttt{*}};
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm,
+    fill=light-bg] (plus) at (1.5, 1.2) {\texttt{+}};
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm,
+    fill=light-bg] (minus) at (4.5, 1.2) {\texttt{-}};
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (a) at (0.7, 0) {\texttt{a}};
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (b) at (2.3, 0) {\texttt{b}};
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (c) at (3.7, 0) {\texttt{c}};
+  \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (d) at (5.3, 0) {\texttt{d}};
+  \draw[thick, color=jet] (root.south) -- (plus.north);
+  \draw[thick, color=jet] (root.south) -- (minus.north);
+  \draw[thick, color=jet] (plus.south) -- (a.north);
+  \draw[thick, color=jet] (plus.south) -- (b.north);
+  \draw[thick, color=jet] (minus.south) -- (c.north);
+  \draw[thick, color=jet] (minus.south) -- (d.north);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: call frames stacked vertically; stack grows downward.
+% Coordinates: (x, y)
+%   main at (0, 0); hanoi(3) at (0, -1.0); hanoi(2) at (0, -2.0);
+%   hanoi(1) at (0, -3.0); each w = 5.2cm, h = 0.8cm
+%   growth arrow at x = -3.4 from y = 0.6 to y = -3.6 (clear of boxes)
+%   top label at (3.9, -3.0); arrow top.west -> hanoi1.east
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=light-bg,
+    text width=5.0cm, align=center] (main) at (0, 0)
+    {\texttt{main}: n = 3};
+  \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=light-bg,
+    text width=5.0cm, align=center] (h3) at (0, -1.0)
+    {\texttt{hanoi(3, S, D, A)}};
+  \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=light-bg,
+    text width=5.0cm, align=center] (h2) at (0, -2.0)
+    {\texttt{hanoi(2, S, A, D)}};
+  \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=primary-gold!25,
+    text width=5.0cm, align=center] (h1) at (0, -3.0)
+    {\texttt{hanoi(1, S, D, A)}: running};
+  \draw[->, thick, color=neutral] (-3.4, 0.6) -- (-3.4, -3.6);
+  \node[text=neutral] at (-3.4, 0.95) {growth};
+  \node[text=primary-gold] (toplab) at (3.9, -3.0) {\texttt{top}};
+  \draw[->, thick, color=primary-gold] (toplab.west) -- (h1.east);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: 3 pegs with 3 disks stacked on source peg S.
+% Coordinates: (x, y)
+%   pegs S/A/D as vertical lines at x = 0/3/6, y from 0 to 2.0
+%   base line y = 0 from x = -1.2 to x = 7.2 (endpoints clear of pegs)
+%   disks (boxes) centred on S: w = 2.2/1.6/1.0cm, h = 0.4cm,
+%     at y = 0.25/0.70/1.15
+%   peg labels at y = -0.55 (clear of base line)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[thick, color=neutral] (-1.2, 0) -- (7.2, 0);
+  \draw[thick, color=jet] (0, 0) -- (0, 2.0);
+  \draw[thick, color=jet] (3, 0) -- (3, 2.0);
+  \draw[thick, color=jet] (6, 0) -- (6, 2.0);
+  \node[draw, fill=primary-blue!20, minimum width=2.2cm,
+    minimum height=0.4cm] (d3) at (0, 0.25) {};
+  \node[draw, fill=primary-blue!20, minimum width=1.6cm,
+    minimum height=0.4cm] (d2) at (0, 0.70) {};
+  \node[draw, fill=primary-blue!20, minimum width=1.0cm,
+    minimum height=0.4cm] (d1) at (0, 1.15) {};
+  \node[text=neutral] at (0, -0.55) {S (source)};
+  \node[text=neutral] at (3, -0.55) {A (aux)};
+  \node[text=neutral] at (6, -0.55) {D (dest)};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\end{document}

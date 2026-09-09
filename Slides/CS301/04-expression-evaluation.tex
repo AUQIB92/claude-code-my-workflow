@@ -1,0 +1,644 @@
+% CS301 Week 4 -- expression notation and conversion (infix to postfix and
+% prefix, prefix to postfix), Tower of Hanoi, recursion and the runtime stack.
+% Difficulty: intro (course-wide default per knowledge-base-CS301.md).
+% Page-grounded in Karumanchi2017 Ch.4 (Stacks, pp.163-204 PDF: Stack ADT and
+% infix/postfix/prefix applications) and Ch.2 (pp.62-73 PDF: recursion, call
+% stack, recursion vs iteration); Wirth Ch.3 (pp.87-108: recursive algorithms,
+% when recursion helps and when it does not); Sedgewick2011 p.120 (stack as a
+% collection ADT). Horowitz & Sahni Ch.3 / Aho-Hopcroft-Ullman Ch.2 cited at
+% chapter level only (not page-indexed).
+% Handoff: Week 3 closed with postfix EVALUATION of an already-given postfix
+% string (Lab P2) and promised conversion; this deck does NOT re-teach
+% evaluation -- it builds on it. Continues the expression-processor thread:
+% the calculator can check brackets and evaluate postfix; now it must rewrite
+% infix itself, then call itself (recursion). Sets up Week 5 (queues) and
+% Week 11 (expression trees).
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{Why Compilers Rewrite Your Arithmetic}
+\subtitle{Week 4 --- Conversion, Hanoi, and Recursion with the Runtime Stack}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 4]{\small Week 4}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- MOTIVATION + HANDOFF
+% =============================================================================
+\section{Motivation and the Handoff}
+
+\begin{frame}{Today's Four Questions}
+  \begin{enumerate}
+    \item Why is \texttt{a+b*c} hard to evaluate as written?
+    \item How does one stack turn infix into postfix or prefix?
+    \item How does one stack turn prefix back into postfix?
+    \item Why does moving 64 disks take longer than the age of the universe?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Plan}
+    Name the three notations. Convert between them with a stack. Then let
+    functions call themselves, and price what that costs.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Handoff: What Week 3 Finished}
+  \begin{itemize}
+    \item Week 3 gave us the Stack ADT (\texttt{push}/\texttt{pop}/\texttt{peek},
+      \texttt{top} with $-1$ = empty, each $O(1)$ worst case) over an array.
+    \item It applied one stack to two jobs: checking brackets (Lab P1) and
+      \emph{evaluating} a postfix string \emph{already in postfix} (Lab P2).
+    \item What it never did: produce that postfix string from what humans
+      actually write.
+  \end{itemize}
+  \begin{exampleblock}{This week's job}
+    Take \texttt{a+b*(c-d)/e} as typed, rewrite it for the stack, then study
+    the stack that rewrites function calls: recursion.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Calculator Pipeline}
+  \begin{center}
+    % Diagram: 4-stage pipeline boxes left-to-right with arrows.
+    % Coordinates: (x, y)
+    %   tokenize at (0,0); check at (3.2,0); convert at (6.4,0);
+    %   evaluate at (9.6,0); each w = 2.7cm, h = 0.95cm
+    %   arrows join east->west anchors of neighbours (no box crossings)
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=light-bg, minimum width=2.7cm, minimum height=0.95cm,
+        text width=2.5cm, align=center] (tok) at (0, 0)
+        {tokenize\\\texttt{(a+b)*c}};
+      \node[draw, fill=light-bg, minimum width=2.7cm, minimum height=0.95cm,
+        text width=2.5cm, align=center] (chk) at (3.2, 0)
+        {check (Wk 3)\\brackets};
+      \node[draw, fill=primary-gold!25, minimum width=2.7cm, minimum height=0.95cm,
+        text width=2.5cm, align=center] (conv) at (6.4, 0)
+        {convert (Wk 4)\\infix to postfix};
+      \node[draw, fill=light-bg, minimum width=2.7cm, minimum height=0.95cm,
+        text width=2.5cm, align=center] (ev) at (9.6, 0)
+        {evaluate (Wk 3)\\postfix};
+      \draw[->, thick, color=jet] (tok.east) -- (chk.west);
+      \draw[->, thick, color=jet] (chk.east) -- (conv.west);
+      \draw[->, thick, color=jet] (conv.east) -- (ev.west);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Weeks 1--3 built stages 1, 2, and 4; the missing stage is the
+      rewrite in the middle.
+    \item Recursion (second half today) explains how stage 4's evaluator and
+      every function call actually run.
+  \end{itemize}
+  \muted{One program learning new tricks each week --- the course thread.}
+\end{frame}
+
+\begin{frame}{Where This Week Sits}
+  \begin{itemize}
+    \item Week 2 priced things: name the operation, give the bound, state the
+      case. Every claim today repeats that shape.
+    \item Week 3's close promised: ``from postfix to prefix and back, Hanoi,
+      and recursion with the runtime stack.''
+    \item Week 5 (queues) then reuses the same conversion discipline for
+      buffering; Week 11 returns with expression trees.
+  \end{itemize}
+  \muted{The arc again: state the contract, implement it once, analyse what
+    it costs.}
+\end{frame}
+
+\transitionslide{First: why what you type is not what the machine wants.}
+
+% =============================================================================
+% ACT 1 --- THREE NOTATIONS
+% =============================================================================
+\section{Three Ways to Write Arithmetic}
+
+\sectiondivider{Section 1}{Three Ways to Write Arithmetic}
+
+\begin{frame}{Why Infix Is Hard to Evaluate}
+  \begin{itemize}
+    \item In \texttt{a+b*c}, the \texttt{+} comes first but runs second ---
+      position lies about order.
+    \item In \texttt{a-b-c}, the same symbol twice needs a tie-break: left to
+      right gives $(a-b)-c$, right to left would give $a-(b-c)$.
+    \item In \texttt{(a+b)*c}, brackets override everything --- the scanner
+      must remember how deep it is.
+  \end{itemize}
+  \begin{exampleblock}{The problem in one line}
+    Infix mixes three rules (precedence, associativity, parentheses); a
+    single left-to-right scan cannot apply all three without remembering.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Infix, Postfix, Prefix}
+  \begin{block}{Definitions (standard treatment; see Horowitz \& Sahni Ch.~3)
+    \cite{HorowitzSahni2008_fundamentals_data_structures}}
+    \key{Infix}: operator between operands (\texttt{a+b}). \key{Postfix}:
+    operator after (\texttt{ab+}). \key{Prefix}: operator before
+    (\texttt{+ab}). Postfix and prefix need no parentheses or precedence
+    rules --- position alone fixes the order.
+  \end{block}
+  \begin{itemize}
+    \item Same computation, three spellings: \texttt{(a+b)*c} =
+      \texttt{ab+c*} = \texttt{*+abc}.
+    \item Week 3 evaluated the middle spelling; today we produce all three
+      from the first.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Precedence and Associativity}
+  \begin{center}
+  {\small
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{operators} & \textbf{precedence} & \textbf{associativity} \\
+    \midrule
+    \texttt{( )} & highest (override) & --- \\
+    \texttt{\^{}} (power) & high & right: $a^{b^{c}} = a^{(b^{c})}$ \\
+    \texttt{* /} & medium & left: $a/b*c = (a/b)*c$ \\
+    \texttt{+ -} & low & left: $a-b-c = (a-b)-c$ \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item \key{Precedence} decides \texttt{*} before \texttt{+};
+      \key{associativity} breaks ties among equals.
+    \item C, Java, and the syllabus all use this table --- memorise it once.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Mini-Example}
+  \begin{block}{Same operands, different spellings}
+    \texttt{a+b*c} means $a + (b \times c)$: postfix \texttt{abc*+}.
+    \texttt{(a+b)*c} means $(a + b) \times c$: postfix \texttt{ab+c*}.
+  \end{block}
+  \begin{itemize}
+    \item The brackets move no operand --- they only redirect which operator
+      waits on the stack.
+    \item That redirection is the whole conversion algorithm of the next
+      section.
+  \end{itemize}
+  \muted{Trace both with the Week 3 evaluator to confirm: same stack code,
+    different strings in.}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{Which postfix matches \texttt{a*b+c}?}
+    A: \texttt{abc+*} \quad B: \texttt{ab*c+} \quad C: \texttt{ab+*c}
+  \end{block}
+  \begin{enumerate}
+    \item A --- addition first, since it is written last.
+    \item B --- multiplication first, by precedence.
+    \item C --- brackets are implied around \texttt{b+c}.
+  \end{enumerate}
+  \begin{exampleblock}{Turn and talk}
+    Why does precedence decide this before any stack is even mentioned?
+  \end{exampleblock}
+\end{frame}
+
+\transitionslide{The rules are set. Now the stack that applies them.}
+
+% =============================================================================
+% ACT 2 --- INFIX TO POSTFIX
+% =============================================================================
+\section{Infix to Postfix}
+
+\sectiondivider{Section 2}{Infix to Postfix}
+
+\begin{frame}[fragile]{Infix to Postfix with One Stack (Lab P3)}
+  \begin{block}{Algorithm (Karumanchi Ch.~4, pp.163--204 PDF)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}}
+\begin{semiverbatim}
+for each token t in the infix string, left to right:
+    operand: append to output
+    '(': push it
+    ')': pop to output until '(' (discard both parens)
+    operator op: while top is an operator of >= precedence
+        (strictly > if op is right-associative): pop to output
+        then push op
+at the end: pop everything to output
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Operands never touch the stack; only operators wait there.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Trace: \texttt{a+b*c-(d+e/f)}}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{token} & \textbf{output so far} & \textbf{stack after step} \\
+    \midrule
+    \texttt{a} & \texttt{a} & empty \\
+    \texttt{+} & \texttt{a} & \texttt{+} \\
+    \texttt{b} & \texttt{a b} & \texttt{+} \\
+    \texttt{*} & \texttt{a b} & \texttt{+ *} \\
+    \texttt{c} & \texttt{a b c} & \texttt{+ *} \\
+    \texttt{-} & \texttt{a b c * +} & \texttt{-} \\
+    \texttt{(} & \texttt{a b c * +} & \texttt{- (} \\
+    \texttt{d} & \texttt{a b c * + d} & \texttt{- (} \\
+    \texttt{+} & \texttt{a b c * + d} & \texttt{- ( +} \\
+    \texttt{e} & \texttt{a b c * + d e} & \texttt{- ( +} \\
+    \texttt{/} & \texttt{a b c * + d e} & \texttt{- ( + /} \\
+    \texttt{f} & \texttt{a b c * + d e f} & \texttt{- ( + /} \\
+    \texttt{)} & \texttt{a b c * + d e f / +} & \texttt{-} \\
+    end & \texttt{a b c * + d e f / + -} & empty \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \muted{Watch \texttt{-}: it flushes \texttt{+ *} first, since both outrank or
+    tie it left-associatively.}
+\end{frame}
+
+\begin{frame}{Two Traps: Powers and Parentheses}
+  \begin{itemize}
+    \item \bad{Power is right-associative}: $a^{b^{c}}$ is $a^{(b^{c})}$, so a
+      second \texttt{\^{}} must \emph{not} pop the first --- pop only on
+      strictly greater precedence.
+    \item \bad{Parentheses are not output}: \texttt{(} marks ``stop here'' on
+      the stack; \texttt{)} flushes to it and both parens are discarded.
+    \item \bad{Subtraction order}: \texttt{a-b} pops as ``pop \texttt{b}
+      first, \texttt{a} second'' at evaluation --- the Week 3 rule, unchanged.
+  \end{itemize}
+  \begin{exampleblock}{Cost}
+    One pass, each token pushed and popped at most once: $O(n)$ time worst
+    case, $O(n)$ auxiliary space worst case for $n$ tokens.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{Convert \texttt{(a+b)*c-d}. What is the postfix?}
+    A: \texttt{ab+cd-*} \quad B: \texttt{ab+c*d-} \quad C: \texttt{abc*+d-}
+  \end{block}
+  \begin{enumerate}
+    \item A --- the \texttt{-} binds tighter than \texttt{*}.
+    \item B --- brackets first, then \texttt{*}, then \texttt{-}.
+    \item C --- precedence beats the brackets.
+  \end{enumerate}
+  \muted{Run the algorithm line by line; the \texttt{)} flushes exactly one
+    \texttt{+}.}
+\end{frame}
+
+\transitionslide{Postfix done. Now the mirror image: prefix.}
+
+% =============================================================================
+% ACT 3 --- PREFIX ROUTE
+% =============================================================================
+\section{Prefix and Back Again}
+
+\sectiondivider{Section 3}{Prefix and Back Again}
+
+\begin{frame}[fragile]{Infix to Prefix by Reversal (Lab P3)}
+  \begin{block}{Method}
+\begin{semiverbatim}
+1. Reverse the infix string; swap '(' with ')'.
+2. Run the postfix algorithm, treating all
+   operators as usual BUT popping only on
+   strictly greater precedence (mirror rule).
+3. Reverse the result.
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Why it works: prefix of $E$ is the mirror of postfix of $E$
+      reversed --- one algorithm serves both directions.
+    \item The paren swap is the step everyone forgets; without it every
+      bracket binds backwards.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: \texttt{a*(b+c)-d} to Prefix}
+  \begin{itemize}
+    \item Reverse and swap parens: \texttt{d-(c+b)*a}.
+    \item Postfix of the reversed string: \texttt{d c b + a * -}
+      (the \texttt{)} flushes the \texttt{+} exactly as before).
+    \item Reverse back: \texttt{-*a+bcd}.
+  \end{itemize}
+  \begin{exampleblock}{Sanity check}
+    Read \texttt{-*a+bcd} outside-in: subtract $d$ from $\times(a, +(b,c))$
+    --- that is $a \times (b+c) - d$. Correct.
+  \end{exampleblock}
+  \muted{Fresh instance, same method as the previous section --- no new
+    machinery.}
+\end{frame}
+
+\begin{frame}[fragile]{Prefix to Postfix with One Stack (Lab P4)}
+  \begin{block}{Algorithm: scan right to left}
+\begin{semiverbatim}
+for each token t from right to left:
+    if t is an operand: push(t as a string)
+    if t is an operator op:
+        a = pop(); b = pop()
+        push(a + " " + b + " " + op)
+at the end: the stack holds the postfix string
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Direction matters: right-to-left meets operands before the operator
+      that combines them.
+    \item Trace \texttt{*+ab-cd}: \texttt{d}, \texttt{c} $\to$ \texttt{cd-};
+      \texttt{b}, \texttt{a} $\to$ \texttt{ab+}; \texttt{*} $\to$
+      \texttt{ab+cd-*}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A Peek at Expression Trees (Week 11)}
+  \begin{center}
+    % Diagram: expression tree for *+ab-cd.
+    % Coordinates: (x, y)
+    %   root * at (3.0, 2.5); + at (1.5, 1.2); - at (4.5, 1.2)
+    %   leaves a (0.7, 0), b (2.3, 0), c (3.7, 0), d (5.3, 0)
+    %   edges join parent.south to child.north (no box crossings)
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm,
+        fill=light-bg] (root) at (3.0, 2.5) {\texttt{*}};
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm,
+        fill=light-bg] (plus) at (1.5, 1.2) {\texttt{+}};
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm,
+        fill=light-bg] (minus) at (4.5, 1.2) {\texttt{-}};
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (a) at (0.7, 0) {\texttt{a}};
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (b) at (2.3, 0) {\texttt{b}};
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (c) at (3.7, 0) {\texttt{c}};
+      \node[draw, circle, minimum width=0.7cm, minimum height=0.7cm] (d) at (5.3, 0) {\texttt{d}};
+      \draw[thick, color=jet] (root.south) -- (plus.north);
+      \draw[thick, color=jet] (root.south) -- (minus.north);
+      \draw[thick, color=jet] (plus.south) -- (a.north);
+      \draw[thick, color=jet] (plus.south) -- (b.north);
+      \draw[thick, color=jet] (minus.south) -- (c.north);
+      \draw[thick, color=jet] (minus.south) -- (d.north);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Operators are branch nodes, operands are leaves; postfix is
+      post-order, prefix is pre-order.
+    \item Full story in Week 11 --- for now, one picture to file away.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{Prefix \texttt{-+ab+cd} to postfix: first operator resolved?}
+    A: \texttt{ab+} \quad B: \texttt{cd+} \quad C: \texttt{ab+cd+-}
+  \end{block}
+  \begin{enumerate}
+    \item \texttt{ab+} --- the leftmost operator resolves first.
+    \item \texttt{cd+} --- scanning right-to-left meets \texttt{d},
+      \texttt{c} under the rightmost \texttt{+} first.
+    \item The whole string at once --- operators wait for both operands.
+  \end{enumerate}
+  \muted{Right-to-left: \texttt{d}, \texttt{c} combine under the rightmost
+    \texttt{+} before anything else happens.}
+\end{frame}
+
+\transitionslide{Rewriting done. Now functions that call themselves.}
+
+% =============================================================================
+% ACT 4 --- RECURSION + HANOI
+% =============================================================================
+\section{Recursion and Tower of Hanoi}
+
+\sectiondivider{Section 4}{Recursion and Tower of Hanoi}
+
+\begin{frame}[fragile]{What Recursion Is}
+  \begin{block}{Definition (Karumanchi Ch.~2, pp.62--73 PDF; Wirth Ch.~3)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy,Wirth2004_algorithms_data_structures}}
+    A recursive function solves a smaller instance of its own problem: one
+    \key{base case} answered directly, one \key{recursive case} that calls
+    itself on strictly smaller input.
+  \end{block}
+\begin{semiverbatim}
+int fact(int n) {
+    if (n <= 1) return 1;        /* base case */
+    return n * fact(n - 1);      /* smaller instance */
+}
+\end{semiverbatim}
+  \begin{itemize}
+    \item No base case: infinite descent. Input not shrinking: the same fate.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Recursion vs.\ Iteration}
+  \begin{itemize}
+    \item \key{Iteration} keeps one frame and updates variables --- constant
+      stack space, always explicit about progress.
+    \item \key{Recursion} spends one frame per level --- the call chain
+      \emph{is} the progress record, at $O(d)$ auxiliary space for depth $d$.
+    \item Prefer recursion when the problem is self-similar (Hanoi, tree
+      walks); prefer iteration when depth is large and the loop is simple
+      (Wirth Ch.~3: when recursion does \emph{not} help).
+  \end{itemize}
+  \muted{Same power, different ledger: recursion bills the runtime stack.}
+\end{frame}
+
+\begin{frame}{The Runtime Stack: Frames}
+  \begin{center}
+    % Diagram: call frames stacked vertically; stack grows downward.
+    % Coordinates: (x, y)
+    %   main at (0, 0); hanoi(3) at (0, -1.0); hanoi(2) at (0, -2.0);
+    %   hanoi(1) at (0, -3.0); each w = 5.2cm, h = 0.8cm
+    %   growth arrow at x = -3.4 from y = 0.6 to y = -3.6 (clear of boxes)
+    %   top label at (3.9, -3.0); arrow top.west -> hanoi1.east
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=light-bg,
+        text width=5.0cm, align=center] (main) at (0, 0)
+        {\texttt{main}: n = 3};
+      \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=light-bg,
+        text width=5.0cm, align=center] (h3) at (0, -1.0)
+        {\texttt{hanoi(3, S, D, A)}};
+      \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=light-bg,
+        text width=5.0cm, align=center] (h2) at (0, -2.0)
+        {\texttt{hanoi(2, S, A, D)}};
+      \node[draw, minimum width=5.2cm, minimum height=0.8cm, fill=primary-gold!25,
+        text width=5.0cm, align=center] (h1) at (0, -3.0)
+        {\texttt{hanoi(1, S, D, A)}: running};
+      \draw[->, thick, color=neutral] (-3.4, 0.6) -- (-3.4, -3.6);
+      \node[text=neutral] at (-3.4, 0.95) {growth};
+      \node[text=primary-gold] (toplab) at (3.9, -3.0) {\texttt{top}};
+      \draw[->, thick, color=primary-gold] (toplab.west) -- (h1.east);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Each call pushes a \key{frame} (locals, return address); return
+      pops it. Week 1's orientation: stack grows down, heap grows up.
+    \item Depth $d$ means $d$ frames alive --- Hanoi's depth is only $n$,
+      but its calls number $2^{n}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Tower of Hanoi: Rules}
+  \begin{center}
+    % Diagram: 3 pegs with 3 disks stacked on source peg S.
+    % Coordinates: (x, y)
+    %   pegs S/A/D as vertical lines at x = 0/3/6, y from 0 to 2.0
+    %   base line y = 0 from x = -1.2 to x = 7.2 (endpoints clear of pegs)
+    %   disks (boxes) centred on S: w = 2.2/1.6/1.0cm, h = 0.4cm,
+    %     at y = 0.25/0.70/1.15
+    %   peg labels at y = -0.55 (clear of base line)
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \draw[thick, color=neutral] (-1.2, 0) -- (7.2, 0);
+      \draw[thick, color=jet] (0, 0) -- (0, 2.0);
+      \draw[thick, color=jet] (3, 0) -- (3, 2.0);
+      \draw[thick, color=jet] (6, 0) -- (6, 2.0);
+      \node[draw, fill=primary-blue!20, minimum width=2.2cm,
+        minimum height=0.4cm] (d3) at (0, 0.25) {};
+      \node[draw, fill=primary-blue!20, minimum width=1.6cm,
+        minimum height=0.4cm] (d2) at (0, 0.70) {};
+      \node[draw, fill=primary-blue!20, minimum width=1.0cm,
+        minimum height=0.4cm] (d1) at (0, 1.15) {};
+      \node[text=neutral] at (0, -0.55) {S (source)};
+      \node[text=neutral] at (3, -0.55) {A (aux)};
+      \node[text=neutral] at (6, -0.55) {D (dest)};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Move the whole tower S $\to$ D; move one disk at a time; never
+      place a larger disk on a smaller one.
+    \item Three disks need 7 moves; $n$ disks need $2^{n} - 1$ (proved two
+      slides on).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Hanoi: the Recursive Idea}
+  \begin{block}{Algorithm}
+\begin{semiverbatim}
+hanoi(n, src, dst, aux):
+    if n == 1: move disk src -> dst
+    else:
+        hanoi(n-1, src, aux, dst)   /* park n-1 out of the way */
+        move disk src -> dst        /* free the largest disk */
+        hanoi(n-1, aux, dst, src)   /* stack the n-1 on top */
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item The base case moves one disk; the recursive case reduces $n$ to
+      $n - 1$ twice --- self-similarity made visible.
+    \item Each ``move disk'' line is one counted step for the analysis next.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trace: Three Disks, Seven Moves}
+  \begin{center}
+  {\small
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{move} & \textbf{disk} & \textbf{from $\to$ to} \\
+    \midrule
+    1 & smallest & S $\to$ D \\
+    2 & middle & S $\to$ A \\
+    3 & smallest & D $\to$ A \\
+    4 & largest & S $\to$ D \\
+    5 & smallest & A $\to$ S \\
+    6 & middle & A $\to$ D \\
+    7 & smallest & S $\to$ D \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item Moves 1--3 park two disks on A; move 4 frees the largest; moves
+      5--7 restack on D --- the algorithm above, executed.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Pricing Hanoi: $T(n) = 2T(n-1) + 1$}
+  \begin{block}{Recurrence (count disk moves; Week 2 vocabulary)}
+    $T(1) = 1$; for $n > 1$, $T(n) = 2T(n-1) + 1$ (two sub-towers plus the
+    largest disk's move).
+  \end{block}
+  \begin{itemize}
+    \item Unfold: $T(n) = 2^{k}T(n-k) + (2^{k} - 1)$; at $k = n - 1$,
+      $T(n) = 2^{n-1} \cdot 1 + (2^{n-1} - 1) = 2^{n} - 1$.
+    \item Hence $T(n) = 2^{n} - 1 = \Theta(2^{n})$ --- worst, best, and
+      average coincide (only one move sequence exists).
+  \end{itemize}
+  \key{Doubling the disks squares the work only in legend --- it multiplies
+    the moves by roughly two per added disk, and $2^{64} - 1$ outlives us all.}
+\end{frame}
+
+\begin{frame}{What Recursion Bills You}
+  \begin{itemize}
+    \item \bad{Depth overflow}: $n = 100{,}000$ recursive frames burst the
+      runtime stack --- iterate instead.
+    \item \bad{Repeated subproblems}: naive recursive Fibonacci recomputes
+      the same values exponentially often (iteration or memoisation wins).
+    \item \bad{Missing base case}: the stack fills until the program crashes
+      --- the use-after-free of control flow.
+  \end{itemize}
+  \begin{exampleblock}{The habit (Week 2 shape)}
+    Name the operation (moves, frames), give the bound ($\Theta(2^{n})$
+    moves, $O(n)$ frames), state the case.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{Hanoi with $n = 4$ needs how many moves? Deep how many frames?}
+    A: 8 moves, 4 frames \quad B: 15 moves, 4 frames \quad C: 16 moves, 16 frames
+  \end{block}
+  \begin{enumerate}
+    \item A --- each disk doubles the moves exactly.
+    \item B --- $2^{4} - 1$ moves; depth never exceeds $n$.
+    \item C --- moves and depth grow together.
+  \end{enumerate}
+  \muted{Depth is the longest chain alive; moves count every call ever made.}
+\end{frame}
+
+\transitionslide{Conversion done, recursion priced. Now keep what matters.}
+
+% =============================================================================
+% ACT 5 --- WRAP UP
+% =============================================================================
+\section{Summary}
+
+\begin{frame}{Three Common Mistakes}
+  \begin{itemize}
+    \item \bad{Popping \texttt{\^{}} on a tie} --- right-associative means
+      strictly-greater pops only; $a^{b^{c}}$ is not $(a^{b})^{c}$.
+    \item \bad{Forgetting the paren swap on reversal} --- infix-to-prefix
+      without swapping binds every bracket backwards.
+    \item \bad{No base case, or input that never shrinks} --- Hanoi with
+      \texttt{n-1} missing recurses until the stack bursts.
+  \end{itemize}
+  \begin{exampleblock}{The habit}
+    Trace the stack (operators, frames) line by line --- never from memory
+    of the shape.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 4 Summary}
+  \begin{itemize}
+    \item \key{Notations}: infix for humans; postfix/prefix need no parens.
+    \item \key{Conversions}: infix$\to$postfix (one left-to-right stack
+      pass); infix$\to$prefix (reverse--swap--postfix--reverse);
+      prefix$\to$postfix (right-to-left stack of strings) --- all $O(n)$.
+    \item \key{Recursion}: base + shrinking self-call; frames on the runtime
+      stack, $O(d)$ space for depth $d$.
+    \item \key{Hanoi}: $T(n) = 2T(n-1) + 1 = 2^{n} - 1 = \Theta(2^{n})$;
+      depth only $n$.
+  \end{itemize}
+  \begin{exampleblock}{Next week}
+    Queues: what changes when the first element out is the first one in ---
+    circular buffers, deques, and priority.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Before You Go: Predict}
+  \begin{block}{Three one-line predictions}
+    Answer from the algorithms, then check in the lab (P3, P4).
+  \end{block}
+  \begin{enumerate}
+    \item Postfix of \texttt{(a-b)*(c+d)}?
+    \item Prefix of \texttt{a+b*c}?
+    \item Moves and max live frames for Hanoi $n = 5$?
+  \end{enumerate}
+  \muted{Answers: \texttt{ab-cd+*}; \texttt{+a*bc}; $31$ moves, $5$ frames.}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

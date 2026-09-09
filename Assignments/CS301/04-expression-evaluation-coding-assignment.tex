@@ -1,0 +1,100 @@
+% =============================================================================
+% Assignments/CS301/04-expression-evaluation-coding-assignment.tex
+% Coding Assignment 4: Infix to Postfix/Prefix + Prefix to Postfix (P3/P4)
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/04-expression-evaluation-coding/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+%   expr.h, starter_expr.c, test_visible.c
+%
+% Fresh instances throughout: no worked example re-asks a deck/notes or
+% written-assignment instance verbatim (deck/notes: a+b*c, (a+b)*c, a*b+c,
+% a+b*(c-d)/e, a+b*c-(d+e/f), (a+b)*c-d, a*(b+c)-d, *+ab-cd, -+ab+cd,
+% (a-b)*(c+d); written Q3-Q5: p-q*(r+s)/t^u^v, -+*ab+cde, m*(n+p)-q/r).
+% Visible tests use x+y*z-w, x^y^z+w, (x+y)*(z-w), 12+34*5, *+ab+cd.
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 04-expression-evaluation-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Coding Assignment 4: The Calculator Learns to Rewrite}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Week 3 gave the calculator two finished stages: it could check brackets and \emph{evaluate} a postfix string it was handed. But nobody types postfix --- humans write infix, with precedence, associativity, and parentheses mixed together, and something has to rewrite it first. That rewrite is the missing middle stage of the pipeline, and it is also the first program in this course where the \emph{order of equal-precedence operators} silently changes the answer: pop a waiting \texttt{\^{}} too eagerly and \texttt{x\^{}y\^{}z} computes \texttt{(x\^{}y)\^{}z} instead of \texttt{x\^{}(y\^{}z)}. This assignment is that rewrite stage, twice over: Lab P3 (infix to postfix and prefix) and Lab P4 (prefix back to postfix), all running on the Week 3 stack discipline of one left-to-right pass with each token pushed and popped at most once.
+
+\section{Your task}
+
+Implement the three expression conversions in C as \textbf{pure single-pass functions over caller-provided buffers with an explicit status code on every fallible path}. The contract is given to you in \texttt{expr.h} --- \emph{do not modify it}. Copy \texttt{starter\_expr.c} to \texttt{expr.c} and fill in all three functions:
+
+\begin{verbatim}
+ExprStatus infix_to_postfix(const char *infix, char *postfix, size_t out_size);
+ExprStatus infix_to_prefix(const char *infix, char *prefix, size_t out_size);
+ExprStatus prefix_to_postfix(const char *prefix, char *postfix, size_t out_size);
+\end{verbatim}
+
+\textbf{P3a --- infix to postfix.} The lecture's shunting-yard scan: operands append to output; \texttt{(} pushes; \texttt{)} pops to output until \texttt{(} (both parens discarded); operator \texttt{op} pops waiting operators of \texttt{>=} precedence (strictly \texttt{>} if \texttt{op} is right-associative), then pushes \texttt{op}; at the end, pop everything to output. Precedence: \texttt{\^{}} (highest, right-associative) $>$ \texttt{* /} (medium, left) $>$ \texttt{+ -} (low, left).
+
+\textbf{P3b --- infix to prefix.} The lecture's reversal route: reverse the \emph{token} stream (not the characters --- \texttt{12} must stay \texttt{12}), swap \texttt{(} with \texttt{)}, run the postfix pass under the mirror rule (pop only on \emph{strictly greater} precedence), then reverse the result. The paren swap is load-bearing; without it every bracket binds backwards.
+
+\textbf{P4 --- prefix to postfix.} Scan \emph{right to left} with a stack of strings: operand pushes as a string; operator \texttt{op} pops \texttt{a} first and \texttt{b} second, then pushes \texttt{a + " " + b + " " + op}. Direction matters: right-to-left meets operands before the operator that combines them. A single operand alone is the identity (\texttt{"a"} $\to$ \texttt{"a"}).
+
+\textbf{Tokens and output format.} Operands are single letters (\texttt{a}--\texttt{z}) \emph{or} non-negative multi-digit integers (\texttt{12}, \texttt{305}); operators are \texttt{+ - * / \^{}}; infix alone may use \texttt{( )}. Spaces and tabs may appear anywhere and are ignored, except that they delimit multi-digit numbers (\texttt{"12+34*5"} and \texttt{"12 + 34 * 5"} are the same expression). There is no unary minus in infix: a leading \texttt{-} is always binary subtraction, so \texttt{"a+-b"} is invalid. Every output is space-separated tokens with exactly one space, no trailing space (e.g. \texttt{"x y z * + w -"}).
+
+\textbf{Status codes.} Read all six \texttt{ExprStatus} codes in \texttt{expr.h} before coding --- each error maps to exactly one of them. On \emph{any} non-\texttt{OK} status the output buffer is unspecified and must not be read.
+
+\section{Constraints}
+
+\begin{itemize}
+  \item Implementation must be the lecture's one-stack passes --- no expression trees, no recursive-descent parser, no \texttt{system} calls, no heap allocation required (fixed-size local stacks suffice), no global/static mutable state, no \texttt{strtok} shortcuts that hide the token scan.
+  \item Error paths use the explicit status codes --- a submission that returns \texttt{EXPR\_OK} with a wrong string, or the wrong code on an error input, fails the hidden suite's status traps (check \emph{both} the return value and the buffer in your own testing).
+  \item Correctness is graded against the contract; your code must compile with \texttt{gcc -Wall -Wextra} (or MSVC \texttt{/W4} on Windows) without errors or warnings.
+  \item Complexity: each conversion makes one pass at $O(n)$ time worst case in the input length, holding at most $O(n)$ auxiliary space for $n$ tokens (each token pushed and popped at most once).
+\end{itemize}
+
+\section{Worked examples (these are the visible tests)}
+
+\textbf{Example 1 --- P3a, infix to postfix.} \texttt{infix\_to\_postfix("x+y*z-w")} returns \texttt{EXPR\_OK} with \texttt{"x y z * + w -"}. \texttt{infix\_to\_postfix("x\^{}y\^{}z+w")} returns \texttt{EXPR\_OK} with \texttt{"x y z \^{} \^{} w +"} (the second \texttt{\^{}} must \emph{not} pop the first --- right-associativity). \texttt{infix\_to\_postfix("(x+y)*(z-w)")} returns \texttt{EXPR\_OK} with \texttt{"x y + z w - *"}.
+
+\textbf{Example 2 --- P3b and multi-digit operands.} \texttt{infix\_to\_prefix("x+y*z-w")} returns \texttt{EXPR\_OK} with \texttt{"- + x * y z w"}. \texttt{infix\_to\_postfix("12+34*5")} returns \texttt{EXPR\_OK} with \texttt{"12 34 5 * +"} (the numbers stay whole). \texttt{infix\_to\_prefix("12+34*5")} returns \texttt{EXPR\_OK} with \texttt{"+ 12 * 34 5"}.
+
+\textbf{Example 3 --- P4, prefix to postfix.} \texttt{prefix\_to\_postfix("*+ab+cd")} returns \texttt{EXPR\_OK} with \texttt{"a b + c d + *"}. \texttt{prefix\_to\_postfix("+ 12 * 34 5")} returns \texttt{EXPR\_OK} with \texttt{"12 34 5 * +"}. \texttt{prefix\_to\_postfix("a")} returns \texttt{EXPR\_OK} with \texttt{"a"}.
+
+\section{What to submit}
+
+\begin{enumerate}
+  \item \texttt{expr.c} --- your completed implementation (edit \texttt{starter\_expr.c}).
+  \item \texttt{expr.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+\section{Getting started}
+
+\begin{enumerate}
+  \item Copy \texttt{starter\_expr.c} to \texttt{expr.c} and fill in the three function bodies.
+  \item Sanity-check locally:
+\begin{verbatim}
+gcc -Wall -Wextra -o test_visible test_visible.c expr.c
+./test_visible
+\end{verbatim}
+    All three worked examples should pass. (On Windows with MSVC, see the build lines at the top of \texttt{starter\_expr.c}.)
+  \item Submit \texttt{expr.c} and \texttt{expr.h}. The autograder compiles your \texttt{expr.c} against a \emph{hidden} test suite and reports pass/fail. The hidden suite covers: \texttt{NULL}/empty/whitespace inputs; mismatched parens in both directions; right-associative \texttt{\^{}} chains vs.\ left-associative \texttt{-} and \texttt{/} chains; multi-digit operands with and without spaces; invalid tokens and malformed infix grammar (empty parens, doubled operators, doubled operands, missing operators, unknown characters, rejected unary minus); invalid prefix (too-few-operands, leftover operands, bad tokens) and the single-operand identity; output buffers too small; and seeded random batches of expression trees whose fully-parenthesised infix is checked against post-order/pre-order ground truth, including a prefix round-trip.
+\end{enumerate}
+
+\end{document}

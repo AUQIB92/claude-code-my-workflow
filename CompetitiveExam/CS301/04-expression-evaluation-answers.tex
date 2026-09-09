@@ -1,0 +1,53 @@
+% =============================================================================
+% CompetitiveExam/CS301/04-expression-evaluation-answers.tex
+% Answer key for 04-expression-evaluation-questions.tex.
+%
+% Real GATE PYQs (Q1--Q4) are sourced from the local GATEOverflow Volume 2
+% PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability: Infix
+% Prefix cluster PDF pp.231-232, Stack cluster p.232, Recursion cluster
+% p.310), which authenticates each question (year + question number printed
+% on the page). The book's own answer keys are collapsed and not
+% extractable, so each real-PYQ answer was independently established in the
+% build session (2026-09-09): GATEOverflow online question pages, ExamSIDE
+% year-wise/topic listings, the SlideShare scan of the official GATE CS
+% 2004 solved paper, the gatecse.in key tables, the Electrical4U GATE-2007
+% solutions, and — where the answer is exact algorithmics — deterministic
+% re-derivation confirmed by execution (infix-to-postfix, prefix-to-postfix,
+% postfix-trace, Hanoi completion). Original questions (Q5--Q8) have
+% answers derived directly from the Week 4 deck algorithms, likewise
+% confirmed by execution.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Competitive Exam Practice 4 --- Answer Key\\\large Expression Notation, Recursion, and Tower of Hanoi}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(A).} Only operators ever wait on the conversion stack (operands go straight to the output; parentheses are markers, not content) --- so an operator stack is the one essential structure. An operand stack is what postfix \emph{evaluation} needs, not conversion; a parse tree is sufficient but not necessary. Text and options confirmed against the GATEOverflow V2 p.231 heading and ExamSIDE's stacks-and-queues listing (2026-09-09); the year tag differs across those two sources, so none is claimed.
+
+\item[\textbf{Q2}] \textbf{(A) \texttt{abc*+def\^{}\^{}-}.} Scan left to right: \texttt{a} out; \texttt{+} waits; \texttt{b} out; \texttt{*} outranks \texttt{+} so it waits too; \texttt{c} out; \texttt{-} flushes \texttt{*} then \texttt{+} (both outrank or tie it left-associatively); \texttt{d} out; the first \texttt{\^{}} waits above \texttt{-}; the second \texttt{\^{}} does \emph{not} pop the first (right-associative: pop only on strictly greater precedence); \texttt{f} out; end flushes \texttt{\^{}\^{} -}. Option (B) wrongly pops the first \texttt{\^{}} (treats it as left-associative, giving $d^{(e^{f})}$ the wrong grouping $(d^{e})^{f}$); (C) misplaces \texttt{b}; (D) is a prefix string, not postfix. Confirmed against the SlideShare scan of the official GATE CS 2004 solved paper (options verbatim), the gatecse.in GATE-2004 key (Q38 = a), and exact re-derivation by execution (2026-09-09).
+
+\item[\textbf{Q3}] \textbf{(A) 6, 1 (top first).} Trace: push 8, 2, 3; \texttt{\^{}} pops $3, 2$ giving $2^{3} = 8$, stack $[8, 8]$; \texttt{/} gives $8/8 = 1$, stack $[1]$; push 2, 3; the first \texttt{*} pops $3, 2$ giving $2 \times 3 = 6$, stack $[1, 6]$ --- top element 6, next 1. (B)/(C) are intermediate values from mis-grouping; (D) reverses the order. Confirmed against the GATEOverflow page for GATE CSE 2007 Q38 (accepted answer A), ExamSIDE's GATE-2007 page, the Electrical4U GATE-2007 solutions, and exact re-trace by execution (2026-09-09).
+
+\item[\textbf{Q4}] \textbf{Condition: \texttt{n >= 1} (accept \texttt{n > 0}, \texttt{n != 0}); first call: \texttt{move(n-1, A, C, B)}; second call: \texttt{move(n-1, B, A, C)}.} The skeleton prints the $n$-th-disk move \emph{inside} the \texttt{if}, so the condition must admit every $n \geq 1$ and use $n = 0$ as the silent base case (no \texttt{else} exists, hence \texttt{n == 1} is wrong --- it would skip every larger tower). With \texttt{printf} moving \texttt{A -> C}, \texttt{A} is the source and \texttt{C} the destination, so the first recursive call parks $n-1$ disks on \texttt{B}: \texttt{move(n-1, A, C, B)}, and the second restacks them from \texttt{B} onto \texttt{C}: \texttt{move(n-1, B, A, C)}. Skeleton text from GATEOverflow V2 p.310 (single source for the year); completion derived deterministically from the deck's Hanoi algorithm.
+
+\item[\textbf{Q5}] \textbf{(A) \texttt{*+ab-cd}.} Reverse and swap parens: \texttt{(d-c)*(b+a)}; its postfix is \texttt{dc-ba+*}; reverse back: \texttt{*+ab-cd}. (B) swaps the operand pairs; (C) puts \texttt{+} outside (forgets the reversal step); (D) flips a sign. Confirmed by execution (2026-09-09).
+
+\item[\textbf{Q6}] \textbf{(B) \texttt{ab*cd-+}.} Scan right to left: \texttt{d}, \texttt{c} combine under \texttt{-} first (\texttt{cd-}); \texttt{b}, \texttt{a} combine under \texttt{*} (\texttt{ab*}); \texttt{+} joins them: \texttt{ab*cd-+}. (A) is the deck's own answer to the \emph{different} prefix \texttt{*+ab-cd} --- the planted near-miss; (C) misplaces the last operator; (D) reverses operand order. Confirmed by execution (2026-09-09).
+
+\item[\textbf{Q7}] \textbf{63.} $T(1) = 1$, $T(n) = 2T(n-1) + 1$ gives $T(n) = 2^{n} - 1$; $2^{6} - 1 = 63$.
+
+\item[\textbf{Q8}] \textbf{(B) $(63, 6)$.} $M = 2^{6} - 1 = 63$ moves; the longest chain of simultaneously live calls never exceeds the disk count, so $D = 6$. (A) counts $2^{n}$ instead of $2^{n} - 1$; (C) confuses total calls with live depth; (D) is the $n = 5$ instance from the deck's exit ticket.
+\end{enumerate}
+
+\end{document}

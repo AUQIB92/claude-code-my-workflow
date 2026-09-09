@@ -1,0 +1,54 @@
+% =============================================================================
+% CompetitiveExam/CS301/03-arrays-stacks-answers.tex
+% Answer key for 03-arrays-stacks-questions.tex.
+%
+% Real GATE PYQs (Q1, Q2, Q5, Q6, Q8--Q10) are sourced from the local
+% GATEOverflow Volume 2 PYQ book (CompetitiveExam/Books/index.md, Tier-1
+% availability: Array cluster PDF pp.199-200, Stack cluster PDF pp.245-246),
+% which authenticates each question (year + question number printed on the
+% page). The book's own answer keys are collapsed and not extractable, so
+% each real-PYQ answer was independently established in the build session
+% (2026-09-09): GATEOverflow online question pages, ExamSIDE year-wise
+% listings, the BYJUS GATE question bank, and — where the answer is exact
+% arithmetic or an exact program trace — deterministic derivation shown
+% below. Original questions (Q3, Q4, Q7) have answers derived directly from
+% the Week 3 deck formulas (1D/column-major address, top-trace).
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Competitive Exam Practice 3 --- Answer Key\\\large Arrays and Stacks}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(A).} Row-major with 1-based bounds: skip $(i-1)$ full rows of $15$ cells, then $(j-1)$ cells, from base $100$: $100 + (i-1)\times 15 + (j-1) = 15i + j + 84$. Confirmed against the GATEOverflow online page for GATE CSE 1998 Q2.14 (accepted answer) and ExamSIDE's GATE-1998 array listing (2026-09-09).
+
+\item[\textbf{Q2}] \textbf{(A).} Only scores $51$ through $100$ are reported --- $50$ distinct values --- so a $50$-slot frequency table indexed by $\mathit{score} - 51$ is exact and smallest. Confirmed against the BYJUS GATE bank (``Answer (a)'') and ExamSIDE's GATE-2005 array listing (2026-09-09).
+
+\item[\textbf{Q3}] \textbf{3020.} 0-based 1D formula $\mathrm{addr}(A[i]) = \mathrm{base} + i \times w = 3000 + 5 \times 4 = 3020$.
+
+\item[\textbf{Q4}] \textbf{(B).} Column-major skips columns: $\mathrm{addr} = \mathrm{base} + ((j \times r) + i) \times w = 2000 + ((3 \times 4) + 2) \times 4 = 2000 + 56 = 2056$. (A) $2052$ is the row-major trap $((2\times 5)+3)\times 4$; (C) $2044$ swaps in $i \times r$; (D) $2068$ swaps in $j \times c$.
+
+\item[\textbf{Q5}] \textbf{(D).} The stacks grow toward each other, so no slot is wasted until the tops are adjacent: full iff \texttt{top1} $=$ \texttt{top2} $- 1$. Fixed-half options (A)/(C) waste space when the stacks are unbalanced. Confirmed against the BYJUS GATE bank (``Answer (d)'') and ExamSIDE's GATE-2004 listing (2026-09-09).
+
+\item[\textbf{Q6}] \textbf{15.} Trace the \emph{static} \texttt{stkTop}: set size $10$; push $5$ (\texttt{stkTop} $0\to 1$); push $10$ ($1\to 2$); first pop returns \texttt{A[1]} $= 10$; second pop returns \texttt{A[0]} $= 5$; printed sum $10 + 5 = 15$. Cross-checked against ExamSIDE's GATE-2015-Set-2 listing of this question (2026-09-09).
+
+\item[\textbf{Q7}] \textbf{(A).} Trace the index: $-\!1 \to 0 \to 1 \to 0$ (pop returns $20$) $\to 1 \to 2 \to 1$ (pop returns $40$); stack holds $[10, 30]$, so \texttt{top} $= 1$ and \texttt{peek()} returns $30$.
+
+\item[\textbf{Q8}] \textbf{(B).} The last-opened bracket must close first --- exactly LIFO, so a stack (push openers, pop on match) decides balance in one $O(n)$ pass.
+
+\item[\textbf{Q9}] \textbf{(C).} Keep the queue's front at the stack top: ENQUEUE($x$) = REVERSE, PUSH $x$, REVERSE (three instructions); DEQUEUE = POP (single). Pairing (B) fails: after one REVERSE+POP the stack is left reversed, so the next PUSH would attach at the wrong end; (A) is refuted by the construction above and (D) is impossible (a single PUSH/POP cannot reverse order). Consistent with GATE's own canonical triple-operation construction from the 2000 descriptive (ENQUEUE = PUSH; DEQUEUE = REVERSE, POP, REVERSE) and listed as GATE 2014 Set 2 on ExamSIDE's stacks-and-queues page (2026-09-09).
+
+\item[\textbf{Q10}] \textbf{142.} Left-to-right single pass: $10 + 5 = 15$; $60 / 6 = 10$; $15 \times 10 = 150$; $150 - 8 = 142$. Expression confirmed on ExamSIDE's GATE-2015-Set-3 page (2026-09-09); arithmetic is exact.
+\end{enumerate}
+
+\end{document}

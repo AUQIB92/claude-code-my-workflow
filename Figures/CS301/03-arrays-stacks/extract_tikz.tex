@@ -1,0 +1,68 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\begin{document}
+
+\begin{frame}
+\begin{center}
+% Diagram: 1D array A[0..4] with values; indices below.
+% Coordinates: (x, y)
+%   cell i at x = 0.9*i (i = 0..4), y = 0, w = 0.78cm, h = 0.75cm
+%   index labels at y = -0.90 (clear of cell bottoms at y = -0.375)
+%   "base" arrow from below-left to cell 0 (ends at cell edge, no crossing)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \foreach \i/\v in {0/10,1/20,2/30,3/40,4/50} {
+    \node[draw, minimum width=0.78cm, minimum height=0.75cm, fill=light-bg]
+      (c\i) at (0.9*\i, 0) {\v};
+  }
+  \foreach \i in {0,...,4} {
+    \node[text=neutral] at (0.9*\i, -0.90) {\i};
+  }
+  \node[text=neutral] (base) at (-1.35, -0.90) {base};
+  \draw[->, color=neutral] (base.east) -- (c0.south west);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: 2x3 grid; each cell shows A[i][j] and its flat offset k.
+% Coordinates: (x, y)
+%   cell (i,j) at x = 1.7*j, y = -1.0*i, w = 1.55cm, h = 0.85cm
+%   no edges; labels live inside their own boxes (P7-safe)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a00) at (0, 0) {\texttt{A[0][0]}\\{\scriptsize $k = 0$}};
+  \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a01) at (1.7, 0) {\texttt{A[0][1]}\\{\scriptsize $k = 1$}};
+  \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a02) at (3.4, 0) {\texttt{A[0][2]}\\{\scriptsize $k = 2$}};
+  \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a10) at (0, -1.0) {\texttt{A[1][0]}\\{\scriptsize $k = 3$}};
+  \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a11) at (1.7, -1.0) {\texttt{A[1][1]}\\{\scriptsize $k = 4$}};
+  \node[draw, minimum width=1.55cm, minimum height=0.85cm, fill=light-bg, align=center] (a12) at (3.4, -1.0) {\texttt{A[1][2]}\\{\scriptsize $k = 5$}};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+% Diagram: vertical stack array, indices 0..4 bottom-to-top layout;
+% filled cells 0..2, empty dashed 3..4; top arrow points at cell 2.
+% Coordinates: (x, y)
+%   cell k at (0, -0.9*k), w = 3.2cm, h = 0.75cm
+%   index labels at x = -2.2, same y as their cell (clear of box edge)
+%   top label at (3.1, -1.8); arrow top.west -> cell2.east (horizontal)
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \node[draw, minimum width=3.2cm, minimum height=0.75cm, fill=primary-blue!15] (s0) at (0, 0) {\texttt{10}};
+  \node[draw, minimum width=3.2cm, minimum height=0.75cm, fill=primary-blue!15] (s1) at (0, -0.9) {\texttt{20}};
+  \node[draw, minimum width=3.2cm, minimum height=0.75cm, fill=primary-blue!15] (s2) at (0, -1.8) {\texttt{30}};
+  \node[draw, dashed, minimum width=3.2cm, minimum height=0.75cm, text=neutral] (s3) at (0, -2.7) {empty};
+  \node[draw, dashed, minimum width=3.2cm, minimum height=0.75cm, text=neutral] (s4) at (0, -3.6) {empty};
+  \node[text=neutral] at (-2.2, 0) {0};
+  \node[text=neutral] at (-2.2, -0.9) {1};
+  \node[text=neutral] at (-2.2, -1.8) {2};
+  \node[text=neutral] at (-2.2, -2.7) {3};
+  \node[text=neutral] at (-2.2, -3.6) {4};
+  \node[text=primary-gold] (toplab) at (3.1, -1.8) {\texttt{top = 2}};
+  \draw[->, thick, color=primary-gold] (toplab.west) -- (s2.east);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\end{document}

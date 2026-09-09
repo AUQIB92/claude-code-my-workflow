@@ -1,0 +1,102 @@
+% =============================================================================
+% Assignments/CS301/04-expression-evaluation-assignment.tex
+% Assignment 2 (Week 4): Expression Conversion, Recursion, and Tower of Hanoi
+%
+% Student set — NO answers. Solution key: 04-expression-evaluation-solutions.tex
+% (never deployed). Sourced from Slides/CS301/04-expression-evaluation.tex
+% and Notes/CS301/04-expression-evaluation-notes.tex.
+%
+% Fresh instances throughout: no problem re-asks a deck/notes worked example
+% verbatim (deck/notes: a+b*c, (a+b)*c, a*b+c, a+b*(c-d)/e, a+b*c-(d+e/f),
+% (a+b)*c-d, a*(b+c)-d, *+ab-cd, -+ab+cd, +*ab*cd, (a-b)*(c+d), fact(n),
+% Hanoi n=3/4/5/64). Q3 uses p-q*(r+s)/t^u^v; Q4b uses -+*ab+cde;
+% Q5 uses m*(n+p)-q/r; Q6 traces fact(4) and new scenarios.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 04-expression-evaluation-assignment.tex
+%   $env:BIBINPUTS="../..;"; bibtex 04-expression-evaluation-assignment
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 04-expression-evaluation-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{4.\arabic{section}}
+
+\title{Assignment 2 (Week 4): Expression Conversion, Recursion, and Tower of Hanoi}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions. Each problem states its own assumptions; everything you need is in Week~4's Notes chapter alone. Notation matches the lecture exactly: \texttt{push}/\texttt{pop}/\texttt{peek}, \texttt{top} $= -1$ means empty, precedence \texttt{\^{}} $>$ \texttt{* /} $>$ \texttt{+ -}, \texttt{\^{}} is right-associative, all others left-associative, $T(n)$ counts Hanoi disk moves, $d$ is runtime-stack depth.
+
+\section{Conceptual}
+
+\textbf{Q1.} Postfix and prefix need no parentheses and no precedence rules --- position alone fixes the order (standard treatment; see Horowitz \& Sahni Ch.~3) \cite{HorowitzSahni2008_fundamentals_data_structures}.
+\begin{enumerate}
+  \item[(a)] In one or two sentences, explain why infix needs all three rules (precedence, associativity, parentheses) while postfix does not --- name what a single left-to-right scan of infix cannot resolve without remembering.
+  \item[(b)] Group \texttt{x/y*z} both ways: $(x/y)*z$ and $x/(y*z)$. With $x = 12$, $y = 3$, $z = 2$, compute both values and state which one the lecture's left-associativity rule picks.
+  \item[(c)] Group \texttt{x\^{}y\^{}z} both ways: $x^{(y^{z})}$ and $(x^{y})^{z}$. With $x = 2$, $y = 3$, $z = 2$, compute both values and state which one the lecture's right-associativity rule picks.
+\end{enumerate}
+Why this matters: the compiler rewrites what you type before it ever runs it --- this question pins down why the rewrite is needed at all, and why getting the tie-break wrong silently computes a different number.
+
+\textbf{Q2.} A recursive function solves a smaller instance of its own problem: one \key{base case} answered directly, one \key{recursive case} that calls itself on strictly smaller input (Karumanchi Ch.~2, pp.62--73 PDF; Wirth Ch.~3) \cite{Karumanchi2017_data_structures_algorithms_made_easy,Wirth2004_algorithms_data_structures}. Each call pushes a \key{frame} (locals, return address); each return pops it. \key{Iteration} keeps one frame and updates variables; \key{recursion} spends one frame per level, i.e.\ $O(d)$ auxiliary space for depth $d$.
+\begin{enumerate}
+  \item[(a)] In one or two sentences, explain the difference between the \emph{number of moves} $2^{n} - 1$ and the \emph{maximum live frames} $n$ for Hanoi --- what does each one count?
+  \item[(b)] In one or two sentences, explain why a recursion depth of $n = 100{,}000$ bursts the runtime stack while a loop with $100{,}000$ iterations does not (name who pays per level).
+  \item[(c)] Name the two failure modes from the lecture besides deep overflow that make recursion the wrong tool (repeated subproblems, missing base case), one line each, and state Wirth's rule of thumb for when to prefer iteration (Ch.~3, pp.87--108).
+\end{enumerate}
+Why this matters: recursion and iteration have the same power but different ledgers --- this question checks you can read the bill (frames alive now) separately from the receipt (calls ever made).
+
+\section{Numerical}
+
+\textbf{Q3.} Convert the infix string \texttt{p-q*(r+s)/t\^{}u\^{}v} to postfix with the lecture's one-stack algorithm (Karumanchi Ch.~4, pp.163--204 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}: operands append to output; \texttt{(} pushes; \texttt{)} pops to output until \texttt{(} (both parens discarded); operator \texttt{op} pops waiting operators of \texttt{>=} precedence (strictly \texttt{>} if \texttt{op} is right-associative), then pushes.
+\begin{enumerate}
+  \item[(a)] Give the output string and the stack contents after \emph{every} token, as a small table with one row per token (15 tokens: \texttt{p}, \texttt{-}, \texttt{q}, \texttt{*}, \texttt{(}, \texttt{r}, \texttt{+}, \texttt{s}, \texttt{)}, \texttt{/}, \texttt{t}, \texttt{\^{}}, \texttt{u}, \texttt{\^{}}, \texttt{v}).
+  \item[(b)] State the final postfix string (no spaces).
+  \item[(c)] Name the two tokens where the lecture's traps bite in this string: the token that must pop a waiting operator of \emph{equal} precedence (left-associativity), and the token that must \emph{not} pop a waiting operator of equal precedence (right-associativity) --- one sentence each, naming the operators involved.
+\end{enumerate}
+Why this matters: one pass with each token pushed and popped at most once --- $O(n)$ time, $O(n)$ space --- but only if the tie-break fires in the right direction at exactly these two spots.
+
+\textbf{Q4.} Two pricings: a conversion and a recurrence.
+\begin{enumerate}
+  \item[(a)] Convert the prefix string \texttt{-+*ab+cde} to postfix by the lecture's right-to-left scan (operand: push as a string; operator \texttt{op}: \texttt{a} $=$ \texttt{pop()}, \texttt{b} $=$ \texttt{pop()}, push \texttt{a} + `` '' + \texttt{b} + `` '' + \texttt{op}). Give the stack contents after \emph{every} token and the final postfix string.
+  \item[(b)] For Tower of Hanoi with $T(1) = 1$ and $T(n) = 2T(n-1) + 1$ ($n > 1$): unfold the recurrence for $n = 6$ step by step from $T(5) = 31$, state the move count $T(6)$ and the maximum live frames, then state $T(10)$. For each bound, name the operation, give the bound, and state the case (Week~2 shape).
+  \item[(c)] At one billion moves per second, how many years do the $2^{64} - 1$ moves for $n = 64$ take? Show the division chain (seconds $\to$ years) and give the answer to the nearest year.
+\end{enumerate}
+Why this matters: conversion costs a linear scan while Hanoi costs an exponential one --- this question makes you feel both prices in concrete numbers on the same page.
+
+\section{Design}
+
+\textbf{Q5.} Convert the infix string \texttt{m*(n+p)-q/r} to \emph{prefix} by the lecture's reversal route: (1) reverse the string and swap \texttt{(} with \texttt{)}; (2) run the postfix algorithm under the mirror rule (pop only on \emph{strictly greater} precedence); (3) reverse the result.
+\begin{enumerate}
+  \item[(a)] Give the reversed-and-swapped string.
+  \item[(b)] Give the postfix of that reversed string, showing the output and stack after every token.
+  \item[(c)] Reverse it back to the final prefix string, then sanity-check it outside-in: read the outermost operator first and confirm it says ``subtract $q/r$ from $m \times (n+p)$.'' State the check in one or two sentences.
+\end{enumerate}
+Why this matters: prefix is the mirror of postfix on the reversed string --- one algorithm serves both directions, but only if the paren swap and the mirror rule both fire; this question makes you execute both on a string the lecture never worked.
+
+\textbf{Q6.} The runtime stack as a design constraint. Recall the lecture's canonical recursion:
+\begin{verbatim}
+int fact(int n) {
+    if (n <= 1) return 1;        /* base case */
+    return n * fact(n - 1);      /* smaller instance */
+}
+\end{verbatim}
+\begin{enumerate}
+  \item[(a)] Trace the live-frame depth of \texttt{fact(4)}: list each running call from \texttt{main} down to the deepest frame, and state the maximum frames alive at once (count \texttt{main}'s frame).
+  \item[(b)] A classmate writes \texttt{int down(int n) \{ return n * down(n - 1); \}} with no base case and reports ``it crashes on large $n$ but works on small $n$.'' In two or three sentences, explain what actually happens on \emph{every} input (including small $n$): which lecture failure mode this is, and why no input size escapes it.
+  \item[(c)] Choose recursion vs.\ iteration with one-sentence Wirth-style justification each: (i) moving a 20-disk Hanoi tower (self-similar, depth 20); (ii) summing $100{,}000$ array elements with a plain loop available. Name the depth/space ledger that decides each choice.
+\end{enumerate}
+Why this matters: depth is the longest chain alive, and the stack only holds so many frames --- this question turns that picture into two shipping decisions, one where recursion earns its frames and one where it does not.
+
+\bibliography{../../Bibliography_base}
+\bibliographystyle{plain}
+\end{document}

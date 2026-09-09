@@ -1,0 +1,172 @@
+% =============================================================================
+% CompetitiveExam/CS301/03-arrays-stacks-questions.tex
+% Competitive Exam Practice 3 — GATE (Computer Science) Pattern
+% Arrays and Stacks (Week 3: 1D/2D array address arithmetic row-/column-major,
+% array costs, stack ADT + array implementation with top, balanced parentheses,
+% postfix evaluation)
+%
+% Student-facing — NO answers. Answer key: 03-arrays-stacks-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book
+% CompetitiveExam/Books/GATE-PYQs/filter1_volume2.pdf):
+%   - Q1  [GATE CSE 1998 Q2.14, verified — GATEOverflow V2 p.199] — 2D
+%     row-major address of A[i][j]; option text/values image-dropped in the
+%     local PDF text layer, recovered verbatim from the GATEOverflow online
+%     question page (gateoverflow.in/1686) which lists all four options and
+%     the accepted answer; cross-checked against ExamSIDE's year-wise
+%     GATE-1998 array listing.
+%   - Q2  [GATE CSE 2005 Q5, verified — GATEOverflow V2 p.200] — frequency
+%     array sizing; option numbers image-dropped locally, recovered from
+%     BYJUS GATE question bank (options + "Answer (a)") and cross-checked
+%     against ExamSIDE's GATE-2005 array listing.
+%   - Q3  [Original, GATE-pattern] — 1D address arithmetic (0-based C).
+%   - Q4  [Original, GATE-pattern] — column-major address with row-major /
+%     index-swap distractors (deck's own col-major example uses a different
+%     instance, so this is a fresh instance, not a copy).
+%   - Q5  [GATE CSE 2004 Q3, verified — GATEOverflow V2 p.245] — two stacks
+%     in one array, stack-full condition; options image-dropped locally,
+%     recovered from BYJUS (all four options + "Answer (d)") and
+%     cross-checked against ExamSIDE's GATE-2004 listing.
+%   - Q6  [GATE CSE 2015 Set 2 Q38, verified — GATEOverflow V2 p.246] —
+%     stkFunc stack-simulation C program (NAT); code fully recoverable via
+%     pdftotext; value 15 derived by an exact trace and cross-checked
+%     against ExamSIDE's GATE-2015-Set-2 listing of this question.
+%   - Q7  [Original, GATE-pattern] — push/pop trace for top + peek (fresh
+%     instance; deck's exit ticket uses push(5)/push(7)/pop/push(9)).
+%   - Q8  [GATE CSE 2004 Q5, verified — GATEOverflow V2 p.246] — best data
+%     structure for balanced parentheses; fully recoverable via pdftotext.
+%   - Q9  [GATE CSE 2014 Set 2 Q41, verified — GATEOverflow V2 p.246] —
+%     REVERSE-stack queue implementation; options fully recoverable via
+%     pdftotext; answer (C) established by constructive proof (front-at-top
+%     invariant: ENQUEUE = REVERSE,PUSH,REVERSE; DEQUEUE = POP — the only
+%     listed pairing that works for arbitrary sequences), consistent with
+%     the canonical triple-operation construction GATE itself endorsed in
+%     the 2000 descriptive (Transtutors expert-verified solution:
+%     ENQUEUE = PUSH single, DEQUEUE = REVERSE,POP,REVERSE); listed as
+%     GATE 2014 Set 2 on ExamSIDE's stacks-and-queues page.
+%   - Q10 [GATE CSE 2015 Set 3 Q12, verified — GATEOverflow V2 p.246] —
+%     postfix evaluation NAT (10 5 + 60 6 / * 8 -); expression confirmed on
+%     ExamSIDE's GATE-2015-Set-3 page; value 142 by exact integer arithmetic.
+%
+% Considered and dropped: GATE CSE 2025 Set 2 Q35 (min-augmented stack MSQ,
+% V2 Stack cluster) — beyond Week 3 scope (deck covers only push/pop/peek);
+% deferred to a later week covering augmented/advanced stacks.
+%
+% No render+OCR pass was possible (no Ghostscript/Tesseract in this
+% environment); image-dropped values above were recovered via Tier-2 web
+% search + CoVe instead, per the skill's sourcing ladder.
+%
+% Compile with: cd CompetitiveExam/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 03-arrays-stacks-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{3.\arabic{section}}
+
+\title{Competitive Exam Practice 3: Arrays and Stacks\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type. C uses 0-based indexing throughout.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CSE 1998 Q2.14, verified --- GATEOverflow V2 p.199]} \textbf{[MCQ, 2 marks]} Let $A$ be a two dimensional array declared as follows:
+\begin{verbatim}
+A: array [1 ... 10] [1 ... 15] of integer;
+\end{verbatim}
+Assuming that each integer takes one memory location, the array is stored in row-major order and the first element of the array is stored at location $100$, what is the address of the element $A[i][j]$?
+\begin{enumerate}
+  \item[(A)] $15i + j + 84$
+  \item[(B)] $15j + i + 84$
+  \item[(C)] $10i + j + 89$
+  \item[(D)] $10j + i + 89$
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2005 Q5, verified --- GATEOverflow V2 p.200]} \textbf{[MCQ, 1 mark]} A program $P$ reads in $500$ integers in the range $[0, 100]$ representing the scores of $500$ students. It then prints the frequency of each score above $50$. What would be the best way for $P$ to store the frequencies?
+\begin{enumerate}
+  \item[(A)] An array of $50$ numbers
+  \item[(B)] An array of $100$ numbers
+  \item[(C)] An array of $500$ numbers
+  \item[(D)] A dynamically allocated array of $550$ numbers
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]} An integer array \texttt{A[100]} starts at base address $3000$, and each \texttt{int} occupies $4$ bytes. The address of \texttt{A[5]} is \_\_\_\_\_\_\_\_\_. (Answer in integer)
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A $4 \times 5$ integer array \texttt{A} is stored in \emph{column-major} order starting at base address $2000$, with each element occupying $4$ bytes. What is the address of \texttt{A[2][3]} (0-based indices)?
+\begin{enumerate}
+  \item[(A)] $2052$
+  \item[(B)] $2056$
+  \item[(C)] $2044$
+  \item[(D)] $2068$
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[GATE CSE 2004 Q3, verified --- GATEOverflow V2 p.245]} \textbf{[MCQ, 2 marks]} A single array \texttt{A[1..MAXSIZE]} is used to implement two stacks. The two stacks grow from opposite ends of the array. Variables \texttt{top1} and \texttt{top2} (\texttt{top1} $<$ \texttt{top2}) point to the location of the topmost element in each of the stacks. If the space is to be used efficiently, the condition for ``stack full'' is
+\begin{enumerate}
+  \item[(A)] (\texttt{top1} = MAXSIZE/2) AND (\texttt{top2} = MAXSIZE/2+1)
+  \item[(B)] \texttt{top1} + \texttt{top2} = MAXSIZE
+  \item[(C)] (\texttt{top1} = MAXSIZE/2) OR (\texttt{top2} = MAXSIZE)
+  \item[(D)] \texttt{top1} = \texttt{top2} $-$ 1
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[GATE CSE 2015 Set 2 Q38, verified --- GATEOverflow V2 p.246]} \textbf{[NAT, 1 mark]} Consider the C program below:
+\begin{verbatim}
+#include <stdio.h>
+int *A, stkTop;
+int stkFunc(int opcode, int val)
+{
+    static int size = 0, stkTop = 0;
+    switch (opcode) {
+        case -1: size = val; break;
+        case 0: if (stkTop < size) A[stkTop++] = val; break;
+        default: if (stkTop) return A[--stkTop];
+    }
+    return -1;
+}
+int main()
+{
+    int B[20]; A = B; stkTop = -1;
+    stkFunc(-1, 10);
+    stkFunc(0, 5);
+    stkFunc(0, 10);
+    printf("%d\n", stkFunc(1, 0) + stkFunc(1, 0));
+}
+\end{verbatim}
+The value printed by the above program is \_\_\_\_\_\_\_\_\_. (Answer in integer)
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} An integer stack of capacity $100$ is implemented over an array with \texttt{top = -1} for the empty stack. Starting from empty, the operations \texttt{push(10)}, \texttt{push(20)}, \texttt{pop()}, \texttt{push(30)}, \texttt{push(40)}, \texttt{pop()} are performed in order. What are the final value of \texttt{top} and the value returned by \texttt{peek()}?
+\begin{enumerate}
+  \item[(A)] \texttt{top} $= 1$, \texttt{peek()} returns $30$
+  \item[(B)] \texttt{top} $= 2$, \texttt{peek()} returns $40$
+  \item[(C)] \texttt{top} $= 1$, \texttt{peek()} returns $20$
+  \item[(D)] \texttt{top} $= 0$, \texttt{peek()} returns $10$
+\end{enumerate}
+
+\item[\textbf{Q8}] \textit{[GATE CSE 2004 Q5, verified --- GATEOverflow V2 p.246]} \textbf{[MCQ, 1 mark]} The best data structure to check whether an arithmetic expression has balanced parentheses is a
+\begin{enumerate}
+  \item[(A)] queue
+  \item[(B)] stack
+  \item[(C)] tree
+  \item[(D)] list
+\end{enumerate}
+
+\item[\textbf{Q9}] \textit{[GATE CSE 2014 Set 2 Q41, verified --- GATEOverflow V2 p.246]} \textbf{[MCQ, 1 mark]} Suppose a stack implementation supports an instruction REVERSE, which reverses the order of elements on the stack, in addition to the PUSH and POP instructions. Which one of the following statements is TRUE (with respect to this modified stack)?
+\begin{enumerate}
+  \item[(A)] A queue cannot be implemented using this stack.
+  \item[(B)] A queue can be implemented where ENQUEUE takes a single instruction and DEQUEUE takes a sequence of two instructions.
+  \item[(C)] A queue can be implemented where ENQUEUE takes a sequence of three instructions and DEQUEUE takes a single instruction.
+  \item[(D)] A queue can be implemented where both ENQUEUE and DEQUEUE take a single instruction each.
+\end{enumerate}
+
+\item[\textbf{Q10}] \textit{[GATE CSE 2015 Set 3 Q12, verified --- GATEOverflow V2 p.246]} \textbf{[NAT, 2 marks]} The result of evaluating the postfix expression $10~5~+~60~6~/~*~8~-$ is \_\_\_\_\_\_\_\_\_. (Answer in integer)
+
+\end{enumerate}
+
+\end{document}
