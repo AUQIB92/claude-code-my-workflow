@@ -1,0 +1,212 @@
+% =============================================================================
+% CompetitiveExam/CS301/05-queues-questions.tex
+% Competitive Exam Practice 5 — GATE (Computer Science) Pattern
+% Queue ADT and linear-array false-full trap, circular queue with mod
+% wraparound and full/empty tests, double-ended queue and restricted
+% variants, priority queue using arrays (unordered vs ordered bills),
+% plus Unit-I review (Labs P5, P6; Class Test 1).
+%
+% Student-facing — NO answers. Answer key: 05-queues-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book
+% CompetitiveExam/Books/GATE-PYQs/filter1_volume2.pdf):
+%   - Q1  [GATE CSE 1996 Q1.12, verified — GATEOverflow V2 p.240] —
+%     FIFO/LIFO-by-stacks-or-queues + list/queue-implementation
+%     statements. Stem fully recoverable via pdftotext; option numerals
+%     image-dropped locally, recovered verbatim from the BYJUS GATE
+%     question bank ((a) ii and iii / (b) i and ii / (c) iii and iv /
+%     (d) ii and iv; "Answer (a)"); year confirmed on ExamSIDE's
+%     GATE-1996 listing. Only (ii) and (iii) are true, by direct
+%     evaluation (stacks are LIFO, queues are FIFO; circular reuse
+%     beats linear drift).
+%   - Q2  [GATE CSE 2012 Q35, verified — GATEOverflow V2 p.241] —
+%     circular-queue full/empty conditions with REAR/FRONT, capacity
+%     n-1 in n slots. Stem + all four options confirmed on the
+%     GATEOverflow question page (32k views), Testbook's GATE-2012
+%     solved page, and ExamSIDE's GATE-2012 listing; answer (A)
+%     confirmed on Testbook ("option 1") and the GATEOverflow
+%     accepted reasoning (initial REAR = FRONT = 0 kills (B)/(C)/(D)).
+%   - Q3  [GATE CSE 2016 Set 1 Q10, verified — GATEOverflow V2 p.242]
+%     — array queue with efficient ENQUEUE and DEQUEUE: both O(1).
+%     Stem + all four options confirmed on appliedroots' GATE-2016-Set-1
+%     listing and the SamagraCS solved-PYQ page, and listed on
+%     ExamSIDE's stacks-and-queues topic page; answer (A) per the
+%     official GATE 2016 key and deterministic from the deck's circular
+%     implementation (one array access + one mod per op, O(1) worst).
+%   - Q4  [GATE CSE 1997 Q4.7, verified — GATEOverflow V2 p.239] —
+%     priority queue used as a stack (PUSH = INSERT with key K,
+%     POP = DELETEMIN): keys in strictly decreasing order. Stem +
+%     all four options fully recoverable via pdftotext (Tier-1 text);
+%     listed on ExamSIDE's stacks-and-queues page under GATE CSE 1997;
+%     answer (D) derived deterministically (DELETEMIN returns the
+%     smallest key, so LIFO needs each newer key smaller than all
+%     older ones) and consistent with the documented monotonic-key
+%     principle (StackOverflow: stack-from-priority-queue uses
+%     monotonic priorities; min-extraction forces decreasing).
+%   - Q5  [GATE IT 2007 Q30, verified — GATEOverflow V2 pp.243-244]
+%     — recursive f (delete, recurse, insert) reverses the queue.
+%     Stem + all four options fully recoverable via pdftotext;
+%     confirmed on the GATEOverflow question page (23.8k views, best
+%     answer B with 56 votes), the GFG GATE-IT-2007 quiz, and
+%     ExamSIDE's stacks-and-queues listing. Answer (B).
+%   - Q6  [Original, GATE-pattern] — circular-queue count-version
+%     numeric trace (capacity 6, front = 4, rear = 2, count = 5;
+%     dequeue then enqueue). Fresh instance: the deck's worked trace
+%     uses capacity 4 (front 2/rear 2/count 1 walk) and its exit ticket
+%     uses capacity 5 (front 3/rear 1/count 4). Verified by execution
+%     2026-09-17: final front = 5, rear = 3, count = 5, not full.
+%   - Q7  [Original, GATE-pattern] — restricted-deque naming: insert
+%     at both ends, delete front-only => output-restricted; forbidden
+%     op is dequeueRear. Fresh instance (the deck's worked example
+%     uses enqueueRear(Q)/enqueueRear(R)/enqueueFront(P); no prior
+%     practice set tests the naming). Cross-checked against the
+%     standard definitions (input-restricted = single-end insert;
+%     output-restricted = single-end delete) and the BU Lecture-5
+%     restricted-deque operation sets. NOTE (open issue, flagged in
+%     the gate report, not fixed here): the deck's exam-note box in
+%     Act 3 labels "insert at rear, delete at both ends" as
+%     output-restricted, which contradicts both the standard
+%     definitions and the deck's own bullet definitions two paragraphs
+%     earlier (insert-one-end-only = input-restricted). Q7 follows the
+%     standard/BU naming.
+%   - Q8  [Original, GATE-pattern] — unordered vs ordered array
+%     priority-queue workload choice (10,000 inserts then 5
+%     deleteMins => unordered wins). Fresh instance: the deck's
+%     check-your-prediction uses 1,000/3 and 3/1,000 splits. Verified
+%     by execution 2026-09-17 (unordered ~60k vs ordered ~1e8
+%     worst-case elementary ops).
+%
+% Considered and dropped: GATE CSE 2022 Q52 (two-queue reversal NAT,
+% V2 p.242-243) — figure-dependent (Initial/Final-state diagrams are
+% embedded images, dropped from the text layer) with no second web
+% source confirming exact queue contents; GATE CSE 2016 Set 1 Q41
+% (queue+stack sort NAT, V2 p.242) — a sorting-network question, out
+% of Week 5 array-queue scope; GATE DS&AI 2024 Q22 (deque op trace,
+% V2 p.243) — operation lines truncated in the text layer
+% ("a removeFirst()" fragments) with no second source confirming the
+% full stem, so not shippable as verified (its style is mirrored by
+% original Q6/Q7 instead); GATE CSE 2017 Set 2 Q13 and GATE CSE 2018
+% Q3 (linked-list queues) — Week 7 scope, not arrays; GATE CSE 2006
+% Q49 and GATE CSE 2013 Q44 (amortized two-stack/MultiDequeue
+% analysis) — beyond Week 5's O(1)-per-op array scope.
+%
+% No render+OCR pass was possible (no Ghostscript/Tesseract in this
+% environment); image-dropped values above were recovered via Tier-2 web
+% search + CoVe instead, per the skill's sourcing ladder. No forked
+% claim-verifier subagent exists in this environment, so CoVe was executed
+% inline (each claim checked against 2+ independent sources, verdicts in
+% the session report).
+%
+% Compile with: cd CompetitiveExam/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 05-queues-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Competitive Exam Practice 5: Queues, Circular Buffers, Deques, and Priority Queues\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CSE 1996 Q1.12, verified --- GATEOverflow V2 p.240]} \textbf{[MCQ, 1 mark]} Consider the following statements:
+\begin{itemize}
+  \item[(i)] First-in-first out types of computations are efficiently supported by STACKS.
+  \item[(ii)] Implementing LISTS on linked lists is more efficient than implementing LISTS on an array for almost all the basic LIST operations.
+  \item[(iii)] Implementing QUEUES on a circular array is more efficient than implementing QUEUES on a linear array with two indices.
+  \item[(iv)] Last-in-first-out type of computations are efficiently supported by QUEUES.
+\end{itemize}
+Which of the following is correct?
+\begin{enumerate}
+  \item[(A)] (ii) and (iii) are true
+  \item[(B)] (i) and (ii) are true
+  \item[(C)] (iii) and (iv) are true
+  \item[(D)] (ii) and (iv) are true
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2012 Q35, verified --- GATEOverflow V2 p.241]} \textbf{[MCQ, 2 marks]} Suppose a circular queue of capacity $(n-1)$ elements is implemented with an array of $n$ elements. Assume that the insertion and deletion operations are carried out using \texttt{REAR} and \texttt{FRONT} as array index variables, respectively. Initially, \texttt{REAR} = \texttt{FRONT} = 0. The conditions to detect queue full and queue empty are:
+\begin{enumerate}
+  \item[(A)] \texttt{full}: (\texttt{REAR}+1) mod $n$ == \texttt{FRONT} \quad \texttt{empty}: \texttt{REAR} == \texttt{FRONT}
+  \item[(B)] \texttt{full}: (\texttt{REAR}+1) mod $n$ == \texttt{FRONT} \quad \texttt{empty}: (\texttt{FRONT}+1) mod $n$ == \texttt{REAR}
+  \item[(C)] \texttt{full}: \texttt{REAR} == \texttt{FRONT} \quad \texttt{empty}: (\texttt{REAR}+1) mod $n$ == \texttt{FRONT}
+  \item[(D)] \texttt{full}: (\texttt{FRONT}+1) mod $n$ == \texttt{REAR} \quad \texttt{empty}: \texttt{REAR} == \texttt{FRONT}
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CSE 2016 Set 1 Q10, verified --- GATEOverflow V2 p.242]} \textbf{[MCQ, 1 mark]} A queue is implemented using an array such that ENQUEUE and DEQUEUE operations are performed efficiently. Which one of the following statements is CORRECT ($n$ refers to the number of items in the queue)?
+\begin{enumerate}
+  \item[(A)] Both operations can be performed in $O(1)$ time
+  \item[(B)] At most one operation can be performed in $O(1)$ time but the worst case time for the other operation will be $\Omega(n)$
+  \item[(C)] The worst case time complexity for both operations will be $\Omega(n)$
+  \item[(D)] Worst case time complexity for both operations will be $\Omega(\log n)$
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CSE 1997 Q4.7, verified --- GATEOverflow V2 p.239]} \textbf{[MCQ, 1 mark]} A priority queue \texttt{Q} is used to implement a stack that stores characters. \texttt{PUSH(C)} is implemented as \texttt{INSERT(Q, C, K)} where \texttt{K} is an appropriate integer key chosen by the implementation. \texttt{POP} is implemented as \texttt{DELETEMIN(Q)}. For a sequence of operations, the keys chosen are in
+\begin{enumerate}
+  \item[(A)] non-increasing order
+  \item[(B)] non-decreasing order
+  \item[(C)] strictly increasing order
+  \item[(D)] strictly decreasing order
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[GATE IT 2007 Q30, verified --- GATEOverflow V2 pp.243--244]} \textbf{[MCQ, 2 marks]} Suppose you are given an implementation of a queue of integers. The operations that can be performed on the queue are:
+\begin{itemize}
+  \item[(i)] \texttt{isEmpty(Q)} --- returns true if the queue is empty, false otherwise.
+  \item[(ii)] \texttt{delete(Q)} --- deletes the element at the front of the queue and returns its value.
+  \item[(iii)] \texttt{insert(Q, i)} --- inserts the integer \texttt{i} at the rear of the queue.
+\end{itemize}
+Consider the following function:
+\begin{verbatim}
+void f (queue Q) {
+    int i;
+    if (!isEmpty(Q)) {
+        i = delete(Q);
+        f(Q);
+        insert(Q, i);
+    }
+}
+\end{verbatim}
+What operation is performed by the above function \texttt{f}?
+\begin{enumerate}
+  \item[(A)] Leaves the queue \texttt{Q} unchanged
+  \item[(B)] Reverses the order of the elements in the queue \texttt{Q}
+  \item[(C)] Deletes the element at the front of the queue \texttt{Q} and inserts it at the rear keeping the other elements in the same order
+  \item[(D)] Empties the queue \texttt{Q}
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A circular queue of capacity $6$ uses the \texttt{count} version (\texttt{count} $= 0$ means empty, \texttt{count} $= 6$ means full), with indices advancing modulo $6$. At some moment \texttt{front} $= 4$, \texttt{rear} $= 2$, \texttt{count} $= 5$. One \texttt{dequeue} followed by one \texttt{enqueue} is performed. Afterwards, (\texttt{front}, \texttt{rear}, \texttt{count}) equals:
+\begin{enumerate}
+  \item[(A)] $(5, 3, 5)$
+  \item[(B)] $(5, 3, 6)$
+  \item[(C)] $(4, 3, 5)$
+  \item[(D)] $(5, 2, 5)$
+\end{enumerate}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A double-ended queue supports insertions at \emph{both} ends but deletions from the \emph{front} only. Which restricted variant is this, and which operation is forbidden?
+\begin{enumerate}
+  \item[(A)] Input-restricted deque; \texttt{enqueueFront} is forbidden
+  \item[(B)] Output-restricted deque; \texttt{dequeueRear} is forbidden
+  \item[(C)] Input-restricted deque; \texttt{dequeueRear} is forbidden
+  \item[(D)] Output-restricted deque; \texttt{enqueueFront} is forbidden
+\end{enumerate}
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A priority queue holds up to $n = 10{,}000$ items in an array (no heap allowed). The workload is $10{,}000$ inserts followed by $5$ \texttt{deleteMin} operations. Which design gives the smaller worst-case total time?
+\begin{enumerate}
+  \item[(A)] Unordered array: $10{,}000$ $O(1)$ inserts plus $5$ $O(n)$ scans
+  \item[(B)] Ordered array: $10{,}000$ $O(n)$ inserts plus $5$ $O(1)$ removals
+  \item[(C)] Both designs cost the same asymptotically on this workload
+  \item[(D)] Ordered array, because \texttt{deleteMin} dominates the insert cost
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

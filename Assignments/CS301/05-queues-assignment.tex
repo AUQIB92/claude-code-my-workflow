@@ -1,0 +1,99 @@
+% =============================================================================
+% Assignments/CS301/05-queues-assignment.tex
+% Assignment 5 (Week 5): Queues, Circular Buffers, Deques, and Priority
+%
+% Student set — NO answers. Solution key: 05-queues-solutions.tex
+% (gitignored via **/*-solutions.tex, never deployed). Sourced from
+% Slides/CS301/05-queues.tex and Notes/CS301/05-queues-notes.tex.
+%
+% Fresh instances throughout: no problem re-asks a deck/notes worked example
+% verbatim (deck/notes: linear A,B,C/deq/enqD; capacity-4 A,B,C,D + deqx2 +
+% enq E -> rear=4 overflow; circular cap-4 A,B,C/deqx2/enq D,E,F; before-you-go
+% cap-5 front=3/rear=1/count=4; deque [P Q _ _ R]; priority J:4,K:7,L:9,M:1,N:5
+% and A:3,B:1,C:2; workloads 1000/3 and 3/1000; notes exercises: cap-5 linear
+% A,B/deq/C,D/deq, cap-4 full-start X,Y,Z, cap-6 5/4/6, deque A,B,C,D,
+% P:5,Q:2,R:4). Q3 starts cap-6 at (4,2,5) with V,W,X; Q4 uses T:6,U:2,V:9,W:4
+% with 800/4 and 4/600 workloads; Q5 uses M,N,P,Q; Q6 uses a,b,c,d,e,f on
+% capacity 5.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 05-queues-assignment.tex
+%   $env:BIBINPUTS="../..;"; bibtex 05-queues-assignment
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 05-queues-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Assignment 5 (Week 5): Queues, Circular Buffers, Deques, and Priority}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions. Each problem states its own assumptions; everything you need is in Week~5's Notes chapter alone. Notation matches the lecture exactly: \texttt{enqueue} adds at \texttt{rear}, \texttt{dequeue} removes from \texttt{front}, \texttt{front} peeks without removing, indices are 0-based on \texttt{Q[0..n-1]} with capacity $n$, circular advance is $(\cdot + 1) \bmod n$, deque operations are \texttt{enqueueFront}/\texttt{enqueueRear}/\texttt{dequeueFront}/\texttt{dequeueRear}, and priority removal is \texttt{deleteMin}. For every bound, name the operation, give the bound, and state the case (Week~2 shape).
+
+\section{Conceptual}
+
+\textbf{Q1.} A linear array queue reports ``full'' while free slots stand empty --- overflow with free space (standard treatment; see Horowitz \& Sahni Ch.~3) \cite{HorowitzSahni2008_fundamentals_data_structures}.
+\begin{enumerate}
+  \item[(a)] In one or two sentences, explain the \key{false-full} trap: with \texttt{rear} $= n - 1$ and \texttt{front} $> 0$, where exactly are the free slots, and why can the linear code never reuse them?
+  \item[(b)] In one or two sentences, explain why the shift-everything-left-on-dequeue fix is dishonest pricing: what does each \texttt{dequeue} cost worst case, and which term of the queue contract (\texttt{enqueue}/\texttt{dequeue} each $O(1)$ worst case) does it break?
+  \item[(c)] In one or two sentences, contrast with the Week~3 stack: why does a single moving boundary (\texttt{top}) never strand slots the way two marching indices (\texttt{front}, \texttt{rear}) do?
+\end{enumerate}
+Why this matters: a print spooler that cries ``full'' with an empty half-buffer is not out of memory, it is out of arithmetic --- this question pins down whose arithmetic is at fault before the fix is introduced.
+
+\textbf{Q2.} With wraparound, \texttt{front} $=$ \texttt{rear} after the first enqueue \emph{and} when the ring is completely full --- one equality, two meanings (Karumanchi Ch.~5, pp.205--223 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] In one or two sentences, state the ambiguity precisely: name the two distinct ring states that both satisfy \texttt{front} $=$ \texttt{rear}, and explain why testing full as \texttt{front} $=$ \texttt{rear} also fires on empty.
+  \item[(b)] Compare the two honest fixes in a small table (one row each): the test expression, the number of items the ring can hold at capacity $n$, and the extra state required. Name which fix the course adopts (Lab P5) and why in one sentence.
+  \item[(c)] Unit-I review: in one or two sentences, explain why writing the full/empty test down \emph{before} the code prevents the most common queue bug on a Class Test 1 paper.
+\end{enumerate}
+Why this matters: examiners check the test, not the fashion --- this question makes you state both tests exactly, so the name alone earns the first mark and the trace earns the rest.
+
+\section{Numerical}
+
+\textbf{Q3.} Circular queue, \texttt{count} version, capacity $n = 6$. Start at \texttt{front} $= 4$, \texttt{rear} $= 2$, \texttt{count} $= 5$ (five live items sit at indices 4, 5, 0, 1, 2). Rules: \texttt{dequeue} advances \texttt{front} $=$ (\texttt{front} $+ 1) \bmod n$ and decrements \texttt{count}; \texttt{enqueue} advances \texttt{rear} $=$ (\texttt{rear} $+ 1) \bmod n$ and increments \texttt{count}; full iff \texttt{count} $= n$.
+\begin{enumerate}
+  \item[(a)] Run, in order: \texttt{dequeue}, \texttt{enqueue(V)}, \texttt{enqueue(W)}, \texttt{dequeue}, \texttt{enqueue(X)}. Give \texttt{front}, \texttt{rear}, \texttt{count} after \emph{every} step as a five-row table.
+  \item[(b)] Show each modular computation explicitly (all five advances), and circle each step where an index wraps past $n - 1$ back to $0$ (there may be fewer such steps than advances).
+  \item[(c)] Is the queue full at the end? How many further enqueues (if any) can it accept before the honest full test fires?
+\end{enumerate}
+Why this matters: the wrap steps are exactly where the linear code died --- this question makes your hand execute the one-line arithmetic that refuses to die there.
+
+\textbf{Q4.} Two pricings: one scan and two workloads (Karumanchi Ch.~7, pp.369--408 PDF; Sedgewick Sec.~2.4, p.~308) \cite{Karumanchi2017_data_structures_algorithms_made_easy,Sedgewick2011_algorithms}.
+\begin{enumerate}
+  \item[(a)] An unordered array priority queue holds \texttt{T:6, U:2, V:9, W:4} (smaller number = more urgent). Trace \texttt{deleteMin}: which job is returned, how many priorities are scanned, and what is the worst-case cost? Name the operation, give the bound, state the case.
+  \item[(b)] Workload A: 800 inserts then 4 removals. Workload B: 4 inserts then 600 removals. For each workload, write the total asymptotic bill under \emph{both} designs (unordered: $O(1)$ insert, $O(n)$ \texttt{deleteMin}; ordered: $O(n)$ insert, $O(1)$ \texttt{deleteMin}), pick the cheaper design, and state the deck's workload rule in one sentence.
+\end{enumerate}
+Why this matters: there is no free lunch with arrays, so you price the workload, not the structure --- this question puts both bills for both workloads on the same page.
+
+\section{Design}
+
+\textbf{Q5.} A deque on a capacity-6 ring supports all four operations at $O(1)$ worst case each; \texttt{front} may step backwards as \texttt{front} $=$ (\texttt{front} $- 1 + n) \bmod n$ (Karumanchi Ch.~5, pp.205--223 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}. An \key{input-restricted} deque inserts at one end only and removes at either; an \key{output-restricted} deque inserts at either end and removes at one end only.
+\begin{enumerate}
+  \item[(a)] Starting empty, run: \texttt{enqueueRear(M)}, \texttt{enqueueFront(N)}, \texttt{enqueueRear(P)}, \texttt{dequeueFront}, \texttt{enqueueFront(Q)}, \texttt{dequeueRear}. Give the live contents (front to rear) after \emph{every} step.
+  \item[(b)] Classify the sequence: does it stay inside the input-restricted variant, the output-restricted variant, both, or neither? Justify in one or two sentences by naming which end(s) each operation uses.
+  \item[(c)] Design a four-operation sequence (using at least one \texttt{enqueueFront} and at least one removal from each end across the whole sequence is \emph{not} required --- choose freely) that is legal in an output-restricted deque but illegal in an input-restricted one. List the operations, give the final contents, and state in one sentence which restriction bites and where.
+\end{enumerate}
+Why this matters: the name earns the first mark only if you can tie each operation to the end it touches --- this question forces that tie on a sequence the lecture never worked.
+
+\textbf{Q6.} Design review: a print spooler buffers jobs in a capacity-5 array. The arrival pattern is fixed: \texttt{enqueue(a)}, \texttt{enqueue(b)}, \texttt{enqueue(c)}, \texttt{dequeue}, \texttt{dequeue}, \texttt{enqueue(d)}, \texttt{enqueue(e)}, \texttt{enqueue(f)}.
+\begin{enumerate}
+  \item[(a)] Run the pattern on the \emph{linear} implementation (start \texttt{front} $= 0$, \texttt{rear} $= -1$; \texttt{rear} $=$ \texttt{rear} $+ 1$ with no wraparound). Give \texttt{front}/\texttt{rear} after every step, pinpoint the exact step where the false full fires, and state how many live jobs and how many free-but-unreachable slots exist at that moment.
+  \item[(b)] Run the \emph{same} pattern from empty on the circular \texttt{count} version. Give \texttt{front}/\texttt{rear}/\texttt{count} after every step, show the wraparound computation, and state whether the pattern completes and whether the buffer is full at the end.
+  \item[(c)] Had the spooler used the sacrificed-slot fix at $n = 5$ instead: how many jobs could it hold at most, what is the exact full test, and in one or two sentences, when would you choose it over the \texttt{count} version (name the resource each fix spends)?
+\end{enumerate}
+Why this matters: this is the week's whole arc as one shipping decision --- the linear buffer fails the acceptance test, the ring passes it, and the capacity ledger tells you what the alternative fix would have cost.
+
+\bibliography{../../Bibliography_base}
+\bibliographystyle{plain}
+\end{document}

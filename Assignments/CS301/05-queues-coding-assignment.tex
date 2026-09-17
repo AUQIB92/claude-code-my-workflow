@@ -1,0 +1,110 @@
+% =============================================================================
+% Assignments/CS301/05-queues-coding-assignment.tex
+% Coding Assignment 5: The Waiting Room That Wraps Around (P5/P6)
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/05-queues-coding/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+%   queue.h, starter_queue.c, test_visible.c
+%
+% Fresh instances throughout: no worked example re-asks a deck/notes,
+% written-assignment, or earlier-lab instance verbatim (deck/notes: A,B,C,D
+% cap-4 traces, A..F ring, J:4,K:7,L:9,M:1,N:5, M,N,P,Q,R deque, A:3,B:1,C:2,
+% cap-5 front=3/rear=1/count=4; written Q3: cap-6 front=4/rear=2/count=5 with
+% V,W,X, Q4: T:6,U:2,V:9,W:4 workloads, Q5: M,N,P,Q,R deque, Q6: print
+% spooler a,b,c,d,e,f cap-5; notes extras: cap-4 X,Y,Z, P:5,Q:2,R:4).
+% Visible tests use spooler ids 5/15/25, 11..21 wrap, runner jobs
+% 701..704 and 801/802.
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 05-queues-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{5.\arabic{section}}
+
+\title{Coding Assignment 5: The Waiting Room That Wraps Around}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Week 5 gave the calculator a waiting room: jobs leave in the order they arrived, the buffer never walks off the end of its array, and urgent jobs jump the line. The lecture stated both contracts but left the \emph{code} for you to write, with one deliberate simplification you must now unlearn: on the slides, \texttt{dequeue} on an empty queue returns $-1$ to keep the slide readable. That sentinel cannot tell ``the queue held $-1$'' from ``the queue was empty'' --- a real queue must say which happened. This assignment is those two real structures: Lab P5 (a circular queue that reuses freed slots by wraparound) and Lab P6 (an unordered priority queue that scans for the minimum), both running on your array implementations with explicit status codes throughout.
+
+\section{Your task}
+
+Implement two ADTs in C as \textbf{fixed arrays with explicit status codes on every fallible operation}. The contracts are given to you in \texttt{queue.h} --- \emph{do not modify it}. Copy \texttt{starter\_queue.c} to \texttt{queue.c} and fill in all fifteen functions:
+
+\begin{verbatim}
+void     cqueue_init(CQueue *q);
+int      cqueue_is_empty(const CQueue *q);   /* 1 iff count == 0 */
+int      cqueue_is_full(const CQueue *q);    /* 1 iff count == QUEUE_MAX */
+int      cqueue_size(const CQueue *q);
+CQStatus cqueue_enqueue(CQueue *q, int x);   /* CQ_OK / CQ_FULL */
+CQStatus cqueue_dequeue(CQueue *q, int *out);/* CQ_OK / CQ_EMPTY */
+CQStatus cqueue_front(const CQueue *q, int *out);
+int      cqueue_display(const CQueue *q, int *out, int out_cap);
+
+void     pqueue_init(PQueue *q);
+int      pqueue_is_empty(const PQueue *q);
+int      pqueue_is_full(const PQueue *q);
+int      pqueue_size(const PQueue *q);
+PQStatus pqueue_enqueue(PQueue *q, int value, int priority);
+PQStatus pqueue_peek_min(const PQueue *q, int *value_out, int *priority_out);
+PQStatus pqueue_delete_min(PQueue *q, int *value_out, int *priority_out);
+\end{verbatim}
+
+\textbf{P5 is the \texttt{count} version from lecture.} \texttt{cqueue\_init} sets \texttt{front} to $0$, \texttt{rear} to $-1$, \texttt{count} to $0$, so the first enqueue lands at index $0$. Every enqueue advances \texttt{rear} $=$ (\texttt{rear} $+ 1) \bmod 8$ and increments \texttt{count}; every dequeue reads \texttt{data[front]} \emph{before} advancing \texttt{front} $=$ (\texttt{front} $+ 1) \bmod 8$ and decrementing \texttt{count}. Full iff \texttt{count} $== 8$ --- never test \texttt{front} $==$ \texttt{rear}, which also fires on an empty ring. \texttt{display} copies the live items front-to-rear into the caller's buffer and returns how many it wrote ($-1$ when the buffer is too small); it never disturbs the queue.
+
+\textbf{P6 is the unordered design from lecture.} \texttt{enqueue} appends at the end in $O(1)$. \texttt{peek\_min} and \texttt{delete\_min} scan every live item and return the \emph{smallest priority number} first (urgency $0$ beats urgency $9$); ties leave in arrival order, earliest-inserted first. \texttt{delete\_min} closes the gap so the survivors stay packed. Either \texttt{out} pointer may be \texttt{NULL} (discard that half); on \emph{any} non-\texttt{OK} status, the queue and every \texttt{*out} are left unchanged.
+
+\section{Constraints}
+
+\begin{itemize}
+  \item Representation must be the \texttt{CQueue}/\texttt{PQueue} arrays in \texttt{queue.h} --- no linked lists, no heap allocation, no global/static mutable state.
+  \item Error paths use the explicit status codes --- never the lecture's $-1$ sentinel. A submission whose \texttt{dequeue} returns $-1$-as-error fails the hidden suite's value-trap tests (enqueueing the \emph{value} $-1$ and reading it back must succeed with \texttt{CQ\_OK}).
+  \item Correctness is graded against the contract; your code must compile with \texttt{gcc -Wall -Wextra} without errors or warnings.
+  \item Complexity: circular \texttt{enqueue}, \texttt{dequeue}, \texttt{front} are $O(1)$ worst case each, holding at most \texttt{QUEUE\_MAX} integers; priority \texttt{enqueue} is $O(1)$ worst case while \texttt{peek\_min} and \texttt{delete\_min} each scan all live items at $O(n)$ worst case in the current size.
+\end{itemize}
+
+\section{Worked examples (these are the visible tests)}
+
+\textbf{Example 1 --- the circular queue itself.} After \texttt{init}: empty, size $0$. \texttt{enqueue(5)}, \texttt{enqueue(15)}, \texttt{enqueue(25)} all return \texttt{CQ\_OK}; \texttt{front} gives $5$ and size stays $3$; \texttt{dequeue} gives $5$, then $15$; size is $1$ and \texttt{front} is $25$.
+
+\textbf{Example 2 --- wraparound, display, honest full/empty (P5).} Enqueue $11, 12, 13, 14, 15, 16$; dequeue $11$, $12$; enqueue $17$, $18$, $19$ --- the last one walks \texttt{rear} from index $7$ back to index $0$. Size is $7$, not full. \texttt{display} writes $7$ items in front-to-rear order: $13, 14, 15, 16, 17, 18, 19$. \texttt{enqueue(20)} fills the ring (full at $8$ of $8$); \texttt{enqueue(21)} returns \texttt{CQ\_FULL}. Draining gives $13, 14, 15, 16, 17, 18, 19, 20$ in order; the queue is empty and the next \texttt{dequeue} returns \texttt{CQ\_EMPTY}.
+
+\textbf{Example 3 --- the priority runner (P6).} Enqueue $(701, 4)$, $(702, 1)$, $(703, 3)$. \texttt{peek\_min} reports $(702, 1)$ and size stays $3$. \texttt{delete\_min} returns $702$, then $703$. Enqueue $(704, 1)$; \texttt{delete\_min} returns $704$, then $701$; the queue is empty and the next \texttt{delete\_min} returns \texttt{PQ\_EMPTY}. Ties keep arrival order: enqueueing $(801, 2)$ then $(802, 2)$ deletes $801$ first.
+
+\section{What to submit}
+
+\begin{enumerate}
+  \item \texttt{queue.c} --- your completed implementation (edit \texttt{starter\_queue.c}).
+  \item \texttt{queue.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+\section{Getting started}
+
+\begin{enumerate}
+  \item Copy \texttt{starter\_queue.c} to \texttt{queue.c} and fill in the fifteen function bodies.
+  \item Sanity-check locally:
+\begin{verbatim}
+gcc -Wall -Wextra -o test_visible test_visible.c queue.c
+./test_visible
+\end{verbatim}
+    All three worked examples should pass.
+  \item Submit \texttt{queue.c} and \texttt{queue.h}. The autograder compiles your \texttt{queue.c} against a \emph{hidden} test suite and reports pass/fail. The hidden suite covers: the $-1$ value trap and \texttt{INT\_MIN}/\texttt{INT\_MAX} round-trips; filling the ring to exactly \texttt{QUEUE\_MAX} and one past it; \texttt{front} purity and \texttt{NULL}-out calls; display with too-small and \texttt{NULL} buffers (with a canary check that nothing is written on refusal); wraparound states including the count-honesty configuration that defeats any \texttt{front} $==$ \texttt{rear} full test; repeated fill/drain cycles; negative and tied priorities with earliest-wins ordering; peeking/deleting through \texttt{NULL} halves; filling the priority queue to \texttt{PQUEUE\_MAX}; a twenty-item delete-all-sorted check; and seeded random campaigns for both structures checked operation-by-operation against independent oracles.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,643 @@
+% CS301 Week 5 -- Queue ADT: linear queue and its false-full trap, circular
+% queue with mod wraparound, double-ended queue, priority queue using arrays,
+% plus Unit-I review for Class Test 1.
+% Difficulty: intro (course-wide default per knowledge-base-CS301.md).
+% Page-grounded in Karumanchi2017 Ch.5 (Queues, pp.205-223 PDF: Queue ADT and
+% variants) and Ch.7 (pp.369-408 PDF: Priority Queue ADT); Sedgewick2011
+% Sec.1.3 p.120 (queue as a collection ADT) and Sec.2.4 p.308 (priority
+% queues). Horowitz & Sahni Ch.3 / Aho-Hopcroft-Ullman Ch.2 cited at chapter
+% level only (not page-indexed).
+% Handoff: Week 4 closed with infix/postfix/prefix conversion (Lab P3/P4),
+% Hanoi, and recursion on the runtime stack, and promised queues ("what
+% changes when the first element out is the first one in"). This deck does NOT
+% re-teach stacks or conversion -- it builds on them. Continues the
+% expression-processor thread: the calculator can rewrite and evaluate, but it
+% cannot yet buffer jobs in arrival order. Sets up Week 6 (linked lists) and
+% Week 7 (list-based queue), and Week 12 (BFS frontier as a queue).
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{First In, First Out}
+\subtitle{Week 5 --- Queues, Circular Buffers, Deques, and Priority}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 5]{\small Week 5}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- MOTIVATION + HANDOFF
+% =============================================================================
+\section{Motivation and the Handoff}
+
+\begin{frame}{Today's Four Questions}
+  \begin{enumerate}
+    \item Why does a stack ruin a print queue?
+    \item How does one index calculation reclaim wasted array slots?
+    \item What can a deque do that a queue cannot --- and what does it cost?
+    \item Where does the most urgent job wait when everything is an array?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Plan}
+    Name the queue contract. Fix its array with circular arithmetic. Open
+    both ends, then rank by priority. Close with the Unit-I review.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Handoff: What Week 4 Finished}
+  \begin{itemize}
+    \item Week 4 gave us conversion: infix to postfix with one left-to-right
+      stack pass, infix to prefix by reverse--swap--postfix--reverse, and
+      prefix to postfix right-to-left (Labs P3, P4) --- all $O(n)$ worst case.
+    \item It priced recursion: Hanoi needs $2^{n} - 1 = \Theta(2^{n})$ moves
+      but only $O(n)$ live frames on the runtime stack.
+    \item What it never did: hold items in \emph{arrival} order. Every Week 4
+      structure is last-in, first-out.
+  \end{itemize}
+  \begin{exampleblock}{This week's job}
+    Give the calculator a waiting room: jobs leave in the order they arrived,
+    the buffer never walks off the end of its array, urgent jobs jump the
+    line --- honestly priced (Labs P5, P6).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Calculator Pipeline, Extended}
+  \begin{itemize}
+    \item Weeks 3--4 built an expression processor: tokenize, check brackets,
+      convert, evaluate. One program learning new tricks each week.
+    \item New deficiency: two users hit ``print'' at once. The second job
+      must \emph{wait its turn} --- a stack would serve the newcomer first.
+    \item The same need appears everywhere: keyboard buffers, process
+      scheduling, server request queues, and (Week 12) the BFS frontier.
+  \end{itemize}
+  \begin{exampleblock}{The pattern (design principle)}
+    Every structure in this course answers a deficiency the previous one just
+    exhibited. The stack's deficiency is its exit order --- the queue is the
+    answer.
+  \end{exampleblock}
+  \muted{One evolving program, not twelve disconnected topics.}
+\end{frame}
+
+\begin{frame}{Where This Week Sits}
+  \begin{itemize}
+    \item Week 2 priced things: name the operation, give the bound, state the
+      case. Every claim today repeats that shape.
+    \item Week 4's close promised: ``what changes when the first element out
+      is the first one in --- circular buffers, deques, and priority.''
+    \item Week 6 re-implements this week's contract on linked lists; Week 7
+      compares the two; Week 12 spends a whole traversal inside a queue.
+  \end{itemize}
+  \muted{The arc again: state the contract, implement it once, analyse what
+    it costs.}
+\end{frame}
+
+\transitionslide{First: why arrival order needs its own contract.}
+
+% =============================================================================
+% ACT 1 --- QUEUE ADT + LINEAR ARRAY
+% =============================================================================
+\section{The Queue Contract}
+
+\sectiondivider{Section 1}{The Queue Contract}
+
+\begin{frame}{Why a Stack Ruins a Print Queue}
+  \begin{itemize}
+    \item Jobs arrive: \texttt{Alice}, \texttt{Bob}, \texttt{Carol}. Fairness
+      means Alice prints first --- she arrived first.
+    \item Push all three on a stack and pop: Carol prints first. The last
+      arrival jumps the line; Alice starves while newcomers keep coming.
+    \item \bad{Wrong exit order is not a bug you can patch} --- LIFO cannot
+      be tuned into FIFO. The contract itself must change.
+  \end{itemize}
+  \begin{exampleblock}{The requirement in one line}
+    Insert at one end, remove at the other: first in, first out.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Queue ADT}
+  \begin{block}{Definition (Karumanchi Ch.~5, pp.205--223 PDF; Sedgewick
+    Sec.~1.3, p.~120)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy,Sedgewick2011_algorithms}}
+    A \key{queue} is a collection with one removal rule: remove the least
+    recently inserted item. \texttt{enqueue} adds at the \key{rear};
+    \texttt{dequeue} removes from the \key{front}; \texttt{front} peeks
+    without removing. Empty dequeue is an error (the queue exception).
+  \end{block}
+  \begin{itemize}
+    \item Sedgewick's framing: bag, queue, and stack differ \emph{only} in
+      which item leaves next --- same contract shape as Week 3's stack.
+    \item New symbols today: \texttt{front} (next to dequeue),
+      \texttt{rear} (last enqueued) --- both array indices, 0-based.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Linear Array Implementation (First Attempt)}
+  \begin{block}{Operations on \texttt{Q[0..n-1]}, capacity $n$}
+\begin{semiverbatim}
+enqueue(x): rear = rear + 1; Q[rear] = x
+dequeue():   x = Q[front]; front = front + 1; return x
+empty when front > rear; start with front = 0, rear = -1
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Each operation touches one slot: $O(1)$ worst case --- same habit
+      as the stack's $O(1)$ \texttt{push}/\texttt{pop}.
+    \item But \texttt{front} only marches right. Watch what happens to the
+      slots it leaves behind.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A Linear Queue, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=neutral!20, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (q0) at (0, 0) {\texttt{X} freed};
+      \node[draw, fill=light-bg, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (q1) at (1.5, 0) {\texttt{A}};
+      \node[draw, fill=light-bg, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (q2) at (3.0, 0) {\texttt{B}};
+      \node[draw, fill=light-bg, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (q3) at (4.5, 0) {\texttt{C}};
+      \node[draw, fill=white, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (q4) at (6.0, 0) {empty};
+
+      \node[text=neutral, above=0.15cm of q0] {\texttt{Q[0]}};
+      \node[text=neutral, above=0.15cm of q1] {\texttt{Q[1]}};
+      \node[text=neutral, above=0.15cm of q2] {\texttt{Q[2]}};
+      \node[text=neutral, above=0.15cm of q3] {\texttt{Q[3]}};
+      \node[text=neutral, above=0.15cm of q4] {\texttt{Q[4]}};
+
+      \node[text=primary-blue, align=center] (flab) at (1.5, -1.0) {\texttt{front}=1\\[-1pt]\tiny oldest leaves};
+      \draw[->, thick, color=primary-blue] (flab.north) -- (q1.south);
+
+      \node[text=primary-gold, align=center] (rlab) at (4.5, -1.0) {\texttt{rear}=3\\[-1pt]\tiny newest waits};
+      \draw[->, thick, color=primary-gold] (rlab.north) -- (q3.south);
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item \texttt{X} was dequeued; its slot sits empty while \texttt{front}
+      marches away from it. The queue holds 3 items but owns 5 slots.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Trace: Enqueue, Enqueue, Dequeue}
+  \begin{center}
+  {\small
+  \begin{tabular}{llll}
+    \toprule
+    \textbf{operation} & \texttt{front} & \texttt{rear} & \textbf{contents} \\
+    \midrule
+    start & 0 & $-1$ & empty \\
+    \texttt{enqueue(A)} & 0 & 0 & \texttt{[A]} \\
+    \texttt{enqueue(B)} & 0 & 1 & \texttt{[A B]} \\
+    \texttt{enqueue(C)} & 0 & 2 & \texttt{[A B C]} \\
+    \texttt{dequeue} $\to$ \texttt{A} & 1 & 2 & \texttt{[B C]} \\
+    \texttt{enqueue(D)} & 1 & 3 & \texttt{[B C D]} \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item Read the dequeue row: the returned value is \texttt{Q[front]}
+      \emph{before} the increment --- off-by-one here returns the wrong job.
+    \item After five operations the live items sit at indices 1--3; index 0
+      is dead space the implementation cannot reuse.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The False-Full Trap}
+  \begin{itemize}
+    \item Keep dequeuing and enqueuing: \texttt{front} and \texttt{rear} both
+      drift right until \texttt{rear} $= n - 1$ with live items fewer than $n$.
+    \item The implementation reports \bad{full} --- but slots $0$ to
+      \texttt{front}$-1$ stand empty. Overflow with free space: a false
+      alarm.
+    \item The naive fix (shift everything left on each dequeue) restores
+      honesty at $O(n)$ worst case per dequeue --- paying linear time to
+      defend a constant-time contract.
+  \end{itemize}
+  \begin{exampleblock}{The real fix (next section)}
+    Let the indices wrap around the end of the array instead of marching off
+    it: one modular addition, no shifting, $O(1)$ kept.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{Capacity 4: \texttt{enqueue} A, B, C, D, then \texttt{dequeue}
+    twice, then \texttt{enqueue} E. Where does E land?}
+    A: index 0 (dead slot reused) \quad B: index 4 (overflow!) \quad
+    C: index 2
+  \end{block}
+  \begin{enumerate}
+    \item A --- the linear code never looks left, so it cannot reuse index 0.
+    \item B --- \texttt{rear} was 3, so \texttt{rear}+1 = 4: past the end.
+    \item C --- the queue holds 3 live items, so E takes the third slot.
+  \end{enumerate}
+  \muted{Trace \texttt{front}/\texttt{rear} as numbers, not pictures: B is
+    what the first-attempt code actually does.}
+\end{frame}
+
+\transitionslide{The trap is set. Now the one-line arithmetic that springs it.}
+
+% =============================================================================
+% ACT 2 --- CIRCULAR QUEUE
+% =============================================================================
+\section{Circular Queue}
+
+\sectiondivider{Section 2}{Circular Queue}
+
+\begin{frame}{Wraparound Arithmetic}
+  \begin{block}{The rule (Karumanchi Ch.~5, pp.205--223 PDF)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}}
+    Advance every index modulo the capacity: \key{\texttt{rear} $=$
+    (\texttt{rear} $+ 1) \bmod n$}, \key{\texttt{front} $=$
+    (\texttt{front} $+ 1) \bmod n$}. Index $n - 1$ is followed by index $0$
+    --- the array is used as a ring.
+  \end{block}
+  \begin{itemize}
+    \item Concrete: capacity $8$, \texttt{rear} $= 7$ $\to$ next
+      \texttt{rear} $= (7 + 1) \bmod 8 = 0$. The ``past the end'' slot is the
+      freed slot at the start.
+    \item Cost of the fix: one division remainder per operation --- still
+      $O(1)$ worst case. No shifting, ever.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A Circular Queue, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.92]
+      \node[draw, circle, fill=white, minimum size=0.68cm, inner sep=0] (s0) at (0:1.45) {\texttt{A}};
+      \node[draw, circle, fill=primary-blue!20, minimum size=0.68cm, inner sep=0] (s1) at (45:1.45) {\texttt{B}};
+      \node[draw, circle, fill=primary-blue!20, minimum size=0.68cm, inner sep=0] (s2) at (90:1.45) {\texttt{C}};
+      \node[draw, circle, fill=primary-blue!20, minimum size=0.68cm, inner sep=0] (s3) at (135:1.45) {\texttt{D}};
+      \node[draw, circle, fill=primary-blue!20, minimum size=0.68cm, inner sep=0] (s4) at (180:1.45) {\texttt{E}};
+      \node[draw, circle, fill=primary-blue!20, minimum size=0.68cm, inner sep=0] (s5) at (225:1.45) {\texttt{F}};
+      \node[draw, circle, fill=white, minimum size=0.68cm, inner sep=0] (s6) at (270:1.45) {};
+      \node[draw, circle, fill=white, minimum size=0.68cm, inner sep=0] (s7) at (315:1.45) {};
+
+      \node[text=neutral] at (0:2.05) {\texttt{0}};
+      \node[text=neutral] at (45:2.05) {\texttt{1}};
+      \node[text=neutral] at (90:2.05) {\texttt{2}};
+      \node[text=neutral] at (135:2.05) {\texttt{3}};
+      \node[text=neutral] at (180:2.05) {\texttt{4}};
+      \node[text=neutral] at (225:2.05) {\texttt{5}};
+      \node[text=neutral] at (270:2.05) {\texttt{6}};
+      \node[text=neutral] at (315:2.05) {\texttt{7}};
+
+      \node[text=primary-blue] (flab) at (45:2.65) {\texttt{front}=1};
+      \draw[->, thick, color=primary-blue] (flab) -- (s1);
+
+      \node[text=primary-gold] (rlab) at (225:2.65) {\texttt{rear}=5};
+      \draw[->, thick, color=primary-gold] (rlab) -- (s5);
+
+      \draw[->, thick, dashed, color=positive] (325:1.8) arc (-35:35:1.8);
+      \node[text=positive, anchor=west] at (10:2.1) {\tiny $7 \to 0$};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.25cm}
+  \begin{itemize}
+    \item Five live items (\texttt{B}--\texttt{F}), \texttt{front} $= 1$,
+      \texttt{rear} $= 5$; the next \texttt{enqueue} lands at index $6$,
+      and slot $0$ was already recycled once.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Full or Empty? They Look Identical}
+  \begin{itemize}
+    \item With wraparound, \texttt{front} $=$ \texttt{rear} after the first
+      enqueue \emph{and} when the ring is completely full --- one equality,
+      two meanings.
+    \item \key{Fix A (count)}: keep \texttt{count} of live items; empty when
+      \texttt{count} $= 0$, full when \texttt{count} $= n$. One extra integer.
+    \item \key{Fix B (sacrificed slot)}: declare full when
+      (\texttt{rear} $+ 1) \bmod n =$ \texttt{front}; the ring holds at most
+      $n - 1$ items and one slot always stands empty.
+  \end{itemize}
+  \begin{exampleblock}{Course convention (Labs P5)}
+    Use the \texttt{count} version: it holds all $n$ items and its tests read
+    plainly. Name your choice on paper --- examiners check the test, not the
+    fashion.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Worked Trace: Wrapping Around (Capacity 4, Count Version)}
+  \begin{center}
+  {\small
+  \begin{tabular}{llll}
+    \toprule
+    \textbf{operation} & \texttt{front} & \texttt{rear} & \textbf{count} \\
+    \midrule
+    \texttt{enq A, enq B, enq C} & 0 & 2 & 3 \\
+    \texttt{deq} $\to$ A, \texttt{deq} $\to$ B & 2 & 2 & 1 \\
+    \texttt{enq D}: $(2+1) \bmod 4 = 3$ & 2 & 3 & 2 \\
+    \texttt{enq E}: $(3+1) \bmod 4 = 0$ & 2 & 0 & 3 \\
+    \texttt{enq F}: $(0+1) \bmod 4 = 1$ & 2 & 1 & 4 = full \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item Watch \texttt{rear} walk $2 \to 3 \to 0 \to 1$: the wrap steps are
+      where the linear code died, and the modular code does not even pause.
+    \item Full test fires honestly: \texttt{count} $= 4 = n$ with every slot
+      genuinely occupied.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Circular Queue: Cost and Code Shape (Lab P5)}
+  \begin{itemize}
+    \item \texttt{enqueue}, \texttt{dequeue}, \texttt{front}: each one array
+      access plus one $\bmod$ --- $O(1)$ worst case, $O(1)$ auxiliary space
+      beyond the $n$-slot array ($n$ = capacity here).
+    \item The ring is the week's load-bearing idea: the same wraparound
+      servings keyboard buffers, streaming windows, and Week 12's BFS frontier.
+    \item Lab P5 implements exactly this trace: circular \texttt{enqueue} /
+      \texttt{dequeue} / display with the full and empty tests above.
+  \end{itemize}
+  \begin{exampleblock}{The habit (Week 2 shape)}
+    Name the operation (index advance), give the bound ($O(1)$), state the
+    case (worst). ``Circular is $O(1)$'' without the case is half an answer.
+  \end{exampleblock}
+\end{frame}
+
+\transitionslide{Both ends served by one rule. Now open both ends.}
+
+% =============================================================================
+% ACT 3 --- DEQUE
+% =============================================================================
+\section{Double-Ended Queue}
+
+\sectiondivider{Section 3}{Double-Ended Queue}
+
+\begin{frame}{The Double-Ended Queue}
+  \begin{block}{Definition (Karumanchi Ch.~5, pp.205--223 PDF; standard
+    treatment)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}}
+    A \key{deque} (``deck'') allows \texttt{enqueue} and \texttt{dequeue} at
+    \emph{both} ends: \texttt{enqueueFront}, \texttt{enqueueRear},
+    \texttt{dequeueFront}, \texttt{dequeueRear}. A queue is a deque with two
+    of the four operations switched off.
+  \end{block}
+  \begin{itemize}
+    \item Motivation: an undo history takes new states at the rear but drops
+      the \emph{oldest} states from the front when full --- one structure,
+      both ends working.
+    \item Array version: a circular ring with \texttt{front} allowed to step
+      \emph{backwards}: \texttt{front} $=$ (\texttt{front} $- 1 + n) \bmod n$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A Deque, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=light-bg, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (d0) at (0, 0) {\texttt{P}};
+      \node[draw, fill=light-bg, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (d1) at (1.5, 0) {\texttt{Q}};
+      \node[draw, fill=white, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (d2) at (3.0, 0) {empty};
+      \node[draw, fill=white, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (d3) at (4.5, 0) {empty};
+      \node[draw, fill=light-bg, minimum width=1.3cm, minimum height=0.75cm,
+        text width=1.1cm, align=center] (d4) at (6.0, 0) {\texttt{R}};
+
+      \node[text=neutral, below=0.1cm of d0] {\texttt{D[0]}};
+      \node[text=neutral, below=0.1cm of d4] {\texttt{D[4]}};
+
+      \draw[<->, thick, color=primary-blue] (-0.3, 0.75) -- (1.0, 0.75);
+      \node[text=primary-blue, above=0.05cm] at (0.35, 0.75) {front end};
+
+      \draw[<->, thick, color=primary-gold] (5.0, 0.75) -- (6.3, 0.75);
+      \node[text=primary-gold, above=0.05cm] at (5.65, 0.75) {rear end};
+
+      \node[text=positive, below=0.55cm of d2]
+        {insert or remove at either end: all $O(1)$ worst case};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item The ring wraps underneath (as in Section 2); the new freedom is
+      that \texttt{front} steps either direction, and so does \texttt{rear}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example and Restricted Cousins}
+  \begin{itemize}
+    \item Start empty (capacity 5): \texttt{enqueueRear(Q)},
+      \texttt{enqueueRear(R)} $\to$ rear grows right;
+      \texttt{enqueueFront(P)} $\to$ front steps left with wraparound.
+      State above: \texttt{[P Q \_ \_ R]} with both arrows live.
+    \item \key{Input-restricted deque}: insert at one end only, remove at
+      either --- models a priority lane that admits newcomers singly.
+    \item \key{Output-restricted deque}: insert at either end, remove at one
+      end only --- models a pipeline with a single outlet.
+  \end{itemize}
+  \begin{exampleblock}{Exam note}
+    If a question says ``insert at rear, delete at both ends'': that is the
+    input-restricted deque. Name it, then trace it --- the name earns the
+    first mark, the trace the rest.
+  \end{exampleblock}
+\end{frame}
+
+\transitionslide{Order served. Now urgency: not who waited longest, but who matters most.}
+
+% =============================================================================
+% ACT 4 --- PRIORITY QUEUE USING ARRAYS
+% =============================================================================
+\section{Priority Queue Using Arrays}
+
+\sectiondivider{Section 4}{Priority Queue Using Arrays}
+
+\begin{frame}{When Arrival Order Is the Wrong Order}
+  \begin{itemize}
+    \item The OS scheduler holds processes \texttt{(job, priority)}: a system
+      interrupt (priority 0) must run before a background backup (priority
+      9), however late it arrived. FIFO would run the backup first.
+    \item Hospital triage, printer ``urgent'' flags, Dijkstra's frontier
+      (Week 12): every one ranks by \key{priority}, not by arrival time.
+    \item Syllabus constraint: implement it \emph{using arrays} --- no heaps
+      yet (heaps arrive with trees in Week 11). Two honest array designs,
+      opposite bills.
+  \end{itemize}
+  \begin{exampleblock}{Definition (Karumanchi Ch.~7, pp.369--408 PDF;
+    Sedgewick Sec.~2.4, p.~308)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy,Sedgewick2011_algorithms}}
+    A \key{priority queue} returns the minimum (or maximum) priority item
+    first. Insert is \texttt{enqueue} with a priority; removal is
+    \texttt{deleteMin} (or \texttt{deleteMax}).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Two Array Designs, Opposite Bills}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{design} & \textbf{insert} & \textbf{\texttt{deleteMin}} \\
+    \midrule
+    Unordered (append) & $O(1)$ worst case & scan all $n$: $O(n)$ worst \\
+    Ordered (sorted) & shift room: $O(n)$ worst & read off end: $O(1)$ worst \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item No free lunch with arrays: one end of the trade is always linear.
+      (Week 11's heap makes both $O(\log n)$ --- the reason heaps exist.)
+    \item Choose by workload: many inserts, few removals $\to$ unordered;
+      removals dominate $\to$ ordered.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Priority Queue, Drawn and Traced}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[text=neutral, anchor=east] at (-2.0, 0.75) {unordered};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (u0) at (-1.3, 0.75) {\texttt{J:4}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (u1) at (0, 0.75) {\texttt{K:7}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (u2) at (1.3, 0.75) {\texttt{L:9}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm,
+        fill=primary-gold!25, align=center] (u3) at (2.6, 0.75) {\texttt{M:1}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (u4) at (3.9, 0.75) {\texttt{N:5}};
+
+      \draw[->, thick, color=neutral] (-1.8, 0.05) -- (4.3, 0.05);
+      \node[text=neutral, anchor=west] at (4.4, 0.05) {scan $O(n)$};
+
+      \draw[->, thick, color=negative] (2.6, 1.45) -- (u3.north);
+      \node[text=negative, above=0.02cm] at (2.6, 1.45) {min: \texttt{M:1}};
+
+      \node[text=neutral, anchor=east] at (-2.0, -0.75) {ordered};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (s0) at (-1.3, -0.75) {\texttt{L:9}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (s1) at (0, -0.75) {\texttt{K:7}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (s2) at (1.3, -0.75) {\texttt{N:5}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm, fill=light-bg,
+        align=center] (s3) at (2.6, -0.75) {\texttt{J:4}};
+      \node[draw, minimum width=1.1cm, minimum height=0.7cm,
+        fill=primary-gold!25, align=center] (s4) at (3.9, -0.75) {\texttt{M:1}};
+
+      \node[text=positive, below=0.15cm of s4] {read end $O(1)$};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item Trace \texttt{deleteMin} above: scan five priorities, return
+      \texttt{M:1}, close the gap by shifting (unordered) or take the end
+      slot (ordered). Lab P6 implements the unordered version.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{1\,000 inserts then 3 removals: which array design? 3 inserts
+    then 1\,000 removals?}
+    A: ordered for both \quad B: unordered, then ordered \quad
+    C: unordered for both
+  \end{block}
+  \begin{enumerate}
+    \item A --- sorting once up front always wins.
+    \item B --- pay the linear bill on the rare operation, keep the frequent
+      one constant.
+    \item C --- insertion order never matters.
+  \end{enumerate}
+  \muted{Price the workload, not the structure: count which operation runs
+    hot, then read the table two slides back.}
+\end{frame}
+
+\transitionslide{Five weeks of tools. Now the map that holds them together.}
+
+% =============================================================================
+% ACT 5 --- UNIT-I REVIEW + CLOSE
+% =============================================================================
+\section{Unit-I Review and Close}
+
+\begin{frame}{Unit I in One Map (Class Test 1)}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{week} & \textbf{contract} & \textbf{load-bearing skill} \\
+    \midrule
+    1 & ADT; \texttt{malloc}/\texttt{free}, \texttt{NULL} & ownership tracing \\
+    2 & $T(n)$, $O/\Omega/\Theta$, best/worst/average & price every claim \\
+    3 & Stack ADT; \texttt{top} $= -1$ empty; $O(1)$ & bracket check, postfix eval \\
+    4 & Notations; conversion; recursion; Hanoi $\Theta(2^{n})$ & stack traces \\
+    5 & Queue; \texttt{front}/\texttt{rear}; $\bmod$ ring & buffer traces (today) \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item The test rewards the course habit: name the structure, trace it
+      line by line, state operation $+$ bound $+$ case.
+    \item Every structure so far lives in an array; Week 6 asks what pointers
+      buy us instead.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Three Common Mistakes (All of Unit I)}
+  \begin{itemize}
+    \item \bad{Confusing the case with the bound} --- ``best case $O(n)$''
+      mixes the input (case) with the growth class (bound). Say ``best case
+      $\Theta(1)$, worst case $\Theta(n)$'' with the operation named.
+    \item \bad{Testing full as \texttt{front} $=$ \texttt{rear}} --- that test
+      also fires on empty. Use \texttt{count} ($0$ vs.\ $n$) or sacrifice a
+      slot, and write the test down before the code.
+    \item \bad{Forgetting direction} --- stacks pop the young end, queues the
+      old end, deques either end, priority queues the urgent end. State the
+      removal rule first; the code follows it.
+  \end{itemize}
+  \begin{exampleblock}{How to revise}
+    Re-trace one table per week (Weeks 3, 4, and today's two) with a covered
+    answer column --- the test is traces, not definitions.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 5 Summary}
+  \begin{itemize}
+    \item \key{Queue}: \texttt{enqueue} at \texttt{rear}, \texttt{dequeue}
+      from \texttt{front}; $O(1)$ worst case each; the linear array dies of
+      false fullness.
+    \item \key{Circular queue}: $(\cdot + 1) \bmod n$ recycling; full vs.\
+      empty by \texttt{count} or sacrificed slot; Lab P5.
+    \item \key{Deque}: four operations, both ends, backward-stepping
+      \texttt{front}; restricted cousins name which end is closed.
+    \item \key{Priority queue on arrays}: unordered ($O(1)$ insert, $O(n)$
+      \texttt{deleteMin}) vs.\ ordered (flipped); Lab P6; heaps in Week 11.
+  \end{itemize}
+  \begin{exampleblock}{Next week}
+    Linked lists: what changes when nodes carry their own links instead of
+    sitting in numbered slots --- and the queue reborn on pointers (Week 7).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Before You Go: Predict (Class Test 1 Warm-Up)}
+  \begin{block}{Three one-line predictions}
+    Answer from the algorithms, then check in the labs (P5, P6).
+  \end{block}
+  \begin{enumerate}
+    \item Capacity 5, \texttt{front} $= 3$, \texttt{rear} $= 1$,
+      \texttt{count} $= 4$: full or not? After one \texttt{dequeue} and one
+      \texttt{enqueue}, what are the three values?
+    \item Name the deque variant: insert rear-only, remove either end.
+    \item Unordered priority queue holds \texttt{A:3, B:1, C:2}:
+      \texttt{deleteMin} returns what, and what does it cost worst case?
+  \end{enumerate}
+  \muted{Answers: not full (4 $< 5$); then \texttt{front} $= 4$,
+    \texttt{rear} $= 2$, \texttt{count} $= 4$. Input-restricted deque.
+    Returns \texttt{B:1} at $O(n)$ worst case.}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}
