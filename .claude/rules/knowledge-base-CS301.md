@@ -109,8 +109,8 @@ paths:
 | Infix / postfix / prefix | Operator between / after / before its operands; postfix and prefix need no parentheses or precedence rules | **Week 4 (projected)** |
 | `\texttt{front}` / `\texttt{rear}` | Queue indices of the next element to dequeue and the last enqueued | **Week 5 (projected)** |
 | Circular queue wraparound | Index advance is $(\texttt{rear} + 1) \bmod \text{capacity}$; full and empty are distinguished by a count or a sacrificed slot | **Week 5 (projected)** |
-| `\texttt{head}` | Pointer to the first node of a linked list; `\texttt{NULL}` when the list is empty | **Week 6 (projected)** |
-| `\texttt{p->next}` / `\texttt{p->prev}` | Successor / predecessor links in singly and doubly linked lists | **Week 6–7 (projected)** |
+| `\texttt{head}` | Pointer to the first node of a linked list; `\texttt{NULL}` when the list is empty | **Week 6 (confirmed 06-linked-lists-singly)** |
+| `\texttt{p->next}` / `\texttt{p->prev}` | Successor / predecessor links in singly and doubly linked lists | **Week 6 (confirmed, singly) / Week 7 (projected, doubly)** |
 | Stable sort | A sort preserving the relative order of equal keys — the property that makes radix sort work | **Week 8–9 (projected)** |
 | In-place / auxiliary space | Sorting with $O(1)$ extra space vs. requiring $\Theta(n)$ (merge sort's merge buffer) | **Week 9 (projected)** |
 | Load factor $\alpha$ | $\alpha = n/m$ — entries over table slots; drives expected probe count in hashing | **Week 10 (projected)** |

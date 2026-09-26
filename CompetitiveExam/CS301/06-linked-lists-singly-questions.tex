@@ -1,0 +1,226 @@
+% =============================================================================
+% CompetitiveExam/CS301/06-linked-lists-singly-questions.tex
+% Competitive Exam Practice 6 — GATE (Computer Science) Pattern
+% Singly linked lists: array-vs-list trade-offs, node anatomy, search cost,
+% sortedness check, pairwise-swap trace, move-last-to-front splice, in-place
+% reversal complexity, front-insert ordering, delete-bypass.
+%
+% Student-facing — NO answers. Answer key: 06-linked-lists-singly-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book
+% CompetitiveExam/Books/GATE-PYQs/filter1_volume2.pdf, Linked List cluster
+% PDF pp.232-238):
+%   - Q1  [GATE CSE 1994 Q1.17, verified — GATEOverflow V2 p.233] —
+%     linked lists not suitable for binary search. Stem + all four options
+%     confirmed on the GATEOverflow question page, solutionsadda's GATE-1994
+%     listing (options A-D + answer B), the edurev GATE CS 1994 paper
+%     (Q1.17 with options), and ExamSIDE's GATE-1994 listing. Answer (B).
+%   - Q2  [GATE CSE 2002 Q1.5, verified — GATEOverflow V2 p.234] —
+%     worst-case comparisons to search a singly linked list of length n.
+%     Stem + all four options confirmed on the GATEOverflow question page
+%     (answer D), the gatesolutions blog (options a-d + answer (d) n),
+%     the edurev GATE CS 2002 paper (Q1.5), and ExamSIDE's GATE-2002
+%     listing. Answer (D) n.
+%   - Q3  [GATE CSE 2003 Q90, verified — GATEOverflow V2 pp.234-235] —
+%     recursive f returns 1 iff list sorted in non-decreasing order.
+%     Stem + all four options confirmed on the GATEOverflow question page
+%     (answer B), ExamSIDE's GATE-2003 listing, electrical4u's GATE CS 2003
+%     solutions (Q80, answer B), and Knowledge Gate's SLL PYQ page
+%     (correct answer B). Answer (B).
+%   - Q4  [GATE CSE 2008 Q62, verified — GATEOverflow V2 p.235] —
+%     rearrange() pairwise value-swap on 1..7 gives 2,1,4,3,6,5,7.
+%     Stem + all four options confirmed on the GATEOverflow question page
+%     (answer B), ExamSIDE's GATE-2008 listing, electrical4u's GATE CS 2008
+%     solutions (Q76, answer B), and the EduRev discussion (answer B).
+%     Answer (B). (Local text layer drops the 1..7 contents line — image —
+%     recovered verbatim from these web sources.)
+%   - Q5  [GATE CSE 2010 Q36, verified — GATEOverflow V2 pp.235-236] —
+%     move-to-front blank: q->next = NULL; p->next = head; head = p.
+%     Stem + all four options confirmed on the GATEOverflow question page
+%     (answer D), the GFG GATE-CS Linked-Lists PYQ quiz, compsciedu's MCQ
+%     page (answer (d)), electrical4u's GATE CS 2010 solutions (answer D),
+%     and ExamSIDE's GATE-2010 listing. Answer (D). (Local option text is
+%     image-dropped; recovered from these sources.)
+%   - Q6  [GATE CSE 2022 Q5, verified — GATEOverflow V2 p.237] —
+%     reversing in O(1) space takes Theta(n) worst case. Stem + all four
+%     options confirmed on the GATEOverflow question page (answer A), the
+%     official Collegedunia GATE-2022 paper+solutions PDF (correct answer A),
+%     Garg's Academy GATE-2022 DS solutions (answer A), ExamSIDE's
+%     GATE-2022 listing, and GFG's quiz page. Answer (A).
+%   - Q7  [Original, GATE-pattern] — front-insert safe order on fresh chain
+%     head -> 11 -> 23 -> NULL, insert 4. Fresh instance: the deck's worked
+%     build uses 10-20-30, its exit ticket uses 5-15 with 10 at front, and
+%     the Week 6 assignment uses 40-50-60 / 7-14-21-28 / 6-12-18-24 chains.
+%     Verified by execution 2026-09-26: [4, 11, 23].
+%   - Q8  [Original, GATE-pattern] — delete-bypass on fresh chain
+%     head -> 8 -> 13 -> 29 -> NULL, delete 13: result + cost split
+%     (search O(n), bypass O(1)). Fresh instance: none of the assignment
+%     chains (40-50-60, 7-14-21-28, 6-12-18-24) or deck chains appear here.
+%     Verified by execution 2026-09-26: [8, 29].
+%
+% Considered and dropped: GATE CSE 1997 Q1.4 (O(1) concatenation — answer is
+% the circular-doubly variant, Week 7 scope); GATE CSE 2004 Q36 (circular
+% list as queue with rear pointer — circular/queue scope, Week 7);
+% GATE CSE 2004 Q40 (set ops on linked lists — hashing/set scope, not singly
+% operations); GATE CSE 2016 Set 2 Q15 (sorted doubly linked list delete/
+% insert/find/decrease-key — doubly + heap-adjacent scope, Week 7);
+% GATE CSE 2017 Set 1 Q8 (join() null-deref on empty list — NULL-edge case,
+% close to the assignment's guard-design Q6, kept out to stay fresh);
+% GATE CSE 2020 Q16 (sorted-order insertion of n elements — overlaps the
+% assignment's sorted-insertion design Q5, kept out to stay fresh);
+% GATE CSE 2023 Q3 (singly vs doubly delete complexity — doubly scope,
+% Week 7); GATE CSE 2025 Set 1 Q52 (figure-dependent L1/L2 filter NAT —
+% contents figure is an embedded image, dropped from the text layer, no
+% second source confirming exact lists); GATE CSE 2026 Set 1 Q29
+% (getListSize E1/E2 — options image-dropped, single-source only);
+% GATE IT 2004 Q13 (delete given only node pointer — out of Week 6's
+% predecessor-walk scope).
+%
+% No render+OCR pass was possible (no Ghostscript/Tesseract in this
+% environment); image-dropped values above were recovered via Tier-2 web
+% search + CoVe instead, per the skill's sourcing ladder. No forked
+% claim-verifier subagent exists in this environment, so CoVe was executed
+% inline (each claim checked against 2+ independent sources, verdicts in
+% the session report).
+%
+% Compile with: cd CompetitiveExam/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 06-linked-lists-singly-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Competitive Exam Practice 6: Singly Linked Lists\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CSE 1994 Q1.17, verified --- GATEOverflow V2 p.233]} \textbf{[MCQ, 1 mark]} Linked lists are \emph{not} suitable data structures for which one of the following problems?
+\begin{enumerate}
+  \item[(A)] Insertion sort
+  \item[(B)] Binary search
+  \item[(C)] Radix sort
+  \item[(D)] Polynomial manipulation
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2002 Q1.5, verified --- GATEOverflow V2 p.234]} \textbf{[MCQ, 1 mark]} In the worst case, the number of comparisons needed to search a singly linked list of length $n$ for a given element is:
+\begin{enumerate}
+  \item[(A)] $\log n$
+  \item[(B)] $n/2$
+  \item[(C)] $\log_2 n - 1$
+  \item[(D)] $n$
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CSE 2003 Q90, verified --- GATEOverflow V2 pp.234--235]} \textbf{[MCQ, 2 marks]} Consider the function \texttt{f} defined below.
+\begin{verbatim}
+struct item {
+    int data;
+    struct item * next;
+};
+int f(struct item *p) {
+    return ((p == NULL) || (p->next == NULL) ||
+        ((p->data <= p->next->data) &&
+        f(p->next)));
+}
+\end{verbatim}
+For a given linked list \texttt{p}, the function \texttt{f} returns $1$ if and only if:
+\begin{enumerate}
+  \item[(A)] the list is empty or has exactly one element
+  \item[(B)] the elements in the list are sorted in non-decreasing order of data value
+  \item[(C)] the elements in the list are sorted in non-increasing order of data value
+  \item[(D)] not all elements in the list have the same data value
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CSE 2008 Q62, verified --- GATEOverflow V2 p.235]} \textbf{[MCQ, 2 marks]} The following C function takes a single-linked list of integers as a parameter and rearranges the elements of the list. The function is called with the list containing the integers $1, 2, 3, 4, 5, 6, 7$ in the given order. What will be the contents of the list after the function completes execution?
+\begin{verbatim}
+struct node {
+    int value;
+    struct node *next;
+};
+void rearrange(struct node *list) {
+    struct node *p, *q;
+    int temp;
+    if (!list || !list->next) return;
+    p = list; q = list->next;
+    while(q) {
+        temp = p->value; p->value = q->value;
+        q->value = temp; p = q->next;
+        q = p ? p->next : 0;
+    }
+}
+\end{verbatim}
+\begin{enumerate}
+  \item[(A)] $1, 2, 3, 4, 5, 6, 7$
+  \item[(B)] $2, 1, 4, 3, 6, 5, 7$
+  \item[(C)] $1, 3, 2, 5, 4, 7, 6$
+  \item[(D)] $2, 3, 4, 5, 6, 7, 1$
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[GATE CSE 2010 Q36, verified --- GATEOverflow V2 pp.235--236]} \textbf{[MCQ, 2 marks]} The following C function takes a singly-linked list as input argument. It modifies the list by moving the last element to the front of the list and returns the modified list. Some part of the code is left blank.
+\begin{verbatim}
+typedef struct node {
+    int value;
+    struct node *next;
+} Node;
+Node *move_to_front(Node *head) {
+    Node *p, *q;
+    if ((head == NULL) || (head->next == NULL))
+        return head;
+    q = NULL; p = head;
+    while (p->next != NULL) {
+        q = p;
+        p = p->next;
+    }
+    _______________________________
+    return head;
+}
+\end{verbatim}
+Choose the correct alternative to replace the blank line.
+\begin{enumerate}
+  \item[(A)] \texttt{q = NULL; p->next = head; head = p;}
+  \item[(B)] \texttt{q->next = NULL; head = p; p->next = head;}
+  \item[(C)] \texttt{head = p; p->next = q; q->next = NULL;}
+  \item[(D)] \texttt{q->next = NULL; p->next = head; head = p;}
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[GATE CSE 2022 Q5, verified --- GATEOverflow V2 p.237]} \textbf{[MCQ, 1 mark]} Consider the problem of reversing a singly linked list. Which one of the following statements is \emph{TRUE} about the time complexity of algorithms that solve the above problem in $O(1)$ space?
+\begin{enumerate}
+  \item[(A)] The best algorithm for the problem takes $\Theta(n)$ time in the worst case.
+  \item[(B)] The best algorithm for the problem takes $\Theta(n \log n)$ time in the worst case.
+  \item[(C)] The best algorithm for the problem takes $\Theta(n^2)$ time in the worst case.
+  \item[(D)] It is not possible to reverse a singly linked list in $O(1)$ space.
+\end{enumerate}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A singly linked list holds \texttt{head} $\to$ 11 $\to$ 23 $\to$ \texttt{NULL}. A new node with data $4$ is inserted at the front using
+\begin{verbatim}
+newNode->data = 4;
+\end{verbatim}
+followed by two pointer assignments. Which order is safe, and what is the resulting list?
+\begin{enumerate}
+  \item[(A)] \texttt{newNode->next = head;} then \texttt{head = newNode;} giving \texttt{head} $\to$ 4 $\to$ 11 $\to$ 23 $\to$ \texttt{NULL}
+  \item[(B)] \texttt{head = newNode;} then \texttt{newNode->next = head;} giving \texttt{head} $\to$ 4 $\to$ 11 $\to$ 23 $\to$ \texttt{NULL}
+  \item[(C)] \texttt{newNode->next = head;} then \texttt{head = newNode;} giving \texttt{head} $\to$ 11 $\to$ 23 $\to$ 4 $\to$ \texttt{NULL}
+  \item[(D)] \texttt{head = newNode;} then \texttt{newNode->next = head;} giving \texttt{head} $\to$ 4 $\to$ \texttt{NULL} with the old chain orphaned
+\end{enumerate}
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A singly linked list holds \texttt{head} $\to$ 8 $\to$ 13 $\to$ 29 $\to$ \texttt{NULL}. The first occurrence of $13$ is deleted by the deck's delete (find the predecessor, bypass, free). Afterwards, which statement is TRUE?
+\begin{enumerate}
+  \item[(A)] The list is \texttt{head} $\to$ 8 $\to$ 29 $\to$ \texttt{NULL}; the bypass itself is $O(1)$ worst case once the predecessor is in hand, and the overall delete is $O(n)$ worst case because of the search
+  \item[(B)] The list is \texttt{head} $\to$ 8 $\to$ 13 $\to$ 29 $\to$ \texttt{NULL}; the bypass itself is $O(n)$ worst case
+  \item[(C)] The list is \texttt{head} $\to$ 13 $\to$ 29 $\to$ \texttt{NULL}; deleting any value costs $O(1)$ worst case including the search
+  \item[(D)] The list is \texttt{head} $\to$ 8 $\to$ 29 $\to$ \texttt{NULL}; the overall delete is $O(1)$ worst case because no walk is needed
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

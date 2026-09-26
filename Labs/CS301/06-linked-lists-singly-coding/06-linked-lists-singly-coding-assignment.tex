@@ -1,0 +1,105 @@
+% =============================================================================
+% Labs/CS301/06-linked-lists-singly-coding/06-linked-lists-singly-coding-assignment.tex
+% Coding Lab 6: The Roster That Rewires Itself (singly linked lists)
+%
+% Student-facing problem statement. Instructor-only files live in this same
+% directory but are NEVER published to students or synced to docs/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+% Student-facing: slist.h, starter_slist.c, test_visible.c (+ this PDF).
+%
+% Fresh instances throughout: no worked example re-asks a deck/notes,
+% written-assignment, or earlier-lab instance verbatim (deck/notes: build
+% 10-20-30; front-insert 5 onto head->10->20; position insert 25 at pos 2;
+% delete 10 head + delete 30 tail; search/display on 10-20-30 and 5-15-25;
+% reverse 1-2-3 and 10-20-30; before-you-go head->5->15 insert 10, delete 15,
+% reverse 1-2-3; written Q3: 35-40-50-55-60 chain, Q4: 7-14-21-28, Q5:
+% 11-22-29-33-44 with x=29/5/50, Q6: 6-12-18-24). Visible tests use the
+% roster chain 17-42-88 with insert 63 and absent-lookup 77 — all new.
+%
+% Compile with: cd Labs/CS301/06-linked-lists-singly-coding &&
+%   TEXINPUTS=../../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 06-linked-lists-singly-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Coding Lab 6: The Roster That Rewires Itself}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Weeks 3--5 built an expression processor that can tokenize, check brackets, convert, evaluate, and buffer jobs in arrival order. One piece is still missing: evaluating \texttt{(a+b)*c} needs the \emph{values} of \texttt{a}, \texttt{b}, \texttt{c}, and identifiers arrive at unpredictable times in unpredictable numbers. A fixed array demands we guess the capacity up front and pay the slot tax on every front insertion. This lab is that missing piece: a roster of IDs held as a singly linked chain, where each entry carries the address of its successor so the lineup changes by rewriting one address instead of moving $n$ elements. You implement the five operations from lecture --- insertion (front, end, position), deletion, search, display, and in-place reverse --- with the same pointer discipline the deck drilled: save the only path \emph{before} you overwrite it, and free exactly once what you malloc'd.
+
+\section{Your task}
+
+Implement the singly linked list ADT in C on heap nodes with explicit contracts on every fallible operation. The contract is given to you in \texttt{slist.h} --- \emph{do not modify it}. Copy \texttt{starter\_slist.c} to \texttt{slist.c} and fill in all nine functions:
+
+\begin{verbatim}
+SNode  *slist_insert_front(SNode **head, int x);
+SNode  *slist_insert_end(SNode **head, int x);
+int     slist_insert_at(SNode **head, size_t pos, int x); /* 0 ok / -1 fail */
+int     slist_delete_value(SNode **head, int x);          /* 0 gone / -1 absent */
+SNode  *slist_search(SNode *head, int x);                 /* NULL when absent */
+size_t  slist_length(const SNode *head);
+int     slist_display(const SNode *head, int *out, int out_cap);
+void    slist_reverse(SNode **head);
+void    slist_free(SNode **head);
+\end{verbatim}
+
+\textbf{Insertion is the deck's walk-then-splice.} Front-insert is the two-write sequence (\texttt{newNode->next = *head} first, \emph{then} \texttt{*head = newNode}) --- swapped, the old chain is orphaned with no copy anywhere. End-insert walks to the last node (an empty list sets \texttt{*head} directly); position insert walks \texttt{p} to the predecessor then splices in the same order, refusing \texttt{pos} past the end. Every \texttt{malloc} is checked for \texttt{NULL} before dereferencing.
+
+\textbf{Deletion is bypass, reclaim, never touch.} Delete the \emph{first} node holding \texttt{x} (head first, else the predecessor walk): rewrite one link, \texttt{free} exactly once, never touch the node afterwards. Absent \texttt{x} changes nothing and reports $-1$; only the first duplicate goes.
+
+\textbf{Reverse is the three-pointer loop.} \texttt{prev = NULL}, \texttt{curr = *head}; save \texttt{next}, flip, advance both walkers; \texttt{*head = prev}. Display never disturbs the list (the traversal pointer moves while \texttt{head} stays put), and \texttt{free} releases every node and NULLs \texttt{*head} so a second free is safe.
+
+\section{Constraints}
+
+\begin{itemize}
+  \item Representation must be the heap-chained \texttt{SNode} nodes of \texttt{slist.h} --- no arrays, no global/static mutable state.
+  \item Every allocation is checked (\texttt{malloc} for \texttt{NULL}); every node is freed exactly once; no use-after-free, no writes past allocated bounds. Error paths leave the list unchanged.
+  \item Correctness is graded against the contract; your code must compile with \texttt{clang -std=c11 -Wall -Wextra -Werror} without errors or warnings.
+  \item Complexity: front-insert $O(1)$ worst case; end/position insert, delete, and search $O(n)$ worst case in the current length (search $O(1)$ best case when \texttt{head} holds \texttt{x}); display $\Theta(n)$; reverse $O(n)$ worst case in $O(1)$ auxiliary space; length and free $O(n)$ worst case.
+\end{itemize}
+
+\section{Worked examples (these are the visible tests)}
+
+\textbf{Example 1 --- build the roster.} Front-insert $42$ (chain: $42$), front-insert $17$ (chain: $17 \to 42$), end-insert $88$ (chain: $17 \to 42 \to 88$). Length is $3$; display writes $17, 42, 88$. Freeing sets \texttt{head} to \texttt{NULL}.
+
+\textbf{Example 2 --- splice, delete, search.} From $17 \to 42 \to 88$: insert $63$ at position $1$ giving $17 \to 63 \to 42 \to 88$; delete the first $42$ giving $17 \to 63 \to 88$ with length $3$; \texttt{search(63)} finds its node while \texttt{search(77)} reports absent (\texttt{NULL}).
+
+\textbf{Example 3 --- reverse and edges.} Reversing $17 \to 63 \to 88$ gives $88 \to 63 \to 17$; deleting the head $88$ leaves length $2$; reversing again gives $17 \to 63$. Reversing the freed (empty) list is a safe no-op with length $0$.
+
+\section{What to submit}
+
+\begin{enumerate}
+  \item \texttt{slist.c} --- your completed implementation (edit \texttt{starter\_slist.c}).
+  \item \texttt{slist.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+\section{Getting started}
+
+\begin{enumerate}
+  \item Copy \texttt{starter\_slist.c} to \texttt{slist.c} and fill in the nine function bodies.
+  \item Sanity-check locally:
+\begin{verbatim}
+gcc -std=c11 -Wall -Wextra -o test_visible test_visible.c slist.c
+./test_visible
+\end{verbatim}
+    All three worked examples should pass.
+  \item Submit \texttt{slist.c} and \texttt{slist.h}. The autograder compiles your \texttt{slist.c} against a \emph{hidden} test suite and reports pass/fail. The hidden suite covers: \texttt{NULL} head-pointer safety for every op; front/end/position insert boundaries including \texttt{pos} $==$ length vs.\ past-the-end refusal with the list unchanged; head/middle/tail/absent/empty deletes with first-occurrence-only duplicates; search identity at head and tail; display validation with too-small, \texttt{NULL}, and negative-capacity buffers plus a canary check that nothing is written on refusal; exact-capacity display and head purity; \texttt{INT\_MIN}/\texttt{INT\_MAX}/\texttt{-1}/\texttt{0} round-trips; reverse of empty/single/two/four chains with double-reverse identity; free with head-NULLing and double-free safety; and a seeded 200-operation random campaign checked operation-by-operation against an independent array oracle.
+\end{enumerate}
+
+\end{document}

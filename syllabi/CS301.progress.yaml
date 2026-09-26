@@ -1,6 +1,6 @@
 course: CS301
 lab_mode: coding-assignment   # P1-P13 C programming practicals map to weeks -> /coding-assignment
-last_updated: 2026-09-17
+last_updated: 2026-09-26
 weeks:
   "00":
     deck: "00-course-motivation-overview"
@@ -59,12 +59,12 @@ weeks:
   "06":
     deck: "06-linked-lists-singly"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
-      lab:        { status: absent, score: null, note: "instructor-supplied (singly-linked-list operations)" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      slides:     { status: compiled, score: null, note: "26 frames/35 pages; 3-pass XeLaTeX clean, 0 errors/overfull/undefined; 5 TikZ" }
+      notes:      { status: compiled, score: null, note: "qa-notes APPROVED (2 rounds); 8pp; 5 TikZ reused; cites 2/2 parity" }
+      assignment: { status: compiled, score: null, note: "6 problems (2C/2N/2D, fresh instances); solutions key present (gitignored); traces mechanically verified" }
+      lab:        { status: compiled, score: null, note: "coding-assignment singly-linked-list ops (instructor-supplied); visible 35/35 + hidden 908/908 PASS; verify-algorithm PASS" }
+      gate:       { status: compiled, score: null, note: "8Q (6 CoVe-verified PYQ + 2 original); questions+answers PDFs clean" }
+      quarto:     { status: deployed, score: null, note: "PDFs deployed to docs/ (slides/notes/assignment/coding/GATE Q+A); hub regenerated 6/12; .qmd/HTML skipped per user" }
   "07":
     deck: "07-linked-lists-doubly-applications"
     stages:

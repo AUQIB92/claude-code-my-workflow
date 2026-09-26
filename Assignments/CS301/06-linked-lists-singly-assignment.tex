@@ -1,0 +1,99 @@
+% =============================================================================
+% Assignments/CS301/06-linked-lists-singly-assignment.tex
+% Assignment 6 (Week 6): Singly Linked Lists — Nodes, Links, Pointer Surgery
+%
+% Student set — NO answers. Solution key: 06-linked-lists-singly-solutions.tex
+% (gitignored via **/*-solutions.tex, never deployed). Sourced from
+% Slides/CS301/06-linked-lists-singly.tex and
+% Notes/CS301/06-linked-lists-singly-notes.tex.
+%
+% Fresh instances throughout: no problem re-asks a deck/notes worked example
+% verbatim (deck/notes: build 10-20-30; front-insert 5 onto head->10->20;
+% position insert 25 at pos 2 on head->20->10->30; delete 10 head + delete 30
+% tail on 10-20-30; search/display on 10-20-30 and 5-15-25; reverse 1-2-3 and
+% 10-20-30; prediction 1000 lines x500; before-you-go head->5->15 insert 10,
+% delete 15, reverse 1-2-3). This set uses 35-40-50-55-60 (Q3),
+% 7-14-21-28 (Q4), 11-22-29-33-44 (Q5), 6-12-18-24 (Q6) — all new.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 06-linked-lists-singly-assignment.tex
+%   $env:BIBINPUTS="../..;"; bibtex 06-linked-lists-singly-assignment
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 06-linked-lists-singly-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Assignment 6 (Week 6): Singly Linked Lists --- Nodes, Links, Pointer Surgery}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions. Each problem states its own assumptions; everything you need is in Week~6's Notes chapter alone. Notation matches the lecture exactly: \texttt{struct node \{ int data; struct node *next; \};}, \texttt{head} is the first-node pointer (\texttt{NULL} when empty), \texttt{p->next} is the successor link, \texttt{NULL} terminates the chain, positions are 0-based, and the reverse loop uses \texttt{prev}, \texttt{curr}, \texttt{next}. For every bound, name the operation, give the bound, and state the case (Week~2 shape).
+
+\section{Conceptual}
+
+\textbf{Q1.} A class register holds 2\,000 student IDs in an array. During admission week the office inserts 400 new IDs at the front, one at a time; afterwards it looks up IDs by roll number only occasionally (Sedgewick Sec.~1.3, p.~142; Karumanchi Ch.~3, pp.74--162 PDF) \cite{Sedgewick2011_algorithms,Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] In one or two sentences, explain the \key{slot tax} on this workload: what does one front-insertion into a full array of $n$ cost worst case, and why?
+  \item[(b)] In one or two sentences, explain what the singly linked list changes: which single pointer rewrite replaces the shift, what does front-insertion cost worst case, and what is lost in return (name the operation whose bound gets worse and both bounds)?
+  \item[(c)] In one or two sentences, state the workload rule and apply it: which structure fits the admission-week workload, and name one opposite workload on the same register for which you would keep the array.
+\end{enumerate}
+Why this matters: the register is big enough that the wrong choice bills 400 full shifts --- this question forces you to price the workload, not the structure, before choosing.
+
+\textbf{Q2.} Two orderings, one theme: never destroy the only path before saving it (Karumanchi Ch.~3, pp.74--162 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] Front-insertion runs \texttt{newNode->next = head} \emph{then} \texttt{head = newNode}. In one or two sentences, explain precisely what is orphaned if the two assignments are swapped, and why no copy of the lost address survives anywhere.
+  \item[(b)] Iterative reverse runs \texttt{next = curr->next} \emph{before} \texttt{curr->next = prev}. In one or two sentences, explain what is lost if the flip comes first, using the chain \texttt{head} $\to$ 40 $\to$ 50 $\to$ 60 $\to$ \texttt{NULL} with \texttt{curr} on 40 as the concrete instance.
+  \item[(c)] In one or two sentences each, name the Week~1 bug each violation becomes if the program keeps running: the swapped front-insert (heap still billed, nobody pointing) and using \texttt{temp} after \texttt{free(temp)} in delete.
+\end{enumerate}
+Why this matters: both classic list bugs are the same single mistake wearing different clothing --- this question makes you state the mistake once so you recognise it twice.
+
+\section{Numerical}
+
+\textbf{Q3.} Start from \texttt{head} $\to$ 40 $\to$ 50 $\to$ 60 $\to$ \texttt{NULL}. Rules: front-insert is the deck's two-write sequence (\texttt{newNode->next = head} first); position insert walks \texttt{p} from \texttt{head} to the predecessor then splices in the same order; delete bypasses then frees exactly once.
+\begin{enumerate}
+  \item[(a)] Front-insert 35. Give the heap chain after the step and the two assignments in order.
+  \item[(b)] On the result, insert 55 at position 2 (0-based). Which node does \texttt{p} stop on, what are the two splice assignments in order, and what is the final chain?
+  \item[(c)] On the result, delete the first occurrence of 50. Write the bypass assignment, name the freed node, give the final chain, and state the worst-case bound for each of (a)--(c) with operation, bound, and case.
+\end{enumerate}
+Why this matters: insert, splice, and bypass are the same two-write surgery in three positions --- this question puts your hand through all three on one chain the lecture never traced.
+
+\textbf{Q4.} Start from \texttt{head} $\to$ 7 $\to$ 14 $\to$ 21 $\to$ 28 $\to$ \texttt{NULL}. Search and display are the deck's two walks (\texttt{p = head; while (p != NULL ...)}); reverse is the three-pointer loop (\texttt{prev = NULL; curr = head}; save \texttt{next}, flip, advance both walkers; \texttt{head = prev}).
+\begin{enumerate}
+  \item[(a)] How many nodes does \texttt{search(21)} visit, and how many does \texttt{search(99)} visit? Name the case behind each count and give the worst/best bounds for search.
+  \item[(b)] What does \texttt{display()} print, does \texttt{head} move, and what is display's bound?
+  \item[(c)] Reverse the list with the three-pointer loop. Give \texttt{prev}/\texttt{curr}/\texttt{next} after \emph{every} iteration as a four-row table, the final \texttt{head}, and the time and auxiliary-space bounds with cases.
+\end{enumerate}
+Why this matters: counting visits is pricing, and the reverse table is the exam's favourite trace --- this question makes you produce both on a chain the notes never worked.
+
+\section{Design}
+
+\textbf{Q5.} Design sorted insertion into an ascending singly linked list (a \emph{new} scenario: the lecture inserts at a given position, never by key). Assume distinct keys, no tail pointer (Karumanchi Ch.~3, pp.74--162 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] Write pseudocode \texttt{sortedInsert(head, x)} that walks with \texttt{p} (keeping its predecessor), then splices with the deck's two-write order. Handle all three landings explicitly: empty list / insert at front (\texttt{x} smallest), middle splice, insert at end (\texttt{x} largest). Include the \texttt{malloc}-for-\texttt{NULL} check and the \texttt{p != NULL} walk guard.
+  \item[(b)] Trace \texttt{sortedInsert} with \texttt{x} $=$ 29 on \texttt{head} $\to$ 11 $\to$ 22 $\to$ 33 $\to$ 44 $\to$ \texttt{NULL}: which node does the walk stop on, what are the two splice assignments, and what is the final chain?
+  \item[(c)] State the worst-case bound with operation, bound, and case, name which step dominates (walk vs.\ splice), and give the final chain for the edge inputs \texttt{x} $=$ 5 and \texttt{x} $=$ 50 on the same starting list.
+\end{enumerate}
+Why this matters: the calculator's symbol table wants IDs kept in order without re-sorting the world --- this question extends the walk-then-splice pattern to the key-ordered case the lecture left open.
+
+\textbf{Q6.} Design tail deletion plus in-place reversal, with guards (both \emph{new} compositions: the lecture deletes by value and reverses a fixed 3-node chain; here the value is ``last'' and the chain is fresh). No tail pointer. List \texttt{head} $\to$ 6 $\to$ 12 $\to$ 18 $\to$ 24 $\to$ \texttt{NULL} (Karumanchi Ch.~3, pp.74--162 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] Write pseudocode \texttt{deleteLast(head)} that returns the new \texttt{head}: handle the empty list (return \texttt{NULL}), the single-node list (free it, return \texttt{NULL}), and the general case (walk \texttt{p} to the second-last node, set \texttt{temp = p->next}, bypass with \texttt{p->next = temp->next}, free \texttt{temp}). State the worst-case bound with case.
+  \item[(b)] Trace \texttt{deleteLast} on 6 $\to$ 12 $\to$ 18 $\to$ 24: which node does \texttt{p} stop on, what is the bypass assignment, which node is freed, and what is the surviving chain?
+  \item[(c)] Reverse the surviving chain in place with the three-pointer loop (no copying into a second list). Give the final \texttt{head}, the time and auxiliary-space bounds, and in one or two sentences explain why copying into a second list would double the memory for a mere rearrangement (the playlist argument from the deck).
+\end{enumerate}
+Why this matters: ``delete the last job, then play newest first'' is the whole week as one shipping task --- guards first, surgery second, pricing throughout.
+
+\bibliography{../../Bibliography_base}
+\bibliographystyle{plain}
+\end{document}
