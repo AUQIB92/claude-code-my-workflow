@@ -1,0 +1,640 @@
+% CS301 Week 6 -- Singly linked lists: array-vs-linked comparison, node
+% anatomy with structures, types of linked lists, applications, and the five
+% core singly-linked operations (insert, delete, search, display, reverse).
+% Difficulty: intro (course-wide default per knowledge-base-CS301.md).
+% Page-grounded in Karumanchi2017 Ch.3 (Linked Lists, pp.74-162 PDF) and
+% Sedgewick2011 p.142 ("Linked lists" definition); Wirth2004 for the
+% pointer/dynamic-allocation concepts behind node creation; Horowitz & Sahni
+% Ch.4 / Aho-Hopcroft-Ullman Ch.2 cited at chapter level only (not
+% page-indexed).
+% Handoff: Week 5 closed with the queue contract, the circular-buffer fix
+% ((rear+1) mod n with the count convention, Lab P5), deques, array-based
+% priority queues (Lab P6), and the Unit-I review for Class Test 1 -- and
+% promised "what changes when nodes carry their own links instead of sitting
+% in numbered slots". This deck does NOT re-teach queues or circular
+% arithmetic -- it builds on them. Continues the expression-processor thread:
+% the calculator can buffer jobs, but its identifier table still needs a home.
+% Sets up Week 7 (doubly/circular lists, list-based stack/queue, polynomials).
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{Chains Instead of Slots}
+\subtitle{Week 6 --- Singly Linked Lists: Nodes, Links, and Pointer Surgery}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 6]{\small Week 6}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- MOTIVATION + HANDOFF
+% =============================================================================
+\section{Motivation and the Handoff}
+
+\begin{frame}{Today's Four Questions}
+  \begin{enumerate}
+    \item Why does inserting one name into a full array cost $n$ moves?
+    \item What does a node carry that an array slot does not?
+    \item Which linked shape fits which job --- singly, doubly, or circular?
+    \item How do three pointers turn a chain around without copying it?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Plan}
+    Price the array's weakness. Build the node. Tour the family. Operate:
+    insert, delete, search, display --- then reverse.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Handoff: What Week 5 Finished}
+  \begin{itemize}
+    \item Week 5 gave us the queue contract (\texttt{enqueue} at
+      \texttt{rear}, \texttt{dequeue} from \texttt{front}), the circular fix
+      --- \texttt{rear} $=$ (\texttt{rear} $+ 1) \bmod n$ with the
+      \texttt{count} convention (Lab P5) --- deques, and array-based priority
+      queues (Lab P6), then closed Unit I for Class Test 1.
+    \item Every structure so far lives in \emph{numbered slots}: an array owns
+      its elements by position, and position is both its power and its tax.
+    \item Its closing promise: ``what changes when nodes carry their own
+      links instead of sitting in numbered slots.''
+  \end{itemize}
+  \begin{exampleblock}{This week's job}
+    Free the elements from their slots: each one carries the address of the
+    next. Price what we gain (cheap insert/delete) against what we lose
+    (random access).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Calculator Needs a Symbol Table}
+  \begin{itemize}
+    \item Weeks 3--5 built an expression processor: tokenize, check brackets,
+      convert, evaluate, buffer jobs in arrival order. One program learning
+      new tricks each week.
+    \item New deficiency: evaluating \texttt{(a+b)*c} needs the \emph{values}
+      of \texttt{a}, \texttt{b}, \texttt{c} --- identifiers arrive at
+      unpredictable times, in unpredictable numbers. A fixed array demands we
+      guess the capacity up front.
+    \item The same need appears everywhere: OS free-lists of memory blocks,
+      browser back-forward chains, music playlists, and (Week 7) polynomials
+      with missing terms.
+  \end{itemize}
+  \begin{exampleblock}{The pattern (design principle)}
+    Every structure in this course answers a deficiency the previous one just
+    exhibited. The array's deficiency is fixed capacity plus shifting --- the
+    linked list is the answer.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Where This Week Sits}
+  \begin{itemize}
+    \item Week 1 gave us \texttt{malloc}/\texttt{free} and \texttt{NULL};
+      Week 2 the pricing habit (operation $+$ bound $+$ case). Every claim
+      today repeats that shape.
+    \item Week 7 re-implements the stack and the queue on top of \emph{this}
+      week's chain, adds the backward link (\texttt{p->prev}), and spends the
+      polynomial application; Week 10 replays the same symbol table as a hash
+      table --- $O(n)$ as a list vs.\ $O(1)$ expected hashed.
+    \item New symbols today: \texttt{head} (first-node pointer,
+      \texttt{NULL} when empty) and \texttt{p->next} (the successor link).
+  \end{itemize}
+  \muted{The arc again: state the contract, implement it once, analyse what
+    it costs.}
+\end{frame}
+
+\transitionslide{First: price the slot tax that makes chains worth building.}
+
+% =============================================================================
+% ACT 1 --- ARRAY VS LINKED
+% =============================================================================
+\section{Why Chains}
+
+\sectiondivider{Section 1}{Why Chains}
+
+\begin{frame}{The Slot Tax: Insert Into a Full Array}
+  \begin{itemize}
+    \item An array of $n$ integers holds \texttt{A[0..n-1]} back to back.
+      Insert \texttt{x} at position $k$ and every element from $k$ to $n-1$
+      must shift one slot right --- up to $n$ moves, $O(n)$ worst case.
+    \item Delete at $k$ and the same crowd shifts left. Growing past capacity
+      means \texttt{malloc} a bigger block, copy all $n$, \texttt{free} the
+      old one.
+    \item \bad{Position is the tax}: the array finds any element in $O(1)$
+      worst case by arithmetic, but pays linear time whenever the lineup
+      itself changes.
+  \end{itemize}
+  \begin{exampleblock}{The question that buys the list}
+    What if each element carried the address of its successor, so the lineup
+    could change by rewriting one address instead of moving $n$ elements?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Array Slots vs.\ Linked Nodes, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[text=neutral] at (-4.6, 1.15) {array \texttt{A[0..3]}};
+      \node[draw, fill=light-bg, minimum width=1.1cm, minimum height=0.7cm,
+        text width=0.9cm, align=center] (a0) at (-4.6, 0.45) {10};
+      \node[draw, fill=light-bg, minimum width=1.1cm, minimum height=0.7cm,
+        text width=0.9cm, align=center] (a1) at (-3.3, 0.45) {20};
+      \node[draw, fill=light-bg, minimum width=1.1cm, minimum height=0.7cm,
+        text width=0.9cm, align=center] (a2) at (-2.0, 0.45) {30};
+      \node[draw, fill=light-bg, minimum width=1.1cm, minimum height=0.7cm,
+        text width=0.9cm, align=center] (a3) at (-0.7, 0.45) {40};
+      \node[text=neutral, below=0.15cm of a1] {neighbours by arithmetic};
+
+      \node[text=neutral] at (3.0, 1.15) {list: neighbours by address};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.7cm,
+        align=center] (n10) at (1.3, -0.35) {10};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.7cm,
+        align=center] (n11) at (2.2, -0.35) {$\to$};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.7cm,
+        align=center] (n20) at (3.3, -0.35) {20};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.7cm,
+        align=center] (n21) at (4.2, -0.35) {$\to$};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.7cm,
+        align=center] (n30) at (5.3, -0.35) {30};
+      \node[draw, fill=neutral!20, minimum width=0.9cm, minimum height=0.7cm,
+        align=center] (n31) at (6.2, -0.35) {\texttt{NULL}};
+      \draw[->, thick, color=primary-blue] (0.2, -0.35) -- (n10.west);
+      \node[text=primary-blue] at (0.2, 0.15) {\texttt{head}};
+      \node[text=neutral, below=0.15cm of n20] {each box lives anywhere};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item Top: neighbours sit side by side, found by index arithmetic.
+      Bottom: neighbours sit \emph{anywhere} in the heap, found by following
+      arrows from \texttt{head} to \texttt{NULL}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Node: Data Plus One Address}
+  \begin{block}{Definition (Sedgewick Sec.~1.3, p.~142; Karumanchi Ch.~3,
+    pp.74--162 PDF)
+    \cite{Sedgewick2011_algorithms,Karumanchi2017_data_structures_algorithms_made_easy}}
+    A \key{linked list} is either empty (\texttt{head} $=$ \texttt{NULL}) or
+    a node holding data plus a reference to the rest of the list. In C:
+  \end{block}
+\begin{center}
+{\small \texttt{struct node \{ int data; struct node *next; \};}}
+\end{center}
+  \begin{itemize}
+    \item Each node is separately \texttt{malloc}'d --- Week 1's allocation
+      trace, one box per element, scattered across the heap (stack grows
+      down, heap up, same orientation as Week 1).
+    \item \texttt{head} is the \emph{only} entry point: lose it and the whole
+      chain leaks. \texttt{p->next} of the last node is \texttt{NULL}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Build 10--20--30 by Hand}
+  \begin{center}
+  {\small
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{step} & \textbf{heap after the step} \\
+    \midrule
+    \texttt{head = NULL} & empty: \texttt{head} points nowhere \\
+    insert 10 at front & \texttt{head} $\to$ \texttt{[10|NULL]} \\
+    insert 20 at front & \texttt{head} $\to$ \texttt{[20|$\cdot$]} $\to$
+      \texttt{[10|NULL]} \\
+    insert 30 at end & \texttt{head} $\to$ 20 $\to$ 10 $\to$ 30 $\to$
+      \texttt{NULL} \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item Read the arrows, not the addresses: the three boxes may sit at any
+      heap locations --- order lives in the links, never in the layout.
+    \item Every arrow written is one pointer assignment; every box is one
+      \texttt{malloc} that a matching \texttt{free} must one day reclaim.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Arrays vs.\ Linked Lists: The Honest Bill}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{operation} & \textbf{array} & \textbf{singly linked list} \\
+    \midrule
+    access $i$-th element & $O(1)$ worst case & $O(n)$ worst case (walk $i$ links) \\
+    insert/delete at front & $O(n)$ worst case (shift) & $O(1)$ worst case \\
+    insert/delete at end & $O(1)$* amortized & $O(n)$ worst case (no tail link) \\
+    memory & fixed, contiguous & grows one node at a time \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item *Append is $O(1)$ amortized only with spare capacity; a full array
+      pays the copy-everything reallocation.
+    \item No winner --- only workloads: many positional reads $\to$ array;
+      many front insertions and deletions $\to$ list. State the workload,
+      then choose.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{The chain is priced. Now meet the whole family.}
+
+% =============================================================================
+% ACT 2 --- TYPES + APPLICATIONS
+% =============================================================================
+\section{Types and Applications}
+
+\sectiondivider{Section 2}{Types and Applications}
+
+\begin{frame}{Three Shapes of Chain}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[text=neutral] at (-4.5, 1.3) {singly};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (s1) at (-5.3, 0.55) {a};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (s2) at (-4.3, 0.55) {b};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (s3) at (-3.3, 0.55) {c};
+      \draw[->, thick, color=jet] (s1.east) -- (s2.west);
+      \draw[->, thick, color=jet] (s2.east) -- (s3.west);
+      \draw[->, thick, color=neutral] (s3.east) -- (s3.east -| 2.2, 0.55);
+      \node[text=neutral, below=0.15cm of s2] {one way; \texttt{NULL} ends it};
+
+      \node[text=neutral] at (0.3, 1.3) {doubly (Week 7)};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (d1) at (-0.5, 0.55) {a};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (d2) at (0.5, 0.55) {b};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (d3) at (1.5, 0.55) {c};
+      \draw[<->, thick, color=jet] (d1.east) -- (d2.west);
+      \draw[<->, thick, color=jet] (d2.east) -- (d3.west);
+      \node[text=neutral, below=0.15cm of d2] {\texttt{prev} + \texttt{next}};
+
+      \node[text=neutral] at (4.3, 1.3) {circular (Week 7)};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (c1) at (3.6, 0.55) {a};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (c2) at (4.6, 0.55) {b};
+      \node[draw, fill=white, minimum width=0.8cm, minimum height=0.6cm,
+        align=center] (c3) at (5.6, 0.55) {c};
+      \draw[->, thick, color=jet] (c1.east) -- (c2.west);
+      \draw[->, thick, color=jet] (c2.east) -- (c3.west);
+      \draw[->, thick, color=jet] (c3.south) -- (4.6, -0.35) -- (c1.south);
+      \node[text=neutral, below=0.55cm of c2] {last points home; no \texttt{NULL}};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item \key{Singly} (today): one link each, cheapest per node.
+      \key{Doubly}: backward walks, twice the link maintenance.
+      \key{Circular}: round-robin buffers and schedulers.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Applications: Where Chains Earn Their Keep}
+  \begin{block}{The rule of thumb (Karumanchi Ch.~3, pp.74--162 PDF; standard
+    treatment)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}}
+    Reach for a list when the \key{number of items is unpredictable} and
+    \key{insertions and deletions land anywhere} --- the two places arrays
+    charge the slot tax.
+  \end{block}
+  \begin{itemize}
+    \item \key{Symbol table} (our calculator): identifiers come and go;
+      lookup walks the chain --- $O(n)$ worst case, the bill Week 10's hash
+      table will cut to $O(1)$ expected.
+    \item \key{OS memory management}: free blocks linked as they are freed
+      and re-split on demand --- no fixed table of blocks.
+    \item \key{Polynomials} (Week 7 preview): $5x^{100} + 3x^{2} + 1$ stores
+      three nodes, not 101 array slots mostly holding zero.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{A text editor holds 1\,000 lines. The user inserts one line at
+    the top, 500 times. Array or singly linked list?}
+    A: array (indexing wins) \quad B: linked list \quad
+    C: identical either way
+  \end{block}
+  \begin{enumerate}
+    \item A --- indexing only matters if we jump to line numbers; here the
+      workload is all front insertions.
+    \item B --- each insert rewrites one \texttt{next} pointer: $O(1)$ worst
+      case, where the array shifts up to $n$ lines every time.
+    \item C --- the table two sections back says otherwise; price the
+      workload, not the structure.
+  \end{enumerate}
+  \muted{Correct answer: B. Reads are sequential either way; the insertions
+    decide.}
+\end{frame}
+
+\transitionslide{The family introduced. Now the surgery: five operations, one link at a time.}
+
+% =============================================================================
+% ACT 3 --- CORE OPERATIONS
+% =============================================================================
+\section{Insert, Delete, Search, Display}
+
+\sectiondivider{Section 3}{Insert, Delete, Search, Display}
+
+\begin{frame}[fragile]{Insert at the Front: Two Assignments}
+  \begin{block}{Pointer surgery (Karumanchi Ch.~3, pp.74--162 PDF)}
+\begin{semiverbatim}
+newNode = malloc(sizeof(struct node))  // 1. fresh box
+newNode->data = x                      // 2. fill it
+newNode->next = head                   // 3. point at old chain FIRST
+head = newNode                         // 4. THEN swing head over
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Order is the whole lesson: step 4 before step 3 orphans the chain
+      --- \texttt{head}'s old value is gone with no copy anywhere.
+    \item Cost: two pointer writes, no walk --- $O(1)$ worst case. Always
+      check \texttt{malloc} for \texttt{NULL} before dereferencing.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Insert at the Front, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=primary-gold!25, minimum width=1.0cm,
+        minimum height=0.7cm, align=center] (nw) at (0, 0) {x};
+      \node[draw, fill=white, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (o1) at (3.0, 0) {10};
+      \node[draw, fill=white, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (o2) at (4.5, 0) {20};
+      \node[draw, fill=neutral!20, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (o3) at (6.0, 0) {\texttt{NULL}};
+      \draw[->, thick, color=jet] (o1.east) -- (o2.west);
+      \draw[->, thick, color=jet] (o2.east) -- (o3.west);
+
+      \draw[->, thick, color=positive] (nw.east) -- (1.4, 0.55) -- (o1.north);
+      \node[text=positive, above=0.15cm of nw] {step 3 first};
+
+      \draw[->, thick, dashed, color=primary-blue] (-1.2, -0.9) -- (nw.south);
+      \node[text=primary-blue, anchor=east] at (-1.2, -0.9) {\texttt{head}, step 4};
+
+      \node[text=negative, below=0.55cm of o1]
+        {swap the steps and the old chain is unreachable};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item Trace it with a finger: new box points at the old first node,
+      \emph{then} \texttt{head} moves. Either arrow alone is a broken list.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Insert at a Position and at the End}
+  \begin{block}{The walk-then-splice pattern}
+\begin{semiverbatim}
+p = head; for (i = 0; i < pos-1; i++) p = p->next
+newNode->next = p->next; p->next = newNode
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Walk to the predecessor ($O(n)$ worst case), then the same two
+      writes as front-insert in the same order.
+    \item End-insert is position $n$: walk all $n$ links --- $O(n)$ worst
+      case without a tail pointer. Guard: inserting into an empty list sets
+      \texttt{head} directly; walking past \texttt{NULL} is a bug, not an
+      edge case.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Delete: Find the Predecessor, Bypass, Free}
+  \begin{block}{Delete first occurrence of \texttt{x}}
+\begin{semiverbatim}
+if head->data == x: temp = head; head = head->next
+else: find p with p->next->data == x
+      temp = p->next; p->next = temp->next
+free(temp)
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Three acts: \key{bypass} (rewrite one link), \key{reclaim}
+      (\texttt{free} exactly once), \key{never touch} \texttt{temp} after the
+      free --- that is Week 1's dangling pointer by name.
+    \item Search-then-delete costs the search: $O(n)$ worst case; the bypass
+      itself is $O(1)$ worst case once \texttt{p} is in hand.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Delete the Middle, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=white, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (m1) at (0, 0) {10};
+      \node[draw, fill=negative!15, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (m2) at (2.0, 0) {20};
+      \node[draw, fill=white, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (m3) at (4.0, 0) {30};
+      \node[draw, fill=neutral!20, minimum width=1.0cm, minimum height=0.7cm,
+        align=center] (m4) at (6.0, 0) {\texttt{NULL}};
+      \draw[->, thick, color=jet] (m1.east) -- (m2.west);
+      \draw[->, thick, color=negative, dashed] (m2.east) -- (m3.west);
+      \draw[->, thick, color=jet] (m3.east) -- (m4.west);
+
+      \draw[->, thick, color=positive] (m1.south) -- (1.0, -0.9) -- (m3.south);
+      \node[text=positive, below=0.5cm of m2] {bypass: \texttt{p->next = temp->next}};
+
+      \node[text=neutral, above=0.15cm of m2] {doomed: \texttt{free(temp)}};
+      \draw[->, thick, color=neutral] (2.0, 1.15) -- (m2.north);
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item Deleting 20: node 10's link jumps over it straight to 30 (solid
+      green), then 20's box is freed. Skip the free and the node still sits
+      in the heap with nobody pointing at it --- Week 1's leak, drawn.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Search and Display: The Two Walks}
+  \begin{block}{Both are one loop over \texttt{p = p->next}}
+\begin{semiverbatim}
+search(x):  p = head; while (p != NULL && p->data != x) p = p->next
+            return (p != NULL)   // found or walked off the end
+display():  p = head; while (p != NULL) { print p->data; p = p->next }
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Search is $O(n)$ worst case (the miss walks everything) and
+      $O(1)$ best case (head holds \texttt{x}) --- name the case, per the
+      Week 2 habit.
+    \item Display never modifies: the traversal pointer \texttt{p} moves
+      while \texttt{head} stays put. Moving \texttt{head} itself loses the
+      list.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Four operations banked. Now the classic: turn the chain around in place.}
+
+% =============================================================================
+% ACT 4 --- REVERSE + COSTS + CLOSE
+% =============================================================================
+\section{Reverse, Costs, Close}
+
+\sectiondivider{Section 4}{Reverse, Costs, Close}
+
+\begin{frame}{Reverse: Motivation Before Mechanism}
+  \begin{itemize}
+    \item The playlist just queued 500 songs oldest-first; the user taps
+      ``play newest first.'' Copying all 500 into a second list doubles the
+      memory for a rearrangement.
+    \item The chain already holds every link we need --- each arrow just
+      points the wrong way. Reversal re-points $n$ arrows using three
+      pointers and $O(1)$ extra space.
+    \item Socratic pause: with only \texttt{prev}, \texttt{curr}, and
+      \texttt{next}, which arrow must be saved \emph{before} overwriting
+      \texttt{curr->next} --- and why?
+  \end{itemize}
+  \begin{exampleblock}{The answer (check your instinct)}
+    \texttt{next} $=$ \texttt{curr->next} first --- overwriting
+    \texttt{curr->next} destroys the only path to the rest of the chain.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Iterative Reverse: Three Pointers, One Pass}
+  \begin{block}{The loop (Karumanchi Ch.~3, pp.74--162 PDF)}
+\begin{semiverbatim}
+prev = NULL; curr = head
+while (curr != NULL):
+    next = curr->next   // save the rest of the chain
+    curr->next = prev   // flip this arrow
+    prev = curr         // advance both walkers
+    curr = next
+head = prev
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Each node visited exactly once: $T(n) = n$ link flips --- $O(n)$
+      worst case, $O(1)$ auxiliary space (three pointers, however long the
+      list).
+    \item Trace 10 $\to$ 20 $\to$ 30 once on paper before the lab: after the
+      second iteration the chain reads 20 $\to$ 10 $\to$ \texttt{NULL} with
+      \texttt{curr} parked at 30.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Reverse Mid-Pass, Drawn}
+  \begin{center}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.65cm,
+        align=center] (r1) at (0.5, 0) {10};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.65cm,
+        align=center] (r2) at (2.2, 0) {20};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.65cm,
+        align=center] (r3) at (3.9, 0) {30};
+      \node[draw, fill=neutral!20, minimum width=0.9cm, minimum height=0.65cm,
+        align=center] (r4) at (5.6, 0) {\texttt{NULL}};
+      \draw[<-, thick, color=positive] (r1.east) -- (r2.west);
+      \draw[->, thick, color=jet] (r2.east) -- (r3.west);
+      \draw[->, thick, color=jet] (r3.east) -- (r4.west);
+
+      \node[text=neutral] at (0.5, -0.85) {\texttt{prev}};
+      \draw[->, thick, color=neutral] (0.5, -0.7) -- (r1.south);
+      \node[text=primary-blue] at (2.2, -0.85) {\texttt{curr}};
+      \draw[->, thick, color=primary-blue] (2.2, -0.7) -- (r2.south);
+      \node[text=primary-gold] at (3.9, -0.85) {\texttt{next}};
+      \draw[->, thick, color=primary-gold] (3.9, -0.7) -- (r3.south);
+
+      \node[text=positive, above=0.15cm of r1] {flipped};
+      \node[text=neutral, above=0.15cm of r3] {still forward};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item Snapshot after one flip: 10's arrow points back at \texttt{NULL},
+      \texttt{prev} sits on 10, \texttt{curr} on 20, \texttt{next} saved 30.
+      The frontier between flipped and forward walks right until
+      \texttt{curr} $=$ \texttt{NULL}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Singly Linked List: The Full Price List}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{operation} & \textbf{bound} & \textbf{note} \\
+    \midrule
+    insert at front & $O(1)$ worst case & two writes; order matters \\
+    insert at end / position & $O(n)$ worst case & the walk dominates \\
+    delete (value known by walk) & $O(n)$ worst case & bypass itself $O(1)$ \\
+    search & $O(n)$ worst / $O(1)$ best & miss walks everything \\
+    display & $\Theta(n)$ & must visit all $n$ \\
+    iterative reverse & $O(n)$ worst, $O(1)$ space & one pass, three pointers \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item The house rule, Week 2 style: every bound above names its operation
+      and its case. ``Insert is $O(1)$'' without saying \emph{where} is half
+      an answer.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Three Classic Mistakes}
+  \begin{itemize}
+    \item \bad{Rewriting \texttt{head} before saving it} --- in front-insert
+      (step order) and in reverse (unsaved \texttt{next}): the chain's only
+      entry address is gone, and the heap still bills you for every orphaned
+      node.
+    \item \bad{Walking off the end} --- \texttt{p = p->next} past
+      \texttt{NULL} dereferences nothing: check \texttt{p != NULL} in every
+      loop condition, and test empty and single-node lists first.
+    \item \bad{Freeing and still pointing} --- using \texttt{temp} after
+      \texttt{free(temp)}, or forgetting the free entirely: Week 1's
+      dangling pointer and leak, now wearing list clothing.
+  \end{itemize}
+  \begin{exampleblock}{How to revise}
+    Re-trace the insert, delete, and reverse snapshots with a covered answer
+    column --- the exam is traces, not definitions.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 6 Summary}
+  \begin{itemize}
+    \item \key{Chain over slots}: unpredictable size plus anywhere-edits beat
+      $O(1)$ indexing --- that is when the list wins; otherwise the array
+      keeps its crown.
+    \item \key{Node}: \texttt{struct node \{ int data; struct node *next;
+      \};} with \texttt{head} as sole entry and \texttt{NULL} as terminator;
+      singly, doubly, and circular shapes for different jobs.
+    \item \key{Five operations}: front-insert $O(1)$ worst case; end/position
+      insert, delete, and search $O(n)$ worst case; display $\Theta(n)$;
+      three-pointer reverse $O(n)$ worst case in $O(1)$ space.
+  \end{itemize}
+  \begin{exampleblock}{Next week}
+    The backward link (\texttt{p->prev}), circular lists, the stack and queue
+    reborn on chains --- and polynomials that only store what is nonzero.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Before You Go: Predict}
+  \begin{block}{Three one-line predictions}
+    Answer from the algorithms, then check in the lab.
+  \end{block}
+  \begin{enumerate}
+    \item List \texttt{head} $\to$ 5 $\to$ 15 $\to$ \texttt{NULL}. Insert 10 at
+      the front: write the two assignments in the safe order.
+    \item Delete 15 above: which link is rewritten, and what is freed?
+    \item Reverse \texttt{head} $\to$ 1 $\to$ 2 $\to$ 3 $\to$ \texttt{NULL}:
+      after the loop, what does \texttt{head} point at, and what is the cost?
+  \end{enumerate}
+  \muted{Answers: \texttt{newNode->next = head}, then
+    \texttt{head = newNode}. Rewrite 5's \texttt{next} to \texttt{NULL};
+    free 15's node. \texttt{head} $\to$ 3 $\to$ 2 $\to$ 1 $\to$
+    \texttt{NULL}; $O(n)$ worst case, $O(1)$ space.}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

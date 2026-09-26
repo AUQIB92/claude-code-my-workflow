@@ -1,0 +1,53 @@
+% =============================================================================
+% CompetitiveExam/CS301/06-linked-lists-singly-answers.tex
+% Answer key for 06-linked-lists-singly-questions.tex.
+%
+% Real GATE PYQs (Q1--Q6) are sourced from the local GATEOverflow Volume 2
+% PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability: Linked List
+% cluster PDF pp.232-238), which authenticates each question (year + question
+% number printed on the page). The book's own answer keys are collapsed and
+% not extractable, so each real-PYQ answer was independently established in
+% the build session (2026-09-26): GATEOverflow online question pages,
+% ExamSIDE year-wise/topic listings, solutionsadda's GATE-1994 listing, the
+% edurev GATE CS 1994/2002 papers, the gatesolutions blog (2002 Q1.5),
+% electrical4u's GATE CS 2003/2008/2010 solutions, Knowledge Gate's SLL PYQ
+% page (2003 Q90), the EduRev 2008 Q62 discussion, the GFG Linked-Lists PYQ
+% quiz (2010 Q36), compsciedu's MCQ pages, the Collegedunia official
+% GATE-2022 paper+solutions PDF, and Garg's Academy GATE-2022 DS solutions.
+% Original questions (Q7--Q8) have answers derived directly from the Week 6
+% deck algorithms, confirmed by execution (2026-09-26).
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Competitive Exam Practice 6 --- Answer Key\\\large Singly Linked Lists}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(B) Binary search.} Binary search needs $O(1)$ random access to the middle element, but reaching the middle of a linked list costs a linear walk --- so the halving step is $O(n)$, not $O(1)$, and the $O(\log n)$ bill collapses. Insertion sort (splice without shifting), radix sort (sequential bucket appends), and polynomial manipulation (one node per nonzero term) all suit lists. Confirmed on the GATEOverflow page, solutionsadda's GATE-1994 listing, the edurev GATE CS 1994 paper, and ExamSIDE's GATE-1994 listing (2026-09-26).
+
+\item[\textbf{Q2}] \textbf{(D) $n$.} A singly linked list has no indexing, so only linear search applies: the miss (or hit at the last node) compares against all $n$ elements. $n/2$ is the \emph{average}-case figure, and the $\log$ options wrongly assume binary search, which needs $O(1)$ mid-access. Confirmed on the GATEOverflow page (answer D), the gatesolutions blog (answer (d) $n$), the edurev GATE CS 2002 paper (Q1.5), and ExamSIDE's GATE-2002 listing (2026-09-26).
+
+\item[\textbf{Q3}] \textbf{(B) The elements are sorted in non-decreasing order.} The recursion demands \texttt{p->data <= p->next->data} at \emph{every} adjacent pair, which is exactly non-decreasing order (equal neighbours allowed). (A) is contained in (B) but not equivalent --- \texttt{f} also returns $1$ on longer sorted lists, so ``if and only if'' rules (A) out; (C) flips the comparison; (D) is neither necessary nor sufficient. Confirmed on the GATEOverflow page (answer B), ExamSIDE's GATE-2003 listing, electrical4u's GATE CS 2003 solutions (answer B), and Knowledge Gate's SLL PYQ page (2026-09-26).
+
+\item[\textbf{Q4}] \textbf{(B) $2, 1, 4, 3, 6, 5, 7$.} Each pass swaps one adjacent pair by \emph{value} and then skips both nodes (\texttt{p = q->next}), so pairs $(1,2)$, $(3,4)$, $(5,6)$ are swapped and the odd node $7$ has no partner and stays put. (A) would need zero swaps; (C) shifts the pairing by one; (D) rotates instead of swapping. Confirmed on the GATEOverflow page (answer B), ExamSIDE's GATE-2008 listing, electrical4u's GATE CS 2008 solutions (answer B), and the EduRev discussion (2026-09-26).
+
+\item[\textbf{Q5}] \textbf{(D) \texttt{q->next = NULL; p->next = head; head = p;}.} On exit \texttt{p} is the last node and \texttt{q} its predecessor: detach the old tail link first (\texttt{q->next = NULL}), point the last node at the old head, then swing \texttt{head} over --- in exactly this order. (A) orphans the whole rest of the list (\texttt{q} is dropped, tail never detached); (B) sets \texttt{head = p} before linking so \texttt{p->next = head} is a self-loop; (C) mislinks \texttt{p->next} to \texttt{q}. Confirmed on the GATEOverflow page (answer D), the GFG PYQ quiz, compsciedu's MCQ page (answer (d)), electrical4u's GATE CS 2010 solutions (answer D), and ExamSIDE's GATE-2010 listing (2026-09-26).
+
+\item[\textbf{Q6}] \textbf{(A) The best algorithm takes $\Theta(n)$ time in the worst case.} The deck's three-pointer loop visits each node exactly once and flips one link per node --- $n$ flips, $\Theta(n)$ worst case, with only three extra pointers ($O(1)$ space). No $o(n)$ algorithm can touch all $n$ links, ruling out (B)/(C); (D) is refuted by the very loop above. Confirmed on the GATEOverflow page (answer A), the official Collegedunia GATE-2022 paper+solutions PDF (correct answer A), Garg's Academy solutions (answer A), ExamSIDE's GATE-2022 listing, and GFG's quiz page (2026-09-26).
+
+\item[\textbf{Q7}] \textbf{(A) \texttt{newNode->next = head;} then \texttt{head = newNode;} giving \texttt{head} $\to$ 4 $\to$ 11 $\to$ 23 $\to$ \texttt{NULL}.} The new box must point at the old chain \emph{before} \texttt{head} moves; reversing the order ((B)/(D)) overwrites \texttt{head}'s old value with no copy anywhere and orphans $11 \to 23$. (C) keeps the safe order but misstates the result (front-insert never appends). Confirmed by execution (2026-09-26).
+
+\item[\textbf{Q8}] \textbf{(A) The list is \texttt{head} $\to$ 8 $\to$ 29 $\to$ \texttt{NULL}; the bypass is $O(1)$ worst case once the predecessor is in hand, and the overall delete is $O(n)$ worst case because of the search.} Node $8$'s \texttt{next} is rewritten to skip $13$ straight to $29$, then $13$'s box is freed. (B) leaves the list unchanged; (C) deletes the wrong node and claims the search is free; (D) gets the list right but drops the $O(n)$ search bill the deck's price list charges. Confirmed by execution (2026-09-26).
+\end{enumerate}
+
+\end{document}
