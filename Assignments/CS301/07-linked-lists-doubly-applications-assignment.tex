@@ -1,0 +1,104 @@
+% =============================================================================
+% Assignments/CS301/07-linked-lists-doubly-applications-assignment.tex
+% Assignment 7 (Week 7): Doubly & Circular Lists, List-Backed Stack and Queue,
+% and Polynomials
+%
+% Student set — NO answers. Solution key:
+% 07-linked-lists-doubly-applications-solutions.tex (gitignored via
+% **/*-solutions.tex, never deployed). Sourced from
+% Slides/CS301/07-linked-lists-doubly-applications.tex and
+% Notes/CS301/07-linked-lists-doubly-applications-notes.tex.
+%
+% Fresh instances throughout: no problem re-asks a deck/notes worked example
+% verbatim (deck/notes: build 10-20-30; insert 20 after 10 between 10 and 30;
+% delete 15 from 5-15-25; circular ring a-b-c-d; list stack 30-20-10 + push40/
+% pop; list queue 10-20-30 + dequeue/enqueue40; polynomial A=5x^3+4x+2,
+% B=3x^2+4x+1; notes exercise A=4x^4+2x^2+7, B=3x^3+2x^2+5; prediction
+% 2x^2+1 + -2x^2+5x; before-you-go delete 15). This set uses: Q2 ring
+% 9-18-27; Q3 DLL 8-16-32-64 with insert 24 / delete 32 / delete head;
+% Q4 stack 7-4-1 + push9/pop/pop/push5/pop and queue 2-4-6 + deq/deq/enq8/
+% deq/deq; Q5 A=6x^5+3x^2+4, B=-6x^5+2x^3+3x^2+9; Q6 circular queue
+% 11-22-33-44 — all new.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 07-linked-lists-doubly-applications-assignment.tex
+%   $env:BIBINPUTS="../..;"; bibtex 07-linked-lists-doubly-applications-assignment
+%   $env:TEXINPUTS="../../Preambles;"; xelatex -interaction=nonstopmode 07-linked-lists-doubly-applications-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Assignment 7 (Week 7): Doubly \& Circular Lists, List-Backed Stack and Queue, and Polynomials}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent Answer every question. Show all working for Numerical and Design questions. Each problem states its own assumptions; everything you need is in Week~7's Notes chapter alone. Notation matches the lecture exactly: \texttt{struct node \{ int data; struct node *prev; struct node *next; \};}, \texttt{head} is the first-node pointer (\texttt{NULL} when empty), \texttt{p->prev}/\texttt{p->next} are the predecessor/successor links, \texttt{NULL} is uppercase, a circular list satisfies \texttt{last->next == head} with \texttt{head->prev} the last node, list-based stack has \texttt{top} $=$ \texttt{head}, list-based queue removes at \texttt{head} and appends at \texttt{tail}, polynomial nodes are \texttt{struct pnode \{ float coeff; int exp; struct pnode *next; \};} kept in strictly descending exponent order, and positions are 0-based. For every bound, name the operation, give the bound, and state the case (Week~2 shape).
+
+\section{Conceptual}
+
+\textbf{Q1.} A photo editor keeps its undo states in a linked structure. ``Undo'' deletes the most recent state; ``revert-to'' jumps to an older state and discards every state after it; in both cases the editor already holds a pointer straight to the node it must remove (Karumanchi Ch.~3, pp.74--162 PDF; Wirth Sec.~4.3, p.~115) \cite{Karumanchi2017_data_structures_algorithms_made_easy,Wirth2004_algorithms_data_structures}.
+\begin{enumerate}
+  \item[(a)] State the \key{two-link invariant} for an interior node \texttt{p} of a doubly linked list (DLL), then name the two links that a delete-by-pointer must repair and write the two bypass assignments (with their guards).
+  \item[(b)] Explain why the same delete is $O(n)$ worst case in a \emph{singly} linked list but $O(1)$ worst case in a DLL once \texttt{p} is known --- name precisely the information the backward link supplies that a singly list must re-find by walking.
+  \item[(c)] Give the honest bill in one or two sentences: what the second link costs in space and in per-operation maintenance, and why search is unchanged (give both of its bounds and the case). Close with the workload rule for choosing a DLL over a singly list.
+\end{enumerate}
+Why this matters: the backward link's payoff is the week's whole point, and it is only real if you can state the invariant and price the second link together --- this question makes you do both on the editor's own workload.
+
+\textbf{Q2.} A round-robin scheduler stores its runnable processes in a circular list and hands out the CPU by walking the ring (Karumanchi Ch.~3, pp.74--162 PDF) \cite{Karumanchi2017_data_structures_algorithms_made_easy}.
+\begin{enumerate}
+  \item[(a)] A singly circular list reads \texttt{head} $\to$ 9 $\to$ 18 $\to$ 27 $\to$ \texttt{head}. Give \texttt{9->next}, \texttt{27->next}, and the sentinel that replaces \texttt{NULL}. If the same ring is made doubly circular, what is \texttt{head->prev}, and what does that buy?
+  \item[(b)] The deck's trap: in one or two sentences, explain why \texttt{while (p != NULL) \{ p = p->next; \}} never terminates on this ring. Then give the correct terminating traversal that prints \texttt{9 18 27} exactly once, and say in one sentence why the \texttt{do--while} form (not a plain \texttt{while (p != head)}) is required.
+  \item[(c)] For an $n$-node singly circular ring, how many link steps does one full traversal take, and what is its bound (name the operation, the bound, and the case)? In one sentence, why must every insert/delete on a circular list repair a closure link that a \texttt{NULL}-terminated list does not have?
+\end{enumerate}
+Why this matters: a scheduler that waits for \texttt{NULL} spins forever --- this question pins the termination rule to the exact sentinel and makes you pay the closure repair before you write any ring code.
+
+\section{Numerical}
+
+\textbf{Q3.} Start from the DLL \texttt{head} $\leftrightarrow$ 8 $\leftrightarrow$ 16 $\leftrightarrow$ 32 $\leftrightarrow$ 64. Rules: insert after a given node uses the deck's four-write order (\texttt{newNode->next}, \texttt{newNode->prev}, \texttt{old->prev}, \texttt{p->next}); delete-by-pointer uses the guarded bypass then \texttt{free} exactly once.
+\begin{enumerate}
+  \item[(a)] Insert 24 after the node holding 16. Give the four assignments in order, the final chain, and verify both halves of the two-link invariant at the 24-node.
+  \item[(b)] On the result, delete the node holding 32, given only a pointer \texttt{p} to it. Write the two bypass assignments (with their guards), name the freed node, give the final chain, and verify the invariant at the 24-node (now adjacent to 64).
+  \item[(c)] On the result of (b), delete the head node (8), given only a pointer to it. Which guard changes the code path, what is the bypass, and what is the final chain? State the complexity for (a), (b), and (c) with operation, bound, and case.
+\end{enumerate}
+Why this matters: insert-after, delete-middle, and delete-head are the same four-write surgery in three landings --- this question puts your hand through all three on one chain the lecture never traced, and asks you to certify each with the invariant.
+
+\textbf{Q4.} Two interfaces on one implementation: the Week~3 stack and the Week~5 queue contracts, now on chains. Stack top is \texttt{head}; queue removes at \texttt{head} and appends at \texttt{tail}.
+\begin{enumerate}
+  \item[(a)] List-based stack: start \texttt{head} $\to$ 7 $\to$ 4 $\to$ 1 $\to$ \texttt{NULL} (top 7). Run \texttt{push(9)}, \texttt{pop}, \texttt{pop}, \texttt{push(5)}, \texttt{pop}. Give the chain after every step as a five-row table, count the total link writes (\texttt{next} assignments plus \texttt{head} moves), and state the complexity of \texttt{push}/\texttt{pop} with operation, bound, and case.
+  \item[(b)] List-based queue: start \texttt{head} $\to$ 2 $\to$ 4 $\to$ 6 $\to$ \texttt{NULL} with \texttt{tail} at 6. Run \texttt{dequeue}, \texttt{dequeue}, \texttt{enqueue(8)}, \texttt{dequeue}, \texttt{dequeue}. Give \texttt{head}, the chain, and \texttt{tail} after every step, and name the exact step where the \texttt{if (head == NULL) tail = NULL} guard fires. State the complexity of \texttt{enqueue}/\texttt{dequeue} with operation, bound, and case.
+  \item[(c)] A singly circular ring holds $n$ processes. How many link steps does one full traversal take, and what is the bound (operation, bound, case)? In one sentence, why does the linked stack/queue avoid the fixed-capacity or amortized-reallocation cost the array version pays?
+\end{enumerate}
+Why this matters: the contract does not change when the implementation does --- this question traces both interfaces on chains and makes you price the one edge case (the emptying queue) where the linked version needs a guard the array never did.
+
+\section{Design}
+
+\textbf{Q5.} Design polynomial addition over ordered \texttt{(coeff, exp)} chains (the lecture's \texttt{struct pnode}), then extend it to multiplication. Convention: strictly descending exponent order; zero-coefficient terms are never stored (Horowitz \& Sahni Ch.~4, standard treatment; Aho--Hopcroft--Ullman Ch.~2, standard treatment) \cite{HorowitzSahni2008_fundamentals_data_structures,AhoHopcroftUllman1983_data_structures_algorithms}.
+\begin{enumerate}
+  \item[(a)] Write pseudocode \texttt{polyAdd(A, B)} returning a new chain \texttt{C} in descending exponent order. Walk both lists once; a strictly larger exponent is copied through; equal exponents add coefficients and emit a node only when the sum is nonzero; append the remainder of whichever list is not exhausted. Keep a \texttt{C}-tail pointer so each append is $O(1)$, and include the empty-chain and \texttt{malloc}-failure checks.
+  \item[(b)] Trace \texttt{polyAdd} with $A = 6x^{5} + 3x^{2} + 4$ and $B = -6x^{5} + 2x^{3} + 3x^{2} + 9$: give a step table (compare $\to$ action $\to$ \texttt{C} so far), name every term that is cancelled and therefore not stored, and give the final chain.
+  \item[(c)] State the worst-case time bound of \texttt{polyAdd} with its independent variables, and why. Then state the worst-case bound of the multiplication routine (each \texttt{A}-term times every \texttt{B}-term, exponents added, equal exponents merged) with its independent variables, and in one sentence why multiplication is not linear while addition is.
+\end{enumerate}
+Why this matters: sparse polynomials are the syllabus's showcase for ``store only what exists'' --- this question designs the linear merge and then prices the quadratic extension, so you can defend the representation's cost, not just its shape.
+
+\textbf{Q6.} Design a \emph{list-based circular queue} that keeps the ring closed with \texttt{tail->next == head}, so a single \texttt{tail} handle reaches both ends (front $=$ \texttt{tail->next}, rear $=$ \texttt{tail}) (Karumanchi Ch.~5, pp.205--223 PDF; Sedgewick Sec.~1.3, p.~120) \cite{Karumanchi2017_data_structures_algorithms_made_easy,Sedgewick2011_algorithms}.
+\begin{enumerate}
+  \item[(a)] Write pseudocode for \texttt{enqueue(x)} and \texttt{dequeue()} on this ring. Handle all three cases explicitly: empty ring, single-node ring (dequeue), and the general ring. No \texttt{count}, no sacrificed slot, no \texttt{mod} --- say in one sentence how the single \texttt{tail} pointer distinguishes full from empty where a ring over array indices could not.
+  \item[(b)] \sloppy Starting empty, run \texttt{enqueue(11)}, \texttt{enqueue(22)}, \texttt{enqueue(33)}, \texttt{dequeue}, \texttt{dequeue}, \texttt{enqueue(44)}, \texttt{dequeue}, \texttt{dequeue}. Give the ring contents (front to rear) and the location of \texttt{tail} after every step.
+  \item[(c)] State the complexity of \texttt{enqueue} and \texttt{dequeue} with operation, bound, and case, and compare in one sentence with the Week~5 array circular queue's full/empty test.
+\end{enumerate}
+Why this matters: Week~5 spent a \texttt{count} field or a sacrificed slot to tell full from empty; a closed ring spends neither --- this question designs the trick and traces the one case (the last dequeue) where it must collapse the ring.
+
+\bibliography{../../Bibliography_base}
+\bibliographystyle{plain}
+\end{document}

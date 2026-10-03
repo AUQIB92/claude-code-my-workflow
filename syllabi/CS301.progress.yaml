@@ -1,6 +1,6 @@
 course: CS301
 lab_mode: coding-assignment   # P1-P13 C programming practicals map to weeks -> /coding-assignment
-last_updated: 2026-09-26
+last_updated: 2026-10-03
 weeks:
   "00":
     deck: "00-course-motivation-overview"
@@ -68,12 +68,12 @@ weeks:
   "07":
     deck: "07-linked-lists-doubly-applications"
     stages:
-      slides:     { status: absent, score: null, note: "" }
-      notes:      { status: absent, score: null, note: "" }
-      assignment: { status: absent, score: null, note: "" }
-      lab:        { status: absent, score: null, note: "P7 (doubly-linked-list operations)" }
-      gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      slides:     { status: deployed, score: null, note: "39 frames/40 pages; 3-pass XeLaTeX clean, 0 errors/overfull/undefined; 7 TikZ (DLL node + insert/delete surgery, circular rings, list stack/queue, polynomial)" }
+      notes:      { status: deployed, score: null, note: "qa-notes APPROVED (1 round, manual fallback); 12pp; 7 TikZ reused; cites 5/5 parity" }
+      assignment: { status: deployed, score: null, note: "6 problems (2C/2N/2D, fresh instances); solutions key present (gitignored); 21/21 trace/algebra checks PASS" }
+      lab:        { status: deployed, score: null, note: "coding-assignment P7 (doubly-linked-list ops + poly add); visible 42/42 + hidden 4360/4360 PASS; verify-algorithm PASS (O(1) delete, O(n+m) poly_add)" }
+      gate:       { status: deployed, score: null, note: "10Q (5 CoVe-verified PYQ: GATE 1997/2004/2017 S2/2018/2023 + 5 original); questions+answers PDFs clean" }
+      quarto:     { status: deployed, score: null, note: "qmd + 7 TikZ SVGs; PDFs deployed to docs/ (slides/notes/assignment/coding/GATE Q+A); qa-quarto source-parity APPROVED (no quarto binary, no HTML)" }
   "08":
     deck: "08-searching-elementary-sorting"
     stages:

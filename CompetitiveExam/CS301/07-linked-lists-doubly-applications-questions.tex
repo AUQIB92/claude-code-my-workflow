@@ -1,0 +1,191 @@
+% =============================================================================
+% CompetitiveExam/CS301/07-linked-lists-doubly-applications-questions.tex
+% Competitive Exam Practice 7 — GATE (Computer Science) Pattern
+% Doubly linked lists: insert/delete pointer surgery and the two-link invariant,
+% O(1) delete-by-pointer vs singly O(n), circular singly/doubly lists and
+% NULL-free traversal termination, list-based stack/queue (linked circular
+% queue), polynomial representation and merge-by-descending-exponent addition.
+%
+% Student-facing — NO answers. Answer key: 07-linked-lists-doubly-applications-answers.tex.
+%
+% Provenance (availability-first, Tier 1 = local PYQ book
+% CompetitiveExam/Books/GATE-PYQs/filter1_volume2.pdf):
+%   - Q1  [GATE CSE 1997 Q1.4, verified — GATEOverflow V2 p.233] —
+%     O(1) concatenation → circular doubly linked list. Stem + all four
+%     options confirmed in the local text layer (volume2, Linked List cluster,
+%     title 3.10.6) and independently on PracticePaper's GATE CSE 1997 paper
+%     page (same stem + options A-D). Local book answer key: 3.10.6 = C.
+%     Answer (C).
+%   - Q2  [GATE CSE 2004 Q36, verified — GATEOverflow V2 p.235] —
+%     circular list as a queue, one variable to access it → point at the rear
+%     node. Stem + all four options in the local text layer (title 3.10.12);
+%     local book answer key: 3.10.12 = A. Answer (A).
+%   - Q3  [GATE CSE 2017 Set 2 Q13, verified — GATEOverflow V2 p.242] —
+%     circular queue on a singly linked list with FRONT/REAR: rear->next must
+%     point to front. Stem + options (I)/(II) + A-D in the local text layer
+%     (title 3.12.10); local book answer key: 3.12.10 = B. Answer (B).
+%   - Q4  [GATE CSE 2018 Q3, verified — GATEOverflow V2 p.242] —
+%     non-circular singly linked list queue, enqueue at head / dequeue at tail
+%     → Θ(1), Θ(n). Stem in the local text layer (title 3.12.11); all four
+%     options recovered from GeeksforGeeks' GATE-CS-2018 linked-list question
+%     page (Θ(1),Θ(1) / Θ(1),Θ(n) / Θ(n),Θ(1) / Θ(n),Θ(n)); local book answer
+%     key: 3.12.11 = B. Answer (B).
+%   - Q5  [GATE CSE 2023 Q3, verified — GATEOverflow V2 p.237] —
+%     SLLdel (singly, given node pointer) is O(n), DLLdel (doubly) is O(1).
+%     Stem in the local text layer (title 3.10.20); all four options recovered
+%     from GeeksforGeeks' GATE-CS-2023 question page; answer D corroborated by
+%     the GATEQA listing ("Answer: D") and the local book answer key
+%     (3.10.20 = D). Answer (D).
+%   - Q6–Q10  [Original, GATE-pattern] — fresh instances (the deck, Notes, and
+%     the Week 7 exercises use 10-20-30, 5-15-25, a-b-c-d, 4x^4+2x^2+7, and
+%     30-20-10/40; none of those concrete values is reused here). Every trace
+%     was checked by hand this session:
+%       Q6  DLL delete-by-pointer on head <-> 7 <-> 19 <-> 42: removes 19,
+%           rewrites 7->next and 42->prev in O(1) once p is known. Verified.
+%       Q7  DLL insert-after on head <-> 3 <-> 8 <-> 14, insert 5 after 8:
+%           the four-write order that restores the invariant. Verified.
+%       Q8  singly circular head -> p -> q -> r -> p under while (ptr != NULL):
+%           never meets NULL, cycles forever. Verified.
+%       Q9  merge-add A = 6x^3 + 2x + 9 and B = 4x^3 + 5x^2 - 2x:
+%           10x^3 + 5x^2 + 9 (the x term cancels), one pass O(n+m). Verified.
+%       Q10 list stack head -> 7 -> 14 -> 21: push(28) then pop() -> 28, top 7,
+%           both O(1) worst case. Verified.
+%
+% Method note: no Ghostscript/Tesseract OCR in this environment, so
+% image-embedded math/options could not be OCR'd; they were recovered instead
+% by (a) the local pdftotext text layer where present and (b) direct web
+% fetches of GeeksforGeeks/PracticePaper question pages (search engines were
+% partly bot-blocked; no forked claim-verifier Task tool exists here, so CoVe
+% was executed inline against the local answer-key section + the web pages).
+% The local book's answer-key section — which the registry assumed was
+% collapsed — is in fact recoverable via pdftotext and was used for every
+% real-PYQ answer.
+%
+% Compile with: cd CompetitiveExam/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 07-linked-lists-doubly-applications-questions.tex
+%   (Windows/MiKTeX uses ; not : as the separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Competitive Exam Practice 7: Doubly \& Circular Lists, List-Backed Stack and Queue, and Polynomials\\\large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option; NAT = Numerical Answer Type.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CSE 1997 Q1.4, verified --- GATEOverflow V2 p.233]} \textbf{[MCQ, 1 mark]} The concatenation of two lists is to be performed in $O(1)$ time. Which of the following implementations of a list should be used?
+\begin{enumerate}
+  \item[(A)] Singly linked list
+  \item[(B)] Doubly linked list
+  \item[(C)] Circular doubly linked list
+  \item[(D)] Array implementation of list
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2004 Q36, verified --- GATEOverflow V2 p.235]} \textbf{[MCQ, 1 mark]} A circularly linked list is used to represent a queue. A single variable \texttt{p} is used to access the queue. To which node should \texttt{p} point such that both the operations \texttt{enqueue} and \texttt{dequeue} can be performed in constant time?
+\begin{enumerate}
+  \item[(A)] rear node
+  \item[(B)] front node
+  \item[(C)] not possible with a single pointer
+  \item[(D)] node next to front
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[GATE CSE 2017 Set 2 Q13, verified --- GATEOverflow V2 p.242]} \textbf{[MCQ, 2 marks]} A circular queue has been implemented using a singly linked list where each node consists of a value and a single pointer pointing to the next node. We maintain exactly two external pointers \texttt{FRONT} and \texttt{REAR} pointing to the front node and the rear node of the queue, respectively. Which of the following statements is/are CORRECT for such a circular queue, so that insertion and deletion operations can be performed in $O(1)$ time?
+\begin{enumerate}
+  \item[I.] Next pointer of front node points to the rear node.
+  \item[II.] Next pointer of rear node points to the front node.
+\end{enumerate}
+\begin{enumerate}
+  \item[(A)] (I) only
+  \item[(B)] (II) only
+  \item[(C)] Both (I) and (II)
+  \item[(D)] Neither (I) nor (II)
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[GATE CSE 2018 Q3, verified --- GATEOverflow V2 p.242]} \textbf{[MCQ, 1 mark]} A queue is implemented using a non-circular singly linked list. The queue has a head pointer and a tail pointer. Let $n$ denote the number of nodes in the queue. Let \texttt{enqueue} be implemented by inserting a new node at the head, and \texttt{dequeue} be implemented by deletion of a node from the tail. Which one of the following is the time complexity of the most time-efficient implementation of \texttt{enqueue} and \texttt{dequeue}, respectively, for this data structure?
+\begin{enumerate}
+  \item[(A)] $\Theta(1)$, $\Theta(1)$
+  \item[(B)] $\Theta(1)$, $\Theta(n)$
+  \item[(C)] $\Theta(n)$, $\Theta(1)$
+  \item[(D)] $\Theta(n)$, $\Theta(n)$
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[GATE CSE 2023 Q3, verified --- GATEOverflow V2 p.237]} \textbf{[MCQ, 1 mark]} Let \texttt{SLLdel} be a function that deletes a node in a singly linked list given a pointer to the node and a pointer to the head of the list. Similarly, let \texttt{DLLdel} be another function that deletes a node in a doubly linked list given a pointer to the node and a pointer to the head of the list. Let $n$ denote the number of nodes in each of the linked lists. Which one of the following choices is TRUE about the worst-case time complexity of \texttt{SLLdel} and \texttt{DLLdel}?
+\begin{enumerate}
+  \item[(A)] \texttt{SLLdel} is $O(1)$ and \texttt{DLLdel} is $O(n)$
+  \item[(B)] Both \texttt{SLLdel} and \texttt{DLLdel} are $O(\log n)$
+  \item[(C)] Both \texttt{SLLdel} and \texttt{DLLdel} are $O(n)$
+  \item[(D)] \texttt{SLLdel} is $O(n)$ and \texttt{DLLdel} is $O(1)$
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A doubly linked list holds \texttt{head} $\leftrightarrow$ 7 $\leftrightarrow$ 19 $\leftrightarrow$ 42 $\leftrightarrow$ \texttt{NULL}. A pointer \texttt{p} points at the node holding~19. That node is deleted by the deck's delete-by-pointer and then \texttt{free(p)} is called. Which statement is TRUE about the resulting list and the cost?
+\begin{enumerate}
+  \item[(A)] The list becomes \texttt{head} $\leftrightarrow$ 7 $\leftrightarrow$ 42; 7's \texttt{next} is set to 42 and 42's \texttt{prev} is set to 7, both reached in $O(1)$ from \texttt{p}; the delete is $O(1)$ worst case once \texttt{p} is known.
+  \item[(B)] The list becomes \texttt{head} $\leftrightarrow$ 7 $\leftrightarrow$ 42, but the predecessor of the deleted node must first be found by a walk, so the delete is $O(n)$ worst case.
+  \item[(C)] The list is unchanged --- \texttt{head} $\leftrightarrow$ 7 $\leftrightarrow$ 19 $\leftrightarrow$ 42 --- because delete-by-pointer only moves \texttt{head}.
+  \item[(D)] The list becomes \texttt{head} $\leftrightarrow$ 7 $\leftrightarrow$ 42, but only 7's \texttt{next} is updated; 42's \texttt{prev} still points at the freed node, breaking the two-link invariant.
+\end{enumerate}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} A doubly linked list holds \texttt{head} $\leftrightarrow$ 3 $\leftrightarrow$ 8 $\leftrightarrow$ 14 $\leftrightarrow$ \texttt{NULL}, and \texttt{p} points at the node holding~8. A new node holding~5 is inserted immediately after \texttt{p}. Which sequence of pointer writes restores the two-link invariant and yields \texttt{head} $\leftrightarrow$ 3 $\leftrightarrow$ 8 $\leftrightarrow$ 5 $\leftrightarrow$ 14?
+\begin{enumerate}
+  \item[(A)] \texttt{newNode->next = p->next;}\\
+  \texttt{newNode->prev = p;}\\
+  \texttt{if (p->next != NULL) p->next->prev = newNode;}\\
+  \texttt{p->next = newNode;}
+  \item[(B)] \texttt{p->next = newNode;}\\
+  \texttt{newNode->prev = p;}\\
+  \texttt{newNode->next = p->next;}
+  \item[(C)] \texttt{newNode->next = p->next;}\\
+  \texttt{p->next = newNode;}\\
+  \texttt{newNode->prev = p;}\\
+  \texttt{if (p->next != NULL) p->next->prev = newNode;}
+  \item[(D)] \texttt{newNode->prev = p;}\\
+  \texttt{newNode->next = p->next;}\\
+  \texttt{p->next = newNode;}\\
+  \texttt{p->next->prev = newNode;}
+\end{enumerate}
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A singly circular list reads \texttt{head} $\to$ p $\to$ q $\to$ r $\to$ p. The following loop is run:
+\begin{verbatim}
+ptr = head;
+while (ptr != NULL) {
+    visit(ptr);
+    ptr = ptr->next;
+}
+\end{verbatim}
+What happens?
+\begin{enumerate}
+  \item[(A)] It visits p, q, r and then stops when \texttt{ptr} becomes \texttt{NULL}.
+  \item[(B)] It loops forever, cycling p, q, r, p, q, r, $\dots$ and never meets \texttt{NULL}.
+  \item[(C)] It visits only the node p, then stops at the next \texttt{head}.
+  \item[(D)] It aborts after three visits because the list has no end.
+\end{enumerate}
+
+\item[\textbf{Q9}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 2 marks]} Two sparse polynomials are stored as ordered $(\text{coeff},\text{exp})$ chains in strictly descending exponent order: $A = 6x^{3} + 2x + 9$ and $B = 4x^{3} + 5x^{2} - 2x$. Using the deck's merge-by-descending-exponent addition, which result and cost are correct?
+\begin{enumerate}
+  \item[(A)] $A + B = 10x^{3} + 5x^{2} + 9$, produced by one merge pass costing $O(n+m)$ worst case; the cancelled $x$ term is never stored.
+  \item[(B)] $A + B = 10x^{3} + 5x^{2} + 0x + 9$; the merge stores the zero term, still costing $O(n+m)$.
+  \item[(C)] $A + B = 10x^{3} + 5x^{2} + 9$, but the merge costs $O(n \cdot m)$ because every pair of terms is multiplied.
+  \item[(D)] $A + B = 10x^{3} + 5x^{2} + 4x + 9$, produced by one merge pass costing $O(n+m)$.
+\end{enumerate}
+
+\item[\textbf{Q10}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]} A linked-list stack has \texttt{head} $\to$ 7 $\to$ 14 $\to$ 21 $\to$ \texttt{NULL}, with the top of the stack at \texttt{head}. \texttt{push(28)} is performed, then one \texttt{pop()}. Which statement is TRUE?
+\begin{enumerate}
+  \item[(A)] \texttt{push} links 28 in front, giving \texttt{head} $\to$ 28 $\to$ 7 $\to$ 14 $\to$ 21; \texttt{pop()} returns 28 and the new top is 7; both operations are $O(1)$ worst case.
+  \item[(B)] \texttt{push} appends 28 at the tail, giving \texttt{head} $\to$ 7 $\to$ 14 $\to$ 21 $\to$ 28; \texttt{pop()} removes the front, so it returns 7.
+  \item[(C)] \texttt{push} links 28 in front, giving \texttt{head} $\to$ 28 $\to$ 7 $\to$ 14 $\to$ 21; \texttt{pop()} returns 7 because a stack removes the oldest item.
+  \item[(D)] Both \texttt{push} and \texttt{pop} take $O(n)$ worst case, because a linked list has no indices.
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

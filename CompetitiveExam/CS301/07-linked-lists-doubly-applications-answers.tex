@@ -1,0 +1,64 @@
+% =============================================================================
+% CompetitiveExam/CS301/07-linked-lists-doubly-applications-answers.tex
+% Answer key for 07-linked-lists-doubly-applications-questions.tex.
+%
+% Real GATE PYQs (Q1--Q5) are sourced from the local GATEOverflow Volume 2
+% PYQ book (CompetitiveExam/Books/index.md, Tier-1 availability: Linked List
+% cluster PDF pp.232-238, Queue cluster pp.240-243), which authenticates each
+% question (year + question number printed on the page). The book's answer
+% keys, assumed collapsed by the registry, are in fact recoverable via
+% pdftotext from the volume's "Answer Keys" section; those keys give:
+%   3.10.6  (1997 Q1.4)  = C
+%   3.10.12 (2004 Q36)   = A
+%   3.12.10 (2017 S2 Q13)= B
+%   3.12.11 (2018 Q3)    = B
+%   3.10.20 (2023 Q3)    = D
+% Independent web corroboration obtained this session (2026-10-03):
+%   - Q1  stem + options matched on PracticePaper's GATE CSE 1997 paper page.
+%   - Q4  all four options + answer B on GeeksforGeeks' GATE-CS-2018
+%         linked-list question page.
+%   - Q5  all four options on GeeksforGeeks' GATE-CS-2023 question page;
+%         answer D corroborated by the GATEQA listing ("Answer: D").
+%   (Search engines were partly bot-blocked and no OCR was available; Q2/Q3
+%    rest on the local Tier-1 book text + its answer key.)
+% Original questions (Q6--Q10) have answers derived directly from the Week 7
+% deck algorithms and checked by hand this session.
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Competitive Exam Practice 7 --- Answer Key\\\large Doubly \& Circular Lists, List-Backed Stack and Queue, and Polynomials}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textbf{(C) Circular doubly linked list.} To concatenate two lists in $O(1)$ you must reach both ends without a walk and be able to rewire the four boundary links; a circular doubly linked list stores a pointer to the last node whose \texttt{next} is the first node and whose \texttt{prev} is the previous last node, so both joins are constant-time splices. A singly or ordinary doubly linked list needs an $O(n)$ walk to reach the tail, and an array needs $O(n)$ copying/reallocation. (Local book answer key 3.10.6 = C; stem + options also on PracticePaper's GATE CSE 1997 page.)
+
+\item[\textbf{Q2}] \textbf{(A) rear node.} Point \texttt{p} at the rear node. Then the front node is \texttt{p->next} (one link, $O(1)$), so \texttt{dequeue} removes at the front and \texttt{enqueue} inserts just after \texttt{p} and advances \texttt{p} to the new node --- both constant time. Pointing at the front instead makes \texttt{enqueue} at the rear need an $O(n)$ walk to find the tail; two pointers would work but the question allows a single one, so (A) is the answer and (C) is false. (Local book answer key 3.10.12 = A.)
+
+\item[\textbf{Q3}] \textbf{(B) (II) only.} For a singly linked list to behave as a circular queue with $O(1)$ insert/delete, the ring must be closed from the rear back to the front: the rear node's \texttt{next} points to the front node, so appending after \texttt{REAR} and advancing \texttt{REAR} keep \texttt{FRONT} reachable. Statement (I) points the front node forward at the rear, which does not make the rear reach the front and is not required. (Local book answer key 3.12.10 = B.)
+
+\item[\textbf{Q4}] \textbf{(B) $\Theta(1)$, $\Theta(n)$.} Inserting at the head is a constant-time front insert ($O(1)$). Deleting at the tail of a \emph{non-circular} singly linked list requires the tail's predecessor to redirect the tail's \texttt{next} to \texttt{NULL}; with only a tail pointer there is no backward link, so the predecessor must be found by walking from the head --- $\Theta(n)$ worst case. Hence \texttt{enqueue} is $\Theta(1)$ and \texttt{dequeue} is $\Theta(n)$. (Local book answer key 3.12.11 = B; all four options on GeeksforGeeks.)
+
+\item[\textbf{Q5}] \textbf{(D) \texttt{SLLdel} is $O(n)$ and \texttt{DLLdel} is $O(1)$.} In a doubly linked list a node reaches both neighbours through \texttt{prev} and \texttt{next}, so \texttt{DLLdel} unlinks it in $O(1)$ given a pointer to it. In a singly linked list the same node cannot reach its predecessor, so unless it is the first node (or the copy-next trick is used, which fails for the last node) deleting it requires an $O(n)$ walk to find the node whose \texttt{next} points at it. (Local book answer key 3.10.20 = D; all four options on GeeksforGeeks; GATEQA lists answer D.)
+
+\item[\textbf{Q6}] \textbf{(A) The list becomes \texttt{head} $\leftrightarrow$ 7 $\leftrightarrow$ 42; the two boundary links are rewired in $O(1)$ and the delete is $O(1)$ once \texttt{p} is known.} With \texttt{p} at the 19-node, \texttt{p->prev} is the 7-node and \texttt{p->next} is the 42-node, both in hand: set \texttt{7->next = p->next} (42) and \texttt{42->prev = p->prev} (7), then \texttt{free(p)}. (B) wrongly charges an $O(n)$ search the backward link eliminates; (C) denies the bypass ever happens; (D) updates only one link, leaving 42's \texttt{prev} dangling --- the classic half-invariant bug. Confirmed by trace (2026-10-03).
+
+\item[\textbf{Q7}] \textbf{(A).} Wire the new node forward and backward while \texttt{p->next} still names the old successor (14), repair 14's backward link, and only then overwrite \texttt{p->next} --- i.e.\ \texttt{newNode->next = p->next}, then \texttt{newNode->prev = p}, then \texttt{p->next->prev = newNode}, and finally \texttt{p->next = newNode}. (B) overwrites \texttt{p->next} first, so \texttt{newNode->next} becomes a self-loop and 14 is lost. (C) and (D) overwrite \texttt{p->next} too early, so the later \texttt{p->next->prev = newNode} sets \texttt{newNode->prev} to itself and leaves 14's \texttt{prev} pointing at 8 --- a broken two-link invariant. Confirmed by trace (2026-10-03).
+
+\item[\textbf{Q8}] \textbf{(B) It loops forever, cycling p, q, r, \dots} In a ring no node's \texttt{next} is \texttt{NULL}, so the test \texttt{ptr != NULL} is never false and the walk never terminates. The correct traversal tests \texttt{ptr != head} (preferably with a \texttt{do--while} so the head is visited once). (A) would require a \texttt{NULL} terminator that a circle does not have; (C) misreads the loop condition as checked once; (D) is not what the loop does. Confirmed by trace (2026-10-03).
+
+\item[\textbf{Q9}] \textbf{(A) $A + B = 10x^{3} + 5x^{2} + 9$, one merge pass, $O(n+m)$; the cancelled $x$ term is not stored.} Merge by descending exponent: exp~3 gives $6 + 4 = 10$; exp~2 exists only in $B$, so $5x^{2}$ copies through; exp~1 gives $2 + (-2) = 0$, and a zero-coefficient term is never emitted; exp~0 gives 9. Each source node is visited once, so the cost is linear. (B) stores a forbidden zero term; (C) confuses addition with the $O(n \cdot m)$ multiplication; (D) wrongly keeps $4x$. Confirmed by trace (2026-10-03).
+
+\item[\textbf{Q10}] \textbf{(A) \texttt{push} front-inserts 28 giving \texttt{head} $\to$ 28 $\to$ 7 $\to$ 14 $\to$ 21; \texttt{pop()} returns 28, leaving top 7; both $O(1)$ worst case.} The stack top is \texttt{head}, so \texttt{push} is Week 6's front-insert and \texttt{pop} is front-delete --- each rewrites \texttt{head} and one link, both constant time. (B) appends at the tail and mis-states which end pops; (C) mislabels the LIFO discipline (a stack returns the newest, 28, not the oldest); (D) is false: no walk is needed at \texttt{head}. Confirmed by trace (2026-10-03).
+\end{enumerate}
+
+\end{document}
