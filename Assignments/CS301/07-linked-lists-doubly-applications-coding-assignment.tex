@@ -1,0 +1,121 @@
+% =============================================================================
+% Assignments/CS301/07-linked-lists-doubly-applications-coding-assignment.tex
+% Coding Assignment 7: Looking Both Ways (P7, doubly-linked-list operations,
+% plus the week's sparse-polynomial addition)
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/07-linked-lists-doubly-applications-coding/:
+%   reference_solution.c  (NEVER published)
+%   test_hidden.c         (NEVER published)
+%   autograder.sh         (NEVER published)
+%   dlist.h, starter_dlist.c, test_visible.c
+%
+% Fresh instances throughout: no worked example re-asks a deck/notes,
+% written-assignment, or earlier-lab instance verbatim (deck/notes: build
+% 10-20-30; insert 20 after 10; delete 15 from 5-15-25; delete 5/25 from
+% 5-15-25; poly (5x^3+4x+2)+(3x^2+4x+1); poly (4x^4+2x^2+7)+(3x^3+2x^2+5);
+% poly (2x^2+1)+(-2x^2+5x)=5x+1; linked-stack 30-20-10; linked-queue
+% 10-20-30). Visible tests use 7/14/21/28/42, 28/35 and
+% (5x^2+3)+(-5x^2+4x)=4x+3 — all new.
+%
+% Compile with: cd Assignments/CS301 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 07-linked-lists-doubly-applications-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{7.\arabic{section}}
+
+\title{Coding Assignment 7: Looking Both Ways}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\section{Why this problem}
+
+Week 6 built a singly linked list whose every delete paid a walk: to unlink a node you had to find the node whose \texttt{next} pointed at it, because the list could only look forward. Week 7 adds one pointer per node --- the predecessor link \texttt{prev} --- and that single change turns ``delete a node you already hold a pointer to'' from $O(n)$ into $O(1)$. This assignment (practical P7) is that doubly linked list, together with the week's headline application: sparse polynomials, where only the nonzero terms are stored and two polynomials are added by a single linear merge. You implement both on heap nodes, and every insert or delete must leave both links of the \emph{two-link invariant} in agreement: for every interior node \texttt{p}, \texttt{p->next->prev == p} and \texttt{p->prev->next == p}.
+
+\section{Your task}
+
+Implement the doubly linked list and sparse polynomial ADTs in C. The contract is given to you in \texttt{dlist.h} --- \emph{do not modify it}. Copy \texttt{starter\_dlist.c} to \texttt{dlist.c} and fill in all fifteen functions.
+
+\textbf{Part A --- the doubly linked list.} The node is data plus a forward and a backward link:
+\begin{verbatim}
+typedef struct dnode { int data; struct dnode *prev; struct dnode *next; } DNode;
+
+DNode *dlist_insert_front(DNode **head, int x);
+DNode *dlist_insert_back(DNode **head, int x);
+DNode *dlist_insert_after(DNode *p, int x);
+int    dlist_delete_front(DNode **head, int *out);   /* 0 ok / -1 empty   */
+int    dlist_delete_back(DNode **head, int *out);    /* 0 ok / -1 empty   */
+int    dlist_delete_node(DNode **head, DNode *target);/* 0 ok / -1         */
+DNode *dlist_search(DNode *head, int x);             /* NULL when absent  */
+int    dlist_print_forward(const DNode *head, int *out, int out_cap);
+int    dlist_print_backward(const DNode *head, int *out, int out_cap);
+void   dlist_reverse(DNode **head);
+void   dlist_free(DNode **head);
+\end{verbatim}
+
+Insertion is the deck's two-write pointer surgery, done for \emph{both} links. Inserting \texttt{x} after a known node \texttt{p} wires the new node between \texttt{p} and \texttt{p->next}, repairs the old successor's \texttt{prev} \emph{before} overwriting \texttt{p->next}, and is $O(1)$ worst case because the pointer \texttt{p} is already in hand; \texttt{dlist\_insert\_front} is the special case at \texttt{head}. Because this ADT caches no tail handle, \texttt{dlist\_insert\_back} and \texttt{dlist\_delete\_back} must walk to the last node, so each is $O(n)$ worst case --- state that honestly in your docstrings. \textbf{Deletion is the whole point of the backward link}: given only a pointer to a node, \texttt{dlist\_delete\_node} rewires \texttt{target->prev->next} and \texttt{target->next->prev} (moving \texttt{head} when the target is first), then frees the node exactly once, in $O(1)$ worst case. \texttt{print\_forward} and \texttt{print\_backward} copy the sequence into the caller's buffer (the ``print/display'' operation made testable, exactly as Week 5's \texttt{cqueue\_display} and Week 6's \texttt{slist\_display}); \texttt{print\_backward} walks to the tail and then back through \texttt{prev}. \texttt{reverse} flips \emph{both} links of every node.
+
+\textbf{Part B --- sparse polynomials.} A polynomial $\sum_i c_i x^{e_i}$ is stored as a chain of \texttt{pnode} terms in strictly descending exponent order; a zero coefficient is never stored (the sparsity payoff). The polynomial chain is \emph{singly} linked with a cached \texttt{tail} --- document why: the merge only ever moves forward, so a \texttt{prev} link would buy nothing here, while the cached tail makes every append $O(1)$.
+\begin{verbatim}
+struct pnode { int coeff; int exp; struct pnode *next; };
+struct poly  { struct pnode *head; struct pnode *tail; };
+
+void poly_init(struct poly *p);
+int  poly_append_term(struct poly *p, int coeff, int exp);  /* 0 ok / -1 fail */
+void poly_free(struct poly *p);
+int  poly_add(const struct poly *a, const struct poly *b, struct poly *out);
+\end{verbatim}
+
+\texttt{poly\_add} is a single linear merge of the two descending-exponent chains: copy the larger exponent through, add the coefficients on an equal exponent, suppress a term whose coefficient sums to zero, and when one chain is exhausted append the rest of the other. Build the output in descending order with $O(1)$ tail appends, so the whole addition is $O(n+m)$ worst case for $n$ and $m$ terms. An all-cancelling sum is not an error --- it leaves \texttt{out} as the zero polynomial (\texttt{head == NULL}). \texttt{out} must be the zero polynomial on entry and must not alias \texttt{a} or \texttt{b}; on any failure free partial work and leave \texttt{out} empty.
+
+\section{Constraints}
+
+\begin{itemize}
+  \item Representation must be the heap-chained \texttt{DNode} (Part A) and \texttt{pnode} (Part B) nodes of \texttt{dlist.h} --- no arrays, no global/static mutable state.
+  \item Every allocation is checked (\texttt{malloc} for \texttt{NULL}); every node is freed exactly once; no use-after-free, no writes past allocated bounds. Error paths leave the list or polynomial unchanged.
+  \item The two-link invariant must hold after every list operation; the hidden suite re-checks it after each one.
+  \item Correctness is graded against the contract; your code must compile with \texttt{gcc -std=c11 -Wall -Wextra -Werror} without errors or warnings.
+  \item Complexity: \texttt{insert\_front}, \texttt{insert\_after}, \texttt{delete\_front}, and \texttt{delete\_node} are $O(1)$ worst case; \texttt{insert\_back} and \texttt{delete\_back} are $O(n)$ worst case (no tail handle); \texttt{search} is $O(n)$ worst case and $O(1)$ best case; both prints are $\Theta(n)$; \texttt{reverse} is $O(n)$ worst case in $O(1)$ auxiliary space; \texttt{poly\_append\_term} is $O(1)$ worst case; \texttt{poly\_add} is $O(n+m)$ worst case.
+\end{itemize}
+
+\section{Worked examples (these are the visible tests)}
+
+\textbf{Example 1 --- build the chain and read it both ways.} End-insert $14$, then $28$, then $42$. Front-insert $7$ (chain $7 \leftrightarrow 14 \leftrightarrow 28 \leftrightarrow 42$). Insert $21$ after the node holding $14$ (chain $7 \leftrightarrow 14 \leftrightarrow 21 \leftrightarrow 28 \leftrightarrow 42$). \texttt{print\_forward} writes $7, 14, 21, 28, 42$; \texttt{print\_backward} writes $42, 28, 21, 14, 7$. Freeing sets \texttt{head} to \texttt{NULL}.
+
+\textbf{Example 2 --- delete from both ends and by pointer.} From $14 \leftrightarrow 28 \leftrightarrow 42$: \texttt{delete\_front} returns $14$ (chain $28 \leftrightarrow 42$), then \texttt{delete\_back} returns $42$ (chain $28$). \texttt{search(28)} finds the node; \texttt{search(99)} reports absent (\texttt{NULL}). Deleting that node by pointer empties the list; \texttt{delete\_front} on the empty list reports failure.
+
+\textbf{Example 3 --- reverse, and a polynomial addition with cancellation.} Reversing $28 \leftrightarrow 35$ gives $35 \leftrightarrow 28$; \texttt{print\_backward} then reads $28, 35$. Reversing again restores $28 \leftrightarrow 35$. Adding $A = 5x^{2} + 3$ and $B = -5x^{2} + 4x$ gives $4x + 3$: the equal-exponent $x^{2}$ terms cancel to coefficient $0$ and no zero term is stored, while the unshared $4x$ and the constants copy through.
+
+\section{What to submit}
+
+\begin{enumerate}
+  \item \texttt{dlist.c} --- your completed implementation (edit \texttt{starter\_dlist.c}).
+  \item \texttt{dlist.h} --- unchanged, but include it so the submission compiles standalone.
+\end{enumerate}
+
+\section{Getting started}
+
+\begin{enumerate}
+  \item Copy \texttt{starter\_dlist.c} to \texttt{dlist.c} and fill in the fifteen function bodies.
+  \item Sanity-check locally:
+\begin{verbatim}
+gcc -std=c11 -Wall -Wextra -Werror -o test_visible test_visible.c dlist.c
+./test_visible
+\end{verbatim}
+    All three worked examples should pass.
+  \sloppy
+  \item Submit \texttt{dlist.c} and \texttt{dlist.h}. The autograder compiles your \texttt{dlist.c} against a \emph{hidden} test suite and reports pass/fail. The hidden suite covers: \texttt{NULL} head-pointer safety for every operation; front/back/after insert boundaries with neighbour-link repair and returned-node identity; delete of head/middle/tail by pointer using saved node pointers; \texttt{delete\_node(NULL)} and empty-list refusals with \texttt{*out} untouched; \texttt{out}-is-\texttt{NULL} calls; \texttt{print\_forward}/\texttt{print\_backward} on empty/single/many with a backward print that is the reverse of the forward print; buffer-cap and \texttt{NULL}-buffer refusals with a canary check that nothing is written, plus exact-capacity success and head purity; search identity at head and tail; reverse of empty/single/two/four chains with double-reverse identity; the two-link invariant re-verified after every operation; \texttt{INT\_MIN}/\texttt{INT\_MAX}/\texttt{-1}/\texttt{0} round-trips; polynomial helper boundaries (zero-coefficient skip, descending-order enforcement, double-free safety); \texttt{poly\_add} argument validation, empty operands, full and partial cancellation, all-zero results, different lengths, and \texttt{INT} extremes; and two seeded random campaigns checked operation-by-operation against independent oracles --- the list against an int-array model, the polynomial against an exponent-sum model.
+\end{enumerate}
+
+\end{document}

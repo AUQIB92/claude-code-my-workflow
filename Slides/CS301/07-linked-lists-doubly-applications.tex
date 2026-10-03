@@ -1,0 +1,819 @@
+% CS301 Week 7 -- Doubly linked lists (node anatomy, insert/delete/reverse,
+% the two-link invariant), circular singly/doubly lists (NULL-free traversal),
+% list-backed stack and queue (ADT reuse), circular queue over a circular
+% list, and polynomial manipulation (representation, addition by descending
+% exponent, multiplication sketch), closing with the Unit-II review for
+% Class Test 2.
+% Difficulty: intro (course-wide default per knowledge-base-CS301.md).
+% Page-grounded in Karumanchi2017 Ch.3 (Linked Lists, pp.74-162 PDF:
+% doubly/circular lists), Ch.4 (Stacks, pp.163-204 PDF: linked
+% implementation), Ch.5 (Queues, pp.205-223 PDF: linked implementation);
+% Sedgewick2011 p.142 (linked-list definition), p.120 (stack/queue as
+% collection ADTs). Wirth2004 SS4.3 (Linear Lists, p.115) for the two-link
+% invariant. Polynomial manipulation is standard treatment: Horowitz & Sahni
+% Ch.4 and Aho-Hopcroft-Ullman Ch.2 cited at chapter level only (not
+% page-indexed) -- no page numbers are asserted for it.
+% Handoff: Week 6 closed on the singly linked list -- head / p->next, NULL
+% terminator, front-insert O(1), delete/search O(n), three-pointer reverse --
+% and promised "what does a backward link buy?" and "Week 7 = doubly/circular
+% lists, list-based stack/queue, polynomials". This deck pays that off. It
+% does NOT re-teach singly-list operations -- it builds on them. Continues the
+% expression-processor thread: the calculator's symbol table needs O(1)
+% delete-by-pointer at scope exit (the backward link), its undo stack and job
+% queue move onto chains, and its evaluator now stores sparse polynomials.
+% Sets up Week 8 (searching + elementary sorting) and Week 10 (same symbol
+% table as a hash table).
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS301}
+
+\title{Looking Both Ways}
+\subtitle{Week 7 --- Doubly \& Circular Lists, List-Backed Stack and Queue, and Polynomials}
+\author[Dr. Auqib Hamid Lone]{\textbf{Dr. Auqib Hamid Lone}}
+\institute[GCET Ganderbal]{PCC CS-301: Data Structures\\GCET, Ganderbal}
+\date[Week 7]{\small Week 7}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 --- MOTIVATION + HANDOFF
+% =============================================================================
+\section{Motivation and the Handoff}
+
+\begin{frame}{Today's Four Questions}
+  \begin{enumerate}
+    \item What does a backward link (\texttt{p->prev}) buy that one link
+      cannot?
+    \item When a chain has no \texttt{NULL}, where does a walk stop?
+    \item Can the \emph{same} stack and queue contracts run on chains instead
+      of arrays?
+    \item Why does $5x^{100} + 3x^{2} + 1$ want three nodes, not 101 array
+      slots?
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{exampleblock}{Plan}
+    Price the backward link. Meet the ring. Re-implement the stack and queue
+    on chains. Then spend linked lists on the syllabus's polynomial.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Handoff: What Week 6 Left Open}
+  \begin{itemize}
+    \item Week 6 built the singly linked list: a node is data plus one link,
+      \texttt{head} is the sole entry, \texttt{NULL} terminates the chain.
+      Front-insert is $O(1)$ worst case; end-insert, delete, and search are
+      $O(n)$ worst case; the three-pointer reverse runs in $O(n)$ time and
+      $O(1)$ space.
+    \item It closed on one promise: ``what does a backward link buy?'' --- and
+      named Week 7 as doubly/circular lists, list-based stack and queue, and
+      polynomials.
+    \item The deficiency it left: \emph{every} delete paid the walk, because
+      to unlink a node we first had to find its predecessor.
+    \item New symbols today: \texttt{p->prev} (predecessor link),
+      \texttt{tail} (a queue's last-node handle), and circular-list
+      conventions (\texttt{last->next == head}; no \texttt{NULL}).
+  \end{itemize}
+  \begin{exampleblock}{This week's job}
+    Add a second link so a node knows both neighbours, close the chain into a
+    ring when it has no end, run the stack and queue on nodes instead of
+    slots, and store polynomials that are mostly zeros.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Calculator Needs a Backward Link}
+  \begin{itemize}
+    \item The expression processor's symbol table is a linked list of
+      identifiers (Week 6). When a block scope exits, the compiler must delete
+      every identifier declared in it --- and it already holds a pointer to
+      each one, not to its predecessor.
+    \item Singly, ``delete by pointer'' still costs a walk to find the node
+      whose \texttt{next} points at the target: $O(n)$ worst case. We are
+      re-finding information we already had.
+    \item The same need recurs everywhere: text-editor undo/redo, browser
+      back/forward, OS free-lists of memory blocks, LRU caches.
+  \end{itemize}
+  \begin{exampleblock}{The pattern (design principle)}
+    Every structure answers a deficiency the previous one just exhibited.
+    Week 6's singly list had no backward walk --- the doubly linked list is the
+    fix.
+  \end{exampleblock}
+\end{frame}
+
+\transitionslide{One link looked forward. This week's first question: what does a second link add?}
+
+% =============================================================================
+% ACT 1 --- DOUBLY LINKED LISTS
+% =============================================================================
+\section{Doubly Linked Lists}
+
+\sectiondivider{Section 1}{Doubly Linked Lists}
+
+\begin{frame}{The Node That Looks Both Ways}
+  \begin{itemize}
+    \item A user clicks \emph{delete} on a bookmark; the program holds a
+      pointer straight to that node. Singly, the only way to unlink it is to
+      find the node whose \texttt{next} points at it --- a full walk,
+      $O(n)$ worst case. The work is avoidable: at deletion we can already
+      reach the node, so we should reach its neighbours too.
+    \item The fix costs exactly one extra pointer per node: store the
+      predecessor as well as the successor.
+  \end{itemize}
+  \begin{block}{Definition (Karumanchi Ch.~3, pp.74--162 PDF; Wirth
+    Sec.~4.3, p.~115)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy,Wirth2004_algorithms_data_structures}}
+    A \key{doubly linked list} (DLL) is a chain of nodes, each holding data
+    plus \emph{two} links: \texttt{next} to the successor and \texttt{prev} to
+    the predecessor. \texttt{head} points to the first node; the first node's
+    \texttt{prev} is \texttt{NULL} and the last node's \texttt{next} is
+    \texttt{NULL}.
+  \end{block}
+\begin{center}
+{\small \texttt{struct node \{ int data; struct node *prev; struct node
+  *next; \};}}
+\end{center}
+  \begin{itemize}
+    \item Worked example: building \texttt{[10] $\leftrightarrow$ [20]
+      $\leftrightarrow$ [30]}, each \texttt{<->} is two links, drawn next.
+      The bill: one extra pointer per node, and every insert/delete must
+      repair \emph{two} links instead of one.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A Doubly-Linked Node, Drawn}
+  \begin{center}
+    % Diagram: doubly-linked node anatomy -- a prev|data|next node between
+    % its predecessor and successor. Coordinates: L at (-3.4,0) predecessor;
+    % pv at (-1.4,0); da at (0,0) the data p points to; nx at (1.4,0);
+    % R at (3.4,0) successor.
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.9cm,
+        align=center] (L) at (-3.4, 0) {prev\\node};
+      \node[draw, fill=light-bg, minimum width=1.15cm, minimum height=0.9cm,
+        align=center] (pv) at (-1.4, 0) {\texttt{prev}};
+      \node[draw, fill=primary-gold!25, minimum width=1.15cm,
+        minimum height=0.9cm, align=center] (da) at (0, 0) {42};
+      \node[draw, fill=light-bg, minimum width=1.15cm, minimum height=0.9cm,
+        align=center] (nx) at (1.4, 0) {\texttt{next}};
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.9cm,
+        align=center] (R) at (3.4, 0) {next\\node};
+      \draw[<-, thick, color=jet] (L.east) -- (pv.west);
+      \draw[->, thick, color=jet] (nx.east) -- (R.west);
+      \node[text=neutral] at (-3.4, -1.0) {predecessor};
+      \node[text=neutral] at (3.4, -1.0) {successor};
+      \node[text=primary-blue] at (0, -1.0) {\texttt{p} points here};
+      \draw[->, thick, color=primary-blue] (0, -0.75) -- (da.south);
+      \node[text=neutral] at (-2.4, 0.75) {\texttt{p->prev}};
+      \node[text=neutral] at (2.4, 0.75) {\texttt{p->next}};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item One node now offers \emph{two} constant-time moves: forward through
+      \texttt{p->next}, backward through \texttt{p->prev}. That is all the
+      second link does --- and all the delete fix needs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Insert at the Front, End, and After a Node}
+  \begin{block}{Pointer surgery: insert \texttt{x} after a given node
+    \texttt{p} (Karumanchi Ch.~3, pp.74--162 PDF)}
+\begin{semiverbatim}
+newNode = malloc(sizeof(struct node)); newNode->data = x
+newNode->next = p->next                 // 1. wire forward
+newNode->prev = p                       // 2. wire backward
+if (p->next != NULL) p->next->prev = newNode  // 3. fix old successor
+p->next = newNode                       // 4. splice in
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item Front-insert and end-insert are special cases: front-insert sets
+      \texttt{newNode->prev = NULL} and moves \texttt{head}; end-insert is
+      ``after the old last node.''
+    \item \key{The two-link invariant}: after any operation, every interior
+      node satisfies \texttt{p->next->prev == p} and
+      \texttt{p->prev->next == p}. Steps 3 and 4 are what keep it.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Pointer Surgery: Insert After \texttt{p}, Drawn}
+  \begin{center}
+    % Diagram: final state after inserting new node X (20) between A (10)
+    % and B (30) in a doubly linked list. Coordinates: hd label (-4.2,0);
+    % A (-2.4,0); X (0,0); B (2.4,0); NL (4.4,0).
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[text=primary-blue] (hd) at (-4.3, 0) {\texttt{head}};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.8cm,
+        align=center] (A) at (-2.4, 0) {10};
+      \node[draw, fill=primary-gold!25, minimum width=0.9cm,
+        minimum height=0.8cm, align=center] (X) at (0, 0) {20};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.8cm,
+        align=center] (B) at (2.4, 0) {30};
+      \node[draw, fill=neutral!20, minimum width=0.95cm,
+        minimum height=0.8cm, align=center] (NL) at (4.5, 0) {\texttt{NULL}};
+      \draw[->, thick, color=primary-blue] (hd.east) -- (A.west);
+      \draw[<->, thick, color=jet] (A.east) -- (X.west);
+      \draw[<->, thick, color=jet] (X.east) -- (B.west);
+      \draw[->, thick, color=jet] (B.east) -- (NL.west);
+      \node[text=primary-gold] at (0, 0.8) {new node: 4 pointer writes};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item \texttt{X->next = B}, \texttt{X->prev = A}, then
+      \texttt{B->prev = X} and \texttt{A->next = X}. The old
+      \texttt{A $\leftrightarrow$ B} link is overwritten --- wire the new node
+      before repointing its neighbours.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Delete by Pointer: The $O(1)$ Bypass}
+  \begin{block}{Delete the node \texttt{p} points at (Karumanchi Ch.~3,
+    pp.74--162 PDF)}
+\begin{semiverbatim}
+if (p->prev != NULL) p->prev->next = p->next
+else head = p->next                 // p was the first node
+if (p->next != NULL) p->next->prev = p->prev
+free(p)                             // reclaim exactly once
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item \key{Socratic pause}: with only \texttt{p} in hand, which two nodes
+      must learn the new link --- and how does each find its neighbour without
+      a walk?
+    \item The answer is the whole payoff: they are \texttt{p->prev} and
+      \texttt{p->next}, both reachable in $O(1)$. So delete is $O(1)$ worst
+      case once \texttt{p} is known --- against Week 6's $O(n)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Delete the Middle, Drawn}
+  \begin{center}
+    % Diagram: deleting the middle node D (20) of a DLL -- bypass via prev
+    % and next. Coordinates: A (0,0); D (2.4,0) doomed; B (4.8,0).
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.8cm,
+        align=center] (A) at (0, 0) {10};
+      \node[draw, fill=negative!15, minimum width=0.9cm, minimum height=0.8cm,
+        align=center] (D) at (2.4, 0) {20};
+      \node[draw, fill=white, minimum width=0.9cm, minimum height=0.8cm,
+        align=center] (B) at (4.8, 0) {30};
+      \draw[<->, thick, color=negative, dashed] (A.east) -- (D.west);
+      \draw[<->, thick, color=negative, dashed] (D.east) -- (B.west);
+      \draw[<->, thick, color=positive] (A.south)
+        .. controls (1.2, -1.15) and (3.6, -1.15) .. (B.south);
+      \node[text=negative, above=0.2cm of D] {doomed: \texttt{free(p)}};
+      \node[text=positive] at (2.4, -1.4)
+        {\texttt{p->prev->next = p->next; p->next->prev = p->prev}};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item The two dashed links die; one bypass (green) replaces them: 10's
+      \texttt{next} jumps to 30 and 30's \texttt{prev} jumps to 10. Then
+      \texttt{free(p)}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Two-Link Invariant, and the Full Price List}
+  \begin{block}{Invariant (Wirth Sec.~4.3, p.~115; standard treatment)}
+    For every node \texttt{p} that is not an endpoint: \texttt{p->next->prev
+    == p} and \texttt{p->prev->next == p}. Every operation must restore this
+    before it returns.
+  \end{block}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{operation} & \textbf{bound} & \textbf{note} \\
+    \midrule
+    insert at front & $O(1)$ worst case & 2 writes; order matters \\
+    insert after given \texttt{p} & $O(1)$ worst case & given pointer skips the walk \\
+    delete given \texttt{p} & $O(1)$ worst case & \key{the backward link's payoff} \\
+    insert/delete by value & $O(n)$ worst case & the search dominates \\
+    search & $O(n)$ worst / $O(1)$ best & unordered; \texttt{prev} does not help \\
+    display forward / backward & $\Theta(n)$ & must visit all $n$ \\
+    reverse & $O(n)$ worst, $O(1)$ space & one flip + one \texttt{prev} fix per node \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \muted{Search is unchanged: $O(n)$ worst case, $O(1)$ best case --- the
+    backward link does not help an unordered search. \texttt{displayBwd}
+    needs a \texttt{tail} handle; reverse is Week 6's flip plus one
+    \texttt{prev} fix per node.}
+\end{frame}
+
+\transitionslide{One link each --- now both ways. Next: chains with no end at all.}
+
+% =============================================================================
+% ACT 2 --- CIRCULAR LINKED LISTS
+% =============================================================================
+\section{Circular Linked Lists}
+
+\sectiondivider{Section 2}{Circular Linked Lists}
+
+\begin{frame}{A Ring With No End}
+  \begin{itemize}
+    \item A round-robin scheduler hands the CPU to each process in turn, then
+      returns to the first. A repeating playlist does the same; so does a
+      token-ring network. The last element is followed by the first --- there
+      is no natural end.
+    \item A chain that models this should make the last node point back to the
+      first, instead of to \texttt{NULL}.
+  \end{itemize}
+  \begin{block}{Definition (Karumanchi Ch.~3, pp.74--162 PDF)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy}}
+    A \key{circular linked list} is a chain whose last node's \texttt{next}
+    points back to \texttt{head} instead of \texttt{NULL}. In a
+    \key{singly circular} list each node has one link; in a
+    \key{doubly circular} list \texttt{prev} and \texttt{next} both close the
+    ring (\texttt{head->prev} is the last node). An empty circular list has
+    \texttt{head == NULL}; a one-node circular list points to itself.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Singly and Doubly Circular, Drawn}
+  \begin{center}
+    % Diagram: two rings -- singly circular (left, one-way arcs) and doubly
+    % circular (right, two-way arcs). Coordinates: singly nodes sA/sB/sC at
+    % angles 90/210/330 on radius 1.25 around (-3,0); doubly dA/dB/dC around
+    % (3,0). Arcs drawn at radius 1.25/1.32 between node gaps.
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \begin{scope}[shift={(-3,0)}]
+        \node[draw, circle, fill=white, minimum size=0.65cm, inner sep=0]
+          (sA) at (90:1.25) {a};
+        \node[draw, circle, fill=white, minimum size=0.65cm, inner sep=0]
+          (sB) at (210:1.25) {b};
+        \node[draw, circle, fill=white, minimum size=0.65cm, inner sep=0]
+          (sC) at (330:1.25) {c};
+        \draw[->, thick, color=jet] (108:1.25) arc (108:192:1.25);
+        \draw[->, thick, color=jet] (228:1.25) arc (228:312:1.25);
+        \draw[->, thick, color=jet] (348:1.25) arc (348:432:1.25);
+        \node[text=primary-blue] at (90:1.95) {\texttt{head}};
+        \draw[->, thick, color=primary-blue] (90:1.78) -- (sA.north);
+        \node[text=neutral] at (0, -2.15) {singly circular};
+        \node[text=negative] at (0, -2.5)
+          {last$\,$next $=$ head; no \texttt{NULL}};
+      \end{scope}
+      \begin{scope}[shift={(3,0)}]
+        \node[draw, circle, fill=white, minimum size=0.65cm, inner sep=0]
+          (dA) at (90:1.25) {a};
+        \node[draw, circle, fill=white, minimum size=0.65cm, inner sep=0]
+          (dB) at (210:1.25) {b};
+        \node[draw, circle, fill=white, minimum size=0.65cm, inner sep=0]
+          (dC) at (330:1.25) {c};
+        \draw[<->, thick, color=jet] (108:1.32) arc (108:192:1.32);
+        \draw[<->, thick, color=jet] (228:1.32) arc (228:312:1.32);
+        \draw[<->, thick, color=jet] (348:1.32) arc (348:432:1.32);
+        \node[text=primary-blue] at (90:1.95) {\texttt{head}};
+        \draw[->, thick, color=primary-blue] (90:1.78) -- (dA.north);
+        \node[text=neutral] at (0, -2.15) {doubly circular};
+        \node[text=positive] at (0, -2.5)
+          {\texttt{prev} and \texttt{next} both close the ring};
+      \end{scope}
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Traversal Without \texttt{NULL} --- and Where Rings Serve}
+  \begin{block}{The termination rule (Karumanchi Ch.~3, pp.74--162 PDF)}
+\begin{semiverbatim}
+p = head
+if (p != NULL) do { visit p; p = p->next } while (p != head)
+// stop when the walk RETURNS TO HEAD, not when it hits NULL
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item A \texttt{while (p != NULL)} loop on a circular list never meets
+      \texttt{NULL}: it loops forever or crashes. The stop condition must name
+      \texttt{head}. For the doubly circular ring, the same rule with
+      \texttt{p->prev} walks the other way.
+    \item Every operation that ends at the ``last'' node must handle
+      wraparound; insert and delete must keep the ring closed
+      (\texttt{head->prev} and \texttt{last->next}).
+    \item Rings serve round-robin schedulers, repeating playlists, token-ring
+      networks --- and the circular queue's modular index, which is the same
+      idea seen as a linked ring.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Check Your Prediction}
+  \begin{block}{A singly circular list holds 4 nodes: \texttt{head} $\to$ a
+    $\to$ b $\to$ c $\to$ d $\to$ a. You run
+    \texttt{while (p != NULL) \{ p = p->next; \}}. What happens?}
+    A: visits a,b,c,d then stops \quad B: loops forever \quad
+    C: stops after one node
+  \end{block}
+  \begin{enumerate}
+    \item A --- only if some \texttt{next} were \texttt{NULL}; in a ring none
+      is.
+    \item B --- no node ever holds \texttt{NULL}, so the test never fires; the
+      walk cycles a,b,c,d, a,b,c,d, \dots
+    \item C --- the loop condition is checked every hop, not once.
+  \end{enumerate}
+  \muted{Correct: B. The fix is to test \texttt{p != head} (or to visit with a
+    do--while so the first node is not skipped).}
+\end{frame}
+
+\transitionslide{The chain has come full circle. Now reuse the contracts we already own.}
+
+% =============================================================================
+% ACT 3 --- STACK AND QUEUE REBORN ON CHAINS
+% =============================================================================
+\section{Stack and Queue, Reborn on Chains}
+
+\sectiondivider{Section 3}{Stack and Queue, Reborn on Chains}
+
+\begin{frame}[fragile]{List-Based Stack: Push and Pop at the Head}
+  \muted{One ADT, implemented twice: the same Week 3 stack contract, now on chains.}
+  \begin{block}{Stack over a linked list (Karumanchi Ch.~4, pp.163--204 PDF;
+    Sedgewick Sec.~1.3, p.~120)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy,Sedgewick2011_algorithms}}
+\begin{semiverbatim}
+push(x): newNode = malloc(...); newNode->data = x
+         newNode->next = head; head = newNode      // O(1) worst
+pop():   if (head == NULL) error                  // stack underflow
+         temp = head; head = head->next
+         x = temp->data; free(temp); return x      // O(1) worst
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item The top of the stack is \texttt{head}. This is exactly Week 6's
+      front-insert plus front-delete --- both rewrite one link, so both are
+      $O(1)$ worst case.
+    \item The array version was also $O(1)$; the list's win is unbounded size
+      and no amortized reallocation. Cost: $O(n)$ space for $n$ items, one
+      node each.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A List-Based Stack, Drawn}
+  \begin{center}
+    % Diagram: list-based stack, top = head. Coordinates: hd label (-4.7,0.6);
+    % node 30 (-3.3,0.6); 20 (-1.3,0.6); 10 (0.7,0.6); NULL (2.8,0.6).
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[text=primary-blue] (hd) at (-4.8, 0.6) {\texttt{head}};
+      \node[draw, fill=primary-gold!25, minimum width=0.95cm,
+        minimum height=0.75cm, align=center] (t) at (-3.4, 0.6) {30};
+      \node[draw, fill=white, minimum width=0.95cm, minimum height=0.75cm,
+        align=center] (m) at (-1.4, 0.6) {20};
+      \node[draw, fill=white, minimum width=0.95cm, minimum height=0.75cm,
+        align=center] (b) at (0.6, 0.6) {10};
+      \node[draw, fill=neutral!20, minimum width=1.0cm,
+        minimum height=0.75cm, align=center] (nl) at (2.8, 0.6)
+        {\texttt{NULL}};
+      \draw[->, thick, color=primary-blue] (hd.east) -- (t.west);
+      \draw[->, thick, color=jet] (t.east) -- (m.west);
+      \draw[->, thick, color=jet] (m.east) -- (b.west);
+      \draw[->, thick, color=jet] (b.east) -- (nl.west);
+      \node[text=primary-gold] at (-3.4, 1.4) {\texttt{top} = \texttt{head}};
+      \node[text=positive] at (-1.4, -0.5)
+        {\texttt{push}/\texttt{pop} touch only \texttt{head}: $O(1)$ worst
+        case};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item After \texttt{push(40)}, \texttt{head} points at the new 40-node and
+      its \texttt{next} is the old top (30). \texttt{pop} reverses exactly
+      that.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{List-Based Queue: Keep a Tail Pointer}
+  \begin{block}{Queue over a linked list (Karumanchi Ch.~5, pp.205--223 PDF;
+    Sedgewick Sec.~1.3, p.~120)
+    \cite{Karumanchi2017_data_structures_algorithms_made_easy,Sedgewick2011_algorithms}}
+\begin{semiverbatim}
+enqueue(x):
+  newNode = malloc(...); newNode->data = x
+  newNode->next = NULL
+  if (head == NULL) head = tail = newNode
+  else tail->next = newNode; tail = newNode    // O(1)
+dequeue(): if (head == NULL) error      // underflow
+           temp = head; head = head->next
+           if (head == NULL) tail = NULL
+           x = temp->data; free(temp); return x
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item \texttt{tail} makes end-insert $O(1)$; dequeue is at \texttt{head}
+      --- both ends $O(1)$ worst case, unlike a fixed array.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A List-Based Queue, Drawn}
+  \begin{center}
+    % Diagram: list-based queue, dequeue at head, enqueue at tail.
+    % Coordinates: hd label (-4.8,0); n1 10 (-3.4,0); n2 20 (-1.3,0);
+    % n3 30 (0.8,0) filled gold; NULL (2.8,0); tail label above n3.
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[text=primary-blue] (hd) at (-4.9, 0) {\texttt{head}};
+      \node[draw, fill=white, minimum width=0.95cm, minimum height=0.75cm,
+        align=center] (n1) at (-3.5, 0) {10};
+      \node[draw, fill=white, minimum width=0.95cm, minimum height=0.75cm,
+        align=center] (n2) at (-1.4, 0) {20};
+      \node[draw, fill=primary-gold!25, minimum width=0.95cm,
+        minimum height=0.75cm, align=center] (n3) at (0.7, 0) {30};
+      \node[draw, fill=neutral!20, minimum width=1.0cm,
+        minimum height=0.75cm, align=center] (nl) at (2.8, 0) {\texttt{NULL}};
+      \draw[->, thick, color=primary-blue] (hd.east) -- (n1.west);
+      \draw[->, thick, color=jet] (n1.east) -- (n2.west);
+      \draw[->, thick, color=jet] (n2.east) -- (n3.west);
+      \draw[->, thick, color=jet] (n3.east) -- (nl.west);
+      \node[text=primary-gold] (tl) at (0.7, 1.0) {\texttt{tail}};
+      \draw[->, thick, color=primary-gold] (tl.south) -- (n3.north);
+      \node[text=positive] at (-3.5, -0.65)
+        {\texttt{dequeue} from \texttt{head}};
+      \node[text=positive] at (0.7, -0.65)
+        {\texttt{enqueue} after \texttt{tail}};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \begin{itemize}
+    \item \texttt{head} is the oldest item (next to leave); \texttt{tail} is
+      the newest. \texttt{enqueue} links after \texttt{tail} and advances it;
+      \texttt{dequeue} unlinks \texttt{head}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Array vs.\ List for Stack and Queue: The Honest Bill}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{operation} & \textbf{array} & \textbf{linked list} \\
+    \midrule
+    stack \texttt{push}/\texttt{pop} & $O(1)$ worst, fixed capacity$^{*}$ & $O(1)$ worst, unbounded \\
+    queue \texttt{enqueue}/\texttt{dequeue} & $O(1)$ worst (circular), fixed & $O(1)$ worst (\texttt{head}+\texttt{tail}), unbounded \\
+    memory & one block of $n$ slots & one node per item, +1 pointer each \\
+    locality & contiguous, cache-friendly & scattered, pointer-chasing \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item $^{*}$Stack reallocation is amortized $O(1)$ when it grows.
+    \item No universal winner: choose the array when the size is known or
+      bounded and locality matters; the list when the size is unpredictable
+      and growth is frequent. The contract is identical --- only the cost
+      profile moves.
+  \end{itemize}
+  \muted{Circular-queue variant: keeping \texttt{tail->next == head} closes
+    the ring, so one \texttt{tail} pointer gives round-robin
+    \texttt{enqueue}/\texttt{dequeue} at $O(1)$ worst case --- no
+    \texttt{count}, no sacrificed slot, no \texttt{mod} (Week 5's linked
+    cousin).}
+\end{frame}
+
+\transitionslide{Stacks and queues reborn. One application left --- and it is the syllabus's polynomial.}
+
+% =============================================================================
+% ACT 4 --- POLYNOMIALS
+% =============================================================================
+\section{Polynomial Manipulation}
+
+\sectiondivider{Section 4}{Polynomial Manipulation}
+
+\begin{frame}{Why Polynomials Want a List}
+  \begin{itemize}
+    \item The polynomial $5x^{100} + 3x^{2} + 1$ has \emph{three} nonzero
+      terms but spans exponents 0 to 100. An array indexed by exponent needs
+      101 slots --- 98 of them holding zero.
+    \item Sparse data --- mostly empty --- is exactly when a contiguous array
+      wastes space. Storing only nonzero terms as
+      $(\text{coefficient}, \text{exponent})$ nodes keeps three nodes.
+    \item The calculator's evaluator can hold a polynomial expression as a
+      chain, then add, subtract, or multiply two such chains term by term.
+    \item The same deficiency pattern again: the array has a fixed span; the
+      list stores only what actually exists.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Polynomial Node}
+  \begin{block}{Definition (Horowitz \& Sahni Ch.~4, standard treatment;
+    Aho--Hopcroft--Ullman Ch.~2, standard treatment)
+    \cite{HorowitzSahni2008_fundamentals_data_structures,AhoHopcroftUllman1983_data_structures_algorithms}}
+    A polynomial $\sum_i a_i x^{e_i}$ is stored as a list of nodes, each
+    holding a coefficient and an exponent, kept in \key{strictly descending
+    exponent order} (the course convention):
+  \end{block}
+\begin{center}
+{\small \texttt{struct pnode \{ float coeff; int exp; struct pnode *next;
+  \};}}
+\end{center}
+  \begin{itemize}
+    \item The head handle is again \texttt{head}; the zero polynomial is
+      \texttt{head == NULL}. Terms whose coefficient is $0$ are never stored
+      --- that is the sparsity payoff.
+    \item Example: $5x^{3} + 4x + 2$ is the chain
+      \texttt{(5,3) $\to$ (4,1) $\to$ (2,0) $\to$ NULL}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Polynomial Addition: Merge by Descending Exponent}
+  \begin{block}{Adding two ordered chains (Horowitz \& Sahni Ch.~4, standard
+    treatment)
+    \cite{HorowitzSahni2008_fundamentals_data_structures}}
+\begin{semiverbatim}
+// A, B sorted by descending exp; build C
+while (A != NULL && B != NULL):
+    if   A->exp > B->exp: append copy of A; A = A->next
+    elif B->exp > A->exp: append copy of B; B = B->next
+    else: sum = A->coeff + B->coeff
+          if (sum != 0) append node(sum, A->exp)
+          A = A->next; B = B->next
+append the rest of whichever list is not exhausted
+\end{semiverbatim}
+  \end{block}
+  \begin{itemize}
+    \item The two ordered chains are merged like two sorted runs: one pass,
+      one output node per surviving term. Cost $= O(n + m)$ worst case for
+      $n, m$ terms in A, B.
+    \item Appending to the output's tail is Week 6's end-insert; keeping an
+      output \texttt{tail} pointer makes each append $O(1)$, so the whole
+      merge is linear.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Addition Alignment, Drawn}
+  \begin{center}
+    % Diagram: polynomial addition alignment by descending exponent.
+    % Coordinates: exponent columns 3/2/1/0 at x = 0, 1.6, 3.2, 4.8.
+    % Row A y=1.5: 5x^3 at 0, 4x at 3.2, 2 at 4.8. Row B y=0.3: 3x^2 at
+    % 1.6, 4x at 3.2, 1 at 4.8 (gold=shared exp). Row C y=-1.2: 5x^3 at 0,
+    % 3x^2 at 1.6, 8x at 3.2 (gold), 3 at 4.8. Ruler labels at y=2.2.
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.7cm,
+        align=center] (a3) at (0, 1.5) {$5x^{3}$};
+      \node[draw, fill=primary-gold!25, minimum width=1.1cm,
+        minimum height=0.7cm, align=center] (a1) at (3.2, 1.5) {$4x$};
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.7cm,
+        align=center] (a0) at (4.8, 1.5) {$2$};
+      \draw[->, thick, color=jet] (a3.east) -- (a1.west);
+      \draw[->, thick, color=jet] (a1.east) -- (a0.west);
+
+      \node[draw, fill=primary-gold!25, minimum width=1.1cm,
+        minimum height=0.7cm, align=center] (b2) at (1.6, 0.3) {$3x^{2}$};
+      \node[draw, fill=primary-gold!25, minimum width=1.1cm,
+        minimum height=0.7cm, align=center] (b1) at (3.2, 0.3) {$4x$};
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.7cm,
+        align=center] (b0) at (4.8, 0.3) {$1$};
+      \draw[->, thick, color=jet] (b2.east) -- (b1.west);
+      \draw[->, thick, color=jet] (b1.east) -- (b0.west);
+
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.7cm,
+        align=center] (c3) at (0, -1.2) {$5x^{3}$};
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.7cm,
+        align=center] (c2) at (1.6, -1.2) {$3x^{2}$};
+      \node[draw, fill=primary-gold!25, minimum width=1.1cm,
+        minimum height=0.7cm, align=center] (c1) at (3.2, -1.2) {$8x$};
+      \node[draw, fill=white, minimum width=1.1cm, minimum height=0.7cm,
+        align=center] (c0) at (4.8, -1.2) {$3$};
+      \draw[->, thick, color=jet] (c3.east) -- (c2.west);
+      \draw[->, thick, color=jet] (c2.east) -- (c1.west);
+      \draw[->, thick, color=jet] (c1.east) -- (c0.west);
+
+      \node[text=neutral] at (-0.9, 1.5) {A:};
+      \node[text=neutral] at (-0.9, 0.3) {B:};
+      \node[text=neutral, anchor=east] at (-0.9, -1.2) {C:};
+      \node[text=neutral] at (0, 2.15) {\tiny exp 3};
+      \node[text=neutral] at (1.6, 2.15) {\tiny exp 2};
+      \node[text=neutral] at (3.2, 2.15) {\tiny exp 1};
+      \node[text=neutral] at (4.8, 2.15) {\tiny exp 0};
+      \node[text=primary-gold, align=center] at (2.4, -2.15)
+        {gold column: equal exponents\\add coefficients ($4 + 4 = 8$), keep
+        the exponent};
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Worked Example: Add Two Polynomials}
+  \begin{center}
+  {\small
+  \begin{tabular}{llll}
+    \toprule
+    \textbf{step} & \textbf{compare} & \textbf{action} & \textbf{C so far} \\
+    \midrule
+    1 & $3$ vs.\ $2$ & A's exp larger & $5x^{3}$ \\
+    2 & $1$ vs.\ $2$ & B's exp larger & $5x^{3} + 3x^{2}$ \\
+    3 & $1$ vs.\ $1$ & equal: $4 + 4$ & $5x^{3} + 3x^{2} + 8x$ \\
+    4 & $0$ vs.\ $0$ & equal: $2 + 1$ & $5x^{3} + 3x^{2} + 8x + 3$ \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item A $= 5x^{3} + 4x + 2$, B $= 3x^{2} + 4x + 1$. Read the compare
+      column: at each step the larger exponent is copied through; equal
+      exponents are added.
+    \item No term is dropped and no zero term is stored. A cancellation (say
+      $4x + (-4x)$) would append \emph{nothing} --- the sparsity discipline
+      in action.
+    \item \key{Multiplication} repeats the idea: each term of A times every
+      term of B (coefficients multiply, exponents add), then merge equal
+      exponents --- $O(n \cdot m)$ worst case.
+    \item \key{Verdict}: the array wins on a small, dense exponent range
+      ($O(1)$ term lookup by exponent); the list wins on a sparse, high-degree
+      polynomial. State the workload, then choose.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Two weeks of chains. Now the map that holds Unit II together.}
+
+% =============================================================================
+% ACT 5 --- UNIT-II REVIEW + CLOSE
+% =============================================================================
+\section{Unit-II Review and Close}
+
+\begin{frame}{Unit II in One Map (Class Test 2)}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{@{}p{1.0cm} p{5.2cm} p{5.2cm}@{}}
+    \toprule
+    \textbf{week} & \textbf{contract} & \textbf{load-bearing skill} \\
+    \midrule
+    6 & singly list: \texttt{head}, \texttt{p->next}, \texttt{NULL} &
+      pointer surgery; three-pointer reverse \\
+    7 & DLL \texttt{p->prev}; rings; list stack/queue; polynomials &
+      two-link invariant; ring termination; ADT reuse; merge \\
+    \bottomrule
+  \end{tabular}}
+  \end{center}
+  \begin{itemize}
+    \item The decision array-vs-list is now a full comparison, not ``lists
+      are better'': positional reads favour the array; anywhere-edits and
+      unpredictable size favour the chain.
+    \item The test rewards traces: draw the chain, move the pointers, then
+      name the operation, the bound, and the case.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Three Classic Mistakes}
+  \begin{itemize}
+    \item \bad{Forgetting half the invariant} --- updating \texttt{p->next}
+      but not \texttt{p->next->prev} (or the reverse). The two links silently
+      disagree, and a later backward walk corrupts or skips nodes.
+    \item \bad{Waiting for \texttt{NULL} in a ring} ---
+      \texttt{while (p != NULL)} on a circular list never terminates. The stop
+      condition must name \texttt{head}.
+    \item \bad{Ignoring the endpoints} --- forgetting to move \texttt{head}
+      (or clear \texttt{tail}) when the first/last node leaves, or reusing a
+      pointer after \texttt{free}. Week 1's dangling pointer and leak, now
+      wearing list clothing.
+  \end{itemize}
+  \begin{exampleblock}{How to revise}
+    Re-trace insert-after and delete-by-pointer with a covered answer column,
+    then trace one polynomial addition. The test is traces, not definitions.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 7 Summary}
+  \begin{itemize}
+    \item \key{Doubly linked list}: node $=$ data $+$ \texttt{prev} $+$
+      \texttt{next}; delete and insert by a known pointer are $O(1)$ worst
+      case, paid for with an extra pointer per node and a two-link invariant
+      to maintain.
+    \item \key{Circular list}: \texttt{last->next == head}, no \texttt{NULL};
+      traversal stops at \texttt{head}; singly/doubly rings for round-robin
+      use, and a linked circular queue over a ring.
+    \item \key{ADT reuse}: the same Week 3 stack and Week 5 queue contracts
+      run on chains, with $O(1)$ worst-case ends and unbounded size.
+    \item \key{Polynomials}: ordered $(\text{coeff}, \text{exp})$ nodes;
+      addition is a linear merge by descending exponent; lists win on sparse
+      polynomials, arrays on dense ones.
+  \end{itemize}
+  \begin{exampleblock}{Next week}
+    Searching --- linear versus binary, and the elementary sorts that put data
+    in the order binary search needs.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Before You Go: Predict}
+  \begin{block}{Three one-line predictions}
+    Answer from the algorithms, then check in the lab (P7).
+  \end{block}
+  \begin{enumerate}
+    \item A DLL holds \texttt{head $\leftrightarrow$ 5 $\leftrightarrow$ 15
+      $\leftrightarrow$ 25}. Delete the node holding 15, given only a pointer
+      to it: name the two links rewritten and the cost.
+    \item A singly circular list reads a $\to$ b $\to$ c $\to$ a. What are
+      \texttt{a->next} and \texttt{c->next}, and what sentinel replaces
+      \texttt{NULL}?
+    \item Add $(2x^{2} + 1)$ and $(-2x^{2} + 5x)$. Which terms survive, and
+      why?
+  \end{enumerate}
+  \muted{Answers: 5's \texttt{next} $=$ 25 and 25's \texttt{prev} $=$ 5, then
+    \texttt{free} the 15-node --- $O(1)$ worst case. \texttt{a->next} $=$ b,
+    \texttt{c->next} $=$ a $=$ \texttt{head}; no \texttt{NULL}. Result
+    $5x + 1$: the $x^{2}$ terms cancel to coefficient $0$ and a zero term is
+    never stored.}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \scriptsize
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+\end{frame}
+
+\end{document}

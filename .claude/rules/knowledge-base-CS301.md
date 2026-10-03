@@ -110,7 +110,11 @@ paths:
 | `\texttt{front}` / `\texttt{rear}` | Queue indices of the next element to dequeue and the last enqueued | **Week 5 (projected)** |
 | Circular queue wraparound | Index advance is $(\texttt{rear} + 1) \bmod \text{capacity}$; full and empty are distinguished by a count or a sacrificed slot | **Week 5 (projected)** |
 | `\texttt{head}` | Pointer to the first node of a linked list; `\texttt{NULL}` when the list is empty | **Week 6 (confirmed 06-linked-lists-singly)** |
-| `\texttt{p->next}` / `\texttt{p->prev}` | Successor / predecessor links in singly and doubly linked lists | **Week 6 (confirmed, singly) / Week 7 (projected, doubly)** |
+| `\texttt{p->next}` / `\texttt{p->prev}` | Successor / predecessor links in singly and doubly linked lists | **Week 6 (confirmed, singly) / Week 7 (confirmed 07-linked-lists-doubly-applications, doubly)** |
+| `\texttt{tail}` | Last-node handle of a list-based queue (the enqueue end); also the single handle of a singly circular queue, whose front is `\texttt{tail->next}` | **Week 7 (new)** |
+| Circular-list closure | Last node's `\texttt{next}` points back to `\texttt{head}` (no `\texttt{NULL}`); in a doubly circular list `\texttt{head->prev}` is the last node; traversal terminates on returning to `\texttt{head}` | **Week 7 (new)** |
+| Two-link invariant | For every interior node `\texttt{p}`: `\texttt{p->next->prev == p}` and `\texttt{p->prev->next == p}` --- a DLL operation is correct only if it restores both | **Week 7 (new)** |
+| Polynomial node | `\texttt{(coeff, exp)}` node kept in strictly descending exponent order; zero-coefficient terms are never stored (the sparsity payoff) | **Week 7 (new)** |
 | Stable sort | A sort preserving the relative order of equal keys — the property that makes radix sort work | **Week 8–9 (projected)** |
 | In-place / auxiliary space | Sorting with $O(1)$ extra space vs. requiring $\Theta(n)$ (merge sort's merge buffer) | **Week 9 (projected)** |
 | Load factor $\alpha$ | $\alpha = n/m$ — entries over table slots; drives expected probe count in hashing | **Week 10 (projected)** |
