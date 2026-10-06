@@ -148,6 +148,15 @@ bash.exe.stackdump
 # via docs/calendar/ics/cs401.ics.
 Timetable/
 
+# JKSSB-CA course — kept local-only, never tracked or published. The
+# older JKSSB/ course (no -CA suffix) remains tracked; this newer
+# Computer Awareness build stays off the public repo and Pages site.
+**/JKSSB-CA/
+docs/courses/jkssb-ca/
+scripts/sync_jkssb_videos.py
+syllabi/JKSSB-CA.*
+syllabi/JKSSB_Computer_Awareness_Syllabus_Module_Wise_Chapter_Wise_Complete.md
+
 # Output artifacts — uncomment lines below based on your preference
 # *.rds
 # output/**/*.rds

@@ -79,7 +79,7 @@ Legend — `[ ]` = not yet built; `[x]` = shipped. Unit-mastery capstones (lesso
 | 49 | Computer Generations & History — 1st–5th generation, C-DAC/PARAM 8000, association traps | `49-computer-generations-history` [x] | [x] | [x] |
 | 50 | Data Representation, Number Systems & Logic — binary/decimal/octal/hex, bits/nibbles/bytes, ASCII/Unicode, RGB, basic logic gates | `50-data-representation-number-systems-logic` [x] | [x] | [x] |
 
-Video references: [Lesson 01](https://youtu.be/nxzba3RgEqw), [Lesson 02](https://youtu.be/d6zL3YS69kM), and [Lesson 03](https://youtu.be/j_62CGCBElo).
+Video references: [Lesson 01](https://youtu.be/nxzba3RgEqw), [Lesson 02](https://youtu.be/d6zL3YS69kM), [Lesson 03](https://youtu.be/j_62CGCBElo), [Lesson 49](https://youtu.be/AdcuSz6uBNI), and [Lesson 50](https://youtu.be/KpDK_Ah9_rI).
 
 ### Unit 2 — CPU, Hardware & Architecture
 
