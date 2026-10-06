@@ -1,0 +1,200 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{CPU, ALU, Control Unit \& Registers}
+\subtitle{Lesson 05 --- Functional Units and Registers}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Video Lesson 05}
+  \centering
+  \Large\href{https://youtu.be/b6w8uT4GBYQ}{Watch: CPU Explained: ALU, Control Unit \& Registers}
+\end{frame}
+
+\begin{frame}{The CPU and Its Functional Units}
+  \begin{itemize}
+    \item The \key{Central Processing Unit (CPU)} is often called the
+      ``brain'' of the computer.
+    \item It fetches, decodes, and executes instructions and works with main
+      memory.
+    \item Its main functional units are the Arithmetic Logic Unit (ALU),
+      the Control Unit (CU), and the registers.
+    \item Data and control signals move between these units over the
+      internal buses.
+  \end{itemize}
+  \begin{block}{Memory hook}
+    ALU computes, the Control Unit coordinates, and the registers hold the
+    working data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Three Functional Units at a Glance}
+  \begin{columns}[T]
+    \column{0.32\textwidth}
+      \begin{block}{ALU}
+        Performs arithmetic and logical operations on binary data.
+      \end{block}
+    \column{0.32\textwidth}
+      \begin{block}{Control Unit}
+        Directs and sequences operations; issues control signals.
+      \end{block}
+    \column{0.32\textwidth}
+      \begin{block}{Registers}
+        Smallest, fastest storage, located inside the CPU.
+      \end{block}
+  \end{columns}
+  \vspace{0.4cm}
+  \muted{Keep the roles separate; most wrong answers swap the ALU and the
+  Control Unit.}
+\end{frame}
+
+\begin{frame}{The Arithmetic Logic Unit (ALU)}
+  \begin{itemize}
+    \item Performs \key{arithmetic} operations: addition, subtraction,
+      increment, decrement, multiplication, and division.
+    \item Performs \key{logical} operations: AND, OR, NOT, XOR, shifts, and
+      comparisons.
+    \item Operates on \key{binary data} using logic-gate operations.
+    \item Returns its result to a register or the accumulator; it does not
+      permanently store data.
+  \end{itemize}
+  \begin{alertblock}{Exam cue}
+    The ALU is the part that computes; its operations are carried out with
+    logic gates on binary values.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{ALU Works on Binary Data with Logic Gates}
+  \begin{itemize}
+    \item Inside the CPU, numbers and characters are represented in binary.
+    \item Logic gates such as AND, OR, NOT, and XOR implement the ALU's
+      operations.
+    \item Example: adding 1 and 1 works on the binary values, and the result
+      is placed where it can be reused.
+    \item \key{ALU} stands for Arithmetic Logic Unit.
+  \end{itemize}
+  \begin{block}{Remember}
+    Arithmetic and logic are the two halves of the ALU's name; both run on
+    binary data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Control Unit (CU)}
+  \begin{itemize}
+    \item \key{Directs and sequences} the operations of the computer.
+    \item Controls the \key{flow of data} between the ALU, registers, and
+      memory.
+    \item Decodes instructions and \key{issues control signals} that time and
+      trigger the other units.
+    \item It does \bad{not} perform arithmetic or logical calculations.
+  \end{itemize}
+  \begin{block}{Role in one line}
+    The Control Unit is the conductor: it tells every part what to do and
+    when, but it does not itself compute.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Control Unit vs ALU: Do Not Swap the Roles}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Unit} & \textbf{Primary job} \\
+      \midrule
+      Arithmetic Logic Unit (ALU) & Performs arithmetic and logic operations \\
+      Control Unit (CU) & Directs operations and issues control signals \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    The Control Unit controls and coordinates; it does \bad{not} add or
+    subtract. Saying ``CU computes'' or ``ALU controls'' is wrong.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Registers: Fastest Storage Inside the CPU}
+  \begin{itemize}
+    \item \key{Registers} are the \key{smallest and fastest} storage in a
+      computer.
+    \item They sit inside the CPU and are faster than cache and RAM.
+    \item They hold instructions, addresses, data, and intermediate results
+      temporarily while work is in progress.
+    \item Their capacity is very small, so they are used only for the
+      values needed right now.
+  \end{itemize}
+  \begin{block}{Speed order}
+    Registers are fastest, then cache, then main memory (RAM), then
+    secondary storage.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Key Registers and Their Purposes}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Register} & \textbf{Holds} \\
+      \midrule
+      Program Counter (PC / IP) & Address of the next instruction to fetch \\
+      Instruction Register (IR) & Instruction currently being decoded/executed \\
+      Memory Address Register (MAR) & Address of the memory location to access \\
+      Memory Data Register (MDR) & Data being transferred to or from memory \\
+      Accumulator (ACC) & Intermediate arithmetic/logic results \\
+      General-purpose registers & Temporary operands and results \\
+      Status / flags register & Condition flags (zero, carry, sign, overflow) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{PC/IP = Program Counter or Instruction Pointer.}
+\end{frame}
+
+\begin{frame}{The Program Counter: A Common Trap}
+  \begin{itemize}
+    \item The \key{Program Counter (PC)} holds the address of the
+      \good{next} instruction to be fetched.
+    \item It does \bad{not} hold the address of the instruction currently
+      being executed.
+    \item The \key{Instruction Register (IR)} holds the instruction that is
+      currently being decoded or executed.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Near-neighbour confusion: PC = address of the \good{next}
+    instruction; IR = the \good{current} instruction itself.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Clock Speed, Cores, and Threads}
+  \begin{itemize}
+    \item \key{Clock speed} is measured in hertz (Hz); 1 GHz is one billion
+      cycles per second.
+    \item A \key{clock cycle} is one tick of the system clock; different
+      instructions may take different numbers of cycles.
+    \item A \key{core} is an independent processing unit inside the CPU; a
+      quad-core chip has four cores.
+    \item A \key{thread} is a stream of instructions; multiple threads can
+      share or run on the available cores.
+  \end{itemize}
+  \begin{block}{Office desktop example}
+    A quad-core 2.4 GHz machine has four cores, each running at about 2.4
+    billion clock cycles per second.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lesson 05: Recall}
+  \begin{itemize}
+    \item The CPU has the ALU, the Control Unit, and the registers.
+    \item The ALU performs arithmetic and logic on binary data using logic
+      gates; the Control Unit only directs and issues control signals.
+    \item Registers are the fastest, smallest storage, inside the CPU.
+    \item PC holds the address of the \good{next} instruction; IR holds the
+      \good{current} instruction; MAR holds an address; MDR holds data; the
+      accumulator holds intermediate results.
+    \item Clock speed is in Hz/GHz; cores and threads describe parallel
+      execution.
+  \end{itemize}
+\end{frame}
+\end{document}

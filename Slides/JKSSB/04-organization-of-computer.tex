@@ -1,0 +1,206 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Organization of a Computer}
+\subtitle{Lesson 04 --- Units, Buses and the Instruction Cycle}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Video Lesson 04}
+  \centering
+  \Large\href{https://youtu.be/92XQ_n1t_cc}{Watch: How Computers Actually Work: CPU, Memory \& I/O Explained}
+\end{frame}
+
+\begin{frame}{The Office Desktop as a System}
+  \begin{itemize}
+    \item The clerk types marks on the \key{keyboard} and clicks with the
+      \key{mouse}; the scanner feeds a form.
+    \item The \key{CPU} processes the marks using a spreadsheet formula.
+    \item The \key{monitor} shows the total and the \key{printer} prints it.
+    \item \key{RAM} (Random Access Memory) holds the work while it runs; the
+      \key{SSD} keeps the file after the machine is switched off.
+  \end{itemize}
+  \vspace{0.3cm}
+  \muted{One familiar machine carries every unit in this lesson.}
+\end{frame}
+
+\begin{frame}{Five Functional Units}
+  \begin{itemize}
+    \item \key{Input unit}: accepts data and instructions.
+    \item \key{Output unit}: presents the result.
+    \item \key{Memory unit}: primary storage that holds data and instructions
+      currently in use.
+    \item \key{Arithmetic Logic Unit (ALU)}: performs arithmetic and logical
+      operations.
+    \item \key{Control unit}: directs the sequence of operations and the flow
+      of data.
+  \end{itemize}
+  \begin{block}{High-yield grouping}
+    The ALU and the control unit, together with registers, form the
+    \key{Central Processing Unit (CPU)}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Inside the CPU}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Arithmetic Logic Unit}
+      \begin{itemize}
+        \item Adds, subtracts, compares
+        \item Works on binary data
+        \item Produces a result and status flags
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Control Unit}
+      \begin{itemize}
+        \item Fetches and decodes instructions
+        \item Sends control signals
+        \item Coordinates all other units
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \muted{Registers are small, fast storage inside the CPU; the program counter
+  and instruction register are examples.}
+\end{frame}
+
+\begin{frame}{Input and Output Units}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Input devices}
+      \begin{itemize}
+        \item Keyboard, mouse
+        \item Scanner, microphone
+        \item Light pen, digitizer
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Output devices}
+      \begin{itemize}
+        \item Monitor, printer
+        \item Speaker, plotter
+        \item Sound card output
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \muted{Classify the device by the role it plays in the described task.}
+\end{frame}
+
+\begin{frame}{Memory (Primary) versus Storage (Secondary)}
+  \begin{block}{Primary storage / main memory}
+    RAM and ROM --- directly accessed by the CPU; holds data and instructions
+    currently being processed. RAM is volatile.
+  \end{block}
+  \begin{alertblock}{Secondary storage}
+    Hard disk, SSD and pen drive --- keeps files permanently, but is not
+    accessed directly during processing.
+  \end{alertblock}
+  \vspace{0.2cm}
+  \muted{The CPU works with main memory; secondary storage is reached through
+  main memory and the operating system.}
+\end{frame}
+
+\begin{frame}{The Three Buses}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth} p{0.24\textwidth} p{0.44\textwidth}}
+      \toprule
+      \textbf{Bus} & \textbf{Direction} & \textbf{Carries} \\
+      \midrule
+      Address bus & CPU $\rightarrow$ memory & The address of a memory
+      location \\
+      Data bus & Bidirectional & Data and instructions between CPU and
+      memory \\
+      Control bus & CPU $\rightarrow$ units & Control and timing signals \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{Address = where; data = what; control = when and how.}
+\end{frame}
+
+\begin{frame}{Address vs Data vs Control Bus}
+  \begin{itemize}
+    \item \key{Address bus}: one-way, from the CPU to memory --- it carries
+      the location being selected, not the contents.
+    \item \key{Data bus}: two-way --- it moves the actual data and
+      instructions in both directions.
+    \item \key{Control bus}: one-way control path --- it carries read, write
+      and timing signals.
+    \end{itemize}
+  \begin{alertblock}{Near-neighbour trap}
+    The address bus does \emph{not} carry data, and the data bus does
+    \emph{not} carry addresses. Do not swap them.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Motherboard, Slots and Interfaces}
+  \begin{itemize}
+    \item The \key{motherboard} is the main circuit board linking the CPU,
+      memory and buses.
+    \item \key{Expansion slots} let you add cards such as a graphics card or
+      a network card.
+    \item \key{Interfaces/ports} connect external devices such as the
+      keyboard, printer and monitor.
+    \item The system bus runs along the motherboard between the CPU and the
+      other units.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Stored-Program (von Neumann) Idea}
+  \begin{itemize}
+    \item Early machines were rewired for each task.
+    \item The \key{stored-program concept} keeps the program's instructions
+      in the same main memory as the data.
+    \item The CPU fetches an instruction, then processes data under it ---
+      no rewiring needed.
+  \end{itemize}
+  \begin{block}{Association}
+    The idea that both instructions and data are stored in memory is
+    associated with \key{von Neumann architecture}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Instruction Cycle}
+  \begin{enumerate}
+    \item \key{Fetch}: the CPU obtains the next instruction from main
+      memory.
+    \item \key{Decode}: the control unit works out what the instruction
+      means.
+    \item \key{Execute}: the ALU or another unit performs the operation.
+    \item \key{Store} (when required): the result is written back to memory
+      or a register.
+  \end{enumerate}
+  \begin{alertblock}{Order cue}
+    The cycle repeats in the fixed order fetch $\rightarrow$ decode
+    $\rightarrow$ execute.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Data and Instruction Flow}
+  \begin{itemize}
+    \item Input data and instructions enter through input devices.
+    \item They are held in main memory and fetched by the CPU over the
+      system bus.
+    \item The CPU decodes and executes, using the ALU and registers.
+    \item Results go to output devices or back to main memory.
+    \item Secondary storage keeps files between sessions --- the CPU does
+      not reach it directly.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 04: Recall}
+  \begin{itemize}
+    \item Five units: input, output, memory, ALU, control unit;
+      CPU = ALU + control unit + registers.
+    \item Address bus: CPU $\rightarrow$ memory, carries the address. Data
+      bus: bidirectional, carries data and instructions. Control bus: carries
+      control signals.
+    \item The CPU directly accesses main memory (primary storage), not
+      secondary storage.
+    \item Stored-program (von Neumann): instructions and data share memory.
+    \item Instruction cycle: fetch $\rightarrow$ decode $\rightarrow$ execute.
+  \end{itemize}
+\end{frame}
+\end{document}

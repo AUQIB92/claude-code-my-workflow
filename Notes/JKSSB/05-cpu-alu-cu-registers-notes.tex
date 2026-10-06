@@ -1,0 +1,187 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{05.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{CPU, ALU, Control Unit \& Registers --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Video lesson:}
+\href{https://youtu.be/b6w8uT4GBYQ}{CPU Explained: ALU, Control Unit \& Registers}
+
+\section{The CPU and its functional units}
+The Central Processing Unit (CPU) is the part of the computer that executes
+instructions. It repeatedly fetches an instruction from main memory, decodes
+it, and then executes it. To do this work the CPU is organised into three
+functional units: the Arithmetic Logic Unit (ALU), the Control Unit (CU),
+and the registers. Data and control signals move between these units over
+internal buses. The CPU works directly with main memory (RAM); it does not
+reach into secondary storage such as a hard disk by itself.
+
+\begin{definitionbox}{CPU (Central Processing Unit)}
+The processor that fetches, decodes, and executes instructions, made up of
+the ALU, the Control Unit, and registers.
+\end{definitionbox}
+
+A simple way to keep the roles apart is this: the ALU computes, the Control
+Unit coordinates, and the registers hold the working values. Almost every
+objective question about this topic turns on not swapping those three roles.
+
+\section{The Arithmetic Logic Unit (ALU)}
+The ALU is the computing part of the CPU. It performs two broad families of
+operations. \textbf{Arithmetic} operations include addition, subtraction,
+increment, decrement, multiplication, and division. \textbf{Logical}
+operations include AND, OR, NOT, XOR, shifts, and comparisons. The ALU
+operates on data held in binary form, and its operations are carried out with
+logic-gate operations on those binary values. When the ALU finishes, it
+returns its result to a register or the accumulator; it does not keep a
+permanent copy.
+
+\begin{definitionbox}{ALU (Arithmetic Logic Unit)}
+The CPU unit that performs arithmetic and logical operations on binary data
+using logic gates.
+\end{definitionbox}
+
+\begin{example}
+For inputs $1$ and $1$, an addition produces the binary result for two, and
+a logical XOR produces $0$ because the two bits are equal. Both results are
+produced by the same unit --- the ALU --- and handed back for further use.
+\end{example}
+
+\section{The Control Unit (CU)}
+The Control Unit directs and sequences the operations of the computer. It
+decodes each instruction and then issues the control signals that time and
+trigger the other units. It also controls the flow of data between the ALU,
+the registers, and memory. What the Control Unit does \textbf{not} do is
+compute: it does not add, subtract, or carry out logical operations. Those
+are the ALU's job. Students frequently write ``the Control Unit performs the
+calculations,'' which is exactly the error to avoid.
+
+\begin{definitionbox}{Control Unit (CU)}
+The CPU unit that directs and sequences operations, decodes instructions,
+and issues control signals; it does not perform arithmetic or logic.
+\end{definitionbox}
+
+\begin{example}
+When an addition instruction is executed, the Control Unit fetches and
+decodes the instruction and signals the ALU to add the two values. The ALU
+performs the addition; the Control Unit only directs the sequence.
+\end{example}
+
+\section{Registers}
+Registers are the smallest and fastest storage in a computer. They are
+located inside the CPU, so they are faster than cache and far faster than
+main memory. Because they are very small, they hold only the values needed
+for the work currently in progress: instructions, addresses, data, and
+intermediate results. The following table lists the key registers and their
+purposes.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Register} & \textbf{Purpose} \\
+\midrule
+Program Counter (PC / IP) & Holds the address of the \textbf{next} instruction to be fetched. \\
+Instruction Register (IR) & Holds the instruction currently being decoded or executed. \\
+Memory Address Register (MAR) & Holds the address of the memory location to be accessed. \\
+Memory Data Register (MDR) & Holds the data being transferred to or from memory. \\
+Accumulator (ACC) & Holds intermediate arithmetic and logic results. \\
+General-purpose registers & Hold temporary operands and results. \\
+Status / flags register & Holds condition flags such as zero, carry, sign, and overflow. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Program Counter is the register most often confused. It holds the
+address of the \textbf{next} instruction to fetch, not the address of the
+instruction currently being executed. The instruction currently being
+decoded or executed is held in the Instruction Register. Memory access is
+split between two registers: the MAR carries the address, and the MDR carries
+the data itself. The accumulator is the natural home for an ALU result that
+will be used again immediately.
+
+\begin{example}
+Suppose the CPU is about to fetch the instruction at address 200. The
+Program Counter holds 200. Once the instruction is fetched, it is placed in
+the Instruction Register for decoding. If the instruction needs to read a
+value stored at address 900, the MAR holds 900 and the MDR holds the value
+brought back from memory.
+\end{example}
+
+\section{Clock speed, cycles, cores, and threads}
+The CPU's operations are paced by a clock. \textbf{Clock speed} is measured
+in hertz (Hz); one gigahertz (GHz) is one billion clock cycles per second. A
+\textbf{clock cycle} is a single tick of that clock. Do not assume every
+instruction takes exactly one cycle: different instructions can require
+different numbers of clock cycles. A \textbf{core} is an independent
+processing unit within the CPU; a quad-core chip contains four cores. A
+\textbf{thread} is a stream of instructions, and a system can run multiple
+threads across the available cores.
+
+\begin{definitionbox}{Clock cycle}
+One tick of the system clock; the basic unit of timing for CPU operations.
+\end{definitionbox}
+
+\begin{example}
+The office desktop in our running example is a quad-core machine running at
+2.4 GHz. It has four independent cores, and each core can complete clock
+cycles at about 2.4 billion per second. Running a spreadsheet calculation and
+a browser at the same time lets different threads keep the cores busy.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Three distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item Do not swap the ALU and the Control Unit. The ALU performs
+    arithmetic and logic; the Control Unit only directs operations and
+    issues control signals.
+  \item Do not say the Program Counter holds the current instruction. It
+    holds the address of the \textbf{next} instruction; the current
+    instruction is in the Instruction Register.
+  \item Do not place registers below cache or RAM in speed. Registers are
+    the fastest storage, and the accumulator is where intermediate
+    arithmetic and logic results are kept.
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the three main functional units of the CPU and one role of
+    each.
+  \item Expand ALU, CU, PC, IR, MAR, and MDR.
+  \item Does the Control Unit perform arithmetic? Explain in one line.
+  \item Which register holds the address of the next instruction, and which
+    register holds the instruction currently being executed?
+  \item Why are registers described as the fastest storage, and what does
+    the accumulator hold?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item ALU --- performs arithmetic and logical operations on binary data;
+    Control Unit --- directs and sequences operations and issues control
+    signals; registers --- hold instructions, addresses, data, and
+    intermediate results.
+  \item ALU = Arithmetic Logic Unit; CU = Control Unit; PC = Program
+    Counter; IR = Instruction Register; MAR = Memory Address Register;
+    MDR = Memory Data Register.
+  \item No. The Control Unit directs and coordinates operations; the ALU
+    performs the arithmetic and logical calculations.
+  \item The Program Counter (PC/IP) holds the address of the next
+    instruction; the Instruction Register (IR) holds the instruction
+    currently being decoded or executed.
+  \item Registers are located inside the CPU and are smaller and faster than
+    cache and RAM. The accumulator (ACC) holds intermediate arithmetic and
+    logic results.
+\end{enumerate}
+\endgroup
+\end{document}

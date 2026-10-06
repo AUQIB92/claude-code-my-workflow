@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 05 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{A.} ALU stands for Arithmetic Logic Unit. B, C, and D are not
+  expansions of the abbreviation.
+\item \textbf{C.} The Arithmetic Logic Unit performs arithmetic and logical
+  operations. The Control Unit directs operations; the register file stores
+  values; the system bus carries signals.
+\item \textbf{B.} The Control Unit directs the sequence of operations and
+  issues control signals. Performing arithmetic is the ALU's job (A); the
+  CU does not store results (C) or provide secondary storage (D).
+\item \textbf{D.} Adding two numbers is an arithmetic operation performed by
+  the ALU, not the Control Unit. Decoding instructions, issuing control
+  signals, and directing data flow are all Control Unit functions.
+\item \textbf{B.} The Program Counter holds the address of the next
+  instruction to be fetched. The IR holds the current instruction; the MDR
+  holds data; the accumulator holds intermediate results.
+\item \textbf{C.} The Instruction Register holds the instruction currently
+  being decoded and executed. The PC holds the next address; the MDR holds
+  data; the MAR holds an address.
+\item \textbf{B.} The Memory Address Register holds the address of the memory
+  location to be accessed. The MDR holds data; the IR holds an instruction;
+  the accumulator holds a result.
+\item \textbf{C.} The Memory Data Register holds the data being transferred
+  to or from memory. The MAR holds the address; the PC holds the next
+  instruction address; the IR holds the instruction.
+\item \textbf{B.} The accumulator holds intermediate arithmetic and logic
+  results. It does not hold the next-instruction address (A), the fetched
+  instruction (C), or a permanent copy of the OS (D).
+\item \textbf{A.} Registers are the fastest storage, followed by L1 cache,
+  RAM, and secondary storage such as an SSD. B, C, and D are progressively
+  slower.
+\item \textbf{D.} Registers are located inside the CPU. They are not part of
+  cache (A), main memory (B), or secondary storage (C).
+\item \textbf{B.} One gigahertz is one billion ($10^9$) cycles per second, so
+  2.4 GHz is about 2.4 billion cycles per second. A, C, and D misstate the
+  giga- scale.
+\item \textbf{C.} Different instructions may take different numbers of clock
+  cycles, so A and B are false. A clock cycle is a unit of time, not bytes
+  (D).
+\item \textbf{B.} Statements I and II are correct: the ALU works on binary
+  data with logic gates, and the Control Unit directs operations and data
+  flow. III is false because the Control Unit does not perform arithmetic.
+  A omits II; C includes false III and omits I; D includes false III.
+\item \textbf{A.} PC is correctly matched with Program Counter. IR is
+  Instruction Register, MAR is Memory Address Register, and MDR is Memory
+  Data Register, so B, C, and D are wrong expansions.
+\item \textbf{A.} The Program Counter holds the address of the next
+  instruction to be fetched. It does not hold the current instruction (B),
+  the previously executed one (C), or data (D).
+\item \textbf{B.} Registers with no fixed dedicated role, used for general
+  operands and intermediate results, are general-purpose registers. Status
+  registers hold flags; MAR holds addresses; IR holds instructions.
+\item \textbf{C.} The status or flags register holds condition flags such as
+  zero, carry, and sign. A describes the MAR; B describes the IR; D
+  describes the MDR.
+\item \textbf{D.} A quad-core processor contains four independent processing
+  cores on a single chip. It does not mean four bytes of cache (A), four
+  monitors (B), or four operating systems (C).
+\item \textbf{B.} The Control Unit fetches each instruction, decodes it, and
+  issues control signals to the other units. The ALU computes; the hard disk
+  is secondary storage; the monitor is an output device.
+\end{enumerate}
+\end{document}

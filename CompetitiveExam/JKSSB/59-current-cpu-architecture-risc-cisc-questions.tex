@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 59 Practice: Current CPU Architecture, Data Representation \& RISC/CISC}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 17 original JKSSB-pattern questions and five
+paraphrased adaptations of the JKSSB Junior Assistant 2026 computer block
+(Q62, Q64, Q65, final key). The adaptations at Q1, Q5, Q7, Q11, and Q13 are
+reworded, not verbatim reproductions.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q62; final key;
+paraphrased]} Which statement describes von Neumann (stored-program)
+architecture?
+  \begin{enumerate}[label=\Alph*.]
+    \item Instructions and data are stored in two separate memories.
+    \item Only data is stored in memory; instructions are not.
+    \item Instructions and data are stored together in the same memory.
+    \item Only instructions are stored in memory; data is not.
+  \end{enumerate}
+\item \textit{[Original]} In immediate addressing, the operand is:
+  \begin{enumerate}[label=\Alph*.]
+    \item held in a general-purpose register.
+    \item contained within the instruction itself.
+    \item stored in main memory at an address named by the instruction.
+    \item the address of the next instruction to fetch.
+  \end{enumerate}
+\item \textit{[Original]} The cache-hit ratio is defined as:
+  \begin{enumerate}[label=\Alph*.]
+    \item hits divided by total accesses.
+    \item misses divided by total accesses.
+    \item hits divided by misses.
+    \item total accesses divided by hits.
+  \end{enumerate}
+\item \textit{[Original]} Why is a cache hit faster than a cache miss?
+  \begin{enumerate}[label=\Alph*.]
+    \item The cache is located on secondary storage.
+    \item The cache stores only instructions, never data.
+    \item The cache is smaller and faster and sits closer to the CPU, so its
+      access time is lower than main memory.
+    \item The cache runs at the same speed as a hard disk.
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q62; final key;
+paraphrased]} Which statement about data hazards is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item A hazard can arise only when an operand is in memory.
+    \item Register addressing removes every possible hazard.
+    \item A hazard can arise only with immediate addressing.
+    \item A hazard can still arise from a dependency between instructions,
+      for example in a pipeline.
+  \end{enumerate}
+\item \textit{[Original]} Which option correctly contrasts cache and virtual
+memory?
+  \begin{enumerate}[label=\Alph*.]
+    \item Cache is on secondary storage, while virtual memory is in the
+      cache.
+    \item Cache and virtual memory are the same piece of hardware.
+    \item Virtual memory is a single cache line.
+    \item Cache is small fast memory between the CPU and main memory;
+      virtual memory makes memory appear larger by using secondary storage as
+      backing store.
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q64; final key;
+paraphrased]} The Program Counter holds:
+  \begin{enumerate}[label=\Alph*.]
+    \item the address of the instruction currently being executed.
+    \item the address of the next instruction to be fetched.
+    \item the operand value of the current instruction.
+    \item the last instruction that finished executing.
+  \end{enumerate}
+\item \textit{[Original]} The Instruction Register holds:
+  \begin{enumerate}[label=\Alph*.]
+    \item the address of the next instruction to fetch.
+    \item the instruction currently being fetched, decoded, and executed.
+    \item the value of the operand.
+    \item the width of the data bus.
+  \end{enumerate}
+\item \textit{[Original]} Interrupts are normally processed:
+  \begin{enumerate}[label=\Alph*.]
+    \item only after the entire program has completed.
+    \item only during system boot.
+    \item only for hardware faults.
+    \item at instruction boundaries, during program execution.
+  \end{enumerate}
+\item \textit{[Original]} Which statement about instruction timing is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item Every machine instruction takes exactly one clock cycle.
+    \item The clock-cycle count is fixed for the whole program.
+    \item Different machine instructions can take different numbers of clock
+      cycles.
+    \item Machine instructions do not consume clock cycles.
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q65; final key;
+paraphrased]} In two's-complement arithmetic, overflow occurs when:
+  \begin{enumerate}[label=\Alph*.]
+    \item there is a carry out of the most significant bit.
+    \item the result of an addition is exactly zero.
+    \item the operation is performed on unsigned numbers.
+    \item two operands of the same sign produce a result of the opposite
+      sign.
+  \end{enumerate}
+\item \textit{[Original]} When widening a value to more bits, which rule is
+correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item Zero-extension is for signed values and sign-extension is for
+      unsigned values.
+    \item Zero-extension is for unsigned values and sign-extension is for
+      signed values.
+    \item Both unsigned and signed values use zero-extension.
+    \item Both unsigned and signed values use sign-extension.
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q65; final key;
+paraphrased]} In BCD (binary-coded decimal), the decimal number 25 is
+represented as:
+  \begin{enumerate}[label=\Alph*.]
+    \item the plain binary value $11001_2$.
+    \item eight bits per decimal digit.
+    \item the hexadecimal value $25_{16}$.
+    \item $0010\ 0101$, one 4-bit code for each decimal digit.
+  \end{enumerate}
+\item \textit{[Original]} Which statement about byte-addressability and the
+effective address is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item The instruction length is always equal to the effective address.
+    \item Memory is word-addressable only, so individual bytes have no
+      address.
+    \item Each byte has its own address, and the effective address is the
+      operand's actual location, which need not equal the instruction
+      length.
+    \item The effective address is always equal to the Program Counter value.
+  \end{enumerate}
+\item \textit{[Original]} What are the full forms of RISC and CISC?
+  \begin{enumerate}[label=\Alph*.]
+    \item RISC = Reduced Instruction Set Computer; CISC = Complex
+      Instruction Set Computer
+    \item RISC = Rapid Instruction Set Computer; CISC = Complex Instruction
+      Set Computer
+    \item RISC = Reduced Integer Storage Cache; CISC = Central Instruction
+      Set Computer
+    \item RISC = Random Instruction Set Computing; CISC = Common Instruction
+      Set Computer
+  \end{enumerate}
+\item \textit{[Original]} Which set of features describes a RISC processor?
+  \begin{enumerate}[label=\Alph*.]
+    \item Many complex, variable-length instructions.
+    \item Instructions that always operate directly on memory operands.
+    \item Microprogrammed control of highly complex instructions.
+    \item Simple, mostly fixed-length instructions, many registers, and a
+      load/store architecture.
+  \end{enumerate}
+\item \textit{[Original]} Which set of features describes a CISC processor?
+  \begin{enumerate}[label=\Alph*.]
+    \item A few simple fixed-length instructions only.
+    \item A large set of complex, variable-length instructions, often
+      allowing memory operands.
+    \item No general-purpose registers at all.
+    \item A strict load/store-only memory access rule.
+  \end{enumerate}
+\item \textit{[Original]} Which statement is \textbf{NOT} correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item The Program Counter holds the address of the next instruction to
+      fetch.
+    \item Interrupts can be handled at instruction boundaries.
+    \item All machine instructions take the same number of clock cycles.
+    \item Two's-complement overflow can occur when two same-sign operands are
+      added.
+  \end{enumerate}
+\item \textit{[Original]} Which code correctly represents the decimal digit 5
+in BCD?
+  \begin{enumerate}[label=\Alph*.]
+    \item $0101$
+    \item $1001$
+    \item $101$
+    \item $1110$
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item In immediate addressing, the operand is part of the instruction.
+    \item The cache-hit ratio equals hits divided by total accesses.
+    \item Two's-complement overflow is the same as a carry out of the most
+      significant bit.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and II only
+    \item II and III only
+    \item I and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} The von Neumann bottleneck refers to:
+  \begin{enumerate}[label=\Alph*.]
+    \item the delay between keyboard input and screen output.
+    \item the limited rate at which instructions and data can be transferred
+      between the CPU and memory over a shared path.
+    \item the time taken for a hard disk to spin up.
+    \item the number of general-purpose registers in the CPU.
+  \end{enumerate}
+\item \textit{[Original]} The main purpose of virtual memory is to:
+  \begin{enumerate}[label=\Alph*.]
+    \item increase the number of CPU registers.
+    \item replace the cache entirely.
+    \item reduce the CPU clock speed.
+    \item make the available memory appear larger than physical RAM by using
+      secondary storage as backing store.
+  \end{enumerate}
+\end{enumerate}
+\end{document}

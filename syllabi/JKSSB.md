@@ -85,10 +85,12 @@ Video references: [Lesson 01](https://youtu.be/EdRZK57oqpo), [Lesson 02](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 04 | Organization of a Computer — input/output unit, memory, motherboard, buses, instruction cycle | `04-organization-of-computer` [ ] | [ ] | [ ] |
-| 05 | CPU, ALU, CU, Registers — control unit, ALU, registers, PC/IP, IR, accumulator, clock, cores, threads | `05-cpu-alu-cu-registers` [ ] | [ ] | [ ] |
-| 06 | CPU vs GPU & Microprocessor — serial vs parallel, CPU/GPU, microprocessor vs microcontroller | `06-cpu-gpu-microprocessor` [ ] | [ ] | [ ] |
-| 59 | Current CPU Architecture, Data Representation & RISC/CISC — von Neumann, addressing modes, cache-hit ratio, pipelining/data hazards, interrupts, PC/IR, two's-complement overflow, zero extension, BCD, byte-addressability, CISC vs RISC | `59-current-cpu-architecture-risc-cisc` [ ] | [ ] | [ ] |
+| 04 | Organization of a Computer — input/output unit, memory, motherboard, buses, instruction cycle | `04-organization-of-computer` [x] | [x] | [x] |
+| 05 | CPU, ALU, CU, Registers — control unit, ALU, registers, PC/IP, IR, accumulator, clock, cores, threads | `05-cpu-alu-cu-registers` [x] | [x] | [x] |
+| 06 | CPU vs GPU & Microprocessor — serial vs parallel, CPU/GPU, microprocessor vs microcontroller | `06-cpu-gpu-microprocessor` [x] | [x] | [x] |
+| 59 | Current CPU Architecture, Data Representation & RISC/CISC — von Neumann, addressing modes, cache-hit ratio, pipelining/data hazards, interrupts, PC/IR, two's-complement overflow, zero extension, BCD, byte-addressability, CISC vs RISC | `59-current-cpu-architecture-risc-cisc` [x] | [x] | [x] |
+
+Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https://youtu.be/b6w8uT4GBYQ), and [Lesson 06](https://youtu.be/Vaod5Ox7lzM). Lesson 59 has no video yet.
 
 ### Unit 3 — Memory, Storage & Backup
 

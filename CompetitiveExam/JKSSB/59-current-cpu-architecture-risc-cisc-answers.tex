@@ -1,0 +1,83 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 59 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{PYQ provenance:} Q1 and Q5 adapt Junior Assistant 2026 Q62;
+Q7 adapts Q64; Q11 and Q13 adapt Q65. The cited key is the official final key
+for JA 2026, and all adaptations are paraphrased, not verbatim.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{C.} von Neumann architecture stores instructions and data
+  together in the same memory. A describes a separate-memory (Harvard-style)
+  design; B and D wrongly keep only one of the two in memory.
+\item \textbf{B.} Immediate addressing carries the operand inside the
+  instruction encoding. A describes register addressing; C describes direct
+  addressing; D confuses the operand with the next address.
+\item \textbf{A.} The hit ratio is hits divided by total accesses. B gives the
+  miss ratio; C and D invert the intended quantities.
+\item \textbf{C.} A cache hit avoids a slow main-memory access because the
+  cache is small, fast, and close to the CPU. A places the cache on secondary
+  storage; B wrongly limits it to instructions; D gives it disk speed.
+\item \textbf{D.} Hazards stem from dependencies between instructions, such as
+  a read-after-write dependency exposed by pipelining. A wrongly restricts
+  hazards to memory operands; B claims register addressing removes all
+  hazards; C wrongly ties hazards to immediate addressing.
+\item \textbf{D.} Cache is small fast memory between the CPU and main memory;
+  virtual memory makes memory appear larger using secondary storage. A
+  misplaces both; B treats them as one device; C reduces virtual memory to a
+  single cache line.
+\item \textbf{B.} The Program Counter holds the address of the next
+  instruction to fetch. A is the standard trap (current instruction); C
+  confuses it with an operand; D describes a past instruction.
+\item \textbf{B.} The Instruction Register holds the instruction currently
+  being fetched, decoded, and executed. A is the PC's role; C names an operand
+  value; D names the data-bus width.
+\item \textbf{D.} Interrupts are recognised at instruction boundaries during
+  execution. A is the trap (only after the whole program); B and C wrongly
+  limit interrupts to boot or to hardware faults.
+\item \textbf{C.} Different instructions can take different numbers of clock
+  cycles. A and B assert a constant count; D denies that instructions use
+  cycles at all.
+\item \textbf{D.} Overflow is detected when adding two same-sign operands
+  yields an opposite-sign result. A is the trap (carry out of the MSB); B and
+  C misstate the condition.
+\item \textbf{B.} Zero-extension is for unsigned values and sign-extension is
+  for signed values. A swaps them (the trap); C and D apply a single rule to
+  both cases.
+\item \textbf{D.} BCD encodes each decimal digit in 4 bits, so 25 is
+  $0010\ 0101$. A is the plain binary value; B uses eight bits per digit; C
+  treats the number as hexadecimal.
+\item \textbf{C.} Memory is byte-addressable, so each byte has its own
+  address, and the effective address is the operand's actual location, which
+  need not equal the instruction length. A and D wrongly equate unrelated
+  quantities; B denies byte-addressability.
+\item \textbf{A.} RISC is Reduced Instruction Set Computer and CISC is
+  Complex Instruction Set Computer. B, C, and D give incorrect expansions of
+  the abbreviations.
+\item \textbf{D.} RISC uses simple, mostly fixed-length instructions, many
+  registers, and a load/store architecture. A and C describe CISC traits; B
+  contradicts the load/store discipline.
+\item \textbf{B.} CISC offers a large set of complex, variable-length
+  instructions and often permits memory operands. A and D describe RISC; C is
+  false of CISC designs.
+\item \textbf{C.} ``All instructions take the same number of clock cycles'' is
+  false; the count varies. A, B, and D are all correct statements about the PC,
+  interrupts, and overflow.
+\item \textbf{A.} The BCD code for the digit 5 is $0101$. B is the code for 9;
+  C is the plain binary of 5, not its BCD code; D is not a valid BCD digit.
+\item \textbf{A.} Statements I and II are true. III is false because overflow
+  is a sign condition, not a carry out of the MSB. B includes false III; C
+  includes III and omits II; D includes III.
+\item \textbf{B.} The von Neumann bottleneck is the limited rate at which
+  instructions and data move between the CPU and memory over a shared path. A,
+  C, and D name unrelated delays or quantities.
+\item \textbf{D.} Virtual memory makes memory appear larger than physical RAM
+  by using secondary storage as backing store. A, B, and C describe unrelated
+  or incorrect effects.
+\end{enumerate}
+\end{document}

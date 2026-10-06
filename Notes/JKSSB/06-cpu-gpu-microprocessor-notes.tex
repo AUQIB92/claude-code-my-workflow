@@ -1,0 +1,246 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{06.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{CPU vs GPU \& Microprocessor --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Video lesson:}
+\href{https://youtu.be/Vaod5Ox7lzM}{CPU vs GPU: What's the Difference? Microprocessor \& Microcontroller Explained}
+
+\section{Serial and parallel processing}
+\textbf{Serial processing} means that one task is carried out at a time, in
+sequence: the first operation finishes before the next begins. \textbf{Parallel
+processing} means that several tasks or operations proceed at the same time.
+A serial workload rewards a processor with a few very fast units; a parallel
+workload rewards a processor with many units that can work simultaneously.
+
+\begin{definitionbox}{Serial processing}
+Carrying out one task at a time, in sequence, so that each step completes
+before the next starts.
+\end{definitionbox}
+
+\begin{definitionbox}{Parallel processing}
+Carrying out several tasks or operations at the same time.
+\end{definitionbox}
+
+The difference matters because it explains why two processors can both be
+described as ``fast'' while being designed for opposite jobs. A processor that
+excels at finishing a single chain of instructions quickly is a
+latency-optimised design. A processor that excels at completing a very large
+number of small independent operations per second is a
+throughput-optimised design.
+
+\section{CPU versus GPU}
+The CPU (Central Processing Unit) is the general-purpose processor of a
+computer. It has \textbf{few, powerful cores}, and each core is capable of
+running a sequential instruction stream quickly. Its design goal is
+\textbf{low latency}: to complete one task with the least possible delay. In
+the office-desktop running example (EX-01), the CPU executes the operating
+system, \mbox{MS Word}, and spreadsheet logic step by step.
+
+The GPU (Graphics Processing Unit) is a processor built around
+\textbf{many simpler cores}. Each core does a small amount of work, and the
+design goal is \textbf{high throughput}: a very large number of independent
+operations per second. This makes the GPU a natural fit for pixels and
+graphics, and also for scientific and machine-learning workloads that can be
+expressed as many parallel calculations.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Feature} & \textbf{CPU} & \textbf{GPU}\\
+\midrule
+Cores & Few, powerful & Many, simple\\
+Design goal & Low latency & High throughput\\
+Best suited to & Sequential, general-purpose work & Parallel work (pixels, ML)\\
+Core type & General-purpose & Specialised, simpler\\
+Example use & EX-01 desktop logic & Image and graphics operations\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+An item asks which processor is better suited to an image-processing task
+that repeats the same operation on millions of pixels. Because those pixel
+operations are independent and can run in parallel, the GPU --- with its many
+simple cores --- is the better fit. The CPU's few powerful cores would each
+handle the chain of pixels one after another.
+\end{example}
+
+The most common near-neighbour error is to treat GPU cores as if they were
+interchangeable general-purpose CPU cores. They are not. GPU cores are
+simpler and optimised for parallel throughput, so they are not a full
+replacement for the CPU's general-purpose cores.
+
+\section{Cores, threads, and hyper-threading}
+A \textbf{core} is a physical processing unit. A quad-core CPU contains four
+such units. A \textbf{thread} is a stream of instructions that a core
+executes. \textbf{Hyper-threading} lets a single physical core present two
+logical threads, so the core can stay busy while one thread is waiting.
+
+Two logical threads on one core are not two physical cores. A quad-core
+processor with hyper-threading may report eight logical threads, but it still
+has four physical cores. Clock speed and core count together, not thread
+count alone, determine raw capacity.
+
+\begin{definitionbox}{Hyper-threading}
+A technique in which one physical core presents two logical threads to the
+operating system, improving utilisation while a thread waits.
+\end{definitionbox}
+
+\section{Cache depth: L1, L2, and L3}
+Cache is small, fast memory held close to the core. It is organised in levels.
+\textbf{L1} is the smallest and fastest level and sits nearest the core.
+\textbf{L2} is larger and a little slower than L1. \textbf{L3} is the largest
+and slowest of the three and is typically shared across cores. The order of
+speed and closeness is L1, then L2, then L3, then main memory.
+
+\begin{center}
+\begin{tabular}{p{0.12\textwidth}p{0.30\textwidth}p{0.42\textwidth}}
+\toprule
+\textbf{Level} & \textbf{Relative size} & \textbf{Relative speed and location}\\
+\midrule
+L1 & Smallest & Fastest; closest to the core\\
+L2 & Larger & Slower than L1\\
+L3 & Largest & Slowest of the three; often shared across cores\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Clock speed and multi-core}
+\textbf{Clock speed} is measured in \textbf{GHz} (gigahertz), which counts
+billions of cycles per second. A higher clock speed generally means more work
+completed per second, all else being equal. A \textbf{multi-core} processor
+places several cores on one chip, which enables parallel work. However, clock
+speed alone never decides real performance: the number of cores, the cache
+size, the amount of memory, and the input/output speed all contribute.
+
+\section{Microprocessor versus microcontroller}
+A \textbf{microprocessor} is a central processing unit implemented on a single
+chip. It is a general-purpose processor, and software decides what it does.
+On its own it still needs external memory and input/output devices to form a
+complete working system. The EX-01 office desktop is built around a
+microprocessor.
+
+A \textbf{microcontroller} integrates more on the same chip: a microprocessor
+\textbf{plus} memory \textbf{plus} input/output peripherals. It therefore
+forms a near-complete computer on one chip and is used for
+\textbf{embedded/special-purpose} control, for example in washing machines,
+remote controls, and appliance or vehicle controllers.
+
+\begin{definitionbox}{Microprocessor}
+A central processing unit implemented on a single chip; a general-purpose
+device that needs external memory and I/O.
+\end{definitionbox}
+
+\begin{definitionbox}{Microcontroller}
+A microprocessor together with integrated memory and input/output peripherals
+on one chip, used in embedded and special-purpose systems.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
+\toprule
+\textbf{Feature} & \textbf{Microprocessor} & \textbf{Microcontroller}\\
+\midrule
+Contents & CPU on a chip & CPU + memory + I/O on a chip\\
+Purpose & General-purpose & Embedded / special-purpose\\
+System & Needs external parts & Self-contained on one chip\\
+Example & EX-01 office desktop & Appliance controller\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The key difference is the \textbf{level of integration}, not clock speed. A
+microcontroller is not ``just a microprocessor'': it is a more integrated
+device that already includes memory and I/O on the same chip.
+
+\section{Diagnosing a ``slow'' computer (EX-01)}
+The office desktop in this running example is a quad-core 2.4\,GHz machine
+with 16\,GB of RAM and an SSD. Suppose one particular program still runs
+slowly. A common but incorrect conclusion is that the CPU must be slow,
+because ``more cores should mean faster''. More cores do not help a
+single-threaded program, which uses only one core at a time. The real cause is
+usually a \textbf{bottleneck}: memory pressure, disk input/output, or software
+that is not multithreaded.
+
+\begin{example}
+A question describes a quad-core 2.4\,GHz desktop with 16\,GB RAM and an SSD,
+and asks why one application is slow. The best answer is to diagnose a stated
+bottleneck --- a single-threaded program, insufficient memory, or slow disk
+input/output --- rather than to declare the CPU slow. A slow program is not
+automatically a ``slow CPU.''
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Use two retrieval directions. Given the processor, recall its core profile;
+given the workload, recall the better processor.
+\begin{itemize}
+  \item CPU $\leftrightarrow$ few powerful general-purpose cores, low latency.
+  \item GPU $\leftrightarrow$ many simple cores, high throughput, parallel.
+  \item Serial $\leftrightarrow$ one task at a time in sequence.
+  \item Parallel $\leftrightarrow$ several tasks or operations at once.
+  \item Microprocessor $\leftrightarrow$ CPU on a single chip, general-purpose.
+  \item Microcontroller $\leftrightarrow$ microprocessor + memory + I/O on one
+    chip, embedded.
+  \item Cache order $\leftrightarrow$ L1 (smallest, fastest) to L3 (largest,
+    slowest).
+\end{itemize}
+
+Three distinctions prevent most errors in this topic:
+\begin{enumerate}
+  \item Do not treat GPU cores as general-purpose CPU cores. They are simpler
+    and optimised for parallel throughput.
+  \item Do not confuse serial with parallel. Serial is sequential, one task at
+    a time; parallel is simultaneous.
+  \item Do not attribute a slow program on a capable machine automatically to
+    a slow CPU. Check the multithreading, memory, and disk-I/O bottleneck; and
+    do not confuse a microprocessor (CPU on a chip) with a microcontroller
+    (CPU + memory + I/O on one chip).
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish serial processing from parallel processing.
+  \item State one design goal of the CPU and one of the GPU, and give the
+    core profile of each.
+  \item Explain the difference between a microprocessor and a microcontroller.
+  \item What does hyper-threading allow, and why is it not the same as adding
+    a physical core?
+  \item A quad-core 2.4\,GHz desktop with 16\,GB RAM and an SSD runs one
+    program slowly. Give the most appropriate diagnosis and say why.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Serial processing performs one task at a time in sequence; parallel
+    processing performs several tasks or operations at the same time.
+  \item The CPU is optimised for low latency and has few powerful
+    general-purpose cores. The GPU is optimised for high throughput and has
+    many simpler cores for parallel work.
+  \item A microprocessor is a CPU on a single chip and is general-purpose,
+    needing external memory and I/O. A microcontroller adds memory and I/O
+    peripherals on the same chip, forming an embedded, special-purpose system;
+    the difference is the level of integration.
+  \item Hyper-threading lets one physical core present two logical threads, so
+    it can stay busy while one thread waits. It does not add a physical core;
+    a quad-core chip with hyper-threading still has four physical cores.
+  \item The program is likely limited by a bottleneck --- a single-threaded
+    workload, insufficient memory, or slow disk input/output --- rather than
+    by a slow CPU, since extra cores do not speed up a single-threaded
+    program. A slow program is not automatically a ``slow CPU.''
+\end{enumerate}
+\endgroup
+\end{document}

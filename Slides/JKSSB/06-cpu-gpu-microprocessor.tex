@@ -1,0 +1,204 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{CPU vs GPU \& Microprocessor}
+\subtitle{Lesson 06 --- Serial vs Parallel, Microprocessor vs Microcontroller}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Video Lesson 06}
+  \centering
+  \Large\href{https://youtu.be/Vaod5Ox7lzM}{Watch: CPU vs GPU: What's the Difference?}
+\end{frame}
+
+\begin{frame}{Serial vs Parallel Processing}
+  \begin{itemize}
+    \item \key{Serial processing}: one task is carried out at a time, in
+      sequence.
+    \item \key{Parallel processing}: several tasks or operations proceed at
+      the same time.
+    \item A few fast cores suit serial work; many cores working together suit
+      parallel work.
+    \item The office desktop (EX-01) runs several programs together, so it
+      depends on parallel support.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    Serial = order (A, then B, then C). Parallel = together (A and B and C).
+  \end{block}
+\end{frame}
+
+\begin{frame}{CPU: Few Powerful Cores}
+  \begin{itemize}
+    \item The CPU is the \key{Central Processing Unit}, the general-purpose
+      processor.
+    \item It has \key{few, powerful cores}, each able to run a sequential
+      instruction stream quickly.
+    \item Design goal: \key{low latency} --- finish one task with minimum
+      delay.
+    \item In EX-01, the CPU runs the operating system, MS Word, and
+      spreadsheet logic step by step.
+  \end{itemize}
+  \begin{alertblock}{Remember}
+    A CPU core is general-purpose: it can run any instruction, not only
+    graphics.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{GPU: Many Simple Cores}
+  \begin{itemize}
+    \item GPU is the \key{Graphics Processing Unit}.
+    \item It has \key{many simpler cores}, each performing a small amount of
+      work.
+    \item Design goal: \key{high throughput} --- a huge number of parallel
+      operations per second.
+    \item Natural fit: pixels and graphics, plus scientific and
+      machine-learning workloads.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    \bad{GPU cores are not general-purpose CPU cores.} They are many,
+    simpler, and optimised for parallel work.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{CPU vs GPU at a Glance}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Feature} & \textbf{CPU vs GPU} \\
+      \midrule
+      Cores & CPU: few, powerful \quad GPU: many, simple \\
+      Optimised for & CPU: latency \quad GPU: throughput \\
+      Best at & CPU: sequential \quad GPU: parallel \\
+      Example & CPU: desktop logic \quad GPU: pixels \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{Think: a few experts (CPU) vs a large team of simple workers (GPU).}
+\end{frame}
+
+\begin{frame}{Cores vs Threads and Hyper-Threading}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Core}
+      \begin{itemize}
+        \item A physical processing unit.
+        \item A quad-core CPU has four such units.
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Thread}
+      \begin{itemize}
+        \item A stream of instructions a core executes.
+        \item \key{Hyper-threading}: one core presents two logical threads.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{block}{Do not confuse}
+    Two logical threads on one core are \bad{not} two physical cores.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cache Depth: L1, L2, L3}
+  \begin{itemize}
+    \item Cache is small, fast memory held close to the core.
+    \item \key{L1}: smallest and fastest, nearest the core.
+    \item \key{L2}: larger and a little slower than L1.
+    \item \key{L3}: largest and slowest of the three, shared across cores.
+    \item Speed order: L1 faster than L2 faster than L3, then main memory.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    Smallest $\rightarrow$ fastest $\rightarrow$ closest:
+    \key{L1\,$<$\,L2\,$<$\,L3}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Clock Speed and Multi-Core}
+  \begin{itemize}
+    \item \key{Clock speed} is measured in \key{GHz} (gigahertz): billions of
+      cycles per second.
+    \item A higher clock speed generally means more work completed per second,
+      all else equal.
+    \item A \key{multi-core} processor has several cores on one chip, which
+      enables parallel work.
+    \item Clock speed alone does not decide real speed --- cores, cache,
+      memory, and I/O all matter.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Microprocessor: A CPU on a Chip}
+  \begin{itemize}
+    \item A \key{microprocessor} is a \key{central processing unit implemented
+      on a single chip}.
+    \item It is a \key{general-purpose} processor: software decides what it
+      does.
+    \item It needs external memory and I/O devices to form a complete working
+      system.
+    \item The office desktop (EX-01) is built around a microprocessor.
+  \end{itemize}
+  \begin{block}{Definition}
+    Microprocessor = the CPU, integrated on one chip.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Microcontroller: Integration on One Chip}
+  \begin{itemize}
+    \item A \key{microcontroller} adds more onto one chip: a microprocessor
+      \key{plus} memory \key{plus} I/O peripherals.
+    \item It forms a near-complete computer on one chip, used for
+      \key{embedded/special-purpose} control.
+    \item Everyday uses: washing machines, remote controls, and appliance or
+      vehicle controllers.
+    \item The key difference from a microprocessor is the \key{level of
+      integration}, not clock speed.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Microprocessor vs Microcontroller}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Microprocessor} & \textbf{Microcontroller} \\
+      \midrule
+      CPU on a chip & CPU + memory + I/O on a chip \\
+      General-purpose & Embedded / special-purpose \\
+      Needs external parts & Self-contained system \\
+      E.g. office desktop & E.g. appliance controller \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \begin{alertblock}{Trap}
+    \bad{Do not call a microcontroller ``just a microprocessor''} --- it is a
+    more integrated device.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Diagnosing a ``Slow PC'' (EX-01)}
+  \begin{itemize}
+    \item EX-01: a quad-core 2.4\,GHz desktop with 16\,GB RAM and an SSD.
+    \item Yet one program still runs slowly.
+    \item More cores do not help a \key{single-threaded} program.
+    \item The cause is usually a \key{bottleneck}: memory, disk I/O, or
+      software that is not multithreaded.
+  \end{itemize}
+  \begin{alertblock}{Trap (TRAP-11)}
+    \bad{A slow program is not automatically a ``slow CPU.''} Diagnose the
+    stated bottleneck first.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 06: Recall}
+  \begin{itemize}
+    \item CPU: few powerful, general-purpose cores optimised for latency.
+    \item GPU: many simple cores optimised for parallel throughput.
+    \item Serial = one at a time; parallel = many at once.
+    \item Microprocessor = CPU on a chip; microcontroller = CPU + memory +
+      I/O on one chip.
+    \item Quad-core but slow $\rightarrow$ suspect a bottleneck, not always
+      the CPU.
+  \end{itemize}
+\end{frame}
+\end{document}

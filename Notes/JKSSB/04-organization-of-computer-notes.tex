@@ -1,0 +1,265 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{04.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Organization of a Computer --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Video lesson:}
+\href{https://youtu.be/92XQ_n1t_cc}{How Computers Actually Work: CPU, Memory \& I/O Explained}
+
+\section{The functional units of a computer}
+Start with the office desktop. A clerk types marks on the keyboard, the CPU
+processes them through a spreadsheet formula, the monitor and printer present
+the result, and the file is kept on the SSD for later use. This single machine
+contains every functional unit that the exam asks you to name.
+
+\begin{definitionbox}{Functional unit}
+A major part of a computer that performs one broad job --- accepting input,
+producing output, holding data, performing operations, or controlling the
+machine.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.25\textwidth}p{0.63\textwidth}}
+\toprule
+\textbf{Unit} & \textbf{Job in this lesson}\\
+\midrule
+Input unit & Accepts data and instructions from the outside world.\\
+Output unit & Presents the result to the user.\\
+Memory (primary storage) & Holds data and instructions currently in use.\\
+Arithmetic Logic Unit (ALU) & Performs arithmetic and logical operations.\\
+Control unit & Directs the sequence of operations and the flow of data.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The memory unit described here is \emph{primary storage}, that is, main
+memory. Secondary storage such as a hard disk or an SSD is a separate idea and
+is treated in Section 4.
+
+\section{The CPU: ALU, control unit and registers}
+The \key{Central Processing Unit (CPU)} is the processing centre of the
+computer. It is built from three parts: the arithmetic logic unit, the control
+unit, and registers.
+
+\begin{definitionbox}{Central Processing Unit (CPU)}
+The unit that fetches, decodes and executes instructions; it is formed by the
+ALU, the control unit and the registers.
+\end{definitionbox}
+
+\begin{definitionbox}{Arithmetic Logic Unit (ALU)}
+The part of the CPU that performs arithmetic operations (such as addition and
+subtraction) and logical operations (such as comparison) on binary data.
+\end{definitionbox}
+
+\begin{definitionbox}{Control unit}
+The part of the CPU that fetches and decodes instructions, issues control
+signals, and coordinates the operation of all other units.
+\end{definitionbox}
+
+\begin{definitionbox}{Register}
+A small, very fast storage location inside the CPU used to hold data,
+addresses or control information during processing.
+\end{definitionbox}
+
+The ALU does the calculating, but it does not decide what to do. The control
+unit decides the sequence of operations and the flow of data, and then tells
+the ALU and the other units when to act. Registers are the CPU's own working
+storage; they are not the same as main memory or secondary storage.
+
+\begin{example}
+In the marks spreadsheet, the formula that adds three marks is carried out by
+the ALU. The control unit has already fetched the formula's instruction from
+memory, decoded it, and signalled the ALU to act. The intermediate values are
+kept in registers while the operation runs. The final total is then written
+back to memory and later shown on the monitor.
+\end{example}
+
+\section{Input and output units}
+The input unit brings data and instructions into the system. The output unit
+presents the result.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.58\textwidth}}
+\toprule
+\textbf{Input devices} & \textbf{Output devices}\\
+\midrule
+Keyboard, mouse, scanner, microphone, light pen, digitizer & Monitor,
+printer, plotter, speaker, sound-card output\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A device is classified by the role it plays in the described task, not by its
+shape. A monitor is normally an output device because it presents results. A
+scanner is an input device because it brings data in. When a question lists
+devices, mark each one as input or output before choosing the option.
+
+\section{Memory (primary storage) versus secondary storage}
+This is a high-value contrast.
+
+\begin{definitionbox}{Primary storage (main memory)}
+The memory the CPU accesses directly while processing; it holds the programs
+and data currently in use. Random Access Memory (RAM) is volatile; Read Only
+Memory (ROM) is non-volatile.
+\end{definitionbox}
+
+\begin{definitionbox}{Secondary storage}
+Storage that keeps data and files permanently but is not accessed directly by
+the CPU during processing; examples are the hard disk, the Solid State Drive
+(SSD) and the pen drive.
+\end{definitionbox}
+
+The key rule for the exam is that the \key{CPU works with main memory, not
+with secondary storage}. When a program on the hard disk is run, it is first
+loaded into main memory; the CPU then works from main memory. Secondary
+storage is reached through main memory and the operating system.
+
+\begin{example}
+The spreadsheet file is saved on the SSD. When the clerk opens it, the file is
+first loaded into RAM. All the additions and comparisons are then performed
+on data held in RAM and in the CPU registers. Writing the result back to the
+SSD happens later, through the operating system. At no point does the ALU
+process the file straight from the SSD.
+\end{example}
+
+\section{The system bus: address, data and control}
+The \key{system bus} is the set of wires that carries information between the
+CPU, memory and the other units. It has three parts, and their directions
+differ --- this is a common trap.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.26\textwidth}p{0.46\textwidth}}
+\toprule
+\textbf{Bus} & \textbf{Direction} & \textbf{Role}\\
+\midrule
+Address bus & CPU $\rightarrow$ memory & Carries the address of the memory
+location the CPU wants to use.\\
+Data bus & Bidirectional & Carries the actual data and instructions between
+the CPU and memory.\\
+Control bus & CPU $\rightarrow$ units & Carries control and timing signals,
+such as read and write.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{System bus}
+The address bus, data bus and control bus taken together; they connect the
+CPU with memory and the input/output units.
+\end{definitionbox}
+
+Remember the three questions: the address bus answers \emph{where}, the data
+bus answers \emph{what}, and the control bus answers \emph{when and how}. The
+address bus is one-way (from the CPU outwards) and carries the address, not
+the contents of the location. The data bus is two-way. The control bus
+carries signals, not data or addresses.
+
+\begin{example}
+The CPU wants the value stored at memory location 200. It places the address
+200 on the address bus and sends a read signal on the control bus. The memory
+puts the contents of location 200 onto the data bus, and the CPU receives it.
+The address travelled out on the address bus; the data travelled back on the
+data bus.
+\end{example}
+
+\section{The motherboard, expansion slots and interfaces}
+The \key{motherboard} is the main circuit board that connects and links the
+CPU, main memory and the buses. Expansion slots on the motherboard allow
+extra cards to be added, such as a graphics card or a network card. Interfaces
+and ports connect external devices --- keyboard, printer, monitor --- to the
+system. The system bus runs along the motherboard between the CPU and the
+other units, so the motherboard is the physical platform on which the units
+communicate.
+
+\section{The stored-program (von Neumann) idea}
+In early machines, changing the task often meant rewiring the machine. The
+\key{stored-program concept} changed this.
+
+\begin{definitionbox}{Stored-program concept (von Neumann architecture)}
+The design in which a program's instructions are stored in main memory
+together with the data, so the CPU can fetch and execute them without
+rewiring the machine.
+\end{definitionbox}
+
+Because instructions and data share the same memory, the CPU fetches an
+instruction from memory, executes it, and moves on to the next. This repeating
+pattern is the instruction cycle, described next.
+
+\section{The instruction cycle}
+The \key{instruction cycle} is the sequence the CPU follows for each
+instruction.
+
+\begin{enumerate}
+  \item \key{Fetch}: the CPU obtains the next instruction from main memory.
+  \item \key{Decode}: the control unit works out what the instruction means.
+  \item \key{Execute}: the ALU or another unit performs the operation.
+  \item \key{Store} (when required): the result is written back to memory or
+    to a register.
+\end{enumerate}
+
+The order is fixed: fetch, then decode, then execute. The optional store step
+writes the result back. Data and instructions move between the units over the
+system bus, and the whole cycle repeats for the next instruction.
+
+\begin{example}
+Consider an instruction ``add the value in memory to a register''. During
+fetch, the CPU gets the instruction from memory. During decode, the control
+unit identifies it as an addition and signals the ALU. During execute, the ALU
+performs the addition. The updated value is then stored back in the register
+or in memory, and the cycle begins again.
+\end{example}
+
+Three distinctions prevent most errors in this topic:
+\begin{enumerate}
+  \item The CPU accesses main memory directly, not secondary storage.
+  \item Address, data and control buses are not interchangeable: the address
+    bus is one-way and carries addresses; the data bus is two-way and carries
+    data and instructions; the control bus carries control signals.
+  \item Memory (primary) holds current work; storage (secondary) keeps files
+    permanently.
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Name the five functional units of a computer and state one job of
+    each.
+  \item What are the three parts of the CPU, and what does each do?
+  \item State the direction and role of the address bus, the data bus and the
+    control bus.
+  \item A file is opened from a hard disk and edited. Explain why the CPU does
+    not process the file directly from the hard disk.
+  \item List the steps of the instruction cycle in order.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Input unit (accepts data and instructions); output unit (presents
+    results); memory/primary storage (holds data and instructions in use);
+    ALU (performs arithmetic and logical operations); control unit (directs
+    operations and data flow).
+  \item The ALU, the control unit and the registers. The ALU computes; the
+    control unit fetches, decodes and signals; the registers hold data and
+    addresses during processing.
+  \item Address bus: one-way from CPU to memory, carrying the address of the
+    location. Data bus: bidirectional, carrying data and instructions.
+    Control bus: carries control and timing signals from the CPU to other
+    units.
+  \item The CPU accesses only main memory directly. The file is first loaded
+    into main memory, the CPU processes the copy in main memory and registers,
+    and the operating system writes the changes back to the hard disk.
+  \item Fetch, decode, execute (and store when a result must be written back).
+\end{enumerate}
+\endgroup
+\end{document}

@@ -1,0 +1,239 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current CPU Architecture, Data Representation \& RISC/CISC}
+\subtitle{Lesson 59 --- von Neumann, Addressing, Hazards, BCD, RISC vs CISC}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{von Neumann Architecture \& the Bottleneck}
+  \begin{itemize}
+    \item \key{von Neumann (stored-program) architecture}: instructions and
+      data are held together in the \key{same memory}.
+    \item The CPU repeatedly fetches an instruction, decodes it, and executes
+      it, fetching data from the same memory.
+    \item A single shared path carries both instructions and data.
+  \end{itemize}
+  \begin{alertblock}{von Neumann bottleneck}
+    The limited rate at which instructions and data can move between the CPU
+    and memory on that shared path. The CPU often waits for memory, which
+    caps performance.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Addressing Modes: Immediate}
+  \begin{itemize}
+    \item An \key{addressing mode} is how an instruction specifies where its
+      operand comes from.
+    \item \key{Immediate addressing}: the operand is carried \emph{inside}
+      the instruction itself.
+    \item No extra memory access is needed to fetch the operand.
+  \end{itemize}
+  \begin{block}{Immediate in one line}
+    The operand is part of the instruction, not a separate memory location.
+  \end{block}
+  \muted{Contrast: register addressing names a register; direct addressing names a memory address.}
+\end{frame}
+
+\begin{frame}{Cache, Hit Ratio \& Why a Hit Is Faster}
+  \begin{itemize}
+    \item A \key{cache} is a small, fast memory between the CPU and main
+      memory that holds recently used instructions and data.
+    \item A \key{hit} means the requested item is present; a \key{miss} means
+      it is not.
+  \end{itemize}
+  \begin{block}{Cache-hit ratio}
+    $\text{hit ratio} = \dfrac{\text{hits}}{\text{hits} + \text{misses}}
+    = \dfrac{\text{hits}}{\text{total accesses}}$.
+  \end{block}
+  \begin{alertblock}{Why a hit is faster}
+    Cache access time is far lower than main-memory access time, so a hit
+    avoids a slow main-memory access.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Data Hazards Even with Register Addressing}
+  \begin{itemize}
+    \item A \key{data hazard} is a dependency that stops an instruction from
+      proceeding correctly in the expected cycle.
+    \item Register operands avoid an extra memory access, but they do
+      \bad{not} remove every hazard.
+    \item A read-after-write dependency (an instruction needs a register that
+      an earlier instruction is still writing) is a hazard even though no
+      memory operand is involved.
+  \end{itemize}
+  \begin{block}{Key point}
+    Hazards come from \emph{dependencies between instructions}, typically
+    exposed by pipelining, not only from memory operands.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Virtual Memory vs Cache}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+      \textbf{Cache}
+      \begin{itemize}
+        \item Small, fast memory close to the CPU.
+        \item Holds recently used blocks.
+        \item Managed mostly in hardware.
+        \item Goal: lower average access time.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Virtual memory}
+      \begin{itemize}
+        \item Makes memory appear larger than physical RAM.
+        \item Uses secondary storage as backing store.
+        \item Managed by the OS with hardware help.
+        \item Goal: run large programs within limited RAM.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.2cm}
+  \muted{The two solve different problems and are not the same hardware.}
+\end{frame}
+
+\begin{frame}{Instruction Cycle: Program Counter \& Instruction Register}
+  \begin{itemize}
+    \item \key{Program Counter (PC)}: holds the address of the \key{next}
+      instruction to be fetched.
+    \item \key{Instruction Register (IR)}: holds the instruction currently
+      being fetched, decoded, and executed.
+    \item After fetching, the PC is advanced to point at the following
+      instruction.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    The PC holds the address of the \emph{next} instruction, \bad{not} the
+    current one being executed.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Interrupts at Instruction Boundaries}
+  \begin{itemize}
+    \item An \key{interrupt} is a signal that makes the CPU pause the current
+      program and run a handler.
+    \item Interrupts are checked at \key{instruction boundaries}, during the
+      program run.
+    \item They are \good{not} delayed until the whole program finishes.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    ``Interrupts are processed only after the entire program completes'' is
+    false. Handling happens mid-program, between instructions.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Instruction Cycle Counts Vary}
+  \begin{itemize}
+    \item Different instructions do different amounts of work.
+    \item A simple register operation may complete in one clock cycle.
+    \item A divide, a multi-step operation, or an instruction that accesses
+      slow memory can take many cycles.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    ``All machine instructions take the same number of clock cycles'' is
+    false. The count \bad{varies} by instruction.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Two's-Complement \& Overflow Detection}
+  \begin{itemize}
+    \item In $n$-bit two's complement the most significant bit is the
+      \key{sign} bit; negative values are formed by inverting and adding one.
+    \item \key{Overflow} means the true result cannot be represented in the
+      available bits.
+  \end{itemize}
+  \begin{block}{Overflow test}
+    Overflow occurs when two operands of the \key{same sign} produce a result
+    of the \key{opposite sign}.
+  \end{block}
+  \begin{alertblock}{Trap}
+    Overflow is \bad{not} the same as a carry out of the most significant
+    bit. A carry can occur without any overflow.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Zero-Extension vs Sign-Extension}
+  \begin{itemize}
+    \item \key{Extension} widens a value to more bits while keeping its
+      value.
+    \item \key{Zero-extension}: fill the new leftmost bits with 0 --- used
+      for \key{unsigned} values.
+    \item \key{Sign-extension}: copy the sign bit into the new leftmost bits
+      --- used for \key{signed} values.
+  \end{itemize}
+  \begin{block}{Remember the pair}
+    Unsigned $\rightarrow$ zero-extension; signed $\rightarrow$
+    sign-extension. Swapping them is the common trap.
+  \end{block}
+\end{frame}
+
+\begin{frame}{BCD Encoding}
+  \begin{itemize}
+    \item \key{BCD} = Binary-Coded Decimal.
+    \item Each decimal digit is stored in its own \key{4-bit} code.
+    \item Decimal $59$ becomes $0101\ 1001$ (5 then 9).
+  \end{itemize}
+  \begin{block}{Contrast with plain binary}
+    Plain binary of $59$ is $111011_2$; BCD keeps one 4-bit code per decimal
+    digit.
+  \end{block}
+  \begin{alertblock}{Trap}
+    BCD does \bad{not} pack the whole decimal number as ordinary binary.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Byte-Addressability \& Effective Address}
+  \begin{itemize}
+    \item \key{Byte-addressable memory}: every individual byte has its own
+      unique address; a word is a group of bytes at consecutive addresses.
+    \item The \key{effective address} is the actual location an instruction
+      uses for its operand; it may be computed at run time.
+    \item Instruction length (in bytes) and effective address are
+      \key{different} quantities.
+  \end{itemize}
+  \begin{block}{Key point}
+    A long instruction does not mean a far address; the operand address is
+    determined by the addressing mode, not by the instruction's size.
+  \end{block}
+\end{frame}
+
+\begin{frame}{RISC vs CISC}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Aspect} & \textbf{RISC} & \textbf{CISC} \\
+      \midrule
+      Instruction set & Small, simple & Large, complex \\
+      Instruction length & Fixed & Variable \\
+      Registers & Many & Fewer \\
+      Memory access & Load/store only & Memory operands allowed \\
+      Cycles per instruction & Typically one (pipelined) & Often multiple \\
+      Control emphasis & Hardwired, compiler-driven & Microcoded, hardware-driven \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{RISC = Reduced Instruction Set Computer; CISC = Complex Instruction Set Computer.}
+\end{frame}
+
+\begin{frame}{Lesson 59: Recall}
+  \begin{itemize}
+    \item von Neumann: instructions and data share one memory; the shared
+      path causes the von Neumann bottleneck.
+    \item Immediate addressing keeps the operand inside the instruction.
+    \item Cache-hit ratio $=$ hits $/$ total accesses; a hit is faster than
+      main memory.
+    \item Hazards come from dependencies, even with register addressing.
+    \item The PC holds the address of the \key{next} instruction; the IR
+      holds the current instruction.
+    \item Interrupts are handled at instruction boundaries, mid-program.
+    \item Clock-cycle counts vary by instruction.
+    \item Overflow $=$ same-sign operands give an opposite-sign result.
+    \item Zero-extension for unsigned; sign-extension for signed.
+    \item BCD uses one 4-bit code per decimal digit.
+    \item RISC $=$ simple fixed-length, many registers, load/store.
+  \end{itemize}
+\end{frame}
+\end{document}
