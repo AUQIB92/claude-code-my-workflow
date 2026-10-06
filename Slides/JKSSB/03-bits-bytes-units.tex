@@ -1,0 +1,104 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Bits, Bytes \& Units}
+\subtitle{Lesson 03 --- Measuring Digital Information}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Video Lesson 03}
+  \centering
+  \Large\href{https://youtu.be/j_62CGCBElo}{Watch: Bits, Bytes \& KB--TB}
+\end{frame}
+
+\begin{frame}{Why Units Matter}
+  \begin{itemize}
+    \item A file is reported as 4 MB; a network plan is reported as 20 Mbps.
+    \item Both describe digital data, but one uses bytes and the other uses
+      bits per second.
+    \item Mixing the unit or the case of the letter can create an eightfold
+      mistake.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Small Building Blocks}
+  \begin{itemize}
+    \item \key{Bit}: a binary digit, 0 or 1; the smallest unit of data.
+    \item \key{Nibble}: 4 bits.
+    \item \key{Byte}: 8 bits (two nibbles).
+    \item \key{Word}: the natural data size a processor handles as a unit;
+      its size depends on the architecture.
+    \item \key{Character}: a text symbol; its encoded storage is not always
+      one byte.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Case Is Part of the Unit}
+  \begin{block}{Do not confuse}
+    \texttt{b} means bit; \texttt{B} means byte. One byte contains 8 bits.
+  \end{block}
+  \begin{itemize}
+    \item \texttt{Mbps}: megabits per second.
+    \item \texttt{MB}: megabytes.
+    \item At matching decimal prefixes, 8 Mbps corresponds to at most
+      1 MB/s before protocol overhead.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Capacity Ladder: Exam Convention}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Conversion} & \textbf{JKSSB-style binary convention} \\
+      \midrule
+      1 KB & 1024 bytes \\
+      1 MB & 1024 KB \\
+      1 GB & 1024 MB \\
+      1 TB & 1024 GB \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Use 1024 when an exam question uses the traditional KB/MB/GB/TB
+  ladder. Modern standards also distinguish decimal SI units from binary
+  IEC units such as KiB.}
+\end{frame}
+
+\begin{frame}{One-Step Conversion}
+  \begin{exampleblock}{Example}
+    How many bytes are in 3 KB under the 1024 convention?
+  \end{exampleblock}
+  \begin{enumerate}
+    \item Write the given unit: 3 KB.
+    \item Use 1 KB = 1024 bytes.
+    \item Calculate: $3 \times 1024 = 3072$ bytes.
+  \end{enumerate}
+  \begin{alertblock}{Check}
+    State the convention and unit with the answer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Capacity Is Not Speed}
+  \begin{itemize}
+    \item \key{Capacity} tells how much data can be stored.
+    \item \key{Transfer rate} tells how much data moves in a time interval.
+    \item Storage is commonly labelled in bytes; data rates are commonly
+      labelled in bits per second.
+    \item A large-capacity drive is not automatically a fast drive.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 03: Recall}
+  \begin{itemize}
+    \item 1 nibble = 4 bits; 1 byte = 8 bits.
+    \item The bit/byte distinction depends on lowercase \texttt{b} vs
+      uppercase \texttt{B}.
+    \item A processor's word size is architecture-dependent.
+    \item Under the exam's 1024 convention: 1 KB = 1024 bytes.
+  \end{itemize}
+\end{frame}
+\end{document}

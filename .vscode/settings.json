@@ -1,4 +1,6 @@
 {
-    "allowDangerouslySkipPermissions": true,
-    "claudeCode.initialPermissionMode": "bypassPermissions"
-}
+  "python-envs.defaultEnvManager": "ms-python.python:system"
+} // {
+//     "allowDangerouslySkipPermissions": true,
+//     "claudeCode.initialPermissionMode": "bypassPermissions"
+// }

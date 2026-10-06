@@ -8,7 +8,7 @@ what passed which gate, what's next). Committed so collaborators/forkers see the
 
 `/build-week` is the primary reader/writer. Disk is authoritative for *existence*
 (the same scan `/publish-course-hub` runs over `Slides/`, `Notes/`, `Assignments/`,
-`Labs/`, `Quarto/`, `docs/`); this file adds what disk can't hold — gate scores,
+`Labs/`, and `docs/`); this file adds what disk can't hold — gate scores,
 notes, and the `lab_mode`/deck mapping.
 
 ## Top-level fields
@@ -27,15 +27,15 @@ exists that is not in the syllabus work-list). Each week:
 | Field | Meaning |
 |---|---|
 | `deck` | Deck/lecture stem, e.g. `01-intro-performance` (the `NN-topic-slug` convention; `Slides/<CODE>/<deck>.tex`). |
-| `stages` | Map of the 7 canonical stage names → `{status, score, note}`. |
+| `stages` | Map of the per-week course-build stage names → `{status, score, note}`. |
 
 ## Stage status
 
 | `status` | Meaning |
 |---|---|
 | `absent` | No source artifact on disk for this stage. |
-| `present` | Source exists (`.tex`/`.qmd`) but no compiled/rendered output. |
-| `compiled` | Local compiled/rendered output exists (`.pdf`/HTML) but not in `docs/`. |
+| `present` | Source exists but no compiled output. |
+| `compiled` | Local compiled output (`.pdf`) exists but is not in `docs/`. |
 | `deployed` | Published output exists in `docs/`. |
 | `skipped` | Stage not applicable to this week/course (e.g. `lab` on CS401, whose Nand2Tetris labs are a separate numbered track). |
 
@@ -57,15 +57,22 @@ weeks:
       assignment: { status: absent, score: null, note: "" }
       lab:        { status: skipped, score: null, note: "" }
       gate:       { status: absent, score: null, note: "" }
-      quarto:     { status: absent, score: null, note: "" }
+      hub:        { status: absent, score: null, note: "" }
 ```
 
-## The 7 canonical stages (order is load-bearing)
+Older course registries may still contain a `quarto` key. It is historical
+metadata only; `/build-week` ignores it and does not create or update Quarto
+course artifacts.
+
+## The 6 canonical stages (order is load-bearing)
 
 1. `slides` — `/create-lecture` + `/compile-latex`
 2. `notes` — `/lecture-notes` + `/qa-notes`
 3. `assignment` — `/create-assignment` (+ compile)
 4. `lab` — `/lab-manual` **or** `/coding-assignment`, per `lab_mode` (`none` = skip)
 5. `gate` — `/competitive-exam-questions` (default GATE-CS)
-6. `quarto` — `/translate-to-quarto` + `/qa-quarto` + `/deploy`
-7. `hub` — `/publish-course-hub <CODE>` (final, once per course after deploy)
+6. `hub` — `/publish-course-hub <CODE>` (final, once per course after its artifacts are built)
+
+Quarto fields in existing progress files are legacy metadata. Do not add Quarto
+as a course stage or include it in course build/publishing workflows. Preserve
+the separate Quarto guide and site/deployment infrastructure.

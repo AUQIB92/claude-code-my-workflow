@@ -632,7 +632,7 @@ Rules are markdown files in `.claude/rules/` that Claude loads automatically. Th
 
 The always-on rules are deliberately compact — together they fit well within the budget Claude reads reliably each session. `meta-governance` is a reference document for the template's dual nature (working project vs. public template) and loads passively. Path-scoped rules add rich, domain-specific guidance exactly when Claude needs it.
 
-**Sync vs. translate:** The `beamer-quarto-sync` rule handles incremental edits --- fix a typo in Beamer, same fix goes to Quarto. The `/translate-to-quarto` skill is for full initial translation of a new lecture. Translate once, sync thereafter.
+**Optional Quarto workflow:** Course builds do not require Quarto. If you explicitly request a web-slide version, use `/translate-to-quarto` for the initial translation and `/qa-quarto` or `/deploy` as needed. Beamer remains the source of truth; existing Quarto mirrors are not auto-synced.
 
 **Why rules matter:** Without them, Claude will use generic defaults. With them, Claude follows *your* standards consistently across sessions.
 
@@ -1073,7 +1073,7 @@ Use it for:
 ## Corrections Log
 - [LEARN:r-code] Package X drops obs silently when covariate is missing
 - [LEARN:citation] Post-LASSO is Belloni (2013), NOT Belloni (2014)
-- [LEARN:workflow] Every Beamer edit must auto-sync to Quarto
+- [LEARN:workflow] Quarto mirrors are optional; normal Beamer edits do not require syncing them
 ```
 
 #### Two-tier memory architecture (`MEMORY.md` vs `personal-memory.md`)
@@ -1531,7 +1531,7 @@ Every correction gets tagged for future reference in MEMORY.md:
 - [LEARN:notation] T_t = 1{t=2} is deterministic -> use T_i in {1,2}
 - [LEARN:citation] Post-LASSO is Belloni (2013), NOT Belloni (2014)
 - [LEARN:r-code] Package X: ALWAYS include intercept in design matrix
-- [LEARN:workflow] Every Beamer edit must auto-sync to Quarto
+- [LEARN:workflow] Quarto mirrors are optional; normal Beamer edits do not require syncing them
 ```
 
 These tags are searchable and persist across sessions. When Claude encounters a similar situation, it checks memory first.

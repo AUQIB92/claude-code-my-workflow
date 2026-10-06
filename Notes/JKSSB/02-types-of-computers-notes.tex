@@ -1,0 +1,285 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{2.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Types of Computers --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+\noindent\textbf{Video lesson:}
+\href{https://youtu.be/d6zL3YS69kM}{Computer Classifications for JKSSB}
+
+\section{Choose the classification axis first}
+Computer labels are useful only when the basis of classification is clear.
+``Digital'' describes how data are represented; ``microcomputer'' describes
+a traditional size/use class; ``laptop'' describes a form factor. These
+labels do not compete. One laptop can correctly be described using several
+axes at once.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Axis} & \textbf{Question} & \textbf{Clue / example}\\
+\midrule
+Signal representation & How are values represented? & Continuous signal: analog; distinct states: digital\\
+Scale and workload & What kind of work or volume is handled? & Many transactions: mainframe; very large calculations: supercomputer\\
+Purpose & How broad is the intended task range? & Many different programs: general-purpose; narrow task: special-purpose\\
+Integration & Where is the computer installed? & Built into a larger product: embedded\\
+Form factor & What physical form does it take? & Desktop, laptop, tablet, or smartphone\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Classification axis}
+The feature used to group computers, such as signal representation,
+capability/workload, purpose, or physical form.
+\end{definitionbox}
+
+Before choosing an answer, identify the question being asked:
+\begin{enumerate}
+  \item Is the stem about continuous or discrete signals?
+  \item Is it about personal use, transaction volume, or very large
+    calculations?
+  \item Is it about a computer's general purpose or its built-in role in a
+    larger product?
+  \item Is it naming a shape, such as desktop, laptop, or tablet?
+\end{enumerate}
+Selecting a familiar label without checking the axis is a common source of
+wrong answers.
+
+\section{Classification by signal representation}
+\begin{definitionbox}{Analog computer}
+A computer that represents or processes quantities as continuously varying
+signals over a range.
+\end{definitionbox}
+
+\begin{definitionbox}{Digital computer}
+A computer that represents or processes data as discrete values, commonly
+using binary digits 0 and 1.
+\end{definitionbox}
+
+\begin{definitionbox}{Hybrid computer}
+A system combining analog measurement or input with digital processing,
+control, or display.
+\end{definitionbox}
+
+An analog quantity can take intermediate values within a range. For
+example, a moving pointer can indicate many positions along a speed range,
+not just a fixed list of allowed readings. A digital system represents
+information using distinct states; modern computers commonly use binary
+states, written as 0 and 1. The important contrast is continuous versus
+discrete representation, not old versus new or mechanical versus electronic.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+\toprule
+\textbf{Class} & \textbf{Representation} & \textbf{Recognition clue}\\
+\midrule
+Analog & Continuously varying quantity & A value can lie anywhere within a range\\
+Digital & Separate symbols or states & A value is encoded using distinct states, commonly 0 and 1\\
+Hybrid & Uses both forms at different stages & Measurement or input is analog; processing or display is digital\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A hybrid arrangement can sense a physical signal and then use digital
+circuitry to process and present the measurement. Its classification
+describes the complete path, not just the display or one internal component.
+
+\begin{example}
+A digital patient monitor may measure a changing physical signal through a
+sensor. The sensor/front end handles an analog quantity; conversion allows
+digital processing; the screen shows a numeric result. When a question asks
+about the complete measurement-and-processing arrangement, ``hybrid'' is
+the useful classification. The monitor's display alone does not determine
+the signal class of its entire system.
+\end{example}
+
+\section{Traditional size and capability classes}
+\begin{definitionbox}{Microcomputer}
+A personal-use computer built around a microprocessor; common examples
+include desktop computers, laptops, tablets, and smartphones.
+\end{definitionbox}
+
+\begin{definitionbox}{Minicomputer}
+A historical term for a mid-range computer class, often described as
+supporting multiple users; it is less common in current product marketing.
+\end{definitionbox}
+
+\begin{definitionbox}{Mainframe}
+A computer class associated with reliable, high-volume input/output and
+large numbers of concurrent users or transactions.
+\end{definitionbox}
+
+\begin{definitionbox}{Supercomputer}
+A high-performance computer designed for very large computational
+workloads, often using parallel processing.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.2\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Class} & \textbf{Primary clue} & \textbf{Example / caution}\\
+\midrule
+Microcomputer & Personal-use computer built around a microprocessor & Desktop, laptop, tablet, or smartphone; not defined only by its outer size\\
+Minicomputer & Historical mid-range, multi-user class & A traditional category; less common in current product marketing\\
+Mainframe & High transaction and input/output throughput for many users & Large banking or account-processing workload\\
+Supercomputer & Very high computational performance, often parallel & Large climate or engineering simulation\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Mainframes and supercomputers may both be powerful. The distinction in an
+exam question is usually the workload. A mainframe is associated with
+throughput, reliability, and many transactions or users. A supercomputer is
+associated with computationally intensive scientific or engineering
+problems. ``Throughput'' here means the amount of work completed over time;
+the mainframe clue is handling many transactions reliably, rather than
+solving one unusually large numerical problem. Parallel processing divides
+computational work so multiple processing units can perform parts of it at
+the same time. Physical size alone is not a dependable classification rule.
+
+\begin{example}
+A bank processes a large number of account transactions for many customers.
+The emphasis is concurrent transaction throughput and service reliability,
+so the mainframe class is the best match. A research centre running a
+large-scale climate simulation emphasizes high-performance computation, so
+the supercomputer class is the better match.
+\end{example}
+
+\begin{example}
+A question describes a ``mid-range, multi-user computer'' and asks for its
+traditional category. The intended answer is minicomputer. Do not infer that
+the label is common in modern consumer advertisements; it is a historical
+classification term.
+\end{example}
+
+\section{Classification by purpose and form}
+\begin{definitionbox}{General-purpose computer}
+A computer capable of performing many different tasks by running different
+programs.
+\end{definitionbox}
+
+\begin{definitionbox}{Special-purpose computer}
+A computer designed primarily for a narrower task or a limited set of
+related tasks.
+\end{definitionbox}
+
+\begin{definitionbox}{Embedded computer}
+A computer built into a larger device to control or support that device's
+function.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.2\textwidth}p{0.37\textwidth}p{0.3\textwidth}}
+\toprule
+\textbf{Term} & \textbf{What it describes} & \textbf{Example}\\
+\midrule
+General-purpose & Broad range of tasks through different programs & Personal computer used for documents, browsing, and media\\
+Special-purpose & Narrow task or small set of related tasks & Controller dedicated to an appliance function\\
+Embedded & Integration into a larger product & Washing-machine controller\\
+Form factor & Physical arrangement or shape & Desktop, laptop, tablet, smartphone\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+An embedded computer is commonly special-purpose, but these terms name
+different aspects: ``embedded'' describes where the computer is integrated;
+``special-purpose'' describes the range of tasks it is intended to perform.
+A desktop computer that runs office, browsing, and media programs is a
+general-purpose system. A washing-machine controller is built into a larger
+appliance and handles a limited control task. A computer can therefore be
+both embedded and special-purpose; the terms are compatible, not competing
+answers. In contrast, ``laptop'' says how a computer is physically arranged
+and does not by itself tell whether the data representation is analog or
+digital.
+
+\begin{example}
+A smartphone can be classified as digital by signal representation, a
+microcomputer by personal-use class, and a mobile device by form factor.
+These labels can all be true at the same time because they answer different
+questions.
+\end{example}
+
+\begin{example}
+A washing machine's controller is embedded in the appliance and is
+special-purpose because it manages a limited set of appliance functions.
+Calling it a mainframe because it controls a whole machine confuses physical
+integration with workload class.
+\end{example}
+
+\section{A reliable matching procedure}
+When an exam stem describes a device, underline the clue that indicates the
+axis. ``Continuous'' points to analog; ``discrete'' or binary points to
+digital; ``sensor plus digital processing'' may point to hybrid. ``Many
+concurrent transactions'' suggests mainframe. ``Large scientific
+calculations'' suggests supercomputer. ``Built into an appliance'' points to
+embedded. ``Desktop'' or ``laptop'' identifies form factor, not signal type.
+
+\begin{example}
+Classify a laptop used by an accounts clerk. By representation it is digital;
+by traditional size/use class it is a microcomputer; by form it is a laptop;
+and by purpose it is general-purpose if it runs many kinds of programs.
+None of these labels invalidates the others.
+\end{example}
+
+\subsection*{Computer type and generation}
+A computer's type may describe its signal class, scale, purpose, or form.
+Generation instead names a historical technology grouping. Keep these axes
+separate: integrated circuits are associated with the third generation,
+while microprocessors are associated with the fourth.
+
+This distinction prevents a common category error. A laptop can be called a
+digital microcomputer and can belong to a particular historical generation
+based on the technology used in its development. ``Laptop'' identifies its
+form, ``microcomputer'' its traditional user/capability class, ``digital''
+its representation, and ``generation'' its place in a historical grouping.
+Each answer must match the axis named in the question.
+
+\begin{example}
+For a washing-machine controller, ``embedded'' answers where the computer is
+installed. ``Special-purpose'' answers the range of work it is designed to
+perform. The controller can correctly have both labels at once. If a
+question asks how it represents data, that is a separate signal
+classification and must be answered from that clue.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Classify a smartphone on the signal, traditional class, and form
+    axes.
+  \item A system is described as handling many simultaneous banking
+    transactions reliably. Which class is the strongest match, and why?
+  \item Distinguish an embedded computer from a special-purpose computer.
+  \item Why is ``laptop'' not an answer to a question asking whether a
+    computer is analog or digital?
+  \item A digital instrument measures a continuously changing physical
+    quantity and processes the result digitally. Explain when ``hybrid'' is
+    an appropriate label.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item It is digital by representation, a microcomputer by personal-use
+    class, and a smartphone by form factor.
+  \item Mainframe. The clues are many simultaneous transactions and
+    reliability/throughput, rather than a single extremely large calculation.
+  \item Embedded describes integration into a larger product. Special-purpose
+    describes a narrow intended task. An embedded controller is often
+    special-purpose, but the terms describe different properties.
+  \item Laptop names physical form. Analog/digital names the representation
+    of data, so the question asks about a different classification axis.
+  \item It is appropriate when the complete arrangement combines analog
+    sensing or measurement with digital conversion and processing.
+\end{enumerate}
+\endgroup
+\end{document}

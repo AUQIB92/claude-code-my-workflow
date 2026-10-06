@@ -15,7 +15,7 @@
 
 - **Plan first** -- enter plan mode before non-trivial tasks; save plans to `quality_reports/plans/`
 - **Verify after** -- compile/render and confirm output at the end of every task
-- **Single source of truth** -- Beamer `.tex` is authoritative; Quarto `.qmd` derives from it
+- **Single source of truth** -- Beamer `.tex` is authoritative; Quarto course mirrors are legacy artifacts outside course workflows
 - **Quality gates** -- nothing ships below 80/100
 - **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to [MEMORY.md](MEMORY.md)
 
@@ -34,14 +34,14 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 ├── Figures/<CODE>/<lecture>/    # TikZ SVGs, per lecture, namespaced by course
 ├── Preambles/header.tex         # LaTeX headers (shared)
 ├── Slides/<CODE>/               # Beamer .tex files, one subfolder per course
-├── Quarto/<CODE>/                # RevealJS .qmd mirrors, same course subfolders
+├── Quarto/<CODE>/                # Preserved legacy RevealJS artifacts; not part of course workflows
 ├── Notes/<CODE>/                # Prose Lecture Notes, derived from Slides/ (see single-source-of-truth.md)
 ├── Assignments/<CODE>/           # Graded assignments: <lecture>-assignment.tex + -solutions.tex (never deployed)
 ├── InstructorHandouts/<CODE>/    # Instructor-only teaching prep, derived from Slides/+Notes
 ├── Labs/<CODE>/                  # Lab manuals: <lecture>-lab.tex + <lecture>-reference/ (instructor-only, never deployed)
 ├── Accreditation/<CODE>/         # NBA/AICTE CO-PO-PSO mapping + attainment templates (see /accreditation)
 ├── syllabi/<CODE>.md            # One syllabus per course
-├── docs/                        # GitHub Pages (auto-generated, mirrors Slides/Quarto nesting)
+├── docs/                        # GitHub Pages, including the preserved guide/site
 ├── scripts/                     # Utility scripts + R code
 ├── quality_reports/             # Plans, session logs, merge reports, decision records
 ├── explorations/                # Research sandbox (see rules)
@@ -56,7 +56,7 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 
 **Multi-course convention.** `<CODE>` is a short course code (`CS401`, `MATH201`, ...). Course-less demo decks (e.g. `HelloWorld`) stay at the `Slides/`/`Quarto/` top level. Every skill that takes a lecture argument now takes `<CODE>/<lecture>` (e.g. `CS401/05-addressing-cpu-bus`).
 
-**Course tag inside the deck.** Every Beamer deck sets `\coursecode{CS401}` right after `\input{header}` — it renders in the footer of every slide (see `Preambles/header.tex`), so the course is visible without opening the file path or the title page. The Quarto mirror carries the same tag via its RevealJS YAML `footer:` key.
+**Course tag inside the deck.** Every Beamer deck sets `\coursecode{CS401}` right after `\input{header}` — it renders in the footer of every slide (see `Preambles/header.tex`), so the course is visible without opening the file path or the title page.
 
 ---
 
@@ -70,12 +70,8 @@ BIBINPUTS=../..:$BIBINPUTS bibtex file
 TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 
-# Deploy Quarto to GitHub Pages — whole course, one lecture, or omit for everything
-./scripts/sync_to_docs.sh CS401
-./scripts/sync_to_docs.sh CS401/05-addressing-cpu-bus
-
 # Quality score
-python scripts/quality_score.py Quarto/CS401/file.qmd
+python scripts/quality_score.py Slides/CS401/file.tex
 
 # Palette sync (LaTeX ↔ SCSS)
 ./scripts/check-palette-sync.sh
@@ -106,7 +102,8 @@ Enforced by `/commit` (halts + asks for override) **and** — once you run `./sc
 
 The full table of all skills lives in [README.md](README.md#skills-claudeskills). Most-used, by workflow:
 
-- **Slides / teaching:** `/create-lecture` `/compile-latex` `/deploy` `/qa-quarto` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises` `/lecture-notes` `/qa-notes` `/index-textbook` `/build-week`
+- **Slides / teaching:** `/create-lecture` `/compile-latex` `/slide-excellence` `/syllabus` `/teach-from-paper` `/scaffold-exercises` `/lecture-notes` `/qa-notes` `/index-textbook` `/build-week`
+- **Legacy guide/site maintenance:** `/deploy`; Quarto course translation and parity tools are not part of course workflows
 - **Papers / review:** `/review-paper` (`--peer`) `/seven-pass-review` `/respond-to-referees` `/verify-claims` `/proofread` `/humanize` `/submission-disclosures`
 - **Data / reproducibility:** `/data-analysis` `/did-event-study` `/simulation-study` `/audit-reproducibility` `/diagnose` `/replication-package` `/capture-environment` `/power-analysis` `/disclosure-check`
 - **Research / writing:** `/interview-me` `/lit-review` `/research-ideation` `/preregister` `/grant-proposal` `/data-management-plan`
@@ -128,7 +125,7 @@ Stata (`/stata-replication`), R packages (`/r-package-check`), TikZ (`/extract-t
 | `\sectiondivider{Label}{Title}` | Near-black divider: white label line, gold title, thin gold bottom rule | Numbered section/act break with a striking dark style |
 | `block` / `exampleblock` / `alertblock` | Blue / green / gold titled boxes | Definition / worked example / key takeaway — max 2 per slide (INV-7) |
 
-## Quarto CSS Classes
+## Quarto CSS Classes (Legacy Guide/Site Styling)
 
 | Class | Effect | Use Case |
 | --- | --- | --- |
@@ -151,4 +148,4 @@ Stata (`/stata-replication`), R packages (`/r-package-check`), TikZ (`/extract-t
 
 | Lecture | Beamer | Quarto | Key Content |
 | --- | --- | --- | --- |
-| HelloWorld *(sample — delete when ready)* | `Slides/HelloWorld.tex` | `Quarto/HelloWorld.qmd` | Minimal deck to verify setup |
+| HelloWorld *(sample — delete when ready)* | `Slides/HelloWorld.tex` | `Quarto/HelloWorld.qmd` *(legacy sample)* | Minimal Beamer setup sample; preserve its existing Quarto file |

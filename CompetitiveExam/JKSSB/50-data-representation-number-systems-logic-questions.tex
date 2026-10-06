@@ -1,0 +1,186 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 50 Practice: Data Representation, Number Systems \& Logic}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 16 original JKSSB-pattern questions and five
+paraphrased adaptations of official JKSSB PYQs: Computer Instructor/Operator
+2025 Q1--Q4 and Website Operator 2026 Q73. Adaptations are not verbatim
+reproductions.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[PYQ-adapted: JKSSB Computer Instructor/Operator 2025 Q1;
+official paper; paraphrased]} What is the decimal ASCII code for the dollar
+sign (\$)?
+  \begin{enumerate}[label=\Alph*.]
+    \item 32
+    \item 30
+    \item 34
+    \item 36
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Computer Instructor/Operator 2025 Q2;
+official paper; paraphrased]} Convert the binary number
+$11010101.01_2$ to decimal.
+  \begin{enumerate}[label=\Alph*.]
+    \item $200.25_{10}$
+    \item $198.25_{10}$
+    \item $213.25_{10}$
+    \item $209.25_{10}$
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Computer Instructor/Operator 2025 Q3;
+official paper; paraphrased]} Which statement about UTF-8 is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item It is fixed-length and uses exactly 8 bits for every character.
+    \item It is variable-length and compatible with ASCII in the ASCII range.
+    \item It assigns Unicode code points only to Latin letters.
+    \item It stores every character using 8 bytes.
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Computer Instructor/Operator 2025 Q4;
+official paper; paraphrased]} What is the binary representation of
+$278_{10}$?
+  \begin{enumerate}[label=\Alph*.]
+    \item $100010110_2$
+    \item $101010110_2$
+    \item $100110110_2$
+    \item $110010110_2$
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Website Operator 2026 Q73; official
+provisional key; paraphrased]} Which binary numeral has the value
+$10_{10}$?
+  \begin{enumerate}[label=\Alph*.]
+    \item $1010_2$
+    \item $1001_2$
+    \item $1100_2$
+    \item $1110_2$
+  \end{enumerate}
+\item \textit{[Original]} What is the base of the octal number system?
+  \begin{enumerate}[label=\Alph*.]
+    \item 2
+    \item 8
+    \item 10
+    \item 16
+  \end{enumerate}
+\item \textit{[Original]} Which digit is not permitted in an octal numeral?
+  \begin{enumerate}[label=\Alph*.]
+    \item 0
+    \item 5
+    \item 7
+    \item 8
+  \end{enumerate}
+\item \textit{[Original]} What is the decimal value of $2F_{16}$?
+  \begin{enumerate}[label=\Alph*.]
+    \item 31
+    \item 32
+    \item 47
+    \item 63
+  \end{enumerate}
+\item \textit{[Original]} Convert $1111111_2$ to octal.
+  \begin{enumerate}[label=\Alph*.]
+    \item $177_8$
+    \item $177_2$
+    \item $77_8$
+    \item $177_{16}$
+  \end{enumerate}
+\item \textit{[Original]} In BCD, how is the decimal number 25 represented?
+  \begin{enumerate}[label=\Alph*.]
+    \item $11001_2$
+    \item $0010\ 0101$
+    \item $0101\ 0010$
+    \item $11101_2$
+  \end{enumerate}
+\item \textit{[Original]} Which statement is \textbf{NOT} correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item Original ASCII uses 7-bit codes.
+    \item Unicode assigns code points across many writing systems.
+    \item UTF-8 is variable-length.
+    \item BCD and Unicode are interchangeable names for character encoding.
+  \end{enumerate}
+\item \textit{[Original]} Which option describes the relationship between
+  Unicode and UTF-8 correctly?
+  \begin{enumerate}[label=\Alph*.]
+    \item Unicode assigns code points; UTF-8 encodes them using a
+      variable-length byte sequence.
+    \item UTF-8 is another name for BCD.
+    \item Unicode is a 4-bit code for each decimal digit.
+    \item UTF-8 is always fixed at 8 bytes per character.
+  \end{enumerate}
+\item \textit{[Original]} In common 24-bit RGB, the three 8-bit channels
+  represent:
+  \begin{enumerate}[label=\Alph*.]
+    \item Red, green, and blue
+    \item Red, grey, and black
+    \item Row, grid, and bit
+    \item Read, generate, and store
+  \end{enumerate}
+\item \textit{[Original]} For inputs $A=1$ and $B=0$, what is the output of
+  XOR?
+  \begin{enumerate}[label=\Alph*.]
+    \item 0
+    \item 1
+    \item 2
+    \item It depends on a clock
+  \end{enumerate}
+\item \textit{[Original]} Which gate outputs 1 only when both inputs are 1?
+  \begin{enumerate}[label=\Alph*.]
+    \item OR
+    \item XOR
+    \item AND
+    \item NOT
+  \end{enumerate}
+\item \textit{[Original]} For $A=1$ and $B=1$, the NAND output is:
+  \begin{enumerate}[label=\Alph*.]
+    \item 0
+    \item 1
+    \item 2
+    \item Undefined
+  \end{enumerate}
+\item \textit{[Original]} A NOT gate has:
+  \begin{enumerate}[label=\Alph*.]
+    \item One input and the opposite output
+    \item Two inputs and output 1 only when both are 1
+    \item Two inputs and output 1 when they differ
+    \item Three inputs representing RGB
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements about a common 24-bit RGB
+  representation:
+  \begin{enumerate}[label=\Roman*.]
+    \item It uses red, green, and blue channels.
+    \item Three 8-bit channels total 24 bits per pixel.
+    \item Every image format must use exactly 24-bit RGB.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item I and II only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} What is $1011_2$ in decimal?
+  \begin{enumerate}[label=\Alph*.]
+    \item 9
+    \item 10
+    \item 11
+    \item 13
+  \end{enumerate}
+\item \textit{[Original]} When converting a binary numeral to hexadecimal by
+  grouping bits, how many bits are placed in each complete group?
+  \begin{enumerate}[label=\Alph*.]
+    \item 2
+    \item 3
+    \item 4
+    \item 8
+  \end{enumerate}
+\item \textit{[Original]} For inputs $A=0$ and $B=0$, what are the outputs
+  of AND, OR, XOR, and NAND, in that order?
+  \begin{enumerate}[label=\Alph*.]
+    \item $0,0,0,1$
+    \item $1,0,0,0$
+    \item $0,1,1,1$
+    \item $1,1,0,1$
+  \end{enumerate}
+\end{enumerate}
+\end{document}

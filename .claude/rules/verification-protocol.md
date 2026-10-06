@@ -9,6 +9,9 @@ paths:
 
 **At the end of EVERY task, Claude MUST verify the output works correctly.** This is non-negotiable.
 
+Quarto/HTML verification below applies only when Quarto work was explicitly
+requested. It is not a required step for a course or Beamer task.
+
 ## For Quarto/HTML Slides:
 1. Run `./scripts/sync_to_docs.sh` (or `./scripts/sync_to_docs.sh LectureN`) to render and deploy
 2. Open the HTML in browser: `open docs/slides/LectureX.html` (macOS) or `xdg-open` (Linux)

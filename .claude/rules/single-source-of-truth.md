@@ -8,24 +8,34 @@ paths:
 
 # Single Source of Truth: Enforcement Protocol
 
-**The Beamer `.tex` file is the authoritative source for ALL content.** Everything else is derived.
+**The Beamer `.tex` file is the authoritative source for lecture-slide content.**
+Lecture Notes are the standard derived artifact. Quarto course mirrors are
+legacy artifacts and are not created or maintained as part of course work.
 
 ## The SSOT Chain
 
 ```
 Beamer .tex (SOURCE OF TRUTH)
-  ├── extract_tikz.tex → PDF → SVGs (derived)
-  ├── Quarto .qmd → HTML (derived)
-  ├── Notes/<CODE>/*-notes.tex → article-class PDF (derived, expanded prose;
-  │       checked via /qa-notes, same relationship Quarto has to Beamer)
+  ├── extract_tikz.tex → PDF → SVGs (when requested)
+  ├── Notes/<CODE>/*-notes.tex → article-class PDF (standard derived artifact;
+  │       checked via /qa-notes)
   ├── Bibliography_base.bib (shared)
   └── Figures/LectureN/*.rds → plotly charts (data source)
 
 NEVER edit derived artifacts independently.
-ALWAYS propagate changes from source → derived.
+Propagate changes to standard derived artifacts. Do not update legacy Quarto
+course mirrors during course work.
 ```
 
-**Notes is a sibling of Quarto, not a special case** — with one deliberate difference from Quarto in *how* "derived" is enforced. Quarto's fidelity is structural: frame-for-frame, near-verbatim translation (see the Content Fidelity Checklist below). Notes' fidelity is about **content parity, not structural mirroring**: every fact, citation, diagram, and worked example in the Beamer deck must appear somewhere in the Notes and trace back to it (checked by `/qa-notes`, nothing invented, nothing dropped) — but the Notes are free to, and by default *should*, reorganize that content into a textbook-chapter shape rather than following the deck's slide-by-slide/Act-by-Act presentation order. A Beamer deck is paced for a live audience (Socratic questions, transition slides, "recap" framing, "bridge to next week" hooks); a textbook chapter is organized by topic. Concretely, Notes should:
+**Lecture Notes are the standard derived artifact.** Their fidelity is about
+**content parity, not structural mirroring**: every fact, citation, diagram, and
+worked example in the Beamer deck must appear somewhere in the Notes and trace
+back to it (checked by `/qa-notes`, nothing invented, nothing dropped) — but the
+Notes are free to, and by default *should*, reorganize that content into a
+textbook-chapter shape rather than following the deck's slide-by-slide/Act-by-Act
+presentation order. A Beamer deck is paced for a live audience (Socratic
+questions, transition slides, "recap" framing, "bridge to next week" hooks); a
+textbook chapter is organized by topic. Concretely, Notes should:
 
 - **Number sections by lecture/week**, e.g. `5.1, 5.2, ...` for Week 5, not plain `1, 2, 3` (`\renewcommand{\thesection}{<week>.\arabic{section}}` right after `\input{header}`).
 - **Number figures and worked examples the same way** — `Fig. 5.1`, `Example 5.1` — via `\renewcommand{\thefigure}{...}` and a `\newtheorem{example}{Example}[section]`-style counter, not ad hoc "Worked Trace" subsection headings.
@@ -38,7 +48,8 @@ Notes are still never co-drafted and never edited independently of a Beamer chan
 
 ## TikZ Freshness Protocol (MANDATORY)
 
-**Before using ANY TikZ SVG in a Quarto slide, verify it matches the current Beamer source.**
+**For existing site or guide maintenance that uses a TikZ SVG, verify it matches
+the current Beamer source before use.**
 
 **This is now mechanically enforced, not just manually followed.** `scripts/check-tikz-freshness.py` (chained into `scripts/check-surface-sync.sh`, which runs on every `/commit` and every direct `git commit` once the pre-commit hook is installed) diffs every `\begin{tikzpicture}...\end{tikzpicture}` block between a Beamer source and its `Figures/<CODE>/<lecture>/extract_tikz.tex`, comment-stripped and whitespace-normalized. Added after a real near-miss: a Beamer diagram's label/border overlap got fixed in `Slides/`, but the already-extracted SVG kept the old, broken coordinate, and nothing caught it until a user explicitly asked to check. The manual procedure below is still the right way to *fix* a drift the gate flags — the gate only tells you *that* something drifted, not what changed.
 
@@ -48,21 +59,20 @@ Notes are still never co-drafted and never edited independently of a Beamer chan
 2. Read the corresponding block from `Figures/LectureN/extract_tikz.tex`
 3. Compare EVERY coordinate, label, color, opacity, and anchor point
 4. If ANY difference exists: update `extract_tikz.tex` from Beamer, recompile, regenerate SVGs
-5. Only then reference the SVG in the QMD
+5. Only then reference the SVG in the existing site or guide artifact
 
 ### When to Re-Extract
 
 Re-extract ALL TikZ diagrams when:
 - The Beamer `.tex` file has been modified since last extraction
-- Starting a new Quarto translation
 - Any TikZ-related quality issue is reported
-- Before any commit that includes QMD changes
 
 ---
 
-## Environment Parity (MANDATORY)
+## Environment Parity (LEGACY QUARTO)
 
-**Every Beamer environment MUST have a CSS equivalent before translation begins.**
+This applies only when maintaining existing site or guide assets, not when
+building course materials.
 
 1. Scan the Beamer source for all custom environments
 2. Check each against your theme SCSS file
@@ -70,8 +80,10 @@ Re-extract ALL TikZ diagrams when:
 
 ---
 
-## Content Fidelity Checklist
+## Legacy Quarto Content Fidelity Checklist
 
+Use only when a change to an existing site or guide artifact specifically
+requires content parity:
 ```
 [ ] Frame count: Beamer frames == Quarto slides
 [ ] Math check: every equation appears with identical notation

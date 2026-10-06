@@ -1,0 +1,137 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Data Representation, Number Systems \& Logic}
+\subtitle{Lesson 50 --- From Binary Digits to Gates}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Computers Use Binary}
+  \begin{itemize}
+    \item Digital circuits can reliably distinguish two states, commonly
+      labelled 0 and 1.
+    \item A \key{number system} uses a base (radix) and a set of allowed
+      digits.
+    \item In base $b$, each position represents a power of $b$.
+  \end{itemize}
+  \begin{block}{Positional value}
+    $1011_2 = 1(2^3)+0(2^2)+1(2^1)+1(2^0)=11_{10}$.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Four Number Systems}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Name} & \textbf{Base} & \textbf{Digits} \\
+      \midrule
+      Binary & 2 & 0--1 \\
+      Octal & 8 & 0--7 \\
+      Decimal & 10 & 0--9 \\
+      Hexadecimal & 16 & 0--9, A--F \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{In hexadecimal, A=10, B=11, C=12, D=13, E=14, and F=15.}
+\end{frame}
+
+\begin{frame}{Convert Decimal to Binary}
+  \begin{exampleblock}{Convert $45_{10}$ to binary}
+    Divide repeatedly by 2 and read the remainders from bottom to top.
+  \end{exampleblock}
+  \begin{itemize}
+    \item $45 \div 2 = 22$ remainder 1
+    \item $22 \div 2 = 11$ remainder 0; $11 \div 2 = 5$ remainder 1
+    \item $5 \div 2 = 2$ remainder 1; $2 \div 2 = 1$ remainder 0
+    \item $1 \div 2 = 0$ remainder 1
+  \end{itemize}
+  \begin{alertblock}{Result}
+    $45_{10}=101101_2$.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Binary, Octal, and Hexadecimal}
+  \begin{itemize}
+    \item Group binary digits in threes to convert to octal:
+      $1111111_2 = 001\ 111\ 111_2 = 177_8$.
+    \item Group binary digits in fours to convert to hexadecimal:
+      $0111\ 1111_2 = 7F_{16}$.
+    \item Verify by place value: $7F_{16}=7(16)+15=127_{10}$.
+  \end{itemize}
+  \muted{Pad the leftmost group with zeros when needed; do not change the value.}
+\end{frame}
+
+\begin{frame}{Text and Decimal Digits Have Encodings}
+  \begin{itemize}
+    \item \key{ASCII}: character-encoding standard; original ASCII uses 7-bit
+      codes.
+    \item \key{Unicode}: assigns code points to characters across many
+      writing systems; UTF-8 is a variable-length encoding.
+    \item \key{BCD}: Binary-Coded Decimal; each decimal digit is represented
+      by a 4-bit code.
+    \item These are not interchangeable: a character code, a Unicode
+      encoding, and a decimal-digit representation solve different problems.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Representing Colour: RGB}
+  \begin{itemize}
+    \item RGB represents colour with red, green, and blue channel values.
+    \item In a common 24-bit RGB representation, each channel has 8 bits:
+      $8+8+8=24$ bits per pixel.
+    \item More bits per channel can represent more levels; actual image
+      formats and display systems may use other layouts.
+  \end{itemize}
+  \begin{block}{Keep the claim scoped}
+    24-bit RGB is a common representation, not a rule for every image or
+    display.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Basic Logic Gates}
+  \begin{center}
+    \begin{tabular}{cc|cccc}
+      \toprule
+      $A$ & $B$ & AND & OR & XOR & NAND \\
+      \midrule
+      0 & 0 & 0 & 0 & 0 & 1 \\
+      0 & 1 & 0 & 1 & 1 & 1 \\
+      1 & 0 & 0 & 1 & 1 & 1 \\
+      1 & 1 & 1 & 1 & 0 & 0 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{itemize}
+    \item AND is 1 only when both inputs are 1.
+    \item OR is 1 when at least one input is 1.
+    \item XOR is 1 when the inputs differ; NAND is the negation of AND.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{NOT Gate and Exam Traps}
+  \begin{itemize}
+    \item NOT has one input and reverses it: NOT 0 = 1; NOT 1 = 0.
+    \item Do not call BCD ordinary binary for the whole number: BCD encodes
+      each decimal digit separately.
+    \item Do not call UTF-8 fixed-length: it is variable-length.
+    \item Do not confuse RGB bits per pixel with the number of colour
+      channels.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 50: Recall}
+  \begin{itemize}
+    \item Binary, octal, decimal, and hexadecimal use bases 2, 8, 10, and 16.
+    \item Place values are powers of the base.
+    \item ASCII, Unicode/UTF-8, BCD, and RGB represent different kinds of
+      information.
+    \item Truth tables give the output for every input combination.
+  \end{itemize}
+\end{frame}
+\end{document}

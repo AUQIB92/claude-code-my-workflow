@@ -13,7 +13,6 @@ lectures_recorded: 0
 paths:
   - "Slides/[COURSE_CODE]/**/*.tex"
   - "Slides/[COURSE_CODE]/**/*.md"
-  - "Quarto/[COURSE_CODE]/**/*.qmd"
   - "Notes/[COURSE_CODE]/**"
   - "Assessments/[COURSE_CODE]/**"
   - "master_supporting_docs/[COURSE_CODE]/**"

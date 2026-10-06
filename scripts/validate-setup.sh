@@ -3,7 +3,8 @@
 # validate-setup.sh — Verify all dependencies for the academic workflow
 #
 # Run this after forking the repo to confirm your environment is ready.
-# Exits 0 if all required tools are found; non-zero otherwise.
+# Exits 0 if all required tools are found; non-zero otherwise. Quarto is only
+# checked for existing guide/site maintenance, not for course workflows.
 # =============================================================================
 
 set -uo pipefail
@@ -76,12 +77,12 @@ check_optional() {
 echo -e "${BOLD}Required tools:${RESET}"
 check_required "Claude Code"  "claude"   "https://claude.ai/install"
 check_required "XeLaTeX"      "xelatex"  "https://tug.org/texlive/ (or MacTeX: https://tug.org/mactex/)"
-check_required "Quarto"       "quarto"   "https://quarto.org/docs/get-started/" "Posit.Quarto"
 check_required "git"          "git"      "https://git-scm.com/downloads"
 check_required "Python 3"     "python3"  "https://python.org (needed for hooks)"
 echo ""
 
 echo -e "${BOLD}Recommended tools:${RESET}"
+check_optional "Quarto (guide/site maintenance only)" "quarto" "https://quarto.org/docs/get-started/" "Posit.Quarto"
 check_optional "R"            "R"        "https://www.r-project.org/"
 check_optional "GitHub CLI"   "gh"       "https://cli.github.com/" "GitHub.cli"
 echo ""
@@ -190,7 +191,6 @@ echo ""
 # read naturally.
 has_claude="false";  command -v claude  >/dev/null 2>&1 && has_claude="true"
 has_xelatex="false"; command -v xelatex >/dev/null 2>&1 && has_xelatex="true"
-has_quarto="false";  command -v quarto  >/dev/null 2>&1 && has_quarto="true"
 has_r="false";       command -v R       >/dev/null 2>&1 && has_r="true"
 
 if [ "$fail" -gt 0 ]; then
@@ -201,9 +201,6 @@ if [ "$fail" -gt 0 ]; then
         echo "  - Open Claude Code:                      claude"
         echo ""
         echo "  ${BOLD}Inside Claude Code${RESET} (these are slash-commands, NOT shell commands):"
-        if [ "$has_quarto" = "true" ]; then
-            echo "    /deploy HelloWorld         # render Quarto sample"
-        fi
         if [ "$has_xelatex" = "true" ]; then
             echo "    /compile-latex HelloWorld  # compile Beamer sample"
         fi
@@ -213,9 +210,6 @@ if [ "$fail" -gt 0 ]; then
         if [ "$has_xelatex" != "true" ]; then
             echo ""
             echo "  (Beamer workflow disabled until you install XeLaTeX: https://tug.org/texlive/)"
-        fi
-        if [ "$has_quarto" != "true" ]; then
-            echo "  (Quarto deploy disabled until you install Quarto: https://quarto.org/docs/get-started/)"
         fi
     else
         echo "  - Install Claude Code first: https://claude.ai/install"
@@ -229,6 +223,6 @@ fi
 echo -e "${GREEN}Setup looks good!${RESET} Next steps:"
 echo "  1. Open Claude Code in this directory:  claude"
 echo "  2. Compile the sample deck:              /compile-latex HelloWorld"
-echo "  3. Deploy the Quarto sample:             /deploy HelloWorld"
+echo "  3. Start building a course:              /create-lecture <CourseCode>/<topic>"
 echo ""
 exit 0

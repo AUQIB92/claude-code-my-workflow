@@ -15,9 +15,9 @@ A working repository for AI-assisted course development and academic work. I des
 
 ## Quick Start (5–10 minutes, plus ~30 min for first-time installs)
 
-> **Before you start:** Claude Code + git are the minimum. To run the included `HelloWorld` demos end-to-end you also need XeLaTeX (Beamer sample) and Quarto (Quarto sample). R and the GitHub CLI are recommended. Python 3 is used by a few internal scripts (`check-palette-sync.py`, `check-tikz-prevention.py`) and is pre-installed on macOS/Linux. Full list in [Prerequisites](#prerequisites) below. Fastest path: clone first, then run `./scripts/validate-setup.sh` — it reports exactly what's missing with install links.
+> **Before you start:** Claude Code + git are the minimum. To build and compile course lectures, install XeLaTeX. Quarto is used only for maintaining the existing guide/site infrastructure, not for course workflows. R and the GitHub CLI are recommended. Python 3 is used by a few internal scripts (`check-palette-sync.py`, `check-tikz-prevention.py`) and is pre-installed on macOS/Linux. Full list in [Prerequisites](#prerequisites) below. Fastest path: clone first, then run `./scripts/validate-setup.sh` — it reports what's missing with install links.
 >
-> **Only need Python/R/markdown?** You don't need XeLaTeX or Quarto. The agents, rules, skills, and orchestration patterns work for any text/code artifact. Skip the `HelloWorld` demos and head straight to `/data-analysis`, `/review-paper`, `/lit-review`, or `/review-r`.
+> **Only need Python/R/markdown?** You don't need XeLaTeX or Quarto. The agents, rules, skills, and orchestration patterns work for any text/code artifact. Skip the `HelloWorld` demo and head straight to `/data-analysis`, `/review-paper`, `/lit-review`, or `/review-r`.
 >
 > **Session 2 onwards:** [MEMORY.md](MEMORY.md) (committed) collects generic `[LEARN]` entries that help all forkers; `.claude/state/personal-memory.md` (gitignored) is for machine-specific notes. See [`.claude/rules/meta-governance.md`](.claude/rules/meta-governance.md) for the distinction.
 
@@ -57,17 +57,16 @@ The [full guide](https://auqib92.github.io/claude-code-my-workflow/workflow-guid
 Before building real lectures, confirm your environment works:
 
 ```bash
-./scripts/validate-setup.sh        # Checks XeLaTeX, Quarto, Python, git, etc.
+./scripts/validate-setup.sh        # Checks required course tools; Quarto is for guide/site maintenance
 ```
 
 Then inside Claude:
 
 ```text
 /compile-latex HelloWorld          # Compiles Slides/HelloWorld.tex to PDF
-/deploy HelloWorld                 # Renders Quarto/HelloWorld.qmd to HTML
 ```
 
-If both succeed, delete `Slides/HelloWorld.tex` and `Quarto/HelloWorld.qmd` and start on your real work.
+If compilation succeeds, delete `Slides/HelloWorld.tex` and start on your real work. Quarto course mirrors are legacy artifacts and are not part of course workflows; the existing guide and site/deployment infrastructure is retained.
 
 ---
 
@@ -85,7 +84,7 @@ This is **not** an autonomous daemon — the loop is always you- or skill-initia
 
 ### Contractor Mode
 
-You describe a task. For complex or ambiguous requests, Claude first creates a requirements specification with MUST/SHOULD/MAY priorities and clarity status (CLEAR/ASSUMED/BLOCKED). You approve the spec, then Claude plans the approach and invokes the right skill (e.g. `/create-lecture`, `/qa-quarto`, `/review-paper --adversarial`). That skill implements the orchestrator runtime internally — implement, verify, review, fix, re-verify, score — and returns a summary when the work meets quality standards. Say "just do it" and it runs the full loop; commits still require an explicit `/commit` (which the pre-commit hook then gates).
+You describe a task. For complex or ambiguous requests, Claude first creates a requirements specification with MUST/SHOULD/MAY priorities and clarity status (CLEAR/ASSUMED/BLOCKED). You approve the spec, then Claude plans the approach and invokes the right skill (e.g. `/create-lecture`, `/review-paper --adversarial`). Quarto guide/site tools remain available for their existing maintenance purpose, outside course workflows. That skill implements the orchestrator runtime internally — implement, verify, review, fix, re-verify, score — and returns a summary when the work meets quality standards. Say "just do it" and it runs the full loop; commits still require an explicit `/commit` (which the pre-commit hook then gates).
 
 ### Specialized Agents
 
@@ -167,7 +166,7 @@ The guide covers Claude Code's latest capabilities:
 
 | Academic Task | How This Workflow Helps |
 |---------------|----------------------|
-| Lecture slides (Beamer/Quarto) | Full creation, translation, multi-agent review, deployment |
+| Lecture slides (Beamer) | Full Beamer course build; legacy Quarto mirrors are outside course workflows |
 | Research papers | Literature review, manuscript review, simulated peer review (`/review-paper --peer [journal]`), reviewer-disposition variance reporting (`--variance N`) |
 | Data analysis | End-to-end R pipelines (`/data-analysis`) or Stata pipelines via `stata-mcp` (`/stata-replication`, v1.9.0), replication verification, publication-ready output |
 | Monte Carlo simulations | Reproducible simulation studies (`/simulation-study`, v1.10.0) — parameterized DGP, estimator grid, bias/RMSE/coverage/size/power with Monte Carlo SEs, dedicated `sim-reviewer` review pass |
@@ -226,15 +225,15 @@ This workflow is designed as a **single hub for an entire research program** —
 | Skill | What It Does |
 |-------|-------------|
 | `/compile-latex` | 3-pass XeLaTeX compilation with bibtex |
-| `/deploy` | Render Quarto + sync to GitHub Pages |
+| `/deploy` | Maintain existing Quarto guide/site pages on GitHub Pages |
 | `/extract-tikz` | TikZ diagrams to PDF to SVG pipeline |
 | `/proofread` | Launch proofreader on a file |
 | `/visual-audit` | Launch slide-auditor on a file |
 | `/pedagogy-review` | Launch pedagogy-reviewer on a file |
 | `/review-r` | Launch R code reviewer |
-| `/qa-quarto` | Adversarial critic-fixer loop (loops until dry; 5-round cap is a fallback) |
+| `/qa-quarto` | Legacy Quarto-vs-Beamer parity review; not part of course builds |
 | `/slide-excellence` | Combined multi-agent review |
-| `/translate-to-quarto` | Full 11-phase Beamer-to-Quarto translation |
+| `/translate-to-quarto` | Legacy translation utility; not part of course workflows |
 | `/validate-bib` | Cross-reference citations against bibliography |
 | `/devils-advocate` | Challenge design decisions before committing |
 | `/create-lecture` | Full lecture creation workflow |
@@ -278,7 +277,7 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/scaffold-exercises` (v2.0) | Scaffold a graded problem set across analytical/empirical/coding types, with worked solutions and "why this matters" explainers emitted to a separate solution key |
 | `/new-skill` (v2.0) | Scaffold a new skill that follows this repo's conventions — interviews for purpose, triggers, and tools, writes `.claude/skills/<name>/SKILL.md` from the template with frontmatter/body that pass `check-skill-integrity.py` first try, then reminds to add the surface-table rows |
 | `/index-textbook` (v2.2) | Build a persistent chapter → page-range → key-terms index for a course textbook (text-layer or OCR), so `/create-lecture` can cite a specific page instead of "standard treatment" |
-| `/lecture-notes` (v2.2) | Expand a finished, compiled Beamer deck into prose Lecture Notes (article-class PDF) — derived from Slides, never co-drafted, same relationship Quarto has to Beamer |
+| `/lecture-notes` (v2.2) | Expand a finished, compiled Beamer deck into prose Lecture Notes (article-class PDF) — derived from Slides and never co-drafted |
 | `/qa-notes` (v2.2) | Adversarial critic-fixer loop checking Lecture Notes against the Beamer source (content/citation parity, no invention) |
 | `/create-assignment` (v2.2) | Scaffold a graded engineering-course assignment (Conceptual/Numerical/Design problems) sourced from a lecture's Slides/Notes — student set + separate solution key, course-organized |
 | `/competitive-exam-questions` (v2.2) | Course-organized competitive-exam practice set (default GATE CS) — real past-year questions verified via Chain-of-Verification, plus original exam-pattern questions for topic gaps, each labeled by provenance |
@@ -290,7 +289,7 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/trace-execution` (v2.3) | Step-by-step execution trace as a sequence of coordinate-consistent TikZ diagrams (memory/stack/heap, pointer mutation, data-structure operations) — automates the pattern hand-built for CS301 Week 1's stack/heap traces |
 | `/publish-course-hub` (v2.4) | Regenerate a course hub page's data-driven regions (lecture rail, progress ribbon, assignments/practice tables) from the syllabus + what's actually published in `docs/`, instead of hand-editing `docs/courses/<code>/index.html` every time a new week ships |
 | `/accreditation` (v2.4) | NBA-style Course Outcome → Program Outcome mapping and attainment-calculation template — numbers the syllabus's learning objectives as COs, Bloom-tags them, drafts a CO-PO-PSO correlation matrix against NBA's 12 fixed POs (faculty-review draft, never auto-filed), maps each CO to its assessment tool, and emits the attainment formulas with `[FILL]` placeholders instead of fabricated scores |
-| `/build-week` (v2.5) | Semester autopilot — resolve a `<CourseCode>/<week>` from the syllabus work-list and run the 7-stage pipeline (slides → notes → assignment → lab → GATE set → Quarto/deploy → hub), delegating each stage to its owning skill via `Task` and reconciling a per-course `syllabi/<CODE>.progress.yaml` registry, with checkpoint approval between stages |
+| `/build-week` (v2.5) | Semester autopilot — resolve a `<CourseCode>/<week>` from the syllabus work-list and run the 6-stage pipeline (slides → notes → assignment → lab → GATE set → hub), delegating each stage to its owning skill via `Task` and reconciling a per-course `syllabi/<CODE>.progress.yaml` registry, with checkpoint approval between stages; no Quarto stage |
 | `/textbook-edition-diff` (v2.6) | Diff a swapped textbook edition against its old `index.md` chapter mapping, then grep every citation of that book across the whole course into one consolidated re-verification report — read-only, no auto-fix |
 | `/course-arc-audit` (v2.6) | Fan out reviewers across consecutive week-pairs plus one whole-arc pass to check semester-level pedagogical continuity — handoff-line accuracy, notation reuse-drift, forward-reference payoff |
 | `/student-simulator` (v2.6) | Playtest a deck by simulated execution: a blind "cold student" persona works through its Socratic Checks before seeing the answers, then diffs its stumbles against the instructor handout's predicted misconceptions |
@@ -336,7 +335,7 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 | `quality-gates` | `.tex`, `.qmd`, `*.R` | 80/90/95 scoring + tolerance thresholds |
 | `r-code-conventions` | `*.R` | R coding standards + math line-length exception |
 | `tikz-visual-quality` | `.tex` | TikZ diagram visual standards |
-| `beamer-quarto-sync` | `.tex`, `.qmd` | Auto-sync Beamer edits to Quarto |
+| `beamer-quarto-sync` | `.tex`, `.qmd` | Keeps Quarto course mirrors outside course workflows |
 | `pdf-processing` | `master_supporting_docs/` | Safe large PDF handling |
 | `proofreading-protocol` | `.tex`, `.qmd`, `quality_reports/` | Propose-first, then apply with approval |
 | `no-pause-beamer` | `.tex` | No overlay commands in Beamer |
@@ -389,14 +388,14 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 | git | Clone + version control | [git-scm.com](https://git-scm.com/downloads) |
 | Python 3 (3.9+) | Internal checkers (palette sync, TikZ prevention) | Preinstalled on macOS/Linux; [python.org](https://www.python.org/) for Windows |
 | XeLaTeX | LaTeX compilation (Beamer `HelloWorld`, real lectures) | [TeX Live](https://tug.org/texlive/) or [MacTeX](https://tug.org/mactex/) |
-| [Quarto](https://quarto.org) | Web slides (Quarto `HelloWorld`, real lectures) | [quarto.org/docs/get-started](https://quarto.org/docs/get-started/) |
+| [Quarto](https://quarto.org) | Existing guide/site maintenance; not used for course builds | [quarto.org/docs/get-started](https://quarto.org/docs/get-started/) |
 | R | Figures and analysis (`/data-analysis`, `scripts/R/` template) | [r-project.org](https://www.r-project.org/) |
-| pdf2svg | TikZ → SVG for Quarto (`/extract-tikz`) | `brew install pdf2svg` (macOS), `apt install pdf2svg` (Debian) |
+| pdf2svg | TikZ → SVG for existing guide/site assets (`/extract-tikz`) | `brew install pdf2svg` (macOS), `apt install pdf2svg` (Debian) |
 | [gh CLI](https://cli.github.com/) | PR / issue workflow | `brew install gh` (macOS), `apt install gh` (Debian) |
 
 **Minimum to fork this template:** Claude Code + git + Python 3 (Python is already installed on macOS/Linux).
 
-**Minimum to run the included HelloWorld demos end-to-end:** add XeLaTeX (for `/compile-latex HelloWorld`) and Quarto (for `/deploy HelloWorld`).
+**Minimum to build course lectures:** add XeLaTeX (for `/compile-latex HelloWorld`). No course build depends on Quarto.
 
 **Your real lectures may need more** — R for `scripts/R/` analyses, pdf2svg if you use TikZ extraction, gh CLI if you use the PR-based commit workflow. `./scripts/validate-setup.sh` reports which of these are installed and what each unlocks.
 
@@ -406,9 +405,9 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 
 1. **Fill in the knowledge base** (`.claude/rules/knowledge-base-template.md`) with your notation, applications, and design principles
 2. **Customize the domain reviewer** (`.claude/agents/domain-reviewer.md`) with review lenses specific to your field
-3. **Update the color palette** — this is a **two-surface contract**: change the HEX values at the top of **both** [`Preambles/header.tex`](Preambles/header.tex) (Beamer/TikZ) **and** [`Quarto/theme-template.scss`](Quarto/theme-template.scss) (Quarto slides) so they agree. Then run `./scripts/check-palette-sync.sh` to verify. Forgetting one surface silently produces mismatched Beamer vs. Quarto renderings. See [`Preambles/README.md`](Preambles/README.md) for the full contract and the TikZ style library.
+3. **Update the color palette** — the legacy Quarto theme mirrors the palette in [`Preambles/header.tex`](Preambles/header.tex). Keep the palette check in sync when maintaining the guide/site theme. See [`Preambles/README.md`](Preambles/README.md) for the palette contract and TikZ style library.
 4. **Add field-specific R pitfalls** to `.claude/rules/r-code-conventions.md`
-5. **Fill in the lecture mapping** in `.claude/rules/beamer-quarto-sync.md`
+5. **Preserve legacy Quarto artifacts** — they are not part of course authoring or build workflows; guide/site tooling remains available for its existing purpose.
 6. **Customize the workflow quick reference** (`.claude/WORKFLOW_QUICK_REF.md`) with your non-negotiables and preferences
 7. **Set up the exploration folder** (`explorations/`) for experimental work
 

@@ -437,7 +437,7 @@ empty when front > rear; start with front = 0, rear = -1
   \end{itemize}
   \begin{exampleblock}{Exam note}
     If a question says ``insert at rear, delete at both ends'': that is the
-    input-restricted deque. Name it, then trace it --- the name earns the
+    output-restricted deque. Name it, then trace it --- the name earns the
     first mark, the trace the rest.
   \end{exampleblock}
 \end{frame}
@@ -630,7 +630,7 @@ empty when front > rear; start with front = 0, rear = -1
       \texttt{deleteMin} returns what, and what does it cost worst case?
   \end{enumerate}
   \muted{Answers: not full (4 $< 5$); then \texttt{front} $= 4$,
-    \texttt{rear} $= 2$, \texttt{count} $= 4$. Input-restricted deque.
+    \texttt{rear} $= 2$, \texttt{count} $= 4$. Output-restricted deque.
     Returns \texttt{B:1} at $O(n)$ worst case.}
 \end{frame}
 

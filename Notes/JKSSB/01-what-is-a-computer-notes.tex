@@ -1,0 +1,274 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{1.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{What Is a Computer? --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+\noindent\textbf{Video lesson:}
+\href{https://youtu.be/nxzba3RgEqw}{What is a Computer?}
+
+\section{A computer is a data-processing system}
+Start with an office task. A clerk enters marks into a spreadsheet, a formula
+adds the values and calculates an average, the result appears on screen, and
+the workbook can be saved. A computer is not merely the screen or the box on
+the desk. The task depends on data, instructions, processing, an output path,
+and possibly storage.
+
+\begin{definitionbox}{Computer}
+An electronic, programmable system that accepts data, processes it under
+instructions, produces information, and can store data or results.
+\end{definitionbox}
+
+Each part of the definition matters. \emph{Electronic} describes the
+technology used by the system. \emph{Programmable} means that instructions
+specify the operations to perform. The system accepts inputs, applies those
+instructions, and makes results available. It can also retain data or results
+for later use.
+
+\begin{definitionbox}{Data}
+Raw facts or symbols supplied to a system before they have been organized for
+the particular question being asked.
+\end{definitionbox}
+
+\begin{definitionbox}{Information}
+Data that have been organized or processed so that they are useful for a
+particular purpose.
+\end{definitionbox}
+
+\begin{definitionbox}{Instruction}
+A rule that tells the computer what operation to perform or what action to
+take.
+\end{definitionbox}
+
+\begin{definitionbox}{Program}
+An organized set of instructions that directs a computer through a task.
+\end{definitionbox}
+
+Data and information are defined by their role in a task, not by whether the
+values are numbers or text. Individual marks are data when the question is
+``What are the three scores?'' Their average is information when the question
+is ``What was the student's average?'' The average can itself become input
+data for a later task, so the same value may play different roles in
+different contexts.
+
+\begin{example}
+A clerk enters $68$, $74$, and $81$. These three marks are the input data.
+Adding them gives $223$; dividing by three gives
+$223/3=74.333\ldots$, or approximately $74.33$ to two decimal places. The
+total and average are processed results. They are useful information if the
+task is to summarize performance. Saving the workbook retains the records.
+\end{example}
+
+\begin{example}
+Suppose the same three marks are each out of $100$. The total possible score
+is therefore $300$. The percentage is
+\[
+  \frac{68+74+81}{300}\times 100
+  =\frac{223}{300}\times 100
+  =74.333\ldots\%.
+\]
+Rounded to two decimal places, the percentage is $74.33\%$. The total,
+maximum possible score, formula, and rounding rule all matter; the computer
+cannot infer a missing maximum score from the marks alone.
+\end{example}
+
+\section{Input, processing, output, and storage}
+\begin{definitionbox}{Input}
+Data and instructions that enter a computer system through a device, file,
+network, or software interface.
+\end{definitionbox}
+
+\begin{definitionbox}{Processing}
+Operations carried out on input data according to instructions, usually by
+the processor and program involved in the task.
+\end{definitionbox}
+
+\begin{definitionbox}{Output}
+The result made available by a computer system, for example on a display, in
+a printed document, as sound, or through another system.
+\end{definitionbox}
+
+\begin{definitionbox}{Storage}
+The retention of data, instructions, or results for current or later use.
+\end{definitionbox}
+
+The basic three-stage model is IPO: Input, Processing, Output. Many
+introductory diagrams add Storage, giving IPOS. Storage is a distinct
+function, not another name for processing. The stages describe roles in a
+task; they do not require every computer job to follow a single rigid,
+one-direction path. A saved result can be read back as input to a later
+operation.
+
+\begin{center}
+\begin{tabular}{p{0.17\textwidth}p{0.34\textwidth}p{0.37\textwidth}}
+\toprule
+\textbf{Stage} & \textbf{Question to ask} & \textbf{Marks-spreadsheet example}\\
+\midrule
+Input & What data or instructions enter? & The three marks and the average formula\\
+Processing & What operation changes or organizes the data? & Addition, division, and percentage calculation\\
+Output & What result is presented, and how? & The total or percentage shown on screen or printed\\
+Storage & What is retained for later use? & The saved workbook and its records\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The physical item does not determine the stage by itself. A monitor is
+normally an output device, but the classification question concerns the
+monitor's role in the described task. A saved file is stored data; opening
+that same file later makes its contents input to the new task. Likewise,
+information describes the usefulness of processed data, whereas output
+describes how the result is made available. A screen can present useful
+information, but the terms answer different questions.
+
+\begin{example}
+In the marks spreadsheet, typing or importing the scores is input. The
+formula performs processing. The displayed total and average are output.
+Saving the workbook is storage. If the saved workbook is opened tomorrow,
+reading it is input to that later session.
+\end{example}
+
+\section{Characteristics and limitations}
+\begin{definitionbox}{Speed}
+The ability to carry out many operations in a short time.
+\end{definitionbox}
+
+\begin{definitionbox}{Accuracy}
+The ability to produce consistent, precise results when the data, instructions,
+and operation are correct.
+\end{definitionbox}
+
+\begin{definitionbox}{Diligence}
+The ability to repeat work without tiring in the human sense, provided the
+system continues to receive power and function correctly.
+\end{definitionbox}
+
+\begin{definitionbox}{Versatility}
+The ability to perform different kinds of tasks by running different
+programs.
+\end{definitionbox}
+
+\begin{definitionbox}{Automation}
+The ability to continue a programmed operation after it has been started and
+the required inputs or conditions have been supplied.
+\end{definitionbox}
+
+\begin{definitionbox}{Storage as a characteristic}
+The ability to retain data, instructions, and results for later access.
+\end{definitionbox}
+
+These characteristics describe capabilities, not a guarantee that every
+result is correct or useful. Speed concerns how quickly operations are
+performed; accuracy concerns whether the operation is correctly carried out
+on the supplied data. Storage concerns retaining material; it does not
+validate that material. Versatility comes from using different programs,
+while automation means a started procedure can continue according to its
+instructions and conditions.
+
+Speed and accuracy must not be confused with judgement. A computer can
+calculate quickly and repeat the same operation consistently, but it cannot
+infer that a deliberately or accidentally incorrect mark is false merely
+because the value is stored in a spreadsheet. Accuracy is conditional on the
+quality of data and instructions.
+
+\begin{definitionbox}{GIGO}
+``Garbage In, Garbage Out'': unsuitable or incorrect input can lead to
+unsuitable or incorrect output, even when the computer follows its
+instructions.
+\end{definitionbox}
+
+\begin{example}
+Suppose the correct marks are $68$, $74$, and $81$, but a user enters $18$
+instead of $81$. The formula may correctly compute
+$68+74+18=160$ and $160/3\approx 53.33$. The arithmetic is consistent with
+the entered values, but the output is not a valid summary of the actual
+marks. The error entered at the input stage was not corrected by processing.
+\end{example}
+
+The example illustrates the limitation often summarized by GIGO. If the
+input is wrong, a correct formula can still produce an incorrect result. If
+the input is correct but the formula is wrong, the result can also be wrong.
+The machine may execute either set of instructions consistently; it does not
+automatically decide that the source data are truthful, complete, or fair.
+Computers do not possess human judgement or common-sense understanding by
+default, so a person must interpret output in context and decide what action
+it justifies.
+
+\section{Applications and role classification}
+The same IPO/IPOS model applies across fields. What changes is the type of
+data and the useful result; the roles of input, processing, output, and
+storage remain identifiable.
+
+\begin{center}
+\begin{tabular}{p{0.15\textwidth}p{0.24\textwidth}p{0.27\textwidth}p{0.22\textwidth}}
+\toprule
+\textbf{Field} & \textbf{Input} & \textbf{Processing / output} & \textbf{Storage}\\
+\midrule
+Office & Text, figures, and instructions & Create a document or calculate a total & Document or workbook file\\
+Banking & Account and transaction details & Validate and process a transaction; show a status & Account and transaction records\\
+Education & Learner responses and assessment rules & Score work and present results or learning resources & Assessment and learner records\\
+Healthcare & Patient details and appointment requests & Organize records, schedules, or diagnostic support & Patient and appointment records\\
+Governance & Online form fields and supporting details & Process a request and provide a citizen service & Submitted forms and service records\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For exam questions, classify the role within the described task. A keyboard
+is an input device; the formula is processing; a monitor presents output; a
+saved file is stored data. A physical object may support more than one
+stage, but the question usually asks for the role it is playing in that
+particular scenario.
+
+\begin{example}
+An online expense form accepts entered amounts, checks and sums them using
+the programmed rules, displays the total, and stores the submitted record.
+If one amount is mistyped, the calculation may still be executed correctly
+on the wrong data. The user should correct the input before relying on the
+total.
+\end{example}
+
+When a question gives a complete workflow, mark the stage of each action
+rather than assigning one label to the entire system. Entering a value is
+input; checking or summing it is processing; showing a result is output;
+keeping the transaction record is storage. If the stored record is opened
+and processed again, its role changes to input for that later operation.
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item A user enters four prices, applies a tax formula, prints the invoice,
+    and saves the file. Identify the input, processing, output, and storage.
+  \item Explain why a fast, consistent computer can still produce an
+    incorrect result.
+  \item Three temperature readings are $18$, $20$, and $22$ degrees. For a
+    task asking for their average, identify the data and the resulting
+    information.
+  \item Give one example from banking or governance and trace it through
+    IPOS.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The four prices are input; applying the tax formula is processing;
+    the printed invoice is output; saving the invoice file is storage.
+  \item The computer follows its instructions and operates on the supplied
+    data. Incorrect input or a wrong formula can therefore produce an
+    incorrect result consistently; speed does not establish truth.
+  \item The three readings are input data. Their average is
+    $(18+20+22)/3=20$ degrees and is information for the average-reading
+    task.
+  \item Example: an online fee form accepts the user's details and amount
+    (input), calculates the fee (processing), shows a receipt (output), and
+    saves the transaction record (storage).
+\end{enumerate}
+\endgroup
+\end{document}

@@ -27,6 +27,7 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 8. Thread at least 1 running empirical application throughout
 9. All citations verified against the bibliography
 10. **Work in batches of 5-10 slides** — share for feedback, don't bulk-dump
+11. **Quarto is outside course workflows.** Do not create, sync, or update a Quarto course mirror.
 
 ---
 
@@ -74,7 +75,7 @@ State the pedagogical goal, get user confirmation, then proceed.
 
 1. Acknowledge this is the course's first lecture and the KB is empty.
 2. Propose a **minimal starter knowledge base** from the user's topic: 5-8 key symbols with conventions, 1-2 running applications, a short narrative arc (intro → main idea → implications). Present for approval.
-3. Write the approved stub into `.claude/rules/knowledge-base-<CODE>.md` so subsequent lectures in this course inherit it. Its `paths:` frontmatter should already scope it to `Slides/<CODE>/**/*.tex` and `Quarto/<CODE>/**/*.qmd` from the template — don't widen it to match other courses.
+3. Write the approved stub into `.claude/rules/knowledge-base-<CODE>.md` so subsequent lectures in this course inherit it. Its `paths:` frontmatter should scope it to this course's Beamer slides and other active course materials — don't widen it to match other courses.
 4. Continue to Phase 1.
 
 This prevents `/create-lecture` from deadlocking for every new forker or new course.
@@ -100,7 +101,7 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 ### Phase 4: Figures & Code
 - R scripts following conventions
 - TikZ diagrams in Beamer source (single source of truth)
-- Save RDS for future Quarto integration
+- Save RDS outputs only when needed by a requested analysis or figure workflow
 - **TikZ overlap audit (MANDATORY):** before compiling, run the P7 clearance audit (`.claude/rules/tikz-prevention.md`) on every diagram — each boxed node must declare explicit dimensions (P1), every diagram with ≥3 nodes must have a coordinate map (P2), and the map must be checked for: no path crossing a box except at a connection point (P7a), no label sitting on a line (P7b), labels ≥0.15 cm clear of box edges (P7c), and no curve visibly crossing its own dashed asymptote (P7d). Fix any finding before compiling. This audit is what prevents bus-through-box and label-on-arrow overlaps from shipping.
 - **tikz-reviewer pass (MANDATORY, before Phase 5):** compile the deck (3-pass `xelatex`, same as Phase 5), then for each diagram added or modified this session spawn `tikz-reviewer` via `Task` (`subagent_type=tikz-reviewer`), passing the compiled `.pdf` path — the reviewer rasterizes and actually looks at the render (Pass 6) before reasoning from source, catching the class of overlap the static P7 audit above cannot (font-metric/anchor-specific collisions invisible from coordinates alone). Apply fixes and re-invoke, looping until **APPROVED**, max 5 rounds — same pattern `/new-diagram` Step 5-6 uses. If a diagram is a straight port with no changes this session, it can be skipped (it already passed this gate when first authored).
 
@@ -135,10 +136,8 @@ This prevents `/create-lecture` from deadlocking for every new forker or new cou
 
 ## Cross-references
 
-- [`.claude/skills/translate-to-quarto/SKILL.md`](../translate-to-quarto/SKILL.md) — port the finished Beamer deck to a Quarto RevealJS mirror.
-- [`.claude/skills/qa-quarto/SKILL.md`](../qa-quarto/SKILL.md) — adversarial Beamer↔Quarto parity (loop-until-dry).
 - [`.claude/skills/lecture-notes/SKILL.md`](../lecture-notes/SKILL.md) — expand the finished deck into prose Lecture Notes.
 - [`.claude/skills/qa-notes/SKILL.md`](../qa-notes/SKILL.md) — adversarial Beamer↔Notes parity (loop-until-dry).
 - [`.claude/skills/index-textbook/SKILL.md`](../index-textbook/SKILL.md) — build the page-cited index this course's `supporting_books/*/index.md` inputs come from.
-- [`.claude/skills/deploy/SKILL.md`](../deploy/SKILL.md) — render + publish the lecture to GitHub Pages.
+- [`.claude/skills/deploy/SKILL.md`](../deploy/SKILL.md) — optional render + publish the lecture to GitHub Pages.
 - [`.claude/skills/scaffold-exercises/SKILL.md`](../scaffold-exercises/SKILL.md) — problem sets + solutions to accompany the lecture.

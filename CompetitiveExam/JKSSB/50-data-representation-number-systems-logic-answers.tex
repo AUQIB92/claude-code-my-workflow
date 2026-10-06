@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 50 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{PYQ provenance:} Q1--Q4 adapt Computer
+Instructor/Operator 2025 Q1--Q4; Q5 adapts Website Operator 2026 Q73.
+These are paraphrases, not verbatim reproductions. The Website Operator
+answer key is provisional.
+\begin{enumerate}
+\item \textbf{D.} The ASCII decimal code for \texttt{\$} is 36. 32 is the
+  space code; 30 and 34 are other control/punctuation values, not the dollar
+  sign.
+\item \textbf{C.} The integer bits give $128+64+16+4+1=213$; the fractional
+  bits give $0/2+1/4=0.25$, so the value is $213.25$. A, B, and D do not
+  match the positional sum.
+\item \textbf{B.} UTF-8 is variable-length and preserves ASCII values in the
+  ASCII range. A falsely says fixed-length; C wrongly limits Unicode to
+  Latin; D incorrectly says every character uses eight bytes.
+\item \textbf{A.} $278=256+16+4+2$, which sets bits 8, 4, 2, and 1 to give
+  $100010110_2$. B, C, and D encode different decimal values.
+\item \textbf{A.} $1010_2=8+2=10$. B is 9, C is 12, and D is 14.
+\item \textbf{B.} Octal is base 8. A is binary, C decimal, and D hexadecimal.
+\item \textbf{D.} Octal digits range from 0 through 7, so 8 is not allowed.
+  0, 5, and 7 are valid octal digits.
+\item \textbf{C.} $2F_{16}=2(16)+15=47$. A is 31, B is 32, and D is 63;
+  none equals the place-value sum.
+\item \textbf{A.} Grouping from the right gives $001\ 111\ 111_2$, or
+  $1\ 7\ 7_8$. B has the wrong base label; C drops a leading group; D gives
+  the wrong base label.
+\item \textbf{B.} BCD encodes each decimal digit separately: 2 is 0010 and
+  5 is 0101. A is the ordinary binary value 25; C reverses the digit
+  nibbles; D is not the two-digit BCD form.
+\item \textbf{D.} BCD is a decimal-digit code, not another name for Unicode.
+  A correctly describes original ASCII; B correctly describes Unicode; C
+  correctly describes UTF-8.
+\item \textbf{A.} Unicode assigns code points; UTF-8 is one encoding that
+  represents those code points with variable-length byte sequences. B
+  conflates UTF-8 and BCD; C confuses Unicode with a four-bit decimal code;
+  D falsely claims a fixed eight-byte length.
+\item \textbf{A.} The channels are red, green, and blue, with 8 bits each in
+  this common 24-bit representation. B, C, and D are not the RGB channel
+  names.
+\item \textbf{B.} XOR outputs 1 when inputs differ, and 1 and 0 differ. A is
+  the AND result; C is not a Boolean output; D incorrectly makes a
+  combinational gate depend on a clock.
+\item \textbf{C.} AND is 1 only when both inputs are 1. OR is 1 if either
+  input is 1; XOR is 1 when they differ; NOT takes one input.
+\item \textbf{A.} NAND is the negation of AND; with inputs 1 and 1, AND is 1
+  and NAND is 0. B is the AND result; C is not a Boolean value; D is defined
+  for these inputs.
+\item \textbf{A.} NOT has one input and returns its complement. B describes
+  AND; C describes XOR; D confuses a logic gate with colour channels.
+\item \textbf{B.} I and II are true: three 8-bit RGB channels total 24 bits.
+  III is false because formats can use other channels and bit depths. A
+  omits II; C includes false III and omits I; D includes false III.
+\item \textbf{C.} $1011_2=8+2+1=11$. A is 9, B is 10, and D is 13.
+\item \textbf{C.} One hexadecimal digit represents four binary bits.
+  Two bits correspond to one octal digit; three bits form an octal group;
+  eight bits make a byte, not a hex digit.
+\item \textbf{A.} For inputs 0,0, AND=0, OR=0, XOR=0, and NAND=1. B assigns
+  an incorrect AND and NAND; C gives incorrect OR and XOR; D gives
+  incorrect AND, OR, and XOR.
+\end{enumerate}
+\end{document}

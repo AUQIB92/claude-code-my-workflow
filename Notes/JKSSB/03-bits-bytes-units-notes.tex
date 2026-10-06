@@ -1,0 +1,251 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{3.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Bits, Bytes \& Units --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+\noindent\textbf{Video lesson:}
+\href{https://youtu.be/j_62CGCBElo}{Bits, Bytes \& KB--TB Explained}
+
+\section{The basic units of digital data}
+Digital information is represented using bits. Groups of bits form larger
+units, but the terms do not all describe the same kind of quantity. A bit is
+a single binary digit; a word is an architecture-dependent processor unit;
+a character is an encoded symbol.
+
+\begin{definitionbox}{Bit}
+A binary digit that has one of two values, 0 or 1; the smallest unit of data
+in the usual computer-fundamentals description.
+\end{definitionbox}
+
+\begin{definitionbox}{Nibble}
+A group of four bits.
+\end{definitionbox}
+
+\begin{definitionbox}{Byte}
+A group of eight bits, equal to two nibbles.
+\end{definitionbox}
+
+\begin{definitionbox}{Word}
+The natural data size a processor handles as a unit; its size depends on the
+processor architecture.
+\end{definitionbox}
+
+\begin{definitionbox}{Character}
+A text symbol represented in digital storage by a character encoding; its
+storage size is not necessarily one byte.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.19\textwidth}p{0.2\textwidth}p{0.48\textwidth}}
+\toprule
+\textbf{Unit} & \textbf{Size / basis} & \textbf{Meaning}\\
+\midrule
+Bit & 1 binary digit & One of the two values 0 or 1\\
+Nibble & 4 bits & Half of an 8-bit byte\\
+Byte & 8 bits & Two nibbles; common unit for file/storage amounts\\
+Word & Architecture-dependent & Natural processor data size, such as 32 or 64 bits\\
+Character & Encoding-dependent & A text symbol; its encoded storage may take more than one byte\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The bit-to-byte relationships are fixed in this lesson:
+\[
+  1\text{ nibble}=4\text{ bits},\qquad
+  1\text{ byte}=8\text{ bits}=2\text{ nibbles}.
+\]
+The word size is not defined by this ladder. A processor may work with a
+natural word size such as 32 or 64 bits, but the term depends on the
+architecture and should not be treated as one universal number.
+
+\begin{example}
+Write the byte \texttt{10110110} as two nibbles: \texttt{1011} and
+\texttt{0110}. Each group contains four bits; together the two groups still
+contain eight bits, so the original value is one byte.
+\end{example}
+
+\section{Bits and bytes in names and data rates}
+Capitalization changes the unit. Lowercase \texttt{b} denotes a bit, while
+uppercase \texttt{B} denotes a byte. A byte contains eight bits. Therefore a
+rate reported in megabits per second is not numerically equal to a rate in
+megabytes per second.
+
+\begin{definitionbox}{Transfer rate}
+The amount of data transferred in a stated time interval, commonly written
+in bits per second or bytes per second.
+\end{definitionbox}
+
+\begin{definitionbox}{Capacity}
+The amount of data that a storage medium can hold.
+\end{definitionbox}
+
+The slash in a rate such as Mbps means ``per second.'' It is not part of the
+data amount itself. Keep the numerical amount, whether it is bits or bytes,
+and the time unit visible while calculating. Under matching decimal prefixes,
+\[
+  1\text{ byte}=8\text{ bits},\qquad
+  1\text{ MB}=8\text{ Mb}.
+\]
+Thus dividing a rate in Mb/s by eight gives MB/s, while multiplying a file
+size in MB by eight gives Mb. These conversions change the unit, not the
+underlying amount of data.
+
+To convert a bit rate to a byte rate, divide by eight, provided the prefixes
+match and the question is asking for the ideal conversion. Protocol overhead,
+congestion, and other factors can reduce actual network throughput, so a
+nominal rate is not a promise of application-level speed.
+
+\begin{example}
+A link is rated at $8$ Mbps. Using matching decimal prefixes and ignoring
+overhead, convert bits to bytes:
+\[
+8\text{ megabits/s}\div 8=1\text{ megabyte/s}.
+\]
+This is a transfer rate, not a storage capacity.
+\end{example}
+
+\begin{example}
+Convert an ideal rate of $24$ Mbps to megabytes per second. The prefixes
+already match, so only the bit-to-byte conversion is needed:
+\[
+  24\text{ Mb/s}\div 8=3\text{ MB/s}.
+\]
+The answer is a rate because the time denominator remains. If the question
+asked how long a file takes to transfer, the file amount would first need to
+be expressed in the same unit as the rate, then divided by that rate.
+\end{example}
+
+\begin{example}
+A $4$ MB file contains $32$ megabits under matching decimal prefixes because
+$4\text{ MB}\times 8=32\text{ Mb}$. If transferred over an ideal $20$ Mbps
+link, the simple lower-bound calculation is $32/20=1.6$ seconds. Actual
+transfer can take longer because the ideal calculation ignores protocol
+overhead and other delays.
+\end{example}
+
+\section{Capacity units and the 1024 convention}
+For the conventional JKSSB-style ladder used in this lesson, each step is a
+factor of 1024:
+\[
+1\text{ KB}=1024\text{ bytes},\quad
+1\text{ MB}=1024\text{ KB},\quad
+1\text{ GB}=1024\text{ MB},\quad
+1\text{ TB}=1024\text{ GB}.
+\]
+Thus $1$ MB under this convention is $1024\times1024=1{,}048{,}576$ bytes.
+The exam-style abbreviations KB, MB, GB, and TB are often used with this
+traditional binary ladder. Modern technical standards distinguish decimal
+SI units (powers of 1000) from binary IEC units such as KiB (powers of 1024).
+If a question specifies decimal units or the IEC prefixes, use those
+definitions instead. Do not silently mix conventions.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.25\textwidth}p{0.43\textwidth}}
+\toprule
+\textbf{Unit} & \textbf{Previous unit} & \textbf{Bytes under repeated 1024 convention}\\
+\midrule
+1 KB & 1024 bytes & $1{,}024$ bytes\\
+1 MB & 1024 KB & $1{,}048{,}576$ bytes\\
+1 GB & 1024 MB & $1{,}073{,}741{,}824$ bytes\\
+1 TB & 1024 GB & $1{,}099{,}511{,}627{,}776$ bytes\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+To move from a larger unit to the next smaller unit, multiply by 1024.
+Repeat once for every step crossed. To move from a smaller unit to the next
+larger unit, divide by 1024. Writing the units beside the numbers helps
+prevent using the wrong direction.
+
+\begin{example}
+Convert $3$ KB to bytes under the 1024 convention:
+\[
+3\text{ KB}\times 1024\text{ bytes/KB}=3072\text{ bytes}.
+\]
+The KB units cancel, leaving bytes.
+\end{example}
+
+\begin{example}
+Convert $2$ MB to KB under the same convention:
+\[
+2\text{ MB}\times 1024\text{ KB/MB}=2048\text{ KB}.
+\]
+This is one step down the capacity ladder, so multiply by 1024.
+\end{example}
+
+\begin{example}
+Convert $5$ GB to MB using the same convention. GB is one step larger than
+MB, so multiply by 1024:
+\[
+  5\text{ GB}\times 1024\text{ MB/GB}=5120\text{ MB}.
+\]
+The units GB cancel, leaving MB. To convert $5120$ MB back to GB, divide by
+1024 and recover $5$ GB.
+\end{example}
+
+\section{Keep capacity separate from rate}
+Capacity answers ``how much can be stored?'' Transfer rate answers ``how
+much is moved per unit of time?'' MB is a byte-based amount; Mbps is a
+bit-based rate. The lowercase/uppercase distinction and the \texttt{/s}
+time component carry information. A drive with a larger capacity does not
+necessarily transfer data faster than a smaller drive.
+
+\begin{center}
+\begin{tabular}{p{0.2\textwidth}p{0.31\textwidth}p{0.31\textwidth}}
+\toprule
+\textbf{Question} & \textbf{Capacity} & \textbf{Transfer rate}\\
+\midrule
+What does it measure? & Amount that can be held & Amount moved per unit of time\\
+Common example & A 4 MB file or 1 TB drive & A 20 Mbps connection\\
+Unit clue & No time denominator & Includes ``per second'' or \texttt{/s}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+In the lesson's opening comparison, $4$ MB describes the file's storage
+amount, while $20$ Mbps describes the network's transfer rate. The first
+has no time denominator; the second is measured per second, so they are
+different kinds of quantities.
+\end{example}
+
+Before calculating, perform a quick unit check: if the final question asks
+for bytes, convert bits to bytes; if it asks for seconds, divide an amount
+of data by a compatible rate; if it asks for a storage amount, do not attach
+a time unit. A numerically correct calculation with mismatched units is not
+a correct answer.
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item How many bits are in $7$ bytes? Show the conversion.
+  \item How many bytes are in $5$ KB under the 1024 convention?
+  \item Convert $24$ Mbps to MB/s using matching decimal prefixes and
+    ignoring overhead.
+  \item A device stores $4$ GB. Is this a capacity or a transfer rate? What
+    unit clue supports your answer?
+  \item A processor has a 64-bit word size. How many bytes are in one word?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item $7\times 8=56$ bits.
+  \item $5\times 1024=5120$ bytes.
+  \item $24/8=3$ MB/s before protocol overhead.
+  \item It is capacity: GB is a data amount, and there is no ``per second''
+    time component.
+  \item $64/8=8$ bytes per word.
+\end{enumerate}
+\endgroup
+\end{document}

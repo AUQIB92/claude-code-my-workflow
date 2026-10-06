@@ -22,7 +22,7 @@ Not for building the slides themselves (`/create-lecture`), reviewing a deck's p
 
 A syllabus is shaped almost entirely by four parameters. Resolve them first — from flags, then by asking. Do **not** start sequencing until all four are pinned.
 
-0. **Course code** — the short code this course will be filed under (e.g. `CS401`, `MATH201`). Everything downstream (`syllabi/<CODE>.md`, `Slides/<CODE>/`, `Quarto/<CODE>/`, `.claude/rules/knowledge-base-<CODE>.md`) keys off it, so pin it before drafting. If unstated and not inferable, ask.
+0. **Course code** — the short code this course will be filed under (e.g. `CS401`, `MATH201`). Everything downstream (`syllabi/<CODE>.md`, `Slides/<CODE>/`, `.claude/rules/knowledge-base-<CODE>.md`) keys off it, so pin it before drafting. Quarto is outside course workflows and must not be added to the course work-list. If unstated and not inferable, ask.
 1. **Level + audience** — `--level` (`phd` / `grad` / `undergrad`). For economics, name the sequence (first-year metrics, micro theory, macro, field course, undergrad intermediate). Level sets reading depth, proof-vs-application balance, and assessment type.
 2. **Length + cadence** — `--weeks` (default 14) and `--sessions-per-week` (default 2). A reading seminar and a problem-set course at the same length need very different schedules.
 3. **Material** — the topic list or reading list (`$ARGUMENTS`, a file path, or a `.bib`). If the user points at a `.bib` or a folder of PDFs, `Glob`/`Read` to inventory it; if topics are bare, ask for 1-2 anchor texts per topic.
