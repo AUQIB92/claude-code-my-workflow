@@ -1,0 +1,394 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{65.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current Multimedia, GUI and Media Formats --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What multimedia means}
+\textbf{Multimedia} is the presentation of content that combines more than
+one medium in a single document or program. The media may be \textbf{text,
+graphics, audio, video}, and \textbf{animation}. Text and graphics are
+\emph{static} media: they do not change with time. Audio, video, and animation
+are \emph{time-based} media: their meaning depends on being played in the
+correct order and at the correct speed. Because a computer stores everything
+as binary data, every medium --- sound, picture, or moving image --- must
+first be captured and converted into numbers before it can be stored,
+compressed, and replayed.
+
+\begin{definitionbox}{Multimedia}
+Content that combines two or more media types --- such as text, graphics,
+audio, video, and animation --- in a single digital presentation.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Element} & \textbf{Meaning} \\
+\midrule
+Text & Readable characters; the base medium of almost every document. \\
+Graphics & Still images, drawings, and photographs. \\
+Audio & Sound, music, and speech. \\
+Video & Moving pictures, usually accompanied by sound. \\
+Animation & A sequence of images played fast enough to create motion. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Digitising media: sampling and quantization}
+An analogue signal, such as a sound wave or a scene's light, is
+\emph{continuous}: it has a value at every instant. A computer, however,
+stores only discrete numbers. Converting a continuous signal into digital
+form is done by \textbf{analogue-to-digital conversion}, and it has two
+distinct steps, \textbf{sampling} and \textbf{quantization}.
+
+\begin{definitionbox}{Sampling}
+The process of measuring a continuous signal at regular intervals and
+recording each measurement. The number of measurements taken per second is
+the \textbf{sampling rate}, measured in hertz (Hz).
+\end{definitionbox}
+
+A \textbf{higher sampling rate} captures the signal more often, so the
+reproduction is more faithful, but the file becomes larger. A lower sampling
+rate saves space but loses detail. The sampling rate is the horizontal
+resolution of the digitised signal: how often we look at it.
+
+\begin{definitionbox}{Quantization}
+The process of mapping each measured sample to one of a fixed set of discrete
+levels, because a computer can store only a limited number of distinct values
+per sample.
+\end{definitionbox}
+
+The number of available levels is set by the \textbf{bit depth} of each
+sample. With a higher bit depth --- more bits per sample --- there are more
+levels, so each recorded value is closer to the true value; the rounding
+error, called \emph{quantization noise}, is smaller, and quality is better,
+but again the file is larger.
+
+\begin{example}
+Think of drawing a smooth curve on graph paper. \textbf{Sampling} decides how
+many points across the page you mark --- more points follow the curve more
+closely. \textbf{Quantization} decides how finely the vertical axis is ruled
+--- more lines let you record each point's height more precisely. The two
+choices together determine how closely the digitised version matches the
+original, and how big the file becomes.
+\end{example}
+
+The common exam confusion is to swap the two. Remember the one-line
+distinction: \textbf{sampling is how often we measure; quantization is how
+precisely each measurement is stored.}
+
+\section{Compression: lossy and lossless}
+Raw multimedia files are large, so they are almost always \textbf{compressed}
+--- stored in a form that takes less space. There are two kinds of
+compression, and the difference is whether the original can be recovered
+exactly.
+
+\begin{definitionbox}{Lossless compression}
+Compression that allows the original data to be reconstructed exactly. No
+information is discarded. PNG and GIF images and ZIP archives are lossless.
+\end{definitionbox}
+
+\begin{definitionbox}{Lossy compression}
+Compression that discards some data to reduce the file size further, so the
+reconstruction is only an approximation of the original. JPEG images and MP3
+audio are lossy.
+\end{definitionbox}
+
+Lossless compression works by removing redundancy --- repeated or predictable
+data --- while keeping every value. Lossy compression goes further: it removes
+detail that a human eye or ear is unlikely to notice. Lossy files are usually
+much smaller, which is why lossy formats dominate the internet for
+photographs, music, and video. When exactness matters --- for a diagram,
+screenshot, or archive --- a lossless format is used instead.
+
+\section{Synchronization}
+A multimedia file often carries more than one \textbf{stream} at once: a video
+stream and an audio stream, for instance. \textbf{Synchronization} is the
+process of keeping those streams aligned in time so they play together
+correctly. If the streams drift out of step, the sound no longer matches the
+picture --- the narrator's voice is heard before or after the lips move, which
+is called a loss of \emph{sync}. Synchronization is what makes a video play
+with the sound in the right place at the right moment; it is a timing
+requirement peculiar to time-based media.
+
+\begin{definitionbox}{Synchronization}
+The alignment in time of separate media streams --- such as audio and video
+--- so that they are presented together correctly during playback.
+\end{definitionbox}
+
+\section{The graphical user interface and its elements}
+A \textbf{GUI} is a \textbf{Graphical User Interface}: it lets the user work
+with pictures, icons, and menus instead of typing commands. A \textbf{CLI} is
+a \textbf{Command-Line Interface}: it accepts typed text commands. The GUI is
+easier for beginners and is the standard on modern desktops; the CLI is often
+faster for an expert and is still used for administration.
+
+\begin{definitionbox}{GUI (Graphical User Interface)}
+A user interface in which the user interacts with the computer through visual
+elements such as windows, icons, menus, and a pointer, rather than by typing
+text commands.
+\end{definitionbox}
+
+The four classic GUI elements are remembered by the short form \textbf{WIMP}:
+\textbf{Windows, Icons, Menus, Pointers}.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.72\textwidth}}
+\toprule
+\textbf{Element} & \textbf{Meaning} \\
+\midrule
+Window & A rectangular on-screen area that holds a program or a document. \\
+Icon & A small picture that represents a file, folder, or program. \\
+Menu & A list of commands that the software offers. \\
+Pointer & The on-screen arrow, moved by the mouse or touchpad, used to select. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Dialogue box}
+A small window that appears to ask the user for input or to confirm an action,
+such as Save As or Print. It usually contains text boxes, drop-down lists,
+check boxes, radio buttons, and OK/Cancel buttons.
+\end{definitionbox}
+
+\section{WYSIWYG}
+\textbf{WYSIWYG} stands for \textbf{What You See Is What You Get}. It means
+that what is shown on the screen is exactly how the document will look when
+printed --- the same layout, fonts, spacing, and page breaks. A word processor
+such as MS Word works in WYSIWYG mode, so the page visible on the monitor
+matches the printed page.
+
+\begin{example}
+While editing a document in MS Word, the text, margins, and page breaks on
+screen match the printed output. This is WYSIWYG. When the user opens the
+Print dialogue box and chooses options, those settings are entered in a
+dialogue box, not typed on the command line. The two ideas are often asked
+together: WYSIWYG describes the on-screen view; a dialogue box is one GUI
+element that collects input.
+\end{example}
+
+\section{Image formats: PNG, JPEG, and GIF}
+Three image formats appear most often in competitive-exam questions.
+
+\begin{center}
+\begin{tabular}{p{0.12\textwidth}p{0.26\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Format} & \textbf{Full form} & \textbf{Nature and typical use} \\
+\midrule
+PNG & Portable Network Graphics & Lossless; supports transparency; used for logos and web graphics. \\
+JPEG & Joint Photographic Experts Group & Lossy; best for photographs and complex pictures. \\
+GIF & Graphics Interchange Format & Lossless but limited to 256 colours; used for simple graphics and short animation. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{JPEG} is chosen for photographs because its lossy compression makes
+them much smaller with little visible loss. \textbf{PNG} is chosen when exact
+colours or transparency are needed, because it is lossless. \textbf{GIF} is
+chosen for simple graphics and small animations, but it can show only 256
+colours, so it is unsuitable for photographs. \textbf{BMP} (Bitmap) is an
+older, largely uncompressed image format that produces large files and is not
+used for the web.
+
+\section{Audio and video formats: MP3 and MP4}
+\textbf{MP3} stands for \textbf{MPEG-1 Audio Layer III} (also written MPEG
+Audio Layer III). It is a \textbf{lossy} audio format: it removes sound detail
+that the human ear is unlikely to notice, which is why an MP3 file is far
+smaller than an uncompressed one. Its small size made MP3 the standard for
+portable music and downloads. By contrast, \textbf{WAV} is an uncompressed
+audio format.
+
+\textbf{MP4} stands for \textbf{MPEG-4 Part 14}. It is a \textbf{container}
+format: a single MP4 file can hold video, audio, and subtitles together. It is
+widely used for streaming, downloads, and mobile video. A container such as
+MP4 holds the streams; the \emph{codec} inside the container is what actually
+compresses the video and audio. \textbf{AVI} (Audio Video Interleave) is an
+older video container.
+
+\begin{definitionbox}{MPEG}
+MPEG stands for Moving Picture Experts Group --- the group that defines the
+MP3 audio layer and the MP4 container, among other standards.
+\end{definitionbox}
+
+\section{Frame rate, resolution, and bit rate}
+Video is a rapid sequence of still frames. The \textbf{frame rate} is the
+number of frames shown per second (fps); a higher frame rate produces smoother
+motion but a larger file. The \textbf{resolution} is the number of pixels in
+each frame (for example, $1920 \times 1080$); more pixels mean a sharper image
+and a larger file. The \textbf{bit rate} is the amount of data stored or sent
+per second; a higher bit rate keeps more detail but needs more space or
+bandwidth. These three settings, together with the choice of lossy or lossless
+compression, decide the final quality and size of a video or audio file.
+
+\begin{definitionbox}{Frame rate}
+The number of still frames displayed per second in a video. A higher frame
+rate gives smoother motion at the cost of a larger file.
+\end{definitionbox}
+
+\begin{example}
+A video at 30 frames per second with a high bit rate looks smooth and sharp
+but takes much more space than the same clip at a lower frame rate and bit
+rate. Streaming services lower the bit rate when the network is slow, trading
+quality for smooth playback --- a daily example of the quality-versus-size
+trade-off that runs through the whole lesson.
+\end{example}
+
+\section{Plotter}
+A \textbf{plotter} is an \textbf{output} device that draws on paper. Unlike a
+printer, which lays down text and small images, a plotter produces
+\textbf{vector graphics}: lines and curves defined by coordinates rather than
+by a grid of dots. It is used for \textbf{large engineering drawings}, maps,
+blueprints, and banners, where continuous, accurate lines are needed. Early
+pen plotters moved a pen across the paper; modern inkjet plotters spray ink
+while the sheet moves. A plotter is always an output device, never an input
+device (PYQ-29, PYQ-08).
+
+\section{Impact versus non-impact printers (revisit)}
+The basic classification of printers reappears in later units, so keep it
+firmly in mind. An \textbf{impact printer} forms an image by striking the
+paper; a \textbf{non-impact printer} does so without any striking action.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Impact} & \textbf{Non-impact} \\
+\midrule
+Action & Strikes the paper to print & Forms the image without striking \\
+Examples & Dot-matrix, daisy-wheel, line printer & Inkjet, laser, thermal printer \\
+Carbon copies & Possible (same strike hits several sheets) & Not possible \\
+Noise & Comparatively noisy & Comparatively quiet \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The quick test is the mechanism: if the device physically hits the paper, it
+is impact; if it does not, it is non-impact. Both kinds are output devices. A
+\emph{dot-matrix} printer is impact; an \emph{inkjet} and a \emph{laser}
+printer are non-impact.
+
+\section{Multimedia hardware and applications}
+Playing and creating multimedia needs both hardware and software. On the
+hardware side, a \textbf{sound card} processes audio, \textbf{speakers} and
+\textbf{headphones} play it, and a \textbf{microphone} captures it. A
+\textbf{graphics card (GPU)} renders images and video, a \textbf{monitor or
+projector} displays them, and a \textbf{camera} or \textbf{webcam} captures
+still and moving pictures. Because audio and video files are large, multimedia
+also places heavy demands on \textbf{memory and storage}.
+
+On the software side, editors for images, audio, and video are used to
+capture, edit, compress, and synchronize the media streams. The main
+application areas of multimedia are education (e-learning and tutorials),
+entertainment (music, games, and streaming films), business (presentations
+and advertising), and medicine (medical imaging and simulation).
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Short form} & \textbf{Full form} \\
+\midrule
+GUI & Graphical User Interface \\
+CLI & Command-Line Interface \\
+WYSIWYG & What You See Is What You Get \\
+WIMP & Windows, Icons, Menus, Pointers \\
+PNG & Portable Network Graphics \\
+JPEG & Joint Photographic Experts Group \\
+GIF & Graphics Interchange Format \\
+MP3 & MPEG-1 Audio Layer III \\
+MP4 & MPEG-4 Part 14 \\
+MPEG & Moving Picture Experts Group \\
+AVI & Audio Video Interleave \\
+BMP & Bitmap \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+Several distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Sampling} is how often a signal is measured; \textbf{quantization}
+    is how precisely each sample is stored. Do not swap them.
+  \item \textbf{Lossless} formats restore the original exactly (PNG, GIF);
+    \textbf{lossy} formats discard data (JPEG, MP3, MP4).
+  \item \textbf{JPEG} is lossy and best for photographs; \textbf{PNG} is
+    lossless and supports transparency; \textbf{GIF} is lossless and supports
+    simple animation.
+  \item \textbf{MP3} is audio (MPEG-1 Audio Layer III); \textbf{MP4} is video
+    (MPEG-4 Part 14). Do not swap the full forms.
+  \item \textbf{Synchronization} keeps audio and video aligned in time; it is
+    not compression and not sampling.
+  \item \textbf{GUI} is Graphical User Interface; its elements are
+    \textbf{Windows, Icons, Menus, Pointers} (WIMP).
+  \item \textbf{WYSIWYG} means the screen matches the print; a \textbf{dialogue
+    box} is a small window that collects input.
+  \item A \textbf{plotter} is an output device for large drawings; an
+    \textbf{impact} printer strikes the paper and a \textbf{non-impact} printer
+    does not.
+\end{enumerate}
+
+\begin{example}
+An item asks, ``Which format is lossless and supports transparency?'' Trace
+the formats: JPEG is lossy, MP3 is lossy audio, MP4 is lossy video, and GIF is
+lossless but limited to 256 colours without transparency support. The answer
+is PNG, the lossless format that supports transparency.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define multimedia and name its five building blocks.
+  \item Distinguish sampling from quantization, and explain how each affects
+    file size.
+  \item Differentiate lossy and lossless compression, giving one example of
+    each.
+  \item What is synchronization in multimedia, and why is it needed?
+  \item Expand GUI, WYSIWYG, and WIMP.
+  \item State one suitable use each for PNG, JPEG, and GIF.
+  \item Expand MP3 and MP4, and state the medium each is used for.
+  \item Explain why a plotter is preferred over a printer for large engineering
+    drawings.
+  \item Distinguish impact printers from non-impact printers with one example
+    of each.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Multimedia is content combining more than one medium in a single
+    presentation. Its five building blocks are text, graphics, audio, video,
+    and animation.
+  \item Sampling measures a continuous signal at regular intervals; a higher
+    sampling rate captures more detail but enlarges the file. Quantization maps
+    each sample to one of a fixed set of levels set by the bit depth; more
+    levels improve quality but also enlarge the file.
+  \item Lossless compression restores the original exactly (for example PNG);
+    lossy compression discards some data and is only an approximation (for
+    example JPEG).
+  \item Synchronization is the alignment in time of separate media streams such
+    as audio and video. It is needed so that sound and picture play together
+    correctly rather than drifting apart.
+  \item GUI = Graphical User Interface; WYSIWYG = What You See Is What You Get;
+    WIMP = Windows, Icons, Menus, Pointers.
+  \item PNG: logos and web graphics needing transparency or exact colours.
+    JPEG: photographs and complex pictures. GIF: simple graphics and short
+    animations.
+  \item MP3 = MPEG-1 Audio Layer III, used for audio (music and speech). MP4 =
+    MPEG-4 Part 14, used for video (a container holding video, audio, and
+    subtitles).
+  \item A plotter produces vector graphics --- continuous lines defined by
+    coordinates --- on large sheets, which suits precise engineering drawings,
+    maps, and blueprints better than a printer.
+  \item Impact printers strike the paper (for example dot-matrix); non-impact
+    printers form the image without striking (for example inkjet or laser).
+\end{enumerate}
+\endgroup
+\end{document}

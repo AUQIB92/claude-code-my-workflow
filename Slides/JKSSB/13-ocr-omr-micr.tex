@@ -1,0 +1,268 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{OCR, OMR, MICR}
+\subtitle{Lesson 13 --- Reading Machines and Nearest-Neighbour Traps}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Reading Machines: Why They Exist}
+  \begin{itemize}
+    \item A computer cannot read paper by itself; a \key{reading machine}
+      converts a physical mark, character, or tag into machine-readable data.
+    \item OCR, OMR, and MICR are three \key{recognition technologies}, each
+      reading a different kind of input.
+    \item The physical reader (a scanner or a dedicated reader) captures the
+      item; the recognition method decides what it means.
+    \item \muted{Direct-recall items ask what each one reads and where it is
+      used.}
+  \end{itemize}
+  \begin{block}{The one idea}
+    OCR reads \key{text}, OMR reads \key{marks}, MICR reads
+    \key{magnetic-ink characters}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Reading-Machine Family}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.38\textwidth}}
+      \toprule
+      \textbf{Method} & \textbf{What it reads} & \textbf{Typical use} \\
+      \midrule
+      OCR & Printed or written characters & Digitising documents and books \\
+      OMR & Marks (filled bubbles or boxes) & MCQ answer sheets, surveys \\
+      MICR & Characters in magnetic ink & Bank cheques \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Learn one read-target and one use for each row.}
+\end{frame}
+
+\begin{frame}{OCR --- Optical Character Recognition}
+  \begin{itemize}
+    \item \key{OCR} = \key{Optical Character Recognition}.
+    \item It converts a scanned image of \key{printed or handwritten text}
+      into machine-encoded, \key{editable text}.
+    \item It recognises \key{characters} (letters, digits, symbols), not
+      merely marks.
+    \item Used to digitise books, documents, passports, invoices, and forms.
+  \end{itemize}
+  \begin{block}{What it is}
+    OCR turns a picture of text into text that a computer can search and
+    edit.
+  \end{block}
+\end{frame}
+
+\begin{frame}{OMR --- Optical Mark Recognition}
+  \begin{itemize}
+    \item \key{OMR} = \key{Optical Mark Recognition}.
+    \item It detects the \key{presence or absence of a mark} (a darkened
+      bubble or box) at a fixed position on a form.
+    \item It reads \key{marks}, \key{not} characters --- it does not identify
+      letters.
+    \item Used for \key{MCQ answer sheets}, questionnaires, surveys, and
+      ballots.
+  \end{itemize}
+  \begin{block}{What it is}
+    OMR checks \emph{which} position is filled in, not what a character
+    says.
+  \end{block}
+\end{frame}
+
+\begin{frame}{MICR --- Magnetic Ink Character Recognition}
+  \begin{itemize}
+    \item \key{MICR} = \key{Magnetic Ink Character Recognition}.
+    \item It reads characters printed in a special \key{magnetic ink}
+      (containing iron oxide).
+    \item The MICR line along the bottom of a \key{bank cheque} encodes the
+      cheque number, bank/branch code, and account number.
+    \item It is fast and hard to forge, so banks use it for cheque clearing.
+  \end{itemize}
+  \begin{block}{What it is}
+    MICR is the \key{magnetic-ink} technology behind cheque processing.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Crucial Trio: OCR vs OMR vs MICR}
+  \begin{center}
+    \begin{tabular}{p{0.13\textwidth}p{0.27\textwidth}p{0.38\textwidth}}
+      \toprule
+      \textbf{Method} & \textbf{Reads} & \textbf{Nearest confusion} \\
+      \midrule
+      OCR & Printed/scanned text & Reads characters, not marks \\
+      OMR & Marks on a form & Reads marks, not characters \\
+      MICR & Magnetic-ink characters & Used on cheques, not forms \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap alert (TRAP-25)}
+    Do not interchange them: MICR = \key{magnetic ink}; OCR = \key{printed
+    text}; OMR = \key{marks}. (PYQ-30)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Where Each Is Used}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.66\textwidth}}
+      \toprule
+      \textbf{Method} & \textbf{Common applications} \\
+      \midrule
+      OCR & Digitising books, passports, invoices, scanned documents \\
+      OMR & Objective (MCQ) answer sheets, surveys, census forms \\
+      MICR & Bank cheques and cheque clearing (magnetic-ink line) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{If the stem says ``bank cheque'' or ``magnetic ink'', the answer is
+  MICR.}
+\end{frame}
+
+\begin{frame}{Barcode}
+  \begin{itemize}
+    \item A \key{barcode} is a one-dimensional (1D) pattern of parallel lines
+      of varying width.
+    \item A barcode scanner reads it with a \key{light beam}; it needs
+      \key{line of sight}.
+    \item It represents a number or code that identifies a product.
+    \item Used on \key{product labels}, book \key{ISBNs}, and postal items.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{QR Code}
+  \begin{itemize}
+    \item \key{QR} = \key{Quick Response}.
+    \item A QR code is a \key{two-dimensional (2D)} matrix of black and
+      white squares.
+    \item It stores \key{more data} than a barcode and can be read from
+      \key{any direction}.
+    \item It can hold a URL, so scanning it can open a website or app.
+  \end{itemize}
+  \begin{block}{Barcode vs QR}
+    Barcode = 1D lines, small amount of data. QR = 2D matrix, more data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Barcode vs QR Code (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Barcode} & \textbf{QR code} \\
+      \midrule
+      Shape & 1D parallel lines & 2D matrix of squares \\
+      Data capacity & Less & More \\
+      Read direction & Along the lines & Any direction \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    A QR code is \key{not} a barcode: it is two-dimensional and holds more
+    data. Both are read \key{optically}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{RFID}
+  \begin{itemize}
+    \item \key{RFID} = \key{Radio Frequency Identification}.
+    \item A system has a \key{tag} and a \key{reader} that exchange
+      \key{radio waves}.
+    \item It needs \key{no line of sight}, unlike a barcode.
+    \item Used in toll collection (for example FASTag), access cards,
+      passports, and inventory tracking.
+  \end{itemize}
+  \begin{block}{Passive vs active}
+    A \key{passive} tag has no battery (it is powered by the reader); an
+    \key{active} tag has its own battery.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Barcode/QR vs RFID (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Barcode / QR} & \textbf{RFID} \\
+      \midrule
+      Medium & Light (optical) & Radio waves \\
+      Line of sight & Required & Not required \\
+      Reading & One tag at a time & Many tags at once \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    RFID uses \key{radio waves} and needs \key{no line of sight}; barcodes
+    and QR codes are read \key{optically}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Biometric Input}
+  \begin{itemize}
+    \item \key{Biometrics} identifies a person from a \key{physical or
+      behavioural trait}.
+    \item Common traits: \key{fingerprint}, \key{iris}, \key{face}, voice,
+      and palm.
+    \item A sensor captures the trait and feeds it to the computer as
+      \key{input}.
+    \item Used for attendance, device unlocking, and authentication.
+  \end{itemize}
+  \begin{block}{Why it is input}
+    The sensor reads a human trait and passes the measured data to the
+    system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Full-Form Ladder}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.72\textwidth}}
+      \toprule
+      \textbf{Short form} & \textbf{Full form (learn exactly)} \\
+      \midrule
+      OCR & Optical Character Recognition \\
+      OMR & Optical Mark Recognition \\
+      MICR & Magnetic Ink Character Recognition \\
+      QR & Quick Response \\
+      RFID & Radio Frequency Identification \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Full-form questions are direct recall and among the most common
+  formats.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Reading-Machine Facts to Keep Straight}
+  \begin{itemize}
+    \item MICR = \key{magnetic ink}, used on \key{bank cheques}. (PYQ-30)
+    \item OCR = \key{printed/scanned text}; OMR = \key{marks}; MICR =
+      \key{magnetic ink}. (TRAP-25)
+    \item \key{OMR} reads marks, so it is used for \key{MCQ answer sheets}.
+    \item \key{QR} is 2D and holds more data than a \key{barcode} (1D).
+    \item \key{RFID} uses radio waves; barcode and QR need \key{line of
+      sight}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 13: Recall}
+  \begin{itemize}
+    \item OCR reads printed/scanned characters and digitises text; OMR reads
+      marks on forms (MCQ answer sheets); MICR reads magnetic-ink characters
+      on bank cheques.
+    \item TRAP-25: MICR = magnetic ink, OCR = printed text, OMR = marks.
+      PYQ-30: magnetic ink = MICR.
+    \item Barcode is 1D lines; QR is a 2D matrix that holds more data and
+      reads from any direction.
+    \item RFID uses radio waves between a tag and a reader and needs no line
+      of sight.
+    \item Biometric input identifies a person from a fingerprint, iris, face,
+      voice, or palm.
+    \item Full forms: OCR, OMR, MICR, QR (Quick Response), RFID.
+  \end{itemize}
+\end{frame}
+\end{document}

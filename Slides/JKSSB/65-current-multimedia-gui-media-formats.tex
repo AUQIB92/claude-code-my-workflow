@@ -1,0 +1,319 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current Multimedia, GUI \& Media Formats}
+\subtitle{Lesson 65 --- Multimedia, GUI and File-Format Recall}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is Multimedia?}
+  \begin{itemize}
+    \item \key{Multimedia} is content that combines more than one medium in a
+      single presentation.
+    \item The media may be \key{text, graphics, audio, video}, and
+      \key{animation}.
+    \item Multimedia is stored in digital form, so each medium must first be
+      captured and converted into binary data.
+    \item Examples: a training video with narration, a web page with pictures,
+      and a presentation with sound.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Multimedia = multiple media types presented together, all reduced to
+    digital form the computer can process.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Five Building Blocks of Multimedia}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.68\textwidth}}
+      \toprule
+      \textbf{Element} & \textbf{Meaning} \\
+      \midrule
+      Text & Readable characters; the base medium. \\
+      Graphics & Still images, drawings, and photographs. \\
+      Audio & Sound, music, and speech. \\
+      Video & Moving pictures, usually with sound. \\
+      Animation & A sequence of images that creates motion. \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Text and graphics are static; audio, video, and animation are
+  time-based media.}
+\end{frame}
+
+\begin{frame}{Digitising Media: Sampling}
+  \begin{itemize}
+    \item Analogue sound and light are \key{continuous} signals; a computer
+      stores only discrete numbers.
+    \item \key{Sampling} means measuring the signal at regular intervals and
+      recording each measurement.
+    \item The \key{sampling rate} is the number of samples taken per second,
+      measured in hertz (Hz).
+    \item A \key{higher} sampling rate gives better quality but a larger file.
+  \end{itemize}
+  \begin{block}{Sampling answers two questions}
+    How often do we measure the signal, and how many measurements do we store
+    each second?
+  \end{block}
+\end{frame}
+
+\begin{frame}{Quantization and Bit Depth}
+  \begin{itemize}
+    \item Each sample is a precise value; the computer must round it to the
+      nearest allowed level.
+    \item \key{Quantization} is the process of mapping each sample to one of a
+      fixed set of discrete levels.
+    \item The number of levels is set by the \key{bit depth} of each sample.
+    \item \key{More levels} (higher bit depth) means less rounding error and
+      better quality, but a larger file.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Sampling = how often we measure. Quantization = how precisely each
+    measurement is recorded. Do not confuse the two.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Compression: Lossy vs Lossless}
+  \begin{itemize}
+    \item \key{Compression} reduces the size of a media file.
+    \item \key{Lossless} compression restores the original exactly --- no data
+      is lost (example: PNG, GIF, ZIP).
+    \item \key{Lossy} compression discards some data to shrink the file further
+      (examples: JPEG, MP3).
+    \item Lossy files are usually smaller; lossless files preserve full quality.
+  \end{itemize}
+  \begin{block}{Which to choose}
+    Use lossless when exactness matters; use lossy when a smaller file matters
+    more than perfect fidelity.
+  \end{block}
+  \begin{alertblock}{Exam point}
+    JPEG, MP3, and MP4 are lossy formats; PNG and GIF are lossless.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Synchronization of Media Streams}
+  \begin{itemize}
+    \item In a multimedia file, audio and video are separate \key{streams}.
+    \item \key{Synchronization} keeps those streams aligned in time.
+    \item If they drift apart, speech no longer matches the moving lips ---
+      a \key{sync} error.
+    \item Synchronization is what makes a video play with the sound in the
+      correct place.
+  \end{itemize}
+  \begin{block}{Simple view}
+    Synchronization means the picture and the sound stay together at every
+    moment of playback.
+  \end{block}
+\end{frame}
+
+\begin{frame}{GUI vs CLI}
+  \begin{itemize}
+    \item A \key{GUI} (Graphical User Interface) lets the user work with
+      \key{pictures, icons, and menus} instead of typed commands.
+    \item A \key{CLI} (Command-Line Interface) accepts typed text commands.
+    \item The GUI is easier for beginners; the CLI is often faster for experts.
+    \item Windows and modern Linux desktops use a GUI.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    GUI = \key{Graphical} User Interface. It is not ``General'' or ``Graphic''
+    alone; the exact full form is asked directly.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{GUI Elements: WIMP}
+  \begin{itemize}
+    \item The four classic GUI elements are remembered as \key{WIMP}:
+      \key{W}indows, \key{I}cons, \key{M}enus, and \key{P}ointers.
+    \item \key{Window}: a rectangular area that holds a program or document.
+    \item \key{Icon}: a small picture that represents a file, folder, or
+      program.
+    \item \key{Menu}: a list of commands offered by the software.
+    \item \key{Pointer}: the on-screen arrow moved by the mouse or touchpad.
+  \end{itemize}
+  \begin{block}{WIMP full form}
+    Windows, Icons, Menus, Pointers --- the standard interaction set of a GUI.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Dialogue Boxes and WYSIWYG}
+  \begin{itemize}
+    \item A \key{dialogue box} is a small window that asks for input or
+      confirms an action (for example, Save As or Print).
+    \item It usually contains text boxes, drop-down lists, check boxes, radio
+      buttons, and \key{OK / Cancel} buttons.
+    \item \key{WYSIWYG} (What You See Is What You Get) means the screen shows
+      the document exactly as it will be printed.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    In MS Word, the page on screen looks like the printed page. That is
+    WYSIWYG. When the Print dialogue box opens, the settings appear inside a
+    dialogue box.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Image Formats: PNG, JPEG, GIF}
+  \begin{center}
+    \begin{tabular}{p{0.13\textwidth}p{0.24\textwidth}p{0.50\textwidth}}
+      \toprule
+      \textbf{Format} & \textbf{Full form} & \textbf{Nature and typical use} \\
+      \midrule
+      PNG & Portable Network Graphics & Lossless; supports transparency; logos, web graphics. \\
+      JPEG & Joint Photographic Experts Group & Lossy; best for photographs. \\
+      GIF & Graphics Interchange Format & Lossless but limited to 256 colours; simple animation. \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{GIF is an image format that also supports short, simple animation.}
+\end{frame}
+
+\begin{frame}{Choosing the Right Image Format}
+  \begin{itemize}
+    \item \key{JPEG} for photographs and complex pictures --- small size,
+      some quality loss.
+    \item \key{PNG} when transparency or exact colours are needed --- lossless.
+    \item \key{GIF} for simple graphics and small animations --- limited to
+      256 colours.
+    \item \key{BMP} is a large, uncompressed bitmap format, not a web format.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    JPEG is \key{lossy}, PNG and GIF are \key{lossless}. Neither PNG nor JPEG
+    supports animation; only GIF does among the three.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Audio Format: MP3}
+  \begin{itemize}
+    \item \key{MP3} stands for \key{MPEG-1 Audio Layer III} (also written
+      MPEG Audio Layer III).
+    \item It is a \key{lossy} audio format: it removes sound data the ear is
+      unlikely to notice.
+    \item Its small size made it the standard format for portable music and
+      downloads.
+    \item \key{WAV} is an uncompressed audio format; MP3 is compressed.
+  \end{itemize}
+  \begin{block}{Keep the family straight}
+    MPEG is the Moving Picture Experts Group; MP3 is its audio layer, MP4 is
+    its later container.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Video Format: MP4}
+  \begin{itemize}
+    \item \key{MP4} stands for \key{MPEG-4 Part 14}.
+    \item It is a \key{container} format: it can hold video, audio, and
+      subtitles in one file.
+    \item It is widely used for streaming, downloads, and mobile video.
+    \item \key{AVI} (Audio Video Interleave) is an older video container.
+  \end{itemize}
+  \begin{block}{Container vs codec}
+    MP4 is the container (the box); the codec inside it actually compresses
+    the video and audio.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Media Format Quick Table}
+  \begin{center}
+    \begin{tabular}{p{0.12\textwidth}p{0.20\textwidth}p{0.18\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Format} & \textbf{Type} & \textbf{Compression} & \textbf{Best use} \\
+      \midrule
+      PNG & Image & Lossless & Web graphics, transparency \\
+      JPEG & Image & Lossy & Photographs \\
+      GIF & Image & Lossless & Simple graphics, animation \\
+      MP3 & Audio & Lossy & Music and speech \\
+      MP4 & Video & Lossy & Video with sound \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Full forms are high-yield: learn every expansion exactly.}
+\end{frame}
+
+\begin{frame}{Plotter}
+  \begin{itemize}
+    \item A \key{plotter} is an \key{output} device that draws on paper.
+    \item It produces \key{vector graphics} --- lines and curves defined by
+      coordinates.
+    \item It is used for \key{large engineering drawings}, maps, blueprints,
+      and banners.
+    \item Pen plotters use pens; modern inkjet plotters spray ink.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A plotter is an \key{output} device, not input. It is chosen for large
+    technical or engineering drawings, not for ordinary text. (PYQ-29)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Impact vs Non-Impact Printers (Revisit)}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Impact} & \textbf{Non-impact} \\
+      \midrule
+      Action & Strikes the paper & No striking \\
+      Examples & Dot-matrix, daisy-wheel, line printer & Inkjet, laser, thermal \\
+      Copies & Carbon copies possible & No carbon copies \\
+      Noise & Noisy & Quiet \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Both are output devices; the difference is whether the mechanism
+  strikes the paper.}
+\end{frame}
+
+\begin{frame}{Full Forms You Must Recall}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.40\textwidth}p{0.30\textwidth}}
+      \toprule
+      \textbf{Short} & \textbf{Full form} & \textbf{Note} \\
+      \midrule
+      GUI & Graphical User Interface & Icons and menus, not typed commands \\
+      CLI & Command-Line Interface & Typed commands \\
+      WYSIWYG & What You See Is What You Get & Screen matches print \\
+      WIMP & Windows, Icons, Menus, Pointers & Classic GUI elements \\
+      MP3 & MPEG-1 Audio Layer III & Lossy audio \\
+      MP4 & MPEG-4 Part 14 & Video container \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Trap Alert: Format Facts to Keep Straight}
+  \begin{itemize}
+    \item \key{Sampling} = how often we measure; \key{quantization} = how
+      precisely each sample is stored.
+    \item \key{JPEG, MP3, MP4} are lossy; \key{PNG, GIF} are lossless.
+    \item \key{MP3} is audio; \key{MP4} is video; do not swap their full forms.
+    \item A \key{plotter} is an output device for large drawings.
+    \item \key{Impact} printers strike the paper; \key{non-impact} printers do
+      not.
+    \item A \key{dialogue box} asks for input; \key{WYSIWYG} shows the print
+      layout on screen.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 65: Recall}
+  \begin{itemize}
+    \item Multimedia combines text, graphics, audio, video, and animation.
+    \item \key{Sampling} measures a continuous signal; \key{quantization} maps
+      each sample to discrete levels; \key{bit depth} sets the number of
+      levels.
+    \item \key{Lossless} restores the original (PNG, GIF); \key{lossy} discards
+      data (JPEG, MP3).
+    \item \key{Synchronization} keeps audio and video lined up in time.
+    \item GUI elements are \key{Windows, Icons, Menus, Pointers} (WIMP);
+      \key{WYSIWYG} matches screen to print.
+    \item \key{PNG}, \key{JPEG}, \key{GIF} are image formats; \key{MP3} is
+      audio; \key{MP4} is video.
+    \item A \key{plotter} is an output device for large drawings; \key{impact}
+      printers strike, \key{non-impact} printers do not.
+  \end{itemize}
+\end{frame}
+\end{document}

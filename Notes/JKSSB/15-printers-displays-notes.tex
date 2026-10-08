@@ -1,0 +1,322 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{15.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Printers and Displays --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Printers and hard-copy output}
+A printer is an output device. It accepts data from the computer and records
+it as \textbf{hard copy} --- output on a physical medium, normally paper.
+Output that stays on a screen is called \textbf{soft copy}; a printer is the
+device that turns soft copy into hard copy. Printers are described from three
+angles: by the \textbf{mechanism} they use (dot matrix, inkjet, laser,
+thermal, 3D), by whether they touch the paper (\textbf{impact} or
+\textbf{non-impact}), and by the \textbf{unit printed} (a character, a line,
+or a page).
+
+\begin{definitionbox}{Printer}
+An output device that records computer output as a permanent, human-readable
+copy on paper or another medium.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Basis} & \textbf{Types} \\
+\midrule
+By mechanism & Dot matrix, inkjet, laser, thermal, 3D printer \\
+By contact & Impact (strikes the paper) vs non-impact (no contact) \\
+By unit printed & Character printer, line printer, page printer \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The same machine can carry several labels at once. A laser printer, for
+example, is a non-impact printer, a page printer, and a laser-mechanism
+printer. In an exam item, read which label is being asked for before choosing.
+
+\section{Impact and non-impact printers}
+An \textbf{impact printer} forms characters by physically striking an inked
+ribbon against the paper. The contact makes these printers relatively noisy,
+but because the type presses through the paper, they can produce
+\textbf{multiple carbon copies} of multi-part forms. Common impact printers
+are the dot matrix printer, the daisy wheel printer, and line printers such
+as the drum printer and chain printer.
+
+A \textbf{non-impact printer} forms characters without striking the paper.
+These printers are quieter and generally give better print quality, but they
+cannot make carbon copies. Common non-impact printers are the inkjet printer,
+the laser printer, and the thermal printer.
+
+\begin{definitionbox}{Impact printer}
+A printer that strikes an inked ribbon against the paper to form a character.
+\end{definitionbox}
+
+\begin{definitionbox}{Non-impact printer}
+A printer that forms characters without touching the paper with a striking
+mechanism.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Point} & \textbf{Impact} & \textbf{Non-impact} \\
+\midrule
+Contact with paper & Yes (strikes) & No \\
+Noise & Louder & Quieter \\
+Carbon copies & Possible & Not possible \\
+Examples & Dot matrix, daisy wheel, & Inkjet, laser, thermal \\
+           & drum/chain line printers & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+An item lists ``inkjet, laser, thermal, dot matrix'' and asks which is an
+impact printer. Trace the test: which device strikes an inked ribbon against
+the paper? Only the dot matrix printer does. The other three form the image
+without contact, so they are non-impact.
+\end{example}
+
+\section{Impact printers in detail}
+\subsection*{Dot matrix printer}
+The dot matrix printer is an impact printer. Its print head holds rows of
+tiny pins or hammers. The pins strike an inked ribbon to build each character
+as a pattern of dots inside a matrix. It is noisy and its print quality is
+low, but it is cheap to run and can print carbon copies and multi-part
+invoices and receipts. For this reason it survives in billing and point-of-sale
+work.
+
+\subsection*{Daisy wheel printer}
+A daisy wheel printer is an impact printer that uses a spinning wheel with
+raised type characters, much like an electric typewriter. It produces good
+text quality but cannot print graphics or images well.
+
+\subsection*{Line printers}
+A line printer prints an entire line of text in one operation instead of one
+character at a time. A \textbf{drum printer} uses a rotating drum that carries
+the full character set, with a hammer striking the paper wherever a character
+is needed. A \textbf{chain (band) printer} moves a chain or band of type
+characters past the hammers. Line printers are high-speed impact printers
+associated with older mainframes and large batch printing.
+
+\begin{definitionbox}{Line printer}
+A printer that prints one full line of characters at a time; the drum printer
+and chain printer are line printers.
+\end{definitionbox}
+
+\subsection*{Print units}
+Printers are often grouped by the unit they print. A \textbf{character
+printer} prints one character at a time (dot matrix, daisy wheel). A
+\textbf{line printer} prints one line at a time (drum, chain). A \textbf{page
+printer} prints one complete page at a time (laser and LED printers). The
+unit grows from character to line to page.
+
+\section{Inkjet printers}
+An inkjet printer is a non-impact printer. Its print head sprays tiny
+\textbf{droplets of liquid ink} through fine nozzles onto the page. Because
+there is no striking, it is quieter than an impact printer, and it prints
+good-quality full-colour images and photographs on many kinds of paper. Its
+drawbacks are that it is slower per page than a laser printer, that wet ink
+can \textbf{smudge}, and that its ink cartridges must be replaced when empty.
+Inkjet printers use liquid ink, not toner.
+
+\begin{definitionbox}{Inkjet printer}
+A non-impact printer that forms characters and images by spraying fine
+droplets of liquid ink onto the paper.
+\end{definitionbox}
+
+\section{Laser printers}
+A laser printer is a non-impact printer that uses a \textbf{laser beam} and
+\textbf{toner}, a fine dry powder, in a xerographic (electrostatic) process.
+The laser draws the page image onto a charged drum; the toner sticks to the
+charged areas; the toner is then transferred to the paper and fused in place
+with heat and pressure. The result is fast, sharp, high-quality text, which
+is why laser printers are common in offices. A laser printer is a
+\textbf{page printer}: it prints a whole page at a time. Because it uses
+toner rather than liquid ink, its output does not smudge when it gets wet.
+
+\begin{definitionbox}{Laser printer}
+A non-impact page printer that uses a laser beam to draw an image on a
+charged drum and toner powder to form the printed page.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Point} & \textbf{Inkjet} & \textbf{Laser} \\
+\midrule
+Contact & Non-impact & Non-impact \\
+Image formed by & Liquid ink droplets & Laser beam + toner \\
+Unit printed & Character/line & Page printer \\
+Speed & Slower & Faster \\
+Strengths & Colour photos & Sharp text, offices \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Thermal printers}
+A thermal printer is a non-impact printer that uses \textbf{heat}. It heats
+specially treated \textbf{thermal paper} (or a heat-sensitive ribbon) to form
+characters. In its simplest form it needs no ink or toner cartridge, and it
+operates silently. It is used for point-of-sale receipts, tickets, barcode
+labels, and older fax machines. It is usually limited to a single colour.
+Thermal, laser, and inkjet printers are all non-impact; dot matrix is impact.
+
+\section{3D printers}
+A 3D printer builds a solid three-dimensional object \textbf{layer by layer}
+from a digital model. This process is called \textbf{additive
+manufacturing}. It does not print ink onto paper; instead it adds material
+such as plastic, resin, or metal until the object is complete. 3D printers
+are used for prototypes, models, spare parts, and some medical implants. The
+word ``printer'' is used, but the output is a physical object rather than a
+document.
+
+\section{Plotters}
+A plotter is an output device that \textbf{draws} line graphics, usually with
+one or more pens that move over the paper. It works with \textbf{vector}
+drawings, so it is ideal for large engineering drawings, maps, and CAD plans,
+and it handles sheet sizes that ordinary printers cannot. A plotter draws
+lines; a printer lays down dots or characters. Both are output devices. A
+plotter must not be confused with a scanner or a digitizer, which are input
+devices.
+
+\begin{example}
+An item says, ``A plotter is an input device.'' This is wrong. A plotter
+produces output by drawing lines on paper, so it is an \textbf{output}
+device. The items that capture drawings as data --- the scanner and the
+digitizer tablet --- are the input devices.
+\end{example}
+
+\section{Display terminology}
+A monitor displays soft copy, and several exact terms describe it.
+
+\begin{definitionbox}{Pixel}
+The smallest addressable element of a display; short for ``picture element''.
+Every image on the screen is built from pixels.
+\end{definitionbox}
+
+\begin{definitionbox}{Resolution}
+The number of pixels a display can show, written as columns $\times$ rows,
+for example $1920 \times 1080$. More pixels mean a sharper image.
+\end{definitionbox}
+
+The sharpness of a printed page is measured in \textbf{DPI}, which stands for
+\textbf{Dots Per Inch}.
+
+\begin{definitionbox}{Refresh rate}
+How many times per second a display redraws the image. It is measured in
+\textbf{hertz (Hz)}. A higher refresh rate (for example 120 Hz) gives
+smoother motion and less flicker.
+\end{definitionbox}
+
+\begin{definitionbox}{Response time}
+How long a pixel takes to change from one state to another. It is measured
+in \textbf{milliseconds (ms)}. A lower response time means less motion blur
+or ghosting.
+\end{definitionbox}
+
+\textbf{Brightness} is the amount of light a display emits, commonly measured
+in \textbf{nits} (candela per square metre, cd/m$^2$). \textbf{Contrast} is
+the difference between the brightest white and the darkest black the display
+can produce. The \textbf{contrast ratio} compares the two, for example
+$1000:1$; a higher ratio gives deeper blacks and more vivid images. In short:
+brightness is how much light, and contrast is the range between light and
+dark.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Display term} & \textbf{Meaning} & \textbf{Unit} \\
+\midrule
+Pixel & Smallest addressable element & --- \\
+Resolution & Number of pixels shown & pixels (or DPI for print) \\
+Refresh rate & Screen redraws per second & hertz (Hz) \\
+Response time & Time for a pixel to change & milliseconds (ms) \\
+Brightness & Light emitted by the screen & nits (cd/m$^2$) \\
+Contrast ratio & Brightest white : darkest black & ratio \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Impact vs non-impact}. Only a printer that \emph{strikes} an
+    inked ribbon is impact. Dot matrix, daisy wheel, and drum/chain line
+    printers are impact; inkjet, laser, and thermal are non-impact.
+  \item \textbf{Dot matrix is impact}. It is easy to group it with inkjet and
+    laser by ``modern-ness'', but it strikes the ribbon, so it is impact.
+  \item \textbf{Inkjet vs laser}. Inkjet sprays \emph{liquid ink}; laser uses
+    a \emph{laser beam and toner}. Do not swap the consumables.
+  \item \textbf{Page vs line printer}. A laser printer is a page printer
+    (one page at a time); a drum or chain printer is a line printer (one line
+    at a time).
+  \item \textbf{Printer vs plotter}. A plotter \emph{draws} vector line
+    graphics for engineering drawings; it is an output device, not a printer
+    of characters and not an input device.
+  \item \textbf{Display units}. Refresh rate is in \emph{Hz} (higher is
+    better); response time is in \emph{ms} (lower is better); brightness is
+    in \emph{nits}; resolution is a pixel count.
+\end{enumerate}
+
+\begin{example}
+An item asks for the difference between an inkjet and a laser printer. The
+correct contrast is the image-forming method and consumable: the inkjet sprays
+liquid ink droplets, while the laser uses a laser beam and toner powder.
+Both are non-impact. A choice that calls the laser a character printer, or
+says the inkjet uses toner, is wrong.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define an impact printer and a non-impact printer, and give two
+    examples of each.
+  \item Explain how a dot matrix printer forms a character, and state whether
+    it is impact or non-impact.
+  \item Distinguish an inkjet printer from a laser printer in terms of the
+    image-forming method and the consumable used.
+  \item What is a page printer? Name one example and contrast it with a line
+    printer.
+  \item Define pixel, resolution, refresh rate, response time, brightness,
+    and contrast, giving the unit of measurement for each where one applies.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item An impact printer forms characters by striking an inked ribbon
+    against the paper (dot matrix, daisy wheel, drum/chain line printers). A
+    non-impact printer forms characters without striking the paper (inkjet,
+    laser, thermal).
+  \item The dot matrix print head has rows of pins that strike an inked
+    ribbon to build each character as a pattern of dots in a matrix. Because
+    it strikes the ribbon, it is an impact printer.
+  \item An inkjet printer sprays fine droplets of liquid ink through nozzles;
+    a laser printer uses a laser beam to draw an image on a charged drum and
+    toner powder to form the page. The inkjet consumable is liquid ink; the
+    laser consumable is toner.
+  \item A page printer prints a whole page at a time; a laser printer is an
+    example. A line printer prints a whole line at a time (drum or chain
+    printer), a smaller unit than a page.
+  \item A pixel is the smallest addressable element of a display (no unit);
+    resolution is the number of pixels shown, as columns $\times$ rows (pixel
+    count, or DPI for print); refresh rate is the number of screen redraws per
+    second (hertz, Hz); response time is the time for a pixel to change
+    (milliseconds, ms); brightness is the light emitted by the screen (nits,
+    cd/m$^2$); contrast is the difference between brightest white and darkest
+    black, expressed as a contrast ratio.
+\end{enumerate}
+\endgroup
+\end{document}

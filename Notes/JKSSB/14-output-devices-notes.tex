@@ -1,0 +1,386 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{14.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Output Devices --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What is an output device}
+A computer works in a cycle: input, process, and output. In the output step,
+the result of processing is handed back to the user or to another device. An
+\textbf{output device} is the hardware that receives processed data from the
+CPU and presents it in a form a human can see, hear, or read. Without an
+output device the result of the computation would stay locked inside the
+machine.
+
+\begin{definitionbox}{Output device}
+Hardware that receives processed data from the CPU and presents it to the
+user or to another device in a readable form, such as on a screen, through a
+speaker, or on paper.
+\end{definitionbox}
+
+Common output devices include the monitor, projector, speaker, headphones,
+printer, and plotter. The following table fixes the meaning of each term used
+in this lesson.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Monitor & The main visual output device; shows text, images, and video as soft copy. \\
+Projector & Throws a large image onto a screen or wall as soft copy. \\
+Speaker & Converts an electrical signal into sound for a group of listeners. \\
+Headphones & Produce sound for a single listener; worn on or over the ears. \\
+Printer & Produces hard copy on paper; impact or non-impact. \\
+Plotter & Draws large, precise line drawings such as engineering designs. \\
+MFP & Multifunction Printer; combines printing, scanning, copying, and often faxing. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Classifying output devices}
+Output devices are grouped by the form in which they present the result. This
+is the classification JKSSB question-setters use most often, so learn one
+example for each row.
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Category} & \textbf{Typical devices} \\
+\midrule
+Visual / soft copy & Monitor, projector \\
+Audio & Speaker, headphones \\
+Printed / hard copy & Printer, plotter \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A single device may belong to more than one row if it produces more than one
+kind of output, but for exam purposes use the primary role: a monitor is a
+visual output device, a speaker is an audio output device, and a printer is a
+printed (hard copy) output device.
+
+\section{Soft copy vs hard copy}
+Output comes in two forms. \textbf{Soft copy} is output that is displayed
+electronically, such as an image on a monitor or a projected slide; it is not
+printed and can usually still be edited. \textbf{Hard copy} is output that is
+printed on a physical medium such as paper, produced by a printer or a
+plotter; once printed it is fixed.
+
+\begin{definitionbox}{Soft copy}
+Output that is shown on a screen or projected electronically and is not
+printed, such as the image on a monitor or projector.
+\end{definitionbox}
+
+\begin{definitionbox}{Hard copy}
+Output that is printed on a physical medium such as paper, produced by a
+printer or a plotter.
+\end{definitionbox}
+
+The distinction matters because a single item can test it in either
+direction. If the stem mentions a screen, a display, or a projected image,
+the answer is soft copy; if it mentions paper, printing, or a physical
+printout, the answer is hard copy.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Soft copy} & \textbf{Hard copy} \\
+\midrule
+Form & Electronic, on a screen & Physical, on paper \\
+Examples & Monitor, projector & Printer, plotter \\
+Editable & Easily edited & Fixed once printed \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Uses and limits of each form}
+Soft copy and hard copy serve different needs, and an exam item may ask which
+is better for a stated purpose. Soft copy is convenient because it can be
+edited, searched, copied, and shared electronically, and it costs nothing to
+display; its limit is that it needs power and a screen, and it is easy to lose
+if it is not saved. Hard copy is convenient because it needs no power to read,
+is permanent, and can be signed or filed as a legal record; its limits are
+that it can be bulky, is fixed once printed, and consumes paper and ink. The
+rule of thumb is: to read, edit, or send, use soft copy; to sign, file, or
+archive, use hard copy.
+
+\section{Monitors}
+A \textbf{monitor} is the main visual output device of a computer. It displays
+text, images, and video as soft copy. Screen size is measured diagonally in
+inches, and picture sharpness is measured in pixels, which together give the
+resolution of the display. A monitor shows output to the user; it does not
+take input, with the single exception of a touchscreen, which senses touch in
+addition to displaying.
+
+\subsection{CRT displays}
+A \textbf{CRT} display uses a \textbf{Cathode Ray Tube}. An electron beam
+sweeps across a phosphor-coated screen inside a vacuum tube to form the image.
+CRT monitors are bulky and deep, and they are now largely replaced by flat
+panels. For exam purposes the key point is the full form: CRT = \textbf{Cathode
+Ray Tube}, and it is the older, bulky technology.
+
+\subsection{Flat-panel displays: LCD, LED, and OLED}
+A \textbf{flat-panel display} is thin, light, and flat. The common
+technologies are LCD, LED, and OLED.
+
+\begin{center}
+\begin{tabular}{p{0.14\textwidth}p{0.44\textwidth}p{0.24\textwidth}}
+\toprule
+\textbf{Type} & \textbf{What it means} & \textbf{Backlight} \\
+\midrule
+LCD & Liquid Crystal Display; cells of liquid crystal control light & Needs a backlight \\
+LED & Light Emitting Diode display; an LCD panel lit by LEDs & LED backlight \\
+OLED & Organic Light Emitting Diode; each pixel emits its own light & No backlight (self-emitting) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The nearest-neighbour trap is LCD versus LED versus OLED. An \textbf{LCD}
+needs a separate backlight to be visible. An \textbf{LED} display is really an
+LCD panel whose backlight is made of LEDs. An \textbf{OLED} display needs no
+backlight at all, because each pixel makes its own light.
+
+\subsection{Display size, resolution, and refresh}
+The size of a monitor is given as the diagonal length of the screen in inches.
+The picture is made of tiny dots called \textbf{pixels}; the number of pixels
+across and down the screen is the \textbf{resolution}, such as 1920 by 1080. A
+higher resolution shows more detail in the same screen area. The
+\textbf{refresh rate} is how many times per second the screen is redrawn,
+measured in hertz (Hz); a higher refresh rate gives smoother motion. These are
+the three numbers a display specification quotes, and they apply to monitors
+and to laptop screens alike.
+
+\section{Projector}
+A \textbf{projector} throws a large image onto a screen or a wall. It is used
+in classrooms, meetings, and cinemas to show the same computer output to many
+people at once. The projected image is soft copy, because it is shown on a
+surface and not printed. A projector is an output device; it does not capture
+anything, so it must not be confused with a scanner or a camera.
+
+\section{Audio output: speakers and headphones}
+A \textbf{speaker} converts an electrical signal into sound that a group of
+listeners can hear. \textbf{Headphones} produce sound for a single listener
+and are worn on or over the ears. Both are audio output devices.
+
+The nearest-neighbour pair is the speaker against the microphone. A
+\textbf{microphone} takes sound in and is an audio input device; a
+\textbf{speaker} or a \textbf{headphone} sends sound out and is an audio
+output device.
+
+\begin{example}
+A student plays a recorded lecture on the office desktop. The sound leaves the
+computer through the speakers, so the speakers are audio output devices. If
+the student then records a reply into the same computer, the microphone is
+used; that is an audio input device. The same machine performs both jobs
+through two different devices.
+\end{example}
+
+\section{Printers: overview}
+A \textbf{printer} produces hard copy on paper. Printers fall into two broad
+classes according to how they mark the paper. An \textbf{impact printer}
+strikes a ribbon against the paper; a \textbf{non-impact printer} marks the
+paper without striking it, using ink, toner, or heat. The common types are the
+dot-matrix printer (impact) and the inkjet and laser printers (non-impact).
+Laser printers are common in offices, while inkjet printers are common in
+homes. A printer is an output device (TRAP-12).
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Impact} & \textbf{Non-impact} \\
+\midrule
+Method & Strikes a ribbon and the paper & No striking; uses ink, toner, or heat \\
+Examples & Dot-matrix & Inkjet, laser \\
+Noise & Noisier & Quieter \\
+Graphics quality & Lower & Higher \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A \textbf{dot-matrix} printer is an impact printer and is the noisiest of the
+common types. An \textbf{inkjet} printer sprays tiny drops of ink onto the
+paper, and a \textbf{laser} printer forms the image with toner that is fused
+onto the paper by heat. Both are non-impact printers.
+
+The choice follows the job. A dot-matrix printer is cheap to run and can print
+multi-part carbon forms, but its quality is low and it is noisy. An inkjet
+printer is quiet and inexpensive to buy and is suited to colour photographs
+and home use, though the ink can be costly. A laser printer is fast, quiet,
+and gives sharp text, which is why it is the usual office choice. Whatever the
+type, every printer is an output device producing hard copy.
+
+\begin{example}
+An office prints a hundred letters every morning. The best choice is a laser
+printer, because it is fast, quiet, and gives sharp text. If the same office
+had to print only the occasional colour photograph at home, an inkjet printer
+would be enough. If it needed multi-part carbon forms for a carbon copy, a
+dot-matrix printer would be the right impact printer.
+\end{example}
+
+\section{Plotter}
+A \textbf{plotter} draws large, precise line drawings, such as engineering and
+architectural designs, on paper larger than a normal printer's. It draws using
+a pen or a vector-based method, which makes it suitable for the continuous
+lines of technical drawings. A plotter is an output device: it produces hard
+copy but it does not read anything, so it must not be confused with a scanner
+(TRAP-12).
+
+\begin{example}
+An item asks which output device is used to produce large engineering
+drawings. The answer is a \textbf{plotter}, because it is designed for large,
+precise line drawings. A normal printer is meant for ordinary pages, a monitor
+shows soft copy, and a scanner is an input device.
+\end{example}
+
+\section{Multifunction printer (MFP)}
+An \textbf{MFP} is a \textbf{Multifunction Printer}, also called an
+\textbf{all-in-one} device. It combines \textbf{printing, scanning, copying},
+and often \textbf{faxing} in a single unit. Because it does several jobs, an
+MFP is the one common device that is both an input and an output device: its
+scanner part takes input, while its printer part gives output. MFPs are common
+in offices and small businesses.
+
+\section{Summary of output devices}
+The table below gathers the devices in this lesson for quick revision. Use it
+as a checklist: for each device, be ready to state its category (visual,
+audio, or printed) and its one-line function, and to name the device it is
+most often confused with.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.22\textwidth}p{0.46\textwidth}}
+\toprule
+\textbf{Device} & \textbf{Category} & \textbf{Function} \\
+\midrule
+Monitor & Visual / soft copy & Shows text, images, and video on a screen. \\
+Projector & Visual / soft copy & Throws a large image onto a screen or wall. \\
+Speaker & Audio & Converts an electrical signal into sound for a group. \\
+Headphones & Audio & Produces sound for a single listener. \\
+Printer & Printed / hard copy & Prints text and graphics on paper; impact or non-impact. \\
+Plotter & Printed / hard copy & Draws large, precise line drawings. \\
+MFP & Hybrid & Combines printing, scanning, copying, and often faxing. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Points of confusion between similar devices}
+Beyond classifying a device, JKSSB items often test a single distinction
+between two devices that look or sound alike. The table below collects the
+pairs used in this lesson.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Pair} & \textbf{The distinction to state} \\
+\midrule
+Printer vs plotter & Printer: standard pages of text and graphics. Plotter: large, precise line drawings. \\
+Monitor vs projector & Monitor: image on its own screen. Projector: image thrown onto a screen or wall. \\
+Speaker vs microphone & Speaker: audio output. Microphone: audio input. \\
+Soft copy vs hard copy & Soft copy: shown on a screen. Hard copy: printed on paper. \\
+LCD vs OLED & LCD: needs a backlight. OLED: self-emitting, no backlight. \\
+Impact vs non-impact & Impact: strikes the paper (dot-matrix). Non-impact: no striking (inkjet, laser). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+An office buys one machine that must print letters, scan signed forms, and
+photocopy pages. The right choice is a Multifunction Printer (MFP), because it
+does all three jobs in one unit. If the office instead needed very large
+engineering plans, the correct device would be a plotter, and if it only
+needed to show a presentation to a room, the correct device would be a
+projector. Matching the output device to the job is the practical form of this
+topic's classification.
+\end{example}
+
+\section{Other output devices on the exam}
+A few output devices appear in real JKSSB items without being part of the
+main list. A \textbf{sound card} produces audio output: it turns the digital
+sound data into a signal for the speakers. A \textbf{Voice Response Unit
+(VRU)} speaks responses to a caller and so gives audio output. \textbf{Haptic
+gloves} and a \textbf{tactile display} give touch or force feedback to the
+user and are therefore output devices. All of these feed information
+\emph{back} to the user and must be told apart from input devices of similar
+names, such as a \textbf{data glove}, which captures hand movement as input
+(PYQ-09).
+
+\begin{definitionbox}{Sound card}
+An expansion card that produces audio output, converting digital sound data
+into a signal that speakers or headphones can play.
+\end{definitionbox}
+
+\section{Exam retrieval and common confusions}
+Seven distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Soft copy} is on a screen (monitor, projector); \textbf{hard
+    copy} is printed on paper (printer, plotter). Do not swap them.
+  \item A \textbf{plotter} and a \textbf{printer} are \textbf{output} devices;
+    a \textbf{scanner}, a \textbf{light pen}, and a \textbf{digitizer} are
+    \textbf{input} devices (TRAP-12).
+  \item \textbf{CRT} = Cathode Ray Tube and is bulky; modern monitors are flat
+    panels (LCD, LED, OLED).
+  \item An \textbf{LCD} needs a backlight, an \textbf{LED} display is an LCD
+    with an LED backlight, and an \textbf{OLED} display is self-emitting with
+    no backlight.
+  \item A \textbf{dot-matrix} printer is an \textbf{impact} printer; inkjet
+    and laser printers are \textbf{non-impact}.
+  \item A \textbf{plotter} draws large engineering drawings (PYQ-29), while a
+    normal printer is meant for ordinary pages.
+  \item A \textbf{sound card}, a \textbf{Voice Response Unit (VRU)}, a
+    \textbf{haptic glove}, and a \textbf{tactile display} give output to the
+    user; a \textbf{data glove} captures hand movement as input (PYQ-09).
+\end{enumerate}
+
+\begin{example}
+An item lists four devices --- scanner, plotter, drum printer, and light pen
+--- and asks which are output devices. Classify each one: the scanner is
+input, the plotter is output, the drum printer is output, and the light pen is
+input. The answer is the plotter and the drum printer. This is exactly the
+input/output classification tested by TRAP-12.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define an output device and give three examples.
+  \item Distinguish soft copy from hard copy, giving one example of each.
+  \item Expand CRT, LCD, and OLED, and state which of them needs a backlight.
+  \item Explain the difference between an impact printer and a non-impact
+    printer, giving one example of each.
+  \item Which output device is used for large engineering drawings, and why?
+  \item State whether each is input or output: plotter, scanner, projector,
+    digitizer tablet, speaker.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item An output device receives processed data from the CPU and presents it
+    to the user in a readable form. Examples: monitor, printer, speaker (any
+    three valid devices).
+  \item Soft copy is shown on a screen and is not printed, such as an image on
+    a monitor or projector. Hard copy is printed on paper, such as a page from
+    a printer or plotter.
+  \item CRT = Cathode Ray Tube; LCD = Liquid Crystal Display; OLED = Organic
+    Light Emitting Diode. The LCD needs a backlight; the OLED does not,
+    because each pixel emits its own light.
+  \item An impact printer strikes a ribbon against the paper, such as a
+    dot-matrix printer. A non-impact printer marks the paper without striking
+    it, such as an inkjet or a laser printer.
+  \item A plotter is used, because it is designed to draw large, precise line
+    drawings such as engineering and architectural designs (PYQ-29).
+  \item Plotter --- output; scanner --- input; projector --- output; digitizer
+    tablet --- input; speaker --- output.
+\end{enumerate}
+\endgroup
+\end{document}

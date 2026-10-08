@@ -1,0 +1,368 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{16.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Computer Ports --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What a port is}
+Every device that connects to a computer does so through a \textbf{port}. A
+port is a socket or interface on the machine into which a cable or a device
+is plugged. It lets data and, in many cases, electric power pass between the
+computer and the attached device. Ports are not all alike: they differ in
+their shape, in the type of signal they carry (digital or analog), and in the
+job they are meant to do.
+
+The common physical ports found on a personal computer are USB (including
+USB-C), HDMI, DisplayPort, VGA, Ethernet through an RJ-45 connector, the
+3.5~mm audio jack, and SATA. Knowing which port suits which device is the
+central skill of this lesson.
+
+\begin{definitionbox}{Port}
+A socket or interface on a device where a cable or another device is
+connected, allowing data (and often power) to flow between the computer and
+the attached device.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.64\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Port & The socket on the device (a USB port, an HDMI port). \\
+Connector & The plug end of a cable that fits the port. \\
+Cable & The wire that joins two connectors. \\
+Physical port & A hardware socket on the machine. \\
+Logical port & A software number that names a network service. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A first view of the ports covered in this lesson, with their signal type and
+their normal use, is given below. The rest of the lesson explains each one in
+turn.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.22\textwidth}p{0.48\textwidth}}
+\toprule
+\textbf{Port} & \textbf{Signal} & \textbf{Typical use} \\
+\midrule
+USB / USB-C & Digital (data + power) & Keyboard, mouse, pen drive, phone \\
+HDMI & Digital (video + audio) & TV, monitor, projector \\
+DisplayPort & Digital (video + audio) & PC monitors, graphics cards \\
+VGA & Analog (video only) & Older monitors and projectors \\
+RJ-45 (Ethernet) & Digital (network) & Wired LAN cable, router, switch \\
+3.5 mm audio jack & Analog (audio) & Headphones, speakers, microphone \\
+SATA / eSATA & Digital (storage) & Internal and external drives \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The two meanings of ``port''}
+The word \textbf{port} has two entirely different meanings in computing, and
+the exam frequently tests the difference. A \textbf{physical port} is a piece
+of hardware --- a socket such as a USB port, an HDMI port, or an RJ-45
+network port. A \textbf{logical port}, also called a network port, is a
+software number that identifies a particular service running on a computer
+during network communication.
+
+A web server, for example, listens on logical port 80 for ordinary web
+requests and on port 443 for secure web requests. The physical network cable,
+meanwhile, is plugged into an RJ-45 port on the network card. Thus one
+machine uses both meanings at the same time without any contradiction: the
+socket is hardware, and the port number is software.
+
+\begin{definitionbox}{Logical (network) port}
+A number, in the range 0 to 65535, that identifies a specific service or
+process on a computer for the purpose of network communication. It is not a
+physical socket.
+\end{definitionbox}
+
+\begin{example}
+An item states, ``The monitor is connected to logical port 80.'' This is
+nonsense. Port 80 is a logical port used by web (HTTP) traffic, not a socket
+for a monitor. A monitor connects to a physical video port such as HDMI,
+DisplayPort, or VGA. The wrong statement has mixed the two meanings of the
+word \emph{port}.
+\end{example}
+
+A few well-known logical port numbers are worth remembering, because the exam
+sometimes asks which service uses a given port. The list below is
+illustrative; the concept being tested is that these are \emph{numbers}, not
+sockets.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.16\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Service} & \textbf{Logical port} & \textbf{Full form} \\
+\midrule
+HTTP & 80 & HyperText Transfer Protocol \\
+HTTPS & 443 & HTTP Secure \\
+FTP & 21 & File Transfer Protocol \\
+SMTP & 25 & Simple Mail Transfer Protocol \\
+DNS & 53 & Domain Name System \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{USB: the Universal Serial Bus}
+\textbf{USB} stands for \textbf{Universal Serial Bus}. It is a standard
+interface for connecting a wide range of peripherals to a computer. Two of
+its best-known features are \textbf{plug and play} and \textbf{hot swapping}:
+a device can be attached or removed while the computer is running, without
+switching the machine off. A USB connection carries both \textbf{data} and
+\textbf{power}, which is why many small devices can be used or charged
+directly from a USB port.
+
+Typical USB devices include the keyboard, the mouse, a printer, a pen drive
+(flash drive), an external hard disk, a webcam, and a smartphone. The
+connector at the end of a USB cable comes in several shapes:
+
+\begin{itemize}
+  \item \textbf{USB Type-A}: the familiar rectangular connector found on most
+    PCs.
+  \item \textbf{USB Type-B}: often used for printers and scanners.
+  \item \textbf{Mini-USB} and \textbf{Micro-USB}: smaller connectors used on
+    older phones and devices.
+  \item \textbf{USB Type-C}: a modern, small, reversible connector.
+\end{itemize}
+
+\textbf{USB-C}, or USB Type-C, deserves special attention. It is a
+\emph{connector type}, not a separate bus. It is \textbf{reversible}, so it
+can be plugged in either way up, and a single USB-C connection can carry
+data, power, and video together. It is now common on smartphones, laptops,
+external SSDs, and docking stations. The key exam point is precision: USB is
+the standard, USB-C is one connector shape for that standard, and a USB port
+is the socket on the machine.
+
+The USB standard itself has developed over time through versions such as USB
+1.1, USB 2.0, USB 3.0 (and its later 3.1 and 3.2 refinements), and USB4. Each
+newer version generally offers a higher data-transfer rate, and the version
+is independent of the connector shape: a Type-A or Type-C socket can appear
+on a machine that supports different USB versions. For exam purposes, the
+safe points are the meaning of the abbreviation, the plug-and-play and
+hot-swap behaviour, the combined data-and-power carrying, and the
+reversibility of USB-C.
+
+\section{Video ports: HDMI, DisplayPort, and VGA}
+Displays are attached through video ports. Three names dominate the syllabus.
+
+\textbf{HDMI} stands for \textbf{High-Definition Multimedia Interface}. It
+carries \textbf{digital video and digital audio} over a single cable, which
+is why one HDMI cable can replace a separate video cable and a separate audio
+cable. It is very common on televisions, monitors, projectors, set-top boxes,
+and game consoles.
+
+\textbf{DisplayPort} is also a \textbf{digital} audio/video interface, but it
+is designed mainly for computers and monitors. It appears on graphics cards,
+laptops, and desktop monitors, and it supports high refresh rates and
+multiple monitors through daisy-chaining. \textbf{Mini DisplayPort} is a
+smaller variant of the same interface.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.30\textwidth}p{0.38\textwidth}}
+\toprule
+\textbf{Point} & \textbf{HDMI} & \textbf{DisplayPort} \\
+\midrule
+Signal & Digital video + audio & Digital video + audio \\
+Main use & TV, home theatre, monitor & PC monitors, graphics cards \\
+Note & Very common on TVs & Common on PCs; multi-monitor \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both HDMI and DisplayPort are digital. The right choice in practice usually
+depends on which sockets the devices offer, not on one being inherently
+better than the other.
+
+\textbf{VGA} stands for \textbf{Video Graphics Array}. It is an
+\textbf{analog} video interface: it carries video only and no audio. It uses
+a 15-pin D-sub connector, often coloured blue and held in place by two
+screws. VGA is still seen on older monitors and projectors but has largely
+been replaced by HDMI and DisplayPort.
+
+\begin{definitionbox}{Digital vs analog video}
+Digital video ports (HDMI, DisplayPort) send the picture as discrete numbers
+and also carry audio; the analog port (VGA) sends a continuously varying
+signal and carries video only.
+\end{definitionbox}
+
+\begin{example}
+An item reads, ``VGA carries both video and audio.'' This is false. VGA is an
+analog video-only interface with no audio channel. HDMI and DisplayPort, by
+contrast, carry digital video together with digital audio. The wrong option
+has transferred the audio capability of the digital ports onto VGA.
+\end{example}
+
+\section{Ethernet and the RJ-45 connector}
+\textbf{Ethernet} is the standard for \textbf{wired} computer networking, and
+it is commonly associated with the IEEE 802.3 family of standards. The
+physical socket used for a wired network connection is the \textbf{RJ-45}
+connector. RJ-45 stands for \textbf{Registered Jack 45}, and it has eight
+pins, used with twisted-pair cable such as Cat5e or Cat6.
+
+Typical devices attached through an RJ-45 port are a router, a switch, a
+modem, and the network card of a desktop computer. A near-neighbour that
+causes confusion is \textbf{RJ-11}, the smaller telephone jack. RJ-45 is the
+network connector with eight pins; RJ-11 is the telephone connector and is
+smaller. The two look similar but serve different purposes.
+
+\section{Audio jacks}
+The common audio socket on a personal computer is the \textbf{3.5~mm audio
+jack}. It connects headphones, earphones, speakers, and microphones. The plug
+wiring has standard forms: \textbf{TRS} (Tip-Ring-Sleeve) carries stereo
+audio, while \textbf{TRRS} (Tip-Ring-Ring-Sleeve) adds a microphone channel,
+which is why a phone headset with a microphone uses a TRRS plug. On desktop
+PCs a colour convention is often followed: green for audio output, such as
+headphones or speakers, and pink for a microphone. Some equipment uses
+2.5~mm or 6.35~mm jacks instead of the 3.5~mm size.
+
+\section{Storage interfaces: SATA and eSATA}
+\textbf{SATA} stands for \textbf{Serial Advanced Technology Attachment}. It
+is the interface that connects \textbf{internal storage} --- a hard disk
+drive, a solid-state drive, or an optical drive --- to the motherboard. The
+SATA data cable is thin and has seven pins, and a separate power connector
+feeds the drive. \textbf{eSATA} stands for \textbf{external SATA}, and it is
+used to connect an external drive. It is important to classify eSATA
+correctly: it is a \emph{storage interface}, not a general-purpose peripheral
+port like USB. SATA is about attaching drives, whereas USB, HDMI, and the
+audio jack are about attaching other kinds of peripherals and displays.
+
+\section{Classifying a port: four questions to ask}
+When a question shows a port or names it, four questions settle almost every
+case. First, \emph{is it a physical port or a logical one?} A socket is
+physical; a number such as 80 or 443 is logical. Second, \emph{what kind of
+signal does it carry?} HDMI and DisplayPort are digital audio/video, VGA is
+analog video, the 3.5~mm jack is analog audio, and RJ-45 is a digital network
+link. Third, \emph{what class of device does it attach?} Displays go to
+video ports, drives go to SATA, network equipment goes to RJ-45, and general
+peripherals go to USB. Fourth, \emph{which near-neighbour is it often
+confused with?} USB-C is confused with USB generally; RJ-45 is confused with
+RJ-11; VGA is confused with HDMI and DisplayPort.
+
+\begin{definitionbox}{Port class}
+A way of grouping ports by what they attach: peripheral ports (USB), display
+ports (HDMI, DisplayPort, VGA), the network port (RJ-45), audio ports (3.5~mm
+jack), and storage interfaces (SATA, eSATA).
+\end{definitionbox}
+
+Two ports are easily confused with a near-neighbour. The table below keeps the
+distinctions in one place.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.26\textwidth}p{0.44\textwidth}}
+\toprule
+\textbf{Port} & \textbf{Nearest confusion} & \textbf{The distinction} \\
+\midrule
+USB-C & USB (the standard) & USB-C is a connector shape; USB is the bus. \\
+HDMI & DisplayPort & Both digital A/V; HDMI is common on TVs, DisplayPort on PCs. \\
+VGA & HDMI / DisplayPort & VGA is analog, video-only; the others are digital with audio. \\
+RJ-45 & RJ-11 & RJ-45 is the 8-pin network jack; RJ-11 is the smaller phone jack. \\
+SATA & USB & SATA attaches drives (storage); USB is a general peripheral port. \\
+Logical port & Physical port & Logical port is a number; physical port is a socket. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+The following distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{physical port} is a hardware socket; a \textbf{logical
+    (network) port} is a software number, such as HTTP 80 or HTTPS 443. Never
+    mix the two meanings of ``port''.
+  \item \textbf{VGA is analog} and video-only; \textbf{HDMI and DisplayPort
+    are digital} and carry both video and audio.
+  \item \textbf{RJ-45} (network, eight pins) is not \textbf{RJ-11} (the
+    smaller telephone jack).
+  \item \textbf{USB-C is a connector type} and is reversible; ``USB'' is the
+    standard, and a USB port is the socket.
+  \item \textbf{SATA is a storage interface}; do not call it a display or
+    network port.
+  \item Say the term precisely: a \emph{port} is the socket, a
+    \emph{connector} is the plug, and a \emph{cable} is the wire. This is the
+    same discipline as file \emph{format} vs file \emph{extension} (TRM-09).
+\end{enumerate}
+
+\begin{example}
+An item asks which port carries digital audio and digital video over one
+cable. Name the digital audio/video ports: HDMI and DisplayPort both qualify,
+whereas VGA is analog video-only, RJ-45 is networking, and SATA is storage.
+If the stem prefers the port common on television sets, choose HDMI; if it
+stresses PC monitors and multi-monitor setups, choose DisplayPort.
+\end{example}
+
+The full forms below are the ones most likely to be asked directly, so they
+should be memorised exactly.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.56\textwidth}}
+\toprule
+\textbf{Abbreviation} & \textbf{Full form} \\
+\midrule
+USB & Universal Serial Bus \\
+HDMI & High-Definition Multimedia Interface \\
+VGA & Video Graphics Array \\
+RJ-45 & Registered Jack 45 \\
+SATA & Serial Advanced Technology Attachment \\
+eSATA & external SATA \\
+TRS & Tip-Ring-Sleeve \\
+TRRS & Tip-Ring-Ring-Sleeve \\
+HTTP & HyperText Transfer Protocol \\
+HTTPS & HTTP Secure \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a physical port from a logical port, giving one example
+    of each.
+  \item Expand USB, HDMI, VGA, RJ-45, and SATA.
+  \item Which video port is analog and video-only, and which two common video
+    ports are digital and also carry audio?
+  \item What is the difference between RJ-45 and RJ-11?
+  \item What is the difference between SATA and eSATA, and why is SATA not a
+    general peripheral port?
+  \item Which port is commonly used to connect a monitor and supports high
+    refresh rates and multiple monitors, and which connector is used for a
+    wired Ethernet connection?
+  \item Explain the difference between TRS and TRRS audio plugs.
+  \item Name two features of USB that make attaching devices convenient.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A physical port is a hardware socket such as a USB port or an RJ-45
+    port. A logical port is a software number that identifies a network
+    service, such as HTTP port 80.
+  \item USB = Universal Serial Bus; HDMI = High-Definition Multimedia
+    Interface; VGA = Video Graphics Array; RJ-45 = Registered Jack 45;
+    SATA = Serial Advanced Technology Attachment.
+  \item VGA is the analog, video-only port. HDMI and DisplayPort are digital
+    and carry both video and audio.
+  \item RJ-45 is the eight-pin connector used for wired Ethernet networking;
+    RJ-11 is the smaller telephone jack.
+  \item SATA connects internal drives (HDD, SSD, optical drive) to the
+    motherboard. eSATA is external SATA, used for an external drive. SATA is a
+    storage interface --- it attaches drives --- so it is not a
+    general-purpose peripheral port such as USB.
+  \item DisplayPort is the monitor port for high refresh rates and multiple
+    monitors; RJ-45 is the connector for a wired Ethernet connection.
+  \item TRS (Tip-Ring-Sleeve) has three contact areas and carries stereo
+    audio; TRRS (Tip-Ring-Ring-Sleeve) has four and adds a microphone channel.
+  \item USB supports plug and play and hot swapping, and it carries both data
+    and power over the same connection.
+\end{enumerate}
+\endgroup
+\end{document}

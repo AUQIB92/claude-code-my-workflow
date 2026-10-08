@@ -1,0 +1,366 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{12.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Input Devices --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What is an input device}
+A computer works in a cycle: input, process, and output. In the input step,
+data and instructions are fed into the machine. An \textbf{input device} is
+the hardware that accepts data or control signals from the user or from the
+environment and passes them to the computer, converting a human action or a
+physical signal into machine-readable form. Without an input device the
+computer would have nothing to process.
+
+\begin{definitionbox}{Input device}
+Hardware that accepts data or control signals from the user or the
+environment and supplies them to the CPU, converting them into a form the
+computer can process.
+\end{definitionbox}
+
+Common input devices include the keyboard, mouse, touchscreen, scanner,
+microphone, digital camera, barcode reader, and biometric sensor. The
+following table fixes the meaning of each term used in this lesson.
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Keyboard & Text input device that converts a keystroke into a character code. \\
+Mouse & Pointing device moved on a surface to control the on-screen pointer. \\
+Trackball & Pointing device whose ball is rotated in place; the device stays still. \\
+Touchpad & Flat, touch-sensitive pad on a laptop; the pointer moves on the screen. \\
+Joystick & Lever that moves on two or three axes, used for games and control. \\
+Light pen & Pen-shaped input device with a light sensor, used on a CRT screen. \\
+Stylus / digitizer & Pen plus tablet that converts strokes into digital coordinates. \\
+Scanner & Converts a paper document or picture into a digital image. \\
+Biometrics & Input from a physical or behavioural human trait (fingerprint, iris, face). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Classifying input devices}
+Input devices are grouped by the type of data they capture. This is the
+classification JKSSB question-setters use most often, so learn one example
+for each row.
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Category} & \textbf{Typical devices} \\
+\midrule
+Text input & Keyboard \\
+Pointing input & Mouse, trackball, touchpad, joystick, light pen, stylus, touchscreen \\
+Audio input & Microphone \\
+Image / video input & Scanner, digital camera, webcam \\
+Biometric input & Fingerprint, iris, and face sensors \\
+Code / tag input & Barcode, QR code, RFID \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A single device may belong to more than one row if it captures more than one
+kind of data, but for exam purposes use the primary role: a touchscreen is a
+pointing input device, a webcam is an image/video input device, and a
+microphone is an audio input device.
+
+\section{Direct vs indirect input}
+A second useful classification is whether the data is captured at its source
+or encoded by the user.
+
+\textbf{Direct input devices} capture the data themselves. Examples are the
+touchscreen, light pen, scanner, barcode reader, biometric sensor, and
+microphone: the device reads the object, code, trait, or sound and turns it
+directly into computer data.
+
+\textbf{Indirect input devices} require the user to act on the device to
+encode the data. Examples are the keyboard, mouse, trackball, touchpad, and
+joystick: the user translates an intention into keystrokes or pointer
+movements, which the device then sends to the computer.
+
+\begin{definitionbox}{Direct input}
+Input in which the device captures the data at its source (for example, a
+scanner reading a page or a biometric sensor reading a fingerprint) without
+the user encoding it by hand.
+\end{definitionbox}
+
+The distinction matters because it explains why some devices are fast and
+error-free while others depend on the user. A barcode reader or a biometric
+sensor captures the data exactly as it is, so there is no typing mistake; a
+keyboard, being indirect, is only as accurate as the person typing. In a
+question, if the stem stresses that the device \emph{reads} or \emph{captures}
+an object, code, trait, or sound, think of a direct input device; if it
+stresses that the \emph{user types or moves} something to enter the data,
+think of an indirect input device.
+
+\section{The keyboard: text input}
+The keyboard is the most common text input device. Its standard letter
+layout is called \textbf{QWERTY}, after the first six letters of the top row.
+A keyboard has alphanumeric keys, function keys (F1 to F12), modifier keys
+such as Ctrl, Alt, and Shift, and usually a numeric keypad. Each time a key
+is pressed, the keyboard sends the corresponding character code to the
+computer. The keyboard is an indirect input device: the user types the data,
+and the device encodes it.
+
+Keyboards differ in construction even though their role is the same. A
+\textbf{membrane keyboard} uses a flexible membrane under the keys and is
+cheap and quiet. A \textbf{mechanical keyboard} uses a separate physical
+switch under each key and gives a firmer, more definite feel. A
+\textbf{wireless keyboard} connects to the computer by Bluetooth or by a USB
+receiver instead of a cable. Whatever the construction, a keyboard is still a
+text input device: it sends character codes for the keys that are pressed.
+
+\section{Pointing devices}
+A pointing device controls the position of an on-screen pointer (cursor) and
+is used to point, click, and drag. The table below fixes each pointing device
+and its nearest neighbour, because JKSSB questions often ask candidates to
+tell two similar pointing devices apart.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.38\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Device} & \textbf{How it works} & \textbf{Nearest neighbour} \\
+\midrule
+Mouse & The device slides on a surface and the pointer follows. & Trackball: the ball rotates while the device stays still. \\
+Trackball & The ball is rotated in place; the device is stationary. & Mouse: the whole device moves. \\
+Touchpad & A flat finger pad moves the pointer on the screen (indirect). & Touchscreen: the display itself is touched (direct). \\
+Joystick & A lever moves on two or three axes for games and control. & Mouse: flat-surface pointing. \\
+Light pen & A light sensor is pointed at a CRT screen. & Stylus: used on a digitizer surface. \\
+Stylus + digitizer & A pen stroke is converted into digital coordinates. & Light pen: uses a light sensor, not a tablet. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The mouse}
+The \textbf{mouse} is a hand-held pointing device moved on a flat surface. It
+has one or more buttons and usually a scroll wheel. An \textbf{optical or
+laser mouse} tracks movement with light, which is the common modern design;
+an older \textbf{mechanical mouse} used a rolling ball. A mouse is an input
+device (PYQ-08).
+
+\subsection{The trackball}
+The \textbf{trackball} is, in effect, an upside-down mouse: the ball is on
+top and is rotated with the fingers while the device itself stays still. This
+saves desk space because the device does not have to be moved. The
+nearest-neighbour trap is that a trackball and a mouse both point, but with a
+mouse the \emph{device} slides, while with a trackball the \emph{ball}
+rotates in place.
+
+\subsection{The trackpad or touchpad}
+The \textbf{trackpad} (also called the touchpad) is a flat, touch-sensitive
+pad found on laptops. The user slides a finger across the pad to move the
+pointer on the screen and taps to click. It is an indirect device because the
+finger does not touch the object on the screen; the pad only controls the
+pointer.
+
+\subsection{The joystick}
+The \textbf{joystick} is a lever that can be moved on two or three axes. It is
+used mainly for games and for some industrial control tasks.
+
+\subsection{The light pen}
+The \textbf{light pen} is a pen-shaped input device with a light sensor at its
+tip. It is pointed at a CRT screen to select items or to draw. A light pen is
+an input device, not an output device (TRAP-12).
+
+\section{Stylus and digitizer tablet}
+A \textbf{stylus} is a pen-like tool used to write or draw on a tablet or a
+touch screen. A \textbf{digitizer} (graphics tablet) is a flat surface that
+converts the movement of the stylus into digital coordinates. Together they
+are used for freehand drawing, capturing signatures, computer-aided design
+(CAD), and handwriting recognition. Because a digitizer captures a drawing as
+data, it is an input device (TRAP-12). Do not confuse the stylus with the
+light pen: the light pen works with a light sensor, while the stylus works
+with a digitizer surface.
+
+\section{Touchscreen}
+A \textbf{touchscreen} is a display that also works as an input device. The
+user touches the screen directly to select and enter data. Because the item
+touched is the item selected, a touchscreen is a direct input device. The two
+common technologies are \textbf{resistive} and \textbf{capacitive}
+touchscreens. Touchscreens are used in smartphones, tablets, ATMs, and
+information kiosks.
+
+The nearest-neighbour trap is the touchscreen versus the touchpad. On a
+touchscreen the user touches the display itself, so the input is direct. On a
+touchpad the user touches a separate pad and the pointer moves on the screen,
+so the input is indirect. A touchpad is not a touchscreen.
+
+\section{Scanners, cameras, and webcams}
+A \textbf{scanner} converts a paper document or a picture into a digital
+image. Common types are the \textbf{flatbed} scanner (the page is placed on a
+glass surface), the sheet-fed scanner, the handheld scanner, and the drum
+scanner. Software such as OCR (Optical Character Recognition) or OMR (Optical
+Mark Recognition) can then read text or marks from the scanned image. A
+scanner is an input device (TRAP-12).
+
+A \textbf{digital camera} captures photographs as digital images and stores
+them on a memory card. A \textbf{webcam} is a small digital camera connected
+to a computer and used mainly for live video, such as video calls and
+streaming. Both are image/video input devices.
+
+\section{Barcode, QR code, and RFID}
+A \textbf{barcode} is a one-dimensional pattern of parallel lines of varying
+width, read by a barcode scanner. It is used on product labels and on book
+ISBNs.
+
+A \textbf{QR code} (Quick Response code) is a two-dimensional matrix of black
+and white squares. It can store more data than a barcode and can be read from
+any direction. The full form of QR is \textbf{Quick Response}.
+
+\textbf{RFID} stands for \textbf{Radio Frequency Identification}. An RFID
+system has a tag and a reader; the two exchange radio waves, so no line of
+sight is needed, unlike a barcode. RFID is used in toll collection, access
+cards, and inventory tracking. A barcode, a QR code, and an RFID tag are all
+read by an input device that feeds the data into the computer.
+
+\section{Microphone and biometric input}
+A \textbf{microphone} is an audio input device. It converts sound, such as
+voice or music, into an electrical signal that the computer digitises. It is
+used for recording, voice calls, and speech recognition. The matching output
+device is the \textbf{speaker}: a microphone takes audio in, a speaker sends
+audio out.
+
+\textbf{Biometric} input identifies a person from a physical or behavioural
+trait. Common traits are the \textbf{fingerprint}, the \textbf{iris}, the
+\textbf{face}, the voice, and the palm. A sensor captures the trait and feeds
+the measured data to the computer. Biometrics are used for attendance
+systems, device unlocking, and authentication. Because the sensor reads a
+human trait and passes the data to the system, biometric input is a direct
+input form.
+
+\begin{example}
+A student wants to scan a printed page into the computer. The correct device
+is a scanner, which converts the page into a digital image. If the student
+instead wanted to type the same text by hand, the device would be a keyboard,
+which is an indirect text input device. If the goal were to capture a live
+video of the student, the device would be a webcam.
+\end{example}
+
+\section{Summary of input devices}
+The table below gathers the devices in this lesson for quick revision. Use it
+as a checklist: for each device, be ready to state its category and its
+one-line function, and to name the device it is most often confused with.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.24\textwidth}p{0.42\textwidth}}
+\toprule
+\textbf{Device} & \textbf{Category} & \textbf{Function} \\
+\midrule
+Keyboard & Text & Converts a keystroke into a character code. \\
+Mouse & Pointing & Moves the on-screen pointer; point, click, drag. \\
+Trackball & Pointing & Ball rotated in place; device stays still. \\
+Touchpad & Pointing & Flat finger pad; pointer moves on the screen. \\
+Joystick & Pointing & Lever on two or three axes for games/control. \\
+Light pen & Pointing & Light sensor pointed at a CRT screen. \\
+Stylus + digitizer & Pointing & Converts pen strokes into digital coordinates. \\
+Touchscreen & Pointing (direct) & Touch the display to select and enter. \\
+Scanner & Image & Converts a document or picture into a digital image. \\
+Digital camera & Image/video & Captures photographs as digital images. \\
+Webcam & Image/video & Small camera for live video on a computer. \\
+Microphone & Audio & Converts sound into an electrical signal. \\
+Biometric sensor & Biometric & Reads a fingerprint, iris, or face trait. \\
+Barcode / QR code & Code/tag & Read optical codes that identify an item. \\
+RFID & Code/tag & Reads a tag by radio waves; no line of sight. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Points of confusion between similar devices}
+Beyond classifying a device, JKSSB items often test a single distinction
+between two devices that look or sound alike. The table below collects the
+pairs used in this lesson.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Pair} & \textbf{The distinction to state} \\
+\midrule
+Mouse vs trackball & Mouse: the device slides. Trackball: the ball rotates, device still. \\
+Touchscreen vs touchpad & Touchscreen: touch the display (direct). Touchpad: separate pad moves the pointer (indirect). \\
+Light pen vs stylus & Light pen: light sensor on a CRT screen. Stylus: used with a digitizer tablet. \\
+Scanner vs digital camera & Scanner: converts a flat document or picture into an image. Camera: captures a scene. \\
+Barcode vs QR code & Barcode: 1D parallel lines. QR code: 2D matrix, holds more data. \\
+Barcode/QR vs RFID & Barcode/QR are read optically and need line of sight; RFID uses radio waves. \\
+Microphone vs speaker & Microphone: audio input. Speaker: audio output. \\
+Data glove vs haptic glove & Data glove: captures hand movement (input). Haptic glove: gives force feedback (output). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A light pen is an \textbf{input} device; a plotter is an \textbf{output}
+    device. Do not swap them (TRAP-12).
+  \item A punch-card reader, a digitizer tablet, and a scanner are all
+    \textbf{input} devices. A drum printer and a sound card are
+    \textbf{output} devices (TRAP-12).
+  \item A \textbf{trackball} rotates its ball in place; a \textbf{mouse}
+    slides over a surface.
+  \item A \textbf{touchscreen} is touched directly; a \textbf{touchpad} is a
+    separate pad that moves the pointer indirectly.
+  \item \textbf{RFID} uses radio waves and needs no line of sight; a
+    \textbf{barcode} and a \textbf{QR code} are read optically.
+  \item \textbf{Haptic gloves}, a \textbf{tactile display}, and a
+    \textbf{Voice Response Unit (VRU)} give feedback to the user and are
+    \textbf{output}; a \textbf{data glove} captures hand movement and is
+    \textbf{input} (PYQ-09).
+\end{enumerate}
+
+\begin{example}
+An item lists four devices --- light pen, punch-card reader, plotter, and
+scanner --- and asks which are input devices. Classify each one: the light
+pen is input, the punch-card reader is input, the plotter is output, and the
+scanner is input. The answer is the light pen, the punch-card reader, and the
+scanner. The plotter is the only output device in the list.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define an input device and give three examples.
+  \item Classify these devices by the type of data they capture: keyboard,
+    microphone, scanner, fingerprint sensor.
+  \item Distinguish direct input from indirect input, giving one example of
+    each.
+  \item Explain the difference between a trackball and a mouse, and between a
+    touchscreen and a touchpad.
+  \item Differentiate a barcode, a QR code, and RFID.
+  \item State whether each is input or output: light pen, plotter, digitizer
+    tablet, drum printer, sound card.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item An input device accepts data or control signals from the user or the
+    environment and passes them to the CPU in machine-readable form.
+    Examples: keyboard, mouse, scanner (any three valid devices).
+  \item Keyboard --- text input; microphone --- audio input; scanner ---
+    image input; fingerprint sensor --- biometric input.
+  \item Direct input captures the data at its source, such as a scanner or a
+    biometric sensor. Indirect input needs the user to encode the data, such
+    as a keyboard or a mouse.
+  \item With a mouse, the device slides over a surface; with a trackball, the
+    ball is rotated in place and the device stays still. A touchscreen is
+    touched directly on the display; a touchpad is a separate pad that moves
+    the pointer indirectly.
+  \item A barcode is a 1D pattern of lines read optically; a QR code is a 2D
+    matrix that holds more data; RFID uses radio waves between a tag and a
+    reader and needs no line of sight.
+  \item Light pen --- input; plotter --- output; digitizer tablet --- input;
+    drum printer --- output; sound card --- output.
+\end{enumerate}
+\endgroup
+\end{document}

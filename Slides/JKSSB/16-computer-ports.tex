@@ -1,0 +1,241 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Computer Ports}
+\subtitle{Lesson 16 --- Physical Connectors and Logical Ports}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is a Port?}
+  \begin{itemize}
+    \item A \key{port} is a socket or interface on a device where a cable or
+      another device is connected.
+    \item A port lets data and/or power move between the computer and the
+      attached device.
+    \item Ports differ by \key{shape}, by signal type (digital or analog), and
+      by purpose.
+    \item Common physical ports on a PC: USB, HDMI, DisplayPort, VGA,
+      Ethernet (RJ-45), audio jack, and SATA.
+    \item Keep the words apart: the \key{port} is the socket, the
+      \key{connector} is the plug end of the cable.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A port is the doorway between the computer and a device; the connector is
+    the plug that fits that doorway.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Two Meanings of ``Port''}
+  \begin{itemize}
+    \item \key{Physical port}: a hardware socket, such as a USB port, an HDMI
+      port, or an RJ-45 port.
+    \item \key{Logical port} (network port): a software number that identifies
+      a service running on a computer --- it is \muted{not} a socket.
+    \item The same machine has both: web traffic uses logical port 80, while
+      the network cable still plugs into a physical RJ-45 port.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    In networking, ``port'' means a \key{number} (0--65535), not a connector.
+    Do not confuse a port number with a port on the back of the computer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{USB --- Universal Serial Bus}
+  \begin{itemize}
+    \item \key{USB} stands for Universal Serial Bus.
+    \item It is a standard interface for connecting many peripherals to a
+      computer.
+    \item It supports \key{plug and play} and \key{hot swapping} --- a device
+      can be attached or removed without switching the computer off.
+    \item A USB connection carries both \key{data} and \key{power}.
+    \item Typical devices: keyboard, mouse, printer, pen drive, external disk,
+      webcam, and smartphone.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{USB Connector Types}
+  \begin{itemize}
+    \item \key{USB Type-A}: the familiar rectangular connector on most PCs.
+    \item \key{USB Type-B}: often used for printers and scanners.
+    \item \key{Mini-USB} and \key{Micro-USB}: smaller connectors used on older
+      phones and devices.
+    \item \key{USB Type-C}: a modern, small, reversible connector.
+  \end{itemize}
+  \vspace{0.25cm}
+  \muted{The connector shape can change while the underlying USB standard
+  stays the same. Do not treat a connector shape as the bus itself.}
+\end{frame}
+
+\begin{frame}{USB-C (USB Type-C)}
+  \begin{itemize}
+    \item \key{USB-C} is a connector type, not a separate bus.
+    \item It is \key{reversible}: it can be plugged in either way up.
+    \item One connector can carry \key{data}, \key{power}, and \key{video}.
+    \item Typical devices: modern smartphones, laptops, external SSDs, and
+      docking stations.
+  \end{itemize}
+  \begin{block}{Keep it straight}
+    USB is the standard; USB-C is one connector shape for that standard.
+  \end{block}
+\end{frame}
+
+\begin{frame}{HDMI}
+  \begin{itemize}
+    \item \key{HDMI} stands for High-Definition Multimedia Interface.
+    \item It carries \key{digital video and digital audio} over one cable.
+    \item Typical devices: monitor, television, projector, set-top box, and
+      game console.
+    \item A single HDMI cable replaces separate video and audio cables.
+  \end{itemize}
+  \begin{exampleblock}{In the office}
+    The desktop is linked to a large screen with one HDMI cable, so both the
+    picture and the sound travel over the same wire.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{DisplayPort}
+  \begin{itemize}
+    \item \key{DisplayPort} is a \key{digital} audio/video interface designed
+      mainly for computers and monitors.
+    \item It is common on graphics cards, laptops, and desktop monitors.
+    \item It supports high refresh rates and multiple monitors through
+      daisy-chaining.
+    \item \key{Mini DisplayPort} is a smaller variant of the same interface.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{HDMI vs DisplayPort}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.30\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{HDMI} & \textbf{DisplayPort} \\
+      \midrule
+      Signal & Digital video + audio & Digital video + audio \\
+      Main use & TV, home theatre, monitor & PC monitors, graphics cards \\
+      Note & Very common on TVs & Common on PCs; multi-monitor \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Both are digital. The right choice usually depends on the device,
+  not on which one is somehow ``better''.}
+\end{frame}
+
+\begin{frame}{VGA}
+  \begin{itemize}
+    \item \key{VGA} stands for Video Graphics Array.
+    \item It is an \key{analog} video interface --- video only, no audio.
+    \item It uses a 15-pin D-sub connector, often blue, held by two screws.
+    \item Found on older monitors and projectors; now largely replaced by
+      HDMI and DisplayPort.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    VGA is \key{analog} and carries \key{no audio}. HDMI and DisplayPort are
+    digital and do carry audio.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Ethernet and RJ-45}
+  \begin{itemize}
+    \item \key{Ethernet} is the standard for \key{wired} computer networking
+      (IEEE 802.3).
+    \item \key{RJ-45} (Registered Jack 45) is the 8-pin connector used with
+      twisted-pair LAN cable.
+    \item Typical devices: router, switch, modem, and the desktop network
+      card.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    RJ-45 (network, 8 pins) is \key{not} RJ-11 (the smaller telephone jack).
+    The two are near-neighbours in shape but different in use.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Audio Jacks}
+  \begin{itemize}
+    \item The common PC \key{3.5 mm audio jack} connects headphones,
+      earphones, speakers, and microphones.
+    \item \key{TRS} (Tip-Ring-Sleeve) carries stereo audio.
+    \item \key{TRRS} (Tip-Ring-Ring-Sleeve) adds a microphone channel.
+    \item Colour convention on PCs: green = audio out, pink = microphone.
+  \end{itemize}
+  \vspace{0.25cm}
+  \muted{Some equipment uses 2.5 mm or 6.35 mm jacks instead of 3.5 mm.}
+\end{frame}
+
+\begin{frame}{SATA and eSATA}
+  \begin{itemize}
+    \item \key{SATA} stands for Serial Advanced Technology Attachment.
+    \item It connects \key{internal storage} --- a hard disk, an SSD, or an
+      optical drive --- to the motherboard.
+    \item The SATA data cable is thin and has 7 pins; a separate power
+      connector feeds the drive.
+    \item \key{eSATA} (external SATA) is used for an external drive; it is a
+      \key{storage interface}, not a general peripheral port like USB.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Match the Port to Its Use}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.56\textwidth}}
+      \toprule
+      \textbf{Port} & \textbf{Typical use} \\
+      \midrule
+      USB / USB-C & Keyboard, pen drive, phone; data + power \\
+      HDMI & Digital audio + video to a TV or monitor \\
+      DisplayPort & Digital audio + video to PC monitors \\
+      VGA & Analog video to older monitors and projectors \\
+      RJ-45 (Ethernet) & Wired network (LAN) cable \\
+      3.5 mm jack & Headphones, speakers, microphone \\
+      SATA & Internal HDD, SSD, or optical drive \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Term Precision: Port, Connector, Cable}
+  \begin{itemize}
+    \item \key{Port}: the socket on the device.
+    \item \key{Connector}: the plug end of a cable (for example, a USB-C
+      connector).
+    \item \key{Cable}: the wire joining the two.
+    \item \key{USB} is a standard; \key{USB-C} is a connector type; a
+      \key{USB port} is the socket.
+  \end{itemize}
+  \vspace{0.25cm}
+  \muted{Same discipline as file \emph{format} vs file \emph{extension}
+  (TRM-09): always say exactly which one you mean.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Physical vs Logical Ports}
+  \begin{itemize}
+    \item A \key{physical port} is a hardware socket --- USB, HDMI, RJ-45.
+    \item A \key{logical (network) port} is a number that names a service.
+    \item Well-known examples: HTTP 80, HTTPS 443, FTP 21, SMTP 25, DNS 53.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    ``Port 80'' is a number, not a socket. A USB port or an RJ-45 port is
+    hardware. Never mix the two meanings of the word ``port''.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 16: Recall}
+  \begin{itemize}
+    \item A port is a socket for connecting devices; a connector is the plug
+      end of a cable.
+    \item USB = Universal Serial Bus: plug and play, hot swapping, data +
+      power; USB-C is reversible.
+    \item HDMI and DisplayPort carry digital audio and video; VGA is analog
+      video only.
+    \item RJ-45 (Ethernet) is the wired-network connector; RJ-11 is the
+      smaller telephone jack.
+    \item 3.5 mm jack: TRS for stereo, TRRS adds a microphone.
+    \item SATA connects internal storage; eSATA is for external storage.
+    \item Physical port = a hardware socket; logical port = a network service
+      number.
+  \end{itemize}
+\end{frame}
+\end{document}

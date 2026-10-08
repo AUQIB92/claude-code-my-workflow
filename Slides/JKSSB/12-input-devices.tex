@@ -1,0 +1,290 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Input Devices}
+\subtitle{Lesson 12 --- Types, Functions and Nearest-Neighbour Traps}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is an Input Device?}
+  \begin{itemize}
+    \item An input device \key{feeds data and instructions} into a computer
+      for processing.
+    \item It converts a human action or a physical signal into
+      \key{machine-readable} form.
+    \item Common examples: keyboard, mouse, touchscreen, scanner,
+      microphone, camera, barcode reader.
+    \item \muted{Input is the first step of the input--process--output
+      cycle.}
+  \end{itemize}
+  \begin{block}{Definition}
+    An input device accepts data or control signals from the user or the
+    environment and passes them to the CPU.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Classifying Input Devices}
+  \begin{center}
+    \begin{tabular}{p{0.26\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{Category} & \textbf{Typical devices} \\
+      \midrule
+      Text input & Keyboard \\
+      Pointing input & Mouse, trackball, touchpad, joystick, light pen, stylus, touchscreen \\
+      Audio input & Microphone \\
+      Image / video input & Scanner, digital camera, webcam \\
+      Biometric input & Fingerprint, iris, face sensors \\
+      Code / tag input & Barcode, QR code, RFID \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{The same device can be classified by the type of data it captures.}
+\end{frame}
+
+\begin{frame}{Direct vs Indirect Input}
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+      \textbf{Direct input}
+      \begin{itemize}
+        \item The device captures the data itself
+        \item Touchscreen, light pen, scanner, barcode reader, biometric
+          sensor, microphone
+      \end{itemize}
+    \column{0.47\textwidth}
+      \textbf{Indirect input}
+      \begin{itemize}
+        \item The user acts on the device to encode the data
+        \item Keyboard, mouse, trackball, touchpad, joystick
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    A direct device captures data at source; an indirect device needs the
+    user to enter or encode the data.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Keyboard}
+  \begin{itemize}
+    \item The keyboard is the most common \key{text input} device.
+    \item The standard letter layout is called \key{QWERTY}.
+    \item It has alphanumeric keys, function keys (F1--F12), modifier keys
+      (Ctrl, Alt, Shift), and a numeric keypad.
+    \item Each key press is converted into the corresponding character code.
+  \end{itemize}
+  \begin{block}{Key idea}
+    A keyboard turns a keystroke into a character code the computer can
+    process.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Pointing Devices: The Mouse}
+  \begin{itemize}
+    \item A hand-held pointing device moved on a flat surface.
+    \item It controls an on-screen \key{pointer (cursor)} to point, click,
+      double-click, and drag.
+    \item It has buttons and usually a scroll wheel.
+    \item An \key{optical/laser} mouse tracks movement with light; an older
+      mechanical mouse used a rolling ball.
+    \item \muted{Input device --- PYQ-08.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trackball and Trackpad}
+  \begin{itemize}
+    \item \key{Trackball}: an upside-down mouse --- a ball is rotated in
+      place while the device stays still, saving desk space.
+    \item \key{Trackpad / touchpad}: a flat, touch-sensitive pad used on
+      laptops; slide a finger to move the pointer, tap to click.
+    \item Both are \key{pointing input} devices.
+    \item \muted{Do not confuse the trackball (rotating ball) with the
+      mouse (device slides).}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Touchscreen}
+  \begin{itemize}
+    \item A display that is also an \key{input device}: touch it to select
+      and enter data.
+    \item The user touches the screen \key{directly}, so it is a direct
+      input device.
+    \item Common types are \key{resistive} and \key{capacitive}.
+    \item Used in smartphones, tablets, ATMs, and information kiosks.
+  \end{itemize}
+  \begin{block}{Why it is direct}
+    The item touched on the display is the item selected --- no separate
+    pointer is needed.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Touchscreen vs Touchpad (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Touchscreen} & \textbf{Touchpad} \\
+      \midrule
+      Where you touch & On the display itself & A separate pad \\
+      Type of input & Direct & Indirect \\
+      Typical use & Phone, tablet, ATM & Laptop pointing \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    A touchpad is not a touchscreen. On a touchpad you touch a separate pad
+    and the pointer moves on the screen.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Joystick and Light Pen}
+  \begin{itemize}
+    \item \key{Joystick}: a lever that moves on two or three axes; used for
+      games and some industrial control.
+    \item \key{Light pen}: a pen-shaped device with a light sensor; pointed
+      at a CRT screen to select or draw.
+    \item Both are \key{pointing input} devices.
+    \item \muted{A light pen is an input device, not an output device
+      (TRAP-12).}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Stylus and Digitizer Tablet}
+  \begin{itemize}
+    \item \key{Stylus}: a pen-like tool used to write or draw on a tablet or
+      screen.
+    \item \key{Digitizer / graphics tablet}: converts pen strokes into
+      digital coordinates.
+    \item Used for freehand drawing, signatures, CAD, and handwriting
+      recognition.
+  \end{itemize}
+  \begin{block}{Keep the pair (TRAP-12)}
+    A stylus and a digitizer tablet are \key{input} devices. A digitizer
+    captures a drawing as data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Scanners}
+  \begin{itemize}
+    \item A \key{scanner} converts a paper document or picture into a
+      digital image.
+    \item Common types: \key{flatbed}, sheet-fed, handheld, and drum.
+    \item Software such as OCR/OMR reads text or marks from the scanned
+      image.
+    \item \muted{A scanner is an input device (TRAP-12).}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Scanned Codes: Barcode, QR Code, RFID}
+  \begin{itemize}
+    \item \key{Barcode}: a 1D pattern of parallel lines read by a barcode
+      scanner; used on product labels and ISBNs.
+    \item \key{QR code}: a 2D matrix of black and white squares; holds more
+      data; QR = \key{Quick Response}.
+    \item \key{RFID}: Radio Frequency Identification; a tag and a reader
+      exchange radio waves, with no line of sight needed; used in tolls,
+      access cards, and inventory.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    All three are \key{input} devices: they read a code or tag and feed the
+    data into the computer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Digital Camera and Webcam}
+  \begin{itemize}
+    \item \key{Digital camera}: captures photographs as digital images
+      stored on a memory card.
+    \item \key{Webcam}: a small digital camera connected to a computer,
+      used mainly for live video (video calls, streaming).
+    \item Both are \key{image / video input} devices.
+    \item \muted{A webcam is not used for printing; a printer is an output
+      device.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Microphone (Audio Input)}
+  \begin{itemize}
+    \item A \key{microphone} converts sound (voice or music) into an
+      electrical signal that the computer digitises.
+    \item Used for recording, voice calls, and speech recognition.
+    \item \muted{Audio is input; a \key{speaker} produces audio output.}
+  \end{itemize}
+  \begin{block}{Pair to remember}
+    Microphone = audio input; speaker = audio output.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Biometric Input}
+  \begin{itemize}
+    \item \key{Biometrics} identifies a person from a physical or
+      behavioural trait.
+    \item Common traits: \key{fingerprint}, \key{iris}, \key{face}, voice,
+      and palm.
+    \item A sensor captures the trait and feeds it to the computer as
+      input.
+    \item Used for attendance, device unlock, and authentication.
+  \end{itemize}
+  \begin{block}{Why it is input}
+    The sensor reads a human trait and passes the measured data to the
+    system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trap Alert: Input or Output? (TRAP-12)}
+  \begin{itemize}
+    \item \key{Input}: light pen, punch-card reader, digitizer tablet,
+      scanner.
+    \item \key{Output}: plotter, drum printer, sound card.
+    \item \muted{A monitor, printer, projector, and speaker are output
+      devices.}
+    \item \muted{A keyboard, mouse, scanner, and microphone are input
+      devices.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A plotter, a drum printer, and a sound card produce output. They are
+    \key{not} input devices, however they are grouped in an option list.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Matching Special Devices (PYQ-09)}
+  \begin{itemize}
+    \item \key{Haptic gloves}: worn on the hand to give touch/force
+      feedback --- \muted{output}.
+    \item \key{Tactile display}: presents touch sensations to the user ---
+      \muted{output}.
+    \item \key{Voice Response Unit (VRU)}: speaks responses to a caller ---
+      \muted{output}.
+    \item \key{Data glove}: worn to capture hand movement as data ---
+      \key{input}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Haptic gloves, a tactile display, and a VRU give feedback to the user
+    (output). A data glove captures hand movement (input).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 12: Recall}
+  \begin{itemize}
+    \item An input device feeds data or control signals to the computer;
+      input is the first step of the input--process--output cycle.
+    \item By data type: text (keyboard), pointing (mouse, trackball,
+      touchpad, joystick, light pen, stylus, touchscreen), audio
+      (microphone), image/video (scanner, camera, webcam), biometric, and
+      code/tag (barcode, QR, RFID).
+    \item Direct input captures data at source (touchscreen, scanner,
+      biometric); indirect input needs the user to encode it (keyboard,
+      mouse).
+    \item Near-neighbours: trackball (ball rotates) vs mouse (device
+      slides); touchscreen (touch the display) vs touchpad (separate pad).
+    \item TRAP-12: light pen, punch-card reader, digitizer, and scanner are
+      \key{input}; plotter, drum printer, and sound card are \key{output}.
+    \item PYQ-09: haptic gloves, tactile display, and VRU are output; a
+      data glove is input.
+  \end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,385 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{13.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{OCR, OMR, MICR --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Reading machines and why they matter}
+A computer works only with data that has already been converted into
+machine-readable form. When the data exists on paper --- as printed text, as
+a filled-in bubble on a form, or as a line of characters on a cheque --- the
+machine needs a way to read it. A \textbf{reading machine} is the device or
+technology that captures this physical information and turns it into digital
+data the system can process. The physical reader (often a scanner, sometimes
+a dedicated reader) performs the capture; the \emph{recognition method}
+decides what the captured pattern means. This lesson covers the three most
+examined recognition methods --- OCR, OMR, and MICR --- together with the
+code-and-tag devices (barcode, QR code, RFID) and biometric input, because
+questions frequently ask candidates to tell these near-neighbours apart.
+
+The single most important idea is the \emph{read-target} of each method.
+\textbf{OCR} reads \emph{text}. \textbf{OMR} reads \emph{marks}.
+\textbf{MICR} reads \emph{characters printed in magnetic ink}. Almost every
+item on this topic can be solved by fixing this one distinction in memory.
+
+All the devices in this lesson are \emph{input} devices or reading
+\emph{technologies}: they bring data into the system. Most of them are also
+\emph{direct} input, because the device reads the object, mark, code, or
+trait itself, instead of asking the user to type it. This is why a reading
+machine is faster and less error-prone than a keyboard for a repetitive task
+such as reading a thousand answer sheets or a thousand cheques.
+
+\begin{definitionbox}{Reading machine}
+A device or technology that captures printed characters, marks, codes, or
+tags from a physical medium and converts them into machine-readable data for
+the computer to process.
+\end{definitionbox}
+
+\section{Terminology at a glance}
+The table below fixes the meaning of every term used in this lesson. Read it
+down once; then, for each term, be ready to state the read-target and one
+place it is used.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+OCR & Optical Character Recognition --- converts an image of printed or written text into editable text. \\
+OMR & Optical Mark Recognition --- detects the presence or absence of marks at fixed positions on a form. \\
+MICR & Magnetic Ink Character Recognition --- reads characters printed in magnetic ink, used on bank cheques. \\
+Barcode & A one-dimensional pattern of parallel lines read optically to identify an item. \\
+QR code & A two-dimensional matrix of squares (Quick Response) that holds more data than a barcode. \\
+RFID & Radio Frequency Identification --- a tag and reader exchange radio waves; no line of sight is needed. \\
+Biometrics & Input that identifies a person from a physical or behavioural trait (fingerprint, iris, face). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{OCR --- Optical Character Recognition}
+\textbf{OCR} stands for \textbf{Optical Character Recognition}. It takes a
+scanned image of \emph{printed or handwritten text} and converts it into
+machine-encoded, \emph{editable text}. The key word is
+\emph{character}: OCR recognises individual letters, digits, and symbols, so
+the output is text that a computer can search, copy, and edit. This is what
+makes OCR different from OMR, which recognises only whether a position has
+been marked and never identifies a letter.
+
+OCR is used to digitise the printed word. A book, a bundle of invoices, a
+passport page, or an old form can be scanned into an image, and OCR software
+then extracts the text from that image. A useful way to remember the pairing
+is: the \textbf{scanner} is the hardware that creates the image, while
+\textbf{OCR} is the technology that turns the image of text into actual,
+selectable text.
+
+\begin{definitionbox}{OCR}
+A recognition technology that reads characters from a scanned image of
+printed or handwritten text and converts them into machine-encoded,
+editable text.
+\end{definitionbox}
+
+OCR works best on clean, clearly printed text in a known font; its accuracy
+drops when the page is skewed, smudged, or handwritten. When the input is
+handwritten rather than printed, the same idea is sometimes called
+\emph{Intelligent Character Recognition} (ICR), but for exam purposes both
+count as OCR-style reading of text. OCR is \emph{not} a storage device and
+\emph{not} a printer: it only converts an existing image into text.
+
+\begin{example}
+A student scans a page of a textbook into the computer. The scanner produces
+an \emph{image}, so the words on the page cannot yet be copied or searched.
+Running OCR on that image produces a text file in which every word can be
+selected and edited. The scanner supplied the image; OCR supplied the text.
+\end{example}
+
+\section{OMR --- Optical Mark Recognition}
+\textbf{OMR} stands for \textbf{Optical Mark Recognition}. It reads a form
+by detecting the \emph{presence or absence of a mark} at fixed positions.
+Typically the candidate fills a small bubble or shades a box with a pencil or
+pen, and the OMR reader checks which positions have been darkened. Crucially,
+OMR reads \emph{marks}, not characters: it does not know what a letter
+``says'', only that a particular position has been filled.
+
+Because it detects marks at fixed coordinates, OMR is ideal for forms where
+the answer is one of a small set of choices. Its classic use is the
+\textbf{MCQ answer sheet}: the machine reads which bubble has been shaded for
+each question. It is also used for questionnaires, surveys, census forms, and
+ballots. A very common exam trap is to confuse OMR with OCR; remember that
+OMR works on \emph{marks}, while OCR works on \emph{text}.
+
+\begin{definitionbox}{OMR}
+A recognition technology that detects the presence or absence of marks at
+fixed positions on a form, used mainly to read objective (MCQ) answer
+sheets and survey forms.
+\end{definitionbox}
+
+OMR is extremely fast because it does not have to interpret a shape as a
+character; it only has to decide whether a small region is dark or light.
+That speed is why OMR is the standard method for large-scale examinations
+where millions of answer sheets must be processed quickly. Its natural limit
+is that it can record only \emph{which} option was marked, not any written
+answer: if the candidate writes a sentence instead of shading a bubble, OMR
+cannot read it.
+
+\section{MICR --- Magnetic Ink Character Recognition}
+\textbf{MICR} stands for \textbf{Magnetic Ink Character Recognition}. It
+reads characters printed in a special \emph{magnetic ink} that contains iron
+oxide. The characters are printed in a standard font along the bottom of a
+\emph{bank cheque} as the \textbf{MICR line}, which normally encodes the
+cheque number, the bank and branch code, and the account number. A MICR
+reader magnetises the ink and detects the shapes of the characters as they
+pass the read head.
+
+Banking is the defining application of MICR. Cheque processing must be very
+fast and highly secure, and MICR satisfies both needs: the reading is quick,
+and because the ink is magnetic it is difficult to forge or to alter without
+detection. When a question mentions a \emph{bank cheque} or \emph{magnetic
+ink}, the answer is almost always MICR.
+
+\begin{definitionbox}{MICR}
+A recognition technology that reads characters printed in magnetic ink,
+used mainly in banking to process the MICR line printed at the bottom of a
+cheque.
+\end{definitionbox}
+
+Unlike ordinary ink, magnetic ink can be read even if the cheque is slightly
+crumpled or over-stamped, because the reader senses the magnetic field of
+the ink rather than a purely visual image. This ruggedness and the difficulty
+of counterfeiting magnetic ink are exactly the reasons banks adopted MICR
+for cheque clearing.
+
+\section{The crucial trio: OCR vs OMR vs MICR}
+These three names are the heart of the lesson, and JKSSB questions routinely
+swap their meanings in the options. The table below is the single most useful
+thing to memorise.
+
+\begin{center}
+\begin{tabular}{p{0.12\textwidth}p{0.26\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Method} & \textbf{What it reads} & \textbf{Where it is used} \\
+\midrule
+OCR & Printed or written characters & Digitising books, documents, and passports \\
+OMR & Marks on a form & MCQ answer sheets, surveys, ballots \\
+MICR & Characters in magnetic ink & Bank cheques and cheque clearing \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The distinction to hold is: \textbf{MICR} uses \emph{magnetic ink};
+\textbf{OCR} reads \emph{printed text}; \textbf{OMR} reads \emph{marks}. This
+is the JKSSB trap TRAP-25, and the real paper item behind it (PYQ-30) asks
+simply that magnetic ink means MICR.
+
+It also helps to picture \emph{how} each one captures its data. OMR and OCR
+both read an optical (light) signal: the reader sees the paper. MICR is the
+odd one out, because its reader senses a \emph{magnetic} signal from the ink.
+So a quick way to separate them in a hurry is: two are \emph{optical}, one is
+\emph{magnetic}.
+
+\begin{center}
+\begin{tabular}{p{0.11\textwidth}p{0.20\textwidth}p{0.25\textwidth}p{0.31\textwidth}}
+\toprule
+\textbf{Method} & \textbf{Signal read} & \textbf{Input pattern} & \textbf{Cannot do} \\
+\midrule
+OCR & Optical (light) & Text characters & Cannot read marks alone \\
+OMR & Optical (light) & Marks / shaded bubbles & Cannot read written characters \\
+MICR & Magnetic & Magnetic-ink characters & Not used for forms or plain text \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Barcodes and QR codes}
+A \textbf{barcode} is a one-dimensional (1D) pattern of parallel lines of
+varying width and spacing. A barcode scanner shines a light beam across the
+lines and reads the reflected pattern, which represents a number or code
+that identifies a product. Because the scanner must see the lines, a barcode
+requires \emph{line of sight}. Barcodes are used on product labels, on the
+ISBN of books, and on postal items.
+
+A \textbf{QR code} --- \textbf{Quick Response} code --- is a
+\emph{two-dimensional} (2D) matrix of black and white squares. It stores
+more data than a barcode and can be read from any direction. Because it can
+hold a URL, scanning a QR code can open a website or an app directly. Both a
+barcode and a QR code are read \emph{optically}, so the nearest-neighbour
+trap is simply that a QR code is two-dimensional and carries more
+information, while a barcode is one-dimensional.
+
+\begin{definitionbox}{QR code}
+A two-dimensional matrix of black and white squares (Quick Response code)
+that stores more data than a barcode and can be read from any direction.
+\end{definitionbox}
+
+\begin{example}
+A shop assistant passes a product over a laser at the billing counter: the
+scanner reads the 1D \emph{barcode} on the packet and looks up its price. A
+customer points a phone camera at the square \emph{QR code} on a poster: the
+phone reads the 2D code and opens the shop's website. The barcode carried a
+short number; the QR code carried a whole web address.
+\end{example}
+
+\section{RFID --- Radio Frequency Identification}
+\textbf{RFID} stands for \textbf{Radio Frequency Identification}. An RFID
+system has two parts: a \emph{tag} attached to the object and a \emph{reader}
+that interrogates it. The two exchange \emph{radio waves}, so no line of
+sight is required, unlike a barcode. A passive tag carries no battery and is
+powered by the reader's signal; an active tag has its own battery and can
+broadcast over a longer range.
+
+RFID is used where the tag may be out of sight or where many tags must be
+read quickly: toll collection (for example FASTag), access-control cards,
+passports, library books, and inventory tracking. The exam contrast is
+always barcode/QR versus RFID: barcode and QR are read \emph{optically} and
+need line of sight, while RFID uses \emph{radio waves} and can read a tag
+without it being visible.
+
+\section{Biometric input}
+\textbf{Biometrics} identifies a person from a physical or behavioural
+trait. The common physical traits are the \textbf{fingerprint}, the
+\textbf{iris}, the \textbf{face}, and the palm; the voice is a common
+behavioural trait. A sensor captures the trait and feeds the measured data to
+the computer as \emph{input}; the system then compares it with the stored
+template. Biometric input is a \emph{direct} form of input because the sensor
+reads the trait itself rather than asking the user to type or encode it.
+
+Biometrics are used for attendance systems, device unlocking, and
+authentication, and they appear in national identity and benefit systems. A
+useful checklist item for the exam is that a fingerprint reader, an iris
+scanner, and a face-recognition camera are all \emph{input} devices; a device
+that merely prints or displays the result is \emph{output}. Do not confuse
+biometric traits (fingerprint, iris, face) with the optical reading machines:
+a fingerprint sensor reads a part of the human body, not a paper code.
+
+\section{Full-form ladder and memory hooks}
+Direct-recall items on this topic usually ask for a full form, so learn the
+expansions exactly. The same expansions appear on the slides; repeat them
+until they can be produced without hesitation.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.72\textwidth}}
+\toprule
+\textbf{Short form} & \textbf{Full form} \\
+\midrule
+OCR & Optical Character Recognition \\
+OMR & Optical Mark Recognition \\
+MICR & Magnetic Ink Character Recognition \\
+QR & Quick Response \\
+RFID & Radio Frequency Identification \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three one-line hooks carry most of the content of this lesson. First,
+\emph{OCR reads text, OMR reads marks, MICR reads magnetic ink}. Second,
+\emph{a barcode is one-dimensional, a QR code is two-dimensional, and RFID
+uses radio waves}. Third, \emph{a biometric sensor reads a human trait ---
+fingerprint, iris, face, or voice}. If a question seems unfamiliar, reduce
+it to one of these three sentences and the answer usually becomes clear.
+
+\section{Applications at a glance}
+The table gathers the reading machines and code devices with their defining
+application, for quick revision.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Technology} & \textbf{Defining application} \\
+\midrule
+OCR & Converting scanned printed text into editable text \\
+OMR & Reading marks on objective (MCQ) answer sheets \\
+MICR & Reading the magnetic-ink line at the bottom of a bank cheque \\
+Barcode & Reading 1D product labels and book ISBNs \\
+QR code & Reading 2D codes that can open a link or store more data \\
+RFID & Reading tags by radio waves (tolls, access cards, inventory) \\
+Biometrics & Identifying a person from a fingerprint, iris, face, or voice \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{MICR} uses \textbf{magnetic ink}; \textbf{OCR} reads
+    \textbf{printed text}; \textbf{OMR} reads \textbf{marks}. Do not
+    interchange them (TRAP-25, PYQ-30).
+  \item A real PYQ asks which technology uses magnetic ink on cheques: the
+    answer is \textbf{MICR} (PYQ-30).
+  \item \textbf{OMR}, not OCR, is used for \textbf{MCQ answer sheets},
+    because it reads marks at fixed positions.
+  \item A \textbf{QR code} is two-dimensional and holds more data than a
+    one-dimensional \textbf{barcode}; both are read optically.
+  \item \textbf{RFID} uses \textbf{radio waves} and needs no line of sight;
+    a barcode or QR code must be \emph{seen} by the reader.
+  \item A \textbf{fingerprint} or \textbf{iris} scanner is \textbf{input};
+    biometrics identify a person from a physical or behavioural trait.
+\end{enumerate}
+
+\begin{example}
+An item states that a bank reads the characters at the bottom of a cheque
+using OCR. This is wrong. The cheque characters are printed in magnetic ink,
+so the technology is \textbf{MICR}. OCR would be used to read ordinary
+\emph{printed text} from a scanned document, and OMR would be used to read
+\emph{marks} on a form --- neither of which matches a cheque's magnetic-ink
+line.
+\end{example}
+
+\begin{example}
+An item lists four reading methods and asks which two are \emph{optical}.
+OCR and OMR both use a light signal to read the paper, so they are the two
+optical methods. MICR is \emph{magnetic}, not optical, and RFID is neither
+optical nor magnetic --- it uses radio waves. Separating the methods by their
+signal (optical, magnetic, radio) is a fast way to answer such a question.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Expand OCR, OMR, and MICR, and state in one line what each reads.
+  \item Which technology would read an objective (MCQ) answer sheet, and
+    why?
+  \item Explain why a bank uses MICR rather than OCR for cheque processing.
+  \item Distinguish a barcode from a QR code on two points.
+  \item State one way in which RFID differs from a barcode.
+  \item Give three examples of biometric traits and state the purpose for
+    which biometric input is commonly used.
+  \item Classify these as optical, magnetic, or radio reading: OMR, MICR,
+    RFID, OCR.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item OCR = Optical Character Recognition, which reads printed or written
+    characters; OMR = Optical Mark Recognition, which reads marks on a form;
+    MICR = Magnetic Ink Character Recognition, which reads characters in
+    magnetic ink.
+  \item OMR, because it detects the presence or absence of a mark at fixed
+    positions, which is exactly how a candidate fills bubbles on an MCQ
+    answer sheet.
+  \item The cheque characters are printed in magnetic ink, which MICR reads
+    directly; the reading is fast, and the magnetic ink is difficult to
+    forge or alter. OCR reads ordinary printed text, not magnetic-ink
+    characters.
+  \item A barcode is a one-dimensional pattern of parallel lines and holds
+    less data; a QR code is a two-dimensional matrix of squares, holds more
+    data, and can be read from any direction.
+  \item RFID exchanges radio waves between a tag and a reader and needs no
+    line of sight, whereas a barcode is read optically and must be visible
+    to the scanner. RFID can also read many tags at once.
+  \item Fingerprint, iris, and face (voice and palm are also valid).
+    Biometric input is commonly used for attendance, authentication, and
+    device unlocking.
+  \item OMR and OCR are \emph{optical}; MICR is \emph{magnetic}; RFID is
+    \emph{radio}.
+\end{enumerate}
+\endgroup
+\end{document}

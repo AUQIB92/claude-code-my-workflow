@@ -106,12 +106,12 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 12 | Input Devices — keyboard, mouse, trackball, touchpad, joystick, light pen, stylus/tablet, touchscreen, scanner, webcam, microphone, biometrics | `12-input-devices` [ ] | [ ] | [ ] |
-| 13 | OCR, OMR, MICR — plus barcode, QR, RFID, biometric identification | `13-ocr-omr-micr` [ ] | [ ] | [ ] |
-| 14 | Output Devices — monitors, projector, speakers, headphones, plotters, MFP, hard vs soft copy | `14-output-devices` [ ] | [ ] | [ ] |
-| 15 | Printers & Displays — dot matrix, inkjet, laser, thermal, impact vs non-impact, page printers | `15-printers-displays` [ ] | [ ] | [ ] |
-| 16 | Computer Ports — USB/USB-C, HDMI, DisplayPort, VGA, Ethernet/RJ-45, audio, SATA, logical ports | `16-computer-ports` [ ] | [ ] | [ ] |
-| 65 | Current Multimedia, GUI & Media Formats — sampling, quantization, compression, synchronization; WYSIWYG, dialogue boxes; PNG/MP4/MP3; plotter; impact vs non-impact | `65-current-multimedia-gui-media-formats` [ ] | [ ] | [ ] |
+| 12 | Input Devices — keyboard, mouse, trackball, touchpad, joystick, light pen, stylus/tablet, touchscreen, scanner, webcam, microphone, biometrics | `12-input-devices` [x] | [x] | [x] |
+| 13 | OCR, OMR, MICR — plus barcode, QR, RFID, biometric identification | `13-ocr-omr-micr` [x] | [x] | [x] |
+| 14 | Output Devices — monitors, projector, speakers, headphones, plotters, MFP, hard vs soft copy | `14-output-devices` [x] | [x] | [x] |
+| 15 | Printers & Displays — dot matrix, inkjet, laser, thermal, impact vs non-impact, page printers | `15-printers-displays` [x] | [x] | [x] |
+| 16 | Computer Ports — USB/USB-C, HDMI, DisplayPort, VGA, Ethernet/RJ-45, audio, SATA, logical ports | `16-computer-ports` [x] | [x] | [x] |
+| 65 | Current Multimedia, GUI & Media Formats — sampling, quantization, compression, synchronization; WYSIWYG, dialogue boxes; PNG/MP4/MP3; plotter; impact vs non-impact | `65-current-multimedia-gui-media-formats` [x] | [x] | [x] |
 
 ### Unit 5 — Software, Operating Systems, Windows & Utilities
 
