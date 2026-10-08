@@ -1,0 +1,315 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{33.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{PDF and File Formats --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What a file format is}
+Every file on a computer is stored as a long series of bits. On its own, a
+string of bits says nothing about whether it is a letter, a photograph, a
+spreadsheet, or a slide show. The \textbf{file format} is the rule that tells
+the software how those bits are arranged --- where the text begins, where the
+image data sits, and how the page should be drawn. When a program opens a
+file, it reads the format to know how to interpret the contents.
+
+The \textbf{extension} is the short suffix at the end of a file name, such as
+\texttt{.pdf}, \texttt{.docx}, or \texttt{.png}. The extension is a label
+that helps the operating system choose which program should open the file.
+It is convenient but only a name: the real identity of the file is its format.
+
+\begin{definitionbox}{File format}
+The defined structure or rule by which data is stored in a file, so that
+software can correctly read, display, and save its contents.
+\end{definitionbox}
+
+\begin{definitionbox}{Extension}
+The suffix at the end of a file name, usually written with a dot, that
+indicates the file's intended type (for example \texttt{.pdf}, \texttt{.docx},
+\texttt{.png}).
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.58\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Format & The actual structure of the data inside the file. \\
+Extension & The dot-suffix in the file name, such as \texttt{.docx}. \\
+Fixed layout & A format that stores exact positions, so the page looks the same everywhere. \\
+Plain text & A file of ordinary characters with no formatting. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Extension versus format (the core trap)}
+The single most repeated confusion in this topic is treating the extension and
+the format as the same thing. They are not. In the file name
+\texttt{report.docx}, the base name is \texttt{report}, the extension is
+\texttt{docx} (written \texttt{.docx}), and the format is DOCX, the Office
+Open XML word-processing format. Likewise, \texttt{.png} is an extension,
+while PNG (Portable Network Graphics) is the format.
+
+The extension can also be changed easily, and doing so does not convert the
+file. Renaming a photograph from \texttt{pic.jpg} to \texttt{pic.png} does
+not turn a JPEG image into a PNG image; it only changes the label. This is
+why the exam stresses the distinction: the extension is a name, the format is
+the content.
+
+\begin{example}
+An item states, ``\texttt{.png} is an image file format.'' The statement
+mixes the two ideas. \texttt{.png} is the \textbf{extension}; PNG is the
+\textbf{format}. A correct statement would be, ``PNG is an image file format,
+and \texttt{.png} is its usual extension.''
+\end{example}
+
+\section{Common document formats}
+The Office applications each save their work in a standard format. These are
+the Office Open XML formats, and each has its own extension.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Extension} & \textbf{Format} & \textbf{Typical use} \\
+\midrule
+\texttt{.docx} & Word document & Text, formatting, and images (MS Word) \\
+\texttt{.xlsx} & Excel workbook & Worksheets, formulas, and charts (MS Excel) \\
+\texttt{.pptx} & PowerPoint presentation & Slides and slide shows (PowerPoint) \\
+\texttt{.csv} & Comma-Separated Values & Plain-text rows with values separated by commas \\
+\texttt{.txt} & Plain text & Unformatted characters only \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A \textbf{word-processing document} (DOCX) stores formatted text. A
+\textbf{workbook} (XLSX) stores worksheets with formulas and numbers. A
+\textbf{presentation} (PPTX) stores slides. A \textbf{CSV} file is plain text
+in which each line is a record and commas separate the fields; it is often
+used to move data between programs. A \textbf{TXT} file holds plain
+characters and no formatting at all.
+
+\section{Common image extensions}
+Images also come in many formats, each suited to a different purpose.
+\textbf{PNG} (Portable Network Graphics) uses lossless compression and
+supports transparency, so it is good for logos and screenshots.
+\textbf{JPG/JPEG} uses lossy compression, so it is good for photographs where
+a small loss of quality is acceptable. \textbf{GIF} (Graphics Interchange
+Format) handles simple images and short animations. \textbf{BMP} (Bitmap)
+stores a raw image and is usually larger. \textbf{TIFF} (Tagged Image File
+Format) is used for high-quality scanning and printing. \textbf{SVG}
+(Scalable Vector Graphics) stores a drawing as lines and shapes, so it scales
+without blurring.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Extension} & \textbf{Format} & \textbf{Character} \\
+\midrule
+\texttt{.png} & Portable Network Graphics & Lossless, transparency \\
+\texttt{.jpg} & JPEG image & Lossy, photos \\
+\texttt{.gif} & Graphics Interchange Format & Simple images, animation \\
+\texttt{.bmp} & Bitmap & Raw, larger \\
+\texttt{.tiff} & Tagged Image File Format & High quality, scanning/print \\
+\texttt{.svg} & Scalable Vector Graphics & Vector, scales without blur \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{PDF: the Portable Document Format}
+\textbf{PDF} stands for \textbf{Portable Document Format}. It is a
+\textbf{fixed-layout} format: every item on the page is placed at a fixed
+position. Because the file also carries the fonts and images it needs, a PDF
+looks the \textbf{same on every device and printer}. This is why PDF is used
+for e-books, forms, official letters, admit cards, and result sheets, where
+the exact appearance matters.
+
+Contrast this with a word-processing document, which is a \emph{re-flowable}
+format: text re-flows to fit the screen, so the layout can shift when the
+font or device changes. A PDF, by design, does not re-flow; it is a picture of
+a finished page expressed as instructions.
+
+\begin{definitionbox}{PDF}
+Portable Document Format --- a fixed-layout file format that preserves the
+appearance of a document so it renders identically across devices and
+printers.
+\end{definitionbox}
+
+\section{Text and scanned PDFs}
+Not every PDF contains real text. It is important to separate two kinds.
+
+A \textbf{text PDF} (sometimes called an editable-source PDF) is generated
+from a source document such as a Word file. Its pages contain genuine text and
+vector graphics. The text can be selected, copied, and searched, and the file
+is usually smaller.
+
+A \textbf{scanned PDF} (image-only PDF) is produced by scanning printed pages
+or photographing them. Each page is stored as an \emph{image}, much like a
+photograph. The text is readable to the human eye but not to the computer: it
+cannot be selected, copied, or searched. Scanned files are also usually
+larger.
+
+\begin{example}
+An item says, ``In a scanned PDF, you can search for a word using
+\texttt{Ctrl+F}.'' This is wrong. A scanned PDF is only a picture of the
+page, so its text is not searchable until OCR is applied. In a text PDF, the
+same search works immediately.
+\end{example}
+
+\section{OCR: Optical Character Recognition}
+\textbf{OCR} stands for \textbf{Optical Character Recognition}. It is the
+technique that reads the \emph{picture of the text} and converts it into
+\textbf{machine-readable text}. Once OCR has been run, the text in a scanned
+document can be selected, searched, copied, and edited just like the text in a
+text PDF.
+
+OCR is used on scanned pages and on photographs of documents. It is the
+bridge that turns an image-only PDF into a searchable one. The recognition is
+not always perfect, so the result should be checked.
+
+\begin{definitionbox}{OCR (Optical Character Recognition)}
+The process of converting an image of text into machine-readable, editable,
+and searchable text.
+\end{definitionbox}
+
+\section{Encryption and password protection}
+A PDF can be protected so that its contents are confidential.
+\textbf{Encryption} scrambles the file so that it cannot be read without the
+correct key or password. Two kinds of password are common. A \textbf{password
+to open} (user password) is required before the file will open at all. A
+\textbf{permissions password} (owner password) restricts what a reader may
+do --- for example, printing, copying, or editing.
+
+Encryption provides \textbf{confidentiality}: only the authorised reader can
+see the contents. It does not prove who created the file, and it is not the
+same as a digital signature.
+
+\section{Digital signature}
+A \textbf{digital signature} is attached to a file to prove \textbf{who
+signed it}. It also proves \textbf{integrity}: if the file is altered after
+it has been signed, the signature no longer matches and the change is
+detected. A digital signature uses a \textbf{digital certificate} issued by a
+trusted authority.
+
+A digital signature provides \textbf{authenticity} (the signer is verified)
+and \textbf{integrity} (the file has not changed). It does \emph{not} hide
+the contents. This is the distinction the exam most often tests: a digital
+signature is about \emph{who} and \emph{whether it changed}, while encryption
+is about \emph{who can read it}.
+
+\begin{definitionbox}{Digital signature}
+An electronic signature that verifies the identity of the signer and detects
+any change made to the file after signing, providing authenticity and
+integrity.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Point} & \textbf{Encryption} & \textbf{Digital signature} \\
+\midrule
+Main purpose & Confidentiality & Authenticity and integrity \\
+Result & Contents unreadable & Signer verified, tampering detected \\
+Needs & Key / password & Digital certificate \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+An item states, ``A digital signature encrypts the PDF so that only the
+recipient can read it.'' The statement is wrong. The encryption that keeps
+others from reading the file is \textbf{encryption}. A digital signature does
+not hide the content; it confirms the signer and shows whether the file has
+been changed.
+\end{example}
+
+\section{Redaction and PDF/A}
+\textbf{Redaction} means \textbf{permanently removing} sensitive content
+before a file is shared. Names, account numbers, addresses, or photographs
+may be redacted. A proper redaction deletes the underlying text or image; it
+is not enough to draw a black rectangle over it, because hidden text can
+often still be selected and copied. A careful reader should always check that
+the removed text is truly gone.
+
+\textbf{PDF/A} is a special ISO-standard version of PDF designed for
+\textbf{long-term archiving}. It embeds the fonts and colour information
+inside the file so that the document will render exactly the same years later,
+even on future software. The ``A'' in PDF/A stands for \emph{archival}. It is
+used by libraries, courts, and government records, and is meant for
+preservation rather than everyday editing.
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The \textbf{extension} is the file-name suffix; the \textbf{format}
+    is the structure of the data. \texttt{.png} is an extension; PNG is the
+    format (TRAP-34).
+  \item A \textbf{scanned PDF} is an image; its text cannot be selected or
+    searched until \textbf{OCR} is applied. A text PDF is searchable at once.
+  \item \textbf{Encryption} gives confidentiality; a \textbf{digital
+    signature} gives authenticity and integrity. They are not the same
+    (TRM-11, TRAP-15).
+  \item \textbf{Redaction} removes sensitive content permanently; a black
+    box drawn over text is not sufficient.
+  \item \textbf{PDF/A} is for long-term \textbf{archiving}; ordinary PDF is
+    the everyday fixed-layout format.
+\end{enumerate}
+
+\begin{example}
+An item asks which format keeps a fixed layout and looks the same on every
+device. The answer is PDF. If the stem instead asks which format stores
+spreadsheet data, the answer is XLSX; if it asks which is a plain-text data
+format, the answer is CSV; and if it asks which format is meant for long-term
+archiving, the answer is PDF/A.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a file extension from a file format, with one example.
+  \item State the full form of PDF and explain why PDF is called a
+    fixed-layout format.
+  \item Explain the difference between a text PDF and a scanned PDF, and
+    where OCR fits in.
+  \item Distinguish encryption from a digital signature in terms of the
+    security goal each provides.
+  \item What is redaction, and why is drawing a black box over text not a
+    safe redaction? What is PDF/A used for?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The extension is the dot-suffix in the file name, such as
+    \texttt{.docx}; it is only a label. The format is the actual structure of
+    the data inside the file, such as the DOCX word-processing format. The
+    same extension can be renamed without changing the format.
+  \item PDF stands for Portable Document Format. It is called a fixed-layout
+    format because every item is placed at a fixed position on the page, and
+    the fonts and images are carried in the file, so the document looks the
+    same on every device and printer.
+  \item A text PDF contains real, machine-readable text, so it can be
+    selected, copied, and searched. A scanned PDF stores each page as an
+    image, so its text cannot be selected or searched. OCR (Optical Character
+    Recognition) converts the image of the text into machine-readable text,
+    after which the scanned PDF becomes searchable.
+  \item Encryption provides confidentiality: it scrambles the file so only
+    someone with the correct key or password can read it. A digital signature
+    provides authenticity and integrity: it proves who signed the file and
+    detects any change made after signing. It does not hide the contents.
+  \item Redaction is the permanent removal of sensitive content before a file
+    is shared. Drawing a black box over text is not safe because the hidden
+    text may still be selectable and copyable underneath. PDF/A is a
+    standardised PDF version for long-term archiving that embeds fonts and
+    colour information so the document renders the same in the future.
+\end{enumerate}
+\endgroup
+\end{document}

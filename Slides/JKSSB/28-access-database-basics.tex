@@ -1,0 +1,267 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Access Database Basics}
+\subtitle{Lesson 28 --- Databases, Tables and Records}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is a Database?}
+  \begin{itemize}
+    \item A \key{database} is an organised collection of related data.
+    \item The data is stored so that it can be \key{searched, updated, and
+      retrieved} easily.
+    \item Example: a school's list of students, their classes, and their
+      marks kept together as related information.
+    \item In a computer, a database is managed by special software, not kept
+      as loose files.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A database is the \key{collection of data}; the software that manages it
+    is a separate thing.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Why Use a Database Instead of a Spreadsheet?}
+  \begin{itemize}
+    \item A spreadsheet is built for \muted{calculation} on a simple grid.
+    \item A database is built for \key{storing and linking large amounts of
+      related data}.
+    \item A database can hold many tables, relate them, and answer queries
+      across them.
+    \item For a big, growing record system, a \key{database} keeps data
+      consistent and avoids duplication.
+  \end{itemize}
+  \begin{alertblock}{Keep it clear}
+    Excel is a spreadsheet; Access is a database program. The two are not
+    the same tool.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Database vs DBMS (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.33\textwidth}p{0.37\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Database} & \textbf{DBMS} \\
+      \midrule
+      What it is & The organised collection of data & The software that manages
+        the data \\
+      Nature & Data & Program \\
+      Example & A school's records & MS Access, Oracle, MySQL \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{The database is the data; the DBMS is the tool. Do not swap them.}
+\end{frame}
+
+\begin{frame}{What a DBMS Does}
+  \begin{itemize}
+    \item \key{DBMS} stands for \key{Database Management System}.
+    \item It \key{stores} data and controls how it is kept on disk.
+    \item It lets users \key{insert, update, delete, and retrieve} records.
+    \item It \key{controls access} so that only allowed users can read or
+      change data.
+    \item It keeps the data \key{consistent} and safe from corruption.
+  \end{itemize}
+  \begin{block}{Full form to memorise}
+    DBMS = Database Management System. An \key{RDBMS} is a relational DBMS
+    (data stored in related tables).
+  \end{block}
+\end{frame}
+
+\begin{frame}{Microsoft Access in the Office Suite}
+  \begin{itemize}
+    \item \key{Microsoft Access} is the database program of the
+      \key{Microsoft Office} suite.
+    \item It is a \key{relational database management system} (RDBMS).
+    \item In the suite, Word handles text, Excel handles spreadsheets,
+      PowerPoint handles presentations, and \key{Access handles databases}.
+    \item Access stores tables, queries, forms, and reports inside one
+      database file.
+  \end{itemize}
+  \begin{alertblock}{Exam point}
+    Access is a DBMS, not a spreadsheet. It is part of the MS Office
+    family.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Objects in an Access Database}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.68\textwidth}}
+      \toprule
+      \textbf{Object} & \textbf{Job} \\
+      \midrule
+      Table & Stores the actual data in rows and columns \\
+      Query & Asks a question and retrieves selected data \\
+      Form & Provides a screen to enter and view data \\
+      Report & Presents data in a printable layout \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Data lives in tables; the other objects work on that data.}
+\end{frame}
+
+\begin{frame}{The Table: Rows and Columns}
+  \begin{itemize}
+    \item A \key{table} is the basic place where data is stored.
+    \item Data is arranged in \key{rows and columns}.
+    \item Each \key{column} is one \key{field} --- one kind of information.
+    \item Each \key{row} is one \key{record} --- one complete entry.
+    \item A table therefore holds \key{many records}, each with the same set
+      of fields.
+  \end{itemize}
+  \begin{block}{The building block}
+    Everything in an Access database starts with the \key{table}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Field vs Record vs Table (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.30\textwidth}}
+      \toprule
+      \textbf{Term} & \textbf{Meaning} & \textbf{Position in a table} \\
+      \midrule
+      Field & One kind of information & A column \\
+      Record & One complete entry & A row \\
+      Table & A collection of related records & The whole grid \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap alert}
+    Do not mix these up: a \key{field} is a column, a \key{record} is a
+    \key{row}, and a \key{table} is the whole collection.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Data Types in Access}
+  \begin{itemize}
+    \item Every field has a \key{data type} --- the kind of value it can
+      hold.
+    \item \key{Short Text} --- names, codes, and other text.
+    \item \key{Number} --- values used in calculations.
+    \item \key{Date/Time} --- dates and times.
+    \item \key{Yes/No} --- only True or False (a Boolean value).
+    \item \key{AutoNumber} --- a unique number added automatically for each
+      new record.
+  \end{itemize}
+  \begin{block}{Why it matters}
+    A field can hold only values that match its data type, which keeps the
+    data clean.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Field Properties}
+  \begin{itemize}
+    \item A \key{field property} is a setting that describes how a field
+      behaves.
+    \item \key{Field Size} limits how much a field can hold.
+    \item \key{Default Value} fills in a value automatically.
+    \item \key{Required} --- if set to Yes, the field \key{cannot be left
+      blank}.
+    \item \key{Input Mask} fixes the pattern of entry, such as a phone
+      number.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Input Validation}
+  \begin{itemize}
+    \item \key{Validation} means checking that entered data is sensible and
+      allowed.
+    \item A \key{Validation Rule} states the condition the value must meet.
+    \item Example rule: \key{Between 0 And 100} --- only values in that range
+      are accepted.
+    \item \key{Validation Text} is the message shown when the rule is
+      violated.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    Set a Validation Rule of \texttt{Between 0 And 100} on a Marks field.
+    If someone types 150, Access rejects it and shows the Validation Text.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Primary Key}
+  \begin{itemize}
+    \item A \key{primary key} is a field that \key{uniquely identifies} each
+      record.
+    \item Its value is \key{different for every record} and is never left
+      blank.
+    \item Example: a \key{Roll Number} identifies each student in a class.
+    \item An \key{AutoNumber} field is often used as a ready-made primary
+      key.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A primary key \key{cannot} contain duplicate values. If two records share
+    the same key value, Access will not allow it.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Indexes}
+  \begin{itemize}
+    \item An \key{index} is a special structure that makes searching and
+      sorting a table \key{faster}.
+    \item It works like the index of a book, pointing straight to the right
+      place.
+    \item A primary key is \key{automatically indexed}.
+    \item An index takes extra space and can slightly slow down adding data,
+      so it is used only where needed.
+  \end{itemize}
+  \begin{block}{Remember}
+    Index = speed of \key{search}; it does not change the data itself.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Worked Example: A Students Table}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.18\textwidth}p{0.14\textwidth}p{0.16\textwidth}}
+      \toprule
+      \textbf{RollNo} & \textbf{Name} & \textbf{Marks} & \textbf{Passed} \\
+      \midrule
+      1 & Ayaan & 78 & Yes \\
+      2 & Bilal & 45 & No \\
+      3 & Chitra & 91 & Yes \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \begin{itemize}
+    \item \key{RollNo} is the primary key (unique for each student).
+    \item \key{Name} is Short Text; \key{Marks} is Number; \key{Passed} is
+      Yes/No.
+    \item Each row is one \key{record}; each column is one \key{field}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Common Misreadings}
+  \begin{itemize}
+    \item A \key{database} is the data; a \key{DBMS} is the software.
+      (TRAP-style)
+    \item A \key{field} is a column; a \key{record} is a row.
+    \item \key{Validation} checks the value; an \key{index} speeds up search.
+    \item A \key{primary key} is unique; it cannot contain duplicates.
+    \item Access is part of \key{MS Office}, not a spreadsheet.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 28: Recall}
+  \begin{itemize}
+    \item A database is an organised collection of related data; a DBMS is
+      the software that manages it.
+    \item Microsoft Access is the RDBMS of the MS Office suite.
+    \item The table stores data in \key{fields} (columns) and \key{records}
+      (rows).
+    \item Data types include Short Text, Number, Date/Time, Yes/No, and
+      AutoNumber.
+    \item Validation Rules and Validation Text check values; Required stops
+      blank entries.
+    \item A primary key uniquely identifies a record; an index speeds up
+      searching.
+  \end{itemize}
+\end{frame}
+\end{document}

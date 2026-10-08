@@ -1,0 +1,283 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{30.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Access Queries, Forms and Reports --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{The Access objects and the object sequence}
+An Access database is built from a small set of \textbf{objects}. The
+\textbf{table} stores the actual data. The \textbf{query} asks a question
+and retrieves selected data. The \textbf{form} provides a screen for
+entering and viewing data. The \textbf{report} presents data in a formatted,
+printable layout. These four objects are used together in a natural order:
+data is stored in a table, selected by a query, entered through a form, and
+printed by a report. That order --- \textbf{Table} $\rightarrow$
+\textbf{Query} $\rightarrow$ \textbf{Form} $\rightarrow$ \textbf{Report}
+--- is the object sequence this lesson is built around.
+
+\begin{definitionbox}{Database object}
+A named component of an Access database that performs one job. The main
+objects are the table, query, form and report.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Object} & \textbf{Job} \\
+\midrule
+Table & Stores the actual data in rows and columns. \\
+Query & Asks a question and retrieves selected data. \\
+Form & Provides an on-screen interface to enter and view data. \\
+Report & Presents data in a formatted, printable layout. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. A
+\textbf{table} is the store. A \textbf{query} is the question. A
+\textbf{form} is the on-screen entry screen. A \textbf{report} is the printed
+output.
+
+\section{The table is the source of data}
+A table stores data in \textbf{fields} (columns) and \textbf{records}
+(rows). Every other object draws its data from a table or from a query. A
+form or report built on a table shows that table's data; built on a query,
+it shows only the rows the query selected. No data is stored in a query, a
+form or a report --- those objects only \emph{present} what the table holds.
+This is why the table is called the foundation of the database.
+
+\section{What a query is}
+A \textbf{query} is a question asked of the database. It retrieves data from
+one or more tables, usually by a condition. A query does not normally store
+new data of its own; it shows a \emph{result set} drawn from the tables each
+time it is opened. Queries can also be used to \emph{change} data; those are
+called \textbf{action queries}, and they are discussed below.
+
+\begin{definitionbox}{Query}
+An Access object that selects, filters, or acts on records according to the
+rules the user sets, drawing its data from one or more tables.
+\end{definitionbox}
+
+\section{The Select query: retrieving on a condition}
+A \textbf{Select query} retrieves the records that satisfy a
+\textbf{condition} (also called a \emph{criterion}). It is the most common
+query type in Access. The condition decides \emph{which rows appear}, and
+the chosen fields decide \emph{which columns appear}. For example, a Select
+query on a Students table could show only those students whose
+\texttt{Marks} are greater than 60.
+
+\begin{example}
+An item asks: ``What is a query that retrieves data on the basis of a
+condition called?'' The query is only \emph{retrieving} data --- it is not
+changing it --- so it is a \textbf{Select query}. This is the concept tested
+by PYQ-39 (Website Operator 2026, query retrieving data on a condition).
+\end{example}
+
+\section{Building a query: Design view and criteria}
+Queries are usually built in \textbf{Query Design} view, or typed directly in
+\textbf{SQL} view. The design grid is called \textbf{QBE} ---
+\textbf{Query By Example}. Each column of the grid holds one \textbf{field},
+and the \textbf{Criteria} row holds the condition for that field. A criterion
+of \texttt{>60} on the \texttt{Marks} field, for instance, keeps only the
+rows in which marks are above 60.
+
+\begin{definitionbox}{QBE (Query By Example)}
+The grid-based design view in Access in which a query is built by choosing
+fields and typing criteria, without writing the SQL by hand.
+\end{definitionbox}
+
+\begin{example}
+For a Students table, place \texttt{Marks} in the field row and \texttt{>60}
+in the Criteria row. When the query runs, Access returns only the students
+who scored more than 60.
+\end{example}
+
+\section{Action queries: Update, Append and Delete}
+An \textbf{action query} changes the stored data. The three common types are:
+\begin{itemize}
+  \item An \textbf{Update query} changes the existing values in records.
+  \item An \textbf{Append query} adds records from one table to another.
+  \item A \textbf{Delete query} removes the records that match a condition.
+\end{itemize}
+Because these queries alter the table itself, they are treated with care in
+Access. The distinction between retrieving data and changing data is the key
+one: a Select query only reads, while Update, Append and Delete queries
+write.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Query} & \textbf{What it does} \\
+\midrule
+Select & Retrieves records that satisfy a condition; does not change data. \\
+Update & Changes existing values in records. \\
+Append & Adds records from one table to another. \\
+Delete & Removes records that match a condition. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Select versus action queries}
+The nearest confusion in this topic is between a Select query and the action
+queries. A \textbf{Select query} \textbf{retrieves} data on a condition and
+leaves the tables unchanged. An \textbf{action query} (Update, Append,
+Delete) \textbf{modifies} the stored data. If a question asks which query
+\emph{changes} records, the answer is an action query; if it asks which query
+\emph{shows} records that meet a condition, the answer is a Select query.
+This is the distinction recorded as TRAP-31.
+
+\begin{example}
+An item lists Select, Update, Append and Delete queries and asks which one
+does \textbf{not} modify the data. Select is the only one that leaves the
+tables unchanged, so Select is the answer.
+\end{example}
+
+\section{Lookup fields}
+A \textbf{lookup} field lets the user \emph{pick a value from a list} instead
+of typing it. The list usually comes from a table or a query --- for example,
+a list of department names from a Departments table. A lookup is often used
+for a \textbf{foreign key}, so that the value entered matches an existing
+value in the related table. The benefit is fewer typing errors and more
+consistent data. A lookup field only \emph{chooses} a value from a list; it
+does not create a new table or a new query.
+
+\begin{definitionbox}{Lookup field}
+A field that displays a list of values, drawn from a table or query, so the
+user can select one instead of typing it.
+\end{definitionbox}
+
+\section{Basic SQL awareness}
+\textbf{SQL} stands for \textbf{Structured Query Language}. It is the
+standard language for working with relational databases, and Access runs SQL
+behind the scenes whenever a query is run. A retrieval statement has the
+general shape \texttt{SELECT fields FROM table WHERE condition;}. The
+\texttt{SELECT} keyword names the fields to show, \texttt{FROM} names the
+table, and \texttt{WHERE} gives the condition. To retrieve only the students
+with marks above 60, one would write
+\texttt{SELECT Name FROM Students WHERE Marks > 60;}.
+
+\begin{definitionbox}{SQL}
+Structured Query Language --- the standard language used to define and
+retrieve data in a relational database.
+\end{definitionbox}
+
+\section{Forms: entering and viewing data}
+A \textbf{form} is an object that provides an on-screen interface for
+entering, viewing and editing data. A form is usually based on a table or a
+query. It shows one record at a time (or a few), with clearly labelled
+fields, and makes data entry easier and safer than typing directly into a
+table grid. Where the table is the raw store, the form is the friendly
+screen the user actually works with.
+
+\section{Reports: printable output}
+A \textbf{report} presents data in a formatted, printable layout. It can
+group records and show totals and summaries. A report is \textbf{read-only}:
+it is meant for printing and sharing, not for editing data. Like a form, a
+report can be based on a table or a query. The report is the output object of
+the database.
+
+\begin{example}
+A school can keep all student marks in a table, use a Select query to pick
+the students who passed, enter new students through a form, and print the
+pass list as a report. The same data moves, in order, through the
+Table~$\rightarrow$~Query~$\rightarrow$~Form~$\rightarrow$~Report sequence.
+\end{example}
+
+\section{Forms versus reports}
+The nearest confusion between the two presentation objects is worth stating
+plainly. A \textbf{form} is used \emph{on screen} to enter and view data, and
+it allows editing. A \textbf{report} is \emph{read-only} and is used to
+\emph{print} data and present summaries. A form answers the question ``how do
+I put data in and look at it?''; a report answers ``how do I print it?''
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.36\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Form} & \textbf{Report} \\
+\midrule
+Purpose & Enter and view data on screen & Print and present data \\
+Data change & Allows editing & Read-only \\
+Typical use & Data-entry screen & Printed summary \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+Six distinctions clear up most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{Select} query \textbf{retrieves} data on a condition;
+    \textbf{Update}, \textbf{Append} and \textbf{Delete} queries
+    \textbf{modify} data (TRAP-31).
+  \item Data is stored in a \textbf{table}, \textbf{not} in a query, form or
+    report.
+  \item A \textbf{form} is for on-screen entry and viewing; a \textbf{report}
+    is a printable, read-only output.
+  \item The object sequence is \textbf{Table} $\rightarrow$ \textbf{Query}
+    $\rightarrow$ \textbf{Form} $\rightarrow$ \textbf{Report}.
+  \item \textbf{SQL} stands for \textbf{Structured Query Language};
+    \texttt{SELECT ... FROM ... WHERE} retrieves data on a condition.
+  \item A \textbf{lookup} field picks a value from a list supplied by a table
+    or query.
+\end{enumerate}
+
+\begin{example}
+An item states, ``A report is used to enter new records into the
+database.'' This is wrong. Entering records is the job of a \textbf{form}; a
+report is \textbf{read-only} and is used for printing. The wrong option has
+swapped the form and the report.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Name the four main objects of an Access database and state the job of
+    each.
+  \item Give the correct object sequence for storing, selecting, entering and
+    printing data.
+  \item What is a Select query, and how does it differ from an Update query?
+  \item Name the three common action queries and say what each one does.
+  \item What is a lookup field, and why is it useful?
+  \item Expand SQL and write the general form of a retrieval statement.
+  \item Distinguish a form from a report.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Table} stores the data; \textbf{Query} asks a question and
+    retrieves selected data; \textbf{Form} provides an on-screen interface to
+    enter and view data; \textbf{Report} presents data in a formatted,
+    printable layout.
+  \item \textbf{Table} $\rightarrow$ \textbf{Query} $\rightarrow$
+    \textbf{Form} $\rightarrow$ \textbf{Report}. The table stores the data,
+    the query selects it, the form enters it, and the report prints it.
+  \item A Select query \textbf{retrieves} records that satisfy a condition
+    and leaves the tables unchanged. An Update query \textbf{changes} the
+    existing values in records, so it modifies the stored data.
+  \item \textbf{Update} changes existing values in records;
+    \textbf{Append} adds records from one table to another;
+    \textbf{Delete} removes records that match a condition.
+  \item A lookup field displays a list of values, drawn from a table or
+    query, so the user selects one instead of typing it. It reduces typing
+    errors and keeps values consistent, and it is often used for a foreign
+    key.
+  \item SQL is \textbf{Structured Query Language}. A retrieval statement has
+    the form \texttt{SELECT fields FROM table WHERE condition;}, where
+    \texttt{SELECT} names the fields, \texttt{FROM} names the table, and
+    \texttt{WHERE} gives the condition.
+  \item A \textbf{form} is an on-screen interface used to enter and view
+    data, and it allows editing. A \textbf{report} is a read-only, formatted
+    output used for printing and summarising data.
+\end{enumerate}
+\endgroup
+\end{document}

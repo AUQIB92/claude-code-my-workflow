@@ -1,0 +1,241 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Excel Formulas}
+\subtitle{Lesson 25 --- References, Operators and Copying}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What a Formula Does}
+  \begin{itemize}
+    \item A \key{formula} calculates a new value from other cells, from
+      constants, or from functions.
+    \item It is typed into the formula bar, and its result appears in the
+      cell.
+    \item Stored in the cell is the \key{formula}; shown on the sheet is the
+      computed result.
+    \item Excel recalculates the result automatically when a referenced cell
+      changes.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A formula is an instruction that tells Excel how to calculate the value of
+    a cell.
+  \end{block}
+\end{frame}
+
+\begin{frame}{A Formula Must Start with \texttt{=}}
+  \begin{itemize}
+    \item Every formula begins with the equal sign \key{\texttt{=}}.
+    \item \texttt{=A1+A2} is calculated; \texttt{A1+A2} entered without the
+      \texttt{=} is stored as ordinary text.
+    \item The same symbol also acts as a comparison operator that tests
+      equality.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-30, PYQ-38)}
+    A common wrong answer says a formula may start with \texttt{+}, \texttt{\%},
+    or \texttt{@}. The exam rule is: a \key{formula must start with
+    \texttt{=}}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Formula Anatomy}
+  \begin{itemize}
+    \item Take the formula \texttt{=A1*B1+100}.
+    \item Leading \texttt{=}: starts the formula.
+    \item Operands: cell references (\texttt{A1}, \texttt{B1}) and constants
+      (\texttt{100}).
+    \item Operators: \texttt{*} (multiply) and \texttt{+} (add).
+  \end{itemize}
+  \begin{block}{Read it out}
+    "Take the value in A1, multiply by B1, then add 100."
+  \end{block}
+\end{frame}
+
+\begin{frame}{Arithmetic Operators}
+  \begin{center}
+    \begin{tabular}{p{0.12\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Operator} & \textbf{Meaning} \\
+      \midrule
+      \texttt{+} & Addition \\
+      \texttt{-} & Subtraction \\
+      \texttt{*} & Multiplication \\
+      \texttt{/} & Division \\
+      \texttt{\textasciicircum} & Exponent (power) \\
+      \texttt{\%} & Percent \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Exact symbols}
+    Use \texttt{*} for multiplication and \texttt{/} for division;
+    \texttt{x} and $\div$ are not Excel operators.
+    \texttt{=2\textasciicircum3} gives 8.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Comparison Operators}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.56\textwidth}}
+      \toprule
+      \textbf{Operator} & \textbf{Meaning} \\
+      \midrule
+      \texttt{=} & Equal to \\
+      \texttt{>} & Greater than \\
+      \texttt{<} & Less than \\
+      \texttt{>=} & Greater than or equal to \\
+      \texttt{<=} & Less than or equal to \\
+      \texttt{<>} & Not equal to \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{A comparison formula returns TRUE or FALSE, not a number.}
+\end{frame}
+
+\begin{frame}{Text and Reference Operators}
+  \begin{itemize}
+    \item \key{\texttt{\&}} (concatenation) joins text: \texttt{="Total " \& A1}.
+    \item \key{\texttt{:}} (range): \texttt{A1:A10} means all cells from A1
+      to A10.
+    \item \key{\texttt{,}} (union) joins two ranges into one list.
+    \item A space (intersection) gives the cells common to two ranges.
+  \end{itemize}
+  \begin{block}{Why operators matter}
+    An operator tells Excel what to do with the operands on either side of it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Order of Evaluation (Precedence)}
+  \begin{itemize}
+    \item Parentheses are evaluated first.
+    \item Then percent, then exponent, then multiply/divide, then add/subtract.
+    \item Then \texttt{\&} (concatenation).
+    \item Then the comparison operators.
+    \item Use parentheses to force an order: \texttt{=(A1+A2)*B1}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    \texttt{=2+3*4} is 14, not 20, because multiplication is done before
+    addition.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Cell References Are Addresses}
+  \begin{itemize}
+    \item A reference names a cell by its column letter and row number.
+    \item \texttt{A1} is column A, row 1; \texttt{B5} is column B, row 5.
+    \item A formula uses the \key{current value} of the referenced cell.
+    \item Change the referenced cell and the formula result updates at once.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Relative References}
+  \begin{itemize}
+    \item \key{\texttt{A1}} is a \key{relative} reference.
+    \item It is stored as an offset from the formula's own cell.
+    \item Copy the formula and the reference shifts by the same offset.
+  \end{itemize}
+  \begin{exampleblock}{Example}
+    \texttt{=A1} placed in B1 and copied to B2 becomes \texttt{=A2}.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Absolute References}
+  \begin{itemize}
+    \item \key{\texttt{\$A\$1}} is an \key{absolute} reference.
+    \item The dollar sign locks \key{both the column and the row}.
+    \item Copying the formula leaves \texttt{\$A\$1} unchanged.
+    \item Use it for a constant such as a fixed rate or a fixed limit.
+  \end{itemize}
+  \begin{block}{Remember}
+    Absolute means anchored: it never moves when the formula is copied.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Mixed References}
+  \begin{itemize}
+    \item \key{\texttt{\$A1}}: column locked, row relative.
+    \item \key{\texttt{A\$1}}: row locked, column relative.
+    \item The \texttt{\$} locks whatever it directly precedes.
+    \item \texttt{\$} before a letter locks the column; \texttt{\$} before a
+      number locks the row.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Copying Formulas: What Changes}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.28\textwidth}p{0.30\textwidth}}
+      \toprule
+      \textbf{Reference} & \textbf{Locks} & \textbf{B1 copied to C2} \\
+      \midrule
+      \texttt{A1} & nothing & \texttt{B2} \\
+      \texttt{\$A\$1} & column and row & \texttt{\$A\$1} \\
+      \texttt{\$A1} & column & \texttt{\$A2} \\
+      \texttt{A\$1} & row & \texttt{B\$1} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Only the unlocked parts of a reference shift when the formula is
+  copied.}
+\end{frame}
+
+\begin{frame}{Worked Example: A Fixed Tax Rate}
+  \begin{itemize}
+    \item Prices are listed in column A; the tax rate is fixed in
+      \texttt{\$B\$1}.
+    \item Formula in C2: \texttt{=A2*\$B\$1}.
+    \item Copy down --- C3 is \texttt{=A3*\$B\$1}, C4 is \texttt{=A4*\$B\$1};
+      the rate stays \texttt{\$B\$1}.
+    \item If the formula were \texttt{=A2*B1}, copying down would wrongly move
+      the rate to B2, B3.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Common Formula Errors}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Error} & \textbf{Meaning} \\
+      \midrule
+      \texttt{\#DIV/0!} & Divide by zero or by an empty cell \\
+      \texttt{\#VALUE!} & Wrong type of operand (text where a number is needed) \\
+      \texttt{\#REF!} & A referenced cell was deleted, so the reference is invalid \\
+      \texttt{\#NAME?} & Unknown function, or a misspelled name/text entry \\
+      \texttt{\#N/A} & The value is not available (for example a failed lookup) \\
+      \texttt{\#NULL!} & Two ranges that do not intersect \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Trap Alert: References and Errors}
+  \begin{itemize}
+    \item TRAP-30: a formula must start with \key{\texttt{=}} (PYQ-38).
+    \item \texttt{\$} before the letter locks the column; \texttt{\$} before
+      the number locks the row.
+    \item Relative references change on copy; absolute references do not.
+    \item \texttt{\#REF!} means a broken reference;
+      \texttt{\#DIV/0!} means division by zero.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 25: Recall}
+  \begin{itemize}
+    \item A formula begins with \texttt{=} and calculates a cell's value.
+    \item Arithmetic operators: \texttt{+ - * / \textasciicircum \%};
+      comparison operators include \texttt{<>} for "not equal".
+    \item \texttt{\&} joins text; \texttt{:} defines a range;
+      \texttt{,} unions ranges.
+    \item \texttt{A1} is relative, \texttt{\$A\$1} is absolute,
+      \texttt{\$A1} and \texttt{A\$1} are mixed.
+    \item On copy, only the unlocked parts of a reference change.
+    \item Know the error codes: \texttt{\#DIV/0!}, \texttt{\#VALUE!},
+      \texttt{\#REF!}, \texttt{\#NAME?}, \texttt{\#N/A}, \texttt{\#NULL!}.
+  \end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,254 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Excel Structure}
+\subtitle{Lesson 24 --- Workbook, Worksheet and Cell Anatomy}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Excel and the Workbook}
+  \begin{itemize}
+    \item \key{Microsoft Excel} is a spreadsheet program that stores,
+      calculates, and analyses data in a grid.
+    \item A \key{workbook} is the Excel \key{file} that you save and open.
+    \item One workbook can hold \key{many worksheets}, also called sheets.
+    \item Worksheet \key{tabs} at the bottom of the window let you move
+      between them.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A workbook is the file; a worksheet is a single page inside that file.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Workbook vs Worksheet}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Workbook} & \textbf{Worksheet} \\
+      \midrule
+      What it is & The Excel file & One sheet inside a workbook \\
+      How many & One file & Many per workbook \\
+      Saved as & A single file name & Part of that file \\
+      Tab & --- & Tab at the bottom \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap alert}
+    A workbook is \key{not} the same as a worksheet. The worksheet is a part
+    of the workbook, not the whole file.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Worksheet Grid: Rows and Columns}
+  \begin{itemize}
+    \item Every worksheet is a grid of \key{rows} and \key{columns}.
+    \item \key{Rows} run horizontally and are named by \key{numbers} on the
+      left (1, 2, 3, \dots).
+    \item \key{Columns} run vertically and are named by \key{letters} across
+      the top (A, B, C, \dots).
+    \item Column labels go A--Z, then AA--AZ, then BA, and so on up to the
+      last column.
+  \end{itemize}
+  \muted{Read the row number on the left edge and the column letter on the
+  top edge of the sheet.}
+\end{frame}
+
+\begin{frame}{Grid Dimensions (Direct Recall)}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Property} & \textbf{Value in Excel 2007 and later} \\
+      \midrule
+      Total rows & 1,048,576 (numbered 1 to 1,048,576) \\
+      Total columns & 16,384 (labelled A to XFD) \\
+      First column & A \\
+      Last column & XFD \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Remember the two numbers}
+    Rows: \key{1,048,576}. Columns: \key{16,384}. The last column is
+    \key{XFD}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Cell}
+  \begin{itemize}
+    \item A \key{cell} is the \key{intersection} of one row and one column.
+    \item It is the basic box in which you type data.
+    \item Every cell has a unique address, formed from its column letter and
+      its row number.
+    \item A worksheet is simply a very large collection of these boxes.
+  \end{itemize}
+  \begin{block}{Definition}
+    A cell is the small rectangular box formed where a row and a column
+    meet.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cell Address (Cell Reference)}
+  \begin{itemize}
+    \item A \key{cell address} names one specific cell.
+    \item It is written as the \key{column letter first}, then the
+      \key{row number}.
+    \item Example: \key{B5} means column B, row 5.
+    \item Example: \key{C7} means column C, row 7.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    The cell at column D and row 12 is written \key{D12} --- letter first,
+    then number. Writing 12D or D:12 is wrong.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Active Cell}
+  \begin{itemize}
+    \item The \key{active cell} is the cell that is currently
+      \key{selected}.
+    \item It is surrounded by a thick border.
+    \item Whatever you type is entered into the active cell.
+    \item Its address appears in the \key{Name Box}, and its contents appear
+      in the \key{Formula Bar}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Only \key{one} cell is active at a time, even when a whole range of cells
+    is selected.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Formula Bar}
+  \begin{itemize}
+    \item The \key{Formula Bar} is the long white bar \key{below the Ribbon}
+      and above the grid.
+    \item It \key{shows the contents} of the active cell.
+    \item For a formula, it shows the \key{formula itself}, not the result
+      shown in the cell.
+    \item You can also \key{edit} the active cell's contents directly in the
+      Formula Bar.
+  \end{itemize}
+  \begin{block}{Keep it straight}
+    The cell shows the \muted{result}; the Formula Bar shows the
+    \key{formula or data} behind it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Name Box}
+  \begin{itemize}
+    \item The \key{Name Box} is the small box at the \key{left end of the
+      Formula Bar}.
+    \item It normally shows the \key{address of the active cell}.
+    \item If a range is selected, it shows the \key{name or address of that
+      range}.
+    \item You can type an address into the Name Box to jump straight to that
+      cell.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Range}
+  \begin{itemize}
+    \item A \key{range} is a group of two or more cells treated as one block.
+    \item It is written with the two \key{corner addresses} separated by a
+      colon (:).
+    \item Example: \key{A1:C10} means columns A to C, rows 1 to 10.
+    \item A range is usually \key{rectangular} and its cells are contiguous.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    The range B2:D5 covers 3 columns (B, C, D) and 4 rows (2--5), so it
+    contains $3 \times 4 = 12$ cells.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Cell vs Range (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Cell} & \textbf{Range} \\
+      \midrule
+      What it is & One box & A block of cells \\
+      Written as & B5 & B2:D5 \\
+      Number of cells & Exactly one & Two or more \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    \key{B5} is a single cell, not a range. A range needs \key{two} corner
+    addresses joined by a colon, such as \key{B5:D9}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Basic Data Types}
+  \begin{itemize}
+    \item \key{Text} (also called a label): words, names, headings.
+    \item \key{Number}: values used in calculations.
+    \item \key{Date and time}: stored as numbers but shown as dates.
+    \item \key{Formula}: an entry beginning with \key{=} that calculates a
+      result.
+    \item Excel also accepts \key{TRUE/FALSE} (logical values) and shows
+      errors such as \key{\#VALUE!}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Text vs Numbers: Default Alignment}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Data type} & \textbf{Default alignment} & \textbf{Example} \\
+      \midrule
+      Text & Left & Roll No \\
+      Number & Right & 4500 \\
+      Date & Right & 15-08-2026 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{block}{Quick check}
+    If a value sits on the \key{right} of the cell, Excel has treated it as a
+    \key{number}; if it sits on the \key{left}, it is \key{text}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Moving Around a Worksheet}
+  \begin{itemize}
+    \item Click any cell to make it the \key{active cell}.
+    \item Use the \key{arrow keys} or \key{Tab} / \key{Enter} to move.
+    \item The worksheet \key{tabs} switch between sheets in a workbook.
+    \item The \key{Name Box} jumps to a typed address; the Formula Bar reads
+      and edits the active cell.
+  \end{itemize}
+  \muted{These four elements --- grid, Name Box, Formula Bar, tabs --- are the
+  basic navigation anatomy of Excel.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Facts to Keep Straight}
+  \begin{itemize}
+    \item A \key{workbook} is the file; a \key{worksheet} is one sheet inside
+      it.
+    \item A \key{cell} is one box; a \key{range} is two or more cells.
+    \item Cell address = \key{column letter, then row number} (B5).
+    \item Total rows: \key{1,048,576}; total columns: \key{16,384}.
+    \item Last column: \key{XFD}.
+    \item \key{Name Box} shows the address; \key{Formula Bar} shows the
+      contents.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 24: Recall}
+  \begin{itemize}
+    \item A workbook is the Excel file; it can contain many worksheets.
+    \item A worksheet is a grid of numbered rows and lettered columns.
+    \item Excel 2007+ has 1,048,576 rows and 16,384 columns (A to XFD).
+    \item A cell is the intersection of a row and a column; the active cell
+      is the one selected.
+    \item A cell address is column letter plus row number (B5); a range is a
+      block such as A1:C10.
+    \item The Name Box shows the address; the Formula Bar shows the contents.
+    \item Basic data types: text, number, date/time, and formula.
+  \end{itemize}
+\end{frame}
+\end{document}

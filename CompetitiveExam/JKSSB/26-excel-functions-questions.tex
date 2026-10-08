@@ -1,0 +1,200 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\setlength{\emergencystretch}{3em}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 26 Practice: Excel Functions}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 19 questions are original JKSSB-pattern items
+(\textit{[Original]}); Q1 is a real item traced to the KB Real-PYQ Evidence
+Registry as PYQ-14 (\textit{[PYQ JA 2026 Q74, key:final]}). No unverified item
+is presented as a real PYQ.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[PYQ JA 2026 Q74, key:final]} An Excel cell contains a nested IF
+  formula:
+  \begin{center}
+    \texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))}
+  \end{center}
+  Cell A1 is blank. What will the formula display? 
+  \begin{enumerate}[label=\Alph*.]
+    \item High
+    \item Medium
+    \item Low
+    \item \texttt{\#VALUE!}
+  \end{enumerate}
+\item \textit{[Original]} Which function returns the average (arithmetic mean)
+  of the numbers in a range?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{AVERAGE}
+    \item \texttt{MEAN}
+    \item \texttt{TOTAL}
+    \item \texttt{MEDIAN}
+  \end{enumerate}
+\item \textit{[Original]} Which function counts only the cells in a range that
+  contain numbers?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{COUNT}
+    \item \texttt{COUNTA}
+    \item \texttt{COUNTIF}
+    \item \texttt{SUM}
+  \end{enumerate}
+\item \textit{[Original]} A range A1:A10 contains 6 numbers, 2 text labels,
+  and 2 blank cells. What does \texttt{=COUNTA(A1:A10)} return?
+  \begin{enumerate}[label=\Alph*.]
+    \item 6
+    \item 8
+    \item 10
+    \item 2
+  \end{enumerate}
+\item \textit{[Original]} Using the same range (6 numbers, 2 text labels, 2
+  blanks), what does \texttt{=COUNT(A1:A10)} return?
+  \begin{enumerate}[label=\Alph*.]
+    \item 6
+    \item 8
+    \item 10
+    \item 4
+  \end{enumerate}
+\item \textit{[Original]} Which function counts every non-empty cell in a
+  range, whether it holds a number or text?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{COUNTA}
+    \item \texttt{COUNT}
+    \item \texttt{COUNTBLANK}
+    \item \texttt{SUM}
+  \end{enumerate}
+\item \textit{[Original]} Which function returns the largest number in a
+  range?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{MAX}
+    \item \texttt{MIN}
+    \item \texttt{HIGH}
+    \item \texttt{TOP}
+  \end{enumerate}
+\item \textit{[Original]} Which function returns the smallest number in a
+  range?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{MIN}
+    \item \texttt{MAX}
+    \item \texttt{MINIMUM}
+    \item \texttt{LEAST}
+  \end{enumerate}
+\item \textit{[Original]} Which function adds together all the valid numbers
+  in a range?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{SUM}
+    \item \texttt{ADD}
+    \item \texttt{TOTAL}
+    \item \texttt{PLUS}
+  \end{enumerate}
+\item \textit{[Original]} Which keyboard shortcut inserts the AutoSum function
+  in MS Excel?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{Alt + =}
+    \item \texttt{Ctrl + =}
+    \item \texttt{Shift + F3}
+    \item \texttt{Ctrl + S}
+  \end{enumerate}
+\item \textit{[Original]} By default, which formula does the AutoSum button
+  insert?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=SUM(...)}
+    \item \texttt{=AVERAGE(...)}
+    \item \texttt{=COUNT(...)}
+    \item \texttt{=MAX(...)}
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes a function
+  from a formula in MS Excel?
+  \begin{enumerate}[label=\Alph*.]
+    \item A formula must start with \texttt{=}, while a function is a named
+      built-in operation used inside a formula.
+    \item A function must start with \texttt{=}, while a formula is a named
+      built-in operation.
+    \item A formula and a function are exactly the same thing.
+    \item A formula can never contain a function.
+  \end{enumerate}
+\item \textit{[Original]} Which error value appears when a formula divides a
+  number by zero or by a blank cell?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\#DIV/0!}
+    \item \texttt{\#VALUE!}
+    \item \texttt{\#NAME?}
+    \item \texttt{\#REF!}
+  \end{enumerate}
+\item \textit{[Original]} Which error value appears when a formula refers to a
+  name or function that Excel does not recognise, such as a misspelt function
+  name?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\#NAME?}
+    \item \texttt{\#REF!}
+    \item \texttt{\#N/A}
+    \item \texttt{\#NUM!}
+  \end{enumerate}
+\item \textit{[Original]} Which error value appears when a formula uses the
+  wrong type of data --- for example, when text is added to a number?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\#VALUE!}
+    \item \texttt{\#NAME?}
+    \item \texttt{\#DIV/0!}
+    \item \texttt{\#N/A}
+  \end{enumerate}
+\item \textit{[Original]} Which error value appears when a formula refers to a
+  cell that has been deleted, so the reference is no longer valid?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\#REF!}
+    \item \texttt{\#NAME?}
+    \item \texttt{\#VALUE!}
+    \item \texttt{\#NULL!}
+  \end{enumerate}
+\item \textit{[Original]} Which error value means that a value needed by the
+  formula is not available, such as when a lookup finds no match?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\#N/A}
+    \item \texttt{\#NUM!}
+    \item \texttt{\#REF!}
+    \item \texttt{\#DIV/0!}
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} a standard
+  Excel error value?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\#DIV/0!}
+    \item \texttt{\#VALUE!}
+    \item \texttt{\#NAME?}
+    \item \texttt{\#TOTAL!}
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements about MS Excel:
+  \begin{enumerate}[label=\Roman*.]
+    \item \texttt{COUNT} counts only numeric cells, whereas \texttt{COUNTA}
+      counts all non-empty cells.
+    \item In a numeric comparison, a blank cell is treated as zero.
+    \item A formula must always begin with the equal sign (\texttt{=}).
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and II only
+    \item II and III only
+    \item I and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} Match the function with what it returns:
+  \begin{enumerate}[label=\Roman*.]
+    \item \texttt{SUM}
+    \item \texttt{MAX}
+    \item \texttt{COUNT}
+  \end{enumerate}
+  \begin{enumerate}[label=(\alph*)]
+    \item the largest number in a range
+    \item the total of the numbers in a range
+    \item the number of numeric cells in a range
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I-b, II-a, III-c
+    \item I-a, II-b, III-c
+    \item I-c, II-a, III-b
+    \item I-b, II-c, III-a
+  \end{enumerate}
+\end{enumerate}
+\end{document}

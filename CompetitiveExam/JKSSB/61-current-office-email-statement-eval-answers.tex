@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 61 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); concepts drawn from PYQ-12/13/14/15/16/17;
+none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{A.} Content controls are inserted from the Developer tab (enabled
+  via Word Options, Customize Ribbon). The Review tab (B) holds Track Changes
+  and comments; Mailings (C) holds Mail Merge; References (D) holds the Table
+  of Contents and citations.
+\item \textbf{C.} Comments are read in the markup/comments pane, not directly
+  in the Navigation Pane, so C is the NOT-correct statement. A is true (a
+  drop-down list or date picker restricts entry); B is true (hanging indent
+  shifts all lines except the first); D is true (accepting keeps the text and
+  strips that change's metadata).
+\item \textbf{C.} A first-line indent shifts only the first line of the
+  paragraph. A reverses the two indents; B describes a first-line indent while
+  calling it hanging; D describes no standard indent.
+\item \textbf{A.} The Navigation Pane shows Headings, Pages, and Results
+  (search matches). B lists review/markup items, not pane views; C lists Word
+  document views; D lists ribbon tabs.
+\item \textbf{B.} Each tracked change records insertions, deletions, and
+  formatting changes together with the author's name and the date and time. A
+  omits the author and change type; C wrongly claims no metadata is stored; D
+  names printer settings, which are unrelated.
+\item \textbf{C.} Headers, footers, margins, and orientation belong to a
+  section, so only a Section Break creates a section that can carry its own
+  header. A Page Break stays in the same section; column (B) and line (D)
+  breaks do not start new sections.
+\item \textbf{B.} 30 is not greater than 50 (first test FALSE), but 30 is
+  greater than 25 (second test TRUE), so the nested IF returns Medium. A needs
+  A1 above 50; C needs both tests FALSE; D is not a value this formula
+  produces.
+\item \textbf{C.} A blank cell is treated as 0 in a numeric comparison, so
+  both tests are FALSE and the formula falls through to Low. A invents a value
+  of 100; B wrongly claims the first test is skipped; D is wrong because a
+  blank does not produce an error here.
+\item \textbf{C.} Text is not a number, so arithmetic on it fails with
+  \texttt{\#VALUE!}. A is wrong (no numeric result exists); B is wrong
+  (ISNUMBER returns FALSE for text); D overstates the rule (text is not
+  silently zero in arithmetic).
+\item \textbf{B.} COUNTIFS takes paired arguments: range1, criteria1, range2,
+  criteria2, and so on, with AND logic across pairs. A swaps the pair order;
+  C invents an addition syntax; D invents a semicolon/TRUE syntax.
+\item \textbf{B.} Multiplying the two boolean arrays gives 1 only where both
+  conditions hold, and SUMPRODUCT sums those products, hence counts the rows.
+  A misuses SUM over comparisons; C averages instead of counting; D counts
+  non-empty cells without applying the conditions.
+\item \textbf{A.} I is true (COUNTIFS uses AND logic over its pairs) and III
+  is true (blank reads as 0). II is false: SUMPRODUCT multiplies arrays and
+  can count multi-criterion rows as well as add. B keeps only the false
+  statement; C and D both include false II.
+\item \textbf{A.} A rule pairs a condition (sender, subject, keywords) with an
+  action (move, flag, forward, delete), applied automatically. B mixes in
+  security features; C mixes in recipient fields; D mixes in Word breaks.
+\item \textbf{C.} A digital signature gives authenticity and integrity (who
+  sent it, unaltered), while encryption gives confidentiality (only the
+  intended reader can read it). A wrongly claims the signature encrypts; B
+  swaps the two roles; D wrongly calls them the same operation.
+\item \textbf{B.} POP3 stands for Post Office Protocol version 3. A, C, and D
+  are not the correct expansion of the abbreviation.
+\item \textbf{C.} SMTP sends mail, POP3 downloads it to the local device
+  (typically removing it from the server), and IMAP leaves mail on the server
+  and synchronises devices. A swaps POP3 and SMTP; B swaps POP3 and IMAP; D
+  wrongly claims POP3 syncs on the server.
+\item \textbf{B.} The sender always sees the full recipient list; Bcc addresses
+  are hidden from the other recipients (To, Cc, and fellow Bcc). A wrongly
+  makes Bcc visible; C wrongly hides Bcc from the sender; D wrongly claims the
+  addresses are deleted.
+\item \textbf{B.} Convert to SmartArt works directly on text (bulleted,
+  numbered, or levelled lists in A, C, D). A picture has no text levels to
+  convert, so it cannot become SmartArt in one step without re-entry.
+\item \textbf{A.} Only I is correct: a Section Break enables different headers
+  and footers. II is false (Bcc is hidden from the other recipients, never
+  from the sender). III is false (a signature verifies sender and integrity;
+  encryption provides confidentiality). B, C, and D each include a false
+  statement.
+\item \textbf{C.} A first-line indent shifts only the first line and a hanging
+  indent shifts every line except the first. A assigns section behaviour to a
+  Page Break; B misstates both COUNTIFS (it handles several criteria) and
+  SUMPRODUCT (it can count as well as add); D swaps POP3 and IMAP.
+\end{enumerate}
+\end{document}

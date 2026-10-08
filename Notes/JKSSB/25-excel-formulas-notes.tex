@@ -1,0 +1,400 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{25.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Excel Formulas --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What a formula is}
+A \textbf{formula} is an instruction that tells Microsoft Excel how to
+calculate the value of a cell. Instead of holding a fixed number, the cell
+holds a rule, and Excel works out the result of that rule from the other
+cells, from constants, or from functions the rule refers to. The formula is
+typed into the formula bar; the result is shown in the cell. When any cell
+that the formula uses changes, Excel recalculates and shows the new result
+automatically.
+
+\begin{definitionbox}{Formula}
+An instruction, written in a cell or the formula bar, that calculates a value
+from operands such as cell references, constants, and functions. The cell
+stores the formula, while the sheet displays the result.
+\end{definitionbox}
+
+This lesson covers the four building blocks of a formula: the leading
+\texttt{=}, the operators, the cell references, and the way references behave
+when a formula is copied. It closes with the standard error codes and the
+distinctions that examiners test most often.
+
+\section{The \texttt{=} rule and formula syntax}
+Every Excel formula must begin with the equal sign \texttt{=}. This is the
+single fact most often tested on this topic. Typing \texttt{=A1+A2} into a
+cell is treated as a formula and calculated; typing \texttt{A1+A2} without the
+leading \texttt{=} is treated as ordinary text and shown exactly as written.
+
+The same \texttt{=} symbol also serves as a comparison operator that tests
+whether two values are equal. The position tells you which role it plays: at
+the very start of an entry it begins a formula, while inside a formula it
+compares two operands.
+
+\begin{definitionbox}{The \texttt{=} rule}
+A formula must start with \texttt{=}. A cell entry that does not start with
+\texttt{=} is not a formula.
+\end{definitionbox}
+
+A simple formula has three parts: the leading \texttt{=}, the operands, and
+the operators. In the formula \texttt{=A1*B1+100}, the operands are the
+references \texttt{A1} and \texttt{B1} and the constant \texttt{100}, while
+the operators are \texttt{*} (multiply) and \texttt{+} (add).
+
+\section{Formula, function, and constant}
+It helps to separate three ideas that often appear together. A
+\textbf{constant} is a fixed value written directly into a formula, such as
+the number \texttt{100} or a piece of text in quotation marks. A
+\textbf{function} is a built-in calculation with a name, such as
+\texttt{SUM} or \texttt{AVERAGE}, which is called from inside a formula. A
+\textbf{formula} is the whole instruction, and it may combine constants,
+references, operators, and functions in one expression.
+
+\begin{definitionbox}{Function}
+A named, built-in calculation such as \texttt{SUM(A1:A10)} or
+\texttt{AVERAGE(B1:B5)} that is called from within a formula and returns a
+single value.
+\end{definitionbox}
+
+The distinction matters for exams because a question may ask what a formula
+contains rather than what it produces. The formula \texttt{=A1+A2} contains
+two relative references and one arithmetic operator. The formula
+\texttt{=SUM(A1:A10)} calls a function on a range. Both begin with \texttt{=},
+and both return a value to the cell that holds them. The rest of this lesson
+concentrates on the references and operators that every formula uses.
+
+\section{Operators}
+An operator tells Excel what to do with the values on either side of it.
+Excel has four families of operators: arithmetic, comparison, text, and
+reference.
+
+\textbf{Arithmetic operators} produce numbers.
+
+\begin{center}
+\begin{tabular}{p{0.12\textwidth}p{0.72\textwidth}}
+\toprule
+\textbf{Operator} & \textbf{Meaning} \\
+\midrule
+\texttt{+} & Addition \\
+\texttt{-} & Subtraction \\
+\texttt{*} & Multiplication \\
+\texttt{/} & Division \\
+\texttt{\textasciicircum} & Exponent (raise to a power) \\
+\texttt{\%} & Percent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two symbols are easy to get wrong. Multiplication uses the asterisk
+\texttt{*}, not the letter \texttt{x} or a dot; division uses the forward
+slash \texttt{/}. The caret \texttt{\textasciicircum} raises a number to a
+power, so \texttt{=2\textasciicircum3} is 8. The percent sign \texttt{\%}
+divides by 100, so \texttt{=50\%} is 0.5.
+
+\textbf{Comparison operators} compare two values and return \texttt{TRUE} or
+\texttt{FALSE}: \texttt{=} (equal to), \texttt{>} (greater than), \texttt{<}
+(less than), \texttt{>=} (greater than or equal to), \texttt{<=} (less than or
+equal to), and \texttt{<>} (not equal to). The operator \texttt{<>} is the
+Excel way of writing ``not equal''; it is not written \texttt{!=}.
+
+A comparison gives a useful result even on its own: if A1 holds 50, the
+formula \texttt{=A1>100} shows \texttt{FALSE}. The operators that candidates
+confuse most are \texttt{=}, which tests equality when it appears inside a
+formula, and \texttt{<>}, which tests inequality. Note that the leading
+\texttt{=} that starts every formula and the \texttt{=} comparison operator
+are the same character used in two different roles.
+
+\textbf{Text operator.} The ampersand \texttt{\&} joins, or concatenates, two
+pieces of text into one. \texttt{="Total: "\&A1} shows the words
+\texttt{Total:} followed by the contents of cell A1.
+
+\textbf{Reference operators} build references to groups of cells. The colon
+\texttt{:} is the range operator, so \texttt{A1:A10} means every cell from A1
+down to A10. The comma \texttt{,} is the union operator, which joins two
+ranges into one list. A single space between two references is the
+intersection operator, which returns the cells common to both ranges.
+
+The four families can be summarised in one place. Arithmetic operators
+(\texttt{+ - * / \textasciicircum \%}) produce numbers. Comparison operators
+(\texttt{= > < >= <= <>}) produce \texttt{TRUE} or \texttt{FALSE}. The text
+operator \texttt{\&} produces a joined piece of text. The reference operators
+\texttt{:}, \texttt{,}, and the space build ranges and lists of cells.
+Knowing which family an operator belongs to tells you what kind of result to
+expect.
+
+\section{Order of evaluation (precedence)}
+When a formula has several operators, Excel does not simply work from left to
+right. It follows a fixed order of precedence. Parentheses are evaluated
+first. Then the percent sign, then the exponent, then multiplication and
+division, then addition and subtraction. After the arithmetic comes the
+concatenation operator \texttt{\&}, and finally the comparison operators.
+
+Because multiplication and division are evaluated before addition and
+subtraction, \texttt{=2+3*4} is 14, not 20. The multiplication \texttt{3*4} is
+done first to give 12, and then 2 is added. In the same way
+\texttt{=2+3*4} differs from \texttt{=(2+3)*4}, which is 20. Parentheses are
+the reliable way to control the order of evaluation.
+
+\begin{example}
+In \texttt{=10+2*5} the multiplication is done first, so the result is 20. If
+the intention was to add first, the formula must be written
+\texttt{=(10+2)*5}, which gives 60. The exponent binds even tighter than
+multiplication, so \texttt{=2*3\textasciicircum2} is 18, because
+\texttt{3\textasciicircum2} is evaluated before the multiplication by 2.
+\end{example}
+
+\section{Cell references}
+A \textbf{cell reference} names a cell by its column letter and row number. In
+the default \texttt{A1} reference style, \texttt{A1} is column A, row 1, and
+\texttt{B5} is column B, row 5. A reference lets a formula use the current
+value of another cell, so the formula stays correct when that value changes.
+
+The crucial property of a reference is not what it points at now but how it
+behaves when the formula is \emph{copied}. There are three kinds of
+reference: relative, absolute, and mixed.
+
+\section{Relative references}
+A reference such as \texttt{A1} is \textbf{relative}. Excel stores it, in
+effect, as an offset from the cell that contains the formula. When the formula
+is copied to another cell, the reference shifts by the same distance, so it
+keeps pointing at the cell that lies in the same relative position.
+
+\begin{example}
+If \texttt{=A1} is entered in cell B1 and then copied to B2, the formula
+becomes \texttt{=A2}. The reference moved down one row because the copied
+formula moved down one row. Copy the same formula from B1 to C1, and it
+becomes \texttt{=B1}: the reference moved one column to the right because the
+formula did.
+\end{example}
+
+Relative references are the default and are what you want for a column of
+repeated calculations, such as adding each row's two numbers.
+
+\section{Absolute references}
+A reference such as \texttt{\$A\$1} is \textbf{absolute}. The dollar sign
+locks the part of the reference that follows it: the first \texttt{\$} locks
+the column, and the second \texttt{\$} locks the row. An absolute reference
+does not change when the formula is copied; it always points at the same cell.
+
+\begin{example}
+If \texttt{=\$A\$1} is entered in B1 and copied to B5, it remains
+\texttt{=\$A\$1}. Neither the column nor the row moved. A fixed value such as
+a tax rate or a constant kept in one cell should be referenced absolutely, so
+that copying the formula does not disturb it.
+\end{example}
+
+\section{Mixed references}
+A \textbf{mixed} reference locks only one part. In \texttt{\$A1} the column is
+locked and the row is relative; copying the formula to another row changes the
+row number but never the column. In \texttt{A\$1} the row is locked and the
+column is relative; copying the formula to another column changes the column
+letter but never the row.
+
+A useful way to remember this is that the \texttt{\$} locks whatever
+immediately follows it. A \texttt{\$} before a letter locks the column, and a
+\texttt{\$} before a number locks the row.
+
+\section{Copying and filling formulas}
+The behaviour of a reference under copying is the heart of the topic. When a
+formula is copied, only the unlocked parts of each reference shift; the locked
+parts stay put. The table below compares the four reference types when a
+formula is copied one column right and one row down, from cell B1 to cell C2.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.30\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Reference} & \textbf{What is locked} & \textbf{After copying B1 to C2} \\
+\midrule
+\texttt{A1} & nothing & \texttt{B2} \\
+\texttt{\$A\$1} & column and row & \texttt{\$A\$1} \\
+\texttt{\$A1} & column & \texttt{\$A2} \\
+\texttt{A\$1} & row & \texttt{B\$1} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Reading the table: the relative reference \texttt{A1} moved on both axes; the
+absolute reference \texttt{\$A\$1} moved on neither; \texttt{\$A1} kept its
+column but followed the row; and \texttt{A\$1} kept its row but followed the
+column.
+
+A second, very common direction is copying a formula straight down a column.
+If \texttt{=A1*B1} sits in C1 and is copied down to C2, the formula becomes
+\texttt{=A2*B2}: both relative references followed the copy down one row. If
+the value in B1 must stay fixed, the formula should instead read
+\texttt{=A1*\$B\$1}, so that only A1 follows the copy while \texttt{\$B\$1}
+stays anchored.
+
+The same four references behave as follows when copied one column to the
+right, and when copied one row down.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+\toprule
+\textbf{Reference} & \textbf{Copied right (B1$\rightarrow$C1)} & \textbf{Copied down (B1$\rightarrow$B2)} \\
+\midrule
+\texttt{A1} & \texttt{B1} & \texttt{A2} \\
+\texttt{\$A\$1} & \texttt{\$A\$1} & \texttt{\$A\$1} \\
+\texttt{\$A1} & \texttt{\$A1} & \texttt{\$A2} \\
+\texttt{A\$1} & \texttt{B\$1} & \texttt{A\$1} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Reading either column, the rule is the same: a reference moves only along the
+axis that is not locked. The relative reference moves on both axes, the
+absolute reference on neither, and each mixed reference on exactly one.
+
+\section{Worked examples}
+
+\begin{example}
+A price list has prices in column A and a fixed tax rate stored in cell
+\texttt{\$B\$1}. The formula in cell C2 is \texttt{=A2*\$B\$1}. When it is
+copied down, C3 becomes \texttt{=A3*\$B\$1} and C4 becomes \texttt{=A4*\$B\$1}:
+the price reference moves down with each row, while the rate reference stays
+locked on \texttt{\$B\$1}. If the formula had been written \texttt{=A2*B1},
+copying it down would have moved the rate to B2 and then B3, giving wrong
+results.
+\end{example}
+
+\begin{example}
+In cell B1 the formula is \texttt{=\$A1}. It is copied to C2. The column lock
+holds A, and the relative row follows the copy down one row, so C2 contains
+\texttt{=\$A2}. If instead the original formula were \texttt{=A\$1}, copying
+from B1 to C2 would keep the row 1 and move the column one step from A to B,
+giving \texttt{=B\$1}.
+\end{example}
+
+\begin{example}
+A sheet lists marks in column B. To flag each student as passing, the formula
+\texttt{=B2>=40} is entered in C2 and copied down. It returns \texttt{TRUE}
+for a mark of 40 or more and \texttt{FALSE} otherwise. Because B2 is relative,
+the reference follows the copy down the column, so C3 tests B3 and C4 tests
+B4. The comparison operator produces the \texttt{TRUE}/\texttt{FALSE} result,
+not a number.
+\end{example}
+
+\begin{example}
+A score sheet holds marks in B2:B11 and the class total in cell \texttt{\$B\$12}.
+To show each student's share as a percentage, the formula in C2 is
+\texttt{=B2/\$B\$12*100}. The relative \texttt{B2} follows the copy down the
+column, while \texttt{\$B\$12} stays anchored on the total. The operators here
+are division and multiplication, evaluated from left to right at the same
+precedence, and the result is a plain number. If the total were written as a
+relative reference, copying the formula down would corrupt the denominator.
+\end{example}
+
+\section{Common formula errors}
+When a formula cannot be evaluated, Excel shows an error value in the cell.
+The codes tested in exams are:
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Error} & \textbf{Meaning} \\
+\midrule
+\texttt{\#DIV/0!} & Division by zero, or by an empty cell. \\
+\texttt{\#VALUE!} & The wrong type of operand, such as text where a number is needed. \\
+\texttt{\#REF!} & A referenced cell was deleted, so the reference is no longer valid. \\
+\texttt{\#NAME?} & An unknown function, or a misspelled name or text entry. \\
+\texttt{\#N/A} & The value is not available, as when a lookup finds no match. \\
+\texttt{\#NULL!} & The two ranges given do not intersect. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Remember the two that examiners use most: \texttt{\#DIV/0!} for division by
+zero and \texttt{\#REF!} for a reference that has been broken by deleting a
+cell. A related warning is the \textbf{circular reference}, which appears when
+a formula refers, directly or through a chain of other formulas, back to its
+own cell, so Excel cannot work out a value. Deleting the referenced row or
+column is the usual cause of \texttt{\#REF!}, while supplying the wrong type
+of operand, such as text where a number is expected, produces
+\texttt{\#VALUE!}.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A formula must start with \textbf{\texttt{=}} (TRAP-30, PYQ-38). The
+    options \texttt{+}, \texttt{\%}, and \texttt{@} are distractors.
+  \item \textbf{\texttt{\$}} before a letter locks the column; \textbf{\texttt{\$}}
+    before a number locks the row. Do not swap these.
+  \item \textbf{Relative} references change on copy; \textbf{absolute}
+    references do not. A \textbf{mixed} reference changes on one axis only.
+  \item \texttt{\#REF!} means a broken reference; \texttt{\#DIV/0!} means
+    division by zero. Do not swap the error codes.
+  \item \texttt{<>} is the Excel operator for ``not equal''; multiplication is
+    \texttt{*} and division is \texttt{/}.
+  \item A \textbf{function} such as \texttt{SUM} is called from inside a
+    formula, and a \textbf{constant} is a fixed value written directly; both
+    are operands, not operators.
+\end{enumerate}
+
+\begin{example}
+An item asks what \texttt{=\$A\$1} becomes when copied from B1 to B5. Because
+both the column and the row are locked by the two dollar signs, the reference
+does not move: the answer is \texttt{=\$A\$1}. If the question instead gives
+\texttt{=\$A1}, the column is locked but the row is relative, so the answer is
+\texttt{=\$A5}. The dollar signs, not the row numbers, decide the answer.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Which character must every Excel formula begin with, and what happens
+    if it is omitted?
+  \item List the arithmetic operators for addition, subtraction,
+    multiplication, division, and exponent.
+  \item Explain the difference between a relative reference \texttt{A1} and an
+    absolute reference \texttt{\$A\$1}.
+  \item In the mixed reference \texttt{\$A1}, which part is locked and which
+    part changes when the formula is copied?
+  \item The formula \texttt{=A1} is in cell B1. What does B2 contain after the
+    formula is copied to it? What would B2 contain if the formula were
+    \texttt{=\$A\$1}?
+  \item State the meaning of the errors \texttt{\#DIV/0!} and
+    \texttt{\#REF!}.
+  \item What is the result of the formula \texttt{=2+3*4}, and why?
+  \item Name the Excel operator that joins two pieces of text, and the operator
+    that means ``not equal to''.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A formula must begin with \texttt{=}. Without it, the entry is stored
+    and shown as ordinary text rather than calculated.
+  \item Addition \texttt{+}, subtraction \texttt{-}, multiplication
+    \texttt{*}, division \texttt{/}, and exponent \texttt{\textasciicircum}.
+  \item \texttt{A1} is relative: on copying, both its column and its row shift
+    by the same offset as the formula. \texttt{\$A\$1} is absolute: the dollar
+    signs lock the column and the row, so it does not change on copying.
+  \item In \texttt{\$A1} the column A is locked; the row is relative, so the
+    row number changes when the formula is copied to a different row.
+  \item Copying \texttt{=A1} from B1 to B2 gives \texttt{=A2}, because the
+    relative reference follows the copy down one row. Copying \texttt{=\$A\$1}
+    to B2 leaves it as \texttt{=\$A\$1}, because both parts are locked.
+  \item \texttt{\#DIV/0!} means division by zero or by an empty cell;
+    \texttt{\#REF!} means a reference is invalid because a referenced cell was
+    deleted.
+  \item The result is 14. Multiplication is evaluated before addition, so
+    \texttt{3*4} is 12, and \texttt{2+12} is 14.
+  \item The ampersand \texttt{\&} joins (concatenates) text, and \texttt{<>}
+    means ``not equal to''.
+\end{enumerate}
+\endgroup
+\end{document}

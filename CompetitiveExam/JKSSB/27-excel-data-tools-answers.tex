@@ -1,0 +1,87 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 27 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item. Item~16
+is built on the COUNTIFS/SUMPRODUCT distinction observed in JA~2026~Q75
+(PYQ-15, TRAP-14).
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{B.} Sorting rearranges rows into a chosen order. A filter (A)
+  hides rows rather than ordering them; Goal Seek (C) is a what-if tool;
+  Protect Sheet (D) is a protection command.
+\item \textbf{B.} \textbf{Ctrl}$+$\textbf{Shift}$+$\textbf{L} toggles
+  AutoFilter. Ctrl+L (A), Alt+F (C), and Ctrl+F (D) do not turn AutoFilter on
+  or off.
+\item \textbf{A.} \textbf{Ctrl}$+$\textbf{T} converts a range into an Excel
+  table. Ctrl+F (B) opens Find; Ctrl+Shift+T (C) and Alt+T (D) are not the
+  table shortcut.
+\item \textbf{B.} A filter temporarily hides the non-matching rows and does not
+  remove them. It does not delete (A), move them to another sheet (C), or
+  create a PivotTable (D); clearing the filter restores every row.
+\item \textbf{D.} This is the \textbf{NOT} item. Ascending order arranges
+  numbers from smallest to largest, so ``largest to smallest'' is descending and
+  option D is false. Multi-level sort (A), sorting by colour (B), and custom
+  lists (C) are all genuine Excel sorting features.
+\item \textbf{A.} A table gives structured references such as
+  \texttt{Table1[Sales]} and auto-expands; a plain range uses cell addresses.
+  Entering text (B), entering formulas (C), and printing (D) are possible in a
+  plain range too.
+\item \textbf{B.} An Excel table is source data that a PivotTable can
+  summarise. A PivotTable is not a kind of table (A); it never changes the
+  source data (C); and a table can be filtered (D).
+\item \textbf{C.} A pie chart shows the parts of one whole. A line chart (A)
+  shows a trend over time; a scatter chart (B) shows a relationship between two
+  numeric variables; a column chart (D) compares values across categories.
+\item \textbf{B.} A chart is linked to its source range, so it updates
+  automatically when the data changes. It is not frozen (A), deleted (C), or
+  converted into a PivotTable (D).
+\item \textbf{A.} The legend names each data series. The value axis (B) carries
+  the numbers, the plot area (C) is where the data is drawn, and a data label
+  (D) shows the value at a point.
+\item \textbf{D.} This is a \textbf{NOT} item. The four PivotTable areas are
+  Rows, Columns, Values, and Filters; ``Insert'' (D) is not one of them. Rows
+  (A), Columns (B), and Values (C) are all genuine areas.
+\item \textbf{A.} A PivotTable stores a summary view and does not track the
+  source automatically, so it must be Refreshed. It does not update by itself
+  (C); restarting the computer (B) and deleting the worksheet (D) are
+  irrelevant.
+\item \textbf{B.} Statements I and II are correct: a PivotTable summarises data
+  without being the source table, and a PivotChart is linked to a PivotTable.
+  Statement III is false because a filter hides rows temporarily --- it never
+  deletes them. Options A, C, and D all include the false statement III.
+\item \textbf{B.} COUNTIFS is built to count rows meeting several conditions at
+  once. COUNT (A), SUM (C), and AVERAGE (D) do not take paired range-criteria
+  arguments for multi-criterion counting.
+\item \textbf{B.} COUNTIFS takes \textbf{paired} range-and-criteria arguments:
+  \texttt{COUNTIFS(range1, crit1,} \texttt{range2, crit2)}. Option A reverses the
+  pairing;
+  option C gives only criteria with no ranges; option D tries to add two
+  criteria into one argument.
+\item \textbf{C.} COUNTIFS applies AND logic across paired range-and-criteria
+  arguments, and SUMPRODUCT can also count multi-criterion rows using boolean
+  arrays --- the stable distinction behind PYQ-15 and TRAP-14. COUNTIFS can
+  count two criteria at once (A is false); SUMPRODUCT can count as well as add
+  (B is false); neither applies only OR logic (D is false).
+\item \textbf{B.} Print Titles repeats chosen header rows or columns on every
+  printed page. Print Area (A) limits what is printed; Freeze Panes (C) is a
+  screen-view aid; Page Break Preview (D) only shows page breaks.
+\item \textbf{B.} Gridlines are \textbf{not} printed by default; the Print
+  gridlines option must be enabled. Options A, C, and D each state an incorrect
+  condition.
+\item \textbf{C.} A cell is Locked by default, but locking takes effect only
+  after the sheet is protected. Option A is backwards --- a lock has no effect
+  while the sheet is unprotected; Protect Workbook (B) protects structure, not
+  individual cells; protection (D) is not file encryption.
+\item \textbf{A.} Goal Seek finds the input required to reach a target result.
+  Scenario Manager (B) stores alternative input sets; a Data Table (C) shows
+  results for one or two changing inputs; a PivotChart (D) is a chart on a
+  PivotTable, not a what-if tool.
+\end{enumerate}
+\end{document}

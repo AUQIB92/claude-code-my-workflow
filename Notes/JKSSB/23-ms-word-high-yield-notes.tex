@@ -1,0 +1,250 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{23.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{MS Word High-Yield --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why these Word tools are high-yield}
+MS Word is a large program, but JKSSB does not test it evenly. A small set of
+review and editing tools is asked again and again, usually as an exact shortcut
+or as a near-neighbour distinction. This lesson covers that set: Find and
+Replace, spell check, hyperlinks and bookmarks, styles, comments, Track Changes,
+Page Break versus Section Break, mail merge, and saving, printing and exporting
+to PDF. The aim is not to learn every menu; it is to know each tool's shortcut
+and the one thing it is \emph{not}.
+
+\begin{definitionbox}{The high-yield set}
+The Word features that competitive-exam items concentrate on: Find/Replace,
+spell check and grammar tools, hyperlinks and bookmarks, styles, comments,
+Track Changes, Section Break, mail merge, and PDF export.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Find/Replace & The tool to locate text and swap it for other text. \\
+Spell check & Word's proofing tool for spelling and grammar. \\
+Bookmark & A named location or selection inside a document. \\
+Style & A named set of formatting applied to text or a paragraph. \\
+Track Changes & A mode that records every edit with its author. \\
+Section Break & A break that starts a new section with its own layout. \\
+Mail merge & Combining a standard letter with a list of records. \\
+PDF & Portable Document Format --- a fixed-layout file. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Finding and replacing text}
+Word has two related tools. \textbf{Find} locates text in the document and is
+opened with \textbf{Ctrl+F}. \textbf{Find and Replace} both locates text and
+substitutes new text for it, and is opened with \textbf{Ctrl+H}. Inside the
+Find and Replace dialog, \emph{Replace} changes the current match while
+\emph{Replace All} changes every match in one step. The same dialog can find
+formatting, special characters (such as a paragraph mark) and text that uses a
+particular style.
+
+The common confusion is between the two shortcuts. Ctrl+F only finds; it does
+not change anything. Ctrl+H is the one that replaces. An item that asks how to
+``find and replace'' text expects Ctrl+H.
+
+\begin{example}
+A student has typed the word ``recieve'' in ten places and wants ``receive''
+everywhere. Press Ctrl+H, type \texttt{recieve} in the Find box and
+\texttt{receive} in the Replace box, then choose Replace All. Using Ctrl+F
+alone would only highlight the mistakes one by one, without correcting them.
+\end{example}
+
+\section{Spelling and grammar tools}
+Press \textbf{F7} to start the \textbf{spelling and grammar} check. Word
+flags a possible misspelling with a red squiggle and a possible grammar problem
+with another underline. Modern Word gathers these checks in the
+\textbf{Editor} pane, which groups Spelling, Grammar and Refinements. From the
+check you can \emph{Ignore} a flagged word once, \emph{Ignore All} every
+occurrence, or \emph{Add} the word to the dictionary so it is accepted from
+then on.
+
+Two automatic tools support proofing. \textbf{AutoCorrect} fixes common typing
+errors as you type (for example, capitalising the first letter of a sentence),
+and the \textbf{thesaurus} (Shift+F7) offers synonyms. The exam usually tests
+only the main shortcut, F7. Do not confuse F7 with the PowerPoint slide-show
+keys: F5 starts a slide show and F9 has other roles in PowerPoint, but in Word
+F7 is proofing.
+
+\begin{definitionbox}{Spell check}
+The Word tool, opened with F7, that checks spelling and grammar and offers
+corrections, ignoring or adding words to the dictionary.
+\end{definitionbox}
+
+\section{Hyperlinks and bookmarks}
+A \textbf{hyperlink} is text or an object that jumps to another place when
+clicked. Press \textbf{Ctrl+K} to insert one. A hyperlink can point to a web
+address, to a file, or to a location inside the same document. When it points
+inside the document, it usually points to a \textbf{bookmark}.
+
+A \textbf{bookmark} gives a location or a selection a name, so that text,
+a hyperlink or a cross-reference can jump to it. Bookmarks are not printed and
+are not visible to the reader by default; they are an internal target. The
+clean distinction for the exam is that a hyperlink is the \emph{clickable link},
+while a bookmark is the \emph{named target} it points to.
+
+\section{Styles}
+A \textbf{style} is a named collection of formatting settings: font, size,
+colour, spacing, alignment and indent. Instead of formatting each paragraph by
+hand, you apply a style. Applying a \textbf{Heading} style does more than
+change the look: it gives the paragraph an outline level. That is why the
+\textbf{Navigation Pane} can list the document's headings and why a
+\textbf{Table of Contents} can be built and refreshed automatically.
+
+Style-based formatting is consistent and easy to update. If you edit a style,
+every paragraph that uses that style changes at once. This is the main
+advantage of styles over direct formatting.
+
+\begin{example}
+A report uses the Heading 1 style for its chapter titles. Later the author
+wants all chapter titles in a larger font. Instead of selecting every title,
+the author edits the Heading 1 style once, and every chapter title updates
+automatically. The Navigation Pane and the table of contents also stay correct.
+\end{example}
+
+\section{Comments and Track Changes}
+A \textbf{comment} is a note attached to a point in the document. It lets a
+reviewer ask a question or suggest a change \emph{without editing the text
+itself}. Comments can be replied to and marked resolved, and they are stored as
+metadata shown in the margin or the Reviewing Pane.
+
+\textbf{Track Changes} is different: it records the actual edits. When it is
+on, each insertion, deletion and formatting change is marked, together with the
+\textbf{author's name} and the time. This is called revision metadata. The
+reviewer then \textbf{Accepts} or \textbf{Rejects} each change individually or
+all at once. Accepting a change keeps it permanently and, with it, removes the
+revision metadata for that change. Rejecting a change removes the edit and
+keeps the original text.
+
+\begin{definitionbox}{Track Changes}
+A Word mode that records every insertion, deletion and formatting edit along
+with the author and time, so a reviewer can accept or reject each change.
+\end{definitionbox}
+
+\section{Page Break versus Section Break}
+A \textbf{Page Break} pushes the following text onto a new page. It does not
+start a new section, so the page keeps the same layout, margins, headers,
+footers and page numbering as the rest of the document. A quick way to insert a
+page break is \textbf{Ctrl+Enter}.
+
+A \textbf{Section Break} divides the document into independent
+\textbf{sections}. Because each section has its own layout settings, a Section
+Break is what allows \emph{different headers and footers}, different page
+numbering, different margins or a different page orientation within one
+document. Section Breaks are inserted from the \textbf{Layout} tab, under
+\textbf{Breaks}.
+
+This is one of the most tested Word traps. A Page Break changes only the page; a
+Section Break changes the section. Only a Section Break can give a document two
+different headers or footers. (TRAP-13)
+
+\begin{example}
+An item states, ``Using Page Break allows you to have different headers and
+footers in the same document.'' This is wrong. A Page Break keeps the same
+section formatting. It is a \textbf{Section Break} that allows different
+headers and footers in one document. (PYQ-13)
+\end{example}
+
+\section{Mail merge}
+\textbf{Mail merge} is the process that combines a \textbf{main document} (a
+standard letter or template) with a \textbf{data source} (a list of records
+such as names and addresses). The main document contains \textbf{merge fields}
+as placeholders, and each record fills those fields to produce one personalised
+copy. A common data source is a table of names and addresses held in Excel or
+in Outlook contacts.
+
+The typical steps are: create or select the main document; select recipients
+(the data source); insert merge fields; preview the results; and finish the
+merge by printing the letters or sending them by email. The exam definition to
+remember is that mail merge \emph{combines letters with a database of
+addresses}. (PYQ-37, PYQ-47)
+
+\begin{definitionbox}{Mail merge}
+The Word process that combines a standard document with a data source of
+records, producing one personalised copy of the document for each record.
+\end{definitionbox}
+
+\section{Saving, printing and exporting to PDF}
+Press \textbf{Ctrl+S} to save the document; Word normally saves it in the
+\textbf{DOCX} format. Press \textbf{Ctrl+P} to open the print options.
+\textbf{Save As} can change the file name, the location and the file format.
+Using \textbf{Export} or \textbf{Save As PDF} creates a \textbf{PDF} file.
+
+\textbf{PDF} stands for \textbf{Portable Document Format}. A PDF is a
+\emph{fixed-layout} file: it looks the same on every device and is good for
+sharing and printing, but it is not meant for easy editing. This pairs with the
+separate lesson on file formats, where the extension (for example,
+\texttt{.pdf}) and the format (PDF) are kept distinct.
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Ctrl+F} finds; \textbf{Ctrl+H} finds and replaces. Do not swap
+    them.
+  \item \textbf{F7} is spelling and grammar in Word; F5 starts a PowerPoint
+    slide show. (TRAP-32)
+  \item A \textbf{Section Break}, not a Page Break, enables different
+    headers/footers in one document. (TRAP-13)
+  \item A \textbf{bookmark} is a named target; a \textbf{hyperlink}
+    (\textbf{Ctrl+K}) is the clickable link.
+  \item \textbf{Mail Merge} combines a letter with an address database; it is
+    not Track Changes or AutoCorrect. (TRAP-29)
+\end{enumerate}
+
+\begin{example}
+An item asks which feature combines letters with a database of addresses.
+Trace the meaning: a standard letter plus a list of records is mail merge. If
+the item instead asks what records every edit with its author, the answer is
+Track Changes, and if it asks what fixes typing errors as you type, the answer
+is AutoCorrect. (PYQ-37, PYQ-47)
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the shortcuts for Find, Find and Replace, spelling and grammar,
+    and inserting a hyperlink.
+  \item Explain the difference between a Page Break and a Section Break, and
+    say which one allows different headers and footers.
+  \item Distinguish a bookmark from a hyperlink.
+  \item What does Track Changes record, and what happens when a change is
+    accepted?
+  \item Define mail merge and name its two parts.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Find: Ctrl+F. Find and Replace: Ctrl+H. Spelling and grammar: F7.
+    Insert a hyperlink: Ctrl+K.
+  \item A Page Break moves text to a new page within the same section. A
+    Section Break starts a new section with its own layout. Only a Section
+    Break allows different headers and footers.
+  \item A bookmark is a named location or selection inside the document; it is
+    a target and is not printed. A hyperlink is clickable text or an object
+    that jumps to a target, which may be a bookmark, a file or a web address.
+  \item Track Changes records every insertion, deletion and formatting edit,
+    together with the author's name and the time (revision metadata). Accepting
+    a change keeps it permanently and removes that change's revision metadata.
+  \item Mail merge combines a main document (the standard letter or template)
+    with a data source (a list of records such as names and addresses) to
+    produce one personalised copy per record.
+\end{enumerate}
+\endgroup
+\end{document}

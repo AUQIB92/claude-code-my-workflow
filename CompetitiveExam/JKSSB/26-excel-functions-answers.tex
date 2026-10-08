@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 26 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 19 items are original JKSSB-pattern questions
+(\textit{[Original]}); Q1 is a real item traced to the KB Real-PYQ Evidence
+Registry as PYQ-14 (\textit{[PYQ JA 2026 Q74, key:final]}). No unverified item
+is presented as a real PYQ.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{C.} With A1 blank, Excel reads the blank as 0 in a numeric
+  comparison, so A1 is neither greater than 50 nor greater than 25; both tests
+  fail and the final value \texttt{Low} is returned. A and B would need A1 to
+  be above 50 or above 25; D is wrong because a comparison of a blank does not
+  produce \texttt{\#VALUE!} (PYQ-14).
+\item \textbf{A.} \texttt{AVERAGE} returns the arithmetic mean of the numbers
+  in a range. \texttt{MEAN} (B) is not an Excel function, \texttt{TOTAL} (C)
+  is not a function, and \texttt{MEDIAN} (D) returns the middle value, not the
+  mean.
+\item \textbf{A.} \texttt{COUNT} counts only the cells that contain numbers.
+  \texttt{COUNTA} (B) also counts text, \texttt{COUNTIF} (C) counts cells
+  meeting a condition, and \texttt{SUM} (D) adds values instead of counting
+  them.
+\item \textbf{B.} \texttt{COUNTA} counts every non-empty cell: the 6 numbers
+  plus the 2 text labels make 8. The blank cells are not counted. 6 (A) is the
+  \texttt{COUNT} result, 10 (C) counts the blanks too, and 2 (D) counts only
+  the blanks.
+\item \textbf{A.} \texttt{COUNT} counts numeric cells only, so it returns 6.
+  8 (B) is the \texttt{COUNTA} result, 10 (C) is the total number of cells,
+  and 4 (D) is not produced by either function.
+\item \textbf{A.} \texttt{COUNTA} counts every non-empty cell, whether it
+  holds a number or text. \texttt{COUNT} (B) would leave out the text,
+  \texttt{COUNTBLANK} (C) counts only empty cells, and \texttt{SUM} (D) adds
+  numeric values.
+\item \textbf{A.} \texttt{MAX} returns the largest number in a range.
+  \texttt{MIN} (B) returns the smallest, and \texttt{HIGH} (C) and
+  \texttt{TOP} (D) are not Excel functions.
+\item \textbf{A.} \texttt{MIN} returns the smallest number in a range.
+  \texttt{MAX} (B) returns the largest, and \texttt{MINIMUM} (C) and
+  \texttt{LEAST} (D) are not Excel functions.
+\item \textbf{A.} \texttt{SUM} adds the numbers in a range. \texttt{ADD} (B),
+  \texttt{TOTAL} (C), and \texttt{PLUS} (D) are not Excel functions.
+\item \textbf{A.} AutoSum is inserted with \texttt{Alt + =}. \texttt{Ctrl + =}
+  (B) is not the AutoSum shortcut, \texttt{Shift + F3} (C) opens the Insert
+  Function dialog, and \texttt{Ctrl + S} (D) saves the workbook.
+\item \textbf{A.} AutoSum inserts a \texttt{SUM} formula by default, written
+  as \texttt{=SUM(...)} over the adjacent range. \texttt{=AVERAGE(...)} (B),
+  \texttt{=COUNT(...)} (C), and \texttt{=MAX(...)} (D) are available only from
+  the AutoSum drop-down, not by default.
+\item \textbf{A.} A formula must start with \texttt{=} and may use a function;
+  a function is a named built-in operation used inside a formula. B reverses
+  the two definitions, C wrongly calls them identical, and D is false because
+  formulas commonly contain functions.
+\item \textbf{A.} Dividing by zero, or by a blank cell (read as zero), gives
+  \texttt{\#DIV/0!}. \texttt{\#VALUE!} (B) is a wrong data type,
+  \texttt{\#NAME?} (C) is an unrecognised name, and \texttt{\#REF!} (D) is an
+  invalid reference.
+\item \textbf{A.} An unrecognised name, such as a misspelt function name,
+  gives \texttt{\#NAME?}. \texttt{\#REF!} (B) is a deleted reference,
+  \texttt{\#N/A} (C) is a value not available, and \texttt{\#NUM!} (D) is an
+  invalid number.
+\item \textbf{A.} Using the wrong type of data, such as text where a number is
+  needed, gives \texttt{\#VALUE!}. \texttt{\#NAME?} (B) is an unrecognised
+  name, \texttt{\#DIV/0!} (C) is division by zero, and \texttt{\#N/A} (D) is a
+  value not available.
+\item \textbf{A.} A reference to a deleted cell is no longer valid and gives
+  \texttt{\#REF!}. \texttt{\#NAME?} (B) is an unrecognised name,
+  \texttt{\#VALUE!} (C) is a wrong data type, and \texttt{\#NULL!} (D) is the
+  intersection of non-intersecting ranges.
+\item \textbf{A.} A lookup that finds no match leaves the needed value
+  unavailable, which gives \texttt{\#N/A}. \texttt{\#NUM!} (B) is an invalid
+  number, \texttt{\#REF!} (C) is an invalid reference, and \texttt{\#DIV/0!}
+  (D) is division by zero.
+\item \textbf{D.} \texttt{\#TOTAL!} is not an Excel error value. The other
+  three are all real: \texttt{\#DIV/0!} (A), \texttt{\#VALUE!} (B), and
+  \texttt{\#NAME?} (C).
+\item \textbf{D.} All three statements are correct: \texttt{COUNT} counts
+  numbers while \texttt{COUNTA} counts all non-empty cells, a blank is read as
+  zero in a numeric comparison, and every formula begins with \texttt{=}. A,
+  B, and C each omit at least one true statement.
+\item \textbf{A.} \texttt{SUM} returns the total (I-b), \texttt{MAX} returns
+  the largest number (II-a), and \texttt{COUNT} returns the number of numeric
+  cells (III-c). B, C, and D each assign at least one function to the wrong
+  result.
+\end{enumerate}
+\end{document}

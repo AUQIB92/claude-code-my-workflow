@@ -1,0 +1,275 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{31.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{PowerPoint Basics --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What PowerPoint is}
+MS PowerPoint is the presentation program of the MS Office suite. A
+\textbf{presentation} is a file made of one or more pages, and each page is
+called a \textbf{slide}. The slides are shown one after another as a
+\textbf{slide show} on a screen or projector. The official syllabus writes
+this unit as ``Powerpoint Presentation'', and the usual short form is
+\textbf{PPT}. A single slide can hold text, pictures, charts, tables, audio,
+and video.
+
+\begin{definitionbox}{Presentation, slide, slide show}
+A presentation is the whole file; a slide is one page of it; a slide show is
+the full-screen sequential display of those slides to an audience.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Presentation & The whole PowerPoint file, made of slides. \\
+Slide & One page of the presentation. \\
+Placeholder & The dotted-line box on a slide that holds content. \\
+Layout & The arrangement of placeholders on a slide. \\
+Theme & A coordinated set of colours, fonts, and effects. \\
+Template & A ready-made starter file with a theme, layouts, and sample content. \\
+Slide Master & The top-level slide that controls all linked layouts and slides. \\
+Notes & The speaker's reminders below a slide, unseen by the audience. \\
+Handout & A printed sheet carrying several slides for the audience. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. A
+\textbf{slide} is the page, a \textbf{placeholder} is the box that holds
+content on that page, and a \textbf{layout} decides where those boxes sit. A
+\textbf{theme} restyles the file, a \textbf{template} starts a new file from a
+ready design, and the \textbf{Slide Master} controls the design of every
+linked slide at once.
+
+\section{Full forms and file extensions}
+Three full forms carry direct-recall marks. \textbf{PPT} stands for PowerPoint
+Presentation. \textbf{PPTX} stands for PowerPoint XML Presentation and is the
+default format since Office 2007. \textbf{PPSX} stands for PowerPoint Slide
+Show. Two more extensions complete the family: \textbf{POTX} is the PowerPoint
+Template, and \textbf{PPTM} is the macro-enabled presentation.
+
+\begin{definitionbox}{PowerPoint file extensions}
+The editable working file uses \texttt{.pptx}; the template uses
+\texttt{.potx}; the show file that opens directly as a slide show uses
+\texttt{.ppsx}; the macro-enabled file uses \texttt{.pptm}. Presentations can
+also be saved or exported as \texttt{.pdf}.
+\end{definitionbox}
+
+The working distinction is simple. Double-clicking a \texttt{.pptx} file opens
+it for editing, while double-clicking a \texttt{.ppsx} file launches the
+slide show directly. A \texttt{.potx} file is never the finished talk; it is
+the reusable pattern from which new talks are started. Confusing these three
+extensions is one of the most common wrong answers in this unit.
+
+\section{Slides, placeholders, and layouts}
+A slide is a single page of a presentation. Content is not typed freely onto
+the page background; it goes into \textbf{placeholders}, the dotted-line boxes
+marked Title, Text, Picture, Chart, or Table. Clicking inside a placeholder
+allows typing, and the small icons inside a content placeholder insert a
+picture, chart, table, or SmartArt graphic directly.
+
+\begin{definitionbox}{Placeholder}
+A dotted-line container on a slide that holds one kind of content (title,
+text, picture, chart, table, or media).
+\end{definitionbox}
+
+A \textbf{layout} is the arrangement of those placeholders. The common layouts
+are Title Slide, Title and Content, Section Header, Two Content, Comparison,
+Title Only, and Blank. A new slide is added from the Home tab through New
+Slide, which also offers the layout gallery; the layout of an existing slide
+is changed through Home tab to Layout. The Blank layout carries no
+placeholders at all, so every object on it must be inserted by hand.
+
+\begin{example}
+A student builds a five-slide class talk on the office desktop. The first
+slide uses the Title Slide layout (one title plus one subtitle placeholder);
+each following point uses Title and Content; the closing slide reuses Section
+Header. Changing the layout of slide 3 from Title and Content to Two Content
+rearranges only slide 3; nothing else in the file moves.
+\end{example}
+
+\section{Themes, templates, and the Slide Master}
+A \textbf{theme} is a coordinated set of colours, fonts, and effects applied
+from the Design tab. One click restyles every slide in the file, because the
+theme is a design rule, not content. A \textbf{template} is a ready-made
+pattern file (extension \texttt{.potx}) that bundles a theme with a set of
+layouts and sometimes sample text. Starting a new presentation from a template
+reuses that whole design instead of building it again.
+
+\begin{definitionbox}{Theme and template}
+A theme is a coordinated set of colours, fonts, and effects. A template is a
+reusable starter file (\texttt{.potx}) carrying a theme plus layouts and
+sample content.
+\end{definitionbox}
+
+The \textbf{Slide Master} is the top-level slide that controls the design of
+all layouts and slides linked to it. Editing the font, the logo position, or
+the footer on the Slide Master changes every linked slide at once, which is
+far faster than editing forty slides one by one. It is opened from the View
+tab through Slide Master and left through Close Master View. PowerPoint has
+three masters in total: the Slide Master for on-screen slides, the
+\textbf{Handout Master} for printed handout layouts, and the \textbf{Notes
+Master} for printed notes pages.
+
+\begin{example}
+An item states, ``The Handout Master controls the design of all on-screen
+slides.'' This is wrong. The Slide Master controls the on-screen slides; the
+Handout Master controls only the printed handout layouts. The wrong option has
+swapped two of the three masters.
+\end{example}
+
+\section{Views: Normal, Outline, Sorter, Reading, Show, Notes Page}
+PowerPoint offers several views, each with one job. \textbf{Normal view} is
+the default editing view, with three areas: the large slide pane in the
+centre, the slides or outline pane with thumbnails on the left, and the notes
+pane below. All typing, formatting, and inserting happen here. \textbf{Outline
+View} shows only the text outline of every slide, which suits restructuring
+long talks.
+
+\textbf{Slide Sorter view} shows thumbnails of all slides together, so slides
+can be reordered by drag and drop and checked, deleted, or duplicated at a
+glance. \textbf{Reading View} shows the show almost full-screen for reading on
+the author's own screen, with simple navigation but without editing tools.
+\textbf{Slide Show view} is the real full-screen presentation to an audience.
+\textbf{Notes Page view} shows one slide above its speaker-notes text, one
+page per slide, exactly as it will print.
+
+\begin{definitionbox}{Normal view}
+The default editing view of PowerPoint, combining the slide pane, the
+slides or outline pane, and the notes pane.
+\end{definitionbox}
+
+\begin{example}
+A student has twelve slides in the wrong order. The fastest fix is Slide
+Sorter view: drag the thumbnails into the right sequence. Opening each slide
+in Normal view and cutting and pasting would work but wastes time; choosing
+Reading View would not help at all, because Reading View cannot reorder
+anything.
+\end{example}
+
+\section{Notes, handouts, and printing}
+\textbf{Notes} (speaker notes) are reminders typed in the notes pane below a
+slide. The audience never sees them during the show; they exist so the speaker
+does not forget a figure, a definition, or the next point. During the show the
+speaker reads them only in Presenter View on the speaker's own screen. Notes
+print through File to Print to Notes Pages.
+
+\begin{definitionbox}{Speaker notes and handouts}
+Speaker notes help the speaker and stay hidden from the audience. Handouts
+help the audience and are printed sheets carrying several slides per page.
+\end{definitionbox}
+
+\textbf{Handouts} are those printed sheets: 1, 2, 3, 4, 6, or 9 slides per
+page. The most examined choice is 6 slides per page, and the 3-per-page layout
+adds ruled lines beside each slide so the audience can write. Their design is
+controlled by the Handout Master. The full print path is File to Print, with
+choices for Full Page Slides, Handouts, Notes Pages, and Outline View.
+
+\section{Running and navigating the slide show}
+Two shortcuts start the show. \textbf{F5} begins from the first slide, and
+\textbf{Shift+F5} begins from the current slide. This pair is a confirmed past
+item (WO 2026 Q80 tested F5 for ``from the beginning''). During the show, N,
+Space, Right arrow, or Enter moves forward; P or Left arrow moves back; Esc
+ends the show. Pressing B blanks the screen to black and pressing W blanks it
+to white, which is useful while the speaker talks without a slide. The Slide
+Show tab holds timing, rehearsal, and monitor settings.
+
+A \textbf{transition} is the movement between one slide and the next (Fade,
+Push, Wipe, Morph), set on the Transitions tab with one transition per slide.
+An \textbf{animation} is the movement of an object on a slide, set on the
+Animations tab: Entrance, Emphasis, Exit, and Motion Paths, managed in the
+Animation Pane. SmartArt conversion behaviour (which content cannot convert
+without re-entry) has also been examined (JA 2026 Q77), so candidates should
+practise the Insert to SmartArt path on text and picture lists rather than
+assume every object converts.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The \textbf{slide} is the page; the \textbf{placeholder} is the
+    dotted box holding content; the \textbf{layout} arranges those boxes.
+  \item \textbf{.pptx} is the editable file, \textbf{.ppsx} is the show file,
+    and \textbf{.potx} is the template. Do not swap them.
+  \item A \textbf{theme} restyles (colours, fonts, effects); a
+    \textbf{template} is the reusable starter file.
+  \item The \textbf{Slide Master} controls on-screen slides; the Handout and
+    Notes Masters control print layouts.
+  \item \textbf{Normal} is the default editing view; \textbf{Slide Sorter}
+    reorders; Reading reviews; \textbf{notes} serve the speaker and
+    \textbf{handouts} serve the audience.
+  \item \textbf{F5} starts from the beginning and \textbf{Shift+F5} from the
+    current slide; a \textbf{transition} moves between slides while an
+    \textbf{animation} moves objects on a slide.
+\end{enumerate}
+
+\begin{example}
+An item asks which view is the default editing view and offers Normal, Slide
+Sorter, Reading, and Slide Show. Trace the definitions: Normal is the editing
+view with the slide, thumbnail, and notes panes; Slide Sorter manages order;
+Reading reviews; Slide Show presents. The answer is Normal view. If the stem
+instead asks which view reorders slides by drag and drop, the answer changes
+to Slide Sorter.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a slide, a placeholder, and a layout, giving one example
+    of each.
+  \item Expand PPT, PPTX, and PPSX, and state the file extension of a
+    PowerPoint template.
+  \item Distinguish a theme from a template.
+  \item What does the Slide Master control, and how do the Handout and Notes
+    Masters differ from it?
+  \item List four PowerPoint views and state the job of each.
+  \item Distinguish speaker notes from handouts, and state which viewers each
+    serves.
+  \item Which keys start a show from the beginning and from the current slide,
+    and which key ends the show?
+  \item Distinguish a transition from an animation.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A slide is one page of the presentation (for example, slide 2 of a
+    class talk). A placeholder is the dotted-line box holding content on that
+    page (for example, the Title placeholder). A layout is the arrangement of
+    those boxes (for example, Title and Content).
+  \item PPT is PowerPoint Presentation; PPTX is PowerPoint XML Presentation;
+    PPSX is PowerPoint Slide Show. A PowerPoint template uses
+    \texttt{.potx}.
+  \item A theme is a coordinated set of colours, fonts, and effects that
+    restyles a file; a template is a reusable starter file
+    (\texttt{.potx}) that bundles a theme with layouts and sample content.
+  \item The Slide Master controls the design of all linked on-screen slides
+    and layouts. The Handout Master controls printed handout layouts and the
+    Notes Master controls printed notes pages; neither restyles the on-screen
+    slides.
+  \item Normal is the default editing view; Slide Sorter shows thumbnails for
+    reordering; Reading View shows the show for on-screen review; Slide Show
+    presents full-screen; Notes Page shows one slide above its notes text.
+    Any four with correct jobs earn full credit.
+  \item Speaker notes are the speaker's hidden reminders below a slide; they
+    serve the speaker. Handouts are printed multi-slide sheets; they serve
+    the audience.
+  \item F5 starts from the beginning; Shift+F5 starts from the current slide;
+    Esc ends the show.
+  \item A transition is the movement between one slide and the next; an
+    animation is the movement of an object on a slide (Entrance, Emphasis,
+    Exit, Motion Paths).
+\end{enumerate}
+\endgroup
+\end{document}

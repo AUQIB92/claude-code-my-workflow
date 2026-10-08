@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 25 Practice: Excel Formulas}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 19 questions are original JKSSB-pattern items
+(\textit{[Original]}); Q4 is a real previous-year question traced to the KB
+Real-PYQ Evidence Registry as PYQ-38
+(\textit{[PYQ WO 2026 Q78, key:provisional]}).
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Which statement best describes a formula in
+  MS Excel?
+  \begin{enumerate}[label=\Alph*.]
+    \item A fixed value typed into a cell that is never recalculated.
+    \item An instruction, beginning with \texttt{=}, that calculates a cell's
+      value from operands such as references, constants, and functions.
+    \item A permanent record of the cell's last result.
+    \item A formatting rule applied to a range of cells.
+  \end{enumerate}
+\item \textit{[Original]} Which symbol is used for multiplication in an Excel
+  formula?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{x}
+    \item \texttt{*}
+    \item \texttt{.}
+    \item \texttt{/}
+  \end{enumerate}
+\item \textit{[Original]} In an Excel cell reference, what does the dollar
+  sign \texttt{\$} do?
+  \begin{enumerate}[label=\Alph*.]
+    \item It locks the part of the reference that follows it, so that part
+      does not change when the formula is copied.
+    \item It converts the cell value to currency format.
+    \item It marks the cell as read-only.
+    \item It divides the cell value by 100.
+  \end{enumerate}
+\item \textit{[PYQ WO 2026 Q78, key:provisional]} In MS Excel, a formula must
+  begin with which character?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{+}
+    \item \texttt{=}
+    \item \texttt{@}
+    \item \texttt{\#}
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is an absolute reference?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{A1}
+    \item \texttt{\$A\$1}
+    \item \texttt{A\$1}
+    \item \texttt{\$A1}
+  \end{enumerate}
+\item \textit{[Original]} Which operator is used in an Excel formula to join
+  (concatenate) two pieces of text?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\&}
+    \item \texttt{+}
+    \item \texttt{:}
+    \item \texttt{@}
+  \end{enumerate}
+\item \textit{[Original]} In the formula \texttt{=A1+\$A\$1}, which reference
+  will \textbf{NOT} change when the formula is copied to another cell?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{A1}
+    \item \texttt{\$A\$1}
+    \item Both references change.
+    \item Neither reference changes.
+  \end{enumerate}
+\item \textit{[Original]} Cell B1 contains the formula \texttt{=A1}. The
+  formula is copied to cell B2. What does B2 contain?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=A1}
+    \item \texttt{=A2}
+    \item \texttt{=B2}
+    \item \texttt{=\$A\$1}
+  \end{enumerate}
+\item \textit{[Original]} Cell B1 contains the formula \texttt{=\$A\$1}. The
+  formula is copied to cell B5. What does B5 contain?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=\$A\$1}
+    \item \texttt{=\$A\$5}
+    \item \texttt{=\$A5}
+    \item \texttt{=A\$1}
+  \end{enumerate}
+\item \textit{[Original]} Cell B1 contains the formula \texttt{=\$A1}. The
+  formula is copied to cell C2. What does C2 contain?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=\$A1}
+    \item \texttt{=\$A2}
+    \item \texttt{=\$B2}
+    \item \texttt{=\$B1}
+  \end{enumerate}
+\item \textit{[Original]} Cell B1 contains the formula \texttt{=A\$1}. The
+  formula is copied to cell C2. What does C2 contain?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=B\$1}
+    \item \texttt{=B\$2}
+    \item \texttt{=A\$1}
+    \item \texttt{=C\$1}
+  \end{enumerate}
+\item \textit{[Original]} Cell C2 contains the formula \texttt{=A2*\$B\$1}.
+  The formula is copied to cell C3. What does C3 contain?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=A2*\$B\$1}
+    \item \texttt{=A3*\$B\$1}
+    \item \texttt{=A2*\$B\$2}
+    \item \texttt{=A3*\$B\$2}
+  \end{enumerate}
+\item \textit{[Original]} What does the Excel error \texttt{\#DIV/0!} mean?
+  \begin{enumerate}[label=\Alph*.]
+    \item A number is divided by zero or by an empty cell.
+    \item A referenced cell has been deleted.
+    \item The wrong type of operand was used.
+    \item A function name is misspelled.
+  \end{enumerate}
+\item \textit{[Original]} What does the Excel error \texttt{\#REF!} mean?
+  \begin{enumerate}[label=\Alph*.]
+    \item A reference is invalid because the referenced cell was deleted.
+    \item A formula divides by zero.
+    \item A text value was used where a number was expected.
+    \item The formula is missing its leading \texttt{=}.
+  \end{enumerate}
+\item \textit{[Original]} What does the Excel error \texttt{\#VALUE!} mean?
+  \begin{enumerate}[label=\Alph*.]
+    \item The wrong type of operand was used, such as text where a number is
+      needed.
+    \item A referenced file was not found.
+    \item A referenced cell was deleted.
+    \item The requested value is not available.
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} true of a
+  relative reference such as \texttt{A1}?
+  \begin{enumerate}[label=\Alph*.]
+    \item It is stored as an offset from the formula's own cell.
+    \item It shifts when the formula is copied to another cell.
+    \item It always points to the same cell no matter where it is copied.
+    \item It is the default type of reference in Excel.
+  \end{enumerate}
+\item \textit{[Original]} Which of the following correctly states the effect
+  of the dollar sign in a cell reference?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{\$A1} locks both the column and the row.
+    \item \texttt{A\$1} locks the row, and \texttt{\$A1} locks the column.
+    \item \texttt{A\$1} locks the column, and \texttt{\$A1} locks the row.
+    \item \texttt{\$A\$1} locks only the row.
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the following statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item A cell entry that begins with \texttt{+} is still treated as a
+      formula by Excel.
+    \item An absolute reference such as \texttt{\$A\$1} does not change when
+      the formula is copied.
+    \item A relative reference such as \texttt{A1} changes when the formula is
+      copied.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item II and III only
+    \item I and II only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} In an Excel formula, what does the operator
+  \texttt{<>} mean?
+  \begin{enumerate}[label=\Alph*.]
+    \item Not equal to
+    \item Equal to
+    \item Greater than
+    \item Less than or equal to
+  \end{enumerate}
+\item \textit{[Original]} What is the result of the Excel formula
+  \texttt{=2+3*4}?
+  \begin{enumerate}[label=\Alph*.]
+    \item 14
+    \item 20
+    \item 24
+    \item 9
+  \end{enumerate}
+\end{enumerate}
+\end{document}

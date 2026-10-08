@@ -1,0 +1,182 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 27 Practice: Excel Data Tools}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 questions are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item. Item~16
+is built on the COUNTIFS/SUMPRODUCT distinction observed in JA~2026~Q75
+(PYQ-15, TRAP-14).
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} The Excel feature that rearranges rows into a chosen
+  order, such as A to Z or Z to A, is called:
+  \begin{enumerate}[label=\Alph*.]
+    \item Filter
+    \item Sort
+    \item Goal Seek
+    \item Protect Sheet
+  \end{enumerate}
+\item \textit{[Original]} Which keyboard shortcut turns AutoFilter on or off for
+  the selected range?
+  \begin{enumerate}[label=\Alph*.]
+    \item \textbf{Ctrl}$+$\textbf{L}
+    \item \textbf{Ctrl}$+$\textbf{Shift}$+$\textbf{L}
+    \item \textbf{Alt}$+$\textbf{F}
+    \item \textbf{Ctrl}$+$\textbf{F}
+  \end{enumerate}
+\item \textit{[Original]} Which keyboard shortcut converts the selected range
+  into an Excel table?
+  \begin{enumerate}[label=\Alph*.]
+    \item \textbf{Ctrl}$+$\textbf{T}
+    \item \textbf{Ctrl}$+$\textbf{F}
+    \item \textbf{Ctrl}$+$\textbf{Shift}$+$\textbf{T}
+    \item \textbf{Alt}$+$\textbf{T}
+  \end{enumerate}
+\item \textit{[Original]} When a filter is applied to a column, the rows that do
+  not match the condition are:
+  \begin{enumerate}[label=\Alph*.]
+    \item permanently deleted from the worksheet
+    \item temporarily hidden, but not deleted
+    \item moved to a new worksheet
+    \item converted into a PivotTable
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} true about
+  sorting in Excel?
+  \begin{enumerate}[label=\Alph*.]
+    \item Data can be sorted by more than one level using Add Level.
+    \item Data can be sorted by cell colour or font colour.
+    \item A custom list can sort by days of the week or months.
+    \item Ascending order arranges numbers from largest to smallest.
+  \end{enumerate}
+\item \textit{[Original]} Which feature is provided by an Excel table but
+  \textbf{not} by a plain range of cells?
+  \begin{enumerate}[label=\Alph*.]
+    \item Structured references such as \texttt{Table1[Sales]}
+    \item The ability to enter text
+    \item The ability to enter formulas
+    \item The ability to print the data
+  \end{enumerate}
+\item \textit{[Original]} Which statement about an Excel table and a PivotTable
+  is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item A PivotTable is a type of Excel table.
+    \item An Excel table can serve as the source data for a PivotTable.
+    \item A PivotTable permanently changes the source data.
+    \item An Excel table cannot be filtered.
+  \end{enumerate}
+\item \textit{[Original]} Which chart type is best used to show the parts of a
+  single whole, such as the share of each subject in a student's total marks?
+  \begin{enumerate}[label=\Alph*.]
+    \item Line chart
+    \item Scatter (XY) chart
+    \item Pie chart
+    \item Column chart
+  \end{enumerate}
+\item \textit{[Original]} When the source data of a chart is changed, the chart:
+  \begin{enumerate}[label=\Alph*.]
+    \item remains unchanged until it is re-created
+    \item updates automatically
+    \item is deleted
+    \item is converted into a PivotTable
+  \end{enumerate}
+\item \textit{[Original]} In a chart, the component that names each data series
+  is the:
+  \begin{enumerate}[label=\Alph*.]
+    \item legend
+    \item value axis
+    \item plot area
+    \item data label
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} one of the four
+  areas into which fields are dragged in a PivotTable?
+  \begin{enumerate}[label=\Alph*.]
+    \item Rows
+    \item Columns
+    \item Values
+    \item Insert
+  \end{enumerate}
+\item \textit{[Original]} After the source data of a PivotTable is edited, what
+  must be done to display the new summary?
+  \begin{enumerate}[label=\Alph*.]
+    \item Refresh the PivotTable
+    \item Restart the computer
+    \item Nothing --- it updates automatically
+    \item Delete and rename the worksheet
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item A PivotTable summarises data but is not the source table itself.
+    \item A PivotChart is linked to a PivotTable.
+    \item A filter permanently deletes the rows it hides.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item I and II only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} To count the rows that satisfy two conditions at the
+  same time, which function is designed specifically for the purpose?
+  \begin{enumerate}[label=\Alph*.]
+    \item COUNT
+    \item COUNTIFS
+    \item SUM
+    \item AVERAGE
+  \end{enumerate}
+\item \textit{[Original]} Which is the correct general form of the COUNTIFS
+  function?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{COUNTIFS(range1, range2, crit1, crit2)}
+    \item \texttt{COUNTIFS(range1, crit1, range2, crit2)}
+    \item \texttt{COUNTIFS(crit1, crit2)}
+    \item \texttt{COUNTIFS(range, crit1+crit2)}
+  \end{enumerate}
+\item \textit{[Original]} Which statement about COUNTIFS and SUMPRODUCT is
+  correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item COUNTIFS cannot count with two criteria at once.
+    \item SUMPRODUCT can only add numbers and cannot count rows.
+    \item COUNTIFS applies AND logic across paired range-and-criteria
+      arguments, and SUMPRODUCT can also count multi-criterion rows using
+      boolean arrays.
+    \item Both functions can apply only OR logic.
+  \end{enumerate}
+\item \textit{[Original]} Which printing setting repeats the header row at the
+  top of every printed page?
+  \begin{enumerate}[label=\Alph*.]
+    \item Print Area
+    \item Print Titles
+    \item Freeze Panes
+    \item Page Break Preview
+  \end{enumerate}
+\item \textit{[Original]} In Excel, are gridlines printed by default?
+  \begin{enumerate}[label=\Alph*.]
+    \item Yes, always
+    \item No, not unless Print gridlines is enabled
+    \item Only in landscape orientation
+    \item Only when a Print Area is set
+  \end{enumerate}
+\item \textit{[Original]} Which statement about protection in Excel is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item A locked cell cannot be edited even when the sheet is unprotected.
+    \item Turning on Protect Workbook stops individual cells from being edited.
+    \item A cell locking setting takes effect only after the sheet is
+      protected.
+    \item Protection encrypts the workbook file with a password.
+  \end{enumerate}
+\item \textit{[Original]} Which what-if analysis tool finds the input value
+  required to reach a specified target result?
+  \begin{enumerate}[label=\Alph*.]
+    \item Goal Seek
+    \item Scenario Manager
+    \item Data Table
+    \item PivotChart
+  \end{enumerate}
+\end{enumerate}
+\end{document}

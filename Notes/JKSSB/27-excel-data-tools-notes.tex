@@ -1,0 +1,411 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{27.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Excel Data Tools --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What Excel data tools do}
+Once data has been entered into a worksheet, it usually has to be organised,
+narrowed, summarised, and presented. Excel groups the features that do this
+under what we can call its data tools: \textbf{sort}, \textbf{filter},
+\textbf{tables}, \textbf{charts}, \textbf{PivotTables and PivotCharts},
+\textbf{printing}, \textbf{protection}, and \textbf{what-if analysis}. These are
+the features a JKSSB candidate is expected to recognise by name and by
+one-line purpose.
+
+\begin{definitionbox}{Data tools}
+The worksheet features that arrange, narrow, summarise, present, print, and
+safeguard data without changing the underlying values.
+\end{definitionbox}
+
+The single idea that holds the whole lesson together is this: most of these
+tools change the \emph{view} of the data. Sorting, filtering, and a PivotTable
+reorganise what you see on the screen; the original values in the cells stay
+exactly where they were. The exceptions are deliberate edits --- a sort does
+physically move rows, and a user can type new data --- but the summary tools
+themselves are read-only with respect to the source.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Tool} & \textbf{One-line purpose} \\
+\midrule
+Sort & Arrange rows in a chosen order. \\
+Filter & Show only the rows that meet a condition. \\
+Excel table & A named, auto-expanding, formatted range of data. \\
+Chart & A picture of the data, linked to its source range. \\
+PivotTable & A fast summary of a large table of data. \\
+PivotChart & A chart built on a PivotTable. \\
+Protection & Restrict editing of cells or workbook structure. \\
+What-if analysis & Test how the result changes with different inputs. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Sorting}
+\textbf{Sorting} rearranges rows into an order chosen by the user. \textbf{Ascending}
+order goes from A to Z, or from the smallest number to the largest.
+\textbf{Descending} order goes from Z to A, or from the largest number to the
+smallest. A sort is performed on a \emph{column}, but the whole row moves with
+that column so that each record stays intact.
+
+The \textbf{Sort} dialog (\key{Data > Sort}) can order data by \textbf{more than
+one level}. For example, a payroll sheet can be sorted by Department first, and
+then by Salary within each department. The dialog's \textbf{Add Level} button
+adds these secondary and tertiary keys.
+
+A \textbf{custom list} sorts by a defined order rather than alphabetically: days
+of the week and months are the standard examples. Excel can also sort by cell
+colour, font colour, or cell icon. When the range has titles, the option
+\textbf{My data has headers} must be ticked so that the header row is not sorted
+along with the data.
+
+\begin{example}
+A teacher's marksheet has the columns Roll No., Name, and Marks. Clicking
+anywhere in the Marks column and choosing Sort Largest to Smallest reorders the
+rows so the highest marks appear first. If only the Marks column is selected and
+the rest of the row does not move, the records are scrambled --- the names no
+longer match the marks.
+\end{example}
+
+\textbf{Trap watch.} Sorting a \textbf{single column} on its own scrambles the
+records. Always sort the whole table, or convert the data to an Excel table
+first.
+
+\section{Filtering}
+\textbf{Filtering} displays only the rows that satisfy a condition and hides the
+rest. The hidden rows are \textbf{not deleted}; they are temporarily out of
+sight. AutoFilter is switched on and off with \key{Data > Filter}, whose
+keyboard shortcut is \key{Ctrl}$+$\key{Shift}$+$\key{L}. Once it is on,
+drop-down arrows appear in the header row of each column.
+
+\begin{definitionbox}{Filter}
+A tool that shows only the rows matching a condition while hiding --- not
+removing --- the other rows.
+\end{definitionbox}
+
+Clicking a drop-down arrow allows two broad kinds of narrowing:
+\begin{itemize}
+  \item a \textbf{value filter}, where one or more ticks are kept from a list of
+    the column's values;
+  \item a \textbf{condition filter}, where a rule is applied. Text Filters,
+    Number Filters, and Date Filters offer common rules such as \textit{Equals},
+    \textit{Greater Than}, \textit{Begins With}, and \textit{Between}.
+\end{itemize}
+\textbf{Top 10} and \textbf{Above Average} are ready-made condition filters.
+\textbf{Advanced Filter} is used for more complex criteria and can copy the
+matching rows to another location on the sheet.
+
+Clearing the filter with \textbf{Clear Filter} restores every row. The key
+contrast to remember is that filtering \emph{hides} rows; it does not remove
+them and does not change the data.
+
+\begin{example}
+A sales sheet has a Region column. Applying a value filter and ticking only
+``North'' hides all other regions. The rows for South, East, and West are still
+present in the worksheet; clearing the filter brings them back unchanged.
+\end{example}
+
+\section{Excel tables}
+An \textbf{Excel table} is a range of data that has been converted with
+\key{Insert > Table} (shortcut \key{Ctrl}$+$\key{T}) and given a table style. A
+table has a \textbf{name} (by default \textit{Table1}), and it behaves as a
+single object rather than as loose cells.
+
+\begin{definitionbox}{Excel table}
+A named, formatted range of data that automatically expands to include new
+rows and columns and whose formulas use structured references.
+\end{definitionbox}
+
+The practical advantages of a table over a plain range are:
+\begin{itemize}
+  \item it \textbf{auto-expands} when a new row is typed immediately below it;
+  \item it shows \textbf{banded rows} that improve readability;
+  \item it adds \textbf{filter buttons} to the header row automatically;
+  \item it can display an optional \textbf{Total Row}; and
+  \item its formulas use \textbf{structured references} such as
+    \key{Table1[Sales]} instead of cell addresses such as \key{B2}.
+\end{itemize}
+Because a structured reference points at the whole column, it automatically
+covers new rows that are added to the table. A formula written with cell
+addresses would have to be extended by hand.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Point} & \textbf{Plain range} & \textbf{Excel table} \\
+\midrule
+Name & None & Assigned name (Table1) \\
+Grows & Manually & Auto-expands \\
+Formulas & Cell addresses & Structured references \\
+Filters & Manual AutoFilter & Built-in header buttons \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A table is \emph{not} a PivotTable. A table is the \textbf{source data}; a
+PivotTable is one of the summaries that can be built on top of it.
+
+\section{Charts}
+A \textbf{chart} is a graphical picture of worksheet data. Because the chart is
+\textbf{linked} to its source range, editing the numbers in the cells updates
+the chart automatically. The common chart types and their uses are:
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Chart type} & \textbf{Best used for} \\
+\midrule
+Column / bar & Comparing values across categories. \\
+Line & Showing a trend, usually over time. \\
+Pie / doughnut & Showing the parts of a single whole. \\
+Scatter (XY) & Showing the relationship between two numeric variables. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The parts of a chart carry their own names, and exam items often test them. The
+\textbf{chart area} is the whole chart, including the frame. Inside it, the
+\textbf{plot area} is the region where the data is actually drawn. Each set of
+values is a \textbf{data series}, and the \textbf{legend} names each series. The
+\textbf{category axis} (usually the X-axis) carries the labels, while the
+\textbf{value axis} (the Y-axis) carries the numbers. \textbf{Data labels}
+display the exact value at each data point, and \textbf{gridlines} help read the
+values.
+
+A chart normally floats on the same worksheet as its data, but it can be moved
+to a separate \textbf{chart sheet} that contains only the chart.
+
+\begin{example}
+A school records the number of students in each class. A column chart compares
+the classes at a glance. The same data as a line chart would suggest a trend
+across the classes, which may not be meaningful; for parts of one total, such as
+the share of boys and girls in the school, a pie chart is the right choice.
+\end{example}
+
+\section{PivotTables and PivotCharts}
+A \textbf{PivotTable} summarises a large table of data in seconds. Instead of
+writing formulas, the user \textbf{drags} fields into four areas:
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Area} & \textbf{What goes there} \\
+\midrule
+Rows & Field values listed down the left side of the summary. \\
+Columns & Field values spread across the top of the summary. \\
+Values & The numbers that are summarised (Sum, Count, Average, and more). \\
+Filters & Fields used to filter the whole PivotTable. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The \textbf{Values} area chooses the aggregation: by default a numeric field is
+summed and a text field is counted, but Count, Average, Max, Min, and other
+functions can be chosen. Rearranging the field layout re-computes the summary
+instantly --- this quick re-orientation is what gives the PivotTable its name.
+
+\begin{definitionbox}{PivotTable}
+An interactive summary that aggregates a large range of data by dragging fields
+into Rows, Columns, Values, and Filters areas.
+\end{definitionbox}
+
+A \textbf{PivotChart} is a chart built on a PivotTable and linked to it. When
+the PivotTable layout changes, the PivotChart changes with it.
+
+The most important contrast is that a PivotTable \textbf{summarises} the source
+data; it does not replace it and does not change it. If the source data is
+edited, the PivotTable must be \textbf{refreshed} to show the new result.
+Deleting the source range breaks the PivotTable, and a PivotTable is never the
+same thing as an Excel table.
+
+\section{Printing worksheets}
+A worksheet is printed from \key{File > Print}, and its layout is controlled
+from the \key{Page Layout} tab. The key settings are:
+\begin{itemize}
+  \item \textbf{Orientation} --- \textbf{Portrait} for a tall page or
+    \textbf{Landscape} for a wide one;
+  \item \textbf{Paper size}, \textbf{margins}, and \textbf{headers/footers};
+  \item \textbf{Print Area} --- select a range and choose \key{Set Print Area}
+    to print only that part of the sheet;
+  \item \textbf{Print Titles} --- repeats chosen header rows or columns at the
+    top or left of every printed page, so a long table keeps its headings; and
+  \item \textbf{Scaling} --- options such as ``Fit Sheet on One Page'' shrink
+    the printout to a chosen width or number of pages.
+\end{itemize}
+\textbf{Gridlines} are the faint cell borders seen on screen. They are
+\textbf{not printed by default}; the \key{Print} gridlines option under Sheet
+Options must be enabled to show them on paper. \textbf{Page breaks} can be
+inserted to control where a new printed page begins.
+
+\begin{example}
+A 200-row price list is being printed. Without Print Titles, only the first page
+shows the column headings and later pages are unreadable. Setting the heading
+row as a print title repeats it on every page. If the list is a little too wide,
+landscape orientation or ``Fit All Columns on One Page'' keeps it tidy.
+\end{example}
+
+\section{Protecting worksheets and workbooks}
+\textbf{Protection} restricts changes that can be made to a workbook.
+\textbf{Protect Sheet} (\key{Review > Protect Sheet}) prevents cells on that
+sheet from being edited, while allowing selected actions such as selecting
+locked cells or formatting. \textbf{Protect Workbook} protects the
+\textbf{structure} of the workbook --- preventing sheets from being added,
+deleted, renamed, or moved --- and can also protect its windows.
+
+\begin{definitionbox}{Protection}
+A restriction placed on a worksheet or workbook that prevents specified changes,
+optionally guarded by a password.
+\end{definitionbox}
+
+Cell locking is the detail most candidates miss. Every cell is \textbf{Locked}
+by default in the Format Cells dialog, but this lock has \textbf{no effect until
+the sheet is protected}. To let a user edit some cells and not others, the
+chosen cells must first be \textbf{unlocked}, and then the sheet must be
+protected.
+
+Protection is not the same as encryption. Protection restricts editing inside
+Excel; it is not the password that encrypts the whole file (that is a separate
+file-level password).
+
+\section{What-if analysis}
+\textbf{What-if analysis} answers the question ``what would the result be if an
+input changed?''. Excel provides three tools for this at the depth a JKSSB
+candidate needs:
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Tool} & \textbf{What it does} \\
+\midrule
+Goal Seek & Finds the input value needed to reach a target result. \\
+Scenario Manager & Stores and compares several sets of input values. \\
+Data Table & Shows how an output changes as one or two inputs change. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three are found under \key{Data > What-If Analysis}. Goal Seek works
+backwards from a target: for example, it finds the selling price that makes the
+profit exactly a desired figure. Scenario Manager keeps named alternatives such
+as ``Best case'' and ``Worst case''. A Data Table is a grid that shows a range
+of results for one or two changing inputs.
+
+\section{Near-neighbour contrast: COUNTIFS vs SUMPRODUCT}
+To \textbf{count rows that satisfy several conditions at the same time}, Excel
+offers two tools that students often confuse.
+
+\textbf{COUNTIFS} is the direct multi-criterion counting function. Its arguments
+are written as \textbf{paired} ranges and criteria:
+\[
+\texttt{COUNTIFS(range1, crit1, range2, crit2, \ldots)}
+\]
+It applies \textbf{AND} logic: a row is counted only if it meets \emph{every}
+range-and-criteria pair. For example,
+\texttt{COUNTIFS(A2:A100,"North",B2:B100,">500")} counts the rows that are in
+the North region \emph{and} have a value greater than 500.
+
+\textbf{SUMPRODUCT} is a general array function. It can also count
+multi-criterion rows by multiplying boolean results:
+\[
+\texttt{SUMPRODUCT((A2:A100="North")*(B2:B100>500))}
+\]
+Each TRUE/FALSE comparison becomes 1 or 0 when multiplied, and SUMPRODUCT adds
+the products, giving the same count. Because the multiplication already coerces
+the boolean values to numbers, SUMPRODUCT does not need the \key{--} (double
+unary) that is sometimes seen when boolean arrays are fed to other functions.
+
+For \textbf{OR} logic --- a row that meets either of two conditions --- the two
+matches are \emph{added}, for example
+\texttt{COUNTIF(range,"North")+COUNTIF(range,"South")}.
+
+\begin{example}
+A marksheet has a Stream column and a Marks column. To count students who are in
+the Science stream \emph{and} scored more than 80, write
+\[ \texttt{COUNTIFS(Stream,"Science",Marks,">80")}. \]
+The same count can be obtained with
+\[ \texttt{SUMPRODUCT((Stream="Science")*(Marks>80))}. \]
+Confusing the paired arguments of COUNTIFS, or thinking COUNTIFS cannot handle
+two conditions at once, is the classic error (TRAP-14, PYQ-15).
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Sort} rearranges rows into an order; \textbf{filter} shows only
+    matching rows and \textbf{hides} the rest --- it does not delete them.
+  \item A \textbf{PivotTable} summarises the source data but is \textbf{not} the
+    source table; it must be \textbf{refreshed} after the data changes.
+  \item A PivotTable is \textbf{not} an Excel table. The table is the source;
+    the PivotTable is a summary built on it.
+  \item \textbf{COUNTIFS} counts with AND across \textbf{paired}
+    range-and-criteria arguments; \textbf{SUMPRODUCT} does the same with
+    boolean arrays (TRAP-14).
+  \item \textbf{Locked} cells are protected only \textbf{after} the sheet is
+    protected; the default lock has no effect on its own.
+  \item \textbf{Gridlines} are \textbf{not printed} unless Print gridlines is
+    enabled.
+\end{enumerate}
+
+\begin{example}
+An item states, ``A PivotTable changes the source data and updates on its own.''
+Both halves are wrong. A PivotTable never changes the source; and after the
+source changes it does not update by itself --- the user must refresh it. The
+stable concept is: PivotTable = summary, source = untouched, refresh = manual.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish between sorting and filtering, and state what happens to the
+    rows that a filter does not show.
+  \item Name two features that an Excel table provides but a plain range does
+    not.
+  \item Match each chart to its best use: column, line, pie, scatter.
+  \item List the four areas of a PivotTable and say what goes into each.
+  \item Explain why a PivotTable must be refreshed after the source data
+    changes.
+  \item What is the difference between Protect Sheet and Protect Workbook?
+    When does a locked cell actually become protected?
+  \item Write the COUNTIFS formula that counts rows in the North region with a
+    value greater than 500, and give the equivalent SUMPRODUCT formula.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Sorting rearranges rows into a chosen order; filtering shows only the
+    rows matching a condition. A filter \emph{hides} the other rows temporarily;
+    it does not delete them, and clearing the filter restores them.
+  \item An Excel table has a name and auto-expands when new rows are typed; it
+    also provides structured references, banded rows, and built-in filter
+    buttons. A plain range has none of these by default.
+  \item A column chart compares values across categories; a line chart shows a
+    trend over time; a pie chart shows parts of one whole; a scatter chart shows
+    the relationship between two numeric variables.
+  \item Rows --- field values down the left; Columns --- field values across the
+    top; Values --- the numbers that are summarised; Filters --- fields used to
+    filter the whole PivotTable.
+  \item A PivotTable stores only a summary view; it does not track the source
+    automatically. After the source data changes, the user must Refresh the
+    PivotTable so the summary is recalculated.
+  \item Protect Sheet stops cells on a sheet from being edited; Protect Workbook
+    protects the workbook structure (adding, deleting, renaming, or moving
+    sheets). A cell is Locked by default, but the lock takes effect only after
+    the sheet is protected.
+  \item \texttt{COUNTIFS(A2:A100,"North",} \texttt{B2:B100,">500")}; the
+    equivalent is \texttt{SUMPRODUCT((A2:A100="North")}
+    \texttt{*(B2:B100>500))}.
+\end{enumerate}
+\endgroup
+\end{document}

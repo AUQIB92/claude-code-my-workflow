@@ -1,0 +1,88 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 25 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 19 questions are original JKSSB-pattern items
+(\textit{[Original]}); Q4 is a real previous-year question traced to the KB
+Real-PYQ Evidence Registry as PYQ-38
+(\textit{[PYQ WO 2026 Q78, key:provisional]}).
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{B.} A formula is an instruction, beginning with \texttt{=}, that
+  calculates a cell's value from operands. A describes a constant; C ignores
+  that the cell stores the formula, not a frozen result; D describes
+  formatting, not a formula.
+\item \textbf{B.} Multiplication uses the asterisk \texttt{*}. A (\texttt{x})
+  and C (\texttt{.}) are not Excel operators, and D (\texttt{/}) is the
+  division operator.
+\item \textbf{A.} The \texttt{\$} locks the part of the reference that
+  directly follows it, so that part is fixed when the formula is copied. B, C,
+  and D describe formatting or access settings, not the meaning of \texttt{\$}
+  in a reference.
+\item \textbf{B.} A formula must begin with the equal sign \texttt{=} (TRAP-30,
+  PYQ-38). A, C, and D are the trap distractors: a formula does not start with
+  \texttt{+}, \texttt{@}, or \texttt{\#}.
+\item \textbf{B.} An absolute reference locks both the column and the row with
+  two dollar signs: \texttt{\$A\$1}. A (\texttt{A1}) is relative; C
+  (\texttt{A\$1}) locks only the row; D (\texttt{\$A1}) locks only the column;
+  so each is a mixed or relative reference, not absolute.
+\item \textbf{A.} The ampersand \texttt{\&} concatenates (joins) text. B
+  (\texttt{+}) adds numbers; C (\texttt{:}) is the range operator; D
+  (\texttt{@}) is not an Excel operator.
+\item \textbf{B.} In \texttt{=A1+\$A\$1}, only \texttt{\$A\$1} is absolute, so
+  it stays the same when the formula is copied. A (\texttt{A1}) is relative
+  and shifts; C is wrong because A1 does change; D is wrong because A1 changes.
+\item \textbf{B.} \texttt{=A1} is relative; copying from B1 to B2 moves down
+  one row, so the reference becomes \texttt{=A2}. A would require an absolute
+  reference; C has the wrong column; D is the unchanged absolute form, not the
+  result of copying a relative reference.
+\item \textbf{A.} \texttt{=\$A\$1} is absolute: both the column and the row
+  are locked, so copying to B5 leaves it \texttt{=\$A\$1}. B and C wrongly
+  change the row; D wrongly changes the column.
+\item \textbf{B.} In \texttt{=\$A1} the column is locked and the row is
+  relative. Copying from B1 to C2 moves down one row, so the row follows to 2
+  and the column stays A: \texttt{=\$A2}. A ignores the row change; C moves
+  the locked column; D moves the column without following the row.
+\item \textbf{A.} In \texttt{=A\$1} the row is locked and the column is
+  relative. Copying from B1 to C2 moves one column right, so the column
+  follows from A to B and the row stays 1: \texttt{=B\$1}. B wrongly changes
+  the locked row; C ignores the column change; D keeps the locked column A
+  instead of following it.
+\item \textbf{B.} \texttt{=A2*\$B\$1}: the price reference \texttt{A2} is
+  relative and follows the copy down to \texttt{A3}, while \texttt{\$B\$1} is
+  absolute and stays fixed. A does not advance the price; C wrongly moves the
+  locked rate; D moves both, which only happens if the rate were relative.
+\item \textbf{A.} \texttt{\#DIV/0!} appears when a number is divided by zero
+  or by an empty cell. B describes \texttt{\#REF!}; C describes
+  \texttt{\#VALUE!}; D describes \texttt{\#NAME?}.
+\item \textbf{A.} \texttt{\#REF!} means a reference is invalid because the
+  referenced cell was deleted. B describes \texttt{\#DIV/0!}; C describes
+  \texttt{\#VALUE!}; D describes a missing \texttt{=}, which does not produce
+  \texttt{\#REF!}.
+\item \textbf{A.} \texttt{\#VALUE!} means the wrong type of operand was used,
+  such as text where a number is needed. B is not an Excel error of this kind;
+  C describes \texttt{\#REF!}; D describes \texttt{\#N/A}.
+\item \textbf{C.} A relative reference does \emph{not} always point to the
+  same cell; it shifts when the formula is copied, so C is the false
+  statement. A, B, and D are all true of relative references.
+\item \textbf{B.} A \texttt{\$} before a letter locks the column, and a
+  \texttt{\$} before a number locks the row, so \texttt{A\$1} locks the row
+  while \texttt{\$A1} locks the column. A wrongly says \texttt{\$A1} locks
+  both; C swaps the two; D wrongly says \texttt{\$A\$1} locks only the row.
+\item \textbf{B.} Statement II (absolute references do not change) and
+  statement III (relative references do change) are correct. Statement I is
+  false: under the exam rule a formula must start with \texttt{=}. A omits III;
+  C includes the false I; D includes the false I.
+\item \textbf{A.} The operator \texttt{<>} means ``not equal to''. B is the
+  equality operator \texttt{=}; C is \texttt{>}; D is \texttt{<=}.
+\item \textbf{A.} Multiplication is evaluated before addition, so
+  \texttt{3*4} is 12 and \texttt{2+12} is 14. B (20) would require
+  \texttt{=(2+3)*4}; C (24) would require \texttt{=2*3*4}; D (9) would require
+  \texttt{=(2+3)+4}.
+\end{enumerate}
+\end{document}

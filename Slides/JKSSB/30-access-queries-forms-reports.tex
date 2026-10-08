@@ -1,0 +1,271 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Access Queries, Forms \& Reports}
+\subtitle{Lesson 30 --- Objects, Queries and Reporting}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{The Four Main Access Objects}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.72\textwidth}}
+      \toprule
+      \textbf{Object} & \textbf{Job} \\
+      \midrule
+      Table & Stores the actual data in rows and columns \\
+      Query & Asks a question and retrieves selected data \\
+      Form & Provides a screen to enter and view data \\
+      Report & Presents data in a printable layout \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Data lives in tables; queries, forms and reports work on that data.}
+\end{frame}
+
+\begin{frame}{The Object Sequence}
+  \begin{center}
+    \key{Table} $\rightarrow$ \key{Query} $\rightarrow$ \key{Form}
+    $\rightarrow$ \key{Report}
+  \end{center}
+  \vspace{0.2cm}
+  \begin{itemize}
+    \item \key{Table}: the store where the data actually lives.
+    \item \key{Query}: asks a question and pulls the needed rows together.
+    \item \key{Form}: a screen for entering and viewing data.
+    \item \key{Report}: a formatted, printable presentation of the data.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Data is stored once, in a table; the query selects it, the form enters
+    it, and the report prints it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Tables Revisited: The Source of Data}
+  \begin{itemize}
+    \item A \key{table} stores data in \key{fields} (columns) and
+      \key{records} (rows).
+    \item Every other object draws its data from a \key{table} or a
+      \key{query}.
+    \item A form or a report built on a table shows that table's data; built
+      on a query, it shows only the \key{selected} rows.
+    \item The table is therefore the \key{foundation} of the database.
+  \end{itemize}
+  \begin{block}{Remember}
+    No data is stored in a query, form or report --- they only
+    \muted{present} what a table holds.
+  \end{block}
+\end{frame}
+
+\begin{frame}{What Is a Query?}
+  \begin{itemize}
+    \item A \key{query} is a question you ask of the database.
+    \item It \key{retrieves} data from one or more tables, usually by a
+      condition.
+    \item A query does not normally store new data; it shows a result
+      \key{set} drawn from the tables.
+    \item Queries can also \key{modify} data --- these are called
+      \key{action queries}.
+  \end{itemize}
+  \begin{block}{Definition}
+    A query selects, filters, or acts on records according to the rules you
+    set.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Select Query}
+  \begin{itemize}
+    \item A \key{Select query} \key{retrieves} records that satisfy a
+      \key{condition} (a criterion).
+    \item It is the \key{most common} query type in Access.
+    \item Example: show every student whose \texttt{Marks} are greater than
+      60.
+    \item The condition decides \key{which rows appear}; the fields decide
+      \key{which columns appear}.
+  \end{itemize}
+  \begin{alertblock}{Exam point (PYQ-39)}
+    A query that retrieves data on the basis of a condition is a
+    \key{Select Query}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Building a Query: Design View and Criteria}
+  \begin{itemize}
+    \item Queries are built in \key{Query Design} view (or typed in
+      \key{SQL} view).
+    \item The design grid is called \key{QBE} --- \key{Query By Example}.
+    \item Each column holds a \key{field}; the \key{Criteria} row holds the
+      condition.
+    \item Example criterion: \texttt{>60} on the \texttt{Marks} field shows
+      only rows above 60.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    For a Students table, put \texttt{Marks} in the field row and
+    \texttt{>60} in the Criteria row; the query returns only students who
+    scored more than 60.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Action Queries: Update, Append, Delete}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.68\textwidth}}
+      \toprule
+      \textbf{Query} & \textbf{What it does to the data} \\
+      \midrule
+      Update & Changes existing values in records \\
+      Append & Adds records from one table to another \\
+      Delete & Removes records that match a condition \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Update, Append and Delete all change the stored data; that is why
+  they are called action queries.}
+\end{frame}
+
+\begin{frame}{Select vs Action Queries (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Select query} & \textbf{Action query} \\
+      \midrule
+      What it does & Retrieves data on a condition & Modifies stored data \\
+      Changes data? & No & Yes \\
+      Examples & Select & Update, Append, Delete \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap alert (TRAP-31)}
+    A \key{Select} query only \key{retrieves}; to modify data use an
+    \key{Update}, \key{Append}, or \key{Delete} query.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lookup Fields}
+  \begin{itemize}
+    \item A \key{lookup} field lets the user \key{pick a value from a list}
+      instead of typing it.
+    \item The list usually comes from a \key{table} or a \key{query}, such
+      as a list of department names.
+    \item A lookup is often used for a \key{foreign key}, so the entry
+      matches an existing value.
+    \item Benefit: it \key{reduces typing errors} and keeps values
+      consistent.
+  \end{itemize}
+  \begin{block}{Keep it clear}
+    A lookup field \emph{chooses} a value from a list; it does not create a
+    new table or a new query.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Basic SQL Awareness}
+  \begin{itemize}
+    \item \key{SQL} stands for \key{Structured Query Language}.
+    \item It is the standard language for working with relational databases;
+      Access runs SQL behind the scenes.
+    \item A typical retrieval statement is
+      \texttt{SELECT fields FROM table WHERE condition;}.
+    \item \texttt{SELECT} retrieves; \texttt{FROM} names the table;
+      \texttt{WHERE} gives the condition.
+  \end{itemize}
+  \begin{exampleblock}{Example}
+    \texttt{SELECT Name FROM Students WHERE Marks > 60;} returns the
+    \texttt{Name} of every student with marks above 60.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Forms: Entering and Viewing Data}
+  \begin{itemize}
+    \item A \key{form} is an object that provides a \key{screen} --- a user
+      interface --- for entering, viewing, and editing data.
+    \item A form is usually \key{based on a table or a query}.
+    \item It shows one record at a time (or a few), with clearly labelled
+      fields.
+    \item Forms make data entry \key{easier and safer} than typing directly
+      into a table grid.
+  \end{itemize}
+  \begin{alertblock}{Exam point}
+    A form is for \key{on-screen} work with data --- entering and viewing it.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Reports: Printable Output}
+  \begin{itemize}
+    \item A \key{report} presents data in a \key{formatted, printable}
+      layout.
+    \item It can \key{group} records and show \key{totals and summaries}.
+    \item A report is \key{read-only}: it is meant for \key{printing and
+      sharing}, not for editing data.
+    \item A report can be based on a table or a query.
+  \end{itemize}
+  \begin{block}{Definition}
+    A report is the print-ready view of your data --- the output object.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Form vs Report (Near-Neighbour)}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Form} & \textbf{Report} \\
+      \midrule
+      Purpose & Enter and view data on screen & Print and present data \\
+      Data change & Allows editing & Read-only \\
+      Typical use & Data-entry screen & Printed summary \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Form = screen for data entry; Report = printed output. Do not swap
+  them.}
+\end{frame}
+
+\begin{frame}{Worked Example: A Students Database}
+  \begin{itemize}
+    \item \key{Table}: \texttt{Students} with \texttt{RollNo},
+      \texttt{Name}, \texttt{Marks}.
+    \item \key{Query}: select students with \texttt{Marks} greater than 60
+      (a Select query).
+    \item \key{Form}: a screen to enter a new student's details.
+    \item \key{Report}: a printable list of all students who passed.
+  \end{itemize}
+  \begin{exampleblock}{The full sequence}
+    Table (stores the data) $\rightarrow$ Query (selects it) $\rightarrow$
+    Form (enters it) $\rightarrow$ Report (prints it).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Objects and Query Types}
+  \begin{itemize}
+    \item A \key{Select} query \key{retrieves}; \key{Update}, \key{Append}
+      and \key{Delete} queries \key{modify} (TRAP-31).
+    \item Data is stored in a \key{table}, \key{not} in a query, form or
+      report.
+    \item A \key{form} is for \key{on-screen entry}; a \key{report} is a
+      \key{printable} output.
+    \item \key{SQL} = Structured Query Language.
+    \item A \key{lookup} field picks a value \key{from a list}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 30: Recall}
+  \begin{itemize}
+    \item The four main objects: \key{Table} (stores), \key{Query}
+      (retrieves), \key{Form} (enters on screen), \key{Report} (prints).
+    \item The sequence is \key{Table} $\rightarrow$ \key{Query}
+      $\rightarrow$ \key{Form} $\rightarrow$ \key{Report}.
+    \item A \key{Select query} retrieves data on a condition; \key{action
+      queries} (Update, Append, Delete) modify data.
+    \item Queries are built in \key{QBE} (Query By Example) design view with
+      a \key{Criteria} row.
+    \item A \key{lookup} field chooses a value from a list.
+    \item \key{SQL} (Structured Query Language) uses
+      \texttt{SELECT ... FROM ... WHERE}.
+  \end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,401 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{61.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current Office, Email and Statement Evaluation --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Word: structured content and content controls}
+Most Word documents are free-form, but many office documents --- forms,
+templates, and records --- need \emph{structure}: a fixed place for a name, a
+date, a choice from a list, or a check box. Word provides \textbf{content
+controls} for exactly this task. A content control is an individual element
+that you insert at a chosen point in a document or template; the user can type
+or choose only what the control allows.
+
+\begin{definitionbox}{Content control}
+A single, structured element inserted into a Word document or template to
+capture one piece of information in a controlled way.
+\end{definitionbox}
+
+Common content controls include plain text, rich text, picture, drop-down
+list, combo box, date picker, and check box. They are inserted from the
+\textbf{Developer} tab, which is hidden by default and is enabled through
+Word Options $\rightarrow$ Customize Ribbon. A content control can restrict
+editing at that spot and can enforce limited \textbf{data validation}: a
+drop-down list allows only the listed items, and a date picker allows only a
+date. This is the fact behind the JA 2026 word item (PYQ-12): a content
+control \emph{can} enforce data validation, so the statement that it cannot is
+the incorrect one.
+
+Content controls should not be confused with \emph{placeholders}, which belong
+to PowerPoint slide layouts, or with form \emph{fields} from older Word
+versions. In this course, ``content control'' means the Word Developer-tab
+element that structures a document.
+
+\section{First-line and hanging indents}
+Indentation decides how far a paragraph's text sits from the left (or right)
+margin. Word distinguishes two special paragraph indents.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Indent} & \textbf{Meaning} \\
+\midrule
+First-line indent & Only the \textbf{first line} of the paragraph is indented;
+the remaining lines start at the left margin. \\
+Hanging indent & Every line \textbf{except the first} is indented; the first
+line hangs out to the left. Used for references, bibliographies, and bulleted
+lists. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Hanging indent}
+A paragraph indent in which all lines except the first are pushed inward, so
+the first line ``hangs'' at the left margin.
+\end{definitionbox}
+
+These are paragraph-level formatting settings. Two paragraphs can carry
+different indents even when they use the \emph{same style}, because a
+paragraph style supplies a default that individual paragraphs can override.
+The usual wrong statement claims that a hanging indent shifts the first line;
+in fact the first line is the one that stays out, and all the others move
+inward.
+
+\section{The Navigation Pane}
+The \textbf{Navigation Pane} is a Word panel opened from the \textbf{View}
+tab. It is a browsing aid rather than a formatting tool. It presents three
+views or tabs.
+
+\begin{enumerate}
+  \item \textbf{Headings}: an outline of the document built from paragraphs
+    that carry a \emph{Heading style} (Heading 1, Heading 2, and so on).
+  \item \textbf{Pages}: thumbnail pictures of each page.
+  \item \textbf{Results}: the matches for text typed into the search box.
+\end{enumerate}
+
+Because the Headings view is driven by heading styles, applying a Heading
+style does two things at once: it gives the paragraph an outline level and it
+makes the paragraph appear in the Navigation Pane (and in an automatic Table
+of Contents).
+
+\begin{example}
+A student writes a long report. Applying \emph{Heading 1} to each chapter
+title makes every chapter appear in the Navigation Pane, so the reader can
+jump straight to any chapter. A reviewer's \emph{comment} on a sentence does
+\emph{not} appear in the Navigation Pane; comments are read in the
+markup/comments pane. That distinction is the trap in JA 2026 (PYQ-12).
+\end{example}
+
+\section{Track Changes and revision metadata}
+\textbf{Track Changes} is Word's review tool. When it is switched on, every
+edit is recorded as a \emph{revision} instead of being applied silently. Three
+kinds of change are tracked: insertions, deletions, and formatting changes.
+Each recorded change stores \textbf{metadata} --- the \textbf{author's name}
+and the \textbf{date and time} of the edit.
+
+\begin{definitionbox}{Revision metadata with Track Changes}
+The information Word stores alongside a tracked change: who made it and when.
+\end{definitionbox}
+
+A tracked change can be \textbf{accepted} or \textbf{rejected}. Accepting a
+change keeps the new text as final and \textbf{removes the revision metadata}
+attached to that change; rejecting a change restores the original text. Before
+sharing a document, Word's \emph{Inspect Document} feature can be used to
+strip hidden personal information such as author names.
+
+\section{Section Break versus Page Break}
+Word documents are divided into \textbf{sections}, and page-level settings
+belong to a section. The two breaks behave quite differently.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Break} & \textbf{What it does} & \textbf{What it changes} \\
+\midrule
+Page Break & Moves the following text to the next page. & Nothing else; the
+document stays in the same section with the same headers, footers, and
+margins. \\
+Section Break & Starts a \textbf{new section}. & Each section may have its own
+headers and footers, margins, page orientation, columns, and page numbering. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Section Break}
+A break that ends the current section and begins a new one, so that
+page-level formatting can differ from that point onward.
+\end{definitionbox}
+
+\begin{example}
+A report needs no header on the title page but a running header on every later
+page. Inserting a single Page Break will not do it, because both pages remain
+in one section. The correct tool is a \textbf{Section Break} after the title
+page, after which the new section can carry its own header. This is the exact
+distinction tested in JA 2026 (PYQ-13): Section Break, not Page Break, allows
+different headers and footers in one document.
+\end{example}
+
+\section{Excel: nested IF, blank and non-numeric input}
+An \textbf{IF} function chooses between two values:
+\texttt{=IF(condition, value\_if\_true, value\_if\_false)}. A \textbf{nested
+IF} places a second IF inside one of those two positions, which lets one
+formula test several conditions in turn:
+\[
+\texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))}.
+\]
+Excel evaluates the conditions from left to right and returns the value of the
+\textbf{first} condition that is TRUE; once a condition is satisfied, the
+remaining tests are skipped.
+
+\begin{example}
+With A1 = 70 the first condition (70 > 50) is TRUE, so the result is
+\emph{High}. With A1 = 30 the first condition is FALSE but the second
+(30 > 25) is TRUE, so the result is \emph{Medium}. With A1 = 10 both are
+FALSE, so the result is \emph{Low}.
+\end{example}
+
+The behaviour on \textbf{blank} and \textbf{non-numeric} input is the trap
+(PYQ-14). In a numeric comparison Excel treats a \textbf{blank cell as zero}.
+Therefore, if A1 is empty, \texttt{A1>50} is FALSE and
+\texttt{A1>25} is also FALSE, so the formula falls through to the final value
+--- \emph{Low}. A blank cell does not make the formula stop or produce an
+error; it is simply read as 0.
+
+Non-numeric \textbf{text} is different again. Text is not a number, so:
+\begin{itemize}
+  \item arithmetic on it fails --- for example \texttt{=A1+5} with text in A1
+    returns the error \texttt{\#VALUE!};
+  \item \texttt{ISNUMBER} returns FALSE for a text cell and for a blank cell.
+\end{itemize}
+For this reason, robust formulas guard the input, for instance with
+\texttt{ISBLANK}, \texttt{ISNUMBER}, or \texttt{IFERROR}, before using the
+value in a calculation.
+
+\section{COUNTIFS and SUMPRODUCT}
+Counting rows that meet \emph{several} conditions at once is a frequent task.
+Excel offers two routes.
+
+\begin{definitionbox}{COUNTIFS}
+A function that counts the rows satisfying \emph{all} of the given
+range-and-criteria pairs (AND logic):
+\texttt{COUNTIFS(range1, criteria1, range2, criteria2, \ldots)}.
+\end{definitionbox}
+
+The \textbf{COUNTIFS} function takes \emph{paired} arguments: a range followed
+by the criterion that applies to it, repeated for each condition. All the
+ranges must be the same size. The singular \textbf{COUNTIF} handles one
+condition; the plural \textbf{COUNTIFS} handles several. Text criteria can use
+the wildcards \texttt{*} (any sequence of characters) and \texttt{?} (any one
+character).
+
+\begin{definitionbox}{SUMPRODUCT}
+A function that multiplies corresponding elements of the given arrays and
+returns the sum of those products.
+\end{definitionbox}
+
+On its own, \texttt{SUMPRODUCT(A1:A3,B1:B3)} returns
+\texttt{A1*B1 + A2*B2 + A3*B3}. It can also be used to \emph{count}, by
+building boolean arrays and multiplying them:
+
+\begin{center}
+\texttt{=SUMPRODUCT((A1:A10>50)*(B1:B10="Yes"))}
+\end{center}
+
+\noindent counts the rows in which the first condition AND the second
+condition are both true, because the product is 1 only when both parts are 1.
+The double-unary form \texttt{=SUMPRODUCT(--(A1:A10>50))} is a common way to
+coerce TRUE/FALSE into 1/0.
+
+\begin{example}
+To count how many students scored above 50 \emph{and} belong to the Science
+stream, either
+\texttt{=COUNTIFS(Marks,">50",Stream,"Science")} or
+\texttt{=SUMPRODUCT((Marks>50)*(Stream="Science"))} will work. The stable
+distinction tested in JA 2026 (PYQ-15, TRAP-14) is that COUNTIFS takes several
+criteria directly, while SUMPRODUCT does arithmetic on arrays and can
+therefore both \emph{add} and \emph{count} --- it does not ``only add.''
+\end{example}
+
+\section{Email: filters, signatures, POP3 and privacy}
+\subsection*{Filters and rules}
+An email \textbf{filter}, usually called a \textbf{rule} in desktop mail
+clients, acts automatically on messages. A rule has two parts: a
+\textbf{condition} (sender, recipient, subject, keywords, presence of an
+attachment) and an \textbf{action} (move to a folder, flag, forward, delete,
+mark as read). A typical rule sends all mail from one mailing list into a
+dedicated folder, keeping the inbox tidy.
+
+\subsection*{Digital signature versus encryption}
+These two security features are constantly confused (PYQ-16, TRAP-15).
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Digital signature} & \textbf{Encryption} \\
+\midrule
+Purpose & Authenticity and integrity & Confidentiality \\
+What it establishes & Who sent the message, and that it was not altered in
+transit & That only the intended reader can read the contents \\
+Does it hide the content? & No & Yes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A \textbf{digital signature} does \emph{not} encrypt the message body. It
+proves the sender's identity and detects tampering. It is \textbf{encryption}
+that scrambles the content so that only the holder of the correct key can read
+it.
+
+\subsection*{POP3 and IMAP}
+\textbf{POP3} stands for \textbf{Post Office Protocol version 3}. It is a mail
+\emph{retrieval} protocol: it \textbf{downloads} messages from the mail server
+to the local device. By default it typically \textbf{removes} the messages
+from the server, so once downloaded the mail lives only on that machine and is
+not kept in sync across devices. \textbf{IMAP} works differently: it leaves
+the mail on the server and keeps all devices synchronised. The stable
+distinction (PYQ-16, TRAP-17) is that POP3 downloads to the local machine,
+whereas IMAP syncs. \textbf{SMTP}, in contrast, is the protocol for
+\emph{sending} mail.
+
+\subsection*{BCC and recipient privacy}
+An email has three recipient fields.
+
+\begin{center}
+\begin{tabular}{p{0.14\textwidth}p{0.22\textwidth}p{0.52\textwidth}}
+\toprule
+\textbf{Field} & \textbf{Full form} & \textbf{Visibility} \\
+\midrule
+To & --- & Primary recipients; visible to everyone. \\
+Cc & Carbon Copy & Copied recipients; visible to everyone. \\
+Bcc & Blind Carbon Copy & Addresses hidden from the \emph{other} recipients. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The key point (PYQ-16, TRAP-16) is what Bcc hides. Bcc hides the blind
+recipients from \emph{each other} and from the To/Cc recipients; it does
+\emph{not} hide them from the \textbf{sender}, who always sees the complete
+recipient list. A common wrong statement says that Bcc hides the sender and
+recipients from one another --- the sender is never hidden.
+
+\section{PowerPoint SmartArt conversion}
+\textbf{SmartArt} turns a plain list into a diagram. PowerPoint can convert
+content in both directions, with one firm limit.
+
+\begin{itemize}
+  \item \textbf{Text to SmartArt}: select a bulleted list and choose
+    \textbf{Home} $\rightarrow$ Convert to SmartArt Graphic; choose a layout.
+    The text is preserved as the diagram's content.
+  \item \textbf{SmartArt to text}: with the graphic selected, use SmartArt
+    Tools Design $\rightarrow$ Convert $\rightarrow$ Convert to Text. You get
+    a bulleted list back; the shapes and any pictures in the graphic are
+    \emph{lost}.
+  \item \textbf{SmartArt to shapes}: Convert to Shapes breaks the graphic
+    into ordinary shapes. Once that is done, the shapes \textbf{cannot} be
+    converted back into SmartArt.
+\end{itemize}
+
+\begin{example}
+A presenter has six bullet points and wants a cycle diagram. She selects the
+list and uses \emph{Convert to SmartArt}. Later she needs the plain list
+again, so she uses \emph{Convert to Text} and the six points return as
+bullets. What cannot be undone is the step to individual shapes: after
+\emph{Convert to Shapes}, rebuilding the SmartArt would mean starting over
+(the ``re-entry'' point behind PYQ-17).
+\end{example}
+
+The direct source of Convert to SmartArt is \emph{text}. A picture or a chart
+is not transformed into SmartArt in one step; you would instead insert a
+picture-type SmartArt layout and place the images by hand.
+
+\section{Exam retrieval and common confusions}
+The following distinctions prevent most errors in this unit.
+\begin{enumerate}
+  \item Different headers and footers require a \textbf{Section Break}, not a
+    Page Break (TRAP-13).
+  \item A \textbf{hanging indent} shifts every line except the first; a
+    first-line indent shifts only the first line.
+  \item A \textbf{blank cell} is treated as 0 in a comparison; it does not
+    cause an error (PYQ-14).
+  \item \textbf{COUNTIFS} counts with AND logic over paired arguments;
+    \textbf{SUMPRODUCT} multiplies arrays and can both add and count
+    (TRAP-14).
+  \item A \textbf{digital signature} gives authenticity and integrity, not
+    confidentiality; \textbf{encryption} gives confidentiality (TRAP-15).
+  \item \textbf{POP3 downloads} to the local machine; \textbf{IMAP} syncs
+    (TRAP-17).
+  \item \textbf{Bcc} hides recipients from each other, never from the sender
+    (TRAP-16).
+  \item \textbf{Navigation Pane} shows headings, pages, and search results,
+    not comments.
+\end{enumerate}
+
+\begin{example}
+An item states, ``A digital signature encrypts the message so that only the
+recipient can read it.'' This is wrong. The signature establishes the sender
+and integrity; encryption is the feature that hides the content. The wrong
+option has merged two distinct security services.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a first-line indent from a hanging indent, with one use
+    for each.
+  \item State why a Section Break, and not a Page Break, is needed for
+    different headers and footers.
+  \item Explain what a nested IF returns when several conditions are true at
+    once.
+  \item What does \texttt{=IF(A1>50,"High","Low")} display when A1 is blank,
+    and why?
+  \item Give the general form of COUNTIFS, and state one thing SUMPRODUCT can
+    do that COUNTIFS cannot.
+  \item Distinguish a digital signature from encryption in one sentence.
+  \item What does POP3 do with mail, and how does that differ from IMAP?
+  \item In a message, who can see the addresses placed in the Bcc field?
+  \item Describe two directions of SmartArt conversion and one that cannot be
+    reversed.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A first-line indent indents only the first line (normal paragraph
+    openings); a hanging indent indents every line except the first
+    (references and bulleted lists).
+  \item Page-level settings such as headers and footers belong to a section.
+    A Page Break keeps the same section, so its header/footer cannot differ;
+    a Section Break starts a new section that can carry its own header and
+    footer.
+  \item A nested IF returns the value of the \emph{first} condition that is
+    TRUE; once a condition is satisfied the remaining tests are skipped.
+  \item It displays \emph{Low}, because a blank cell is treated as 0, and 0 is
+    not greater than 50, so the FALSE branch is taken.
+  \item \texttt{COUNTIFS(range1, criteria1, range2, criteria2, \ldots)}.
+    SUMPRODUCT can multiply corresponding array elements and return their sum
+    (arithmetic), so it can add as well as count; COUNTIFS only counts.
+  \item A digital signature proves the sender's identity and that the message
+    was not altered, whereas encryption hides the content so only the
+    intended reader can read it.
+  \item POP3 downloads mail from the server to the local device and by
+    default removes it from the server; IMAP leaves mail on the server and
+    keeps devices synchronised.
+  \item The sender can see all Bcc addresses, and each Bcc recipient is hidden
+    from the other recipients (To, Cc, and the other Bcc recipients).
+  \item Text converts to SmartArt (Convert to SmartArt), and SmartArt
+    converts back to text (Convert to Text). Converting SmartArt to shapes is
+    \emph{not} reversible --- the shapes cannot be turned back into SmartArt.
+\end{enumerate}
+\endgroup
+\end{document}

@@ -1,0 +1,285 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{54.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Office Shortcut and Product Trap Lab --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why this lesson is a trap drill}
+The computer section of JKSSB papers does not reward vague recognition. It
+tests the \textbf{exact key} and the \textbf{exact product category}. A wrong
+option is usually not random; it is the nearest neighbour to the right answer
+--- the key that differs by one letter, the same function key in a different
+program, or a familiar software name placed in the wrong category. The safe
+method is to read every option as a claim to be tested and to keep the exact
+English term: \texttt{F5}, \texttt{F7}, \texttt{Ctrl+H}, \texttt{\$A\$1}.
+This lesson gathers the Word, PowerPoint, Excel, and product-category traps
+that JKSSB reuses.
+
+\section{MS Word: exact shortcut keys}
+Word has a small set of shortcuts that JKSSB asks again and again. Learn each
+key with its full action.
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action in MS Word} \\
+\midrule
+F7 & Spelling \& Grammar (spell check) \\
+Shift+F7 & Thesaurus \\
+Ctrl+H & Find and Replace \\
+Ctrl+F & Find only (opens the Navigation pane) \\
+Ctrl+K & Insert Hyperlink \\
+Ctrl+X & Cut the selection \\
+Ctrl+C & Copy the selection \\
+Ctrl+V & Paste the Clipboard contents \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Find and Replace}
+A Word tool, opened with \textbf{Ctrl+H}, that searches for a word or phrase
+and replaces it with another across the document.
+\end{definitionbox}
+
+The one distinction to fix first is \textbf{Ctrl+H} versus \textbf{Ctrl+F}.
+\texttt{Ctrl+H} opens Find and Replace, so it can change text;
+\texttt{Ctrl+F} only finds text. The second is \textbf{F7} versus
+\textbf{Shift+F7}: \texttt{F7} checks spelling and grammar, while
+\texttt{Shift+F7} opens the Thesaurus. A third is \textbf{Ctrl+K}, which
+inserts a hyperlink, not a comment or a caption.
+
+\section{Word views and review tools}
+Word offers several views of the same document. \textbf{Print Layout} shows
+the document exactly as it will appear on the printed page, with margins,
+headers, and footers in place. The other common views are Web Layout, Outline,
+and Draft. For exam purposes, the key phrase ``as it will appear when printed''
+points to Print Layout.
+
+\textbf{Track Changes} is Word's review tool. When it is switched on, every
+insertion, deletion, and formatting change is recorded rather than applied
+silently. Each marked change can later be \textbf{accepted} or
+\textbf{rejected} by a reviewer. Track Changes also stores the author's name
+and the time of the edit as document metadata. The important trap is that
+Track Changes does \emph{not} delete the original text permanently: the
+original remains available until a reviewer accepts or rejects the change
+(PYQ-12).
+
+\begin{example}
+A candidate reads the option ``Track Changes permanently deletes the original
+text, so it can never be restored.'' This is false. Track Changes preserves
+the original text and marks the edit; the reviewer decides whether to accept
+or reject it. The trap works because ``records changes'' sounds close to
+``deletes the old version.''
+\end{example}
+
+\section{Word: Section Break versus Page Break}
+A \textbf{Page Break} starts a new page but keeps the document in the same
+section. A \textbf{Section Break} starts a new section. The distinction
+matters because only a Section Break lets the pages that follow use a
+\emph{different} header or footer. This is a repeated trap: the wrong option
+claims that a Page Break changes the header or footer, which it does not
+(PYQ-13; TRAP-13).
+
+\begin{definitionbox}{Section Break}
+A break that divides a document into sections, so each section can have its
+own page setup, including a different header and footer.
+\end{definitionbox}
+
+\section{Word feature trap: Mail Merge}
+\textbf{Mail Merge} combines a \textbf{main document} (the common letter or
+label) with a \textbf{data source} such as an address database, and produces
+many personalised copies. It is a Word feature. The trap is to confuse it
+with Track Changes or AutoCorrect. The reliable clue in the question is the
+pair ``combines letters with an address database'', which points to Mail
+Merge and not to any other Word tool (PYQ-37; TRAP-29).
+
+\section{PowerPoint: the show keys}
+PowerPoint's presentation shortcuts are a favourite near-neighbour set.
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action in PowerPoint} \\
+\midrule
+F5 & Start the slide show from the beginning \\
+Shift+F5 & Start the slide show from the current slide \\
+Alt+F5 & Start the presentation in Presenter View \\
+Esc & End the running slide show \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The classic trap is to call \texttt{F5} the spell-check key. In PowerPoint,
+\texttt{F5} starts the show from the first slide; \texttt{F7} checks
+spelling. \texttt{Shift+F5} begins from the slide you are on, and
+\texttt{Alt+F5} opens Presenter View, which shows the speaker notes on the
+presenter's screen while the audience sees only the slides. \texttt{Esc} ends
+the show but does not jump to the first slide (PYQ-40; TRAP-32).
+
+\section{Handouts, Slide Master, and orientation}
+\textbf{Handouts} are a print layout that places several slides on one page
+for the audience, usually with lined space for notes. The \textbf{Handout
+Master} controls the layout of handouts and notes pages.
+
+The \textbf{Slide Master} is the design template behind the whole
+presentation. It controls the fonts, colours, background, and placeholder
+positions of every slide that uses it. Editing the Slide Master changes all
+dependent slides at once, which is exactly why it is used for a consistent
+look.
+
+\textbf{Orientation} is the direction of the page. \textbf{Portrait} is taller
+than it is wide; \textbf{Landscape} is wider than it is tall. Slide
+orientation is set in PowerPoint, and notes and handouts have their own
+orientation setting.
+
+\section{PowerPoint: converting to SmartArt}
+\textbf{SmartArt} turns text into a visual diagram such as a process, cycle,
+or hierarchy. A \textbf{bulleted list}, a \textbf{block of text}, and
+\textbf{indented text} can all be converted directly to SmartArt. A
+\textbf{table of data} cannot be converted directly, because a table is a
+structured object rather than a plain text string; the Convert to SmartArt
+command is disabled for it. To use table content, the text must first be
+copied into a text box (PYQ-17).
+
+\section{Excel: the formula palette}
+Every Excel formula begins with the \textbf{=} sign (PYQ-38; TRAP-30). The
+\textbf{formula palette} --- the Insert Function dialog --- is the helper that
+lets you build a formula. It lists the function and shows each
+\textbf{argument} in its own box, so you can fill in the values one at a
+time. It is opened from the \textbf{fx} button next to the formula bar. The
+palette guides formula entry; it does not resize cells or change data.
+
+\begin{definitionbox}{Formula palette}
+The Excel dialog box that lets a user select a function and enter its
+arguments while building a formula.
+\end{definitionbox}
+
+\section{Excel: cell references and the \$ sign}
+A cell reference tells Excel which cell to use. The reference type decides
+what happens when the formula is copied to another cell.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.28\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Reference} & \textbf{Type} & \textbf{Behaviour when copied} \\
+\midrule
+A1 & Relative & Both column and row shift \\
+\$A\$1 & Absolute & Neither column nor row changes \\
+\$A1 & Mixed & Column fixed, row shifts \\
+A\$1 & Mixed & Row fixed, column shifts \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The \textbf{\$} sign locks the part immediately after it. In \texttt{\$A\$1}
+both the column and the row are locked, so the reference is
+\textbf{absolute}: it always points to the same cell no matter where the
+formula is copied. \texttt{\$A1} locks the column only, and \texttt{A\$1}
+locks the row only; both are \textbf{mixed} references. While editing a
+reference, pressing \textbf{F4} cycles through relative, absolute, and mixed
+forms.
+
+\begin{example}
+A formula in \texttt{D4} reads \texttt{=B4*C4}. Copied down to \texttt{D5}, it
+becomes \texttt{=B5*C5}, because the references are relative. If instead the
+formula is \texttt{=\$B\$4*\$C\$4}, it stays \texttt{=\$B\$4*\$C\$4} in
+every cell, because the \texttt{\$} signs make both references absolute.
+\end{example}
+
+\section{Product-category traps: Word, Excel, Access, MS-DOS}
+JKSSB often places four familiar names together and asks which one belongs to
+a given category. Match each name to its exact category.
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.58\textwidth}}
+\toprule
+\textbf{Program} & \textbf{Correct category} \\
+\midrule
+MS Word & Word processor (text documents) \\
+MS Excel & Spreadsheet (cells and formulas) \\
+MS Access & Database management system (tables, queries, reports) \\
+MS-DOS & Disk Operating System (a command-line operating system) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The trap is that all four are familiar computing names. \textbf{MS Access} is
+a database, \emph{not} a spreadsheet; \textbf{MS Excel} is a spreadsheet,
+\emph{not} a database; and none of Word, Excel, or Access is an operating
+system. \textbf{MS-DOS} is the only operating system in the group.
+
+\section{Exam retrieval and common confusions}
+\begin{enumerate}
+  \item Word \textbf{F7} is spell check; \textbf{Ctrl+H} is Find and Replace;
+    \textbf{Ctrl+K} is Insert Hyperlink.
+  \item \textbf{Section Break}, not Page Break, allows a different
+    header/footer on later pages (TRAP-13).
+  \item PowerPoint \textbf{F5} starts from the beginning, \textbf{Shift+F5}
+    from the current slide, \textbf{Alt+F5} is Presenter View, and
+    \textbf{Esc} ends the show (TRAP-32).
+  \item A \textbf{table} cannot be converted directly to SmartArt.
+  \item Excel \textbf{\$A\$1} is an absolute reference; every formula starts
+    with \textbf{=}.
+  \item \textbf{MS Access} is a database; \textbf{MS-DOS} is an operating
+    system.
+\end{enumerate}
+
+\begin{example}
+A question asks which key starts a PowerPoint slide show from the beginning.
+Trace the set: \texttt{F5} begins the show, \texttt{Shift+F5} starts from the
+current slide, \texttt{Alt+F5} opens Presenter View, and \texttt{Esc} ends the
+show. The answer is \texttt{F5}. If the stem instead says ``from the current
+slide'', the answer is \texttt{Shift+F5}.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the action of F7, Ctrl+H, and Ctrl+K in MS Word.
+  \item Distinguish Print Layout from the other Word views.
+  \item Explain what Track Changes records and why it does not permanently
+    delete the original text.
+  \item Distinguish a Page Break from a Section Break, and say which one
+    allows a different header.
+  \item Give the PowerPoint keys for starting a show from the beginning, from
+    the current slide, for Presenter View, and for ending the show.
+  \item Explain the difference between the relative reference A1 and the
+    absolute reference \$A\$1 in Excel.
+  \item Classify MS Word, MS Excel, MS Access, and MS-DOS by category.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item \texttt{F7} opens Spelling \& Grammar; \texttt{Ctrl+H} opens Find and
+    Replace; \texttt{Ctrl+K} inserts a hyperlink.
+  \item Print Layout shows the document as it will appear on the printed
+    page, with margins and headers in place. Web Layout, Outline, and Draft
+    are the other common views and are not print-accurate.
+  \item Track Changes records insertions, deletions, and formatting edits,
+    along with author and time metadata. It marks the edits instead of
+    applying them silently, so the original text is preserved until a
+    reviewer accepts or rejects each change.
+  \item A Page Break starts a new page within the same section; a Section
+    Break starts a new section. Only a Section Break allows a different
+    header or footer on the following pages.
+  \item \texttt{F5} from the beginning; \texttt{Shift+F5} from the current
+    slide; \texttt{Alt+F5} for Presenter View; \texttt{Esc} to end the show.
+  \item A1 is relative, so both its column and row shift when the formula is
+    copied. \$A\$1 is absolute, so neither the column nor the row changes; the
+    reference always points to the same cell.
+  \item MS Word is a word processor; MS Excel is a spreadsheet; MS Access is
+    a database management system; MS-DOS is an operating system.
+\end{enumerate}
+\endgroup
+\end{document}

@@ -1,0 +1,339 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{22.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{MS Word Fundamentals --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What MS Word is}
+\textbf{MS Word} (Microsoft Word) is a \textbf{word processor}: a program
+used to create, edit, format, store, and print text documents. It is one of
+the main applications in the \textbf{Microsoft Office} suite. A document
+written in Word is saved as a file, and the modern default file format uses
+the \textbf{.docx} extension. Word shows the document in a rectangular
+window that contains the document area together with several command areas
+around it.
+
+\begin{definitionbox}{Word processor}
+An application that lets a user type text, change its appearance
+(formatting), arrange it on pages, and print it. MS Word is the common
+example.
+\end{definitionbox}
+
+A word processor separates the \emph{text} from its \emph{appearance}. The
+same words can be displayed in many different fonts, sizes, colours, and
+layouts, because the formatting is stored alongside the text and can be
+changed at any time. This separation is the central idea of the whole
+lesson.
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Part of the window} & \textbf{What it is} \\
+\midrule
+Document area & The white page where the text is typed and shown. \\
+Ribbon & The strip of command tabs across the top of the window. \\
+Quick Access Toolbar & The small row of always-visible buttons at the top-left. \\
+Status bar & The strip at the bottom showing page, word count, and view buttons. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The Ribbon and its tabs}
+The \textbf{Ribbon} is the broad band of commands across the top of the Word
+window. It replaced the older style of drop-down menus and toolbars. The
+Ribbon is organised in three levels:
+
+\begin{enumerate}
+  \item \textbf{Tabs} across the top: \textbf{Home, Insert, Design, Layout,
+    References, Mailings, Review,} and \textbf{View}.
+  \item \textbf{Groups} inside each tab. For example, the Home tab contains
+    the \textbf{Font}, \textbf{Paragraph}, and \textbf{Styles} groups.
+  \item \textbf{Commands} inside each group, such as the Bold button or the
+    alignment buttons.
+\end{enumerate}
+
+Some tabs are \textbf{contextual}. They are not shown all the time; they
+appear only when the right object is selected. When a table is selected, the
+\textbf{Table Tools} tabs appear; when a picture is selected, the
+\textbf{Picture Format} tab appears. The \textbf{File} tab is special: it
+does not show groups like the other tabs but opens \textbf{Backstage view},
+which holds document-level actions such as New, Open, Save, Save As, Print,
+and Close.
+
+\begin{definitionbox}{Ribbon}
+The command area of the Word window, organised into tabs, groups, and
+buttons, which replaced the older menu-and-toolbar layout.
+\end{definitionbox}
+
+For exam purposes, the key point is that the \textbf{Home} tab carries the
+most-used formatting commands: the \emph{Font} tools that change how
+characters look, and the \emph{Paragraph} tools that change alignment,
+indentation, spacing, bullets, and numbering.
+
+\section{The Quick Access Toolbar}
+The \textbf{Quick Access Toolbar (QAT)} is the small row of buttons in the
+top-left corner of the window, just above the Ribbon. It is designed to hold
+the few commands a user needs most often, so they stay visible on every tab.
+By default it shows \textbf{Save}, \textbf{Undo}, and \textbf{Redo}. A user
+can \textbf{customise} it by adding or removing commands, and it can be moved
+to sit below the Ribbon if preferred.
+
+\begin{definitionbox}{Quick Access Toolbar}
+A small, customisable toolbar at the top-left of the Word window that keeps
+frequently used commands (by default Save, Undo, Redo) visible on every tab.
+\end{definitionbox}
+
+\section{Creating, opening and saving documents}
+The \textbf{File} tab opens \textbf{Backstage view}, the part of Word where
+you work with the document as a whole rather than its contents. From here a
+user can create a new document, open an existing one, save, print, or close.
+The common keyboard shortcuts are worth memorising because direct-recall
+items ask for them.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.64\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action} \\
+\midrule
+Ctrl+N & Create a new blank document. \\
+Ctrl+O & Open an existing document. \\
+Ctrl+S & Save the current document. \\
+Ctrl+P & Open the Print screen. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Save} writes the current document back to its file. \textbf{Save As}
+writes a \emph{copy} under a new name, in a new location, or in a different
+file format, leaving the original as it was. The default Word format is
+\textbf{.docx}; documents made with much older versions use the \textbf{.doc}
+extension.
+
+\begin{example}
+A student types a letter and presses Ctrl+S, saving it as
+\texttt{letter.docx}. To keep the original and also produce a version for
+printing, the student uses Save As and saves a second file with a new name.
+The first file is unchanged.
+\end{example}
+
+\section{Entering and editing text}
+Text is typed at the \textbf{insertion point}, which is shown by a blinking
+cursor. \textbf{Word wrap} moves text automatically to the next line when
+the current line is full; pressing \textbf{Enter} starts a new
+\textbf{paragraph}. The \textbf{Backspace} key deletes the character to the
+left of the cursor, while the \textbf{Delete} key deletes the character to
+the right. \textbf{Ctrl+Z} undoes the last action and \textbf{Ctrl+Y} redoes
+it.
+
+Text must be selected before it can be reformatted. A \textbf{word} is
+selected by double-clicking it, a \textbf{paragraph} by triple-clicking, and
+the \textbf{whole document} with \textbf{Ctrl+A}.
+
+\section{Font formatting}
+The \textbf{Font} group on the Home tab changes how individual characters
+look. It sets the \textbf{font face} (the typeface, such as Arial or Times
+New Roman) and the \textbf{font size}. It provides the style buttons
+\textbf{Bold (Ctrl+B)}, \textbf{Italic (Ctrl+I)}, and \textbf{Underline
+(Ctrl+U)}, and it sets the \textbf{font colour} and \textbf{highlight}. It
+also applies effects such as subscript and superscript. Deeper options are
+available in the Font dialog box.
+
+\begin{definitionbox}{Font}
+The typeface and its settings (face, size, style, colour) that determine how
+characters are displayed. Font formatting changes the appearance of
+characters, not their arrangement on the page.
+\end{definitionbox}
+
+\section{Paragraph alignment}
+\textbf{Alignment} decides where each line of a paragraph sits between the
+left and right margins.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.20\textwidth}p{0.46\textwidth}}
+\toprule
+\textbf{Alignment} & \textbf{Shortcut} & \textbf{Effect} \\
+\midrule
+Left & Ctrl+L & Text lines up evenly on the left; ragged on the right. This is the default. \\
+Centre & Ctrl+E & Each line is placed in the middle of the page. \\
+Right & Ctrl+R & Text lines up evenly on the right. \\
+Justify & Ctrl+J & Text is flush with both left and right margins. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Justify} stretches the spaces between words so that both edges of
+the paragraph are even, which is why books and newspapers use it.
+\textbf{Centre} does not stretch anything; it simply moves each line to the
+middle.
+
+\section{Indentation}
+\textbf{Indentation} pushes paragraph lines inward, away from the margin.
+The \textbf{left indent} and \textbf{right indent} move the whole paragraph
+inward from the respective side. A \textbf{first-line indent} pushes only
+the first line inward, as in a typical book paragraph. A \textbf{hanging
+indent} pushes every line \emph{except} the first inward, which is the
+standard layout for a references or bibliography list.
+
+\begin{definitionbox}{Indentation}
+The inward offset of paragraph lines from the page margins. First-line
+indent affects only the first line; hanging indent affects every line except
+the first.
+\end{definitionbox}
+
+Indentation must not be confused with \textbf{spacing}. Indentation shifts
+lines \emph{horizontally}; spacing changes the \emph{vertical} gaps.
+
+\section{Line and paragraph spacing}
+\textbf{Line spacing} sets the vertical gap between lines \emph{inside} a
+paragraph; common settings are single, 1.5, and double. \textbf{Paragraph
+spacing} sets the gap \emph{before} and \emph{after} a paragraph. Both are
+controlled from the Paragraph group on the Home tab, or from the Paragraph
+dialog box. Using spacing is better than pressing Enter repeatedly to make
+gaps, because spacing stays correct when text is edited.
+
+\section{Bullets and numbering}
+\textbf{Bullets} mark list items with a symbol and are used when the order of
+the items does not matter. \textbf{Numbering} marks items with numbers or
+letters and is used when the order or sequence matters. \textbf{Multilevel
+lists} combine levels (for example 1, then 1.1, then 1.1.1) to build nested
+outlines. All three are applied from the \textbf{Paragraph} group on the
+Home tab.
+
+\begin{example}
+A shopping list uses \textbf{bullets} because the order is irrelevant. A set
+of instructions to install software uses \textbf{numbering} because the
+steps must be followed in order.
+\end{example}
+
+\section{Tables}
+A \textbf{table} arranges information in \textbf{rows} and \textbf{columns};
+each intersection of a row and a column is a \textbf{cell}. A table is
+inserted from \textbf{Insert $\rightarrow$ Table}. Cells can be
+\textbf{merged} into a single larger cell or \textbf{split} back into
+separate cells, and rows and columns can be inserted, deleted, and resized.
+When the table is selected, the \textbf{Table Tools} contextual tabs appear.
+
+\begin{definitionbox}{Table}
+A grid of rows and columns used to arrange text in cells, inserted in Word
+from Insert $\rightarrow$ Table.
+\end{definitionbox}
+
+\section{Images and objects}
+An image is placed in the document from \textbf{Insert $\rightarrow$
+Pictures}. \textbf{Handles} around the image let the user resize and rotate
+it. \textbf{Text wrapping} decides how the surrounding text flows around the
+image; options include In Line with Text, Square, Tight, and Behind Text.
+When the image is selected, the \textbf{Picture Format} contextual tab
+appears. Charts, shapes, and \textbf{SmartArt} are inserted from the same
+Insert tab.
+
+\begin{definitionbox}{Text wrapping}
+The setting that controls how text flows around a picture or object. ``In
+Line with Text'' treats the image like a character; the other styles let
+text flow around the image.
+\end{definitionbox}
+
+\section{Headers and footers}
+A \textbf{header} is the area at the \emph{top} of a page and a
+\textbf{footer} is the area at the \emph{bottom}. Both repeat on every page
+of a section, which makes them ideal for a document title (in the header)
+and \textbf{page numbers} (in the footer). They are inserted from
+\textbf{Insert $\rightarrow$ Header} and \textbf{Insert $\rightarrow$
+Footer}.
+
+\section{Page setup}
+Page setup is found on the \textbf{Layout} tab. It controls the overall page
+geometry: \textbf{margins} (the blank space between the text and the page
+edges), \textbf{orientation} (\textbf{Portrait}, which is tall, or
+\textbf{Landscape}, which is wide), and \textbf{page size} (for example A4
+or Letter). The same tab sets \textbf{columns} and the page \textbf{breaks}
+described next.
+
+\section{Page break vs section break}
+A \textbf{Page Break} (\textbf{Ctrl+Enter}) forces the following content to
+start on a \emph{new page}, but the page formatting stays the same. A
+\textbf{Section Break} starts a new \textbf{section} of the document, which
+can carry its own page setup. The most important consequence for the exam is
+that only a \textbf{Section Break} allows a part of the document to have
+\textbf{different headers and footers}. Both are inserted from
+\textbf{Layout $\rightarrow$ Breaks}.
+
+\begin{example}
+An item claims, ``A Page Break can be used to give the first page a
+different header from the rest of the document.'' This is wrong. A Page
+Break only moves content to a new page; to change the header or footer part
+way through the document, a \textbf{Section Break} is required. The wrong
+option has confused the two breaks (TRAP-13).
+\end{example}
+
+\section{Printing a document}
+\textbf{Ctrl+P} opens the \textbf{Print} screen in Backstage view. The
+\textbf{print preview} shows exactly how the pages will appear on paper. On
+this screen the user selects the \textbf{printer}, the number of
+\textbf{copies}, and which \textbf{pages} to print, then clicks \textbf{Print}
+to send the job to the printer. Checking the preview first catches wrong
+margins, stray blank pages, and cut-off text before paper is used.
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Save} overwrites the current file; \textbf{Save As} stores a
+    copy under a new name, location, or format.
+  \item \textbf{Ctrl+S} saves; \textbf{Ctrl+P} prints; \textbf{Ctrl+Enter}
+    inserts a page break. Do not swap the shortcuts.
+  \item \textbf{Bullets} are for unordered lists; \textbf{numbering} is for
+    ordered lists.
+  \item \textbf{Indentation} shifts lines horizontally; \textbf{spacing}
+    changes vertical gaps between lines and paragraphs.
+  \item A \textbf{Page Break} does \emph{not} change headers and footers;
+    only a \textbf{Section Break} does (TRAP-13).
+\end{enumerate}
+
+\begin{example}
+An item asks which shortcut opens the Print screen. Trace the File-level
+actions: New is Ctrl+N, Open is Ctrl+O, Save is Ctrl+S, and Print is
+Ctrl+P. The answer is \textbf{Ctrl+P}. If the stem instead asks for Undo, the
+answer is Ctrl+Z, and if it asks for a page break, the answer is Ctrl+Enter.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Name the main parts of the MS Word window.
+  \item What is the Quick Access Toolbar, and what does it show by default?
+  \item Distinguish Save from Save As.
+  \item List the four paragraph alignments with their shortcuts.
+  \item Explain the difference between a Page Break and a Section Break.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The document area, the Ribbon (with its tabs and groups), the Quick
+    Access Toolbar, and the status bar.
+  \item The Quick Access Toolbar is the small customisable row of buttons at
+    the top-left of the window. By default it shows Save, Undo, and Redo,
+    and it stays visible on every tab.
+  \item Save writes the current document back to its existing file. Save As
+    writes a copy under a new name, location, or format and leaves the
+    original file unchanged.
+  \item Left (Ctrl+L), Centre (Ctrl+E), Right (Ctrl+R), and Justify
+    (Ctrl+J).
+  \item A Page Break (Ctrl+Enter) starts the following content on a new page
+    while keeping the same formatting. A Section Break starts a new section
+    that can have its own page setup --- including different headers and
+    footers. Only a Section Break can change headers and footers part way
+    through a document.
+\end{enumerate}
+\endgroup
+\end{document}

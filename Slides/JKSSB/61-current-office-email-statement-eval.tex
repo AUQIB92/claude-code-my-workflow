@@ -1,0 +1,281 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current Office, Email \& Statement Evaluation}
+\subtitle{Lesson 61 --- Advanced Statements and Near-Neighbour Traps}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Word: Structured Content and Content Controls}
+  \begin{itemize}
+    \item A \key{content control} is a building block inserted into a
+      document or template to build a structured form.
+    \item Common types: plain text, rich text, picture, drop-down list, combo
+      box, date picker, and check box.
+    \item They are inserted from the \key{Developer} tab (enable it in Word
+      Options $\rightarrow$ Customize Ribbon).
+    \item A content control can \key{restrict editing} and enforce limited
+      \key{data validation} (for example a drop-down list or a date picker).
+  \end{itemize}
+  \begin{block}{One line}
+    Content controls let a template allow only certain kinds of entry at a
+    chosen spot in the document.
+  \end{block}
+\end{frame}
+
+\begin{frame}{First-Line Indent vs Hanging Indent}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.36\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Indent} & \textbf{What it shifts} & \textbf{Typical use} \\
+      \midrule
+      First-line indent & Only the \key{first line} of the paragraph & Normal
+      paragraph openings \\
+      Hanging indent & Every line \key{except the first} (the first line hangs
+      to the left) & References, bibliography, bulleted lists \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{These are paragraph-format settings; two paragraphs can use different
+  indents even under the same style.}
+\end{frame}
+
+\begin{frame}{The Navigation Pane}
+  \begin{itemize}
+    \item Open it from the \key{View} tab $\rightarrow$ Navigation Pane.
+    \item It offers three views: \key{Headings}, \key{Pages}, and
+      \key{Results} (search results).
+    \item It is used to \key{jump} quickly to a heading or a page and to
+      \key{search} the document.
+    \item The Headings list is built from paragraphs that carry a
+      \key{Heading style} (Heading 1, Heading 2, \ldots).
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    Reviewers' \key{comments} are read in the markup/comments pane,
+    \bad{not} directly in the Navigation Pane. (PYQ-12)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Track Changes and Its Metadata}
+  \begin{itemize}
+    \item \key{Track Changes} records \key{insertions}, \key{deletions}, and
+      \key{formatting} changes.
+    \item Each recorded change stores the \key{author's name} and the
+      \key{date and time}.
+    \item \key{Accept} a change: it becomes final text and its revision
+      metadata is \key{removed}.
+    \item \key{Reject} a change: the original text is restored.
+  \end{itemize}
+  \begin{block}{Remember}
+    Accepting a change keeps the new text but strips the author metadata
+    attached to that change. (PYQ-12)
+  \end{block}
+\end{frame}
+
+\begin{frame}{Section Break vs Page Break}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Break} & \textbf{What it does} & \textbf{What changes} \\
+      \midrule
+      Page Break & Moves text to the next page & Nothing: same section, same
+      headers and margins \\
+      Section Break & Starts a \key{new section} & Each section can have its
+      own headers/footers, margins, orientation, columns, numbering \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap}
+    Different headers and footers in one document require a \key{Section
+    Break}, \bad{not} a Page Break. (PYQ-13, TRAP-13)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Excel: The Nested IF}
+  \begin{itemize}
+    \item An \key{IF} returns one of two values:
+      \texttt{=IF(condition, value\_if\_true, value\_if\_false)}.
+    \item A \key{nested IF} places another IF in one of those two positions.
+    \item \texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))}
+    \item The \key{first} condition that is TRUE decides the result; testing
+      stops there.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    A1\,$=$\,70 $\rightarrow$ \good{High}; A1\,$=$\,30 $\rightarrow$
+    \good{Medium}; A1\,$=$\,10 $\rightarrow$ \good{Low}.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Blank and Non-Numeric Input in IF}
+  \begin{itemize}
+    \item In a numeric comparison, a \key{blank cell is treated as zero}.
+    \item So \texttt{=IF(A1>50,\ldots)} with A1 blank takes the \key{FALSE}
+      branch, because 0 is not greater than 50.
+    \item Non-numeric \key{text} is not a number: arithmetic on it gives
+      \texttt{\#VALUE!}, and \texttt{ISNUMBER} returns FALSE.
+    \item Guard the formula with \key{ISBLANK}, \key{ISNUMBER}, or
+      \key{IFERROR} when the cell may be empty or text.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    A blank cell does \bad{not} make IF stop or error --- it is read as 0.
+    (PYQ-14)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{COUNTIFS: Multi-Criterion Counting}
+  \begin{itemize}
+    \item \key{COUNTIFS} counts the rows that satisfy \key{all} the given
+      conditions (AND logic).
+    \item Form: \texttt{COUNTIFS(range1, criteria1, range2, criteria2,
+      \ldots)}.
+    \item All ranges must be the \key{same size}.
+    \item Use \key{COUNTIF} (singular) for one condition; \key{COUNTIFS}
+      (plural) for several.
+    \item Text criteria may use the wildcards \texttt{*} and \texttt{?}.
+  \end{itemize}
+  \begin{block}{Example}
+    \texttt{=COUNTIFS(A2:A20,"Sales",B2:B20,">1000")} counts the Sales rows
+    above 1000.
+  \end{block}
+\end{frame}
+
+\begin{frame}{SUMPRODUCT: Products and Counting}
+  \begin{itemize}
+    \item \key{SUMPRODUCT} multiplies corresponding elements of the arrays and
+      returns the \key{sum of the products}.
+    \item \texttt{=SUMPRODUCT(A1:A3,B1:B3)} =
+      \texttt{A1*B1 + A2*B2 + A3*B3}.
+    \item With boolean arrays it can also \key{count}:
+      \texttt{=SUMPRODUCT((A1:A10>50)*(B1:B10="Yes"))} counts rows meeting
+      both conditions.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    \key{COUNTIFS} takes several criteria; \key{SUMPRODUCT} does \bad{not}
+    ``only add'' --- it can count multi-criterion rows as well. (PYQ-15,
+    TRAP-14)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Email Filters and Rules}
+  \begin{itemize}
+    \item A \key{filter} (called a \key{rule} in Outlook) acts
+      \key{automatically} on incoming or outgoing mail.
+    \item It checks \key{conditions}: sender, recipient, subject, keywords,
+      attachments.
+    \item It performs an \key{action}: move to a folder, flag, forward,
+      delete, or mark as read.
+    \item Typical use: route mail from one sender into a dedicated folder.
+  \end{itemize}
+  \begin{block}{One line}
+    A rule = a condition plus an action, applied automatically to mail.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Digital Signature vs Encryption}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.36\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Digital signature} & \textbf{Encryption} \\
+      \midrule
+      Purpose & Authenticity and integrity & Confidentiality \\
+      What it proves & Who sent it, and that it was not altered & Only the
+      intended reader can read it \\
+      Hides the content? & \bad{No} & \good{Yes} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap}
+    A digital signature does \bad{not} encrypt the message body. It verifies
+    the sender and detects tampering. (PYQ-16, TRAP-15)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{POP3: Post Office Protocol version 3}
+  \begin{itemize}
+    \item \key{POP3} stands for \key{Post Office Protocol version 3}.
+    \item It \key{downloads} mail from the mail server to the \key{local}
+      device.
+    \item By default it typically \key{removes} the mail from the server, so
+      it is not kept in sync across devices.
+    \item \key{IMAP} keeps mail on the server and syncs all devices.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    \key{SMTP} sends mail; \key{POP3} receives (downloads) it. POP3 does
+    \bad{not} keep mail synced on the server. (PYQ-16, TRAP-17)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{BCC and Recipient Privacy}
+  \begin{itemize}
+    \item \key{To}: the primary recipients --- visible to everyone.
+    \item \key{Cc} (Carbon Copy): copied recipients --- visible to everyone.
+    \item \key{Bcc} (Blind Carbon Copy): the addresses are \key{hidden} from
+      the other recipients.
+    \item The \key{sender} always sees all recipients; a Bcc recipient cannot
+      see the other recipients.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    \key{Bcc} hides recipients from \key{each other}, \bad{not} from the
+    sender. (PYQ-16, TRAP-16)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{PowerPoint SmartArt Conversion}
+  \begin{itemize}
+    \item Convert a \key{bulleted list} of text into SmartArt: \key{Home}
+      tab $\rightarrow$ Convert to SmartArt Graphic.
+    \item Convert SmartArt \key{back to text}: SmartArt Tools Design
+      $\rightarrow$ Convert $\rightarrow$ Convert to Text (you get a bulleted
+      list; shapes and pictures are lost).
+    \item \key{Convert to Shapes} breaks the SmartArt into ordinary shapes;
+      after that it \key{cannot} be turned back into SmartArt.
+  \end{itemize}
+  \begin{block}{Remember}
+    The direct source of ``Convert to SmartArt'' is \key{text}, so a picture
+    or a chart is not converted to SmartArt in one step. (PYQ-17)
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trap Alert: Near-Neighbour Distinctions}
+  \begin{itemize}
+    \item Headers/footers $\rightarrow$ \key{Section Break}, not Page Break.
+    \item Hanging indent shifts \key{every line except the first}.
+    \item Blank cell in a comparison = \key{0}, not an error.
+    \item \key{COUNTIFS} = several criteria; \key{SUMPRODUCT} can add and
+      count.
+    \item \key{Digital signature} $\neq$ encryption.
+    \item \key{POP3} downloads; \key{IMAP} syncs.
+    \item \key{Bcc} hides recipients from each other, not from the sender.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 61: Recall}
+  \begin{itemize}
+    \item A \key{content control} structures a template and can restrict
+      entry; it is inserted from the \key{Developer} tab.
+    \item A \key{first-line} indent shifts the first line; a \key{hanging}
+      indent shifts every line except the first.
+    \item The \key{Navigation Pane} jumps by headings, pages, or results;
+      comments are \bad{not} shown there.
+    \item \key{Track Changes} stores author and time; accepting a change
+      removes that change's metadata.
+    \item \key{Section Break} (not Page Break) allows different headers and
+      footers.
+    \item A nested \key{IF} returns the first TRUE branch; a \key{blank} cell
+      is read as 0.
+    \item \key{COUNTIFS} counts with AND logic; \key{SUMPRODUCT} multiplies
+      and can count.
+    \item \key{Digital signature} = authenticity; \key{encryption} =
+      confidentiality; \key{POP3} downloads; \key{Bcc} hides recipients.
+    \item SmartArt converts from text and back to text; shapes cannot revert
+      to SmartArt.
+  \end{itemize}
+\end{frame}
+\end{document}

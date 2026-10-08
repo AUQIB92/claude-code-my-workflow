@@ -137,21 +137,21 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 22 | MS Word Fundamentals — interface, editing, formatting, tables, images, headers/footers, page/section breaks, views, printing | `22-ms-word-fundamentals` [ ] | [ ] | [ ] |
-| 23 | MS Word High-Yield — Find/Replace, spell check (F7), spell/grammar tools, hyperlinks, styles, comments, Track Changes, mail merge, PDF export | `23-ms-word-high-yield` [ ] | [ ] | [ ] |
-| 24 | Excel Structure — workbook/worksheet/row/column/cell/range, formula bar, name box | `24-excel-structure` [ ] | [ ] | [ ] |
-| 25 | Excel Formulas — formulas, operators, relative `A1`, absolute `$A$1`, mixed references | `25-excel-formulas` [ ] | [ ] | [ ] |
-| 26 | Excel Functions — SUM/AVERAGE/COUNT/COUNTA/MAX/MIN/IF, AutoSum, error values | `26-excel-functions` [ ] | [ ] | [ ] |
-| 27 | Excel Data Tools — sort, filter, tables, charts, PivotTables, protection, print | `27-excel-data-tools` [ ] | [ ] | [ ] |
-| 28 | Access Database Basics — database/DBMS, MS Access, table/field/record, data types, validation/index | `28-access-database-basics` [ ] | [ ] | [ ] |
-| 29 | Access Keys & Relationships — primary/foreign/composite keys, relationships, junction table, referential integrity, `.mdb` vs `.accdb` | `29-access-keys-relationships` [ ] | [ ] | [ ] |
-| 30 | Access Queries, Forms & Reports — Table → Query → Form → Report, lookup, SQL awareness | `30-access-queries-forms-reports` [ ] | [ ] | [ ] |
-| 31 | PowerPoint Basics — slides, placeholders, layouts, themes, templates, Slide Master, views/notes/handouts | `31-powerpoint-basics` [ ] | [ ] | [ ] |
-| 32 | PowerPoint Animation & Transition — animation vs transition, Morph, F5/Shift+F5/Alt+F5/Esc | `32-powerpoint-animation-transition` [ ] | [ ] | [ ] |
-| 33 | PDF & File Formats — PDF fixed-layout, editable source vs scan, DOCX/XLSX/PPTX/CSV/TXT/PNG, OCR, PDF/A, e-sign/redaction awareness | `33-pdf-file-formats` [ ] | [ ] | [ ] |
-| 54 | Office Shortcut & Product Trap Lab — Word F7, Ctrl+H, Ctrl+K, Ctrl+X/V, Print Layout, Track Changes; PPT F5/Shift+F5/Alt+F5/Esc, handouts, Slide Master, orientation; Excel formula palette, `$A$1`; Access vs Word/Excel/MS-DOS; exact shortcut near-neighbours | `54-office-shortcut-product-trap` [ ] | [ ] | [ ] |
-| 55 | File Formats & Named Technology Associations — PNG as image format, PDF behaviour, DOCX/XLSX/PPTX/CSV/TXT, `.mdb` vs `.accdb`, Firefox/Mozilla, C-DAC/PARAM, browser vs PDF reader vs remote-support, extension-vs-format trap | `55-file-formats-named-technology` [ ] | [ ] | [ ] |
-| 61 | Current Office, Email & Statement Evaluation — Word content controls, Navigation Pane, first-line/hanging indents, Track Changes & metadata, Section vs Page Break; Excel nested IF, COUNTIFS, SUMPRODUCT, blank/non-numeric behaviour; email filters/rules, digital signature vs encryption, POP3 download, BCC privacy; PowerPoint SmartArt conversion | `61-current-office-email-statement-eval` [ ] | [ ] | [ ] |
+| 22 | MS Word Fundamentals — interface, editing, formatting, tables, images, headers/footers, page/section breaks, views, printing | `22-ms-word-fundamentals` [x] | [x] | [x] |
+| 23 | MS Word High-Yield — Find/Replace, spell check (F7), spell/grammar tools, hyperlinks, styles, comments, Track Changes, mail merge, PDF export | `23-ms-word-high-yield` [x] | [x] | [x] |
+| 24 | Excel Structure — workbook/worksheet/row/column/cell/range, formula bar, name box | `24-excel-structure` [x] | [x] | [x] |
+| 25 | Excel Formulas — formulas, operators, relative `A1`, absolute `$A$1`, mixed references | `25-excel-formulas` [x] | [x] | [x] |
+| 26 | Excel Functions — SUM/AVERAGE/COUNT/COUNTA/MAX/MIN/IF, AutoSum, error values | `26-excel-functions` [x] | [x] | [x] |
+| 27 | Excel Data Tools — sort, filter, tables, charts, PivotTables, protection, print | `27-excel-data-tools` [x] | [x] | [x] |
+| 28 | Access Database Basics — database/DBMS, MS Access, table/field/record, data types, validation/index | `28-access-database-basics` [x] | [x] | [x] |
+| 29 | Access Keys & Relationships — primary/foreign/composite keys, relationships, junction table, referential integrity, `.mdb` vs `.accdb` | `29-access-keys-relationships` [x] | [x] | [x] |
+| 30 | Access Queries, Forms & Reports — Table → Query → Form → Report, lookup, SQL awareness | `30-access-queries-forms-reports` [x] | [x] | [x] |
+| 31 | PowerPoint Basics — slides, placeholders, layouts, themes, templates, Slide Master, views/notes/handouts | `31-powerpoint-basics` [x] | [x] | [x] |
+| 32 | PowerPoint Animation & Transition — animation vs transition, Morph, F5/Shift+F5/Alt+F5/Esc | `32-powerpoint-animation-transition` [x] | [x] | [x] |
+| 33 | PDF & File Formats — PDF fixed-layout, editable source vs scan, DOCX/XLSX/PPTX/CSV/TXT/PNG, OCR, PDF/A, e-sign/redaction awareness | `33-pdf-file-formats` [x] | [x] | [x] |
+| 54 | Office Shortcut & Product Trap Lab — Word F7, Ctrl+H, Ctrl+K, Ctrl+X/V, Print Layout, Track Changes; PPT F5/Shift+F5/Alt+F5/Esc, handouts, Slide Master, orientation; Excel formula palette, `$A$1`; Access vs Word/Excel/MS-DOS; exact shortcut near-neighbours | `54-office-shortcut-product-trap` [x] | [x] | [x] |
+| 55 | File Formats & Named Technology Associations — PNG as image format, PDF behaviour, DOCX/XLSX/PPTX/CSV/TXT, `.mdb` vs `.accdb`, Firefox/Mozilla, C-DAC/PARAM, browser vs PDF reader vs remote-support, extension-vs-format trap | `55-file-formats-named-technology` [x] | [x] | [x] |
+| 61 | Current Office, Email & Statement Evaluation — Word content controls, Navigation Pane, first-line/hanging indents, Track Changes & metadata, Section vs Page Break; Excel nested IF, COUNTIFS, SUMPRODUCT, blank/non-numeric behaviour; email filters/rules, digital signature vs encryption, POP3 download, BCC privacy; PowerPoint SmartArt conversion | `61-current-office-email-statement-eval` [x] | [x] | [x] |
 
 ### Unit 8 — Internet, Web & Email
 

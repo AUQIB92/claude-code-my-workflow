@@ -1,0 +1,258 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{55.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{File Formats and Named Technology Associations --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Extension and format are two different things}
+Every file stored on a computer follows some fixed plan for arranging its
+data. That plan is the \textbf{format} of the file. The format decides which
+program can open the file and what the file is able to store: a picture, a
+document, a table, or a database. An \textbf{image format} stores a picture;
+a \textbf{document format} stores a printable page; a \textbf{plain-text
+format} stores only characters.
+
+A file name usually ends with an \textbf{extension} --- the letters written
+after the last dot. In the name \texttt{report.png}, the extension is
+\texttt{png}. The extension is only a label; it tells the reader which format
+is expected inside. The extension and the format are therefore related but
+not the same thing. The exam tests this distinction directly, so it is stated
+here in its own section.
+
+\begin{definitionbox}{File format}
+A fixed way of arranging the data in a file so that a particular program can
+read it, write it, and display it correctly.
+\end{definitionbox}
+
+\begin{definitionbox}{File extension}
+The letters after the last dot in a file name, such as \texttt{png} in
+\texttt{report.png}. The extension signals the file's format.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Extension & The letters after the last dot in a file name. \\
+Format & The actual arrangement of data inside the file. \\
+PNG & Portable Network Graphics, an image format. \\
+PDF & Portable Document Format, a fixed-layout document format. \\
+CSV & Comma-Separated Values, a table stored as plain text. \\
+TXT & A plain text file with no formatting. \\
+\texttt{.mdb} / \texttt{.accdb} & Older and newer Microsoft Access database formats. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Image formats}
+The best-known image format for this course is \textbf{PNG}, which stands for
+\textbf{Portable Network Graphics}. PNG is a raster image format: it stores a
+picture as a grid of pixels. It uses \emph{lossless} compression, meaning the
+picture is saved without permanently throwing away detail, and it supports
+transparency.
+
+Other common image formats are \textbf{JPEG} (written \texttt{.jpg} or
+\texttt{.jpeg}), a \emph{lossy} format often used for photographs, and
+\textbf{GIF} (\texttt{.gif}), which also supports simple animation. Typical
+image extensions are \texttt{.png}, \texttt{.jpg}, \texttt{.jpeg},
+\texttt{.gif}, \texttt{.bmp}, and \texttt{.tiff}. The key exam point is
+simple: PNG, JPEG, and GIF are all \textbf{image formats}, and none of them
+is a document, spreadsheet, or database format.
+
+\begin{definitionbox}{Raster image}
+An image stored as a grid of pixels. PNG and JPEG are raster formats.
+\end{definitionbox}
+
+\section{PDF: the Portable Document Format}
+\textbf{PDF} stands for \textbf{Portable Document Format}, a format created
+by Adobe. Its defining property is a \textbf{fixed layout}: a PDF keeps the
+exact page layout, fonts, and formatting on every device, so the document
+looks the same whether it is opened on a desktop, a phone, or a printer. This
+is why PDF is the standard format for sharing a finished document that must
+not shift or reflow.
+
+A PDF opens in a \textbf{PDF reader}, the best-known being \textbf{Adobe
+Acrobat Reader}. A \textbf{web browser} can also display a PDF, but reading a
+PDF is not the same as editing an editable word-processing document. A PDF
+may contain real, selectable text, or it may be a \textbf{scanned image} of
+each page. A scanned PDF is only a picture; to make its text searchable and
+selectable, \textbf{OCR} (Optical Character Recognition) must be applied.
+\textbf{PDF/A} is an archival PDF standard meant for long-term preservation.
+
+\begin{example}
+A notice is scanned on a photocopier and saved as a PDF. The PDF now contains
+pictures of the pages, not typed text. Selecting a sentence with the mouse
+does nothing, and searching for a word finds nothing. Running OCR on the file
+creates a text layer, after which the same words can be searched and copied.
+The format is still PDF; only the internal content has changed from an image
+to searchable text.
+\end{example}
+
+\section{The Office document family}
+Microsoft Office files use a matching family of extensions that are easy to
+remember as a group.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Extension} & \textbf{Format} & \textbf{Program} \\
+\midrule
+\texttt{.docx} & Word document & Microsoft Word \\
+\texttt{.xlsx} & Excel workbook & Microsoft Excel \\
+\texttt{.pptx} & PowerPoint presentation & Microsoft PowerPoint \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+These are the modern \textbf{Office Open XML} formats. The older, pre-2007
+extensions were \texttt{.doc} (Word), \texttt{.xls} (Excel), and \texttt{.ppt}
+(PowerPoint). For an exam, the pairing to hold is: \textbf{.docx = Word},
+\textbf{.xlsx = Excel}, \textbf{.pptx = PowerPoint}; each extension always
+belongs to the same program, in the modern and the older naming alike.
+
+\section{Plain-data formats: CSV and TXT}
+\textbf{CSV} stands for \textbf{Comma-Separated Values}. A CSV file stores a
+table as plain text, with the values in each row separated by commas. Because
+it is only text, a CSV file can be opened by a spreadsheet program such as
+Excel, by a database, or by a simple text editor. The commas are the field
+separators; the file itself carries no formatting such as bold text or
+colours.
+
+\textbf{TXT} denotes a \textbf{plain text} file. It stores only characters,
+with no formatting and no table structure. Both CSV and TXT are simple,
+vendor-neutral formats: unlike a \texttt{.docx} or \texttt{.xlsx} file, they
+do not belong to one program. The distinction to keep is that \textbf{CSV
+holds a table written as text separated by commas}, while \textbf{TXT holds
+plain characters with no inherent structure}.
+
+\section{Microsoft Access databases: \texttt{.mdb} and \texttt{.accdb}}
+Microsoft Access is the database program of the Office family, and it uses
+two extensions that candidates often confuse. \texttt{.mdb} is the
+\textbf{older} Access database format, used by Access 2003 and earlier.
+\texttt{.accdb} is the \textbf{newer} Access database format, used from
+Access 2007 onward. Both files can hold the standard database objects:
+tables, queries, forms, reports, macros, and modules.
+
+The important point is that \textbf{both} \texttt{.mdb} and \texttt{.accdb}
+are \textbf{Microsoft Access database} files. Neither is a Word document, an
+Excel workbook, or a PowerPoint presentation.
+
+\section{Named technology associations}
+This section is the high-yield part of the lesson: matching a named
+technology to the organisation that produced it or the purpose it serves.
+
+\textbf{Firefox} is a \textbf{web browser} developed by \textbf{Mozilla}.
+Mozilla is the organisation, and Firefox is its browser product; Mozilla also
+produces \textbf{Thunderbird}, an email client. Firefox must not be confused
+with Microsoft's browser, \textbf{Edge} (or the older Internet Explorer), nor
+with a PDF reader.
+
+\textbf{C-DAC} stands for the \textbf{Centre for Development of Advanced
+Computing}. It is an Indian research and development organisation under the
+\textbf{Ministry of Electronics and Information Technology (MeitY)}.
+\textbf{PARAM} is a family of \textbf{supercomputers} developed by C-DAC;
+\textbf{PARAM 8000} was India's first indigenous supercomputer. The pairing
+to remember is \textbf{PARAM = Indian supercomputer, C-DAC = the organisation
+that developed it}.
+
+\section{Software roles: browser, PDF reader, and remote support}
+Software is often tested by the role it performs rather than by its maker.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.56\textwidth}}
+\toprule
+\textbf{Role} & \textbf{Example} \\
+\midrule
+Web browser & Firefox, Google Chrome, Microsoft Edge \\
+PDF reader & Adobe Acrobat Reader \\
+Remote-support tool & TeamViewer, AnyDesk, Chrome Remote Desktop \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A \textbf{web browser} is used to visit web pages; a \textbf{PDF reader} is
+used to open PDF documents; a \textbf{remote-support tool} lets one computer
+control or view another over a network. Firefox is a browser and Adobe
+Acrobat Reader is a PDF reader; neither is a remote-support tool. Match the
+software to its \emph{job}, not to a similar-sounding name.
+
+\begin{example}
+A help-desk officer needs to see a distant user's screen to fix a problem.
+The right tool is a remote-support program such as TeamViewer or AnyDesk,
+\emph{not} a browser and \emph{not} a PDF reader. If the user then sends a
+manual as a fixed-layout file, it will arrive as a PDF and open in a PDF
+reader. If the user sends a spreadsheet of data, it will be an XLSX (Excel)
+or a CSV. Each task has its own format and its own tool.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item An \textbf{extension} is the letters after the dot; a \textbf{format}
+    is how the data is stored. ``Extension = format'' is wrong (TRM-09,
+    TRAP-34).
+  \item \textbf{PNG, JPEG, and GIF are image formats}. CSV is \textbf{not} an
+    image format; it is a plain-text table format.
+  \item \textbf{PDF} is a fixed-layout document format. A scanned PDF is a
+    picture and needs \textbf{OCR} to become searchable.
+  \item \textbf{.docx = Word}, \textbf{.xlsx = Excel}, \textbf{.pptx =
+    PowerPoint}; the extension always matches the program.
+  \item \textbf{.mdb} and \textbf{.accdb} are \textbf{both Access database}
+    files --- older and newer respectively.
+  \item \textbf{Firefox is a browser by Mozilla}; \textbf{PARAM is a
+    supercomputer by C-DAC}. Do not swap the makers.
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a file \emph{extension} from a file \emph{format}, using
+    \texttt{report.png} as the example.
+  \item Name any three image formats and state one property of PNG.
+  \item Explain what is meant by a fixed-layout format, and name the format
+    created by Adobe that behaves this way.
+  \item Match each extension to its program: \texttt{.docx},
+    \texttt{.xlsx}, \texttt{.pptx}, \texttt{.accdb}.
+  \item What does CSV stand for, and how is its data arranged?
+  \item (a) Who develops Firefox? (b) What is PARAM, and which organisation
+    develops it?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The extension is the suffix after the last dot --- here
+    \texttt{png}. The format is the way the data inside the file is actually
+    stored --- here PNG, the Portable Network Graphics image format. The
+    extension signals the format but is not the format itself.
+  \item PNG (Portable Network Graphics), JPEG (\texttt{.jpg/.jpeg}), and GIF
+    (\texttt{.gif}), among others. PNG uses lossless compression and supports
+    transparency.
+  \item A fixed-layout format keeps the exact page layout, fonts, and
+    formatting on every device, so the document looks the same wherever it is
+    opened. PDF (Portable Document Format) is the format created by Adobe
+    that behaves this way.
+  \item \texttt{.docx} $\rightarrow$ Microsoft Word; \texttt{.xlsx}
+    $\rightarrow$ Microsoft Excel; \texttt{.pptx} $\rightarrow$ Microsoft
+    PowerPoint; \texttt{.accdb} $\rightarrow$ Microsoft Access (newer
+    database format).
+  \item CSV stands for Comma-Separated Values. Its data is stored as a table
+    in plain text, with the values in each row separated by commas.
+  \item (a) Firefox is developed by Mozilla. (b) PARAM is a family of
+    supercomputers, developed by C-DAC (the Centre for Development of
+    Advanced Computing); PARAM 8000 was India's first indigenous
+    supercomputer.
+\end{enumerate}
+\endgroup
+\end{document}

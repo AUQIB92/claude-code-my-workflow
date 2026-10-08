@@ -1,0 +1,282 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{PDF \& File Formats}
+\subtitle{Lesson 33 --- PDF Behaviour and Format Identification}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is a File Format?}
+  \begin{itemize}
+    \item Every file is stored as a series of bits; the \key{file format}
+      is the rule that says how those bits are arranged.
+    \item The format tells the software how to read the file's contents ---
+      text, image, spreadsheet, or slide.
+    \item The \key{extension} is the suffix at the end of the file name
+      (for example \texttt{.pdf} or \texttt{.docx}).
+    \item The extension is only a \muted{label}; the format is the real
+      structure of the data inside.
+  \end{itemize}
+  \begin{block}{The one idea}
+    The extension names the file; the format defines what the file actually is.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Extension vs Format}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{File name} & \texttt{report.docx} \\
+      \midrule
+      File name (base) & \texttt{report} \\
+      Extension & \texttt{docx} (written \texttt{.docx}) \\
+      Format & DOCX --- an Office Open XML word-processing document \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert (TRAP-34)}
+    \texttt{.png} is an \key{extension}; PNG is the \key{format}. Never say
+    that the format \emph{is} the extension.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Common Document Formats}
+  \begin{center}
+    \begin{tabular}{p{0.14\textwidth}p{0.30\textwidth}p{0.42\textwidth}}
+      \toprule
+      \textbf{Extension} & \textbf{Format} & \textbf{Typical use} \\
+      \midrule
+      \texttt{.docx} & Word document & Text, formatting, images (MS Word) \\
+      \texttt{.xlsx} & Excel workbook & Worksheets, formulas, charts (MS Excel) \\
+      \texttt{.pptx} & PowerPoint presentation & Slides and slide shows (PowerPoint) \\
+      \texttt{.csv} & Comma-Separated Values & Plain-text rows separated by commas \\
+      \texttt{.txt} & Plain text & Unformatted characters only \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{DOCX, XLSX, and PPTX are the Office Open XML formats. CSV and TXT
+  are plain-text formats.}
+\end{frame}
+
+\begin{frame}{Common Image Extensions}
+  \begin{itemize}
+    \item \key{PNG} --- Portable Network Graphics; lossless, supports
+      transparency.
+    \item \key{JPG / JPEG} --- compressed photographs; lossy (some quality
+      is lost).
+    \item \key{GIF} --- Graphics Interchange Format; simple images and short
+      animations.
+    \item \key{BMP} --- Bitmap; a raw image, larger than PNG/JPEG.
+    \item \key{TIFF} --- Tagged Image File Format; high-quality scanning and
+      print.
+    \item \key{SVG} --- Scalable Vector Graphics; drawn with lines and
+      shapes, scales without blur.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{PDF: The Portable Document Format}
+  \begin{itemize}
+    \item \key{PDF} stands for \key{Portable Document Format}.
+    \item It is a \key{fixed-layout} format --- each item is placed at a
+      fixed position on the page.
+    \item It keeps fonts, images, and layout together, so the file looks the
+      \key{same on every device and printer}.
+    \item It is widely used for e-books, forms, official letters, admit
+      cards, and result sheets.
+  \end{itemize}
+  \begin{block}{Why PDF is used}
+    A PDF is meant to look identical everywhere, so the sender and the
+    receiver see exactly the same page.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Why PDF Looks the Same Everywhere}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Fixed layout}
+      \begin{itemize}
+        \item Positions, spacing, and page breaks are stored in the file.
+        \item The reader app just draws the page as instructed.
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Re-flowable formats}
+      \begin{itemize}
+        \item In a word processor, text re-flows to fit each screen.
+        \item Layout can shift when fonts or devices change.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \muted{The fixed layout is exactly why a PDF is chosen when the exact
+  appearance matters.}
+\end{frame}
+
+\begin{frame}{Text PDF vs Scanned PDF}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Text (editable-source) PDF} & \textbf{Scanned (image-only) PDF} \\
+      \midrule
+      Page contents & Real text and vector graphics & A photograph of each page \\
+      Select / copy text & Works & Does not work \\
+      Search text & Works & Does not work \\
+      File usually & Smaller & Larger \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{A scanned PDF is text only to the eye; to the computer it is just
+  a picture of text.}
+\end{frame}
+
+\begin{frame}{OCR: Making a Scan Searchable}
+  \begin{itemize}
+    \item \key{OCR} stands for \key{Optical Character Recognition}.
+    \item It reads the \muted{picture of the text} and converts it into
+      \key{machine-readable text}.
+    \item After OCR, the text can be selected, searched, copied, and edited.
+    \item OCR is run on scanned pages and on photographs of documents.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    A scanned admit card will not let you copy the roll number. Run OCR, and
+    the same PDF now lets you select and search that number.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Protecting a PDF: Encryption and Passwords}
+  \begin{itemize}
+    \item \key{Encryption} scrambles the file so it cannot be read without
+      the correct key or password.
+    \item A \key{password to open} (user password) is required before the
+      file will open at all.
+    \item A \key{permissions password} (owner password) restricts printing,
+      copying, or editing.
+    \item Encryption provides \key{confidentiality} --- only the authorised
+      reader can see the content.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Password protection is an access control on the file. It is \key{not}
+    the same thing as a digital signature.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Digital Signature: Authenticity and Integrity}
+  \begin{itemize}
+    \item A \key{digital signature} is attached to a file to prove
+      \key{who signed it}.
+    \item It also proves \key{integrity}: if the file is changed after
+      signing, the signature no longer matches.
+    \item It uses a digital certificate from a trusted authority.
+    \item It provides \key{authenticity} and \key{integrity} --- it does not
+      hide the contents.
+  \end{itemize}
+  \begin{block}{One line to remember}
+    A signature says \emph{who} sent it and that it was \emph{not altered};
+    it does not make the file unreadable to others.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Encryption vs Digital Signature}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Encryption} & \textbf{Digital signature} \\
+      \midrule
+      Main purpose & Confidentiality & Authenticity and integrity \\
+      Result & Contents unreadable & Signer verified, tampering detected \\
+      Needs & Key / password & Digital certificate \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert (TRM-11, TRAP-15)}
+    A digital signature does \key{not} encrypt the file, and encryption does
+    \key{not} prove who sent it. Do not treat the two as the same.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Redaction: Removing Sensitive Content}
+  \begin{itemize}
+    \item \key{Redaction} means \key{permanently removing} sensitive content
+      before a file is shared.
+    \item Typical items: names, account numbers, addresses, or photographs.
+    \item A proper redaction deletes the underlying text or image, not just
+      draws a black box over it.
+    \item \muted{Covering text with a rectangle is not true redaction; the
+      hidden text can often still be copied.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A black mark on the page is not safe if the text underneath can still be
+    selected and copied.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{PDF/A: Archival PDF}
+  \begin{itemize}
+    \item \key{PDF/A} is a special \key{ISO standard} version of PDF made for
+      \key{long-term archiving}.
+    \item It embeds the fonts and colour information inside the file.
+    \item The goal is that the document will render \key{exactly the same}
+      years later, even on future software.
+    \item PDF/A is used by libraries, courts, and government records.
+  \end{itemize}
+  \begin{block}{Remember the ``A''}
+    The ``A'' in PDF/A stands for \key{archival} --- built for permanent
+    preservation, not everyday editing.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Format Identification Drill}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
+      \toprule
+      \textbf{Extension} & \textbf{Format} & \textbf{Category} \\
+      \midrule
+      \texttt{.pdf} & Portable Document Format & Fixed-layout document \\
+      \texttt{.docx} & Word document & Editable document \\
+      \texttt{.csv} & Comma-Separated Values & Plain-text data \\
+      \texttt{.png} & Portable Network Graphics & Image (lossless) \\
+      \texttt{.jpg} & JPEG image & Image (lossy, photos) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Identify the file by both the extension and the format it stands
+  for, not by the extension alone.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Facts to Keep Straight}
+  \begin{itemize}
+    \item The \key{extension} is the suffix; the \key{format} is the data
+      structure. (TRAP-34)
+    \item A \key{scanned PDF} is an image; its text cannot be selected or
+      searched until \key{OCR} is run.
+    \item \key{Encryption} gives confidentiality; a \key{digital signature}
+      gives authenticity and integrity. (TRM-11)
+    \item \key{Redaction} removes sensitive content permanently, not just
+      visually.
+    \item \key{PDF/A} is for long-term \key{archiving}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 33: Recall}
+  \begin{itemize}
+    \item The extension is the file-name suffix; the format is the real
+      structure of the file.
+    \item Common document formats: DOCX (Word), XLSX (Excel), PPTX
+      (PowerPoint), CSV, and TXT.
+    \item PDF is a fixed-layout format and looks the same on every device.
+    \item A text PDF is searchable; a scanned PDF is only an image until OCR
+      converts it into readable text.
+    \item Encryption gives confidentiality; a digital signature gives
+      authenticity and integrity --- they are not the same.
+    \item Redaction permanently removes sensitive content; PDF/A is built for
+      long-term archiving.
+  \end{itemize}
+\end{frame}
+\end{document}

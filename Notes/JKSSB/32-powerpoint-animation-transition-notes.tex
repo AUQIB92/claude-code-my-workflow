@@ -1,0 +1,255 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{32.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{PowerPoint Animation and Transition --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Animation and transition: the core distinction}
+PowerPoint can make a presentation move, but it uses two different tools for
+two different kinds of movement. An \textbf{animation} is an effect applied to
+one object or to text \emph{inside} a single slide. A \textbf{transition} is an
+effect applied to the movement \emph{from one slide to the next}. The simplest
+way to keep them apart is to ask where the movement happens: movement inside a
+slide is animation; movement between slides is a transition.
+
+Both kinds of effect are added from the PowerPoint ribbon. Animation is
+managed on the \textbf{Animations} tab, and transitions are managed on the
+\textbf{Transitions} tab. Neither tool changes the content of the slides; they
+change only how that content appears and how the deck moves from slide to
+slide.
+
+\begin{definitionbox}{Animation}
+An effect applied to a single object or to text on a slide --- for example
+making a picture appear, or making a title grow. Animation acts within a
+slide.
+\end{definitionbox}
+
+\begin{definitionbox}{Transition}
+An effect applied to the change from one slide to the next, such as Fade,
+Push, or Morph. A transition acts between slides.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.32\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Animation} & \textbf{Transition} \\
+\midrule
+Where it applies & An object or text on a slide & The change between two slides \\
+Ribbon tab & Animations & Transitions \\
+Nearest confusion & Transitions & Entrance/Exit effects \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The four animation effects}
+When you select an object and open the Animations tab, PowerPoint groups the
+effects into four categories. Each category answers a different question about
+the object.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.64\textwidth}}
+\toprule
+\textbf{Effect} & \textbf{What it does} \\
+\midrule
+Entrance & Makes an object \textbf{appear} on the slide. \\
+Exit & Makes an object \textbf{leave} the slide. \\
+Emphasis & Draws attention to an object that is \textbf{already visible},
+staying on the slide. \\
+Motion Path & Moves an object \textbf{along a defined path}, such as a line or
+curve. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Entrance} effects are used to reveal content step by step: the title or
+a bullet point appears when the presenter is ready. \textbf{Exit} effects are
+the opposite --- they take an object off the slide once it is no longer needed.
+An entrance and an exit are not the same as an emphasis: an emphasis effect
+does not add or remove the object, it only makes the object stand out while it
+remains on the slide. A \textbf{motion path} is different again: it changes the
+object's position, moving it from one place to another along a drawn path.
+
+\begin{example}
+A presenter wants a logo to travel from the left edge to the corner of the
+slide. That is a \textbf{Motion Path}, because the object's position changes
+during the show. If instead the logo simply spins once and stops in the same
+place, that is an \textbf{Emphasis} effect. If the logo is not on the slide at
+all until clicked, that is an \textbf{Entrance} effect.
+\end{example}
+
+Animations can be set to start when the slide appears or when the presenter
+clicks, and each effect has a duration. The order and timing of the effects on
+one slide are controlled from the \textbf{Animation Pane}.
+
+\section{Transitions and Morph}
+A transition plays as the presentation moves from the current slide to the
+next. Common transitions include \textbf{Fade}, \textbf{Push}, \textbf{Wipe},
+and \textbf{Dissolve}. Each transition can be given a duration and an optional
+sound. From the Transitions tab, the \textbf{Apply To All} button copies the
+chosen transition to every slide in the deck.
+
+Transitions are often grouped by the strength of their effect. \textbf{Subtle}
+transitions, such as Fade and Wipe, are gentle and professional.
+\textbf{Exciting} transitions, such as Push and Split, use stronger movement.
+\textbf{Dynamic Content} transitions respond to the slide content itself.
+
+\begin{definitionbox}{Morph}
+A modern transition that smoothly moves and animates objects as one slide
+changes into the next. Morph works best when two slides share similar objects,
+so the objects appear to glide from their old position to their new one.
+\end{definitionbox}
+
+\begin{example}
+Slide 1 shows a circle on the left side; slide 2 shows the same circle on the
+right side. With \textbf{Morph} applied to slide 2, the circle appears to
+slide smoothly across the screen instead of jumping. Because Morph is a
+transition, it is applied from the \textbf{Transitions} tab, not the Animations
+tab.
+\end{example}
+
+\section{Starting and controlling the slide show}
+The slide show has a small set of shortcut keys that JKSSB papers ask about
+directly. The most important is \textbf{F5}, which starts the slide show from
+the beginning --- that is, from the first slide. \textbf{Shift+F5} starts the
+slide show from the current slide --- the one selected. \textbf{Alt+F5} starts
+the presentation in \textbf{Presenter View}. \textbf{Esc} ends a running slide
+show.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Key} & \textbf{Action} \\
+\midrule
+F5 & Start the slide show from the \textbf{beginning}. \\
+Shift+F5 & Start the slide show from the \textbf{current} slide. \\
+Alt+F5 & Start the presentation in \textbf{Presenter View}. \\
+Esc & \textbf{End} the slide show. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Once the show is running, more controls are available. The keys \textbf{N},
+\textbf{Enter}, \textbf{Space}, or the right arrow advance to the next slide or
+animation; \textbf{P} or the left arrow go back to the previous slide.
+Pressing \textbf{B} turns the screen black and \textbf{W} turns it white, which
+is useful for pausing discussion. Typing a slide number and pressing
+\textbf{Enter} jumps straight to that slide.
+
+\begin{example}
+An item asks, ``Which key starts the slide show from the beginning?'' Trace
+the key set: F5 is the full show from the first slide, Shift+F5 is from the
+current slide, Alt+F5 opens Presenter View, and F7 is the spelling and grammar
+check. The answer is \textbf{F5}. A distractor that offers F7 is testing
+whether you confuse the show shortcut with spell check.
+\end{example}
+
+\section{Speaker notes, views and handouts}
+The \textbf{Notes pane} sits below the slide in Normal view and holds
+\textbf{speaker notes} --- the reminders the presenter reads while presenting.
+Notes are not shown on the projected slide during a normal slide show; in
+\textbf{Presenter View} the notes are visible only to the presenter, along with
+the current slide, the next slide, and a timer.
+
+PowerPoint provides several views for different jobs. \textbf{Normal view} is
+used to edit one slide, with an outline on the side and the notes pane below.
+\textbf{Outline view} works with the text of all slides as an outline.
+\textbf{Slide Sorter view} shows small \textbf{thumbnails} of every slide and
+is the view for rearranging slides. \textbf{Notes Page view} shows a slide
+together with its speaker notes. \textbf{Reading View} reviews the show in a
+window without going full screen, and \textbf{Slide Show view} presents the
+deck full screen.
+
+A \textbf{handout} is the printed version of the presentation that is given to
+the \textbf{audience}. Handouts usually place several slides on one page ---
+two, three, four, six, or nine per page --- and some handout layouts include
+lined space for the audience to write. The key contrast is simple: the notes
+pane is for the presenter, and a handout is for the audience.
+
+\begin{definitionbox}{Handout}
+A printed or exported layout of the presentation for the audience, normally
+showing several slides on a single page, often with room for notes.
+\end{definitionbox}
+
+\section{SmartArt conversion and its limits}
+\textbf{SmartArt} is a graphic that arranges text into a designed layout such
+as a list, process, or hierarchy. A SmartArt graphic can be converted into
+\textbf{shapes} or into \textbf{text}. Converting to \textbf{text} turns the
+graphic into a plain bulleted list, so the graphical layout is lost. Converting
+to \textbf{shapes} keeps individual shapes but removes the SmartArt
+arrangement, and once the conversion is done the graphic cannot be turned back
+into SmartArt --- the content that depended on the layout must be
+\textbf{re-entered} or re-applied by hand.
+
+\begin{example}
+A student has a SmartArt process diagram and converts it to text to reuse the
+wording in a document. The words survive, but the arrows, boxes, and arranged
+layout do not. To get the diagram back, the SmartArt must be created again,
+because a text conversion has dropped the design. The JA 2026 paper tested this
+kind of limit --- which content cannot convert cleanly without re-entry --- as
+its SmartArt item (PYQ-17).
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item Animation applies to an \textbf{object inside a slide}; a transition
+    applies between \textbf{slides}. Movement inside a slide is animation;
+    movement between slides is a transition.
+  \item \textbf{Entrance}, \textbf{Exit}, \textbf{Emphasis}, and
+    \textbf{Motion Path} are animation effects, not transitions.
+  \item \textbf{F5} starts from the beginning; \textbf{Shift+F5} starts from
+    the current slide; \textbf{Alt+F5} opens Presenter View; \textbf{Esc} ends
+    the show. Do not confuse F5 with F7 (spell check) (TRAP-32).
+  \item The \textbf{Notes pane} is for the presenter; a \textbf{handout} is for
+    the audience; \textbf{Slide Sorter} is for reordering slides.
+  \item \textbf{SmartArt} converted to text loses its graphical layout and may
+    need the content re-entered.
+\end{enumerate}
+
+\begin{example}
+An item lists four effects and asks which one is a transition. Read each
+option against the definition: Entrance, Exit, and Emphasis all act on an
+object within a slide, while Fade acts on the move between slides. Fade is the
+transition. The same logic applies when an option offers Morph: Morph is a
+transition, so it belongs with Fade, not with the animation effects.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish an animation from a transition, giving one example of each.
+  \item Name the four animation effect categories and state what each does.
+  \item State the action of F5, Shift+F5, Alt+F5, and Esc during a slide show.
+  \item Explain what the Notes pane is for and how a handout differs from it.
+  \item What happens to a SmartArt graphic when it is converted to text?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item An animation is an effect on one object or text inside a slide (for
+    example, a picture entering). A transition is an effect on the change
+    between two slides (for example, a Fade).
+  \item Entrance makes an object appear; Exit makes an object leave; Emphasis
+    draws attention to an object that stays on the slide; Motion Path moves an
+    object along a defined path.
+  \item F5 starts the show from the beginning; Shift+F5 starts from the current
+    slide; Alt+F5 starts Presenter View; Esc ends the show.
+  \item The Notes pane holds speaker notes for the presenter and is not shown
+    to the audience during a normal show. A handout is the printed layout given
+    to the audience, usually with several slides per page and room to write.
+  \item It becomes a plain bulleted list; the graphical layout is lost, and the
+    design must be re-applied or the SmartArt re-created.
+\end{enumerate}
+\endgroup
+\end{document}

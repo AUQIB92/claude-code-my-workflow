@@ -1,0 +1,266 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Access Keys \& Relationships}
+\subtitle{Lesson 29 --- Keys, Relationships and Integrity}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Keys Matter in a Database}
+  \begin{itemize}
+    \item A database stores data in \key{tables}; each table is a grid of
+      rows and columns.
+    \item A \key{record} is one row; a \key{field} is one column holding one
+      kind of value.
+    \item With many records, the same name or city can repeat, so a row needs
+      a reliable \key{identifier}.
+    \item \key{Keys} provide that identity, and \key{relationships} join
+      tables that share data.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A key identifies a row; a relationship links rows in two tables; integrity
+    keeps those links correct.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Primary Key}
+  \begin{itemize}
+    \item A \key{primary key} (PK) is a field, or set of fields, that
+      \key{uniquely identifies} each record in a table.
+    \item No two records may share the same primary-key value --- it must be
+      \key{unique}.
+    \item A primary key \key{cannot be left blank} (cannot contain a null
+      value).
+    \item Each table has \key{at most one} primary key.
+  \end{itemize}
+  \begin{exampleblock}{Office example}
+    In an Employee table, \texttt{EmployeeID} can be the primary key because
+    every employee gets a different number.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Composite Key}
+  \begin{itemize}
+    \item A \key{composite key} (also called a \key{compound key}) is a
+      primary key made up of \key{two or more fields} used together.
+    \item The combination is unique even if each field alone is not.
+    \item It is common in a \key{junction table} that links two other tables.
+  \end{itemize}
+  \begin{exampleblock}{Office example}
+    In an OrderDetails table, neither \texttt{OrderID} nor \texttt{ProductID}
+    is unique alone, but the pair
+    (\texttt{OrderID}~+~\texttt{ProductID}) is unique for each line item.
+  \end{exampleblock}
+  \begin{block}{Related key names}
+    A \key{candidate key} is any field that could be a primary key; an
+    \key{alternate key} is a candidate key that was not chosen.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Foreign Key}
+  \begin{itemize}
+    \item A \key{foreign key} (FK) is a field in one table that refers to the
+      \key{primary key} of another table.
+    \item It is the \key{link} that creates a relationship between the two
+      tables.
+    \item Unlike a primary key, a foreign key \key{may repeat} and may be
+      blank.
+    \item The table holding the foreign key is called the
+      \key{child} (related) table.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The foreign key refers to the \key{primary key} of the other table --- not
+    to its own primary key.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Primary Key vs Foreign Key}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Primary key} & \textbf{Foreign key} \\
+      \midrule
+      Purpose & Uniquely identifies a record & Links to another table \\
+      Uniqueness & Must be unique & May repeat \\
+      Blank allowed & No (cannot be null) & Yes \\
+      Count per table & At most one & Can be more than one \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{A table must have a primary key to be the ``one'' side of a
+  relationship.}
+\end{frame}
+
+\begin{frame}{Relationships Between Tables}
+  \begin{itemize}
+    \item A \key{relationship} works between two tables that share a common
+      field --- usually a primary key in one and a foreign key in the other.
+    \item Access offers three relationship types:
+      \key{one-to-one}, \key{one-to-many}, and \key{many-to-many}.
+    \item \key{One-to-many} is the \key{most common} type in practice.
+    \item Relationships are drawn and edited in the \key{Relationships}
+      window.
+  \end{itemize}
+  \begin{block}{Why join tables at all?}
+    Splitting data across related tables avoids storing the same value again
+    and again.
+  \end{block}
+\end{frame}
+
+\begin{frame}{One-to-One Relationship}
+  \begin{itemize}
+    \item In a \key{one-to-one} relationship, each record in the first table
+      matches \key{at most one} record in the second table, and vice versa.
+    \item It is used to split a table with many fields, or to keep sensitive
+      data in a separate table.
+    \item It is the \key{least common} of the three types.
+  \end{itemize}
+  \begin{exampleblock}{Office example}
+    An Employee table and an EmployeeConfidential table, where each employee
+    has exactly one confidential record.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{One-to-Many Relationship}
+  \begin{itemize}
+    \item In a \key{one-to-many} relationship, one record in the first table
+      matches \key{many} records in the second table.
+    \item The ``one'' side holds the \key{primary key}; the ``many'' side
+      holds the \key{foreign key}.
+    \item It is the \key{most common} relationship type used in Access.
+  \end{itemize}
+  \begin{exampleblock}{Office example}
+    One Department has many Employees, but each Employee belongs to only one
+    Department.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Many-to-Many and the Junction Table}
+  \begin{itemize}
+    \item In a \key{many-to-many} relationship, many records in the first
+      table match many records in the second.
+    \item Access \key{cannot} store a many-to-many relationship directly.
+    \item It is split into \key{two one-to-many} relationships using a third
+      table called a \key{junction table}.
+    \item The junction table carries the \key{foreign keys} of both other
+      tables.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Many-to-many is \key{not} created directly --- it is always implemented
+    through a junction table.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Junction Table in Detail}
+  \begin{itemize}
+    \item A \key{junction table} (also \key{associative} or \key{linking}
+      table) connects the two tables of a many-to-many relationship.
+    \item It contains a \key{foreign key} for each of the two tables.
+    \item Its own primary key is usually a \key{composite key} of those two
+      foreign keys.
+    \item It can also hold extra fields about the link, such as a quantity or
+      a date.
+  \end{itemize}
+  \begin{exampleblock}{Office example}
+    Students and Courses are many-to-many; an Enrollments junction table holds
+    StudentID and CourseID (and a grade).
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Referential Integrity}
+  \begin{itemize}
+    \item \key{Referential integrity} is the rule that a foreign-key value
+      must \key{match an existing primary-key value} in the related table
+      (or be blank).
+    \item It stops \key{orphan records} --- a child row pointing to a parent
+      row that does not exist.
+    \item In Access it is switched on in the \key{Edit Relationships} /
+      Relationships window.
+    \item With it switched on, Access supports \key{Cascade Update} and
+      \key{Cascade Delete}.
+  \end{itemize}
+  \begin{block}{Plain meaning}
+    You cannot add a child record whose parent is missing, and you cannot
+    delete a parent while children still point to it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cascade Update and Cascade Delete}
+  \begin{itemize}
+    \item \key{Cascade Update}: if the parent primary-key value changes,
+      Access updates the matching foreign-key values automatically.
+    \item \key{Cascade Delete}: if a parent record is deleted, Access deletes
+      the matching child records automatically.
+    \item These options keep the two tables consistent --- they are available
+      only when referential integrity is enforced.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Cascade Delete \key{removes related child records too}. It does not leave
+    them behind.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{File Formats: \texttt{.mdb} vs \texttt{.accdb}}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.38\textwidth}}
+      \toprule
+      \textbf{Extension} & \textbf{Access version} & \textbf{Notes} \\
+      \midrule
+      \texttt{.mdb} & Access 2003 and earlier & The \key{older} format \\
+      \texttt{.accdb} & Access 2007 and later & The \key{newer, default} format \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \begin{alertblock}{Trap alert}
+    \texttt{.mdb} is the \key{old} format; \texttt{.accdb} is the \key{new}
+    format. Reversing ``old'' and ``new'' is the common exam trap.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{What \texttt{.accdb} Added}
+  \begin{itemize}
+    \item \key{Attachment} fields, \key{multi-valued} fields, and
+      \key{calculated} fields.
+    \item Better integration with SharePoint and Outlook.
+    \item Improved encryption for the database file.
+    \item Access 2007 and later can still \key{open} an old \texttt{.mdb}
+      file, but new databases are saved as \texttt{.accdb} by default.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Keys, Relationships and Integrity}
+  \begin{itemize}
+    \item A primary key is \key{unique} and \key{not blank}; a foreign key may
+      repeat and may be blank.
+    \item A table has \key{at most one} primary key, but can have several
+      foreign keys.
+    \item One-to-many is the \key{most common} relationship; many-to-many
+      needs a \key{junction table}.
+    \item \key{Referential integrity} keeps foreign-key values matching
+      primary-key values (TRAP hint).
+    \item \texttt{.mdb} is \key{old}, \texttt{.accdb} is \key{new}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 29: Recall}
+  \begin{itemize}
+    \item \key{Primary key}: uniquely identifies each record; unique and not
+      blank; at most one per table.
+    \item \key{Composite key}: a primary key of two or more fields together.
+    \item \key{Foreign key}: a field that refers to another table's primary
+      key; it creates the relationship and may repeat.
+    \item Relationships: one-to-one, one-to-many (most common), and
+      many-to-many (via a \key{junction table}).
+    \item \key{Referential integrity}: foreign-key values must match existing
+      primary-key values, with Cascade Update / Cascade Delete options.
+    \item File formats: \texttt{.mdb} is the older Access format;
+      \texttt{.accdb} is the newer default format.
+  \end{itemize}
+\end{frame}
+\end{document}

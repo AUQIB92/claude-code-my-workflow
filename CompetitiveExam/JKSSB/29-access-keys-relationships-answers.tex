@@ -1,0 +1,79 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 29 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{B.} PK stands for Primary Key. A (Public Key) and D (Private
+  Key) come from cryptography, and C (Parent Key) is not the standard
+  expansion.
+\item \textbf{C.} FK stands for Foreign Key. A, B, and D are not the standard
+  expansions of the abbreviation.
+\item \textbf{C.} The primary key uniquely identifies each record. A foreign
+  key (A) only links to another table; an alternate key (B) is an unused
+  candidate key; a secondary key (D) is not the identifying key.
+\item \textbf{C.} A primary key must be unique, so it \textbf{cannot} contain
+  duplicate values. Statements A, B, and D are all true of a primary key.
+\item \textbf{C.} A field that refers to another table's primary key is the
+  foreign key. A primary key (A) identifies records in its own table; a
+  composite key (B) is a multi-field primary key; a candidate key (D) is a key
+  eligible to become the primary key.
+\item \textbf{B.} A composite (compound) key is a primary key made of two or
+  more fields together. A primary key (A) may be a single field; a foreign key
+  (C) links tables; an alternate key (D) is an unchosen candidate key.
+\item \textbf{C.} A foreign key may repeat and may be blank. Primary and
+  composite keys must be unique and not blank, and a candidate key is a
+  potential primary key, so none of them may repeat.
+\item \textbf{B.} A table can have \textbf{at most one} primary key (it may
+  have none while being designed). ``Exactly one'' (A) is too strong; C and D
+  are wrong because a table cannot have two or more primary keys.
+\item \textbf{B.} One-to-many is the most common relationship in Access. A
+  one-to-one (A) is the least common; a many-to-many (C) is built indirectly;
+  zero-to-one (D) is not a standard Access relationship type.
+\item \textbf{B.} The ``many'' side holds the foreign key. The primary key
+  (A) sits on the ``one'' side; a composite key (C) is a multi-field primary
+  key; an alternate key (D) is relevant only to candidate keys.
+\item \textbf{C.} A many-to-many relationship cannot be stored directly and
+  needs a junction table. One-to-one (A) and one-to-many (B) are stored
+  directly; one-to-zero (D) is not a standard type.
+\item \textbf{B.} A junction table usually uses a composite key formed from
+  the two foreign keys. A single AutoNumber field (A) is not the typical
+  junction key, and C and D name only one of the two linked tables.
+\item \textbf{B.} Referential integrity requires a foreign-key value to match
+  an existing primary-key value (or be blank). A (composite keys are optional)
+  is unrelated; C describes data typing; D is false because a table has at
+  most one primary key.
+\item \textbf{B.} Cascade Delete removes the related child records when a
+  parent is deleted. Cascade Update (A) changes child values when the parent
+  key changes; referential integrity (C) is the overall rule; a composite key
+  (D) is unrelated.
+\item \textbf{B.} Only statement II is correct: a foreign key may contain
+  duplicate values. Statement I is false (a primary key is unique), and
+  statement III is false (a table has at most one primary key). A, C, and D
+  all include a false statement.
+\item \textbf{A.} \texttt{.mdb} is the older format used by Access 2003 and
+  earlier. B describes \texttt{.accdb}; C and D are false because
+  \texttt{.mdb} is not the modern default.
+\item \textbf{B.} \texttt{.accdb} is the newer, default Access format used
+  from Access 2007 onward. A is wrong (it is the newer format, not older); C
+  and D name unrelated file types.
+\item \textbf{C.} Statement C is incorrect: \texttt{.mdb} is the older
+  format, not the newer one. A, B, and D are all correct statements about the
+  two formats.
+\item \textbf{C.} A composite key is a primary key made of two or more
+  fields, so this pairing is correct. A is wrong (a primary key cannot
+  repeat); B is wrong (a foreign key does not identify records in its own
+  table); D is wrong (a junction table implements many-to-many, not
+  one-to-one).
+\item \textbf{B.} A candidate key not chosen as the primary key is an
+  alternate key. A foreign key (A) links tables; a composite key (C) is a
+  multi-field primary key; ``junction key'' (D) is not a standard term.
+\end{enumerate}
+\end{document}

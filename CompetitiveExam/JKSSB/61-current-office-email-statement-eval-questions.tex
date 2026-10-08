@@ -1,0 +1,202 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 61 Practice: Current Office, Email and Statement Evaluation}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 questions are original JKSSB-pattern
+questions (\textit{[Original]}); concepts drawn from PYQ-12/13/14/15/16/17;
+none reproduces an official paper item.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} In MS Word, content controls (drop-down list, date
+  picker, check box) are inserted from which tab?
+  \begin{enumerate}[label=\Alph*.]
+    \item Developer tab
+    \item Review tab
+    \item Mailings tab
+    \item References tab
+  \end{enumerate}
+\item \textit{[Original]} Which of the following statements about MS Word is
+  \textbf{NOT} correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item A content control can enforce limited data validation, such as a
+      drop-down list or a date picker.
+    \item A hanging indent shifts every line of the paragraph except the first
+      line.
+    \item A reviewer's comments on a sentence appear directly in the Navigation
+      Pane.
+    \item Accepting a tracked change keeps the new text and removes the
+      revision metadata attached to that change.
+  \end{enumerate}
+\item \textit{[Original]} Which pairing of indent type and effect is correctly
+  matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item First-line indent --- indents every line except the first
+    \item Hanging indent --- indents only the first line of the paragraph
+    \item First-line indent --- indents only the first line of the paragraph
+    \item Hanging indent --- centres the first line and left-aligns the rest
+  \end{enumerate}
+\item \textit{[Original]} The Word Navigation Pane offers which three views?
+  \begin{enumerate}[label=\Alph*.]
+    \item Headings, Pages, Results
+    \item Comments, Footnotes, Endnotes
+    \item Draft, Outline, Print Layout
+    \item Insert, Design, References
+  \end{enumerate}
+\item \textit{[Original]} When Track Changes is switched on, each recorded
+  change stores:
+  \begin{enumerate}[label=\Alph*.]
+    \item only the page number of the edit.
+    \item the author's name and the date and time of the edit.
+    \item only the final text with no author information.
+    \item the printer name and the paper size.
+  \end{enumerate}
+\item \textit{[Original]} A report needs no header on the title page but a
+  running header on every later page. Which break makes this possible?
+  \begin{enumerate}[label=\Alph*.]
+    \item Page Break
+    \item Column Break
+    \item Section Break
+    \item Line Break
+  \end{enumerate}
+\item \textit{[Original]} Given
+  \texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))} with A1 containing 30,
+  the formula returns:
+  \begin{enumerate}[label=\Alph*.]
+    \item High
+    \item Medium
+    \item Low
+    \item 0
+  \end{enumerate}
+\item \textit{[Original]} With the same formula
+  \texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))}, if A1 is blank the
+  result is:
+  \begin{enumerate}[label=\Alph*.]
+    \item High, because a blank cell is read as 100.
+    \item Medium, because a blank cell skips the first test.
+    \item Low, because a blank cell is treated as 0 in the comparison.
+    \item \texttt{\#VALUE!}, because a blank cell always causes an error.
+  \end{enumerate}
+\item \textit{[Original]} Cell A1 contains the text ``abc''. Which statement
+  is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=A1+5} returns 5.
+    \item \texttt{ISNUMBER(A1)} returns TRUE.
+    \item \texttt{=A1+5} returns \texttt{\#VALUE!} because text is not a
+      number.
+    \item Text is treated as 0 in every arithmetic operation.
+  \end{enumerate}
+\item \textit{[Original]} Which is the correct general form of COUNTIFS for
+  counting rows that satisfy all the given conditions?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{COUNTIFS(criteria1, range1, criteria2, range2)}
+    \item \texttt{COUNTIFS(range1, criteria1, range2, criteria2)}
+    \item \texttt{COUNTIFS(range1 + range2, criteria1 AND criteria2)}
+    \item \texttt{COUNTIFS(range1; criteria1; TRUE)}
+  \end{enumerate}
+\item \textit{[Original]} Which formula counts the rows in which A1:A10 exceeds
+  50 \textbf{and} B1:B10 contains ``Yes''?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{=SUM(A1:A10>50, B1:B10="Yes")}
+    \item \texttt{=SUMPRODUCT((A1:A10>50)*(B1:B10="Yes"))}
+    \item \texttt{=AVERAGE(A1:A10, B1:B10)}
+    \item \texttt{=COUNT(A1:A10, B1:B10)}
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item COUNTIFS counts only the rows satisfying all the given
+      range-and-criteria pairs.
+    \item SUMPRODUCT can only add numbers and cannot count rows meeting
+      multiple conditions.
+    \item In a numeric comparison, a blank cell is treated as zero.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and III only
+    \item II only
+    \item I, II, and III
+    \item I and II only
+  \end{enumerate}
+\item \textit{[Original]} An email rule (filter) that moves all mail from one
+  sender into a dedicated folder consists of:
+  \begin{enumerate}[label=\Alph*.]
+    \item a condition plus an action, applied automatically to mail.
+    \item a digital signature plus encryption, applied manually.
+    \item a Bcc field plus a Cc field, applied once.
+    \item a Section Break plus a Page Break, applied to pages.
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes a digital
+  signature from encryption?
+  \begin{enumerate}[label=\Alph*.]
+    \item A digital signature encrypts the message body so only the recipient
+      can read it.
+    \item Encryption proves the sender's identity; a digital signature hides
+      the content.
+    \item A digital signature provides authenticity and integrity, while
+      encryption provides confidentiality.
+    \item A digital signature and encryption are different names for the same
+      operation.
+  \end{enumerate}
+\item \textit{[Original]} Expand POP3.
+  \begin{enumerate}[label=\Alph*.]
+    \item Point-to-Point Protocol version 3
+    \item Post Office Protocol version 3
+    \item Packet Ordering Protocol version 3
+    \item Private Office Protocol version 3
+  \end{enumerate}
+\item \textit{[Original]} Which statement about mail protocols is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item POP3 sends mail; SMTP downloads mail to the local device.
+    \item IMAP downloads mail and always deletes it from the server; POP3
+      keeps devices synchronised.
+    \item SMTP sends mail; POP3 downloads mail to the local device; IMAP keeps
+      mail on the server and synchronises devices.
+    \item POP3 keeps mail synced on the server across all devices.
+  \end{enumerate}
+\item \textit{[Original]} A message is sent with addresses in the To, Cc, and
+  Bcc fields. Who can see the Bcc addresses?
+  \begin{enumerate}[label=\Alph*.]
+    \item Every recipient, since Bcc is visible to all.
+    \item Only the sender; the Bcc addresses are hidden from the other
+      recipients.
+    \item Only the Cc recipients; the sender cannot see them.
+    \item Nobody, since Bcc addresses are deleted before sending.
+  \end{enumerate}
+\item \textit{[Original]} In PowerPoint, which content type CANNOT be converted
+  to a SmartArt graphic in one step without re-entry?
+  \begin{enumerate}[label=\Alph*.]
+    \item A bulleted list of text
+    \item A picture inserted on the slide
+    \item Plain paragraph text with levels
+    \item A numbered list of points
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item A Section Break, not a Page Break, allows different headers and
+      footers in one document.
+    \item Addresses in the Bcc field are hidden from the sender.
+    \item A digital signature encrypts the message body for confidentiality.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item I and II only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} Which pairing is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item Page Break --- starts a new section with its own headers and
+      footers
+    \item COUNTIFS --- handles one condition only; SUMPRODUCT --- only adds
+      numbers
+    \item First-line indent --- shifts only the first line; Hanging indent
+      --- shifts every line except the first
+    \item POP3 --- syncs mail on the server; IMAP --- downloads and deletes
+      from the server
+  \end{enumerate}
+\end{enumerate}
+\end{document}

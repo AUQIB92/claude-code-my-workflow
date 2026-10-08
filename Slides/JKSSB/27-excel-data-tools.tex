@@ -1,0 +1,292 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Excel Data Tools}
+\subtitle{Lesson 27 --- Sort, Filter, Charts and PivotTables}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Excel Data Tools Do}
+  \begin{itemize}
+    \item Data entered in a worksheet must be \key{organised}, \key{summarised},
+      and \key{presented}.
+    \item \key{Sort} and \key{filter} arrange and narrow the rows.
+    \item \key{Tables}, \key{charts}, and \key{PivotTables} organise and
+      summarise the data.
+    \item \key{Printing}, \key{protection}, and \key{what-if} analysis prepare
+      and safeguard the result.
+  \end{itemize}
+  \begin{block}{The one idea}
+    These tools change the \emph{view} of the data; they do not change the data
+    itself.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Sorting}
+  \begin{itemize}
+    \item \key{Sort} rearranges rows into a chosen order.
+    \item \key{Ascending} order: A to Z, or smallest number to largest.
+    \item \key{Descending} order: Z to A, or largest to smallest.
+    \item Sorting works on a \key{column}, while the whole row moves with it.
+  \end{itemize}
+  \begin{block}{Data > Sort}
+    The Sort dialog can order by \key{more than one level} --- for example, by
+    Department, and then by Salary within each department.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Multi-Level and Custom Sort}
+  \begin{itemize}
+    \item \key{Add Level} in the Sort dialog sorts by a second and a third key.
+    \item A \key{custom list} sorts by a defined order, such as days of the week
+      or months.
+    \item If the range has titles, tick \key{My data has headers} so the header
+      row is not sorted as data.
+    \item Excel can also sort by cell colour or font colour.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Sorting a \key{single column} on its own scrambles the records. Sort the
+    whole table, or use an Excel table.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Filtering with AutoFilter}
+  \begin{itemize}
+    \item \key{Filter} shows only the rows that meet a condition; the other rows
+      are \key{temporarily hidden}, not deleted.
+    \item Turn it on with \key{Data > Filter}, shortcut
+      \key{Ctrl}$+$\key{Shift}$+$\key{L}.
+    \item Drop-down arrows appear in the header row of each column.
+    \item Clicking an arrow narrows the list to the chosen values.
+  \end{itemize}
+  \begin{block}{Hidden, not removed}
+    Clearing the filter (\key{Clear Filter}) brings back every row.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Filter Criteria}
+  \begin{itemize}
+    \item \key{Value filter}: keep one or more ticks from the list.
+    \item \key{Condition filter}: Text Filters, Number Filters, and Date Filters
+      (for example, Greater Than 500, or Begins With ``A'').
+    \item \key{Top 10} and \key{Above Average} are ready-made condition filters.
+    \item \key{Advanced Filter} handles complex criteria and can copy the result
+      to another location.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Excel Tables (Format as Table)}
+  \begin{itemize}
+    \item An \key{Excel table} is a formatted range with a name and a table
+      style.
+    \item Create one with \key{Insert > Table}, shortcut \key{Ctrl}$+$\key{T}.
+    \item A table auto-expands as new rows are typed, and formulas auto-fill.
+    \item It provides banded rows, header filter buttons, and an optional
+      \key{Total Row}.
+  \end{itemize}
+  \begin{block}{Structured references}
+    In a table, formulas use names such as \key{Table1[Sales]} instead of cell
+    addresses like \key{B2}, so they stay correct as the table grows.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Table vs Plain Range}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Plain range} & \textbf{Excel table} \\
+      \midrule
+      Name & None & Assigned name (Table1) \\
+      Grows & Manually & Auto-expands \\
+      Formulas & Cell addresses & Structured references \\
+      Filters & Manual AutoFilter & Built-in header buttons \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{A table is not a PivotTable; a table is the source data that a
+  PivotTable can summarise.}
+\end{frame}
+
+\begin{frame}{Charts: Common Types}
+  \begin{itemize}
+    \item \key{Column} or \key{bar} chart: compares values across categories.
+    \item \key{Line} chart: shows a trend, usually over time.
+    \item \key{Pie} or \key{doughnut} chart: shows parts of one whole.
+    \item \key{Scatter (XY)} chart: shows the relationship between two numeric
+      variables.
+  \end{itemize}
+  \begin{block}{Linked to data}
+    A chart is \key{linked} to its source range; edit the data and the chart
+    updates.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Chart Parts}
+  \begin{itemize}
+    \item \key{Chart area} is the whole chart; \key{plot area} is where the data
+      itself is drawn.
+    \item A \key{data series} is one set of values; the \key{legend} names each
+      series.
+    \item The \key{category axis} (X) holds labels; the \key{value axis} (Y)
+      holds numbers.
+    \item A chart can float on a worksheet or be moved to a separate
+      \key{chart sheet}.
+  \end{itemize}
+  \muted{Data labels print the exact value on each data point.}
+\end{frame}
+
+\begin{frame}{PivotTables}
+  \begin{itemize}
+    \item A \key{PivotTable} summarises a large table of data in seconds.
+    \item Fields are \key{dragged} into four areas: \key{Rows}, \key{Columns},
+      \key{Values}, and \key{Filters}.
+    \item The \key{Values} area aggregates by \key{Sum}, \key{Count},
+      \key{Average}, and more.
+    \item Change the field layout and the summary is \key{re-computed} at once
+      --- that is the ``pivot''.
+  \end{itemize}
+  \begin{block}{Source unchanged}
+    A PivotTable does not edit the source data; it is only a summary view of it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{PivotTable Areas and PivotCharts}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Area} & \textbf{What goes there} \\
+      \midrule
+      Rows & Field values listed down the left side \\
+      Columns & Field values spread across the top \\
+      Values & Numbers that are summarised (Sum, Count, Average) \\
+      Filters & Fields used to filter the whole PivotTable \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{A \key{PivotChart} is a chart built on a PivotTable; the two are
+  linked.}
+\end{frame}
+
+\begin{frame}{PivotTable vs Source Data}
+  \begin{itemize}
+    \item The PivotTable \key{summarises} the source; it never replaces it.
+    \item If the source data changes, the PivotTable must be \key{refreshed}.
+    \item Deleting the source table breaks the PivotTable.
+    \item A PivotTable is \key{not} the same as an Excel table.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A PivotTable ``summarises data but is not the source table itself''. Do not
+    confuse the summary with the data.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Printing: Page Setup}
+  \begin{itemize}
+    \item Print from \key{File > Print}; adjust layout on the \key{Page Layout}
+      tab.
+    \item \key{Orientation}: \key{Portrait} (tall) or \key{Landscape} (wide).
+    \item Set \key{paper size}, \key{margins}, and \key{headers/footers} here.
+    \item Preview in \key{Print Preview} before printing a large sheet.
+  \end{itemize}
+  \begin{block}{Keep it on one page}
+    \key{Scaling} options such as ``Fit Sheet on One Page'' shrink the printout
+    to a chosen width or number of pages.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Printing: Area, Titles and Gridlines}
+  \begin{itemize}
+    \item \key{Print Area}: select a range and \key{Set Print Area} to print
+      only that part.
+    \item \key{Print Titles} repeats chosen \key{header rows} or columns on every
+      printed page.
+    \item \key{Gridlines} are \key{not printed by default}; enable
+      \key{Print} gridlines under Sheet Options.
+  \end{itemize}
+  \muted{Page breaks can be inserted to control where a new page starts.}
+\end{frame}
+
+\begin{frame}{Protection}
+  \begin{itemize}
+    \item \key{Protect Sheet} (\key{Review > Protect Sheet}) stops cells from
+      being edited; selected actions may still be allowed.
+    \item \key{Protect Workbook} protects the \key{structure} --- adding,
+      deleting, or renaming sheets.
+    \item Cells are \key{Locked} by default, but locking takes effect only
+      \key{after} the sheet is protected.
+  \end{itemize}
+  \begin{alertblock}{Not the same as encryption}
+    Protection restricts editing inside Excel; it is not the same as a password
+    that encrypts the file.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{What-If Analysis (Awareness)}
+  \begin{itemize}
+    \item \key{Goal Seek} finds the input value needed to reach a target result.
+    \item \key{Scenario Manager} stores and compares several sets of input
+      values.
+    \item A \key{Data Table} shows how an output changes as one or two inputs
+      change.
+    \item These tools live under \key{Data > What-If Analysis}.
+  \end{itemize}
+  \muted{Exam depth: recognise each tool and its one-line purpose.}
+\end{frame}
+
+\begin{frame}{Near-Neighbour: COUNTIFS vs SUMPRODUCT}
+  \begin{itemize}
+    \item To \key{count rows meeting several conditions at once}, use
+      \key{COUNTIFS(range1, crit1, range2, crit2, ...)}.
+    \item \key{COUNTIFS} applies \key{AND} logic across all its
+      range-and-criteria pairs.
+    \item \key{SUMPRODUCT((range1>=x)*(range2>=y))} also counts
+      multi-criterion rows, by multiplying TRUE/FALSE results.
+    \item For \key{OR} logic, add two COUNTIF or COUNTIFS results.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-14, PYQ-15)}
+    COUNTIFS takes \key{paired} range-and-criteria arguments; SUMPRODUCT works
+    on \key{arrays} and adds the already-multiplied boolean results directly.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Data-Tools Facts to Keep Straight}
+  \begin{itemize}
+    \item Sort and filter change the \key{view}; a filter \key{hides} rows, it
+      does not delete them.
+    \item A PivotTable \key{summarises} the source and does not replace it; it
+      must be \key{refreshed} after changes.
+    \item A PivotTable is \key{not} an Excel table.
+    \item \key{COUNTIFS} counts with AND across paired arguments; \key{SUMPRODUCT}
+      does the same with boolean arrays. (TRAP-14)
+    \item Locked cells are protected only \key{after} the sheet is protected.
+    \item Gridlines are \key{not printed} unless Print gridlines is enabled.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 27: Recall}
+  \begin{itemize}
+    \item \key{Sort} arranges rows --- ascending, descending, multi-level, and
+      custom.
+    \item \key{Filter} (\key{Ctrl}$+$\key{Shift}$+$\key{L}) shows only matching
+      rows; it hides, not deletes.
+    \item An \key{Excel table} (\key{Ctrl}$+$\key{T}) auto-expands and uses
+      structured references.
+    \item Charts (column, line, pie, scatter) are \key{linked} to their data.
+    \item A \key{PivotTable} summarises with Rows, Columns, Values, and Filters;
+      a \key{PivotChart} is a chart on a PivotTable.
+    \item Printing: print area, print titles, scaling, and gridline options.
+    \item \key{Protect Sheet} vs \key{Protect Workbook}; locking applies after
+      protection.
+    \item \key{Goal Seek}, \key{Scenario Manager}, and \key{Data Table} for
+      what-if analysis.
+    \item \key{COUNTIFS} vs \key{SUMPRODUCT} for multi-criterion counting
+      (TRAP-14).
+  \end{itemize}
+\end{frame}
+\end{document}

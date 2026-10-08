@@ -1,0 +1,267 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{28.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Access Database Basics --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What a database is}
+A \textbf{database} is an organised collection of related data, stored so
+that it can be searched, updated, and retrieved easily. The data is not kept
+as a loose pile of separate files; it is arranged in a planned structure.
+A simple example is a school's information: the list of students, their
+classes, and their marks all belong together as related information, and a
+database keeps them that way.
+
+A useful comparison is a spreadsheet. A spreadsheet (such as Excel) is built
+for calculation on a simple grid. A database is built for storing and linking
+large amounts of related data, and it can hold many tables that are related
+to one another. When a record system grows large, a database keeps the data
+consistent and avoids unnecessary duplication.
+
+\begin{definitionbox}{Database}
+An organised collection of related data, stored so that it can be searched,
+updated, and retrieved easily.
+\end{definitionbox}
+
+\section{Database vs DBMS}
+A database and a DBMS are not the same thing, and the difference is a common
+exam point. The \textbf{database} is the collection of data itself. A
+\textbf{DBMS} (Database Management System) is the software that manages that
+data. The database is data; the DBMS is a program.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.35\textwidth}p{0.37\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Database} & \textbf{DBMS} \\
+\midrule
+What it is & The organised collection of data & The software that manages the data \\
+Nature & Data & Program \\
+Example & A school's records & MS Access, Oracle, MySQL \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{DBMS (Database Management System)}
+The software that stores a database and lets users insert, update, delete,
+and retrieve data while controlling access and keeping the data consistent.
+\end{definitionbox}
+
+A \textbf{relational database management system} (RDBMS) is a DBMS that keeps
+data in related tables. Microsoft Access is an example of an RDBMS.
+
+\section{What a DBMS does}
+A DBMS performs several jobs. It \emph{stores} the data and controls how it is
+kept on disk. It lets users \emph{insert}, \emph{update}, \emph{delete}, and
+\emph{retrieve} records. It controls \emph{access}, so that only permitted
+users can read or change the data. It also keeps the data
+\emph{consistent} --- different parts of the database are not allowed to
+contradict each other --- and protects it from corruption.
+
+Common DBMS software includes MS Access, Oracle, MySQL, and SQL Server. For
+this course, the important point is that Access is a DBMS: it is the program
+that manages a database, not the data itself.
+
+\section{Microsoft Access in the Office suite}
+\textbf{Microsoft Access} is the database program of the Microsoft Office
+suite. In the suite, Word handles text documents, Excel handles spreadsheets,
+PowerPoint handles presentations, and Access handles databases. Access is a
+relational DBMS: it stores its data in tables, and it also holds the queries,
+forms, and reports that work on that data. All of these objects are kept
+inside a single database file for each database.
+
+\begin{example}
+A student is asked, ``Which MS Office program is used to store and manage
+databases?'' The answer is \textbf{Access}. Excel is a spreadsheet program,
+Word is a word processor, and PowerPoint is for presentations; none of them
+is a DBMS.
+\end{example}
+
+\section{The objects in an Access database}
+An Access database contains several kinds of object, each with one job.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Object} & \textbf{Job} \\
+\midrule
+Table & Stores the actual data in rows and columns \\
+Query & Asks a question and retrieves selected data \\
+Form & Provides a screen to enter and view data \\
+Report & Presents data in a printable layout \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The data itself always lives in \textbf{tables}. The other objects work on
+that data: a query retrieves it, a form is used to enter and view it, and a
+report presents it for printing.
+
+\section{Tables, records, and fields}
+A \textbf{table} is the basic object where data is stored. Inside a table,
+data is arranged in rows and columns. Each \textbf{column} is one
+\textbf{field} --- one kind of information, such as Name or Marks. Each
+\textbf{row} is one \textbf{record} --- one complete entry, such as the full
+details of one student. A table therefore holds many records, and every
+record has the same set of fields.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.30\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning} & \textbf{Position in a table} \\
+\midrule
+Field & One kind of information & A column \\
+Record & One complete entry & A row \\
+Table & A collection of related records & The whole grid \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Record}
+One complete entry in a table, held in a single row and made up of one value
+for each field.
+\end{definitionbox}
+
+\begin{definitionbox}{Field}
+One kind of information in a table, held in a single column; each field has a
+name and a data type.
+\end{definitionbox}
+
+\begin{example}
+In a Students table the columns are RollNo, Name, Marks, and Passed. One row
+--- for example, ``1, Ayaan, 78, Yes'' --- is one record. The Name column is
+the Name field. The whole set of rows together is the table.
+\end{example}
+
+\section{Data types in Access}
+Every field has a \textbf{data type}, which is the kind of value it can hold.
+Common Access data types are:
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Data type} & \textbf{Used for} \\
+\midrule
+Short Text & Names, codes, and other text \\
+Number & Values used in calculations \\
+Date/Time & Dates and times \\
+Yes/No & Only True or False (a Boolean value) \\
+AutoNumber & A unique number added automatically for each new record \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Because a field accepts only values that match its data type, the data stays
+clean. A field set to Number will not accept ordinary text, and a Yes/No
+field accepts only a true-or-false value.
+
+\section{Field properties and validation}
+A \textbf{field property} is a setting that describes how a field behaves.
+Some important properties are \textbf{Field Size}, which limits how much a
+field can hold; \textbf{Default Value}, which fills in a value
+automatically; \textbf{Required}, which, when set to Yes, stops the field
+from being left blank; and \textbf{Input Mask}, which fixes the pattern of
+entry, such as the format of a phone number.
+
+\textbf{Validation} means checking that entered data is sensible and allowed.
+A \textbf{Validation Rule} states the condition a value must meet. For
+example, the rule \texttt{Between 0 And 100} accepts only values in that
+range. A \textbf{Validation Text} is the message shown when the rule is
+violated.
+
+\begin{definitionbox}{Validation}
+The checking of entered data against a rule so that only sensible, allowed
+values are stored in a field.
+\end{definitionbox}
+
+\begin{example}
+On a Marks field, the Validation Rule \texttt{Between 0 And 100} is set. A
+user types 150. Access rejects the entry because it fails the rule, and shows
+the Validation Text as a message. A valid value such as 78 is accepted
+normally.
+\end{example}
+
+\section{Primary key and index}
+A \textbf{primary key} is a field that uniquely identifies each record. Its
+value is different for every record and is never left blank. In the Students
+table, RollNo can serve as the primary key because no two students share a
+roll number. An AutoNumber field is often used as a ready-made primary key,
+because Access fills it with a fresh unique number for every new record.
+
+An \textbf{index} is a special structure that makes searching and sorting a
+table faster. It works like the index of a book: instead of reading every
+page, it points straight to the right place. A primary key is automatically
+indexed. An index takes extra space and can slightly slow down the work of
+adding data, so it is created only where it is genuinely useful.
+
+\begin{definitionbox}{Primary key}
+A field, or set of fields, whose value uniquely identifies every record in a
+table; it cannot contain duplicates and cannot be left blank.
+\end{definitionbox}
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{database} is the data; a \textbf{DBMS} is the software that
+    manages it. Do not swap them.
+  \item A \textbf{field} is a column; a \textbf{record} is a row; a
+    \textbf{table} is the whole collection of related records.
+  \item \textbf{Validation} checks the value entered; an \textbf{index}
+    speeds up searching. They do different jobs.
+  \item A \textbf{primary key} is unique and cannot be blank; it cannot
+    contain duplicate values.
+  \item Microsoft \textbf{Access} is a DBMS and part of the MS Office suite;
+    it is not a spreadsheet.
+\end{enumerate}
+
+\begin{example}
+An item asks which object stores the actual data in an Access database.
+Trace the objects: a query retrieves data, a form is for entry, and a report
+is for printing, but only the \textbf{table} stores the data. If the stem
+instead asks which field uniquely identifies a record, the answer is the
+\textbf{primary key}; if it asks which field setting stops a blank entry, the
+answer is \textbf{Required}.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define a database and explain how it differs from a DBMS.
+  \item Distinguish a field, a record, and a table, stating the position of
+    each in a table.
+  \item Name any four Access data types and give one use of each.
+  \item Explain the difference between a validation rule and an index.
+  \item What is a primary key, and why can it not contain duplicate values?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A database is an organised collection of related data. A DBMS is the
+    software that manages that data --- it stores it, allows insert, update,
+    delete, and retrieve operations, and controls access. The database is the
+    data; the DBMS is the program.
+  \item A field is one kind of information and is a column in a table. A
+    record is one complete entry and is a row in a table. A table is the
+    whole collection of related records, arranged in rows and columns.
+  \item Any four of: Short Text (names and codes), Number (values used in
+    calculations), Date/Time (dates and times), Yes/No (True or False),
+    AutoNumber (a unique number for each new record).
+  \item A validation rule checks that entered data meets a condition, such as
+    \texttt{Between 0 And 100}, and rejects values that fail it. An index is a
+    structure that speeds up searching and sorting; it does not check values.
+  \item A primary key is a field whose value uniquely identifies each record.
+    It cannot contain duplicates because two records with the same key value
+    could not be told apart, and uniqueness is the whole purpose of the key.
+\end{enumerate}
+\endgroup
+\end{document}

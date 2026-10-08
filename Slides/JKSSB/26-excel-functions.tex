@@ -1,0 +1,286 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Excel Functions}
+\subtitle{Lesson 26 --- Core Functions and Error Values}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{From Formulas to Functions}
+  \begin{itemize}
+    \item A \key{formula} is an expression that starts with \texttt{=} and
+      calculates a value, for example \texttt{=A1+A2}.
+    \item A \key{function} is a ready-made, named operation such as
+      \texttt{SUM} or \texttt{AVERAGE} that performs the calculation for you.
+    \item A function is used \key{inside} a formula; its name is followed by
+      arguments in parentheses.
+    \item Using a function is faster and less error-prone than typing every
+      cell into the formula by hand.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A formula is the whole calculation; a function is a built-in tool that
+    performs one part of it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Function vs Formula}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.32\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Formula} & \textbf{Function} \\
+      \midrule
+      What it is & Any calculation starting with \texttt{=} & A predefined named operation \\
+      Example & \texttt{=A1+A2} & \texttt{=SUM(A1:A10)} \\
+      Contains a function? & Not always & Always (by definition) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap alert}
+    Every formula must begin with \texttt{=}. Without it, Excel treats the
+    entry as plain text. (TRAP-30)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Anatomy of a Function}
+  \begin{itemize}
+    \item A function has a \key{name} and \key{arguments} inside parentheses:
+      \texttt{=FUNCTION(argument1, argument2)}.
+    \item The \key{name} tells Excel what to do --- \texttt{SUM},
+      \texttt{MAX}.
+    \item The \key{arguments} tell it which cells or values to use, such as
+      the range \texttt{A1:A10}.
+    \item A \key{range} is written with a colon: \texttt{A1:A10} means the
+      cells from A1 down to A10.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    \texttt{=SUM(B2:B6)} adds the values in cells B2, B3, B4, B5, and B6.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{SUM: Adding Values}
+  \begin{itemize}
+    \item \texttt{SUM} returns the \key{total} of the numbers in its
+      arguments.
+    \item Example: \texttt{=SUM(A1:A10)} adds all the numbers in the range
+      A1:A10.
+    \item Text and blank cells in the range are \muted{ignored}; only numbers
+      are added.
+    \item Several ranges can be listed: \texttt{=SUM(A1:A5, C1:C5)}.
+  \end{itemize}
+  \begin{block}{Remember}
+    SUM means addition --- it is the function behind the AutoSum button.
+  \end{block}
+\end{frame}
+
+\begin{frame}{AVERAGE: The Mean}
+  \begin{itemize}
+    \item \texttt{AVERAGE} returns the \key{arithmetic mean} of the numbers
+      in a range.
+    \item Example: \texttt{=AVERAGE(A1:A10)} adds the numbers and divides by
+      how many numbers there are.
+    \item Blank cells and text are \key{not counted} in the divisor.
+    \item Trap: it divides by the number of \key{numeric} cells, not by the
+      total number of cells.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    If A1:A5 holds 10, 20, 30 and two blanks, \texttt{=AVERAGE(A1:A5)} is
+    $(10+20+30)/3 = 20$, not $60/5$.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{COUNT vs COUNTA: The Near-Neighbour}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.32\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{COUNT} & \textbf{COUNTA} \\
+      \midrule
+      Counts & Only cells holding numbers & All non-empty cells \\
+      Text cells & Ignored & Counted \\
+      Blank cells & Ignored & Ignored \\
+      Example & \texttt{=COUNT(A1:A10)} & \texttt{=COUNTA(A1:A10)} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{COUNT counts numbers; COUNTA counts anything that is not empty.}
+\end{frame}
+
+\begin{frame}{COUNT vs COUNTA in Action}
+  \begin{itemize}
+    \item Suppose A1:A10 holds \key{6 numbers}, \key{2 text} labels, and
+      \key{2 blank} cells.
+    \item \texttt{=COUNT(A1:A10)} $=$ \key{6} (numbers only).
+    \item \texttt{=COUNTA(A1:A10)} $=$ \key{8} (6 numbers $+$ 2 text
+      labels).
+    \item Both ignore the blanks; only COUNTA counts the text.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    COUNT counts \key{numbers only}; COUNTA counts \key{all non-empty} cells.
+    Do not swap this near-neighbour pair.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{MAX and MIN}
+  \begin{itemize}
+    \item \texttt{MAX} returns the \key{largest} number in a range.
+    \item \texttt{MIN} returns the \key{smallest} number in a range.
+    \item Examples: \texttt{=MAX(C1:C10)} and \texttt{=MIN(C1:C10)}.
+    \item Blank cells and text are ignored, exactly as in SUM and AVERAGE.
+  \end{itemize}
+  \begin{block}{Pair them}
+    MAX $\rightarrow$ biggest; MIN $\rightarrow$ smallest. Both work on
+    numbers only.
+  \end{block}
+\end{frame}
+
+\begin{frame}{IF: Making a Decision}
+  \begin{itemize}
+    \item \texttt{IF} tests a condition and returns one of two values.
+    \item Syntax: \texttt{=IF(logical\_test, value\_if\_true,
+      value\_if\_false)}.
+    \item Example: \texttt{=IF(A1>50,"Pass","Fail")} returns
+      \texttt{Pass} when A1 is more than 50.
+    \item The first argument must be a \key{logical test} that is either true
+      or false.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    \texttt{=IF(B2>=40,"Pass","Fail")} shows \texttt{Pass} for a mark of 40
+    or above and \texttt{Fail} below it.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Nested IF and Blank Input}
+  \begin{itemize}
+    \item A \key{nested IF} places an IF inside the value-if-false part, to
+      test more than one condition.
+    \item Example: \texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))}.
+    \item Excel checks the conditions \key{in order}; the first true test
+      wins.
+    \item In a numeric comparison Excel reads a \key{blank} cell as
+      \key{0}, so a blank fails the tests and the final value is returned.
+  \end{itemize}
+  \begin{alertblock}{PYQ alert}
+    With A1 blank, the formula above returns \key{Low}: the blank is read as
+    0. (PYQ-14, JA 2026 Q74)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Other Basic Functions Worth Knowing}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Function} & \textbf{What it does} \\
+      \midrule
+      \texttt{COUNTIF} & Counts cells meeting one condition \\
+      \texttt{SUMIF} & Adds cells meeting one condition \\
+      \texttt{MEDIAN} & Returns the middle value of the numbers \\
+      \texttt{ROUND} & Rounds a number to a set number of digits \\
+      \texttt{LEN} & Counts the characters in a text value \\
+      \texttt{TODAY} & Returns today's date \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{At JKSSB depth, know what each one returns and that all are written
+  inside a formula.}
+\end{frame}
+
+\begin{frame}{AutoSum}
+  \begin{itemize}
+    \item \key{AutoSum} is a button that inserts a \texttt{SUM} formula for
+      the cells beside the active cell.
+    \item By default it writes \texttt{=SUM(...)} over the range Excel
+      guesses you want.
+    \item Keyboard shortcut: \key{Alt + =} inserts AutoSum.
+    \item Its drop-down also offers \texttt{Average}, \texttt{Count Numbers},
+      \texttt{Max}, and \texttt{Min}.
+  \end{itemize}
+  \begin{alertblock}{Shortcut alert}
+    AutoSum is \key{Alt + =}, not a Ctrl combination or a function key. This
+    is a common wrong option.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Excel Error Values (1)}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{Error} & \textbf{Meaning} \\
+      \midrule
+      \texttt{\#DIV/0!} & A number is divided by zero or by a blank cell \\
+      \texttt{\#VALUE!} & The wrong type of argument --- text where a number is needed \\
+      \texttt{\#NAME?} & Excel does not recognise a name --- often a misspelt function name \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Read the error as a clue to what Excel could not do.}
+\end{frame}
+
+\begin{frame}{Excel Error Values (2)}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{Error} & \textbf{Meaning} \\
+      \midrule
+      \texttt{\#REF!} & A cell reference is not valid --- the referenced cell was deleted \\
+      \texttt{\#N/A} & The value is not available, as when a lookup finds no match \\
+      \texttt{\#NUM!} & A number in the formula is not valid for the operation \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{\texttt{\#\#\#\#\#} is not an error value --- it only means the column is too narrow to show the number.}
+\end{frame}
+
+\begin{frame}{Trap Alert: What to Keep Straight}
+  \begin{itemize}
+    \item A formula must start with \texttt{=}; without it the entry is text.
+      (TRAP-30)
+    \item \texttt{COUNT} counts \key{numbers}; \texttt{COUNTA} counts all
+      \key{non-empty} cells.
+    \item \texttt{AVERAGE} divides by the number of numeric cells, not by all
+      the cells.
+    \item A \key{function} is a named built-in operation used \key{inside} a
+      formula.
+    \item \texttt{\#DIV/0!} is division by zero; \texttt{\#VALUE!} is a wrong
+      data type; \texttt{\#NAME?} is an unrecognised name.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Office Desktop Example}
+  \begin{itemize}
+    \item A marks sheet lists student names in A2:A31 and marks in B2:B31.
+    \item \texttt{=COUNTA(A2:A31)} counts how many students were entered.
+    \item \texttt{=COUNT(B2:B31)} counts how many have a numeric mark.
+    \item \texttt{=AVERAGE(B2:B31)} gives the class average;
+      \texttt{=MAX(B2:B31)} gives the top mark.
+  \end{itemize}
+  \begin{exampleblock}{Read the two counts together}
+    If COUNTA gives 30 but COUNT gives 28, two students have a non-numeric
+    entry in the marks column --- a data-entry problem to fix.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Lesson 26: Recall}
+  \begin{itemize}
+    \item A formula starts with \texttt{=}; a function such as \texttt{SUM}
+      or \texttt{IF} is a named operation used inside a formula.
+    \item \texttt{SUM} adds, \texttt{AVERAGE} means, \texttt{MAX}/\texttt{MIN}
+      give the largest/smallest number.
+    \item \texttt{COUNT} counts numbers; \texttt{COUNTA} counts all
+      non-empty cells --- the key near-neighbour pair.
+    \item \texttt{IF(logical\_test, value\_if\_true, value\_if\_false)};
+      nested IF checks conditions in order, and a blank is read as 0 in a
+      numeric test (PYQ-14).
+    \item AutoSum inserts \texttt{=SUM(...)}; the shortcut is \texttt{Alt + =}.
+    \item Error values: \texttt{\#DIV/0!}, \texttt{\#VALUE!},
+      \texttt{\#NAME?}, \texttt{\#REF!}, \texttt{\#N/A}.
+  \end{itemize}
+\end{frame}
+\end{document}

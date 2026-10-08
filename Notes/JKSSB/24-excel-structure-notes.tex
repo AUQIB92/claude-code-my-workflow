@@ -1,0 +1,294 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{24.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Excel Structure --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What Excel is and what a workbook is}
+Microsoft Excel is a spreadsheet program. A spreadsheet is a grid of boxes
+in which you can store text, numbers, dates, and formulas, and in which the
+program can calculate results automatically. Excel is one of the standard
+office applications, and its saved document is called a \textbf{workbook}.
+
+A \textbf{workbook} is the Excel \emph{file} --- the single item that you
+open, edit, and save with a file name. When you start Excel and see a grid,
+you are looking at one \textbf{worksheet} that belongs to a workbook. A
+workbook can contain many worksheets, and each worksheet is a separate page
+of the same file.
+
+\begin{definitionbox}{Workbook}
+The Excel file itself. A single workbook can hold one or more worksheets and
+is saved under one file name.
+\end{definitionbox}
+
+\begin{definitionbox}{Worksheet}
+A single sheet of rows and columns inside a workbook. It is also called a
+sheet, and it has a tab at the bottom of the Excel window.
+\end{definitionbox}
+
+At the bottom of the Excel window you will see one or more \textbf{sheet
+tabs} (for example, Sheet1, Sheet2, Sheet3). A new classic workbook opens
+with three worksheets, and you can add or remove sheets. Clicking a tab
+brings that worksheet to the front. The key point for the exam is the
+relationship: the workbook is the container (the file), and the worksheet is
+the content (one page inside it).
+
+\section{Workbook vs worksheet}
+These two words are a classic near-neighbour pair, so keep the contrast
+sharp. The workbook is the file; the worksheet is a part of the file. One
+workbook can contain many worksheets, but a worksheet never contains a
+workbook. A worksheet is not a separate saved file --- it lives inside the
+workbook and is saved as part of it.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Workbook} & \textbf{Worksheet} \\
+\midrule
+What it is & The Excel file & One sheet inside a workbook \\
+How many & One file & Many per workbook \\
+Saved as & A single file name & Part of that file \\
+Tab & --- & A tab at the bottom \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+An item states, ``A worksheet is the Excel file, and a workbook is a part of
+it.'' This is wrong. The relation is the other way round: the workbook is
+the file, and the worksheet is one page inside it. The wrong option has
+swapped the two terms.
+\end{example}
+
+\section{The worksheet grid: rows and columns}
+Every worksheet is a large grid made of \textbf{rows} and \textbf{columns}.
+Rows run horizontally across the sheet and are identified by
+\textbf{numbers}, which appear down the left edge (1, 2, 3, \dots).
+Columns run vertically down the sheet and are identified by
+\textbf{letters}, which appear across the top (A, B, C, \dots).
+
+The column labels do not stop at Z. After A--Z, the labels continue as
+two-letter names: AA, AB, \dots, AZ, then BA, BB, \dots, BZ, and so on. This
+scheme continues with three-letter names until the final column. In Excel
+2007 and later, a worksheet has:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Property} & \textbf{Value in Excel 2007 and later} \\
+\midrule
+Total rows & 1,048,576 (numbered 1 to 1,048,576) \\
+Total columns & 16,384 (labelled A to XFD) \\
+First column & A \\
+Last column & XFD \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+These two figures are worth memorising because they are common direct-recall
+items. In older Excel versions (Excel 97--2003, the \texttt{.xls} format) the
+limits were much smaller: 65,536 rows and 256 columns, with the last column
+labelled IV. Modern Excel uses the larger grid ending at column XFD.
+
+\section{The cell and the active cell}
+A \textbf{cell} is the small rectangular box formed where a row and a column
+meet. It is the basic unit of a worksheet, and it is where you actually type
+your data. The whole sheet is just a very large collection of cells.
+
+At any moment, exactly one cell is the \textbf{active cell}. The active cell
+is the cell that is currently selected: it has a thick border around it, and
+anything you type is entered into it. The active cell's address is shown in
+the Name Box, and its contents are shown in the Formula Bar. Even when you
+select a group of cells, only one of them --- the active cell --- is the one
+the next typed entry goes into.
+
+\begin{definitionbox}{Cell}
+The rectangular box formed by the intersection of a row and a column, in
+which data is entered.
+\end{definitionbox}
+
+\begin{definitionbox}{Active cell}
+The cell that is currently selected. It has a thick border, receives the
+next typed entry, and has its address shown in the Name Box.
+\end{definitionbox}
+
+\section{Cell addresses and references}
+Every cell has a unique \textbf{cell address} (also called a cell
+reference). The address is written with the \textbf{column letter first},
+followed by the \textbf{row number}. For example:
+
+\begin{itemize}
+  \item \textbf{B5} means column B, row 5.
+  \item \textbf{C7} means column C, row 7.
+  \item \textbf{D12} means column D, row 12.
+\end{itemize}
+
+The order is fixed: letter then number. Writing 12D, B:5, or B\_5 is not a
+valid Excel address. Because column labels can have more than one letter, an
+address such as AB100 is also valid: it means column AB, row 100.
+
+\section{Ranges}
+A \textbf{range} is a group of two or more cells treated as one block. It is
+written by typing the addresses of two diagonally opposite corners and
+separating them with a \textbf{colon} (:). For example, \textbf{A1:C10}
+means all the cells from column A to column C and from row 1 to row 10. A
+range is normally rectangular, and the cells in it are contiguous.
+
+The number of cells in a range is the number of columns multiplied by the
+number of rows. For example, the range B2:D5 covers three columns (B, C, D)
+and four rows (2, 3, 4, 5), so it contains $3 \times 4 = 12$ cells.
+
+\begin{definitionbox}{Range}
+A rectangular group of two or more selected cells, written as two corner
+addresses joined by a colon, such as A1:C10.
+\end{definitionbox}
+
+\begin{example}
+A question lists \texttt{B5} and calls it a range. This is wrong: \texttt{B5}
+is a \emph{single} cell, because it has only one address and no colon. A
+range must have two corner addresses joined by a colon, such as
+\texttt{B5:D9}. The colon is the signal that a range, not a single cell, is
+meant.
+\end{example}
+
+\section{The formula bar}
+The \textbf{Formula Bar} is the long white bar that sits below the Ribbon
+and above the worksheet grid. It always shows the \emph{contents} of the
+active cell. If the active cell holds plain text or a number, the Formula
+Bar shows that text or number. If the active cell holds a formula, the
+Formula Bar shows the \emph{formula itself} (for example
+\texttt{=A1+A2}), while the cell itself shows the calculated result.
+
+You can also edit the active cell in the Formula Bar by clicking in it. This
+is useful when a formula is long. Remember the division of labour: the cell
+displays the result, and the Formula Bar displays the underlying formula or
+data.
+
+\begin{definitionbox}{Formula Bar}
+The bar below the Ribbon that shows, and allows editing of, the contents of
+the active cell --- including the formula behind a calculated result.
+\end{definitionbox}
+
+\section{The name box}
+The \textbf{Name Box} is the small box at the \emph{left end of the Formula
+Bar}. It normally shows the \textbf{address of the active cell} (for
+example, B5). If a range of cells is selected, it shows the name or the
+address range of that selection (for example, A1:C10). You can also type an
+address into the Name Box and press Enter to jump directly to that cell.
+
+\begin{definitionbox}{Name Box}
+The box at the left of the Formula Bar that shows the address of the active
+cell or the name of the selected range.
+\end{definitionbox}
+
+Keep the two bars apart. The Name Box (on the left) answers ``which cell
+am I in?'' The Formula Bar (the long part) answers ``what is in that
+cell?''
+
+\section{Basic data types}
+Excel accepts several basic kinds of entry in a cell:
+
+\begin{itemize}
+  \item \textbf{Text} (also called a label): letters, words, names, and
+    headings. Text is not used in arithmetic.
+  \item \textbf{Number}: a numeric value that can be used in calculations.
+  \item \textbf{Date and time}: entered and displayed as a date or time, but
+    stored internally by Excel as a number.
+  \item \textbf{Formula}: an entry that begins with the \textbf{=} sign and
+    calculates a result from other cells.
+\end{itemize}
+
+Excel also recognises \textbf{logical values} (\texttt{TRUE} and
+\texttt{FALSE}) and displays \textbf{error values} such as
+\texttt{\#VALUE!} when a calculation cannot be completed. By default, Excel
+aligns these data types in a helpful way:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Data type} & \textbf{Default alignment} & \textbf{Example} \\
+\midrule
+Text & Left & Roll No \\
+Number & Right & 4500 \\
+Date & Right & 15-08-2026 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A quick visual check therefore tells you what Excel thinks the entry is: a
+value sitting on the \emph{left} is treated as text, and a value sitting on
+the \emph{right} is treated as a number (or a date, which is stored as a
+number). This default alignment is a common exam point.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{workbook} is the file; a \textbf{worksheet} is one page
+    inside it. Do not swap them.
+  \item A \textbf{cell} is one box; a \textbf{range} is two or more cells
+    joined by a colon.
+  \item A cell address is \textbf{column letter first, then row number}
+    (B5), never the reverse.
+  \item A worksheet in Excel 2007+ has \textbf{1,048,576 rows} and
+    \textbf{16,384 columns}; the last column is \textbf{XFD}, not IV (IV was
+    the old \texttt{.xls} limit).
+  \item The \textbf{Name Box} shows the address; the \textbf{Formula Bar}
+    shows the contents.
+  \item Only \textbf{one cell is active} at a time, even when a range is
+    selected.
+\end{enumerate}
+
+\begin{example}
+An item asks, ``What is the total number of rows in a modern Excel
+worksheet?'' Recall the pair: rows are the larger count, 1,048,576, and
+columns are 16,384. If the stem instead asks for the last column, the answer
+is XFD; if it asks for the number of cells in a range, multiply columns by
+rows.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a workbook from a worksheet.
+  \item What is a cell? How is a cell address written, and give one example.
+  \item How many rows and how many columns does a worksheet have in Excel
+    2007 and later, and what is the last column label?
+  \item What is a range? Write the range that covers columns A to C and rows
+    1 to 10, and state how many cells it contains.
+  \item State what the Name Box and the Formula Bar each display.
+  \item List four basic data types that can be entered in an Excel cell and
+    give the default alignment of text and of numbers.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A workbook is the Excel file itself, saved under one file name; a
+    worksheet is a single sheet of rows and columns inside a workbook. A
+    workbook can contain many worksheets.
+  \item A cell is the box formed where a row and a column intersect. A cell
+    address is written as the column letter followed by the row number, for
+    example B5 (column B, row 5).
+  \item A worksheet has 1,048,576 rows and 16,384 columns; the last column is
+    labelled XFD.
+  \item A range is a rectangular group of two or more cells written as two
+    corner addresses joined by a colon. The range is A1:C10, and it contains
+    $3 \times 10 = 30$ cells.
+  \item The Name Box shows the address of the active cell (or the name of the
+    selected range). The Formula Bar shows the contents of the active cell,
+    including the formula behind a calculated result.
+  \item Four basic data types are text, number, date/time, and formula. Text
+    is aligned to the left by default, and numbers to the right by default.
+\end{enumerate}
+\endgroup
+\end{document}

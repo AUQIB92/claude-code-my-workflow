@@ -1,0 +1,230 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{File Formats \& Named Technology Associations}
+\subtitle{Lesson 55 --- Format and Product Matching}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Formats Matter}
+  \begin{itemize}
+    \item Every file on a computer is stored in some \key{format} --- a fixed
+      way of arranging its data.
+    \item The format decides which program can open, read, and edit the file.
+    \item An \key{image format} stores a picture; a \key{document format}
+      stores a printable document.
+    \item Matching an extension to the right file type and program is a
+      high-yield exam skill.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Match \key{extension} $\rightarrow$ \key{format} $\rightarrow$
+    \key{software} --- and do not confuse the three.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Extension and Format Are Not the Same}
+  \begin{itemize}
+    \item The file name ends with an \key{extension}: the letters after the
+      last dot.
+    \item Example: in \texttt{report.png}, \key{png} is the extension.
+    \item The \key{format} is the way the data inside the file is actually
+      stored.
+    \item The extension usually signals the format, but the two words mean
+      different things.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    ``Extension = format'' is wrong. \texttt{.png} is the \key{extension};
+    \key{PNG} is the \key{format} (TRM-09, TRAP-34).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Image Formats}
+  \begin{itemize}
+    \item \key{PNG} = Portable Network Graphics, an \key{image} (raster)
+      format.
+    \item PNG uses \key{lossless} compression and supports transparency.
+    \item Other common image formats: \key{JPEG} (\texttt{.jpg/.jpeg}, lossy)
+      and \key{GIF} (\texttt{.gif}).
+    \item Image extensions are \texttt{.png}, \texttt{.jpg}, \texttt{.jpeg},
+      \texttt{.gif}, \texttt{.bmp}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    PNG is an \key{image format}, never a document, spreadsheet, or database
+    format.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{PDF: Portable Document Format}
+  \begin{itemize}
+    \item \key{PDF} = \key{Portable Document Format}, created by Adobe.
+    \item It keeps the exact \key{layout, fonts, and formatting} on every
+      device.
+    \item Because the page is fixed, it is called a \key{fixed-layout}
+      format.
+    \item A PDF may contain real text or be a \key{scanned image} of a page.
+  \end{itemize}
+  \begin{block}{Why PDF is used}
+    PDF is the standard for sharing a document that must look the same
+    everywhere it is opened.
+  \end{block}
+\end{frame}
+
+\begin{frame}{PDF Behaviour and Readers}
+  \begin{itemize}
+    \item A PDF opens in a \key{PDF reader}, such as \key{Adobe Acrobat
+      Reader}.
+    \item A \key{web browser} can also display a PDF.
+    \item A \key{scanned} PDF is a picture; it needs \key{OCR} to make its
+      text searchable and selectable.
+    \item PDF/A is an archival PDF standard for long-term preservation.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A PDF is \key{not} an editable Word document. Reading and editing are
+    different jobs.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Office Document Family}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Extension} & \textbf{Format} & \textbf{Program} \\
+      \midrule
+      \texttt{.docx} & Word document & Microsoft Word \\
+      \texttt{.xlsx} & Excel workbook & Microsoft Excel \\
+      \texttt{.pptx} & PowerPoint presentation & Microsoft PowerPoint \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{These are the modern Office Open XML formats; the older extensions
+  were \texttt{.doc}, \texttt{.xls}, and \texttt{.ppt}.}
+\end{frame}
+
+\begin{frame}{Plain-Data Formats: CSV and TXT}
+  \begin{itemize}
+    \item \key{CSV} = \key{Comma-Separated Values}.
+    \item A CSV file stores a table as \key{plain text}, with values
+      separated by commas.
+    \item \key{TXT} is a plain text file with \key{no formatting}.
+    \item Both open in a simple text editor and are not tied to one company.
+  \end{itemize}
+  \begin{block}{Keep them apart}
+    CSV looks like a table but is only text; TXT holds characters with no
+    table structure at all.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Microsoft Access: \texttt{.mdb} vs \texttt{.accdb}}
+  \begin{itemize}
+    \item Both \texttt{.mdb} and \texttt{.accdb} are file extensions for a
+      \key{Microsoft Access database}.
+    \item \texttt{.mdb} is the \key{older} Access database format (Access 2003
+      and earlier).
+    \item \texttt{.accdb} is the \key{newer} Access database format (Access
+      2007 and later).
+    \item Both store database objects such as tables, queries, forms, and
+      reports.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    \texttt{.mdb} and \texttt{.accdb} are \key{both Access databases}, not
+    Word or Excel files.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Named Technology: Mozilla and Firefox}
+  \begin{itemize}
+    \item \key{Firefox} is a \key{web browser} developed by \key{Mozilla}.
+    \item \key{Mozilla} is the organisation; \key{Firefox} is its browser
+      product.
+    \item Mozilla also makes \key{Thunderbird}, an email client.
+    \item \muted{Other browsers: Google Chrome, Microsoft Edge, Safari,
+      Opera.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Firefox is by \key{Mozilla}, not Microsoft. Microsoft's browser is
+    \key{Edge}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Named Technology: C-DAC and PARAM}
+  \begin{itemize}
+    \item \key{C-DAC} = \key{Centre for Development of Advanced Computing}.
+    \item C-DAC is an R\&D organisation under \key{MeitY}, Government of
+      India.
+    \item \key{PARAM} is a family of \key{supercomputers} developed by C-DAC.
+    \item \key{PARAM 8000} was India's first indigenous supercomputer.
+  \end{itemize}
+  \begin{block}{The pair to remember}
+    \key{PARAM} is the Indian supercomputer; \key{C-DAC} is the organisation
+    that developed it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Software Roles: Match the Tool to the Job}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.56\textwidth}}
+      \toprule
+      \textbf{Role} & \textbf{Example} \\
+      \midrule
+      Web browser & Firefox, Google Chrome, Microsoft Edge \\
+      PDF reader & Adobe Acrobat Reader \\
+      Remote-support tool & TeamViewer, AnyDesk, Chrome Remote Desktop \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Match the software to its job, not to a similar-sounding name.}
+\end{frame}
+
+\begin{frame}{Associations at a Glance}
+  \begin{center}
+    \begin{tabular}{p{0.26\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{Name} & \textbf{Correct association} \\
+      \midrule
+      PNG & An image format (Portable Network Graphics) \\
+      PDF & A fixed-layout document format by Adobe \\
+      \texttt{.mdb} / \texttt{.accdb} & A Microsoft Access database file \\
+      Firefox & A web browser by Mozilla \\
+      PARAM & A supercomputer by C-DAC \\
+      \texttt{.xlsx} & A Microsoft Excel workbook \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Trap Alert: Confusions to Avoid}
+  \begin{itemize}
+    \item \texttt{.png} is an \key{extension}; \key{PNG} is the \key{format}
+      (TRAP-34).
+    \item Firefox is a \key{browser by Mozilla}, not a PDF reader or a
+      Microsoft product.
+    \item \key{PARAM} is a supercomputer by \key{C-DAC}, not a file format.
+    \item \texttt{.mdb} and \texttt{.accdb} are \key{both Access databases}.
+    \item Adobe Acrobat Reader reads PDFs; it is \key{not} a web browser.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 55: Recall}
+  \begin{itemize}
+    \item An \key{extension} is the letters after the dot; a \key{format} is
+      how the data is stored.
+    \item PNG = Portable Network Graphics, an image format; JPEG and GIF are
+      image formats too.
+    \item PDF = Portable Document Format, a fixed-layout format by Adobe;
+      scanned PDFs need OCR.
+    \item Office family: \texttt{.docx} (Word), \texttt{.xlsx} (Excel),
+      \texttt{.pptx} (PowerPoint).
+    \item CSV = Comma-Separated Values; TXT = plain text with no formatting.
+    \item \texttt{.mdb} and \texttt{.accdb} are both Microsoft Access
+      databases.
+    \item Firefox is a browser by Mozilla; PARAM is a supercomputer by
+      C-DAC.
+  \end{itemize}
+\end{frame}
+\end{document}

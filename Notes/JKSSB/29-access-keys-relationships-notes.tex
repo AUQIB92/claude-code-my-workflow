@@ -1,0 +1,400 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{29.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Access Keys and Relationships --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why keys and relationships matter}
+A database keeps data in \textbf{tables}. A table is a grid: each
+\textbf{record} is one row, and each \textbf{field} is one column that holds a
+single kind of value. When a table holds many records, values such as a name,
+a city, or a date can repeat, so a row cannot be recognised by those values
+alone. A database therefore gives each row a reliable \textbf{identifier},
+called a key, and it links rows that belong together using
+\textbf{relationships}. Keys provide identity; relationships join tables that
+share data; referential integrity keeps those joins correct.
+
+\begin{definitionbox}{Table, record, field}
+A \textbf{table} stores data about one subject as rows and columns. A
+\textbf{record} is one complete row. A \textbf{field} is one column, holding
+one attribute for every record.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Primary key (PK) & A field or set of fields that uniquely identifies each record. \\
+Foreign key (FK) & A field that refers to the primary key of another table. \\
+Composite key & A primary key made of two or more fields together. \\
+Candidate key & Any field that could serve as the primary key. \\
+Alternate key & A candidate key that was not chosen as the primary key. \\
+Junction table & A table that links two tables in a many-to-many relationship. \\
+Referential integrity & The rule that a foreign-key value must match an existing primary-key value. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of the lesson uses these terms in one consistent sense. A
+\textbf{primary key} identifies a record inside its own table. A
+\textbf{foreign key} points from one table to another table's primary key. A
+\textbf{composite key} is simply a primary key built from more than one field.
+A \textbf{junction table} is the third table that implements a many-to-many
+relationship.
+
+\section{The primary key}
+A \textbf{primary key (PK)} is a field, or a set of fields, that
+\textbf{uniquely identifies} each record in a table. It has three firm rules.
+First, its value must be \textbf{unique}: no two records may share the same
+primary-key value. Second, it \textbf{cannot be left blank} (it cannot contain
+a null value), because a blank value cannot identify anything. Third, each
+table has \textbf{at most one} primary key, although that one key may be built
+from several fields.
+
+\begin{definitionbox}{Primary key}
+A field (or set of fields) whose value is unique for every record and is never
+blank, so it can identify each record in the table.
+\end{definitionbox}
+
+\begin{example}
+In an Employee table, the field \texttt{EmployeeID} is a good primary key: every
+employee receives a different number, and no employee is stored without one.
+The employee's name would be a poor choice, because two employees can share a
+name.
+\end{example}
+
+Access can generate a primary key automatically with the \textbf{AutoNumber}
+data type, which inserts a unique number for each new record. A primary key is
+what makes a table the \textbf{``one'' side} of a one-to-many relationship.
+
+\section{Candidate keys, alternate keys and composite keys}
+Any field that could serve as the primary key is called a \textbf{candidate
+key}. When a table has more than one candidate key, only one is selected as
+the primary key; the remaining candidates are called \textbf{alternate keys}.
+For example, a Student table might have both \texttt{RollNumber} and
+\texttt{Email} as candidate keys; if \texttt{RollNumber} is chosen, then
+\texttt{Email} becomes an alternate key.
+
+A \textbf{composite key} (also called a \textbf{compound key}) is a primary key
+made of \textbf{two or more fields used together}. The combination is unique
+even when each field on its own is not. Composite keys appear most often in
+junction tables, where two foreign keys together form the primary key.
+
+\begin{definitionbox}{Composite key}
+A primary key that consists of two or more fields, whose combined value is
+unique for every record.
+\end{definitionbox}
+
+\begin{example}
+An OrderDetails table records each product line within an order. Neither
+\texttt{OrderID} nor \texttt{ProductID} is unique by itself, but the pair
+(\texttt{OrderID}~+~\texttt{ProductID}) is unique for every line item, so the
+pair can be the primary key. This is a composite key.
+\end{example}
+
+A good primary key is also \textbf{stable} and \textbf{meaningless}: it should
+not need to change later. This is why Access often uses an AutoNumber field
+rather than a value such as a name or a phone number, which a person may edit.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Key} & \textbf{What it does} \\
+\midrule
+Primary key & Uniquely identifies a record; unique and not blank; at most one per table. \\
+Candidate key & Any field eligible to become the primary key. \\
+Alternate key & A candidate key that was not chosen as the primary key. \\
+Composite key & A primary key made of two or more fields together. \\
+Foreign key & A field that refers to another table's primary key; may repeat. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The foreign key}
+A \textbf{foreign key (FK)} is a field in one table that refers to the
+\textbf{primary key} of another table. The foreign key is the link that
+creates a relationship between the two tables. Unlike a primary key, a foreign
+key \textbf{may repeat} and \textbf{may be blank}; it is not unique. The table
+that holds the foreign key is the \textbf{child} (or related) table, and the
+table whose primary key is referenced is the \textbf{parent} table.
+
+\begin{definitionbox}{Foreign key}
+A field in one table whose values must match the primary-key values of another
+table, used to link the two tables.
+\end{definitionbox}
+
+\begin{example}
+In an Employee table, the field \texttt{DepartmentID} is a foreign key that
+refers to the \texttt{DepartmentID} primary key in the Department table. Many
+employees can share the same \texttt{DepartmentID}, so the foreign key repeats;
+that is expected and correct.
+\end{example}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Primary key} & \textbf{Foreign key} \\
+\midrule
+Purpose & Uniquely identifies a record & Links to another table \\
+Uniqueness & Must be unique & May repeat \\
+Blank allowed & No & Yes \\
+Count per table & At most one & Can be more than one \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Types of relationships}
+A \textbf{relationship} works between two tables that share a common field ---
+usually a primary key in one table and a foreign key in the other. Access
+supports three relationship types: \textbf{one-to-one},
+\textbf{one-to-many}, and \textbf{many-to-many}. Relationships are created and
+edited in the \textbf{Relationships} window.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.38\textwidth}p{0.32\textwidth}}
+\toprule
+\textbf{Type} & \textbf{Meaning} & \textbf{How it is built} \\
+\midrule
+One-to-one & Each record in one table matches at most one in the other & A shared field that is unique in both tables \\
+One-to-many & One record matches many records in the other table & Primary key on the ``one'' side, foreign key on the ``many'' side (most common) \\
+Many-to-many & Many records match many records & Two one-to-many relationships through a junction table \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rule to hold on to is simple: the \textbf{``one'' side} always contributes
+the \textbf{primary key}, and the \textbf{``many'' side} always carries the
+\textbf{foreign key}. A one-to-one relationship is just a special case in
+which both sides are unique.
+
+\subsection{One-to-one}
+In a \textbf{one-to-one} relationship, each record in the first table matches
+at most one record in the second table, and vice versa. It is used to split a
+table with many fields into smaller parts, or to keep sensitive data in a
+separate table that can be secured on its own. It is the \textbf{least common}
+of the three types.
+
+\begin{example}
+An Employee table and an EmployeeConfidential table are linked one-to-one:
+each employee has exactly one confidential record, and each confidential
+record belongs to exactly one employee.
+\end{example}
+
+\subsection{One-to-many}
+In a \textbf{one-to-many} relationship, one record in the first table matches
+\textbf{many} records in the second table. The ``one'' side holds the
+\textbf{primary key}, and the ``many'' side holds the \textbf{foreign key}.
+This is the \textbf{most common} relationship type used in Access.
+
+\begin{example}
+One Department has many Employees, but each Employee belongs to only one
+Department. The Department table is the ``one'' side and the Employee table is
+the ``many'' side, linked by \texttt{DepartmentID}.
+\end{example}
+
+\subsection{Many-to-many and the junction table}
+In a \textbf{many-to-many} relationship, many records in the first table match
+many records in the second. Access \textbf{cannot} store a many-to-many
+relationship directly. Instead it is split into \textbf{two one-to-many}
+relationships by adding a third table called a \textbf{junction table} (also
+known as an \textbf{associative} or \textbf{linking} table). The junction
+table contains a foreign key for each of the two other tables.
+
+\begin{definitionbox}{Junction table}
+A table that connects two tables in a many-to-many relationship, holding a
+foreign key for each of them.
+\end{definitionbox}
+
+A junction table's own primary key is usually a \textbf{composite key} formed
+from the two foreign keys. It may also carry extra fields that describe the
+link itself, such as a quantity, a grade, or a date.
+
+\begin{example}
+Students and Courses have a many-to-many relationship: a student takes many
+courses, and a course has many students. Access implements this with an
+Enrollments junction table that holds \texttt{StudentID} and \texttt{CourseID}
+as its composite primary key, together with a \texttt{Grade} field.
+\end{example}
+
+\section{Creating a relationship in Access}
+In the Access interface, relationships are built and edited in a small number
+of steps. On the \textbf{Database Tools} tab, the \textbf{Relationships} button
+opens the \textbf{Relationships} window. The tables to be linked are added to
+this window, and then the \textbf{primary-key field} of one table is
+\textbf{dragged onto} the matching foreign-key field of the other table.
+
+\begin{enumerate}
+  \item Open the \textbf{Relationships} window from the \textbf{Database Tools}
+    tab.
+  \item Add the two tables that will be linked.
+  \item Drag the primary key of the ``one'' table onto the foreign key of the
+    ``many'' table.
+  \item In the \textbf{Edit Relationships} dialog box, choose
+    \textbf{Enforce Referential Integrity}.
+  \item Optionally tick \textbf{Cascade Update} and \textbf{Cascade Delete},
+    then confirm.
+\end{enumerate}
+
+\begin{example}
+To link Departments and Employees, drag \texttt{DepartmentID} from the
+Department (parent) table onto \texttt{DepartmentID} in the Employee (child)
+table, then enforce referential integrity. Access now refuses to store an
+employee whose \texttt{DepartmentID} does not exist in the Department table.
+\end{example}
+
+\section{Referential integrity}
+\textbf{Referential integrity} is the rule that a foreign-key value must
+\textbf{match an existing primary-key value} in the related table (or be
+blank). It prevents \textbf{orphan records}, which are child rows that point to
+a parent row that does not exist. In Access, referential integrity is switched
+on in the \textbf{Edit Relationships} dialog box (opened from the
+\textbf{Relationships} window).
+
+\begin{definitionbox}{Referential integrity}
+A rule that keeps the foreign key in a child table consistent with the primary
+key in the parent table: a child value must match an existing parent value or
+be null.
+\end{definitionbox}
+
+When referential integrity is enforced, Access offers two related options.
+\textbf{Cascade Update} means that if the parent primary-key value changes,
+Access automatically updates the matching foreign-key values in the child
+table. \textbf{Cascade Delete} means that if a parent record is deleted, Access
+automatically deletes the matching child records as well.
+
+\begin{example}
+If a Department record is deleted and Cascade Delete is on, all Employees that
+belong to that Department are deleted too. Without referential integrity,
+Access would refuse to delete the Department while those Employees still point
+to it.
+\end{example}
+
+\section{Access file formats: \texttt{.mdb} vs \texttt{.accdb}}
+The file \textbf{extension} shows which Access format a database uses.
+\texttt{.mdb} (\textit{Microsoft Database}) is the \textbf{older} Access file
+format, used by Access 2003 and earlier versions. \texttt{.accdb}
+(\textit{Access Database}) is the \textbf{newer, default} format introduced
+with Access 2007 and used since. Access 2007 and later can still open an old
+\texttt{.mdb} file, but new databases are saved as \texttt{.accdb} by default.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Extension} & \textbf{Access version} & \textbf{Notes} \\
+\midrule
+\texttt{.mdb} & Access 2003 and earlier & The older format; supports user-level security. \\
+\texttt{.accdb} & Access 2007 and later & The newer default; supports attachment, multi-valued and calculated fields. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The newer \texttt{.accdb} format added \textbf{attachment} fields,
+\textbf{multi-valued} fields, and \textbf{calculated} fields, and it integrates
+better with SharePoint and Outlook. Keep the pairing straight: \texttt{.mdb}
+is the \emph{old} format and \texttt{.accdb} is the \emph{new} format.
+Reversing ``old'' and ``new'' is a common exam trap.
+
+\section{Exam retrieval and common confusions}
+Six distinctions clear up most errors on this topic.
+\begin{enumerate}
+  \item A primary key is \textbf{unique} and \textbf{not blank}; a foreign key
+    \textbf{may repeat} and \textbf{may be blank}.
+  \item A table has \textbf{at most one} primary key, but it can hold
+    \textbf{several} foreign keys.
+  \item A foreign key refers to the \textbf{primary key of another table}, not
+    to its own table's primary key.
+  \item \textbf{One-to-many} is the most common relationship; a
+    \textbf{many-to-many} relationship is never stored directly but is built
+    with a \textbf{junction table}.
+  \item A junction table commonly has a \textbf{composite primary key} made
+    from the two foreign keys.
+  \item \texttt{.mdb} is the \textbf{older} Access format; \texttt{.accdb} is
+    the \textbf{newer} format.
+\end{enumerate}
+
+\begin{example}
+An item asks which key may contain duplicate values. Walk through the rules: a
+primary key must be unique and not blank, so it cannot repeat; a foreign key
+may repeat and may be blank; a composite key is still a primary key and so is
+unique as a combination. The answer is the foreign key.
+\end{example}
+
+\begin{example}
+An item states that ``a many-to-many relationship is created by adding a
+foreign key to one of the two tables.'' This is wrong. A many-to-many
+relationship cannot be stored in either table directly; a \textbf{junction
+table} is added, and two one-to-many relationships are built through it. The
+wrong option has skipped the junction table.
+\end{example}
+
+\subsection*{Quick self-check}
+Before the exercise set, confirm you can state each of these in one line.
+\begin{itemize}
+  \item A primary key is unique, never blank, and there is at most one per
+    table.
+  \item A foreign key links to another table's primary key and may repeat.
+  \item A composite key is a primary key of two or more fields.
+  \item One-to-many is the most common relationship; the ``one'' side supplies
+    the primary key and the ``many'' side the foreign key.
+  \item A many-to-many relationship is always built with a junction table.
+  \item Referential integrity keeps foreign-key values matching primary-key
+    values and offers Cascade Update and Cascade Delete.
+  \item \texttt{.mdb} is the older format; \texttt{.accdb} is the newer one.
+\end{itemize}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define a primary key and state its two main rules about uniqueness and
+    blank values.
+  \item Explain the difference between a primary key and a foreign key.
+  \item What is a composite key? Give one example where it is used.
+  \item Name the three relationship types in Access and say which is the most
+    common.
+  \item Why does a many-to-many relationship need a junction table?
+  \item State the rule of referential integrity and name its two cascade
+    options.
+  \item Distinguish the Access file formats \texttt{.mdb} and \texttt{.accdb}.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A primary key is a field (or set of fields) that uniquely identifies
+    each record. Its value must be unique --- no two records may share it ---
+    and it cannot be left blank (no null value). A table has at most one
+    primary key.
+  \item A primary key uniquely identifies records inside its own table and
+    cannot repeat or be blank. A foreign key is a field that refers to another
+    table's primary key; it may repeat and may be blank, and it creates the
+    relationship between the two tables.
+  \item A composite key is a primary key made of two or more fields used
+    together, where the combination is unique. It is used in a junction table
+    --- for example, an Enrollments table whose primary key is
+    (\texttt{StudentID}~+~\texttt{CourseID}).
+  \item The three types are one-to-one, one-to-many, and many-to-many. The
+    \textbf{one-to-many} relationship is the most common.
+  \item Access cannot store a many-to-many relationship directly. It is split
+    into two one-to-many relationships by a junction table that holds a
+    foreign key for each of the two tables.
+  \item Referential integrity means a foreign-key value must match an existing
+    primary-key value in the related table (or be blank), which prevents
+    orphan records. Its two options are \textbf{Cascade Update} and
+    \textbf{Cascade Delete}.
+  \item \texttt{.mdb} is the older Access format used by Access 2003 and
+    earlier. \texttt{.accdb} is the newer, default format used from Access
+    2007 onward, adding attachment, multi-valued and calculated fields.
+\end{enumerate}
+\endgroup
+\end{document}

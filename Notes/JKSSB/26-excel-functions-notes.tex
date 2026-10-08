@@ -1,0 +1,383 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\setlength{\emergencystretch}{3em}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{26.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Excel Functions --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{From formulas to functions}
+MS Excel is built around the idea that a value can be \emph{calculated}
+instead of typed. A cell that begins with the equal sign \texttt{=} holds a
+calculation, and Excel works out the result. Such a calculation is called a
+\textbf{formula}. A simple formula is \texttt{=A1+A2}, which adds the values
+of two cells. A formula can also use operators such as \texttt{+}, \texttt{-},
+\texttt{*}, and \texttt{/} to add, subtract, multiply, and divide.
+
+Typing every cell into a formula becomes slow and error-prone when there are
+many cells. Excel therefore provides \textbf{functions}: ready-made, named
+operations that do a common job for you. \texttt{SUM} adds a range of
+numbers, \texttt{AVERAGE} finds their mean, and \texttt{MAX} finds the largest.
+A function is always written \emph{inside} a formula. The function name is
+followed by parentheses that contain the \emph{arguments} --- the cells or
+values the function should work on.
+
+\begin{definitionbox}{Formula}
+An expression that begins with the equal sign \texttt{=} and calculates a
+value, for example \texttt{=A1+A2} or \texttt{=SUM(A1:A10)}.
+\end{definitionbox}
+
+\begin{definitionbox}{Function}
+A predefined, named built-in operation, such as \texttt{SUM}, \texttt{COUNT},
+or \texttt{IF}, that is used inside a formula to perform a particular
+calculation on its arguments.
+\end{definitionbox}
+
+The distinction to hold is simple. A \textbf{formula} is the whole
+calculation. A \textbf{function} is a built-in tool that performs one part of
+that calculation. Every function is written as a formula, but not every
+formula contains a function: \texttt{=A1+A2} is a formula with no function in
+it, while \texttt{=SUM(A1:A10)} is a formula that uses one function. A
+formula must begin with \texttt{=}; if the equal sign is missing, Excel treats
+the entry as plain text and shows it as typed.
+
+\section{Function syntax and arguments}
+Every function follows the same shape: a name, then a pair of parentheses, and
+inside the parentheses the arguments separated by commas. This is written as
+\texttt{=FUNCTION(argument1, argument2)}. The \textbf{name} tells Excel which
+operation to perform. The \textbf{arguments} tell it which cells or values to
+use. For example, in \texttt{=SUM(A1:A10)} the name is \texttt{SUM} and the
+single argument is the range \texttt{A1:A10}.
+
+A \textbf{range} is a block of cells written with a colon between the first
+and last cell. \texttt{A1:A10} means the cells A1, A2, A3, and so on down to
+A10. A function can take more than one argument: \texttt{=SUM(A1:A5, C1:C5)}
+adds the two ranges together. The comma separates one argument from the next.
+Knowing the name, the parentheses, and the colon is enough to read any of the
+basic functions in this lesson.
+
+\begin{center}
+\begin{tabular}{p{0.15\textwidth}p{0.28\textwidth}p{0.47\textwidth}}
+\toprule
+\textbf{Function} & \textbf{Example} & \textbf{What it returns} \\
+\midrule
+\texttt{SUM} & \texttt{=SUM(A1:A10)} & The total of the numbers in the range. \\
+\texttt{AVERAGE} & \texttt{=AVERAGE(A1:A10)} & The arithmetic mean of the numbers. \\
+\texttt{COUNT} & \texttt{=COUNT(A1:A10)} & The number of cells holding numbers. \\
+\texttt{COUNTA} & \texttt{=COUNTA(A1:A10)} & The number of non-empty cells. \\
+\texttt{MAX} & \texttt{=MAX(A1:A10)} & The largest number in the range. \\
+\texttt{MIN} & \texttt{=MIN(A1:A10)} & The smallest number in the range. \\
+\texttt{IF} & \texttt{=IF(A1>50,"Y","N")} & One of two values, chosen by the test. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{SUM and AVERAGE}
+\texttt{SUM} returns the total of the numbers in its arguments. Its most
+common form is \texttt{=SUM(A1:A10)}, which adds all the numbers in the range
+A1:A10. Cells that hold text and cells that are blank are ignored; only
+numbers are added. SUM accepts several ranges, so \texttt{=SUM(A1:A5,B1:B5)}
+adds both blocks in one step.
+
+\texttt{AVERAGE} returns the arithmetic mean of the numbers in its arguments.
+\texttt{=AVERAGE(A1:A10)} adds the numbers and divides by how many numbers
+there are. The important detail is what counts in the divisor: blank cells and
+cells holding text are \emph{not} counted. AVERAGE divides by the number of
+\emph{numeric} cells, not by the total number of cells in the range. This is
+the source of many wrong answers.
+
+\begin{example}
+Suppose A1:A5 holds the values 10, 20, and 30, while A4 and A5 are blank.
+\texttt{=SUM(A1:A5)} returns $60$. \texttt{=AVERAGE(A1:A5)} returns
+$(10+20+30)/3 = 20$, not $60/5 = 12$. Excel divides by the three cells that
+actually hold numbers, because the two blanks are ignored.
+\end{example}
+
+\section{COUNT and COUNTA: the near-neighbour pair}
+\texttt{COUNT} and \texttt{COUNTA} look almost the same but count different
+things, and the difference is a favourite exam trap. \texttt{COUNT(counts)}
+only the cells in a range that contain \emph{numbers}. \texttt{COUNTA} (the
+``A'' stands for \emph{all}) counts every cell that is \emph{not empty},
+whether it holds a number or text. Both functions ignore blank cells.
+
+\begin{definitionbox}{COUNT}
+A function that returns the number of cells in a range that contain numeric
+values. Text, blanks, and logical values are not counted.
+\end{definitionbox}
+
+\begin{definitionbox}{COUNTA}
+A function that returns the number of cells in a range that are not empty. It
+counts numbers, text, and error values alike; only truly blank cells are
+ignored.
+\end{definitionbox}
+
+The contrast is easiest to see with a mixed range. Suppose A1:A10 holds six
+numbers, two text labels, and two blank cells. \texttt{=COUNT(A1:A10)}
+returns 6, because only the numeric cells are counted. \texttt{=COUNTA(A1:A10)}
+returns 8, because the six numbers and the two text labels are all non-empty.
+Both functions ignore the two blanks. A related function, \texttt{COUNTBLANK},
+does the opposite and counts the empty cells, returning 2 for the same range.
+For the exam, the pair to memorise is: \textbf{COUNT = numbers only; COUNTA =
+all non-empty cells}.
+
+\section{MAX and MIN}
+\texttt{MAX} returns the largest number in a range, and \texttt{MIN} returns
+the smallest. Their forms are \texttt{=MAX(C1:C10)} and, for the smallest,
+\texttt{=MIN(C1:C10)}. Like SUM, AVERAGE, and COUNT, they work on numbers and
+ignore text and blank cells. A useful way to remember them is that \texttt{MAX}
+is the maximum and \texttt{MIN} is the minimum; do not confuse \texttt{MIN}
+with the word ``minimum cell'', which is not a function at all.
+
+\begin{example}
+A range holds the marks 42, 67, 55, 91, and 38. \texttt{=MAX(C1:C5)} returns
+$91$, the top mark. \texttt{=MIN(C1:C5)} returns $38$, the lowest mark.
+\texttt{=AVERAGE(C1:C5)} returns $58.6$, the mean of the five numbers.
+\end{example}
+
+\section{The IF function and nested IF}
+\texttt{IF} lets a cell show one of two results depending on whether a
+condition is true or false. Its syntax is
+\texttt{=IF(logical\_test, value\_if\_true, value\_if\_false)}. The first
+argument is a \emph{logical test} that can be answered only with true or
+false, such as \texttt{A1>50}. The second argument is the value or text to
+return when the test is true, and the third is the value to return when it is
+false. Thus \texttt{=IF(A1>50,"Pass","Fail")} shows \texttt{Pass} when A1 is
+more than 50 and \texttt{Fail} otherwise.
+
+A \textbf{nested IF} places a second IF inside the value-if-false part of the
+first, so more than one condition can be tested. A typical form is
+\texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))}. Excel checks the
+conditions in the order they are written, and the first test that is true
+decides the result.
+
+\begin{example}
+Take the formula \texttt{=IF(A1>50,"High",IF(A1>25,"Medium","Low"))} and let
+A1 be blank. In a numeric comparison Excel reads a blank cell as $0$. Since
+$0$ is neither greater than 50 nor greater than 25, both tests are false and
+the formula returns the final value, \texttt{Low}. This is the behaviour the
+Junior Assistant 2026 paper examined (KB PYQ-14, JA 2026 Q74).
+\end{example}
+
+When the input is \emph{non-numeric} text, the behaviour depends on what the
+formula does with it. A comparison of text against a number is still answered
+by Excel, but if the formula tries to \emph{calculate} with text --- for
+example, \texttt{=A1*2} where A1 holds a word --- Excel cannot do the
+arithmetic and returns the error value \texttt{\#VALUE!}. The safe exam
+reading is: a blank is treated as 0 in a numeric test, and text that is
+arithmetic-only produces \texttt{\#VALUE!}.
+
+\section{A worked sheet, function by function}
+A small sheet makes the behaviour of every function concrete. Column A holds
+five student names --- Anita, Bilal, Chandan, Divya, and Esha --- and column B
+holds the marks 40, 55, 70, and 60, with Esha's mark (B5) left blank because
+she has not been marked yet. Reading the sheet function by function shows what
+each one does with the blank.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}p{0.28\textwidth}}
+\toprule
+\textbf{Formula} & \textbf{Result} & \textbf{Why} \\
+\midrule
+\texttt{=SUM(B1:B5)} & 225 & Adds 40, 55, 70, 60; the blank is ignored. \\
+\texttt{=AVERAGE(B1:B5)} & 56.25 & Divides 225 by 4 numeric cells, not by 5. \\
+\texttt{=COUNT(B1:B5)} & 4 & Counts the four cells that hold numbers. \\
+\texttt{=COUNTA(B1:B5)} & 4 & Counts the four non-empty marks; B5 is blank. \\
+\texttt{=MAX(B1:B5)} & 70 & The largest of the four marks. \\
+\texttt{=MIN(B1:B5)} & 40 & The smallest of the four marks. \\
+\texttt{=IF(B5>=40,"Pass","Fail")} & Fail & B5 is blank, read as 0, so the test fails. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The last row links the sheet back to the nested-IF behaviour: a blank cell is
+read as zero in a numeric test, so Esha is shown as not yet passing. Note also
+that \texttt{COUNTA} on the names column, \texttt{=COUNTA(A1:A5)}, would
+return 5, because all five names are present even though only four marks are.
+This is exactly how the two count functions are used together to spot missing
+data.
+
+\section{Other basic functions worth knowing}
+Beyond the core set, a few basic functions appear in Office-suite questions.
+\texttt{COUNTIF} counts the cells that meet one condition, and \texttt{SUMIF}
+adds the cells that meet one condition; both extend COUNT and SUM. On the
+statistics side, \texttt{MEDIAN} returns the middle value of the numbers,
+while \texttt{MAX} and \texttt{MIN} return the ends of the range.
+\texttt{ROUND} rounds a number to a stated number of digits. \texttt{LEN}
+counts the characters in a text value. \texttt{TODAY} returns the current
+date, and \texttt{NOW} returns the current date and time.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Function} & \textbf{What it returns} \\
+\midrule
+\texttt{COUNTIF} & The number of cells meeting one condition. \\
+\texttt{SUMIF} & The total of the cells meeting one condition. \\
+\texttt{MEDIAN} & The middle value of the numbers. \\
+\texttt{ROUND} & A number rounded to a set number of digits. \\
+\texttt{LEN} & The number of characters in a text value. \\
+\texttt{TODAY} & The current date. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At JKSSB depth, the exam is satisfied by knowing what each function returns
+and that every one of them is written inside a formula that starts with
+\texttt{=}.
+
+\section{AutoSum}
+\textbf{AutoSum} is a button, not a function, that quickly inserts a
+\texttt{SUM} formula. When the active cell is placed below or beside a column
+or row of numbers, AutoSum looks at the adjacent numbers and writes a
+\texttt{=SUM(...)} formula over the range it selects. Pressing the button
+therefore saves the user from typing the range by hand. The keyboard shortcut
+for AutoSum is \texttt{Alt + =}. Its drop-down arrow also offers
+\texttt{Average}, \texttt{Count Numbers}, \texttt{Max}, and \texttt{Min}, so
+the same button can insert any of the core functions, not only SUM.
+
+\begin{definitionbox}{AutoSum}
+An Excel button that automatically inserts a \texttt{SUM} formula for the
+range next to the active cell; the shortcut is \texttt{Alt + =}.
+\end{definitionbox}
+
+\section{Combining functions in one formula}
+Functions can be nested inside one another, so the result of one function
+becomes the argument of another. For example,
+\texttt{=ROUND(AVERAGE(A1:A10),1)} first finds the mean of A1:A10 and then
+rounds it to one decimal place. In the same way,
+\texttt{=IF(COUNT(B1:B5)=0,0,AVERAGE(B1:B5))} shows 0 when the range contains
+no numbers at all, instead of producing an error, and otherwise shows the mean
+of the numbers present. Nesting is read from the inside out: the innermost
+function is calculated first, and its result is passed outwards to the next
+function.
+
+\begin{example}
+Consider \texttt{=IF(COUNT(C1:C6)=0,"No data",AVERAGE(C1:C6))}. If C1:C6 holds
+only text or blanks, \texttt{COUNT} returns 0, the test is true, and the cell
+shows \texttt{No data}. If the range holds numbers, the test is false and the
+cell shows their average. This pattern is common on real marks sheets, where a
+column may be empty early in the term.
+\end{example}
+
+The arguments of a function can also be single cells, several separate cells,
+whole ranges, or even constant values such as \texttt{=SUM(A1, 5, B3:B7)}. A
+reference such as \texttt{A1} can be relative or absolute (\texttt{\$A\$1});
+that choice does not change what the function does, only how the reference
+behaves when the formula is copied.
+
+\section{Error values}
+When a formula cannot be calculated, Excel displays an \emph{error value}
+beginning with the hash sign \texttt{\#}. Each error points to a different
+kind of problem, and recognising them is a common direct-recall question.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.60\textwidth}}
+\toprule
+\textbf{Error value} & \textbf{What it means} \\
+\midrule
+\texttt{\#DIV/0!} & A number is divided by zero or by a blank cell. \\
+\texttt{\#VALUE!} & The wrong type of argument is used --- for example, text where a number is needed. \\
+\texttt{\#NAME?} & Excel does not recognise a name in the formula, often a misspelt function name. \\
+\texttt{\#REF!} & A cell reference is not valid, usually because the referenced cell was deleted. \\
+\texttt{\#N/A} & The value is not available to the formula, as when a lookup finds no match. \\
+\texttt{\#NUM!} & A number in the formula is not valid for the operation. \\
+\texttt{\#NULL!} & A space (intersection) between two ranges that do not intersect. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two clarifications prevent confusion. First, the string \texttt{\#\#\#\#\#}
+that sometimes appears in a cell is \emph{not} an error value; it only means
+the column is too narrow to display the number, and it disappears when the
+column is widened. Second, \texttt{\#DIV/0!} also appears when the divisor is
+a blank cell, because a blank is read as zero in the division. Reading each
+error as a clue to what Excel could not do is the fastest way to answer these
+items.
+
+\begin{example}
+The error value points at the mistake that produced it. A formula
+\texttt{=A1/0}, or \texttt{=A1/B1} where B1 is blank, shows
+\texttt{\#DIV/0!}. A formula \texttt{=A1+B1} where A1 holds text shows
+\texttt{\#VALUE!}. A misspelt function such as \texttt{=SUMM(A1:A5)} shows
+\texttt{\#NAME?}. Deleting a cell that a formula refers to turns the reference
+into \texttt{\#REF!}. A lookup that finds no match leaves the result
+\texttt{\#N/A}, and a mathematically invalid argument such as
+\texttt{=SQRT(-1)} gives \texttt{\#NUM!}.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{formula} starts with \texttt{=}; a \textbf{function} is a
+    named built-in operation used inside a formula. Without the equal sign,
+    the entry is text (TRAP-30).
+  \item \textbf{COUNT} counts numbers only; \textbf{COUNTA} counts all
+    non-empty cells. Do not swap this near-neighbour pair.
+  \item \textbf{AVERAGE} divides by the number of numeric cells, not by the
+    total number of cells.
+  \item A \textbf{blank} cell is read as zero in a numeric test, so a blank
+    fails a ``greater than'' condition; text used in arithmetic gives
+    \texttt{\#VALUE!} (KB PYQ-14).
+  \item \textbf{AutoSum} inserts \texttt{=SUM(...)} and its shortcut is
+    \texttt{Alt + =}, not a Ctrl combination.
+\end{enumerate}
+
+\begin{example}
+An item asks which function counts a range that mixes numbers and labels.
+Read the function name carefully: \texttt{COUNT} returns only the numeric
+cells, while \texttt{COUNTA} returns every non-empty cell. If the stem asks
+for the count of entries of any kind, the answer is \texttt{COUNTA}; if it
+asks for the count of numbers, the answer is \texttt{COUNT}. A second item
+may ask which error appears when a cell is divided by a blank; the blank
+counts as zero, so the error is \texttt{\#DIV/0!}.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Explain the difference between a formula and a function in MS Excel.
+  \item A range A1:A8 contains 5 numbers, 2 text labels, and 1 blank cell.
+    State the values returned by \texttt{=COUNT(A1:A8)} and
+    \texttt{=COUNTA(A1:A8)}.
+  \item Write the general syntax of the IF function and explain each of its
+    three arguments.
+  \item A cell holds \texttt{=IF(A1>10,"Yes",IF(A1>0,"Small","No"))} and A1 is
+    blank. What is shown, and why?
+  \item Match each error value with its cause: \texttt{\#DIV/0!},
+    \texttt{\#VALUE!}, \texttt{\#NAME?}, \texttt{\#REF!}.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A formula is any calculation that begins with \texttt{=}, such as
+    \texttt{=A1+A2}. A function is a predefined, named operation such as
+    \texttt{SUM} or \texttt{IF} that is used inside a formula. Every function
+    is written as a formula, but a formula need not contain a function.
+  \item \texttt{=COUNT(A1:A8)} returns 5, because only the numeric cells are
+    counted. \texttt{=COUNTA(A1:A8)} returns 7, because the 5 numbers and the
+    2 text labels are all non-empty; both ignore the blank.
+  \item \texttt{=IF(logical\_test, value\_if\_true, value\_if\_false)}. The
+    first argument is a test answered true or false; the second is the value
+    returned when it is true; the third is the value returned when it is
+    false.
+  \item The formula shows \texttt{No}. A blank is read as zero in a numeric
+    test, so A1 is neither greater than 10 nor greater than 0, both tests are
+    false, and the final value \texttt{No} is returned.
+  \item \texttt{\#DIV/0!} --- division by zero or by a blank cell;
+    \texttt{\#VALUE!} --- the wrong type of argument, such as text where a
+    number is needed; \texttt{\#NAME?} --- an unrecognised name, often a
+    misspelt function; \texttt{\#REF!} --- an invalid cell reference after
+    the referred cell was deleted.
+\end{enumerate}
+\endgroup
+\end{document}

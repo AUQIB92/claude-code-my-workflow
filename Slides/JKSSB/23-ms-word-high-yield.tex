@@ -1,0 +1,234 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{MS Word High-Yield}
+\subtitle{Lesson 23 --- Shortcuts, Review Tools and Mail Merge}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why These Word Tools Matter}
+  \begin{itemize}
+    \item Exam items on MS Word repeat a small set of \key{review and editing
+      tools}.
+    \item The high-yield set: Find/Replace, spell check, hyperlinks, styles,
+      comments and Track Changes.
+    \item Also tested: \key{Page Break vs Section Break}, mail merge, and
+      save/print/PDF export.
+    \item Most items turn on an \key{exact shortcut} or a
+      \key{near-neighbour distinction}.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Learn each tool as a shortcut plus the one thing it is \emph{not}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Find and Replace}
+  \begin{itemize}
+    \item \key{Ctrl+F} opens the Find box to locate text in the document.
+    \item \key{Ctrl+H} opens \key{Find and Replace}.
+    \item Replace can change one match or use \key{Replace All} for every
+      occurrence.
+    \item Find also locates formatting, special characters and styles.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Ctrl+F only \emph{finds}; Ctrl+H \emph{finds and replaces}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Spelling and Grammar}
+  \begin{itemize}
+    \item \key{F7} starts the spelling and grammar check.
+    \item Word flags a misspelling with a red squiggle and grammar issues with
+      other underlines.
+    \item The \key{Editor} pane groups Spelling, Grammar and Refinements.
+    \item ``Ignore'' skips a word once; ``Add to dictionary'' accepts it
+      permanently.
+  \end{itemize}
+  \begin{alertblock}{Shortcut alert}
+    F7 is spelling and grammar in Word. \muted{F5 and F9 belong to PowerPoint
+    slide shows, not Word proofing.}
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Hyperlinks and Bookmarks}
+  \begin{itemize}
+    \item \key{Ctrl+K} inserts a \key{hyperlink}.
+    \item A hyperlink can point to a web page, a file, or a place in the same
+      document.
+    \item A \key{bookmark} gives a location or selection a name.
+    \item A hyperlink can jump to a bookmark; a bookmark alone is
+      \muted{not visible in print}.
+  \end{itemize}
+  \begin{block}{Key difference}
+    A \key{hyperlink} is the clickable link; a \key{bookmark} is the named
+    target it points to.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Styles}
+  \begin{itemize}
+    \item A \key{style} is a named set of formatting: font, size, colour,
+      spacing and indent.
+    \item Applying a \key{Heading} style gives the paragraph an outline level.
+    \item Styles let the \key{Navigation Pane} and a \key{Table of Contents}
+      update automatically.
+    \item Editing a style updates \key{every} paragraph that uses it.
+  \end{itemize}
+  \begin{block}{Definition}
+    A style is reusable formatting stored under a name.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Comments}
+  \begin{itemize}
+    \item A \key{comment} is a note attached to a point in the document.
+    \item Comments \key{do not change} the document text.
+    \item Reviewers can reply to a comment and mark it resolved.
+    \item Comments are metadata and appear in the margin or the Reviewing
+      Pane.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Track Changes}
+  \begin{itemize}
+    \item \key{Track Changes} records insertions, deletions and formatting
+      edits.
+    \item Each change stores the \key{author's name} and the time --- revision
+      metadata.
+    \item The reviewer can \key{Accept} or \key{Reject} each change.
+    \item Accepting a change keeps it permanently and removes its revision
+      markup.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Accepting a change permanently removes the author's metadata for that
+    change. (PYQ-12)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Page Break vs Section Break}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.30\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Page Break} & \textbf{Section Break} \\
+      \midrule
+      What it does & Moves text to a new page & Starts a new section \\
+      Formatting & Same section layout & New layout and formatting \\
+      Headers/footers & Cannot differ & Can differ per section \\
+      Insert & Ctrl+Enter (page break) & Layout $\rightarrow$ Breaks \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Page Break changes the page; Section Break changes the section.}
+\end{frame}
+
+\begin{frame}{Section Break and Headers/Footers}
+  \begin{itemize}
+    \item A \key{Section Break} divides the document into independent
+      \key{sections}.
+    \item Each section can have its own \key{headers and footers}.
+    \item Each section can also set its own page numbering, margins and
+      orientation.
+    \item A \key{Page Break} does not allow different headers or footers.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Only a \key{Section Break} --- never a Page Break --- enables different
+    headers and footers in one document. (TRAP-13 / PYQ-13)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Mail Merge: The Idea}
+  \begin{itemize}
+    \item \key{Mail Merge} combines a \key{main document} with a
+      \key{data source}.
+    \item Main document: the letter or template, with \key{merge fields} as
+      placeholders.
+    \item Data source: a list of records such as names and addresses.
+    \item Result: one \key{personalised copy} per record.
+  \end{itemize}
+  \begin{block}{Definition}
+    Mail Merge combines a standard letter with a database of addresses.
+    (PYQ-37, PYQ-47)
+  \end{block}
+\end{frame}
+
+\begin{frame}{Mail Merge: Steps}
+  \begin{exampleblock}{Typical mail-merge steps}
+    \begin{enumerate}
+      \item Create or select the main document (the letter).
+      \item Select recipients (the data source).
+      \item Insert merge fields such as name and address.
+      \item Preview the merged letters.
+      \item Finish and Merge --- print or send by email.
+    \end{enumerate}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Saving, Printing and PDF Export}
+  \begin{itemize}
+    \item \key{Ctrl+S} saves the document, normally as a \key{DOCX} file.
+    \item \key{Ctrl+P} opens the print options.
+    \item \key{Save As} can change the file name, location and file format.
+    \item \key{Export} or \key{Save As PDF} creates a
+      \key{PDF} --- Portable Document Format --- file.
+  \end{itemize}
+  \begin{block}{PDF}
+    Portable Document Format: a \key{fixed-layout} file that looks the same on
+    every device, good for sharing and printing.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Shortcut Near-Neighbours}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Action} & \textbf{Shortcut} \\
+      \midrule
+      Find & Ctrl+F \\
+      Find and Replace & Ctrl+H \\
+      Spelling and grammar & F7 \\
+      Insert a hyperlink & Ctrl+K \\
+      Save & Ctrl+S \\
+      Print & Ctrl+P \\
+      Remove document-window split & Alt+Shift+C \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Trap Alert: Word Facts to Keep Straight}
+  \begin{itemize}
+    \item A \key{Section Break}, not a Page Break, enables different
+      headers/footers. (TRAP-13)
+    \item \key{Track Changes} records revision metadata; accepting a change
+      removes that change's metadata. (PYQ-12)
+    \item A \key{bookmark} is a named target; a \key{hyperlink} (Ctrl+K) is the
+      clickable link.
+    \item \key{F7} is spelling/grammar; F5 and F9 are PowerPoint slide-show
+      keys. (TRAP-32)
+    \item \key{Mail Merge} combines a letter with an address database.
+      (TRAP-29)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 23: Recall}
+  \begin{itemize}
+    \item Find: \key{Ctrl+F}; Find and Replace: \key{Ctrl+H}; Replace All
+      changes every match.
+    \item Spell check: \key{F7}; hyperlink: \key{Ctrl+K}; save: Ctrl+S; print:
+      Ctrl+P.
+    \item \key{Styles} are named formatting; Heading styles drive the
+      Navigation Pane and a Table of Contents.
+    \item \key{Comments} do not change text; \key{Track Changes} records edits
+      with author metadata.
+    \item \key{Section Break} --- not Page Break --- enables different
+      headers/footers.
+    \item \key{Mail Merge} combines a standard letter with an address database;
+      \key{Save As PDF} exports a fixed-layout file.
+  \end{itemize}
+\end{frame}
+\end{document}
