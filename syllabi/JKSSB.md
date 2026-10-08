@@ -96,11 +96,11 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 07 | Computer Memory Hierarchy — registers, cache, RAM, ROM, virtual memory ordering | `07-memory-hierarchy` [ ] | [ ] | [ ] |
-| 08 | RAM, ROM & Cache — RAM/DRAM/SRAM, ROM/PROM/EPROM/EEPROM, cache levels | `08-ram-rom-cache` [ ] | [ ] | [ ] |
-| 09 | Virtual Memory — virtual vs physical, allocation, paging/segmentation awareness | `09-virtual-memory` [ ] | [ ] | [ ] |
-| 10 | Storage Devices — HDD/SSD, magnetic/optical/flash/tape/cloud, CD/DVD/Blu-ray, random vs sequential access | `10-storage-devices` [ ] | [ ] | [ ] |
-| 11 | Backup Types — backup vs storage, full/incremental/differential/image/file, 3-2-1, offline/off-site, RAID vs backup | `11-backup-types` [ ] | [ ] | [ ] |
+| 07 | Computer Memory Hierarchy — registers, cache, RAM, ROM, virtual memory ordering | `07-memory-hierarchy` [x] | [x] | [x] |
+| 08 | RAM, ROM & Cache — RAM/DRAM/SRAM, ROM/PROM/EPROM/EEPROM, cache levels | `08-ram-rom-cache` [x] | [x] | [x] |
+| 09 | Virtual Memory — virtual vs physical, allocation, paging/segmentation awareness | `09-virtual-memory` [x] | [x] | [x] |
+| 10 | Storage Devices — HDD/SSD, magnetic/optical/flash/tape/cloud, CD/DVD/Blu-ray, random vs sequential access | `10-storage-devices` [x] | [x] | [x] |
+| 11 | Backup Types — backup vs storage, full/incremental/differential/image/file, 3-2-1, offline/off-site, RAID vs backup | `11-backup-types` [x] | [x] | [x] |
 
 ### Unit 4 — I/O, Peripherals & Multimedia
 

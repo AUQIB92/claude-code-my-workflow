@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 11 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are \textit{[Original]};
+the answer key is the author's. No official JKSSB key is claimed.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{C.} A full backup copies all selected files and folders on every
+  run. Incremental (A) and differential (B) copy only changes; an image (D)
+  is a whole-system clone, a coverage type rather than the ``copy everything
+  each run'' definition.
+\item \textbf{B.} An incremental backup captures changes since the last backup
+  of any type. A describes differential; C is not a backup rule; D is not a
+  basis for change tracking.
+\item \textbf{C.} A differential backup captures changes since the last full
+  backup. A describes incremental; B is an arbitrary interval; D excludes
+  modified files, which is wrong.
+\item \textbf{B.} Incremental looks back to the immediately preceding backup
+  of any type; differential always looks back to the last full backup. A
+  swaps the two definitions; C wrongly makes them identical; D ignores that
+  both back up user data, not just the OS.
+\item \textbf{A.} An incremental restore needs the last full backup plus every
+  incremental applied in sequence, because each holds only its own slice of
+  changes. B and C would lose intermediate changes; D ignores the chain
+  entirely.
+\item \textbf{B.} A differential restore needs the last full backup plus only
+  the most recent differential, which already contains all changes since that
+  full backup. A overstates the requirement; C omits the full baseline; D
+  names the wrong type.
+\item \textbf{C.} A full backup repeats all selected data each run, so it is
+  the largest and slowest to create. Incremental (A) is the smallest and
+  fastest; differential (B) is in between.
+\item \textbf{C.} The full backup is heaviest to create but fastest to
+  restore, since one complete set suffices. Incremental (A) is fast to create
+  but slow to restore; differential (B) is intermediate; file-level (D) does
+  not imply a single complete restore set.
+\item \textbf{B.} An image is a complete clone of a system, including OS,
+  settings and data. A and D describe narrow copies; C describes a
+  differential, not an image.
+\item \textbf{B.} File-level backup copies selected files and folders rather
+  than a whole system. A describes an image; C narrows it incorrectly; D
+  confuses file-level backup with RAID.
+\item \textbf{D.} Defragmentation reorganises file placement on a disk; it is
+  not a backup type. Full, incremental and differential (A, B, C) are the
+  three time-based backup types.
+\item \textbf{A.} The 3-2-1 rule is 3 copies, 2 different media, 1 copy
+  off-site. B swaps the roles of the numbers; C invents a frequency scheme; D
+  confuses backup types with the rule.
+\item \textbf{B.} In 3-2-1 the 2 stands for two different types of storage
+  media. A misreads it as off-site copies (that is the ``1''); C and D attach
+  meanings the rule does not carry.
+\item \textbf{A.} RAID expands to Redundant Array of Independent Disks, and it
+  provides redundancy (uptime), not backup (recovery). B, C and D give wrong
+  expansions and wrongly treat RAID as a backup mechanism.
+\item \textbf{A.} Statements I and II are correct: full copies everything, and
+  differential tracks changes since the last full backup. III is false --- an
+  incremental tracks changes since the last backup of any type, not
+  specifically the last full. B and D wrongly include III; C omits I.
+\item \textbf{A.} A backup is a recoverable copy, storage is the working
+  primary copy, and an archive is old data kept for long-term retention. B
+  collapses the three into one; C mistakes the live working file for a
+  backup; D misidentifies an archive as a RAID disk.
+\item \textbf{A.} Cloud backup stores copies on remote servers, supplying an
+  off-site copy. B wrongly equates it with RAID; C describes a local copy,
+  which is not off-site; D is a category error, since cloud is a location,
+  not a backup type.
+\item \textbf{A.} An offline backup is disconnected from the network, which
+  limits ransomware spread across connected drives. B describes an online
+  backup; C denies a backup exists; D describes volatile memory, not backup
+  media.
+\item \textbf{B.} Rotation keeps several dated backup sets so an older clean
+  copy survives if corruption is found late. A is unrelated to CPU clocks; C
+  confuses rotation with encryption; D wrongly substitutes RAID for a backup
+  strategy.
+\item \textbf{C.} An incremental backup is defined as changes since the last
+  backup of any type. A assigns the differential definition to the wrong
+  type; B assigns the differential's ``last full'' rule to incremental; D
+  describes file-level, not image.
+\end{enumerate}
+\end{document}

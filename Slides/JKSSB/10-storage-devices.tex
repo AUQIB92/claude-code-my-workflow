@@ -1,0 +1,208 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Storage Devices}
+\subtitle{Lesson 10 --- Magnetic, Optical, Flash and Cloud}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Storage in the Memory Hierarchy}
+  \begin{itemize}
+    \item \key{Primary storage}: directly accessible by the CPU; holds data
+      and instructions currently in use (RAM, ROM, cache).
+    \item \key{Secondary storage}: non-volatile; keeps data when the power is
+      off (hard disk, SSD, optical disc, USB drive).
+    \item \key{Tertiary storage}: archival level, often robotic tape
+      libraries that are loaded on demand.
+  \end{itemize}
+  \begin{block}{Anchor point}
+    The CPU works with main memory; secondary storage feeds main memory
+    through the operating system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Magnetic Storage: Hard Disk Drive}
+  \begin{itemize}
+    \item Data is stored magnetically on \key{rotating platters}.
+    \item A \key{read/write head} on an actuator arm moves over the platter
+      surface to read or write.
+    \item It is a mechanical device: the platters spin and the head moves.
+    \item Large capacity at low cost per gigabyte.
+  \end{itemize}
+  \begin{alertblock}{Remember}
+    An HDD is magnetic and mechanical --- it has moving parts.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Magnetic Tape: Sequential Storage}
+  \begin{itemize}
+    \item Data is stored magnetically on a long tape in a reel or cartridge.
+    \item The tape is read or written in order, one position after another.
+    \item This is \key{sequential access}, so reaching a distant record takes
+      longer.
+    \item Widely used for backup and long-term archival rather than
+      day-to-day access.
+  \end{itemize}
+  \vspace{0.3cm}
+  \muted{Tape is cheap and dense, but slow for random lookups.}
+\end{frame}
+
+\begin{frame}{Optical Storage}
+  \begin{itemize}
+    \item Data is stored as microscopic \key{pits and lands} and read by a
+      \key{laser}.
+    \item Common forms: \key{CD}, \key{DVD}, and \key{Blu-ray} disc.
+    \item Optical media are portable, removable, and non-volatile.
+    \item Blu-ray uses a shorter-wavelength laser and tighter tracks, so it
+      holds more than a DVD.
+  \end{itemize}
+  \begin{block}{Capacity cue}
+    CD $\approx$ 700 MB; DVD $\approx$ 4.7 GB (single layer); Blu-ray
+    $\approx$ 25 GB (single layer).
+  \end{block}
+\end{frame}
+
+\begin{frame}{Optical Media Capacities}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Medium} & \textbf{Approximate capacity (single layer)} \\
+      \midrule
+      CD & 700 MB \\
+      DVD & 4.7 GB \\
+      Blu-ray & 25 GB \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{Order from smallest to largest: CD $<$ DVD $<$ Blu-ray.}
+\end{frame}
+
+\begin{frame}{Flash and Solid-State Storage}
+  \begin{itemize}
+    \item \key{Flash memory} stores data in semiconductor cells with
+      \key{no moving parts}.
+    \item Examples: \key{SSD}, \key{USB flash drive}, and \key{memory card}.
+    \item Because nothing spins, flash is faster and more shock-resistant
+      than a mechanical drive.
+    \item It is non-volatile: data remains when the power is off.
+  \end{itemize}
+  \begin{alertblock}{High-yield fact}
+    Among these devices, the \key{SSD} has the highest transfer rate
+    (KB PYQ-27).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Cloud Storage}
+  \begin{itemize}
+    \item Data is stored on \key{remote servers} and accessed over the
+      Internet.
+    \item The provider manages the hardware; the user reaches the files
+      through a network connection.
+    \item It still ultimately rests on physical secondary storage in a data
+      centre.
+    \item Useful for backup, sharing, and access from many devices.
+  \end{itemize}
+  \muted{Cloud storage is remote secondary storage, not main memory.}
+\end{frame}
+
+\begin{frame}{HDD versus SSD}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Hard disk drive}
+      \begin{itemize}
+        \item Magnetic storage
+        \item Mechanical, moving parts
+        \item Rotating platters and a moving head
+        \item Usually slower transfer rate
+        \item More vulnerable to shock
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Solid-state drive}
+      \begin{itemize}
+        \item Flash storage
+        \item No moving parts
+        \item Semiconductor cells
+        \item Higher transfer rate (fastest here)
+        \item More shock-resistant
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Random Access versus Sequential Access}
+  \begin{itemize}
+    \item \key{Random (direct) access}: any location can be reached in
+      approximately equal time. RAM and hard disks behave this way.
+    \item \key{Sequential access}: locations are reached in order; the time
+      depends on how far the target is from the current position. Magnetic
+      tape is sequential.
+    \item This distinction explains why tape is poor for direct lookups but
+      fine for ordered backup.
+  \end{itemize}
+  \begin{block}{Quick check}
+    Memory and disks are approximately random access; tape is sequential.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Non-Volatility of Storage}
+  \begin{itemize}
+    \item \key{Non-volatile} means the contents survive when the power is
+      switched off.
+    \item Primary storage such as RAM is \key{volatile}: its contents are
+      lost without power.
+    \item Secondary storage --- HDD, SSD, optical, USB --- is non-volatile,
+      so files persist after shutdown.
+    \item Do not say RAM is non-volatile; do not say storage is volatile.
+  \end{itemize}
+  \begin{alertblock}{One-line rule}
+    RAM is volatile; storage is non-volatile.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Office Desktop Example (EX-01)}
+  \begin{itemize}
+    \item An office desktop uses an \key{SSD} as the system drive, so the
+      operating system boots quickly.
+    \item A large \key{HDD} holds bulk documents and media at lower cost.
+    \item A \key{DVD drive} and \key{USB flash drive} move files between
+      machines.
+    \item Important files are also copied to \key{cloud storage} for remote
+      backup.
+  \end{itemize}
+  \muted{Fast flash for daily work; magnetic capacity for bulk; optical and
+  USB for transfer; cloud for off-site backup.}
+\end{frame}
+
+\begin{frame}{Exam Traps to Avoid}
+  \begin{itemize}
+    \item The \key{SSD} has the highest transfer rate, not the HDD
+      (KB PYQ-27).
+    \item An HDD is \key{magnetic and mechanical}; an SSD is \key{flash with
+      no moving parts}.
+    \item Optical capacities run CD $<$ DVD $<$ Blu-ray.
+    \item RAM is \key{volatile} but storage is \key{non-volatile}.
+  \end{itemize}
+  \begin{alertblock}{Exam method}
+    Match the storage type to its technology and its access method before
+    answering.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 10: Recall}
+  \begin{itemize}
+    \item Primary storage is CPU-accessible; secondary storage is
+      non-volatile; tertiary storage is archival.
+    \item Magnetic: HDD (rotating platters, moving head) and tape
+      (sequential).
+    \item Optical: CD $\approx$ 700 MB, DVD $\approx$ 4.7 GB, Blu-ray
+      $\approx$ 25 GB (single layer).
+    \item Flash: SSD, USB drive, memory card --- no moving parts; the SSD
+      has the highest transfer rate.
+    \item RAM and disks are approximately random access; tape is sequential.
+  \end{itemize}
+\end{frame}
+\end{document}

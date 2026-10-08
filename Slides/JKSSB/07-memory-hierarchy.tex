@@ -1,0 +1,218 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Computer Memory Hierarchy}
+\subtitle{Lesson 07 --- Speed, Cost and Capacity Trade-offs}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why a Memory Hierarchy Exists}
+  \begin{itemize}
+    \item A running computer keeps data and instructions in several
+      different stores, not in one single place.
+    \item \key{No single memory} is at once fast, large, and cheap.
+    \item Faster memory is smaller and more expensive per bit; slower
+      memory is larger and cheaper per bit.
+    \item The \key{memory hierarchy} arranges these stores from fastest and
+      smallest down to slowest and largest.
+  \end{itemize}
+  \begin{block}{The one idea}
+    The hierarchy balances three competing needs: speed, cost, and capacity.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Ordered Hierarchy}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.28\textwidth}p{0.40\textwidth}}
+      \toprule
+      \textbf{Level} & \textbf{Speed} & \textbf{Typical role} \\
+      \midrule
+      Registers & Fastest, smallest & Values in use right now \\
+      Cache (L1/L2/L3) & Very fast & Recently and frequently used data \\
+      Main memory (RAM) & Moderately fast & Active programs and data \\
+      Secondary (SSD/HDD) & Slower & Permanent file storage \\
+      Tertiary/offline (tape, cloud) & Slowest & Backup and archive \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Registers are fastest; the order runs down to slowest offline
+  storage.}
+\end{frame}
+
+\begin{frame}{Registers: Fastest and Smallest}
+  \begin{itemize}
+    \item Registers sit \key{inside the CPU}.
+    \item They are the \key{fastest} storage in the whole computer.
+    \item Their capacity is \key{very small}, so they hold only the values
+      needed at this instant.
+    \item They hold instructions, addresses, data, and intermediate results
+      while work is in progress.
+  \end{itemize}
+  \begin{alertblock}{Speed order}
+    Registers are fastest, then cache, then main memory (RAM), then
+    secondary storage.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Cache Memory}
+  \begin{itemize}
+    \item \key{Cache} is a small, very fast memory between the CPU and main
+      memory.
+    \item It holds \key{recently and frequently used} data and instructions.
+    \item Cache is \key{faster} than main memory (RAM).
+    \item It keeps \muted{copies} of data that really live in RAM; it is
+      \key{not} a backup.
+  \end{itemize}
+  \begin{block}{Why cache helps}
+    By keeping the most likely-needed data close to the CPU, cache reduces
+    the average time taken to fetch data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cache Levels: L1, L2, L3}
+  \begin{center}
+    \begin{tabular}{p{0.12\textwidth}p{0.34\textwidth}p{0.40\textwidth}}
+      \toprule
+      \textbf{Level} & \textbf{Size / speed} & \textbf{Position} \\
+      \midrule
+      L1 & Smallest and fastest & Closest to the CPU core \\
+      L2 & Larger, a little slower than L1 & Per CPU core \\
+      L3 & Largest, slowest of the three (still faster than RAM) & Often shared across cores \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Exam depth: L1 is fastest and smallest; L3 is the largest and
+  slowest cache level, but still faster than main memory.}
+\end{frame}
+
+\begin{frame}{Cache vs Main Memory (RAM)}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Cache} & \textbf{Main memory (RAM)} \\
+      \midrule
+      Speed & Faster & Slower \\
+      Size & Smaller & Larger \\
+      Holds & Recent/frequent data & Active programs and data \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    Cache is \key{faster} than main memory, not slower. Reversing this is a
+    common wrong answer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Main Memory (RAM)}
+  \begin{itemize}
+    \item Main memory is the computer's \key{primary memory}.
+    \item The programs and data in use are held here while the machine runs.
+    \item \key{RAM} is \key{volatile}: its contents are lost when the power
+      is switched off.
+    \item RAM is larger than cache but slower; the CPU works directly with
+      main memory.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    RAM is main memory, not permanent file storage. Switch the machine off
+    and its contents are gone.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{ROM: Non-Volatile Primary Memory}
+  \begin{itemize}
+    \item \key{ROM} stands for Read-Only Memory.
+    \item It is \key{non-volatile}: it keeps its contents without power.
+    \item In normal operation it is read-only; writing to it needs a special
+      process.
+    \item It stores \key{firmware} such as the startup (BIOS) instructions.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    RAM is volatile; ROM is non-volatile. Do not swap them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Primary Memory vs Secondary Storage}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Primary memory}
+      \begin{itemize}
+        \item Directly accessible by the CPU
+        \item RAM volatile; ROM non-volatile
+        \item Holds active programs and data
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Secondary storage}
+      \begin{itemize}
+        \item Non-volatile; keeps files without power
+        \item Larger and cheaper per bit, but slower
+        \item Reached via main memory and the OS
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \muted{The CPU does not access secondary storage directly.}
+\end{frame}
+
+\begin{frame}{Secondary and Tertiary Storage}
+  \begin{itemize}
+    \item \key{Secondary storage}: SSD (flash, no moving parts) and HDD
+      (magnetic disks).
+    \item It is \key{non-volatile} and holds files and programs between
+      sessions.
+    \item \key{Tertiary / offline} storage: magnetic tape, archival media,
+      and cloud backup.
+    \item It is the \key{slowest and cheapest} level, used for backup and
+      long-term archive.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Locality of Reference}
+  \begin{itemize}
+    \item Programs tend to \key{reuse} the same data and instructions.
+    \item \key{Temporal locality}: the same item is accessed again soon
+      after it was last used.
+    \item \key{Spatial locality}: items stored at nearby addresses are
+      accessed next.
+    \item This re-use is exactly why cache works.
+  \end{itemize}
+  \begin{block}{Office desktop example}
+    While a spreadsheet is edited, the same active cells and nearby rows
+    are used again and again --- so cache keeps that data ready.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trap Alert: Memory Facts to Keep Straight}
+  \begin{itemize}
+    \item RAM is \key{volatile}; ROM is \key{non-volatile}. (TRAP-01)
+    \item Cache is \key{not} a backup; it holds copies of data that live in
+      RAM.
+    \item RAM is main memory, \key{not} storage for files.
+    \item Cache is \key{faster} than main memory. (PYQ-03)
+    \item Order of speed: registers $\rightarrow$ cache $\rightarrow$ RAM
+      $\rightarrow$ secondary storage.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 07: Recall}
+  \begin{itemize}
+    \item The hierarchy runs registers, cache, main memory (RAM), secondary
+      storage, then tertiary/offline storage.
+    \item Registers are fastest and smallest; slower levels are larger and
+      cheaper per bit.
+    \item Cache levels: L1 smallest/fastest, L2 next, L3 largest/slowest
+      (still faster than RAM).
+    \item Cache is faster than main memory and stores recently used data;
+      it is not a backup.
+    \item RAM is volatile primary memory; ROM is non-volatile; secondary
+      storage keeps files without power.
+    \item Locality of reference --- temporal and spatial --- is why cache
+      helps.
+  \end{itemize}
+\end{frame}
+\end{document}

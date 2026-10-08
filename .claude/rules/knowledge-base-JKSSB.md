@@ -7,9 +7,9 @@ term: "JKSSB recruitment cycle 2025-2026"
 level: "competitive-exam prep (post-secondary; no formal programme)"
 status: active
 schema_version: 2
-kb_version: 0.3.0
+kb_version: 0.4.0
 last_updated: 2026-10-07
-lectures_recorded: 9
+lectures_recorded: 14
 paths:
   - "syllabi/JKSSB.md"
   - "Slides/JKSSB/**/*.tex"
@@ -350,6 +350,7 @@ unverified or generated item.
 | 2026-10-06 | 0.1.1 | Stored all four official papers + source index in `master_supporting_docs/JKSSB/`; registered the pre-existing internal MCQ book (`SRC-15`, 11 ch / 220 Q) | Fix the MCQ book's title-page count (says 200, has 220); split it into per-lesson `CompetitiveExam/JKSSB/` sets; consider a download script for the answer keys |
 | 2026-10-11 | 0.2.1 | Added the no-placeholder rule for video references; removed unsupplied Lesson 49–50 references from lesson artifacts and syllabus | Add video links to materials only when supplied |
 | 2026-10-07 | 0.3.0 | Built Unit 2 (lessons 04, 05, 06, 59): slides + notes + MCQ/answer sets; published to the course hub. Supplied videos for 04/05/06 (Concepts That Click channel); 59 intentionally has no video yet | Ingest the CI 2025 computer block (Q8+) and WO Q1–60; index a PSU fundamentals text for page cites |
+| 2026-10-07 | 0.4.0 | Built Unit 3 (lessons 07, 08, 09, 10, 11): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 3 video links when supplied; same source-ingest follow-ups as 0.3.0 |
 
 <!-- Not yet captured: the full CI 2025 computer block (Q8 onward) and the non-computer
      sections of WO/JA; the exact WO section structure; the cut-off figures. Add as

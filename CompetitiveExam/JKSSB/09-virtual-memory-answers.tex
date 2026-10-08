@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 09 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are \textit{[Original]}
+JKSSB-pattern questions for this lesson. No item is a real PYQ, and the
+answer key is the author's verification of the lesson's concepts.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{B.} Virtual memory uses secondary storage to extend the
+  addressable memory beyond physical RAM. A wrongly calls it extra RAM; C
+  describes cache; D describes ROM.
+\item \textbf{C.} Virtual memory is slower than RAM because it is disk-backed.
+  A and B overstate its speed; D is false, since virtual memory is normally in
+  use.
+\item \textbf{B.} Virtual memory is disk-backed and slower than RAM, extending
+  capacity rather than adding RAM. A contradicts this; C is false because cache
+  is faster; D is false because RAM is still required.
+\item \textbf{B.} Virtual memory lets programs and data larger than physical
+  RAM run and gives each process a large contiguous view. A, C, and D describe
+  unrelated hardware changes.
+\item \textbf{A.} MMU stands for Memory Management Unit. B, C, and D are
+  invented expansions.
+\item \textbf{A.} The MMU translates virtual addresses into physical addresses
+  at run time. B is the job of secondary storage; C and D describe other
+  components.
+\item \textbf{B.} In paging, the fixed-size virtual blocks are pages. Frames
+  (C) are the physical blocks; segments (A) belong to segmentation; sectors (D)
+  are disk units.
+\item \textbf{B.} The fixed-size physical blocks into which pages are loaded
+  are frames. Pages (A) are the virtual blocks; segments (C) belong to
+  segmentation; registers (D) are CPU storage.
+\item \textbf{B.} Paging uses fixed-size pages and frames, while segmentation
+  uses variable-size logical segments. A and D reverse the two; C wrongly makes
+  both fixed-size.
+\item \textbf{B.} Segmentation divides a program into variable-size logical
+  segments. A, C, and D describe paging or cache rather than segmentation.
+\item \textbf{B.} A page fault means the referenced page is not currently in
+  RAM and must be loaded from disk. A calls it a hardware fault, which is
+  wrong; C and D describe unrelated failures.
+\item \textbf{A.} Demand paging loads a page only when it is referenced and not
+  already present. B describes loading everything at once; C and D are false.
+\item \textbf{C.} Virtual memory is \emph{not} additional physical RAM; it is
+  disk-backed and slower than RAM. A, B, and D are correct statements, so C is
+  the one that is NOT correct.
+\item \textbf{A.} Statements I and II are correct; III is false because virtual
+  memory is not extra physical RAM but disk-backed storage. B omits II; C
+  includes false III and omits I; D includes false III.
+\item \textbf{A.} Swapping moves data or pages between RAM and secondary
+  storage. B, C, and D describe unrelated operations.
+\item \textbf{A.} Thrashing is excessive paging that leaves little time for
+  useful work. B, C, and D misdescribe it.
+\item \textbf{B.} Cache is small, fast memory close to the CPU, whereas virtual
+  memory is slower and disk-backed. A reverses the two; C wrongly makes both
+  secondary storage; D swaps their purposes.
+\item \textbf{B.} When the working set exceeds RAM, the OS uses virtual memory,
+  keeping some pages on disk and loading them on demand. A is false; C is
+  impossible (disk is not converted into RAM chips); D does not address memory
+  pressure.
+\item \textbf{C.} Disk-backed virtual memory is the slowest of these. L1 cache
+  (A) and a CPU register (D) are fastest, and RAM (B) is faster than the disk.
+\item \textbf{A.} Paging uses fixed-size pages and frames. B and C mismatch the
+  block rule; D wrongly assigns file storage to the MMU.
+\end{enumerate}
+\end{document}

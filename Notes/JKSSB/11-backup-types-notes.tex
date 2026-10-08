@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{11.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Backup Types --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Backup, storage and archive}
+These three words describe different jobs, and exam questions often test the
+distinction. \textbf{Storage} is where your working data lives day to day ---
+the primary copy you actually open and edit. A \textbf{backup} is a separate
+copy kept so that data can be recovered after loss, damage, corruption or an
+attack. An \textbf{archive} is older data retained for the long term, usually
+moved out of routine use. A backup exists for recovery; an archive exists for
+retention. Neither is simply ``another folder'' on the same disk.
+
+\begin{definitionbox}{Backup}
+A separate copy of data kept for the purpose of recovery after loss, damage,
+corruption or attack.
+\end{definitionbox}
+
+\begin{definitionbox}{Archive}
+Older data kept for long-term retention, normally not used in everyday work.
+\end{definitionbox}
+
+The office desktop of the running example (KB EX-01) has one primary copy of
+its documents. If the only copy is the one on the desktop's own drive, then
+the user has storage but no backup. The moment a second, independent copy
+exists, recovery becomes possible.
+
+\section{Full, incremental and differential backups}
+A backup type decides \emph{how much} is copied on each run. The three basic
+types differ only in the answer to one question: since which earlier point are
+changes included?
+
+\begin{definitionbox}{Full backup}
+Copies every selected file and folder (or the entire volume) on every run.
+It is the recovery baseline for the other types.
+\end{definitionbox}
+
+\begin{definitionbox}{Incremental backup}
+Copies only the files changed or added since the \emph{last backup of any
+type} --- whether that was a full, an incremental or a differential backup.
+\end{definitionbox}
+
+\begin{definitionbox}{Differential backup}
+Copies everything changed or added since the \emph{last full backup}, not
+since the previous backup.
+\end{definitionbox}
+
+The single phrase that separates incremental from differential is therefore
+the word \emph{full}. An incremental looks only as far back as the
+immediately preceding backup; a differential always looks back to the last
+full backup, so it keeps growing until the next full backup resets it.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Type} & \textbf{What it copies} & \textbf{Restore requirement}\\
+\midrule
+Full & Everything selected, every run. & One complete set. Fastest single restore, but largest and slowest to create.\\
+Incremental & Changes since the last backup of any type. & The last full backup plus every incremental backup in sequence.\\
+Differential & Changes since the last full backup. & The last full backup plus only the most recent differential.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+There is a consistent trade-off. Smaller and faster backups produce longer or
+more complex restores. A full backup is heavy to create but trivial to
+restore; an incremental is light to create but may need many files chained
+together at restore time; a differential sits in between.
+
+\begin{example}
+On Monday the office desktop is given a full backup. On Tuesday, a single
+document changes. With an incremental strategy, Tuesday's backup contains
+only that one change. With a differential strategy, Tuesday's backup contains
+that change measured against Monday's full backup. If only that one file
+changed, the two results look identical on Tuesday --- the difference appears
+on Wednesday, when the incremental again holds only Wednesday's change, while
+the differential holds Tuesday's change plus Wednesday's change.
+\end{example}
+
+\section{Restore scenarios}
+Restore behaviour is the part candidates most often miss, because it is not
+visible on the day of the backup --- only when recovery is needed.
+
+\begin{example}[Restore from an incremental chain]
+A full backup is taken Sunday. Incrementals are taken Monday, Tuesday and
+Wednesday. On Thursday the disk fails. To recover Wednesday's data you need
+the Sunday full backup and then \emph{all three} incrementals --- Monday,
+Tuesday and Wednesday --- applied in order. Missing any one link loses the
+changes it carried.
+\end{example}
+
+\begin{example}[Restore from a differential chain]
+A full backup is taken Sunday. Differentials are taken Monday, Tuesday and
+Wednesday. On Thursday the disk fails. To recover Wednesday's data you need
+only the Sunday full backup and the \emph{most recent} differential ---
+Wednesday's. The earlier differentials are not required, because Wednesday's
+already includes all changes since Sunday.
+\end{example}
+
+Both scenarios produce the same recovered data. The difference is operational:
+the incremental restore is longer and depends on every tape or file in the
+chain; the differential restore is shorter and depends on only two sets.
+
+\section{Image and file-level backups}
+Beyond the three time-based types, two coverage-based terms appear in exams.
+
+\begin{definitionbox}{Image backup (system image)}
+A complete clone of a system --- operating system, settings, applications and
+data --- that can restore a whole machine.
+\end{definitionbox}
+
+\begin{definitionbox}{File-level backup}
+A backup of selected files and folders rather than a whole system.
+\end{definitionbox}
+
+An image restores a working machine in one step, which makes it ideal after a
+drive failure or a corrupted operating system. A file-level backup is smaller
+and more flexible for everyday documents, but recovering a machine from it
+means reinstalling the operating system first and then restoring the files.
+The office desktop could use an image for disaster recovery and file-level
+backups for its working documents.
+
+\section{The 3-2-1 rule, off-site and offline copies}
+The \textbf{3-2-1 rule} is the standard exam reminder for resilient backup:
+\begin{enumerate}
+  \item \textbf{3} copies of the data --- the original plus two backups.
+  \item On \textbf{2} different types of media (for example, an external disk
+    and cloud storage).
+  \item With \textbf{1} copy kept \textbf{off-site}, at a different location.
+\end{enumerate}
+The numbers map to copies, media and location, in that order. A common trap
+is to swap them, or to read the ``2'' as two off-site copies.
+
+An \textbf{off-site} copy is kept at a different physical place, so a single
+fire, flood or theft cannot destroy every copy at once. An \textbf{offline}
+copy is disconnected from the network; it is especially useful against
+ransomware, which spreads through connected drives. A \textbf{cloud backup}
+is an off-site copy held on remote servers. These are not mutually exclusive:
+the office desktop's cloud backup is both off-site and, when not mounted, can
+serve as an offline copy as well.
+
+\begin{example}
+The office desktop keeps its working files on the local SSD (copy 1), an
+external USB disk (copy 2, different medium, kept offline), and a cloud
+account (copy 3, off-site). This satisfies the 3-2-1 rule: three copies, two
+media types, one off-site.
+\end{example}
+
+\section{Why RAID is not a backup}
+RAID (\textbf{Redundant Array of Independent Disks}) combines several disks
+for performance or redundancy. If one disk fails, a mirrored or parity RAID
+keeps the system running. That protects \emph{uptime}, not \emph{recovery}.
+RAID is not a backup because it does not protect against the things a backup
+exists for: accidental deletion, corruption or ransomware. When a file is
+deleted, or an encrypted copy is written by ransomware, the change is written
+to every member of the RAID array at once. There is no earlier clean copy to
+go back to. Redundancy duplicates the current state --- including the damage.
+
+\section{Backup rotation}
+\textbf{Backup rotation} means keeping several dated backup sets and reusing
+them on a fixed schedule, commonly the grandfather--father--son scheme (daily,
+weekly, monthly). Rotation matters because a problem such as silent
+corruption may not be noticed for days; if the single backup set has already
+been overwritten with the corrupted data, there is no clean copy left.
+Keeping multiple versions across time ensures that an older, clean copy
+remains available.
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define full, incremental and differential backup in one line each.
+  \item A full backup runs Sunday; differentials run Monday to Wednesday. The
+    disk fails on Thursday. Which sets are needed to restore Wednesday's
+    data?
+  \item State the 3-2-1 rule and explain what each number refers to.
+  \item Why is RAID not a substitute for a backup? Give one concrete danger.
+  \item Explain the purpose of backup rotation.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Full: copies everything selected each run. Incremental: copies changes
+    since the last backup of any type. Differential: copies changes since the
+    last full backup.
+  \item The Sunday full backup and the most recent (Wednesday) differential
+    only. The earlier differentials are unnecessary because Wednesday's
+    includes all changes since the full backup.
+  \item Three copies of the data, on two different types of media, with one
+    copy kept off-site.
+  \item RAID provides redundancy for uptime, not recovery. A deletion,
+    corruption or ransomware write is applied to every RAID member at once,
+    so no earlier clean copy survives.
+  \item Rotation retains several dated backup versions so that an older, clean
+    copy is still available if corruption is discovered only after the newest
+    backup has already been overwritten.
+\end{enumerate}
+\endgroup
+\end{document}

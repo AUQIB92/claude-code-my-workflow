@@ -1,0 +1,191 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Backup Types}
+\subtitle{Lesson 11 --- Full, Incremental, Differential and 3-2-1}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Backup, Storage and Archive: Three Different Jobs}
+  \begin{itemize}
+    \item \key{Storage}: where your working data lives every day --- the
+      primary copy you actually use.
+    \item \key{Backup}: a separate copy kept so data can be recovered after
+      loss, damage, corruption or attack.
+    \item \key{Archive}: older data kept for long-term retention, usually
+      removed from routine use.
+  \end{itemize}
+  \begin{alertblock}{Exam distinction}
+    A backup is a copy for \textbf{recovery}, not just another place to keep
+    files. Storage is the original; archive is old history.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Full Backup --- Everything, Every Time}
+  \begin{itemize}
+    \item Copies \textbf{every selected file and folder} (or the whole volume)
+      on every run.
+    \item \good{+} Simplest and fastest to restore: one complete set.
+    \item \bad{--} Largest size and longest backup time; repeats unchanged
+      data.
+  \end{itemize}
+  \begin{block}{Role}
+    The full backup is your recovery \textbf{baseline}. Incremental and
+    differential backups are defined relative to it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Incremental Backup --- Since the Last Backup of Any Type}
+  \begin{itemize}
+    \item Copies only files changed or added since the \key{last backup of
+      any type} --- full, incremental or differential.
+    \item \good{+} Smallest and quickest to create.
+    \item \bad{--} Restore needs the last full backup \textbf{plus every}
+      incremental in sequence.
+  \end{itemize}
+  \begin{alertblock}{Watch the wording}
+    Incremental looks back only to the immediately preceding backup, whatever
+    type it was.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Differential Backup --- Since the Last Full Backup}
+  \begin{itemize}
+    \item Copies everything changed or added since the \key{last full
+      backup}.
+    \item Each differential keeps growing as the day goes on, because it
+      accumulates all changes since that full backup.
+    \item Restore = the last full backup + the \key{most recent} differential
+      only.
+  \end{itemize}
+  \begin{block}{Role}
+    Differential sits between full and incremental: more data than
+    incremental, but a much shorter restore chain.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Incremental vs Differential: The Near-Neighbour Trap}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Type} & \textbf{Copies changes since} & \textbf{Restore needs} \\
+      \midrule
+      Incremental & last backup of \textbf{any} type & full + all incrementals \\
+      Differential & last \textbf{full} backup & full + latest differential \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{The switch word}
+    The word \textbf{``full''} is the difference: only the differential
+    always looks back to the last full backup.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Image vs File-Level Backup}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+      \textbf{Image (system image)}
+      \begin{itemize}
+        \item A complete clone of a system
+        \item Operating system, settings, applications and data
+        \item Restores a whole machine
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{File-level}
+      \begin{itemize}
+        \item Selected files and folders only
+        \item Smaller and more flexible
+        \item You must reinstall the OS before restoring
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \muted{An image restores a machine; file-level restores files.}
+\end{frame}
+
+\begin{frame}{Backup Time vs Restore Time}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Type} & \textbf{Backup size / time} & \textbf{Restore speed} \\
+      \midrule
+      Full & Large, slow & Fastest (one set) \\
+      Incremental & Smallest, fastest & Slowest (long chain) \\
+      Differential & Medium, growing & Medium (short chain) \\
+      Image & Largest (whole system) & Whole-machine restore \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{The trade-off: faster backups usually mean slower restores.}
+\end{frame}
+
+\begin{frame}{The 3-2-1 Rule}
+  \begin{itemize}
+    \item \key{3} copies of your data --- the original plus two backups.
+    \item On \key{2} different types of media (for example, an external disk
+      and cloud storage).
+    \item With \key{1} copy kept off-site (at a different location).
+  \end{itemize}
+  \begin{alertblock}{Say it in order}
+    3 copies, 2 media, 1 off-site. Do not swap the numbers.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Offline vs Off-Site, and Cloud Backup}
+  \begin{itemize}
+    \item \key{Off-site}: a copy at a different physical location, so one
+      disaster cannot destroy every copy.
+    \item \key{Offline}: a copy disconnected from the network --- it helps
+      against ransomware that spreads across connected drives.
+    \item \key{Cloud backup}: an off-site copy held on remote servers.
+    \item One copy can be both offline and off-site.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RAID Is Not a Backup}
+  \begin{itemize}
+    \item RAID gives \key{redundancy}: if a disk fails, the system keeps
+      running from the mirror or parity.
+    \item It does \bad{not} protect against accidental deletion, corruption
+      or ransomware --- those writes are copied to the other disks too.
+    \item A deleted file is deleted on every RAID member at once.
+  \end{itemize}
+  \begin{alertblock}{RAID $\neq$ backup}
+    Redundancy protects \textbf{uptime}; backup protects \textbf{recovery}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Backup Rotation}
+  \begin{itemize}
+    \item Keep several dated backup sets and reuse them on a fixed schedule
+      (for example, the grandfather--father--son scheme).
+    \item Rotation keeps an older, \good{clean} copy available if a problem
+      is only discovered days later.
+    \item It answers the question: what if today's backup already contains
+      the corruption?
+  \end{itemize}
+  \begin{block}{Why rotate}
+    A single overwritten backup gives you no history; rotation keeps
+    recoverable versions across time.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lesson 11: Recall}
+  \begin{itemize}
+    \item Full = everything; incremental = changes since the last backup of
+      \textbf{any} type; differential = changes since the last \textbf{full}
+      backup.
+    \item Image = whole-system clone; file-level = selected files.
+    \item 3-2-1 = 3 copies, 2 media, 1 off-site.
+    \item RAID provides redundancy, not backup --- it does not undo deletion,
+      corruption or ransomware.
+    \item Full restores fastest; incremental restores slowest (longest
+      chain).
+  \end{itemize}
+\end{frame}
+\end{document}

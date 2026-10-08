@@ -1,0 +1,192 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{RAM, ROM \& Cache}
+\subtitle{Lesson 08 --- Volatile and Non-Volatile Memory}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Two Kinds of Memory}
+  \begin{itemize}
+    \item Main memory holds the data and instructions the CPU uses directly.
+    \item The key split is \key{volatile} versus \key{non-volatile}.
+    \item \key{Volatile}: contents are lost when power is removed.
+    \item \key{Non-volatile}: contents are retained without power.
+  \end{itemize}
+  \begin{alertblock}{Trap (TRAP-01)}
+    \bad{RAM is volatile; ROM is non-volatile.} Do not reverse the two.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{RAM --- Volatile Main Memory}
+  \begin{itemize}
+    \item \key{RAM} is \key{Random Access Memory}.
+    \item It is the \key{main memory} that holds running programs and data.
+    \item \key{Volatile}: on power-off, its contents disappear.
+    \item ``Random access'' means any location is reached in roughly equal
+      time.
+    \item In the office desktop (EX-01), the OS, MS Word, and the spreadsheet
+      load into RAM while in use.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    RAM = working space; cleared when the machine is switched off.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Two Types of RAM: DRAM and SRAM}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{DRAM}
+      \begin{itemize}
+        \item Dynamic RAM
+        \item Needs periodic \key{refresh}
+        \item Denser and cheaper
+        \item Used for \key{main memory}
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{SRAM}
+      \begin{itemize}
+        \item Static RAM
+        \item No refresh needed
+        \item \key{Faster}, but costlier
+        \item Used for \key{cache}
+      \end{itemize}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{alertblock}{Do not confuse}
+    Both are RAM and both are volatile --- they differ in speed, cost, and role.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{DRAM vs SRAM at a Glance}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Feature} & \textbf{DRAM} & \textbf{SRAM} \\
+      \midrule
+      Full form & Dynamic RAM & Static RAM \\
+      Refresh & Needs periodic refresh & No refresh \\
+      Speed & Slower & Faster \\
+      Density / cost & Denser, cheaper & Less dense, costlier \\
+      Typical use & Main memory & Cache memory \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{DRAM: many cheap cells. SRAM: fewer, faster cells.}
+\end{frame}
+
+\begin{frame}{ROM --- Non-Volatile and Read-Only}
+  \begin{itemize}
+    \item \key{ROM} is \key{Read-Only Memory}.
+    \item \key{Non-volatile}: it keeps its contents without power.
+    \item \key{Read-only in normal operation}; writing needs a special
+      programming process.
+    \item It commonly stores \key{firmware} such as the start-up code.
+    \item RAM and ROM are both primary memory; they differ in volatility and
+      writeability.
+  \end{itemize}
+  \begin{alertblock}{Trap (TRAP-02)}
+    \bad{ROM is not freely read and write.} Normally you can only read it.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The ROM Family}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Type} & \textbf{Key property} \\
+      \midrule
+      PROM & Programmable once; cannot be erased \\
+      EPROM & Erased by ultraviolet (UV) light \\
+      EEPROM & Erased and rewritten electrically \\
+      Flash & EEPROM-derived; erased in blocks \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{PROM once \quad EPROM by UV \quad EEPROM electrically \quad Flash in blocks.}
+\end{frame}
+
+\begin{frame}{Cache --- Fast Memory Near the CPU}
+  \begin{itemize}
+    \item \key{Cache} is a small, very fast memory between the CPU and main
+      memory.
+    \item It holds frequently or recently used data and instructions.
+    \item Purpose: reduce the CPU's wait for slower main memory.
+    \item Cache is \key{faster than main memory} (PYQ-03).
+    \item Cache is working memory, \bad{not} a backup or permanent store.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    Speed order: cache $>$ main memory $>$ secondary storage.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cache Levels: L1, L2, L3}
+  \begin{itemize}
+    \item \key{L1}: smallest and fastest, closest to the core.
+    \item \key{L2}: larger and a little slower than L1.
+    \item \key{L3}: largest and slowest of the three, typically shared
+      across cores.
+    \item All cache levels are faster than main memory.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    Size and distance: \key{L1\,$<$\,L2\,$<$\,L3}. Speed: reverse.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cache Hit, Miss, and Hit Ratio}
+  \begin{itemize}
+    \item \key{Hit}: the CPU finds the required data in the cache.
+    \item \key{Miss}: the data is not in the cache, so it is fetched from
+      main memory.
+    \item \key{Hit ratio} $=$ hits $\div$ total accesses.
+    \item Example: 100 accesses with 90 hits give a hit ratio of
+      $90/100 = 0.90$.
+    \item A higher hit ratio means less time waiting for main memory.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RAM vs ROM vs Cache}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Aspect} & \textbf{RAM} & \textbf{ROM} \\
+      \midrule
+      Volatility & Volatile (TRAP-01) & Non-volatile \\
+      Normal access & Read and write & Read-only (TRAP-02) \\
+      Typical role & Main memory & Firmware / start-up code \\
+      Speed & Faster than secondary & Slower than cache \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Cache sits between the CPU and RAM and is the fastest of the three.}
+\end{frame}
+
+\begin{frame}{Common Traps in This Topic}
+  \begin{itemize}
+    \item \bad{TRAP-01}: RAM is volatile; ROM is non-volatile.
+    \item \bad{TRAP-02}: ROM is read-only in normal operation.
+    \item Cache is \key{faster} than main memory, not slower (PYQ-03).
+    \item \key{SRAM} goes to cache; \key{DRAM} goes to main memory.
+    \item Cache is \bad{not} a backup --- it is temporary working memory.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 08: Recall}
+  \begin{itemize}
+    \item RAM is volatile; ROM is non-volatile and normally read-only.
+    \item DRAM: denser/cheaper, needs refresh, main memory; SRAM: faster,
+      no refresh, cache.
+    \item ROM family: PROM (once), EPROM (UV), EEPROM (electrical), flash
+      (block erase).
+    \item L1 smallest/fastest, L3 largest/shared; all faster than RAM.
+    \item Hit ratio $=$ hits $\div$ total accesses.
+  \end{itemize}
+\end{frame}
+\end{document}

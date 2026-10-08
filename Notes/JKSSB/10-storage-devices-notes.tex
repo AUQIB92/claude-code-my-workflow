@@ -1,0 +1,305 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{10.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Storage Devices --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{The storage hierarchy}
+Storage is organized into levels according to how close it sits to the
+processor and what job it does. The CPU works directly with primary storage;
+secondary storage holds data permanently until it is needed and feeds it to
+main memory; tertiary storage is an archival level used for large, rarely
+accessed collections.
+
+\begin{definitionbox}{Primary storage}
+The directly CPU-accessible working memory of a computer, such as RAM, ROM,
+and cache; it holds the data and instructions currently in use.
+\end{definitionbox}
+
+\begin{definitionbox}{Secondary storage}
+Non-volatile storage that retains data when the power is off and is not
+accessed directly by the CPU --- for example a hard disk, SSD, optical disc,
+or USB flash drive.
+\end{definitionbox}
+
+\begin{definitionbox}{Tertiary storage}
+An archival storage level for large volumes of infrequently used data,
+typically robotic tape libraries whose media are loaded on demand.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.2\textwidth}p{0.4\textwidth}p{0.3\textwidth}}
+\toprule
+\textbf{Level} & \textbf{Examples} & \textbf{Key property}\\
+\midrule
+Primary & RAM, ROM, cache & Directly accessible by the CPU\\
+Secondary & HDD, SSD, optical disc, USB drive & Non-volatile; holds files\\
+Tertiary & Robotic tape library & Archival; loaded on demand\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The CPU does not read a file straight from secondary storage. The operating
+system brings the required data into main memory first, and the CPU then works
+with that copy. This is why the hierarchy matters for an exam scenario: a
+large program on disk is limited by the memory and storage that actually feed
+it, not only by processor speed.
+
+\section{Magnetic storage}
+Magnetic storage records data by magnetizing a surface, and it is read back by
+detecting those magnetic patterns. Hard disks and magnetic tape are the two
+common magnetic media, but they differ sharply in how they are reached.
+
+\subsection{Hard disk drive}
+A hard disk drive (HDD) stores data on \emph{rotating platters} coated with a
+magnetic material. A \emph{read/write head} mounted on an actuator arm floats
+just above the platter surface and reads or writes as the platter spins. The
+head moves inward and outward to reach different tracks. Because the platters
+spin and the arm moves, an HDD is a \emph{mechanical} device with moving parts.
+
+\begin{definitionbox}{Hard disk drive (HDD)}
+Magnetic secondary storage that stores data on rotating platters read and
+written by a moving read/write head; it is mechanical and contains moving
+parts.
+\end{definitionbox}
+
+\subsection{Magnetic tape}
+Magnetic tape stores data on a long, thin magnetic ribbon wound in a reel or
+cartridge. The tape is read or written in order, position by position, so a
+record far from the current position takes longer to reach. This makes tape a
+\emph{sequential-access} medium. It is inexpensive and dense, which is why it
+is used for backup and long-term archival rather than for routine access.
+
+\begin{definitionbox}{Magnetic tape}
+Magnetic storage on a long tape that is read and written in order; it is a
+sequential-access medium used mainly for backup and archival.
+\end{definitionbox}
+
+\section{Optical storage}
+Optical storage records data as \emph{pits and lands} --- tiny physical
+markings --- on a disc and reads them with a \emph{laser}. The reflected light
+pattern encodes the data. Optical discs are removable and non-volatile, so
+they are convenient for distributing and archiving files.
+
+The three common families are the compact disc (CD), the digital versatile
+disc (DVD), and the Blu-ray disc. Blu-ray uses a shorter-wavelength laser and
+tighter tracks, allowing it to store more than a DVD, which in turn stores
+more than a CD.
+
+\begin{definitionbox}{Optical storage}
+Storage in which a laser reads data encoded as pits and lands on a disc, such
+as a CD, DVD, or Blu-ray disc.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Medium} & \textbf{Approximate capacity (single layer)} &
+\textbf{Reading method}\\
+\midrule
+CD & 700 MB & Laser\\
+DVD & 4.7 GB & Laser (shorter wavelength)\\
+Blu-ray & 25 GB & Laser (shortest wavelength)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Order the capacities from smallest to largest as CD $<$ DVD $<$ Blu-ray.
+A common test error is to swap the middle entries or to reverse the order
+entirely; fix the sequence by remembering that CD is the oldest and smallest
+and Blu-ray is the newest and largest.
+
+\begin{example}
+An item asks which optical disc holds the most data. Compare the standard
+single-layer figures: CD $\approx$ 700 MB, DVD $\approx$ 4.7 GB, and Blu-ray
+$\approx$ 25 GB. Since $25\ \text{GB} > 4.7\ \text{GB} > 700\ \text{MB}$, the
+Blu-ray disc holds the most.
+\end{example}
+
+\section{Flash and solid-state storage}
+Flash memory stores data in semiconductor cells that hold their state without
+power. There are no rotating platters and no moving heads, so flash devices
+are \emph{solid-state}. Common examples are the solid-state drive (SSD), the
+USB flash drive, and the memory card.
+
+\begin{definitionbox}{Flash memory}
+Non-volatile semiconductor storage that keeps data in cells with no moving
+parts; the technology behind SSDs, USB flash drives, and memory cards.
+\end{definitionbox}
+
+\begin{definitionbox}{Solid-state drive (SSD)}
+A flash-based storage device with no moving parts. It is faster and more
+shock-resistant than a mechanical hard disk and has a high transfer rate.
+\end{definitionbox}
+
+Because nothing spins and no head has to move, flash can start a transfer
+almost immediately and is far less sensitive to being bumped or dropped.
+Among a hard disk drive, an optical drive, magnetic tape, and an SSD, the
+\key{SSD} has the highest transfer rate.
+
+\section{Cloud storage}
+Cloud storage keeps data on remote servers in a data centre and makes it
+available over the Internet. The user sees a folder or an application, while
+the provider manages the underlying hardware. Even though the storage feels
+abstract, it ultimately rests on physical secondary storage --- arrays of
+disks and solid-state drives --- on the provider's machines.
+
+\begin{definitionbox}{Cloud storage}
+Storage in which data is held on remote servers and accessed over the
+Internet rather than on a locally attached device.
+\end{definitionbox}
+
+Cloud storage is not main memory and it is not the same as primary storage.
+It is remote secondary storage reached through a network connection, useful
+for backup, sharing, and access from several devices.
+
+\section{Hard disk versus solid-state drive}
+The comparison below is the most frequently tested near-neighbour pair in this
+topic. The hard disk is magnetic and mechanical; the SSD is flash and
+solid-state. Keep the technology and the consequences together.
+
+\begin{center}
+\begin{tabular}{p{0.2\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+\toprule
+\textbf{Aspect} & \textbf{Hard disk drive (HDD)} & \textbf{Solid-state drive (SSD)}\\
+\midrule
+Technology & Magnetic & Flash memory\\
+Moving parts & Yes --- spinning platters, moving head & None\\
+Speed & Usually slower transfer rate & Higher transfer rate (fastest here)\\
+Shock resistance & More vulnerable to shock & More shock-resistant\\
+Typical use & Bulk data at low cost per GB & Fast system and boot drive\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+A candidate reads ``the fastest storage device is the hard disk.'' That is
+incorrect. The hard disk is magnetic and mechanical, with a spinning platter
+and a moving head. The SSD is flash-based with no moving parts and has the
+higher transfer rate. The correct choice is the SSD (KB PYQ-27).
+\end{example}
+
+\section{Access methods: random and sequential}
+An access method describes how quickly a device can reach a stored location.
+
+\begin{definitionbox}{Random (direct) access}
+An access method in which any location can be reached in approximately equal
+time; RAM and hard disks behave this way.
+\end{definitionbox}
+
+\begin{definitionbox}{Sequential access}
+An access method in which locations are reached in order, so the time depends
+on how far the target is from the current position; magnetic tape works this
+way.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.3\textwidth}p{0.38\textwidth}}
+\toprule
+\textbf{Access method} & \textbf{Behavior} & \textbf{Examples}\\
+\midrule
+Random (direct) & Any location in about equal time & RAM, hard disk\\
+Sequential & Reached in order & Magnetic tape\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Memory and disks are approximately random access because the electronics or
+the head can be directed to a location without stepping through everything
+before it. Tape is sequential because the ribbon must physically pass over the
+read head in order.
+
+\section{Non-volatility of storage}
+Non-volatility is the property that stored contents survive when the power is
+switched off. Storage devices are designed to be non-volatile so that files
+remain available after shutdown. Primary storage such as RAM is
+\emph{volatile}: its contents disappear when power is removed.
+
+\begin{definitionbox}{Non-volatile storage}
+Storage that retains its contents without power; hard disks, SSDs, optical
+discs, and USB drives are non-volatile.
+\end{definitionbox}
+
+The one-line rule to carry into the exam is: RAM is volatile; storage is
+non-volatile. This is exactly why unsaved work in RAM can be lost in a power
+failure while a file already saved to disk remains.
+
+\section{Exam retrieval and common confusions}
+Use a two-direction recall drill. Given a device, state its technology and its
+access method; given a technology or capacity, state the matching device.
+\begin{itemize}
+  \item HDD $\leftrightarrow$ magnetic, mechanical, random access.
+  \item Magnetic tape $\leftrightarrow$ magnetic, sequential access, backup.
+  \item CD / DVD / Blu-ray $\leftrightarrow$ optical, capacities 700 MB /
+    4.7 GB / 25 GB (single layer).
+  \item SSD / USB drive / memory card $\leftrightarrow$ flash, no moving
+    parts; the SSD has the highest transfer rate.
+  \item Cloud storage $\leftrightarrow$ remote servers over the Internet.
+  \item RAM volatile versus storage non-volatile.
+\end{itemize}
+
+Three distinctions prevent most errors in this topic:
+\begin{enumerate}
+  \item Do not call the SSD magnetic or mechanical. The magnetic and
+    mechanical device is the hard disk; the SSD is flash with no moving parts.
+  \item Do not claim that the hard disk has the highest transfer rate; the
+    SSD does (KB PYQ-27).
+  \item Do not reverse the optical ordering. It is CD $<$ DVD $<$ Blu-ray
+    for standard single-layer capacities, and do not confuse volatile RAM
+    with non-volatile storage.
+\end{enumerate}
+
+\begin{example}
+An item asks which device stores data without any moving parts. Eliminate the
+hard disk (spinning platters and a moving head) and magnetic tape (a moving
+ribbon). An optical drive also spins its disc. The flash-based SSD stores data
+in semiconductor cells with no moving parts, so it is the answer.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish primary, secondary, and tertiary storage and give one
+    example of each.
+  \item Explain why an SSD is described as having no moving parts, and why it
+    is more shock-resistant than a hard disk.
+  \item Order CD, DVD, and Blu-ray by single-layer capacity from smallest to
+    largest, with the approximate figures.
+  \item Classify RAM, a hard disk, and magnetic tape as random access or
+    sequential access.
+  \item A student writes: ``RAM is non-volatile, and the hard disk is the
+    fastest storage device.'' Correct both errors.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Primary storage is directly accessible by the CPU (for example RAM).
+    Secondary storage is non-volatile and holds data when power is off (for
+    example a hard disk). Tertiary storage is archival storage loaded on
+    demand (for example a robotic tape library).
+  \item An SSD stores data in flash semiconductor cells, with no spinning
+    platter and no moving read/write head. With no moving parts to be
+    disturbed, it tolerates shock better than a hard disk and transfers data
+    faster.
+  \item CD $\approx$ 700 MB, then DVD $\approx$ 4.7 GB, then Blu-ray
+    $\approx$ 25 GB, for single-layer media.
+  \item RAM is random access; a hard disk is approximately random access;
+    magnetic tape is sequential access.
+  \item RAM is \emph{volatile}, not non-volatile: its contents are lost
+    without power. The device with the highest transfer rate is the
+    \emph{SSD}, not the hard disk; the hard disk is magnetic and mechanical
+    with moving parts.
+\end{enumerate}
+\endgroup
+\end{document}

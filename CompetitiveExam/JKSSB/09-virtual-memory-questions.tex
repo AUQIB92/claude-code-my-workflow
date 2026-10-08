@@ -1,0 +1,179 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 09 Practice: Virtual Memory}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions written for this lesson. None is a real PYQ; each is labelled
+\textit{[Original]}.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Virtual memory is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item extra physical RAM added to the computer
+    \item a technique that uses secondary storage to extend the addressable
+      memory beyond physical RAM
+    \item a type of cache built into the CPU
+    \item a read-only memory used to store the BIOS
+  \end{enumerate}
+\item \textit{[Original]} Compared with RAM, virtual memory is:
+  \begin{enumerate}[label=\Alph*.]
+    \item faster
+    \item exactly the same speed
+    \item slower
+    \item always disabled
+  \end{enumerate}
+\item \textit{[Original]} Which statement about virtual memory is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item It is additional physical RAM.
+    \item It is disk-backed and slower than RAM.
+    \item It is faster than cache.
+    \item It removes the need for RAM.
+  \end{enumerate}
+\item \textit{[Original]} The main reason virtual memory exists is to:
+  \begin{enumerate}[label=\Alph*.]
+    \item increase the clock speed of the processor
+    \item allow programs and data larger than physical RAM to run, while
+      giving each process a large contiguous view of memory
+    \item replace the CPU with a faster unit
+    \item store the firmware permanently
+  \end{enumerate}
+\item \textit{[Original]} Expand MMU.
+  \begin{enumerate}[label=\Alph*.]
+    \item Memory Management Unit
+    \item Main Memory Utility
+    \item Multiprocessor Memory Unit
+    \item Machine Mapping Unit
+  \end{enumerate}
+\item \textit{[Original]} The MMU is responsible for:
+  \begin{enumerate}[label=\Alph*.]
+    \item translating virtual addresses into physical addresses
+    \item storing files permanently on disk
+    \item cooling the processor
+    \item displaying output on the monitor
+  \end{enumerate}
+\item \textit{[Original]} In paging, the fixed-size blocks into which a
+  program's virtual address space is divided are called:
+  \begin{enumerate}[label=\Alph*.]
+    \item segments
+    \item pages
+    \item frames
+    \item sectors
+  \end{enumerate}
+\item \textit{[Original]} In paging, the fixed-size blocks of physical memory
+  into which pages are loaded are called:
+  \begin{enumerate}[label=\Alph*.]
+    \item pages
+    \item frames
+    \item segments
+    \item registers
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes paging from
+  segmentation?
+  \begin{enumerate}[label=\Alph*.]
+    \item Paging uses variable-size segments; segmentation uses fixed-size
+      pages.
+    \item Paging divides memory into fixed-size pages and frames; segmentation
+      divides a program into variable-size logical segments.
+    \item Both paging and segmentation divide memory into equal fixed-size
+      blocks.
+    \item Segmentation divides memory into equal frames; paging uses
+      variable-size logical units.
+  \end{enumerate}
+\item \textit{[Original]} Segmentation divides a program into:
+  \begin{enumerate}[label=\Alph*.]
+    \item equal fixed-size pages
+    \item variable-size logical segments
+    \item physical frames of equal size
+    \item cache lines
+  \end{enumerate}
+\item \textit{[Original]} A page fault occurs when:
+  \begin{enumerate}[label=\Alph*.]
+    \item a hardware component develops a physical fault
+    \item the referenced page is not currently in RAM and must be loaded from
+      disk
+    \item the contents of RAM become corrupted
+    \item the processor overheats
+  \end{enumerate}
+\item \textit{[Original]} Demand paging loads a page into memory:
+  \begin{enumerate}[label=\Alph*.]
+    \item only when it is referenced and not already present
+    \item only if the whole program is loaded at startup
+    \item never, because pages stay on disk
+    \item only during the boot process
+  \end{enumerate}
+\item \textit{[Original]} Which statement about virtual memory is \textbf{NOT}
+  correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item Virtual memory uses secondary storage.
+    \item Virtual memory is slower than RAM.
+    \item Virtual memory is additional physical RAM.
+    \item Virtual memory lets a process use a large contiguous address space.
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item Virtual memory uses secondary storage to extend memory.
+    \item Virtual memory is slower than RAM.
+    \item Virtual memory is extra physical RAM.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and II only
+    \item I only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} Swapping refers to:
+  \begin{enumerate}[label=\Alph*.]
+    \item moving data or pages between RAM and disk (secondary storage)
+    \item exchanging the CPU for a GPU
+    \item changing the monitor resolution
+    \item moving data from cache to a CPU register
+  \end{enumerate}
+\item \textit{[Original]} Thrashing is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item excessive paging that leaves little time for useful work
+    \item a fast cache hit
+    \item a type of segmentation
+    \item the automatic addition of extra RAM
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes cache from
+  virtual memory?
+  \begin{enumerate}[label=\Alph*.]
+    \item Cache is disk-backed; virtual memory sits on the CPU chip.
+    \item Cache is small, fast memory close to the CPU; virtual memory uses
+      slower, disk-backed storage.
+    \item Both cache and virtual memory are forms of secondary storage.
+    \item Cache extends RAM using disk; virtual memory speeds up the CPU.
+  \end{enumerate}
+\item \textit{[Original]} The office desktop (EX-01) has 16\,GB of RAM and
+  runs an application whose working set is larger than RAM. What does the
+  operating system do?
+  \begin{enumerate}[label=\Alph*.]
+    \item It refuses to run the application.
+    \item It uses virtual memory, keeping some pages on disk and loading them
+      on demand.
+    \item It converts part of the disk into extra RAM chips.
+    \item It raises the clock speed to compensate.
+  \end{enumerate}
+\item \textit{[Original]} From the perspective of the CPU, which of these is
+  the slowest to access?
+  \begin{enumerate}[label=\Alph*.]
+    \item L1 cache
+    \item RAM
+    \item disk-backed virtual memory
+    \item a CPU register
+  \end{enumerate}
+\item \textit{[Original]} Which pair is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item Paging --- fixed-size pages and frames
+    \item Segmentation --- fixed-size pages and frames
+    \item Paging --- variable-size logical segments
+    \item MMU --- permanent file storage on disk
+  \end{enumerate}
+\end{enumerate}
+\end{document}

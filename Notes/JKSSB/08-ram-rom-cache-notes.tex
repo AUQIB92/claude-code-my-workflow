@@ -1,0 +1,225 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{08.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{RAM, ROM \& Cache --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Memory, volatility, and why the distinction matters}
+\textbf{Main memory} (also called primary memory) holds the data and
+instructions that the CPU uses directly. Secondary storage such as a hard
+disk or an SSD is not accessed by the CPU directly; its contents are brought
+into main memory first. This lesson concentrates on the primary-memory
+components a computer-awareness paper actually asks about: RAM, ROM, and
+cache.
+
+The single most tested distinction in this lesson is \textbf{volatility}.
+
+\begin{definitionbox}{Volatile memory}
+Memory whose stored contents are lost when the power supply is removed.
+\end{definitionbox}
+
+\begin{definitionbox}{Non-volatile memory}
+Memory whose stored contents remain available after the power supply is
+removed.
+\end{definitionbox}
+
+RAM is volatile; ROM is non-volatile. A practice item may phrase this as a
+NOT/incorrect-statement question, so learn both directions: ``RAM loses its
+contents on power-off,'' and ``ROM retains its contents without power.''
+
+\section{RAM: volatile main memory}
+\textbf{RAM} stands for \textbf{Random Access Memory}. It is the main memory
+in which running programs and their active data are held. The term ``random
+access'' means that any storage location can be reached in roughly the same
+amount of time; it is not a statement about volatility. RAM is
+\textbf{volatile}: when the office desktop (EX-01) is switched off, whatever
+was in RAM is lost unless it was saved to secondary storage.
+
+\begin{example}
+A stem states that RAM keeps its data intact after the computer is switched
+off. This is false. RAM is volatile, so its contents are lost on power-off;
+it is ROM (and flash) that retains data without power. If the stem instead
+asks which memory holds the running programs, select RAM.
+\end{example}
+
+\section{DRAM versus SRAM}
+RAM comes in two main types, and the exam routinely contrasts them. Both are
+RAM and both are volatile; the difference lies in speed, refresh, cost, and
+use.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.33\textwidth}p{0.33\textwidth}}
+\toprule
+\textbf{Feature} & \textbf{DRAM} & \textbf{SRAM}\\
+\midrule
+Full form & Dynamic Random Access Memory & Static Random Access Memory\\
+Refresh & Needs periodic refresh & No refresh needed\\
+Speed & Slower & Faster\\
+Density and cost & Denser and cheaper per bit & Less dense and costlier\\
+Typical use & Main memory (the computer's RAM) & Cache memory\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{DRAM} stores each bit in a tiny capacitor that leaks charge, so it
+must be \textbf{refreshed} periodically. That refresh overhead is the price
+of its high density and low cost, which is why DRAM is the natural choice
+for large main memory. \textbf{SRAM} uses a different cell design that holds
+its state without refresh, making it faster but more expensive and less
+dense; it is therefore used for the small, fast \textbf{cache}.
+
+\begin{example}
+An item asks which RAM type is used to build cache memory. SRAM is faster
+and needs no refresh, so it is used for cache; DRAM is denser and cheaper
+and serves as main memory. If the stem asks which type needs periodic
+refreshing, the answer is DRAM.
+\end{example}
+
+\section{ROM and the ROM family}
+\textbf{ROM} stands for \textbf{Read-Only Memory}. It is \textbf{non-volatile}
+and is \textbf{read-only in normal operation}: the processor reads its
+contents, and changing them requires a special programming process rather
+than ordinary memory writes. ROM commonly stores \textbf{firmware}, such as
+the start-up instructions a computer runs before an operating system loads.
+
+\begin{definitionbox}{ROM}
+Read-Only Memory: non-volatile primary memory that is normally read but not
+written during ordinary operation.
+\end{definitionbox}
+
+Several ROM variants appear in exams. They differ mainly in \emph{when} they
+are programmed and \emph{how} they are erased.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.74\textwidth}}
+\toprule
+\textbf{Type} & \textbf{Key property}\\
+\midrule
+PROM & Programmable Read-Only Memory: can be programmed \textbf{once} by the user; it cannot be erased and reprogrammed.\\
+EPROM & Erasable Programmable Read-Only Memory: erased by exposing the chip to \textbf{ultraviolet (UV)} light.\\
+EEPROM & Electrically Erasable Programmable Read-Only Memory: erased and rewritten \textbf{electrically}, without removing the chip.\\
+Flash & An \textbf{EEPROM-derived} non-volatile memory erased in \textbf{blocks}; widely used in USB drives and SSDs.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+An item asks which memory can be erased by ultraviolet light. PROM is
+one-time programmable and cannot be erased; EEPROM is erased electrically;
+flash is erased in blocks. The UV-erasable type is EPROM. If the stem
+instead asks which type is programmable only once, select PROM.
+\end{example}
+
+\section{Cache memory and its levels}
+\textbf{Cache} is a small, very fast memory placed between the CPU and main
+memory. It holds frequently or recently used data and instructions so the
+CPU does not have to wait as often for slower main memory. Cache is
+\textbf{faster than main memory} --- a fact the paper has tested directly
+(PYQ-03). It is temporary working memory, \textbf{not} a backup and not a
+substitute for storage.
+
+Cache is organised in levels.
+
+\begin{definitionbox}{L1 cache}
+The level-1 cache: the smallest, fastest cache, located closest to the CPU
+core.
+\end{definitionbox}
+
+\begin{definitionbox}{L2 cache}
+The level-2 cache: larger and slightly slower than L1.
+\end{definitionbox}
+
+\begin{definitionbox}{L3 cache}
+The level-3 cache: the largest and slowest of the three levels, typically
+shared across the cores of the processor.
+\end{definitionbox}
+
+As the level number rises, size grows and speed falls, and distance from the
+core increases: L1 $<$ L2 $<$ L3 in size, with the speed order reversed.
+Even L3, however, is faster than main memory.
+
+\section{Cache hits, misses, and hit ratio}
+Performance depends on how often the CPU finds what it needs already in the
+cache.
+
+\begin{definitionbox}{Cache hit}
+A memory access in which the required data is found in the cache.
+\end{definitionbox}
+
+\begin{definitionbox}{Cache miss}
+A memory access in which the required data is not found in the cache, so it
+must be fetched from main memory.
+\end{definitionbox}
+
+The \textbf{hit ratio} measures how often accesses succeed in the cache:
+\[
+\text{hit ratio} = \frac{\text{hits}}{\text{total accesses}}.
+\]
+
+\begin{example}
+If the cache receives 100 memory accesses and 90 of them are found in the
+cache, then the hit ratio is $90/100 = 0.90$. The remaining 10 accesses are
+misses and must go to main memory. A higher hit ratio means the CPU waits
+less, so the system performs better.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Use the following distinctions to answer both recall and NOT/incorrect
+items reliably:
+\begin{itemize}
+  \item RAM is \textbf{volatile}; ROM is \textbf{non-volatile} (TRAP-01).
+  \item ROM is \textbf{read-only in normal operation}; writing needs a
+    special process (TRAP-02).
+  \item \textbf{Cache is faster} than main memory, not slower (PYQ-03).
+  \item \textbf{SRAM} is used for cache; \textbf{DRAM} is used for main
+    memory --- and DRAM is the type that needs refresh.
+  \item Cache is \textbf{not} a backup; it is temporary working memory.
+  \item ROM family: PROM (once), EPROM (UV), EEPROM (electrical), flash
+    (block erase).
+  \item Hit ratio $=$ hits $\div$ total accesses.
+\end{itemize}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Explain why RAM is described as volatile and ROM as non-volatile.
+  \item Distinguish DRAM from SRAM in terms of speed, refresh, and typical
+    use.
+  \item Expand PROM, EPROM, EEPROM, and flash, and state how each is erased
+    (or whether it can be).
+  \item Order L1, L2, and L3 cache by size and by speed, and state which
+    level is typically shared across cores.
+  \item A cache handles 200 memory accesses and 150 are hits. Compute the
+    hit ratio.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item RAM is volatile because it loses its contents when power is
+    removed; ROM is non-volatile because it retains its contents without
+    power.
+  \item DRAM needs periodic refresh, is slower but denser and cheaper, and
+    is used for main memory. SRAM needs no refresh, is faster but costlier
+    and less dense, and is used for cache.
+  \item PROM: Programmable Read-Only Memory, programmable once and not
+    erasable. EPROM: Erasable Programmable Read-Only Memory, erased by
+    ultraviolet light. EEPROM: Electrically Erasable Programmable Read-Only
+    Memory, erased electrically. Flash: EEPROM-derived, erased in blocks.
+  \item By size: L1 $<$ L2 $<$ L3, so L3 is the largest. By speed: L1 is
+    fastest and L3 the slowest of the three. L3 is typically shared across
+    cores.
+  \item Hit ratio $= 150/200 = 0.75$.
+\end{enumerate}
+\endgroup
+\end{document}

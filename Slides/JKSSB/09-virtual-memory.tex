@@ -1,0 +1,187 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Virtual Memory}
+\subtitle{Lesson 09 --- Paging, Segmentation and Swapping}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Virtual Memory Exists}
+  \begin{itemize}
+    \item A program or its data can be \key{larger than physical RAM}.
+    \item Virtual memory lets the system run such programs anyway, using
+      secondary storage (disk) as an extension.
+    \item It gives each process a \key{large, contiguous view} of memory,
+      even though the real RAM is smaller and shared.
+    \item The office desktop (EX-01) runs MS Word, a spreadsheet, and the
+      browser together; virtual memory keeps them all addressable.
+  \end{itemize}
+  \begin{block}{High-yield point}
+    Virtual memory \key{extends} addressable memory using disk; it is
+    \bad{not} extra physical RAM.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Virtual vs Physical Addresses}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Virtual address}
+      \begin{itemize}
+        \item The address a program generates.
+        \item Large, uniform space per process.
+        \item Not the real RAM location.
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Physical address}
+      \begin{itemize}
+        \item The actual location in RAM.
+        \item Managed by the OS.
+        \item Where the data really sits.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{block}{Exam cue}
+    The program always sees \key{virtual} addresses; the hardware converts
+    them to \key{physical} addresses.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The MMU: The Translator}
+  \begin{itemize}
+    \item \key{MMU} = \key{Memory Management Unit}.
+    \item It is the hardware that \key{translates virtual addresses into
+      physical addresses} at run time.
+    \item It works with the page table the operating system maintains.
+    \item Every memory access passes through this translation.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    Translation is the MMU's job; \bad{storing files is not}. Virtual memory
+    uses the disk, but the MMU only maps addresses.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Paging: Fixed-Size Blocks}
+  \begin{itemize}
+    \item Paging divides the \key{virtual address space into fixed-size
+      pages}.
+    \item Physical memory is divided into equal \key{frames} of the same size.
+    \item Any page can be loaded into any free frame.
+    \item Because all blocks are equal, allocation is simple and fast.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    \key{Pages} are the virtual blocks; \key{frames} are the physical blocks.
+    Both are fixed-size and equal.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Segmentation: Variable-Size Segments}
+  \begin{itemize}
+    \item Segmentation divides a program into \key{variable-size logical
+      segments}.
+    \item A segment matches a program unit: code, data, stack, a procedure,
+      or a module.
+    \item Segment sizes differ, because logical units differ.
+    \item It reflects the \key{programmer's logical view}, not a fixed grid.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    \bad{Segmentation is not paging.} Paging uses equal fixed-size pages and
+    frames; segmentation uses unequal logical segments.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Paging vs Segmentation}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Paging} & \textbf{Segmentation} \\
+      \midrule
+      Fixed-size blocks & Variable-size blocks \\
+      Blocks: pages / frames & Blocks: logical segments \\
+      Equal size & Unequal size \\
+      Invisible to programmer & Matches program structure \\
+      Simple allocation & Matches logical units \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \muted{Remember: \textit{pages are fixed}; \textit{segments are logical and
+  vary in size}.}
+\end{frame}
+
+\begin{frame}{Page Fault and Demand Paging}
+  \begin{itemize}
+    \item A \key{page fault} occurs when the referenced page is
+      \key{not currently in RAM}.
+    \item The page must then be \key{loaded from the disk} into a free frame.
+    \item \key{Demand paging} loads a page only when it is actually needed,
+      not all at once.
+    \item This is why a program can start before all of it is in memory.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    A page fault is \bad{not a hardware fault}. It is a normal signal that
+    the needed page is currently on disk.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Swapping and the Disk-Backed Hierarchy}
+  \begin{itemize}
+    \item \key{Swapping} moves pages or whole processes between \key{RAM and
+      secondary storage (disk)}.
+    \item Virtual memory is therefore \key{disk-backed}.
+    \item The hierarchy from the CPU outwards: registers, cache, RAM, then
+      disk-backed virtual memory.
+    \item EX-01: with 16\,GB RAM, a working set that exceeds RAM spills to
+      disk and is loaded back on demand.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    Disk-backed virtual memory is \key{much slower} than RAM. It adds
+    \key{capacity}, not speed.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Not Extra RAM --- and Not Cache}
+  \begin{itemize}
+    \item Virtual memory is \bad{not additional physical RAM}; it borrows
+      space on the disk.
+    \item It is \bad{not extra speed}: reading from disk is far slower than
+      reading from RAM.
+    \item Do not confuse it with \key{cache}: cache is small, fast memory
+      \key{close to the CPU}; virtual memory is \key{large and disk-backed}.
+  \end{itemize}
+  \begin{alertblock}{Common confusion}
+    Cache \textit{speeds up} frequently used data; virtual memory
+    \textit{extends capacity} using slower storage.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Thrashing}
+  \begin{itemize}
+    \item \key{Thrashing} is \key{excessive paging}.
+    \item The system spends most of its time moving pages between RAM and
+      disk, leaving little time for useful work.
+    \item It happens when too many processes compete for too little RAM.
+    \item Performance collapses even though the CPU is busy.
+  \end{itemize}
+  \begin{block}{Exam cue}
+    Thrashing = \key{too much paging}, not a hardware failure. Adding RAM
+    usually relieves it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lesson 09: Recall}
+  \begin{itemize}
+    \item Virtual memory \key{extends memory using disk}; it is slower than
+      RAM and is \key{not extra physical RAM}.
+    \item \key{MMU} translates virtual addresses into physical addresses.
+    \item \key{Paging} = fixed-size pages and frames; \key{segmentation} =
+      variable-size logical segments.
+    \item A \key{page fault} means the referenced page is not in RAM and must
+      be loaded from disk; \key{demand paging} loads pages only when needed.
+    \item \key{Thrashing} = excessive paging.
+  \end{itemize}
+\end{frame}
+\end{document}

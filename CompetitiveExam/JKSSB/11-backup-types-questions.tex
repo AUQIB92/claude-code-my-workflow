@@ -1,0 +1,178 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 11 Practice: Backup Types}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 20 original (generated) JKSSB-pattern
+questions, all labelled \textit{[Original]}. None reproduces an official item
+verbatim.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Which backup type copies all selected files and
+  folders every time it runs?
+  \begin{enumerate}[label=\Alph*.]
+    \item Incremental
+    \item Differential
+    \item Full
+    \item Image
+  \end{enumerate}
+\item \textit{[Original]} An incremental backup captures changes since the:
+  \begin{enumerate}[label=\Alph*.]
+    \item last full backup
+    \item last backup of any type
+    \item last deletion only
+    \item start of the operating system
+  \end{enumerate}
+\item \textit{[Original]} A differential backup captures changes since the:
+  \begin{enumerate}[label=\Alph*.]
+    \item last backup of any type
+    \item last hour
+    \item last full backup
+    \item last new file only
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes an
+  incremental backup from a differential backup?
+  \begin{enumerate}[label=\Alph*.]
+    \item Incremental captures changes since the last full backup;
+      differential captures changes since the last backup of any type.
+    \item Incremental captures changes since the last backup of any type;
+      differential captures changes since the last full backup.
+    \item Both capture changes since the last full backup.
+    \item Both capture only the operating system.
+  \end{enumerate}
+\item \textit{[Original]} Restoring from an incremental chain typically
+  requires:
+  \begin{enumerate}[label=\Alph*.]
+    \item the last full backup plus every incremental backup in sequence
+    \item only the most recent incremental backup
+    \item only the most recent differential backup
+    \item the image backup alone
+  \end{enumerate}
+\item \textit{[Original]} Restoring from a differential chain typically
+  requires:
+  \begin{enumerate}[label=\Alph*.]
+    \item the last full backup plus every differential backup
+    \item the last full backup plus the most recent differential backup
+    \item only the most recent differential backup
+    \item only the incremental backups
+  \end{enumerate}
+\item \textit{[Original]} Which backup type usually takes the most time and
+  storage on each run?
+  \begin{enumerate}[label=\Alph*.]
+    \item Incremental
+    \item Differential
+    \item Full
+    \item None of these
+  \end{enumerate}
+\item \textit{[Original]} Which backup type is heaviest to create but
+  fastest to restore because only one complete set is needed?
+  \begin{enumerate}[label=\Alph*.]
+    \item Incremental
+    \item Differential
+    \item Full
+    \item File-level
+  \end{enumerate}
+\item \textit{[Original]} An image (system image) backup is best described
+  as:
+  \begin{enumerate}[label=\Alph*.]
+    \item a copy of only the documents folder
+    \item a complete clone of a system, including the OS, settings and data
+    \item a copy of changes since the last full backup
+    \item a copy of only the most recently deleted files
+  \end{enumerate}
+\item \textit{[Original]} A file-level backup:
+  \begin{enumerate}[label=\Alph*.]
+    \item clones the entire disk including the boot sector
+    \item backs up selected files and folders rather than the whole system
+    \item backs up only the operating system
+    \item is another name for RAID
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} a backup
+  type discussed in this lesson?
+  \begin{enumerate}[label=\Alph*.]
+    \item Full
+    \item Incremental
+    \item Differential
+    \item Defragmentation
+  \end{enumerate}
+\item \textit{[Original]} The 3-2-1 backup rule means:
+  \begin{enumerate}[label=\Alph*.]
+    \item 3 copies, 2 different media, 1 copy off-site
+    \item 3 media, 2 off-site copies, 1 cloud account
+    \item 3 backups per week, 2 per month, 1 per year
+    \item 3 full backups, 2 differential, 1 incremental
+  \end{enumerate}
+\item \textit{[Original]} In the 3-2-1 rule, the number 2 refers to:
+  \begin{enumerate}[label=\Alph*.]
+    \item two off-site copies
+    \item two different types of storage media
+    \item two backups per day
+    \item two encryption keys
+  \end{enumerate}
+\item \textit{[Original]} Expand RAID and state its correct relation to
+  backup.
+  \begin{enumerate}[label=\Alph*.]
+    \item Redundant Array of Independent Disks; it provides redundancy but is
+      not a backup.
+    \item Random Access Internal Disk; it is a backup type.
+    \item Redundant Archive of Integrated Disks; it encrypts backups.
+    \item Read-Ahead Interface Device; it schedules backups.
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item A full backup copies everything selected each time it runs.
+    \item A differential backup copies changes since the last full backup.
+    \item An incremental backup copies changes since the last full backup.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and II only
+    \item I and III only
+    \item II and III only
+    \item I, II and III
+  \end{enumerate}
+\item \textit{[Original]} Which statement best distinguishes a backup from
+  ordinary storage and an archive?
+  \begin{enumerate}[label=\Alph*.]
+    \item A backup is a recoverable copy; storage is the working copy; an
+      archive is old data kept for long-term retention.
+    \item Backup, storage and archive are three names for the same thing.
+    \item A backup is the file currently being edited.
+    \item An archive is a second disk used only for RAID.
+  \end{enumerate}
+\item \textit{[Original]} Cloud backup is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item storing backup copies on remote servers, giving an off-site copy
+    \item the same as RAID 1
+    \item storing the backup only on the same local disk
+    \item a synonym for an incremental backup
+  \end{enumerate}
+\item \textit{[Original]} An offline backup is one that is:
+  \begin{enumerate}[label=\Alph*.]
+    \item disconnected from the network, which helps against ransomware
+    \item always connected and updated instantly
+    \item not created at all
+    \item stored only in main memory
+  \end{enumerate}
+\item \textit{[Original]} Backup rotation (for example, the
+  grandfather--father--son scheme) is used mainly to:
+  \begin{enumerate}[label=\Alph*.]
+    \item rotate the CPU clock speed
+    \item maintain several dated versions so an older clean copy remains
+      available
+    \item encrypt files automatically
+    \item replace full backups with RAID
+  \end{enumerate}
+\item \textit{[Original]} Which pairing is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item Differential --- changes since the last backup of any type
+    \item Incremental --- changes since the last full backup
+    \item Incremental --- changes since the last backup of any type
+    \item Image --- only selected files and folders
+  \end{enumerate}
+\end{enumerate}
+\end{document}
