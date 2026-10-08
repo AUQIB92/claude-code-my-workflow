@@ -1,0 +1,289 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{38.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{SMTP, POP and IMAP --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why email needs protocols}
+Sending and reading mail involve different programs and different servers.
+The sender writes a message in a mail program, that program hands it to a
+mail server, the message travels between servers, waits in the recipient's
+mailbox, and is finally collected by the recipient's program. For all these
+independent programs to work together, they follow fixed rules called
+\textbf{protocols}. One protocol sends mail out, and two other protocols
+bring it in, each in its own way. Secure transmission and protection against
+mail threats sit on top of these three protocols.
+
+\begin{definitionbox}{Email protocol}
+A fixed set of rules that a mail program and a mail server follow when
+sending, forwarding, or collecting mail, so any standard program can work
+with any standard server.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+SMTP & Simple Mail Transfer Protocol; the sending protocol. \\
+POP3 & Post Office Protocol version 3; a receiving protocol that downloads mail to one machine. \\
+IMAP & Internet Message Access Protocol; a receiving protocol that syncs mail across devices. \\
+SSL/TLS & Secure Sockets Layer / Transport Layer Security; the secure channel for mail transmission. \\
+Spam & Bulk unwanted mail, usually junk or advertising. \\
+Phishing & A fake message impersonating a trusted sender to steal secrets. \\
+Spoofing & Forging the sender address so mail looks as if it came from someone trusted. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense.
+\textbf{SMTP} always means the sending step. \textbf{POP3} always means
+downloading to one local machine. \textbf{IMAP} always means keeping every
+device in step with the server copy. \textbf{SSL/TLS} always means the
+secure transmission channel. \textbf{Spam}, \textbf{phishing}, and
+\textbf{spoofing} are three distinct threats defined above.
+
+\section{SMTP: the sending protocol}
+\textbf{SMTP} (Simple Mail Transfer Protocol) is the protocol used to send
+mail. When the sender presses send, the mail program hands the message to
+the sender's mail server using SMTP, and the servers forward it toward the
+recipient's mail server using SMTP. SMTP moves the message out of the
+sender and along the path between servers until it reaches the recipient's
+mailbox.
+
+\begin{definitionbox}{SMTP}
+The protocol that sends mail from the sender's program to the mail server
+and forwards it between mail servers toward the recipient's mailbox.
+\end{definitionbox}
+
+Two limits matter for the exam. First, SMTP only \emph{sends}; it does not
+deliver mail into the recipient's hands for reading. Second, the receiving
+step that follows is the job of POP3 or IMAP, described next. Any option
+that says SMTP downloads mail to the inbox, or that POP3 sends mail,
+reverses the direction and is wrong.
+
+\section{POP3: download to one machine}
+\textbf{POP3} (Post Office Protocol version 3) is a receiving protocol.
+It pulls mail from the mail server down to one local machine. After the
+download, the message is typically removed from the server, so the only
+copy lives on that one computer. Mail downloaded this way can be read
+offline, but a second device will not see the same mailbox, because the
+server copy is gone.
+
+\begin{definitionbox}{POP3}
+A receiving protocol that downloads mail from the server to one local
+machine, usually removing it from the server.
+\end{definitionbox}
+
+POP3 suits a single computer where mail is collected and read in one place.
+Its weakness is exactly its method: because the mail leaves the server,
+bookmarks such as read marks, folders, and deletions do not travel to other
+devices.
+
+\begin{example}
+A clerk collects office mail only on the office desktop. With POP3, each
+morning's mail downloads to that desktop and is removed from the server.
+The clerk can read it offline at the desk, but the same messages do not
+appear on the clerk's phone, because the server copy is gone.
+\end{example}
+
+\section{IMAP: sync across devices}
+\textbf{IMAP} (Internet Message Access Protocol) is also a receiving
+protocol, but it works differently from POP3. The mail stays on the
+server, and the mail program shows a synced view of it: folders, read and
+unread marks, deletions, and moves are all mirrored between the device and
+the server. When the reader acts on one device, every other device shows
+the same change, because each of them reflects the same server copy.
+
+\begin{definitionbox}{IMAP}
+A receiving protocol that keeps mail on the server and syncs each device's
+view --- folders, read marks, deletions --- with that server copy.
+\end{definitionbox}
+
+IMAP suits a reader with several devices, such as a phone and a desktop,
+who must see the same inbox everywhere. Its cost is that the mailbox lives
+on the server, so reading new mail needs a connection, and the server
+mailbox must have room.
+
+\section{POP3 vs IMAP and the full mail flow}
+Both POP3 and IMAP receive mail; neither sends it. The difference is the
+method. POP3 downloads to one machine and usually clears the server; IMAP
+keeps the server copy and syncs every device with it.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Point} & \textbf{POP3} & \textbf{IMAP} \\
+\midrule
+Job & Receives mail & Receives mail \\
+Method & Downloads to one machine & Syncs a view of the server copy \\
+Server copy & Usually removed & Kept on the server \\
+Many devices & Poor fit & Designed for it \\
+Offline reading & Natural (copy is local) & Needs a connection for new mail \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The full journey of one message combines the sending protocol with one of
+the receiving protocols. The sender's program sends the message by SMTP to
+the sender's mail server; that server forwards it by SMTP to the
+recipient's mail server, where it waits in the mailbox; the recipient's
+program then collects it with POP3 (download) or IMAP (sync). In one line:
+sender, then SMTP, then the recipient server, then POP3 or IMAP, then the
+reader. Sending is always SMTP; the receiving side is POP3 or IMAP.
+
+\section{To, Cc, BCC, filters, and signatures}
+The \textbf{To} field names the main recipients of a message, and
+\textbf{Cc} (carbon copy) names others kept in the loop. Everyone who
+receives the message can see both lists. \textbf{BCC} (blind carbon copy)
+names recipients who are hidden from each other: nobody on the To or Cc
+list sees who is on BCC, and BCC recipients do not see each other. The
+sender always knows the full list; BCC hides recipients from each other,
+not from the sender.
+
+\textbf{Filters}, also called \textbf{rules}, sort incoming mail
+automatically. A filter examines the headers and content of each message,
+such as the sender, the subject, or words in the body, and then files,
+flags, or deletes matching mail --- for example, moving all newsletters to
+one folder. A mail \textbf{signature} is different: it is a fixed block of
+sender details, such as name, post, and phone number, added at the end of
+outgoing messages. It identifies the sender but does not encrypt or
+otherwise protect the message.
+
+\section{Digital signature vs encryption, and secure transmission}
+A \textbf{digital signature} proves who sent a message and that it was not
+changed on the way: it gives authenticity and integrity. \textbf{Encryption}
+does something different: it scrambles the message so that only the
+intended recipient can read it, giving confidentiality. A signed message
+can still be read by anyone --- a signature is not secrecy. An encrypted
+message can still be forwarded --- encryption hides the content but does
+not by itself prove who sent it. Confusing the two is a tested trap
+(TRAP-15): a signature never encrypts the body.
+
+\begin{definitionbox}{Digital signature vs encryption}
+A digital signature provides authenticity (who sent it) and integrity (it
+was not altered); encryption provides confidentiality (only the intended
+recipient can read it).
+\end{definitionbox}
+
+When mail travels between programs and servers, the channel itself can be
+protected by \textbf{SSL} (Secure Sockets Layer) and its successor
+\textbf{TLS} (Transport Layer Security). Together \textbf{SSL/TLS} provide
+the secure channel over which mail is transmitted, so that others on the
+path cannot read it. For the exam, the answer is direct: the secure email
+transmission protocol is SSL/TLS (PYQ-36). The official Junior Assistant
+item behind PYQ-16 separately confirms the POP3, BCC, filter, and
+signature-versus-encryption facts used in this lesson.
+
+\begin{example}
+An item states, ``A digitally signed email can be read only by its
+recipient.'' This is wrong. The signature proves the sender and detects
+tampering, but anyone can still read the body. Only encryption makes the
+body readable solely by the intended recipient. The wrong option has
+assigned encryption's job to the signature.
+\end{example}
+
+\section{Spam, phishing, spoofing, and malicious content}
+\textbf{Spam} is bulk unwanted mail, usually advertising or junk sent to
+many addresses at once. Its defining mark is that it is bulk and unwanted;
+it clutters the inbox and may also carry fraud or malware. Spam filters move
+suspected junk to a separate folder using the sender's reputation and
+content rules.
+
+\textbf{Phishing} is a fake message that pretends to be a trusted sender
+--- a bank, an office, or a colleague --- in order to steal passwords or
+money. It typically creates urgency (``verify now'', ``account blocked'',
+``claim within 24 hours'') and asks the reader to click a link or open an
+attachment and hand over secrets. The defence is to check the real sender
+address and never enter passwords through a link reached from mail.
+
+\textbf{Spoofing} forges the sender address so that a message looks as if
+it came from someone trusted. Phishing messages often use spoofing, but
+the two terms are distinct: phishing is the fraud attempt, and spoofing is
+the forged-sender trick it may use. A \textbf{malicious link} leads to a
+fake login page or a malware download; hovering over it shows an address
+that does not match the claimed sender. A \textbf{malicious attachment}
+carries malware behind an innocent-looking file name. The safe rule is to
+verify an unexpected message through another channel before clicking any
+link or opening any attachment.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item SMTP \textbf{sends}; POP3 and IMAP \textbf{receive}. Reversing the
+    direction is a common wrong answer.
+  \item POP3 \textbf{downloads} mail to one local machine (usually clearing
+    the server); IMAP \textbf{syncs} every device with the server copy.
+    Do not swap them (TRAP-17).
+  \item A digital signature proves the sender and detects tampering; it
+    does \textbf{not} encrypt the body. Encryption alone provides secrecy
+    (TRAP-15).
+  \item BCC hides recipients \textbf{from each other}; the sender always
+    knows the full list, and To/Cc are visible to all (PYQ-16).
+  \item Secure transmission of email is \textbf{SSL/TLS} (PYQ-36). A
+    signature is not a transmission protocol.
+  \item Spam is \textbf{bulk unwanted} mail; phishing is \textbf{fake
+    trusted mail that steals secrets}; spoofing is the \textbf{forged
+    sender address} either may use.
+\end{enumerate}
+
+\begin{example}
+An item asks which protocol suits reading the same office mailbox from a
+phone and a desktop. Trace the methods: POP3 downloads to one machine and
+clears the server, so the second device misses the mail; IMAP keeps the
+server copy and syncs every device with it. The answer is IMAP. If the stem
+instead asks which protocol sends the message out, the answer is SMTP, and
+if it asks which channel makes transmission secure, the answer is SSL/TLS.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the full form of SMTP, POP3, IMAP, SSL, and TLS, and give the
+    job of each of the first three.
+  \item Explain the difference between POP3 and IMAP when the same mailbox
+    is read from two devices.
+  \item Trace one message from the sender to the reader, naming the
+    protocol used at each step.
+  \item Distinguish a digital signature from encryption, and state which
+    protocol secures email transmission.
+  \item Define spam, phishing, and spoofing, and state the safe rule for
+    unexpected links and attachments.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item SMTP is Simple Mail Transfer Protocol and sends mail; POP3 is Post
+    Office Protocol version 3 and downloads received mail to one machine;
+    IMAP is Internet Message Access Protocol and syncs received mail across
+    devices; SSL is Secure Sockets Layer and TLS is Transport Layer
+    Security, together the secure transmission channel.
+  \item With POP3 the mail downloads to the first machine and usually
+    leaves the server, so the second device does not see it; with IMAP the
+    mail stays on the server and both devices show the same synced view of
+    folders, read marks, and deletions.
+  \item The sender's program sends the message by SMTP to the sender's
+    server; the servers forward it by SMTP to the recipient's server, where
+    it waits; the recipient collects it with POP3 (download) or IMAP
+    (sync).
+  \item A digital signature provides authenticity and integrity (who sent
+    it, unaltered); encryption provides confidentiality (only the recipient
+    can read it). Secure transmission uses SSL/TLS.
+  \item Spam is bulk unwanted mail; phishing is a fake trusted message
+    that steals secrets through urgency plus a link or attachment;
+    spoofing forges the sender address. Verify an unexpected message by
+    another channel before clicking any link or opening any attachment.
+\end{enumerate}
+\endgroup
+\end{document}

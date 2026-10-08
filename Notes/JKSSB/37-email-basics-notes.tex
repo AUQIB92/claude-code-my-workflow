@@ -1,0 +1,251 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{37.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Email Basics --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What email is}
+Electronic mail (email) is a message sent from one electronic mailbox to
+another over a network such as the Internet. Each user owns a mailbox
+identified by a unique email address. The sender composes a message, directs
+it with the recipient fields, and sends it; the message then waits in each
+recipient's mailbox until it is opened. Because delivery does not require both
+parties to be present at the same time, email is called a store-and-forward
+service.
+
+\begin{definitionbox}{Email address}
+A unique identifier of a mailbox, written as a user name, then the @ symbol,
+then the domain name, for example \texttt{assistant@gmail.com}.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+User name & The part of the address left of the @; the mailbox on the server. \\
+Domain name & The part of the address right of the @; the mail server holding the mailbox. \\
+To / Cc / Bcc & Recipient fields: primary recipient, visible copy, hidden copy. \\
+Subject / body & The topic line and the main written content. \\
+Attachment & A file sent along with the message. \\
+Inbox / Sent / Drafts & Folders for received, sent, and unfinished mail. \\
+Spam / Trash & Folders for filtered junk and for deleted messages. \\
+Webmail / email client & Mail used in a browser vs mail used in an installed app. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. The
+\textbf{user name} is whatever stands left of the @ and the \textbf{domain
+name} is whatever stands right of it. \textbf{To} is the main recipient,
+\textbf{Cc} (Carbon Copy) is a visible additional recipient, and \textbf{Bcc}
+(Blind Carbon Copy) is a hidden additional recipient. \textbf{Subject} is the
+topic line, \textbf{body} is the message text, and an \textbf{attachment} is a
+separate file carried with the message.
+
+\section{The email address}
+Every email address contains exactly one @ symbol, read as ``at''. The @
+separates the user name on the left from the domain name on the right. In
+\texttt{assistant@gmail.com}, \texttt{assistant} is the user name and
+\texttt{gmail.com} is the domain name. The domain name identifies which mail
+server holds the mailbox; the user name identifies which mailbox on that
+server. This is the point tested when an item asks what the @ separates: the
+answer is the user name and the domain name (PYQ-35).
+
+\begin{definitionbox}{Domain name}
+The part of an email address right of the @ that identifies the mail server or
+organisation holding the mailbox, such as \texttt{gmail.com}.
+\end{definitionbox}
+
+Addresses are written without spaces, and the @ appears exactly once.
+Anything before it belongs to the user name; anything after it belongs to the
+domain. Options that say the @ separates the domain and the host, or two
+parts of the domain, are therefore wrong.
+
+\section{Recipient fields: To, Cc and Bcc}
+The three recipient fields decide who receives the message and who can see
+whom. \textbf{To} names the primary recipient, the person the message is
+mainly for. \textbf{Cc} (Carbon Copy) names additional recipients who receive
+a visible copy; every recipient can see the To and Cc lists. \textbf{Bcc}
+(Blind Carbon Copy) names additional recipients whose addresses are hidden
+from the other recipients.
+
+\begin{definitionbox}{Bcc}
+A recipient field whose addresses are hidden from the other recipients of the
+same message; each Bcc recipient is concealed from the To, Cc, and fellow Bcc
+recipients.
+\end{definitionbox}
+
+The word ``blind'' refers to this concealment. A Bcc recipient still receives
+the message normally. The other recipients simply cannot see that address.
+The sender, who composed the message, always knows the full list. To and Cc
+addresses, by contrast, are visible to everyone who receives the message.
+This is the distinction behind the common trap: Bcc hides recipients from each
+other, not from the sender, and it does not hide the To or Cc lists from
+anyone (TRAP-16).
+
+\begin{example}
+The officer sends a notice To the assistant and Cc the clerk, with the head
+office on Bcc. The assistant and the clerk see each other's addresses but
+cannot see the head office address. The head office receives the same notice.
+The sender (the officer) knows all three addresses.
+\end{example}
+
+For the examination, read every Bcc option word by word. An option that says
+Bcc hides the sender is wrong; an option that says Bcc hides the To list from
+the recipients is wrong; the correct statement is that Bcc recipients are
+hidden from each other while To and Cc remain visible to all.
+
+\section{Subject, body and attachments}
+A message has two content parts and an optional file part. The
+\textbf{subject} is a single short line stating the topic, such as ``Leave
+application for 12 October''. It is displayed in the message list before the
+message is opened, so a clear subject helps the recipient identify the
+message. The \textbf{body} is the main written content: the greeting, the
+message itself, and the closing.
+
+An \textbf{attachment} is a file sent along with the message, usually shown
+with a paperclip icon. Common attachments are documents, spreadsheets,
+presentations, PDFs, and images. Attaching a file sends a copy to the
+recipient; the sender keeps the original. Two practical points matter for the
+examination. First, mail servers impose a size limit, so a very large file is
+rejected or must be shared as a link instead. Second, an attachment can carry
+a virus, so an unexpected attachment should not be opened blindly.
+
+\section{Folders: Inbox, Sent, Drafts, Spam, Trash}
+Received mail arrives in the \textbf{Inbox}. Every account has exactly one
+Inbox; it is the default view when the mailbox is opened. A copy of every
+message that is sent is kept in the \textbf{Sent} folder (sometimes labelled
+Sent Items or Sent Mail). A message that has been started but not yet sent can
+be saved in \textbf{Drafts}; it waits there until it is completed and sent.
+
+\begin{definitionbox}{Drafts}
+The folder holding composed messages that have been saved but not yet sent.
+\end{definitionbox}
+
+Unwanted or bulk mail is separated into the \textbf{Spam} folder (also called
+Junk). The mail service filters suspected junk out of the Inbox automatically;
+a wanted message found there should be moved back or marked ``not spam''.
+Messages the user deletes go to the \textbf{Trash} folder (also called Deleted
+Items). They remain recoverable until the folder is emptied; emptying Trash
+or Spam permanently removes those messages.
+
+The five folders are most easily confused in pairs. Inbox receives while Sent
+keeps sent copies; Drafts holds work not yet sent while Sent holds work
+already sent; Spam holds filtered junk while Trash holds what the user deleted.
+No other folder does another's job: drafts never send themselves, sent copies
+never return to drafts, and spam is not the delete bin.
+
+\section{Reply, Reply All and Forward}
+Three actions dispose of a received message. \textbf{Reply} composes an answer
+addressed only to the sender. \textbf{Reply All} composes an answer addressed
+to the sender plus all the To and Cc recipients of the original message.
+\textbf{Forward} sends the received message onward to new recipients chosen
+by the forwarder, usually with a short added note on top.
+
+\begin{definitionbox}{Reply All}
+A response addressed to the sender and to every visible (To and Cc)
+recipient of the original message; Bcc recipients of the original are never
+re-added.
+\end{definitionbox}
+
+Two consequences follow. First, Reply All can only reach the addresses visible
+on the original message, so hidden Bcc addresses are never included. Second,
+a forwarded message carries the original content (and often its attachments)
+inside the new message; the forwarder becomes the new sender. For the
+examination, match the verb to the action: ``answers only the sender'' is
+Reply; ``answers everyone visible'' is Reply All; ``sends it onward to new
+recipients'' is Forward.
+
+\section{Webmail versus an email client}
+Email can be used in two ways. \textbf{Webmail} means using mail through a
+web browser, with the mailbox kept on the provider's server; Gmail, Yahoo
+Mail, and Outlook.com are webmail services. An \textbf{email client} is an
+installed application used for mail, such as Microsoft Outlook or Mozilla
+Thunderbird; it can keep or download copies on the local machine.
+
+Closely tied to the client are the incoming-mail protocols. \textbf{POP3}
+(Post Office Protocol version 3) downloads mail to the local machine, usually
+removing it from the server. \textbf{IMAP} (Internet Message Access Protocol)
+keeps mail synced on the server, so a phone, an office computer, and a laptop
+all show the same folders. Outgoing mail in both arrangements is normally
+sent with \textbf{SMTP} (Simple Mail Transfer Protocol). The one-line
+contrast to remember is: POP3 downloads, IMAP syncs, SMTP sends.
+
+\begin{example}
+The assistant reads office mail in two places: through Gmail in the browser
+(webmail) and through the Outlook app on the office computer (email client)
+configured with IMAP, so a message read on one device shows as read on the
+other. Had the client used POP3, the downloaded message would sit on that one
+computer instead of staying synced on the server.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The @ separates the \textbf{user name} (left) from the \textbf{domain
+    name} (right). It does not separate domain and host (PYQ-35, TRAP-28).
+  \item \textbf{Bcc} hides recipients from \textbf{each other}; the sender
+    always knows, and To/Cc stay visible to all (TRAP-16).
+  \item \textbf{Cc} is Carbon Copy (visible); \textbf{Bcc} is Blind Carbon Copy
+    (hidden). Do not swap ``blind'' and ``visible''.
+  \item \textbf{Reply} answers the sender; \textbf{Reply All} answers all
+    visible recipients; \textbf{Forward} sends the message onward.
+  \item \textbf{Drafts} holds unsent work, \textbf{Sent} holds sent copies,
+    \textbf{Inbox} holds received mail, \textbf{Spam} holds filtered junk,
+    and \textbf{Trash} holds deleted mail.
+  \item \textbf{Webmail} runs in a browser; an \textbf{email client} is
+    installed software. \textbf{POP3} downloads mail to the machine while
+    \textbf{IMAP} keeps it synced on the server.
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item In the address \texttt{assistant@gmail.com}, identify the user name
+    and the domain name. What does the @ separate?
+  \item Distinguish To, Cc, and Bcc by stating who can see whom.
+  \item Distinguish the subject, the body, and an attachment.
+  \item State which folder holds each of the following: an unfinished message,
+    a copy of a sent message, a newly arrived message, filtered junk, a
+    deleted message.
+  \item Distinguish Reply, Reply All, and Forward.
+  \item Distinguish webmail from an email client, and POP3 from IMAP.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The user name is \texttt{assistant} and the domain name is
+    \texttt{gmail.com}. The @ separates the user name (left) from the domain
+    name (right).
+  \item To is the primary recipient and Cc is a visible copy; both lists are
+    seen by all recipients. Bcc is a hidden copy: each Bcc address is concealed
+    from the other recipients, while the sender knows the full list.
+  \item The subject is the short topic line shown in the message list; the
+    body is the main written content; an attachment is a separate file carried
+    with the message (shown with a paperclip icon).
+  \item Unfinished: Drafts. Sent copy: Sent. Newly arrived: Inbox. Filtered
+    junk: Spam (junk). Deleted: Trash (deleted items), recoverable until
+    emptied.
+  \item Reply answers only the sender; Reply All answers the sender plus all
+    visible To and Cc recipients (never Bcc); Forward sends the received
+    message onward to new recipients.
+  \item Webmail is mail used through a browser with the mailbox on the
+    server (Gmail, Yahoo Mail, Outlook.com); an email client is installed
+    software (Outlook, Thunderbird). POP3 downloads mail to the local
+    machine, usually removing it from the server; IMAP keeps mail synced on
+    the server so all devices show the same folders.
+\end{enumerate}
+\endgroup
+\end{document}

@@ -1,0 +1,239 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Networking Legacy Services \& Web Standards}
+\subtitle{Lesson 53 --- Classic Services and Standards}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why This Lesson Is a Trap-Drill}
+  \begin{itemize}
+    \item Every item in this lesson tests a \key{near-neighbour} pair: two
+      terms that look alike but do different jobs.
+    \item The exam's favourite weapon is the \key{negative stem}: NOT,
+      EXCEPT, INCORRECT statement.
+    \item Read every option; the wrong answers are built from \key{real
+      traps} in the trap registry, not random words.
+    \item Rule: match the \key{service to its role}, the \key{term to its
+      full form}, and the \key{statement to its defect}.
+  \end{itemize}
+  \begin{alertblock}{How to survive}
+    Slow down on NOT/EXCEPT items. The correct answer is the one that breaks
+    the pattern.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Packet Switching vs Circuit Switching}
+  \begin{itemize}
+    \item \key{Circuit switching} sets up a dedicated path for the whole
+      call before any data moves; the classic example is the old telephone
+      call.
+    \item \key{Packet switching} breaks data into packets; each packet can
+      travel independently and the path is \key{not} reserved in advance.
+    \item The Internet runs on \key{packet switching}, not on a dedicated
+      circuit per session.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Dedicated reserved path = circuit switching; independent packets, no
+    reserved path = packet switching.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Telnet: Remote Login}
+  \begin{itemize}
+    \item \key{Telnet} --- TELecommunication NETwork --- gives remote login
+      to another computer over the network.
+    \item It lets a user run commands on the \key{remote} machine as if
+      sitting at its keyboard.
+    \item Telnet sends data, including passwords, in \key{plain text}; it is
+      \key{not} a file-transfer or mail service.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Telnet = remote login. It is not FTP (file transfer) and not SMTP
+    (mail sending).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{FTP: File Transfer}
+  \begin{itemize}
+    \item \key{FTP} --- File Transfer Protocol --- transfers files between
+      computers on a network.
+    \item It is the service used to \key{upload and download files}, not to
+      log in and run commands, and not to send mail.
+    \item Keep the triple apart: \key{Telnet} logs in remotely, \key{FTP}
+      moves files, \key{SMTP} sends mail.
+  \end{itemize}
+  \begin{block}{Service-role match}
+    Remote login = Telnet; file transfer = FTP; mail sending = SMTP.
+  \end{block}
+\end{frame}
+
+\begin{frame}{SMTP, POP3, IMAP: Who Does What}
+  \begin{itemize}
+    \item \key{SMTP} --- Simple Mail Transfer Protocol --- \key{sends} mail
+      from the sender toward the receiver's mail server.
+    \item \key{POP3} --- Post Office Protocol version 3 --- \key{downloads}
+      mail to the local machine, typically removing it from the server.
+    \item \key{IMAP} --- Internet Message Access Protocol --- keeps mail
+      \key{on the server} and syncs it across devices.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    POP3 downloads to the local machine; it does not keep mail synced on
+    the server. That synced behaviour is IMAP. (TRAP-17)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Mail Traps: Signature, Encryption, BCC}
+  \begin{itemize}
+    \item A \key{digital signature} proves authenticity and integrity; it
+      does \key{not} encrypt the body. Only \key{encryption} gives
+      confidentiality. (TRAP-15)
+    \item \key{BCC} hides recipients from \key{each other}; the sender
+      always knows, and To/Cc names stay visible to all. (TRAP-16)
+    \item In an address, \key{@} separates the \key{user name} from the
+      \key{domain name}. (TRAP-28)
+  \end{itemize}
+  \begin{block}{Three one-line defences}
+    Signature = who sent it unchanged; encryption = only the recipient reads
+    it; BCC = recipients hidden from each other.
+  \end{block}
+\end{frame}
+
+\begin{frame}{W3C: Who Sets Web Standards}
+  \begin{itemize}
+    \item \key{W3C} --- World Wide Web Consortium --- develops the open
+      standards of the World Wide Web such as HTML and CSS.
+    \item It is a \key{standards body}, not a browser, not a search engine,
+      and not an Internet service provider.
+    \item Near-neighbour guard: \key{ISP} --- Internet Service Provider ---
+      gives Internet access; W3C writes the standards.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    W3C = web standards; ISP = Internet access. Do not swap them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{DHTML vs HTML}
+  \begin{itemize}
+    \item \key{HTML} --- HyperText Markup Language --- marks up the static
+      structure of a web page.
+    \item \key{DHTML} --- Dynamic HyperText Markup Language --- is
+      \key{not} a separate language; it is the combination of HTML with
+      styling and scripting that makes pages dynamic.
+    \item Trap: treating DHTML as a brand-new replacement language for HTML
+      is wrong; it \key{builds on} HTML.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    A static notice page uses HTML; the same page with a drop-down menu that
+    reacts to clicks uses DHTML techniques on top of that HTML.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{URL, DNS, IP Address}
+  \begin{itemize}
+    \item A \key{URL} --- Uniform Resource Locator --- is the full address of
+      a resource on the web.
+    \item \key{DNS} --- Domain Name System --- translates human-readable
+      domain names into numeric addresses.
+    \item An \key{IP address} is the numeric address of a device on the
+      network; DNS resolves names \key{to} IP addresses.
+  \end{itemize}
+  \begin{block}{Chain in one line}
+    Type a URL, DNS resolves its domain name, the browser reaches the IP
+    address.
+  \end{block}
+\end{frame}
+
+\begin{frame}{IPv4 vs IPv6}
+  \begin{itemize}
+    \item \key{IPv4} uses \key{32-bit} addresses, written as four decimal
+      groups.
+    \item \key{IPv6} uses \key{128-bit} addresses --- never 256-bit --- with
+      a fixed header of \key{40 bytes}. (TRAP-18)
+    \item IPv6 was introduced because the IPv4 address space is too small;
+      the bit-length jump is 32 to 128.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Any option saying IPv6 is 256-bit is a planted distractor from a real
+    paper (JA 2026 Q78). Reject it on sight.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Seven OSI Layers}
+  \begin{itemize}
+    \item The \key{OSI model} has \key{seven} layers, top to bottom:
+      Application, Presentation, Session, Transport, Network, Data Link,
+      Physical.
+    \item Memory hook: \key{All People Seem To Need Data Processing}.
+    \item Near-neighbour guard: the \key{TCP/IP model} has four layers, not
+      seven --- do not answer ``four'' when the stem says OSI.
+  \end{itemize}
+  \begin{block}{The one number}
+    OSI = seven layers, always. Four layers = TCP/IP model, a different
+    question.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Physical vs Logical Ports}
+  \begin{itemize}
+    \item A \key{physical port} is a hardware socket on the machine where a
+      cable or device plugs in.
+    \item A \key{logical port} is a number that identifies a service or
+      process in networking software.
+    \item Trap: a logical port number is \key{not} a hardware socket, and a
+      physical socket is \key{not} a service number.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Hardware socket = physical port; service number = logical port.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Companion Protocol Traps}
+  \begin{itemize}
+    \item \key{ICMP} is a control and diagnostic protocol; it transfers
+      \key{no} application data and uses no ports. (TRAP-19)
+    \item \key{BGP} routes \key{between} autonomous systems (inter-domain);
+      it does not route inside one local network. (TRAP-20)
+    \item \key{HTTP/3} runs over \key{QUIC over UDP}, not over TCP.
+      (TRAP-21)
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    ``ICMP transfers data'', ``BGP is for one LAN'', ``HTTP/3 uses TCP'' ---
+    all three are planted wrong statements. Reject each.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Patterns to Reject on Sight}
+  \begin{itemize}
+    \item POP3 keeps mail synced on the server --- wrong; that is IMAP.
+      (TRAP-17)
+    \item Digital signature encrypts the body --- wrong; encryption gives
+      confidentiality. (TRAP-15)
+    \item IPv6 is 256-bit --- wrong; it is 128-bit. (TRAP-18)
+    \item Telnet transfers files; FTP sends mail --- wrong; Telnet logs in,
+      FTP moves files, SMTP sends mail.
+    \item OSI has four layers --- wrong for OSI; seven is the OSI number.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 53: Recall}
+  \begin{itemize}
+    \item Circuit switching reserves a dedicated path; packet switching sends
+      independent packets with no reserved path.
+    \item Telnet = remote login; FTP = file transfer; SMTP sends mail, POP3
+      downloads it locally, IMAP syncs it on the server.
+    \item W3C writes web standards; DHTML builds dynamic behaviour on top of
+      HTML; URL names the resource, DNS resolves names, IP addresses the
+      device.
+    \item IPv4 is 32-bit; IPv6 is 128-bit with a 40-byte header.
+    \item OSI has seven layers; physical ports are hardware sockets, logical
+      ports are service numbers.
+    \item ICMP carries no application data; BGP is inter-domain; HTTP/3 uses
+      QUIC over UDP.
+  \end{itemize}
+\end{frame}
+\end{document}

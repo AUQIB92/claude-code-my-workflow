@@ -1,0 +1,242 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{36.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Web Browsing, Search, Upload and Download --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{The browser, tabs, bookmarks, and history}
+A \textbf{web browser} is the software used to open and view web pages on the
+internet. Common examples are Google Chrome, Mozilla Firefox, and Microsoft
+Edge. The browser sends a request for a page and then displays the returned
+text, images, and links. The address typed to reach a page is the \textbf{URL}
+--- Uniform Resource Locator --- and it is typed in the \textbf{address bar}
+at the top of the browser window.
+
+\begin{definitionbox}{Web browser}
+Software that requests web pages from servers and displays them to the user.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Web browser & Software (Chrome, Firefox, Edge) that opens and displays web pages. \\
+Tab & One open page inside the browser window; many tabs can stay open together. \\
+Bookmark & A saved shortcut to a page for quick return without retyping the address. \\
+Browsing history & The date-wise list of pages visited earlier, kept by the browser. \\
+URL & Uniform Resource Locator: the address of a page, typed in the address bar. \\
+Search engine & A website (Google, Bing) that finds pages matching typed words. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each open page lives in its own \textbf{tab}, so several pages can stay open
+in one window. A new tab is opened with \textbf{Ctrl+T}. A \textbf{bookmark}
+is a saved shortcut to a page: instead of typing the address again, the saved
+bookmark is clicked. It is created with \textbf{Ctrl+D}. \textbf{Browsing
+history} is the list of pages visited earlier, stored by date, and it is
+opened with \textbf{Ctrl+H}. The distinction is simple: history answers
+``where was I'', while a bookmark answers ``where do I want to return''.
+
+\begin{example}
+While preparing a report on the office desktop, the clerk keeps the office
+portal open in one tab and the search results in a second tab, and bookmarks
+the portal page so it can be opened directly the next morning. The history
+list that evening shows both pages in order.
+\end{example}
+
+\section{How a search engine works}
+A \textbf{search engine} is a website, such as Google or Bing, that finds
+pages matching the words typed by the user. It works in three ordered stages:
+crawling, indexing, and ranking.
+
+\begin{definitionbox}{Crawling}
+The collection step: automatic programs called crawlers or spiders visit
+pages and follow their links to discover new and changed pages.
+\end{definitionbox}
+
+\begin{definitionbox}{Indexing}
+The storage step: the crawled pages are kept in a large index, like the
+index at the back of a book, so matches can be found quickly.
+\end{definitionbox}
+
+\begin{definitionbox}{Ranking}
+The ordering step: when words are typed, matching pages are picked from the
+index and ordered by relevance on the search results page.
+\end{definitionbox}
+
+Crawling comes first because without it the engine would never learn that a
+new page exists. Indexing comes second: the collected pages are stored in the
+index before any search is typed. Ranking comes last: only after the user
+types words does the engine select matches from that ready index and order
+them. The anchor to remember is the order itself: \textbf{crawl, then index,
+then rank}.
+
+\section{Sponsored results and organic results}
+The matches chosen by relevance are called \textbf{organic results}. In
+addition, the results page shows \textbf{sponsored results}: paid placements
+that appear because an advertiser paid for them, not because they ranked
+highest on relevance. A sponsored result always carries a visible
+\textbf{Ad} or \textbf{Sponsored} label. The practical consequence is direct:
+being listed first on the page does not always mean being the most relevant
+match, since the top position may be a paid placement.
+
+\begin{example}
+A search for a printer shows two blocks: the first carries a small ``Ad''
+label and links to a seller who paid for the position, while the entries
+below it are the organic results ordered by relevance. The topmost entry is
+therefore not necessarily the best match.
+\end{example}
+
+\section{Cookies, cache, and history}
+These three stores are the most confused triple in this lesson. Each stores a
+different thing, and each is stored by a different party.
+
+\begin{definitionbox}{Cookie}
+A small file a website stores on the computer to remember that visitor:
+login state, cart items, and preferences such as language.
+\end{definitionbox}
+
+\begin{definitionbox}{Browser cache}
+Copies of page parts (images, styles, scripts) kept by the browser on the
+computer so repeat visits load faster.
+\end{definitionbox}
+
+\begin{definitionbox}{Browsing history}
+The list of visited page addresses, kept by the browser by date.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Item} & \textbf{What it stores} & \textbf{Who stores it} \\
+\midrule
+Cookie & Visitor data: login, cart, choices & The website \\
+Cache & Copies of page files: images, styles & The browser \\
+History & List of visited page addresses & The browser \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Cookies are set by websites and read back on the next visit, which is why a
+user stays logged in. The cache is managed by the browser: on the next visit
+the saved copies load from the disk instead of being fetched again, so the
+page opens faster. Clearing them has different effects. Deleting
+\textbf{cookies} signs the user out of sites and clears saved preferences.
+Clearing the \textbf{cache} does not sign the user out; it only makes the
+next visit slightly slower. Clearing \textbf{history} removes the record of
+visited addresses but changes neither logins nor saved page copies.
+
+\section{Downloading and uploading}
+\textbf{Downloading} means copying a file from the internet to the user's
+computer: saving a form PDF from the office portal, or saving a photo from a
+web page. \textbf{Uploading} means sending a file from the user's computer to
+the internet: attaching a document to an email, or submitting a scanned form
+on a portal. The direction is always judged from the user's machine: download
+moves data \textbf{down} to the machine, upload moves data \textbf{up} from
+the machine to a server.
+
+\begin{definitionbox}{Downloading}
+Copying a file from the internet (a server) to the user's computer.
+\end{definitionbox}
+
+\begin{definitionbox}{Uploading}
+Sending a file from the user's computer to the internet (a server).
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Download} & \textbf{Upload} \\
+\midrule
+Direction & Server to computer & Computer to server \\
+Typical use & Opening pages, saving files & Mail attachments, form submission \\
+Typical speed & Faster & Slower \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Home and office connections usually provide a faster download speed than
+upload speed, because receiving pages and files is the more common need. A
+downloaded file, once saved, opens without needing the internet; an upload
+needs the connection at the moment of sending.
+
+\section{File conversion}
+\textbf{File conversion} means changing a file from one format to another
+while keeping the same content. The common office need is converting a Word
+document (\textbf{.docx}) to \textbf{PDF} before submitting it on a portal.
+Conversion changes the \textbf{format}, not the transfer direction: a
+converted file must still be uploaded or downloaded separately. The
+\textbf{extension} (such as .pdf, .docx, .jpg) is the name tag that says
+which format the file is stored in, while the \textbf{format} (such as PDF,
+PNG) is the storage method itself. The two words must not be conflated: the
+extension names the format; it is not the format.
+
+\begin{example}
+The clerk finishes the report in Word, converts the .docx file to PDF, and
+then uploads the PDF on the portal. The conversion changed the format; the
+upload changed the location. If the portal instead needed a photograph, a
+.JPG image would be converted to the needed picture format the same way.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The search order is \textbf{crawl}, then \textbf{index}, then
+    \textbf{rank}. The index is built before the search is typed.
+  \item \textbf{Sponsored} means a paid placement with an Ad label;
+    \textbf{organic} means ranked by relevance. The top of the page is not
+    always the best match.
+  \item \textbf{Cookie} (website; visitor data) vs \textbf{cache} (browser;
+    page copies) vs \textbf{history} (browser; visited list). Do not swap
+    the three.
+  \item \textbf{Download} means internet to computer; \textbf{upload} means
+    computer to internet. Judge the direction from the user's machine.
+  \item \textbf{Conversion} changes the format; \textbf{transfer} changes
+    the location. The extension (.png) names the format (PNG); it is not
+    the format itself.
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item List the three stages of a search engine in order and say what each stage does.
+  \item Distinguish a sponsored result from an organic result.
+  \item Distinguish a cookie from the browser cache and from browsing history.
+  \item Explain the difference between downloading and uploading, giving one office example of each.
+  \item What does file conversion change, and how is the extension related to the format?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Crawling (crawlers visit pages and follow links to collect them),
+    then indexing (pages stored in a large index), then ranking (matches
+    picked from the index and ordered by relevance after words are typed).
+  \item A sponsored result is a paid placement carrying an Ad or Sponsored
+    label; an organic result is a normal match chosen and ordered by
+    relevance.
+  \item A cookie is visitor data (login, cart, choices) stored by the
+    website; the cache is copies of page files (images, styles) stored by
+    the browser for faster repeat visits; history is the browser's
+    date-wise list of visited addresses.
+  \item Downloading copies a file from the internet to the computer, such as
+    saving a form PDF from the portal; uploading sends a file from the
+    computer to the internet, such as attaching a document to an email.
+  \item Conversion changes the format while keeping the content (for example
+    .docx to PDF). The extension (.pdf, .docx) is the name tag for the
+    format; the format is the storage method itself.
+\end{enumerate}
+\endgroup
+\end{document}

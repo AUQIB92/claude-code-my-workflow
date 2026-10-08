@@ -1,0 +1,182 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 35 Practice: URL, DNS, HTTP and HTTPS}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 questions are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Expand URL.
+  \begin{enumerate}[label=\Alph*.]
+    \item Uniform Resource Locator
+    \item Universal Record Link
+    \item Unified Reference Locator
+    \item Uniform Retrieval Language
+  \end{enumerate}
+\item \textit{[Original]} Expand DNS.
+  \begin{enumerate}[label=\Alph*.]
+    \item Domain Name System
+    \item Data Network Service
+    \item Digital Node Scheme
+    \item Distributed Number Sequence
+  \end{enumerate}
+\item \textit{[Original]} Expand HTTPS.
+  \begin{enumerate}[label=\Alph*.]
+    \item Hypertext Transfer Protocol Secure
+    \item High Transfer Text Protocol System
+    \item Hyperlink Text Transmission Protocol Standard
+    \item Host Transfer Protocol Service
+  \end{enumerate}
+\item \textit{[Original]} In the URL
+  \texttt{https://www.example.in:443/study/computer?topic=dns}, which part
+  is the scheme?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{https}
+    \item \texttt{www.example.in}
+    \item \texttt{:443}
+    \item \texttt{/study/computer}
+  \end{enumerate}
+\item \textit{[Original]} In \texttt{mail.example.com}, which label is the
+  subdomain?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{.com}
+    \item \texttt{example}
+    \item \texttt{mail}
+    \item \texttt{mailto}
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is a Top-Level Domain
+  (TLD)?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{www}
+    \item \texttt{.in}
+    \item \texttt{/study}
+    \item \texttt{?topic=dns}
+  \end{enumerate}
+\item \textit{[Original]} The default port for HTTP is
+  \underline{\hspace{1.2cm}}, and for HTTPS it is
+  \underline{\hspace{1.2cm}}.
+  \begin{enumerate}[label=\Alph*.]
+    \item 443; 80
+    \item 80; 443
+    \item 25; 110
+    \item 80; 80
+  \end{enumerate}
+\item \textit{[Original]} Which part of a URL carries extra parameters such
+  as \texttt{?topic=dns\&lang=en}?
+  \begin{enumerate}[label=\Alph*.]
+    \item Scheme
+    \item Domain name
+    \item Path
+    \item Query
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes a URL from
+  a domain name?
+  \begin{enumerate}[label=\Alph*.]
+    \item A URL is the full address of one resource; the domain name is only
+      the host part inside it.
+    \item A domain name is the full address of one resource; the URL is only
+      the host part inside it.
+    \item A URL and a domain name are identical in every part.
+    \item A URL names the server hardware; a domain name names the page
+      content.
+  \end{enumerate}
+\item \textit{[Original]} IPv4 is a \underline{\hspace{1.2cm}} address,
+  whereas IPv6 is a \underline{\hspace{1.2cm}} address.
+  \begin{enumerate}[label=\Alph*.]
+    \item 128-bit; 32-bit
+    \item 32-bit; 128-bit
+    \item 64-bit; 256-bit
+    \item 32-bit; 256-bit
+  \end{enumerate}
+\item \textit{[Original]} The main function of DNS is to:
+  \begin{enumerate}[label=\Alph*.]
+    \item translate domain names into IP addresses.
+    \item encrypt web pages during transfer.
+    \item assign a port number to every browser.
+    \item carry e-mail between mail servers.
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} true of DNS?
+  \begin{enumerate}[label=\Alph*.]
+    \item It maps domain names to IP addresses.
+    \item It uses a distributed hierarchy of servers.
+    \item It caches answers to speed up repeat visits.
+    \item It encrypts the contents of web pages.
+  \end{enumerate}
+\item \textit{[Original]} When a domain name is not cached, the resolver
+  obtains its IP address by:
+  \begin{enumerate}[label=\Alph*.]
+    \item asking the DNS hierarchy (root, then TLD, then authoritative
+      server) for the address.
+    \item guessing the address from the URL path.
+    \item reading the page content over HTTP first.
+    \item copying the port number into the address field.
+  \end{enumerate}
+\item \textit{[Original]} HTTP stands for:
+  \begin{enumerate}[label=\Alph*.]
+    \item Hypertext Transfer Protocol
+    \item Hyperlink Transmission Process
+    \item Host Text Transfer Program
+    \item High-speed Transport Protocol
+  \end{enumerate}
+\item \textit{[Original]} TLS stands for:
+  \begin{enumerate}[label=\Alph*.]
+    \item Transport Layer Security
+    \item Transfer Link Service
+    \item Terminal Login System
+    \item Transmission Line Splitter
+  \end{enumerate}
+\item \textit{[Original]} Which statement about HTTP and HTTPS is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item HTTP encrypts pages by default; HTTPS removes that encryption.
+    \item HTTPS is HTTP protected by TLS; plain HTTP provides no encryption.
+    \item HTTP uses port 443 and HTTPS uses port 80.
+    \item HTTPS is a page-design language unrelated to HTTP.
+  \end{enumerate}
+\item \textit{[Original]} A browser shows a padlock for
+  \texttt{https://www.example.in} because:
+  \begin{enumerate}[label=\Alph*.]
+    \item the TLS handshake authenticated the server and encrypted the
+      channel.
+    \item DNS refused to resolve the name.
+    \item the page was transferred over port 80.
+    \item the query string was removed from the URL.
+  \end{enumerate}
+\item \textit{[Original]} Which sequence gives the correct flow when a user
+  types a secure URL and presses Enter?
+  \begin{enumerate}[label=\Alph*.]
+    \item URL $\rightarrow$ DNS $\rightarrow$ IP $\rightarrow$ server
+      $\rightarrow$ TLS handshake $\rightarrow$ page.
+    \item IP $\rightarrow$ URL $\rightarrow$ DNS $\rightarrow$ TLS handshake
+      $\rightarrow$ server $\rightarrow$ page.
+    \item URL $\rightarrow$ IP $\rightarrow$ page $\rightarrow$ DNS
+      $\rightarrow$ server $\rightarrow$ TLS handshake.
+    \item DNS $\rightarrow$ TLS handshake $\rightarrow$ URL $\rightarrow$ IP
+      $\rightarrow$ page $\rightarrow$ server.
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item DNS translates domain names into IP addresses.
+    \item IPv6 is a 128-bit address.
+    \item Plain HTTP encrypts the data it carries.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item I and II only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} Which pairing is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item Scheme --- \texttt{www.example.in}
+    \item Port 80 --- default for HTTPS
+    \item Query --- parameters after \texttt{?} in a URL
+    \item IPv6 --- 256-bit address
+  \end{enumerate}
+\end{enumerate}
+\end{document}

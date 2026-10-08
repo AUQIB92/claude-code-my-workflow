@@ -1,0 +1,175 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 38 Practice: SMTP, POP and IMAP}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 questions are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Expand SMTP.
+  \begin{enumerate}[label=\Alph*.]
+    \item Simple Mail Transfer Protocol
+    \item Secure Mail Transmission Process
+    \item Server Message Transfer Program
+    \item Simple Message Transport Procedure
+  \end{enumerate}
+\item \textit{[Original]} Expand POP3.
+  \begin{enumerate}[label=\Alph*.]
+    \item Private Office Protocol 3
+    \item Post Office Protocol version 3
+    \item Personal Online Program 3
+    \item Protected Output Process 3
+  \end{enumerate}
+\item \textit{[Original]} Expand IMAP.
+  \begin{enumerate}[label=\Alph*.]
+    \item Internet Message Access Protocol
+    \item Internal Mail Attachment Program
+    \item Integrated Messaging Application Process
+    \item Internet Managed Address Protocol
+  \end{enumerate}
+\item \textit{[Original]} Which protocol is used to \textbf{send} mail from
+  the sender's program toward the recipient's mail server?
+  \begin{enumerate}[label=\Alph*.]
+    \item SMTP
+    \item POP3
+    \item IMAP
+    \item SSL
+  \end{enumerate}
+\item \textit{[Original]} Which protocol \textbf{downloads} received mail to
+  one local machine, usually removing it from the server?
+  \begin{enumerate}[label=\Alph*.]
+    \item SMTP
+    \item POP3
+    \item IMAP
+    \item TLS
+  \end{enumerate}
+\item \textit{[Original]} Which protocol keeps mail on the server and
+  \textbf{syncs} every device's view of folders, read marks, and deletions?
+  \begin{enumerate}[label=\Alph*.]
+    \item SMTP
+    \item POP3
+    \item IMAP
+    \item SSL
+  \end{enumerate}
+\item \textit{[Original]} A clerk reads the same office mailbox from a phone
+  and a desktop and wants both to show the same inbox. Which protocol fits?
+  \begin{enumerate}[label=\Alph*.]
+    \item POP3, because it downloads to one machine
+    \item IMAP, because it syncs each device with the server copy
+    \item SMTP, because it sends mail out
+    \item SSL, because it encrypts the channel
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes POP3 from
+  IMAP?
+  \begin{enumerate}[label=\Alph*.]
+    \item POP3 syncs every device with the server; IMAP downloads to one machine.
+    \item POP3 downloads to one machine and usually clears the server; IMAP syncs every device with the server copy.
+    \item POP3 and IMAP both send mail out through the sender's server.
+    \item POP3 keeps the server copy; IMAP always deletes it at once.
+  \end{enumerate}
+\item \textit{[Original]} Trace one message: sender $\rightarrow$ ? $\rightarrow$
+  recipient server $\rightarrow$ ? $\rightarrow$ reader. Which pair fills the
+  gaps?
+  \begin{enumerate}[label=\Alph*.]
+    \item POP3 then SMTP
+    \item IMAP then SMTP
+    \item SMTP then POP3 or IMAP
+    \item SSL then TLS
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} true of SMTP?
+  \begin{enumerate}[label=\Alph*.]
+    \item It sends mail from the sender's program to the mail server.
+    \item It forwards mail between mail servers.
+    \item It downloads received mail into the recipient's inbox for reading.
+    \item It carries the message toward the recipient's mailbox.
+  \end{enumerate}
+\item \textit{[Original]} BCC stands for blind carbon copy. Who can see the
+  BCC recipients?
+  \begin{enumerate}[label=\Alph*.]
+    \item Everyone on the To and Cc lists
+    \item The other BCC recipients
+    \item Only the sender; BCC recipients are hidden from each other
+    \item Nobody, including the sender
+  \end{enumerate}
+\item \textit{[Original]} Which statement about To, Cc, and BCC is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item To and Cc are visible to all recipients; BCC is hidden from the other recipients.
+    \item BCC recipients are shown to everyone on the To list.
+    \item Cc hides its recipients from the To list.
+    \item The sender does not know who is on BCC.
+  \end{enumerate}
+\item \textit{[Original]} A mail rule moves all newsletters to one folder
+  based on the sender and subject. What is this feature?
+  \begin{enumerate}[label=\Alph*.]
+    \item A filter (rule) sorting incoming mail
+    \item A digital signature on outgoing mail
+    \item Encryption of the message body
+    \item A blind carbon copy
+  \end{enumerate}
+\item \textit{[Original]} Which statement about a mail signature is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item It is a fixed sender block added to outgoing messages and does not encrypt them.
+    \item It scrambles the body so only the recipient can read it.
+    \item It sorts incoming mail into folders automatically.
+    \item It provides the secure transmission channel.
+  \end{enumerate}
+\item \textit{[Original]} Which pairing correctly matches the security
+  mechanism to its job?
+  \begin{enumerate}[label=\Alph*.]
+    \item Digital signature --- secrecy; encryption --- sender identity
+    \item Digital signature --- authenticity and integrity; encryption --- confidentiality
+    \item Digital signature --- secure channel; encryption --- folder sorting
+    \item Digital signature --- bulk filtering; encryption --- sender hiding
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item SMTP sends mail; POP3 and IMAP receive it.
+    \item POP3 downloads to one machine while IMAP syncs with the server.
+    \item A digital signature encrypts the body so only the recipient can read it.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item I and II only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} Secure transmission of email uses:
+  \begin{enumerate}[label=\Alph*.]
+    \item SSL/TLS
+    \item POP3/IMAP
+    \item BCC/Cc
+    \item Filters/rules
+  \end{enumerate}
+\item \textit{[Original]} Dozens of identical unwanted advertising messages
+  arrive overnight in bulk. What is this?
+  \begin{enumerate}[label=\Alph*.]
+    \item Spam
+    \item Phishing
+    \item Spoofing
+    \item Encryption
+  \end{enumerate}
+\item \textit{[Original]} A message pretends to be the clerk's bank, warns
+  that the account is blocked, and asks for the password through a link.
+  What is this?
+  \begin{enumerate}[label=\Alph*.]
+    \item Spam
+    \item Phishing
+    \item A mail filter
+    \item A digital signature
+  \end{enumerate}
+\item \textit{[Original]} A message shows the boss's name as sender, but
+  hovering over the link reveals an unknown address and the attachment has
+  an unexpected file. Which combination best describes the threat?
+  \begin{enumerate}[label=\Alph*.]
+    \item Spoofed sender with a malicious link and attachment
+    \item A genuine signed message with a safe attachment
+    \item A spam filter sorting newsletters
+    \item An encrypted channel over SSL/TLS
+  \end{enumerate}
+\end{enumerate}
+\end{document}

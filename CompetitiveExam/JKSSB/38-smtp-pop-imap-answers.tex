@@ -1,0 +1,75 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 38 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{A.} SMTP stands for Simple Mail Transfer Protocol. B, C, and D
+  are not the correct expansion.
+\item \textbf{B.} POP3 stands for Post Office Protocol version 3. A, C, and
+  D are not the correct full forms.
+\item \textbf{A.} IMAP stands for Internet Message Access Protocol. B, C,
+  and D are not the correct expansions.
+\item \textbf{A.} SMTP sends mail from the sender's program toward the
+  recipient's server. POP3 (B) and IMAP (C) receive mail; SSL (D) is a secure
+  channel, not a sending protocol.
+\item \textbf{B.} POP3 downloads received mail to one local machine, usually
+  removing it from the server. SMTP (A) sends; IMAP (C) syncs with the
+  server; TLS (D) is a secure channel.
+\item \textbf{C.} IMAP keeps mail on the server and syncs folders, read
+  marks, and deletions across devices. SMTP (A) sends; POP3 (B) downloads to
+  one machine; SSL (D) protects transmission.
+\item \textbf{B.} IMAP suits several devices because every device mirrors
+  the server copy. A describes POP3, which strands mail on one machine; C
+  sends rather than receives; D protects the channel rather than syncing.
+\item \textbf{B.} POP3 downloads to one machine (usually clearing the
+  server) while IMAP syncs every device with the server copy. A swaps the
+  two; C wrongly makes both sending protocols; D swaps the server-copy
+  behaviour.
+\item \textbf{C.} The sender's side and server forwarding use SMTP, and the
+  recipient collects with POP3 or IMAP. A and B put the receiving protocols
+  on the sending side; D names the secure channel, not the mail flow.
+\item \textbf{C.} SMTP does not download mail for reading; that is the job
+  of POP3 or IMAP. Sending to the server (A), forwarding between servers
+  (B), and carrying the message toward the mailbox (D) are all true of SMTP.
+\item \textbf{C.} Only the sender knows the BCC list; BCC recipients are
+  hidden from each other. A and B wrongly expose the list; D wrongly hides
+  it even from the sender.
+\item \textbf{A.} To and Cc are visible to all recipients while BCC stays
+  hidden from the other recipients. B exposes BCC; C wrongly hides Cc; D
+  wrongly claims the sender is unaware of BCC.
+\item \textbf{A.} Sorting incoming mail by sender or subject is a filter
+  (rule). A signature (B) labels outgoing mail; encryption (C) hides content;
+  BCC (D) addresses hidden recipients.
+\item \textbf{A.} A signature is a fixed sender block on outgoing messages
+  and provides no encryption. B describes encryption; C describes a filter;
+  D describes SSL/TLS.
+\item \textbf{B.} A digital signature gives authenticity and integrity while
+  encryption gives confidentiality. A swaps the two jobs; C and D attach
+  unrelated sorting, channel, filtering, and hiding jobs.
+\item \textbf{B.} Statements I and II are correct: SMTP sends while POP3 and
+  IMAP receive, and POP3 downloads where IMAP syncs. III is false because a
+  signature proves the sender but does not encrypt the body. A omits II; C
+  includes false III and omits I; D includes false III.
+\item \textbf{A.} SSL/TLS provide the secure email transmission channel.
+  POP3/IMAP (B) receive mail; BCC/Cc (C) address it; filters/rules (D) sort
+  it.
+\item \textbf{A.} Bulk unwanted advertising mail is spam. Phishing (B) is a
+  targeted fake-trust fraud; spoofing (C) is a forged sender; encryption (D)
+  is a protection, not a threat.
+\item \textbf{B.} Impersonating the bank with urgency plus a link to steal
+  the password is phishing. Spam (A) is bulk junk; a filter (C) sorts mail;
+  a signature (D) labels outgoing mail.
+\item \textbf{A.} A forged familiar sender plus a mismatched link and a
+  suspicious attachment is a spoofed message carrying a malicious link and
+  attachment. B wrongly calls it genuine and safe; C describes sorting; D
+  describes the secure channel.
+\end{enumerate}
+\end{document}

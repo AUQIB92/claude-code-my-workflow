@@ -1,0 +1,265 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{SMTP, POP \& IMAP}
+\subtitle{Lesson 38 --- Mail Protocols and Threats}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Email Needs Protocols}
+  \begin{itemize}
+    \item Sending, receiving, and reading mail involve different mail
+      servers and different programs.
+    \item \key{Protocols} are fixed rules so any mail program can talk to
+      any mail server.
+    \item One protocol \key{sends} mail; two other protocols
+      \key{receive} it in different ways.
+    \item Secure transmission and threat awareness sit on top of these
+      protocols.
+  \end{itemize}
+  \begin{block}{The one idea}
+    SMTP sends mail out; POP3 and IMAP bring it in --- in two different ways.
+  \end{block}
+\end{frame}
+
+\begin{frame}{SMTP: The Sending Protocol}
+  \begin{itemize}
+    \item \key{SMTP} stands for Simple Mail Transfer Protocol.
+    \item It is the protocol used to \key{send} mail from the sender's
+      program to the mail server, and between mail servers.
+    \item The sender's program hands the message to its SMTP server; that
+      server forwards it toward the recipient's mail server.
+    \item SMTP does \key{not} deliver mail to the recipient's inbox for
+      reading --- receiving is the job of POP3 or IMAP.
+  \end{itemize}
+  \begin{alertblock}{Direction to remember}
+    SMTP is for \key{sending}: out of the sender, toward the
+    recipient's server.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{POP3: Download to One Machine}
+  \begin{itemize}
+    \item \key{POP3} stands for Post Office Protocol version 3.
+    \item It is a \key{receiving} protocol: it pulls mail from the mail
+      server down to one local machine.
+    \item After downloading, the mail is typically \key{removed from the
+      server}, so it lives on that one computer.
+    \item It suits a single computer where mail is read offline in one
+      place.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    POP3 \key{downloads} mail to the local machine; it does not keep it
+    synced on the server.
+  \end{block}
+\end{frame}
+
+\begin{frame}{IMAP: Sync Across Devices}
+  \begin{itemize}
+    \item \key{IMAP} stands for Internet Message Access Protocol.
+    \item It is also a \key{receiving} protocol, but it works
+      differently from POP3.
+    \item Mail \key{stays on the server}; the program shows a synced
+      view of folders, read marks, and deletions.
+    \item Reading, deleting, or moving a message on the phone shows the
+      same change on the laptop, because every device mirrors the
+      server.
+  \end{itemize}
+  \begin{block}{Office desktop example}
+    Checking office mail on the phone and later on the desktop shows the
+    same inbox --- that is IMAP keeping every device in step with the
+    server.
+  \end{block}
+\end{frame}
+
+\begin{frame}{POP3 vs IMAP}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{POP3} & \textbf{IMAP} \\
+      \midrule
+      Job & Receives mail & Receives mail \\
+      Method & Downloads to one machine & Syncs a view of the server \\
+      Server copy & Usually removed & Kept on the server \\
+      Many devices & Poor fit & Designed for it \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    POP3 \key{downloads} to local storage; IMAP \key{syncs} with the
+    server. Do not swap them. (TRAP-17)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Mail-Server Flow, End to End}
+  \begin{itemize}
+    \item The sender writes a message and the mail program sends it by
+      \key{SMTP} to the sender's mail server.
+    \item The sender's server forwards it by \key{SMTP} to the
+      recipient's mail server, where it waits in the mailbox.
+    \item The recipient's program collects it with \key{POP3} (download)
+      or \key{IMAP} (sync).
+    \item Sending is always SMTP; the receiving side is POP3 or IMAP.
+  \end{itemize}
+  \begin{block}{The flow in one line}
+    Sender $\rightarrow$ SMTP $\rightarrow$ recipient server
+    $\rightarrow$ POP3 or IMAP $\rightarrow$ reader.
+  \end{block}
+\end{frame}
+
+\begin{frame}{To, Cc, and BCC}
+  \begin{itemize}
+    \item \key{To} names the main recipients; \key{Cc} (carbon copy)
+      names others kept in the loop.
+    \item \key{BCC} stands for blind carbon copy: its recipients are
+      \key{hidden from each other}.
+    \item Everyone sees the To and Cc lists; nobody on the To or Cc
+      list sees who is on BCC.
+    \item The \key{sender} always knows all recipients; BCC hides
+      recipients from each other, not from the sender.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    BCC hides recipients \key{from each other}. (TRAP-16)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Filters, Rules, and Signatures}
+  \begin{itemize}
+    \item \key{Filters (rules)} sort incoming mail automatically ---
+      for example, moving newsletters to one folder or flagging
+      important senders.
+    \item A filter acts on the \key{headers and content} of the message,
+      such as sender, subject, or words in the body.
+    \item A mail \key{signature} is a fixed block (name, post, phone)
+      added at the end of outgoing messages.
+    \item A signature identifies the sender; it does \key{not} encrypt
+      or protect the message.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Filters organise incoming mail; a signature labels outgoing mail.
+    Neither one encrypts anything.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Digital Signature vs Encryption}
+  \begin{itemize}
+    \item A \key{digital signature} proves who sent the message and that
+      it was not changed --- authenticity and integrity.
+    \item \key{Encryption} scrambles the message so only the intended
+      recipient can read it --- confidentiality.
+    \item A signed message can still be \key{read} by anyone; a signed
+      message is not automatically secret.
+    \item An encrypted message can still be \key{forwarded}; encryption
+      hides content, it does not prove the sender.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A digital signature does \key{not} encrypt the body. Signature =
+    authenticity; encryption = secrecy. (TRAP-15)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Secure Email: SSL and TLS}
+  \begin{itemize}
+    \item \key{SSL} stands for Secure Sockets Layer; \key{TLS} stands
+      for Transport Layer Security.
+    \item Together \key{SSL/TLS} provide the secure channel over which
+      mail is transmitted.
+    \item Without this protection, mail travels in a form others on the
+      path could read.
+    \item Exam answer: the secure email transmission protocol is
+      \key{SSL/TLS}. (PYQ-36)
+  \end{itemize}
+  \begin{block}{Exam recall}
+    Secure transmission of email = SSL/TLS.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Spam}
+  \begin{itemize}
+    \item \key{Spam} is bulk unwanted mail, usually advertising or junk
+      sent to many addresses at once.
+    \item It clutters the inbox and can carry fraud or malware, but the
+      defining mark is \key{bulk and unwanted}.
+    \item Spam filters move suspected junk to a separate folder using
+      sender reputation and content rules.
+    \item \muted{Deleting spam without opening links or attachments is
+      the safe habit.}
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    Dozens of identical ``prize winner'' messages arriving overnight go
+    to the junk folder --- that is spam filtering at work.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Phishing}
+  \begin{itemize}
+    \item \key{Phishing} is a fake message that pretends to be a trusted
+      sender --- a bank, an office, or a colleague --- to steal
+      passwords or money.
+    \item It creates \key{urgency}: ``verify now'', ``account blocked'',
+      ``claim within 24 hours''.
+    \item It asks the reader to click a link or open an attachment and
+      hand over secrets.
+    \item Check the real sender address and never enter passwords from a
+      mail link.
+  \end{itemize}
+  \begin{alertblock}{Takeaway}
+    Phishing = impersonation + urgency + a link or attachment that
+    steals secrets.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Spoofing, Malicious Links, and Attachments}
+  \begin{itemize}
+    \item \key{Spoofing} forges the sender address so a message looks as
+      if it came from someone trusted.
+    \item A \key{malicious link} leads to a fake login page or a
+      malware download; hovering shows an address that does not match
+      the claimed sender.
+    \item A \key{malicious attachment} carries malware behind an
+      innocent-looking file name.
+    \item Rule: verify the sender by another channel before clicking or
+      opening anything unexpected.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Phishing is the \key{fraud attempt}; spoofing is the \key{forged
+    sender} trick it often uses.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trap Alert: Mail Facts to Keep Straight}
+  \begin{itemize}
+    \item SMTP \key{sends}; POP3 and IMAP \key{receive}.
+    \item POP3 \key{downloads} to one machine; IMAP \key{syncs} with
+      the server. (TRAP-17)
+    \item A digital signature proves the sender; it does \key{not}
+      encrypt the message. (TRAP-15)
+    \item BCC hides recipients \key{from each other}, not from the
+      sender.
+    \item Secure email transmission = \key{SSL/TLS}. (PYQ-36)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 38: Recall}
+  \begin{itemize}
+    \item SMTP (Simple Mail Transfer Protocol) sends mail; POP3 (Post
+      Office Protocol version 3) downloads it to one machine; IMAP
+      (Internet Message Access Protocol) syncs it across devices.
+    \item Mail flow: sender $\rightarrow$ SMTP $\rightarrow$
+      recipient server $\rightarrow$ POP3 or IMAP $\rightarrow$
+      reader.
+    \item BCC hides recipients from each other; filters and rules sort
+      incoming mail; a signature labels outgoing mail.
+    \item Digital signature = authenticity and integrity; encryption =
+      confidentiality; secure transmission = SSL/TLS.
+    \item Spam is bulk unwanted mail; phishing impersonates trust to
+      steal secrets; spoofing forges the sender; malicious links and
+      attachments deliver the fraud or malware.
+  \end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{34.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Internet, WWW and Browser --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{The Internet: the network itself}
+The Internet is a global network of connected computers and networks. It is
+best described as a \textbf{network of networks}: smaller networks joined
+together so that any connected device can reach any other. It carries many
+services --- the World Wide Web, e-mail, file transfer, and more. The
+Internet is the physical infrastructure underneath all of these: the cables,
+routers, servers, and the devices connected to them.
+
+\begin{definitionbox}{Internet}
+The global network of interconnected computers and networks over which
+services such as the Web and e-mail run.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Internet & The global network of networks; the infrastructure. \\
+WWW (World Wide Web) & A service on the Internet: linked web pages and sites. \\
+Website & A collection of related webpages under one address. \\
+Webpage & A single document on the Web, shown in a browser. \\
+Homepage & The main or starting page of a website. \\
+Browser & Software that opens and displays websites and webpages. \\
+Search engine & A website that finds other pages matching typed keywords. \\
+Client & The device or program that requests a service or resource. \\
+Server & The computer or program that supplies services to clients. \\
+ISP (Internet Service Provider) & The company or organisation that provides the Internet connection. \\
+Hyperlink & Clickable text or image that jumps to another page or section. \\
+URL (Uniform Resource Locator) & The address of a webpage or resource on the Web. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. The
+\textbf{Internet} is the network. The \textbf{WWW} is the linked-pages
+service running on that network. A \textbf{webpage} is one document, a
+\textbf{website} is the collection, and the \textbf{homepage} is the
+collection's front door. A \textbf{browser} opens pages; a \textbf{search
+engine} finds pages. A \textbf{client} requests and a \textbf{server}
+supplies. An \textbf{ISP} provides the connection itself. A
+\textbf{hyperlink} points to another page, and a \textbf{URL} is a page's
+address.
+
+\section{Internet vs WWW}
+The single most tested confusion in this lesson is Internet versus WWW. The
+Internet is the whole global network; the WWW --- World Wide Web --- is one
+service that runs on the Internet, namely the system of linked web pages and
+sites. E-mail is another service on the same Internet, and it is not part of
+the Web. Access follows the same layering: a device reaches the Internet
+through an ISP connection, and it reaches the Web through a browser running
+over that Internet connection.
+
+\begin{definitionbox}{World Wide Web (WWW)}
+The system of linked web pages and websites accessed over the Internet
+through a browser; one service among several that the Internet carries.
+\end{definitionbox}
+
+\begin{example}
+An item states, ``The Internet and the World Wide Web are the same thing.''
+This is wrong. The Internet is the global network of networks, while the WWW
+is one service running on it. The wrong option has collapsed the
+infrastructure and one of its services into a single term.
+\end{example}
+
+\section{Website, webpage, and homepage}
+A \textbf{webpage} is a single document on the Web, shown inside a browser.
+A \textbf{website} is a collection of related webpages grouped under one
+address (domain). The \textbf{homepage} is the main or starting page of a
+website --- the page that loads when the site's base address is typed. In
+order of size: the homepage is one page, any single document is a webpage,
+and the whole collection is the website.
+
+\begin{definitionbox}{Website, webpage, homepage}
+A webpage is one document on the Web; a website is the collection of related
+webpages under one address; the homepage is the website's main or starting
+page.
+\end{definitionbox}
+
+Each webpage of a website has its own URL, and the homepage URL is the
+site's base address. Typing that address in the browser's address bar loads
+the homepage first, and hyperlinks on it lead to the site's remaining pages.
+
+\section{Browser}
+A \textbf{browser} is software used to open and view websites and webpages.
+It sends a request for a page and displays the page that comes back. Common
+browsers are Google Chrome, Mozilla Firefox, Microsoft Edge, and Apple
+Safari. A browser is software installed on the user's device; it is not the
+Internet itself, and it is not a search engine.
+
+\begin{definitionbox}{Browser}
+Software that requests webpages and displays them; examples are Google
+Chrome, Mozilla Firefox, Microsoft Edge, and Apple Safari.
+\end{definitionbox}
+
+\section{Search engine}
+A \textbf{search engine} is a website (a service) that finds other webpages
+matching keywords typed by the user. Examples are Google, Bing, and Yahoo.
+It is reached \emph{through} a browser: the browser is the tool open on the
+device, and the search-engine site is loaded inside it. Searching therefore
+needs both layers --- a browser open on the device, and a search-engine site
+loaded in that browser.
+
+\begin{definitionbox}{Search engine}
+A website that returns the pages matching a user's keywords; examples are
+Google, Bing, and Yahoo.
+\end{definitionbox}
+
+The browser-versus-search-engine table is worth memorising as a whole. A
+browser is software (an application) whose role is to open and display pages;
+a search engine is a website whose role is to find pages for keywords. Chrome,
+Firefox, Edge, and Safari belong in the first column; Google, Bing, and
+Yahoo belong in the second. The classic trap swaps them: it calls Chrome a
+search engine or Google a browser.
+
+\section{Client and server}
+A \textbf{client} is the device or program that requests a service or
+resource. The office PC's browser asking for a webpage is acting as a
+client: it asks, and it does not supply the page itself. A \textbf{server}
+is the computer (or program) that supplies services or resources to clients.
+A web server stores websites and sends pages to the browsers that ask for
+them. One server can serve many clients at the same time, and servers stay
+switched on and connected so that clients can reach them at any time.
+
+\begin{definitionbox}{Client and server}
+The client requests a service or resource; the server supplies it. On the
+Web, the browser is the client and the web server holds the pages.
+\end{definitionbox}
+
+The two always appear as a pair, in three steps. First, the client (the
+browser) sends a request for a page. Second, the server receives the request
+and sends the page back. Third, the browser displays the received page. This
+request-and-response pair is the client-server model of the Web: typing a
+site address and pressing Enter sends a request, the site's server returns
+the homepage, and the browser shows it.
+
+\section{ISP: the connection provider}
+\textbf{ISP} stands for Internet Service Provider. It is the company or
+organisation that provides the Internet connection to homes and offices.
+Without an ISP connection, the device cannot reach the Internet at all, so
+the ISP link comes before everything else: no ISP means no browsing, no
+search, and no e-mail. This is the tested fact of WO 2026 Q74 (PYQ-34): ISP
+expands to Internet Service Provider, and no other expansion is accepted.
+
+\begin{definitionbox}{ISP (Internet Service Provider)}
+The company or organisation that provides the Internet connection to homes
+and offices.
+\end{definitionbox}
+
+\section{Hyperlink and URL}
+A \textbf{hyperlink} (link) is clickable text or an image that jumps to
+another page or section. Clicking it loads the linked webpage, which may sit
+on the same site or on a different one. Links are what make the Web a
+``web'': pages joined to pages. Note the division of labour: a hyperlink
+points the way, and the browser follows it when clicked.
+
+A \textbf{URL} --- Uniform Resource Locator --- is the address of a webpage
+or resource on the Web. Typing the site's URL in the browser's address bar
+loads its homepage. The URL names the page; the hyperlink jumps to it.
+
+\begin{definitionbox}{Hyperlink and URL}
+A hyperlink is clickable text or an image that leads to another page; a URL
+(Uniform Resource Locator) is the address of a webpage or resource.
+\end{definitionbox}
+
+\section{Full-form ladder of this lesson}
+Direct-recall full-form items are among the most common JKSSB computer
+formats, so learn each expansion exactly and give the full form on first
+mention. \textbf{ISP} --- Internet Service Provider --- gives the Internet
+connection. \textbf{WWW} --- World Wide Web --- is the linked system of
+pages and sites. \textbf{URL} --- Uniform Resource Locator --- is the address
+of a page or resource. \textbf{HTTP} --- HyperText Transfer Protocol --- is
+the set of rules browsers and servers follow when requesting and delivering
+pages. \textbf{HTML} --- HyperText Markup Language --- is the language in
+which webpages are written.
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The Internet is \textbf{not} the Web; the WWW is \textbf{one
+    service} running on the Internet.
+  \item A browser is \textbf{not} a search engine. Chrome is a
+    \textbf{browser}; Google is a \textbf{search engine}.
+  \item A website is the \textbf{collection}; a webpage is \textbf{one
+    document}; the homepage is the \textbf{first page}.
+  \item The client \textbf{requests} and the server \textbf{supplies}. The
+    ISP --- Internet Service Provider --- gives the connection (PYQ-34).
+  \item A hyperlink \textbf{points}; the browser \textbf{opens}. A URL is the
+    page's address.
+\end{enumerate}
+
+\begin{example}
+An item asks which software is used to view websites. Trace the roles: the
+browser opens and displays pages, while the search engine finds pages and
+the ISP provides the connection. The answer is the browser (for example
+Chrome). If the stem instead asks which site finds pages for keywords, the
+answer is the search engine (for example Google), and if it asks who
+provides the connection, the answer is the ISP.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish the Internet from the World Wide Web.
+  \item Distinguish a website from a webpage and from a homepage.
+  \item Distinguish a browser from a search engine, giving two examples of
+    each.
+  \item Explain the roles of client, server, and ISP when a page is opened.
+  \item Define hyperlink and URL, and explain how the two work together.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The Internet is the global network of networks --- the
+    infrastructure. The WWW (World Wide Web) is one service running on that
+    infrastructure: the system of linked web pages and sites.
+  \item A webpage is one document on the Web; a website is the collection of
+    related webpages under one address; the homepage is the website's main or
+    starting page.
+  \item A browser is software that opens and displays pages (Chrome, Firefox,
+    Edge, Safari). A search engine is a website that finds pages for keywords
+    (Google, Bing, Yahoo); it is reached through a browser.
+  \item The client (browser) requests the page, the server (web server)
+    supplies it, and the ISP (Internet Service Provider) provides the
+    Internet connection over which the request and response travel.
+  \item A hyperlink is clickable text or an image that jumps to another page;
+    a URL (Uniform Resource Locator) is a page's address. Clicking the
+    hyperlink tells the browser to load the page named by that URL.
+\end{enumerate}
+\endgroup
+\end{document}

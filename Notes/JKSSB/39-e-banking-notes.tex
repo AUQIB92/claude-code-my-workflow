@@ -1,0 +1,249 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{39.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{E-Banking --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What e-banking covers}
+Electronic banking, or e-banking, means using banking services without
+visiting the branch. The account itself stays in the bank; only the channel
+used to reach it changes. \textbf{Net banking} is banking through the bank's
+website in a browser. \textbf{Mobile banking} is banking through the bank's
+app on the phone. \textbf{UPI} (Unified Payments Interface) apps move money
+directly between bank accounts from the phone. An ATM, the net-banking site,
+the mobile app, and a UPI app are therefore four doors into the same
+account.
+
+\begin{definitionbox}{E-banking}
+The use of banking services through electronic channels --- net banking,
+mobile banking, UPI, and ATMs --- instead of visiting the branch in person.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Net banking & Banking through the bank's website in a browser. \\
+Mobile banking & Banking through the bank's official app. \\
+UPI & Unified Payments Interface; instant phone-based payments between accounts. \\
+VPA & Virtual Payment Address (for example name@bank); identifies the account without the account number. \\
+ATM PIN & Personal Identification Number used with the physical card. \\
+UPI PIN & Personal Identification Number authorising UPI payments. \\
+CVV & Card Verification Value printed on the card. \\
+OTP & One-Time Password sent by SMS, valid for one transaction only. \\
+MFA & Multi-Factor Authentication; checking two or more factors together. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. A
+\textbf{PIN} is a secret typed by the holder. \textbf{CVV} is printed on the
+card. \textbf{OTP} arrives by SMS and expires. \textbf{MFA} is the
+combination of two or more different proofs of identity.
+
+\section{UPI in detail}
+UPI stands for Unified Payments Interface. Each user is identified by a
+\textbf{VPA} (Virtual Payment Address), such as name@bank, so money can be
+sent without sharing the account number or IFSC. Transfers are
+\textbf{instant} and work \textbf{24 $\times$ 7}, including Sundays and
+holidays. Every payment is authorised on the payer's own phone by entering
+the \textbf{UPI PIN}, which is set separately for each bank account inside
+the UPI app. The central rule of UPI safety is short: entering the UPI PIN
+always sends money, and receiving money never needs any PIN.
+
+Other electronic transfer modes appear in nearby options and should be kept
+in one line each. \textbf{IMPS} (Immediate Payment Service) is an instant
+bank-to-bank transfer available 24 $\times$ 7. \textbf{NEFT} (National
+Electronic Funds Transfer) settles in batches and has no minimum amount.
+\textbf{RTGS} (Real Time Gross Settlement) settles large-value transfers
+instantly and carries a minimum amount. UPI and IMPS are the instant,
+phone-friendly modes; NEFT is batched; RTGS is for large values.
+
+\begin{definitionbox}{UPI}
+Unified Payments Interface: an instant, round-the-clock system for moving
+money between bank accounts from a phone, identified by VPA and authorised by
+a UPI PIN.
+\end{definitionbox}
+
+\section{The four secret codes}
+Four codes look alike and are deliberately mixed in distractors. Each lives
+in a different place and does a different job.
+
+\textbf{ATM PIN.} The Personal Identification Number used with the physical
+card at an ATM or shop terminal. It is memorised, typed on the machine, and
+authorises card transactions on that channel. It never authorises a UPI
+payment.
+
+\textbf{UPI PIN.} The Personal Identification Number typed in the phone to
+authorise a UPI payment. It is set per bank account in the UPI app and can
+differ from the ATM PIN. Approving any screen with the UPI PIN sends money.
+
+\textbf{CVV.} The Card Verification Value: the 3-digit number printed on the
+back of the card (4 digits on the front for some cards). It is entered with
+the card number and expiry date for online card payments and proves the
+card is in hand. It is fixed and reusable for the life of the card.
+
+\textbf{OTP.} The One-Time Password: a short numeric code sent by SMS that
+is valid for one transaction only and for a few minutes. It is generated
+fresh each time and expires after use or after the time window.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.24\textwidth}p{0.22\textwidth}p{0.28\textwidth}}
+\toprule
+\textbf{Code} & \textbf{Where it lives} & \textbf{How long it lasts} & \textbf{Typical use} \\
+\midrule
+ATM PIN & In memory & Until changed & Card at ATM or shop terminal \\
+UPI PIN & In memory & Until changed & Authorising a UPI payment \\
+CVV & Printed on card & Life of the card & Online card payment with card number \\
+OTP & Sent by SMS & One transaction, minutes & Second approval for a login or payment \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+A question states, ``The 3-digit number on the back of the card was sent by
+SMS and expired after one use.'' This mixes two codes. The number printed on
+the back of the card is the \textbf{CVV}, which is fixed and reusable; the
+code that arrives by SMS and expires after one use is the \textbf{OTP}. The
+stem has attached OTP behaviour to the CVV name.
+\end{example}
+
+\section{Authentication and multi-factor authentication}
+\textbf{Authentication} means proving ``I am the account holder'' before the
+bank acts. It uses three kinds of factor. \textbf{Something you know} is a
+password or PIN. \textbf{Something you have} is the phone, the card, or the
+OTP that arrives on the registered mobile number. \textbf{Something you are}
+is a fingerprint or face scan.
+
+\begin{definitionbox}{Multi-Factor Authentication (MFA)}
+Authentication that checks two or more different factors together, for
+example a password (know) plus an SMS OTP (have), or a PIN plus a
+fingerprint.
+\end{definitionbox}
+
+A login password plus an SMS OTP is therefore \textbf{two-factor}
+authentication, not one: the password proves knowledge and the OTP proves
+possession of the registered phone. Asking for the OTP a second time does
+not add a new factor; a fingerprint or card would. The exam trap is to call a
+password-plus-OTP login ``single-factor'' or to call two passwords
+``multi-factor''; factors must be of \emph{different} kinds.
+
+\section{QR codes and collect requests}
+A \textbf{QR} (Quick Response) code is the square barcode the merchant
+displays. Scanning it with the UPI app fills in the merchant's payment
+address; the payer then checks the \textbf{merchant name and amount} on
+their own screen and approves with the UPI PIN. A QR never asks for a PIN or
+OTP by itself. A common fraud is a fake QR sticker pasted over the real one,
+so the displayed name on the payer's screen is the check that matters: if
+the name does not match the shop, stop.
+
+A \textbf{collect request} is a message asking the receiver to pay: it
+appears as ``pay Rs.\ X to Y, approve with UPI PIN''. Approving it and
+entering the UPI PIN sends the receiver's money to the requester. No refund,
+cashback, prize, or buyer ever needs the seller to enter a UPI PIN; entering
+the PIN always means paying. Unexpected collect requests, especially ones
+with remarks like ``refund'' or ``cashback'', must be declined or ignored.
+To receive money, the receiver only shares a VPA or QR and enters nothing.
+
+\begin{example}
+A buyer sends a Rs.\ 500 collect request to a seller with the remark
+``advance, approve to receive''. The seller's screen shows ``pay Rs.\ 500'',
+and approving with the UPI PIN would send Rs.\ 500 to the buyer. The remark
+is false: receiving needs no PIN. The safe action is to decline and ask the
+buyer to send the payment instead.
+\end{example}
+
+\section{Safe-banking rules}
+The rules below are tested almost verbatim, so they are stated exactly.
+
+\begin{enumerate}
+  \item The bank \textbf{never} asks for OTP, CVV, ATM PIN, or UPI PIN by
+    call, SMS, email, or link. Any such request is fraud.
+  \item \textbf{Never share} an OTP for any reason --- to ``cancel'', to
+    ``verify'', or to ``receive'' a payment. Sharing it completes the
+    transaction the fraudster started.
+  \item Do not open \textbf{KYC-update or account-blocked} links from SMS.
+    Open the bank's site or app by typing the address or using the official
+    app.
+  \item \textbf{Never install} a screen-sharing or remote-access app at a
+    caller's request; it exposes OTPs, PINs, and balances on the screen.
+  \item Use \textbf{typed addresses and official apps}, and check the
+    \textbf{padlock (https)} on the banking site before logging in.
+  \item Avoid \textbf{public Wi-Fi} for banking; prefer mobile data or a
+    trusted network.
+  \item \textbf{Log out} after net banking, lock the UPI app with the device
+    lock, and keep \textbf{SMS and email alerts on} so an unknown debit is
+    noticed at once.
+\end{enumerate}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item ATM PIN is for the \textbf{card} channel; UPI PIN is for the
+    \textbf{UPI} channel. They are set and used separately.
+  \item CVV is \textbf{printed on the card} and reusable; OTP is
+    \textbf{sent by SMS} for one transaction and expires.
+  \item Entering the UPI PIN \textbf{always pays}; receiving money needs
+    \textbf{no PIN}.
+  \item A password plus an SMS OTP is \textbf{two-factor} authentication
+    (know + have); two passwords are still one factor.
+  \item The bank \textbf{never asks} for OTP, CVV, or any PIN. Any caller
+    who asks is not the bank.
+  \item A QR is verified by the \textbf{name and amount on your own
+    screen}; a pasted-over sticker is defeated by that check.
+\end{enumerate}
+
+\begin{example}
+An item asks what is needed to receive a UPI refund. Trace the rule:
+receiving needs a VPA or QR and no PIN; any screen asking for the UPI PIN is
+a payment screen. The answer is that no PIN or OTP is entered to receive;
+the ``approve to receive'' request is a collect-request fraud.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Expand UPI, OTP, CVV, PIN, QR, and MFA.
+  \item Distinguish the ATM PIN from the UPI PIN: where is each used?
+  \item Distinguish CVV from OTP: where does each live, and how long does
+    each last?
+  \item Explain why a login password plus an SMS OTP counts as two-factor
+    authentication.
+  \item A seller receives a collect request marked ``refund, approve to
+    receive''. What should the seller do, and why?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item UPI --- Unified Payments Interface; OTP --- One-Time Password; CVV
+    --- Card Verification Value; PIN --- Personal Identification Number; QR
+    --- Quick Response code; MFA --- Multi-Factor Authentication.
+  \item The ATM PIN is typed on a machine with the physical card at an ATM
+    or shop terminal. The UPI PIN is typed in the phone to authorise a UPI
+    payment, set per bank account in the UPI app. Neither works on the
+    other's channel.
+  \item CVV is printed on the card and is reusable for the life of the card;
+    it is entered with the card number for online card payments. OTP is sent
+    by SMS, is valid for one transaction only and a few minutes, and then
+    expires.
+  \item The password is something the user knows and the OTP on the
+    registered phone is something the user has. Two different factor kinds
+    are checked, so the login is two-factor (a form of MFA).
+  \item Decline or ignore it. A collect request approved with the UPI PIN
+    sends the seller's money; receiving a refund needs no PIN. The remark is
+    a fraud pattern.
+\end{enumerate}
+\endgroup
+\end{document}

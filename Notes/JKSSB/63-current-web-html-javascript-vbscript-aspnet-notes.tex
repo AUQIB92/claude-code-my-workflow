@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{63.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current Web, HTML, JavaScript, VBScript and ASP.NET --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Static pages, markup, scripts, and the server}
+A web page can be static or dynamic. A \textbf{static} page shows the same content to every visitor. A \textbf{dynamic} page builds its content, or changes it, at view time. Three layers combine to produce the modern page. \textbf{Markup} describes structure: HTML lays out headings, paragraphs, and links. \textbf{Scripting} adds behaviour: small programs in JavaScript or VBScript run inside the page and react to the visitor. \textbf{Server technology} such as ASP.NET builds the page on the server before the browser ever sees it.
+
+\begin{definitionbox}{Markup language}
+A language that tags text to say what each part is (heading, paragraph, link), rather than giving computational instructions.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+HTML & HyperText Markup Language; structures the page; stored as ASCII text. \\
+Tag & A named element in angle brackets, e.g.\ \texttt{<p>}. \\
+Attribute & Detail inside the opening tag as \texttt{name="value"}. \\
+DHTML & Dynamic HTML: HTML plus styles plus scripts for interactive pages. \\
+XML & eXtensible Markup Language: carries data with user-defined tags. \\
+JavaScript & Netscape browser scripting language; \texttt{+} joins strings. \\
+VBScript & Microsoft scripting language; variables declared with \texttt{Dim}. \\
+ASP.NET & Microsoft server framework; \texttt{Session} stores one user's data. \\
+Meta-search engine & Queries other search engines; Dogpile is the classic example. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. A \textbf{tag} names an element; an \textbf{attribute} refines it. \textbf{DHTML} is not a new language but a combination. \textbf{XML} carries data while HTML displays it. \textbf{Java} and \textbf{JavaScript} are different languages despite the similar names.
+
+\section{HTML: a markup language in an ASCII-text document}
+\textbf{HTML} (HyperText Markup Language) is a markup language, not a programming language. It does not compute; it labels. Each piece of text is wrapped in tags that say what it is: a heading, a paragraph, a link. The browser reads these tags and renders the page, and the tags themselves are not displayed.
+
+An HTML document is an \textbf{ASCII-text document}. It is plain text and can be written and read in any text editor. No special software is needed to create one, and nothing about it is compiled to binary. This is a favourite direct-recall fact: HTML files are plain ASCII text.
+
+\begin{definitionbox}{HTML}
+HyperText Markup Language: the markup language that structures web pages, stored as plain ASCII text and rendered by the browser.
+\end{definitionbox}
+
+\begin{example}
+A student opens a page source and sees \texttt{<html>}, \texttt{<body>}, and \texttt{<p>Hello</p>}. These are tags, readable as text in the source, but the visitor only sees the rendered words. The document on disk is ordinary text, which is why the lesson calls HTML an ASCII-text document.
+\end{example}
+
+\section{Tags, attributes, and validity}
+A \textbf{tag} names an element and is written in angle brackets. Most elements have three parts: an \textbf{opening tag} such as \texttt{<p>}, the content, and a \textbf{closing tag} with a slash such as \texttt{</p>}. An \textbf{attribute} adds detail and always sits inside the opening tag in the form \texttt{name="value"}. In \texttt{<body bgcolor="yellow">}, \texttt{body} is the tag and \texttt{bgcolor="yellow"} is the attribute. In \texttt{<font size="4">}, \texttt{font} is the tag and \texttt{size} is the attribute.
+
+A tag or attribute is \textbf{valid} when the language defines it. An invented name is simply not recognised by the browser. Exam items test this by mixing real names (\texttt{h1}, \texttt{p}, \texttt{marquee}, \texttt{font}, \texttt{body}, \texttt{html} as tags; \texttt{size}, \texttt{bgcolor} as attributes) with invented ones. The method is always the same: match the name against the defined set, and never confuse a tag with an attribute.
+
+\section{The \texttt{h1} heading and the \texttt{marquee} tag}
+Headings run from \texttt{h1} through \texttt{h6}. \textbf{\texttt{h1}} is the largest, top-level heading, and the numbers grow as the headings shrink, so \texttt{h6} is the smallest. It is written as \texttt{<h1>Title</h1>}. The single most common error is reversing this order, so fix the anchor now: \textbf{\texttt{h1} is biggest}.
+
+The \textbf{\texttt{marquee}} tag makes text scroll across the page, written as \texttt{<marquee>Welcome</marquee>}. It is a presentation tag: it moves text but adds no structure. It belongs to older, browser-specific HTML rather than strict modern structure, which is exactly why exam setters like it as a recall item.
+
+\begin{definitionbox}{Heading levels}
+Six levels \texttt{h1} to \texttt{h6}; \texttt{h1} renders largest and \texttt{h6} smallest.
+\end{definitionbox}
+
+\section{DHTML: the dynamic combination}
+\textbf{DHTML} (Dynamic HyperText Markup Language) is not a separate language. It is the combination of HTML with style sheets and scripts working together, so that a page can change after it has loaded --- for example, text that reacts when the mouse passes over it. Plain HTML is static; a DHTML page is interactive without needing a reload.
+
+\begin{definitionbox}{DHTML}
+Dynamic HyperText Markup Language: HTML combined with style sheets and scripts so a page can change after loading.
+\end{definitionbox}
+
+The exam contrast is always the same. If the stem says the page is fixed once sent, the answer is HTML. If it says the page reacts in the browser without reloading, the answer is DHTML.
+
+\section{XML: data, not display}
+\textbf{XML} (eXtensible Markup Language) carries and stores data; it does not lay out a page the way HTML does. Its tags are \textbf{user-defined}: the author invents tags such as \texttt{<city>} to label the data being carried. HTML uses a fixed tag set for display; XML uses an open tag set for data. That is the whole classification: HTML displays, XML transports.
+
+\begin{definitionbox}{XML}
+eXtensible Markup Language: a markup language for storing and transporting data with author-defined tags.
+\end{definitionbox}
+
+\begin{example}
+An item asks which language is used to transport structured data between systems with custom tags. HTML is wrong because its tags are fixed and presentational. The answer is XML, whose tags the author defines for the data at hand.
+\end{example}
+
+\section{Java and JavaScript are different languages}
+\textbf{Java} is a full programming language: code is compiled to bytecode and runs on the Java platform. \textbf{JavaScript} is a lightweight scripting language: code is interpreted in the browser to make pages interactive. They share part of a name and nothing else. Every exam cycle reuses this trap, so treat any option that calls JavaScript a version or subset of Java as wrong on sight.
+
+\textbf{JavaScript} was developed at \textbf{Netscape} for the Navigator browser in the mid-1990s. It first shipped under other names (Mocha, then LiveScript) before the JavaScript name was settled. For exam purposes the anchor is one line: JavaScript means Netscape, just as VBScript means Microsoft.
+
+\section{JavaScript string concatenation with \texttt{+}}
+In JavaScript the \textbf{\texttt{+}} operator joins (concatenates) strings. Joining \texttt{"Good"} and \texttt{"Morning"} gives \texttt{"GoodMorning"}. Mixing text and a number with \texttt{+} also joins as text. For example, joining \texttt{"Total: "} with \texttt{5} gives \texttt{"Total: 5"}. The same symbol adds numbers, but wherever a string is involved it concatenates. Items test this by asking what an expression evaluates to; the method is mechanical: join the pieces as text.
+
+\begin{example}
+\texttt{"Web" + "Page"} evaluates to \texttt{"WebPage"} --- joined, not added. An option showing a numeric sum for two quoted strings has confused the two roles of \texttt{+}.
+\end{example}
+
+\section{VBScript and the \texttt{Dim} statement}
+\textbf{VBScript} (Visual Basic Scripting Edition) is Microsoft's scripting language in the Basic family, used for page scripting and small Windows tasks. Variables are declared with the \textbf{\texttt{Dim}} statement, short for Dimension: \texttt{Dim city} declares a variable named \texttt{city}. The exam anchor is direct: see \texttt{Dim} and think VBScript variable declaration. No other language in this lesson declares variables that way.
+
+\section{ASP.NET and the \texttt{Session} object}
+\textbf{ASP.NET} is Microsoft's framework for building dynamic web pages on the server. The server runs the code, builds the page, and sends plain HTML to the browser. The \textbf{\texttt{Session}} object stores data for \textbf{one user across many pages}, such as a login name kept while the visitor moves from page to page. Its nearest neighbour is the \textbf{Application} object, which is shared by all users. The distinction is per-user versus shared: \texttt{Session} keeps one visitor's data; it is never shared across visitors.
+
+\begin{definitionbox}{Session object}
+The ASP.NET object that holds data for a single user across multiple page requests.
+\end{definitionbox}
+
+\section{Meta-search engines: Dogpile}
+A \textbf{search engine} such as Google or Bing keeps its own index of pages. A \textbf{meta-search engine} keeps no index of its own; it sends the query to other search engines and combines their results. \textbf{Dogpile} is the classic exam example of a meta-search engine. The memory hook is in the name: Dogpile piles up other engines' results and shows them together.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item HTML is an \textbf{ASCII-text} document. An option calling it a compiled binary or a database file is wrong.
+  \item \textbf{\texttt{h1}} is the largest heading; \textbf{\texttt{marquee}} scrolls text. Do not reverse the heading order.
+  \item A \textbf{tag} names the element; an \textbf{attribute} sits inside the opening tag as \texttt{name="value"}. \texttt{font} is a tag; \texttt{size} is its attribute.
+  \item \textbf{Java} is a full compiled language; \textbf{JavaScript} is a Netscape browser scripting language. Similar names, different languages.
+  \item In JavaScript \textbf{\texttt{+}} concatenates strings; in VBScript \textbf{\texttt{Dim}} declares a variable.
+  \item The ASP.NET \textbf{\texttt{Session}} object is per-user, not shared; \textbf{Dogpile} is a meta-search engine, not a search engine with its own index.
+\end{enumerate}
+
+\begin{example}
+An item asks what \texttt{<h1>} produces and offers ``smallest heading'' as an option. Trace the heading ladder: \texttt{h1} is the top level and renders largest, with \texttt{h6} smallest. The option has reversed the ladder. If the stem instead asks which tag scrolls text, scan for \texttt{marquee}; if it asks which object keeps one user's login across pages, scan for \texttt{Session}.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Expand HTML, DHTML, XML, and ASP.NET, and state in one line what each does.
+  \item Explain why an HTML document is called an ASCII-text document.
+  \item Distinguish a tag from an attribute, giving one example of each.
+  \item Which heading tag is largest, and which tag scrolls text across the page?
+  \item Distinguish Java from JavaScript, and state where JavaScript originated.
+  \item What does the \texttt{+} operator do to two strings in JavaScript? What does \texttt{Dim} do in VBScript?
+  \item What does the ASP.NET \texttt{Session} object store, and how does it differ from Application state?
+  \item What is a meta-search engine, and why is Dogpile an example?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item HTML --- HyperText Markup Language: structures web pages. DHTML --- Dynamic HyperText Markup Language: HTML plus styles plus scripts for interactive pages. XML --- eXtensible Markup Language: carries data with user-defined tags. ASP.NET: Microsoft's server framework for building dynamic pages.
+  \item It is plain text: it can be written and read in any text editor, with no compilation step. The browser renders the tags at view time.
+  \item A tag names an element in angle brackets (e.g.\ \texttt{<p>}); an attribute sits inside the opening tag as \texttt{name="value"} (e.g.\ \texttt{size="4"} in \texttt{<font size="4">}).
+  \item \texttt{h1} is the largest heading (\texttt{h6} smallest); \texttt{marquee} scrolls text.
+  \item Java is a full compiled programming language running on the Java platform; JavaScript is a lightweight browser scripting language developed at Netscape.
+  \item \texttt{+} joins (concatenates) the strings as text. \texttt{Dim} declares a variable in VBScript.
+  \item \texttt{Session} stores data for one user across many pages (e.g.\ a login name). Application state is shared by all users; \texttt{Session} is per-user.
+  \item A meta-search engine keeps no index and combines results from other search engines. Dogpile does exactly this, so it is the classic example.
+\end{enumerate}
+\endgroup
+\end{document}

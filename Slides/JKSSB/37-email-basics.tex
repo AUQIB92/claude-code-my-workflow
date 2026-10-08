@@ -1,0 +1,252 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Email Basics}
+\subtitle{Lesson 37 --- Addresses, Fields and Folders}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Email Is}
+  \begin{itemize}
+    \item \key{Electronic mail (email)} is a message sent from one electronic
+      mailbox to another over a network such as the Internet.
+    \item Each user has a unique \key{email address}; each message goes from a
+      sender's mailbox to one or more recipients' mailboxes.
+    \item A message has an \key{envelope} (who it goes to) and \key{content}
+      (subject plus body, with optional attachments).
+    \item Email is \key{store-and-forward}: it waits in the recipient's mailbox
+      until it is opened.
+  \end{itemize}
+  \begin{block}{The one idea}
+    An address identifies the mailbox; fields direct the message; folders store it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Anatomy of an Email Address}
+  \begin{itemize}
+    \item Every address has exactly one \key{@} symbol, read as ``at''.
+    \item The \key{@} separates the \key{user name} on the left from the
+      \key{domain name} on the right. (PYQ-35)
+    \item Example: in \texttt{assistant@gmail.com}, \texttt{assistant} is the
+      user name and \texttt{gmail.com} is the domain name.
+    \item The domain name tells \muted{which mail server} holds the mailbox;
+      the user name tells \muted{which mailbox} on that server.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    \key{@} separates user name and domain name --- not domain and host, and
+    not two parts of the domain.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{To, Cc and Bcc}
+  \begin{center}
+    \begin{tabular}{p{0.12\textwidth}p{0.30\textwidth}p{0.46\textwidth}}
+      \toprule
+      \textbf{Field} & \textbf{Full form} & \textbf{Who sees it} \\
+      \midrule
+      To & Primary recipient & Seen by all recipients \\
+      Cc & Carbon Copy & Seen by all recipients \\
+      Bcc & Blind Carbon Copy & Hidden from other recipients \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{itemize}
+    \item \key{To} names the main recipient; \key{Cc} keeps others visibly in
+      the loop.
+    \item \key{Bcc} hides its recipients from \key{each other}; To and Cc
+      addresses stay visible to all. (TRAP-16)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Bcc: What ``Hidden'' Really Means}
+  \begin{itemize}
+    \item A Bcc recipient receives the message like anyone else.
+    \item Other To, Cc, and Bcc recipients \key{cannot see} who was on Bcc.
+    \item The \key{sender} always knows the full list; ``hidden'' means hidden
+      from each other, not from the sender.
+    \item Use Bcc for a \muted{large or confidential} distribution list where
+      addresses must stay private.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Bcc hides recipients from each other. It does not hide the sender, and it
+    does not hide To/Cc from anyone.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Subject, Body and Attachments}
+  \begin{itemize}
+    \item \key{Subject}: one short line stating the topic; it is shown in the
+      message list before the message is opened.
+    \item \key{Body}: the main written content of the message.
+    \item \key{Attachment}: a file sent along with the message, shown with a
+      paperclip icon in most programs.
+    \item The To/Cc/Bcc fields direct the message; subject, body, and
+      attachments are \muted{what the recipient reads}.
+  \end{itemize}
+  \begin{block}{Keep the triple straight}
+    Subject says what it is about; body says the message; attachment carries the file.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Attachment Essentials}
+  \begin{itemize}
+    \item Common attachments: documents, spreadsheets, presentations, PDFs,
+      images.
+    \item Mail servers set a \key{size limit}; an oversize file is rejected or
+      must be shared as a link instead.
+    \item An attachment can carry a \key{virus}, so unexpected attachments must
+      not be opened blindly.
+    \item Sending a file means sending a \key{copy}; the original stays with
+      the sender.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    The assistant types the covering note in the body and attaches the typed
+    notice as a PDF --- the body explains, the attachment carries the file.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Inbox, Sent and Drafts}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.70\textwidth}}
+      \toprule
+      \textbf{Folder} & \textbf{What it holds} \\
+      \midrule
+      Inbox & Incoming messages received \\
+      Sent & Copies of messages already sent \\
+      Drafts & Composed messages saved but not yet sent \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{A sent message leaves a copy in Sent; an unfinished message waits in Drafts.}
+\end{frame}
+
+\begin{frame}{Spam and Trash}
+  \begin{itemize}
+    \item \key{Spam (junk)}: unwanted or bulk messages filtered out of the
+      Inbox automatically.
+    \item \key{Trash (deleted items)}: messages the user deleted; they stay
+      recoverable until the folder is emptied.
+    \item Emptying Trash or the Spam folder \key{permanently removes} those
+      messages.
+    \item A wanted message found in Spam must be moved back or marked
+      \muted{``not spam''}.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Spam holds suspected junk; Trash holds what the user deleted.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Reply, Reply All and Forward}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.66\textwidth}}
+      \toprule
+      \textbf{Action} & \textbf{What it does} \\
+      \midrule
+      Reply & Answers only the sender \\
+      Reply All & Answers the sender plus all To and Cc recipients \\
+      Forward & Sends the message on to new recipients \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{itemize}
+    \item Reply All \key{never} re-adds Bcc addresses; they stay hidden.
+    \item A forwarded message \muted{may include} the original attachments.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Reply vs Forward: A Worked Exchange}
+  \begin{itemize}
+    \item The officer mails the notice To the assistant, Cc the clerk.
+    \item The assistant presses \key{Reply}: only the officer gets the answer.
+    \item The assistant presses \key{Reply All}: the officer and the clerk
+      both get the answer.
+    \item The assistant presses \key{Forward} to the record keeper: a new
+      message carries the original notice onward.
+  \end{itemize}
+  \begin{exampleblock}{Exam reading}
+    ``Answers only the sender'' is Reply; ``answers everyone visible'' is
+    Reply All; ``sends it onward'' is Forward.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Webmail vs Email Client}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Webmail} & \textbf{Email client} \\
+      \midrule
+      Runs in & Browser & Installed app \\
+      Examples & Gmail, Yahoo Mail, Outlook.com & Outlook, Thunderbird \\
+      Storage & Mail stays on the server & May download to the machine \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    Webmail is mail used through a browser; a client is a separate mail app.
+    Gmail the website is webmail; Outlook the desktop app is a client.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{POP3 and IMAP in One Slide}
+  \begin{itemize}
+    \item An email client collects mail using one of two incoming protocols.
+    \item \key{POP3} --- Post Office Protocol version 3 --- \key{downloads}
+      mail to the local machine (usually removing it from the server).
+    \item \key{IMAP} --- Internet Message Access Protocol --- keeps mail
+      \key{synced} on the server, so every device sees the same folders.
+    \item Outgoing mail in both cases is normally sent with \key{SMTP} ---
+      Simple Mail Transfer Protocol.
+  \end{itemize}
+  \begin{block}{One-line contrast}
+    POP3 downloads; IMAP syncs; SMTP sends.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Composing and Sending, Step by Step}
+  \begin{itemize}
+    \item Open a new message and fill \key{To} (and Cc/Bcc if needed).
+    \item Write a short meaningful \key{subject}; write the \key{body}.
+    \item Attach files if needed and \key{re-check} the recipient list.
+    \item Press Send: a copy goes to \key{Sent}, and the message waits in each
+      recipient's \key{Inbox}.
+    \item An interrupted composition saved midway waits in \key{Drafts}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Email Facts to Keep Straight}
+  \begin{itemize}
+    \item \key{@} separates user name (left) and domain name (right). (PYQ-35)
+    \item \key{Bcc} hides recipients from each other, not from the sender;
+      To/Cc stay visible. (TRAP-16)
+    \item \key{Reply} answers the sender; \key{Reply All} answers all visible
+      recipients; \key{Forward} passes the message onward.
+    \item \key{Drafts} holds unsent work; \key{Sent} holds copies of sent mail;
+      \key{Spam} is not the delete bin.
+    \item \key{Webmail} runs in a browser; an \key{email client} is an installed
+      app; \key{POP3} downloads while \key{IMAP} syncs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 37: Recall}
+  \begin{itemize}
+    \item An address is \texttt{user-name@domain-name}; the @ divides the two
+      parts.
+    \item To is the main recipient; Cc is a visible copy; Bcc is a hidden copy.
+    \item Subject states the topic; body carries the message; attachments carry files.
+    \item Inbox receives; Sent keeps sent copies; Drafts holds unfinished mail;
+      Spam holds junk; Trash holds deleted mail.
+    \item Reply answers the sender, Reply All answers all visible recipients,
+      Forward sends the message onward.
+    \item Webmail lives in the browser; an email client is installed software
+      using POP3/IMAP for incoming mail and SMTP for outgoing mail.
+  \end{itemize}
+\end{frame}
+\end{document}

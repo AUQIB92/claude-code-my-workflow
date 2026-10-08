@@ -1,0 +1,271 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{53.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Networking Legacy Services and Web Standards --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{How to read this lesson}
+This is a trap-drill lesson. Almost every concept here has a near-neighbour:
+another term that sounds similar or sits next to it in a list but does a
+different job. The exam builds its wrong options out of exactly those
+neighbours, and it often asks the question with a negative stem (NOT, EXCEPT,
+or an incorrect statement). The defence is always the same: state what the
+term is, what it is not, and which neighbour it is confused with.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Circuit switching & A communication method that reserves a dedicated path for the whole session before data moves. \\
+Packet switching & A communication method that breaks data into packets, each travelling independently with no reserved path. \\
+Telnet & TELecommunication NETwork; a remote-login service for running commands on a distant computer. \\
+FTP & File Transfer Protocol; the service for uploading and downloading files. \\
+SMTP & Simple Mail Transfer Protocol; sends mail from the sender toward the receiver's server. \\
+POP3 & Post Office Protocol version 3; downloads mail to the local machine. \\
+IMAP & Internet Message Access Protocol; keeps mail on the server and syncs it across devices. \\
+W3C & World Wide Web Consortium; the body that develops open web standards. \\
+DHTML & Dynamic HyperText Markup Language; HTML combined with styling and scripting for dynamic pages. \\
+URL & Uniform Resource Locator; the full address of a web resource. \\
+DNS & Domain Name System; translates domain names into IP addresses. \\
+IP address & The numeric address of a device on the network. \\
+OSI model & The seven-layer networking reference model. \\
+Physical port & A hardware socket on the machine. \\
+Logical port & A number identifying a service or process in networking software. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Packet switching vs circuit switching}
+\textbf{Circuit switching} establishes a dedicated communication path between
+the two ends before any data flows, and that path stays reserved for the whole
+session. The classic example is the old telephone call: the line is yours
+until you hang up, whether or not anyone is speaking.
+
+\begin{definitionbox}{Circuit switching}
+A switching method in which a dedicated path is set up and reserved for the
+entire communication session before data transfer begins.
+\end{definitionbox}
+
+\textbf{Packet switching} works the opposite way. Data is broken into small
+units called packets, and each packet travels independently through the
+network. No path is reserved in advance; packets from many senders share the
+same links. The Internet runs on packet switching.
+
+\begin{definitionbox}{Packet switching}
+A switching method in which data is divided into packets that travel
+independently over shared links, with no dedicated path reserved in advance.
+\end{definitionbox}
+
+\begin{example}
+An item states, ``The Internet reserves a dedicated circuit for each browsing
+session.'' This is wrong. The Internet uses packet switching: pages arrive as
+independent packets over shared links, and no path is reserved for the session.
+The wrong option has described circuit switching instead.
+\end{example}
+
+\section{Telnet and FTP}
+\textbf{Telnet} (TELecommunication NETwork) is a remote-login service. It lets
+a user connect to another computer over the network and run commands there as
+if sitting at its keyboard. Telnet sends its traffic, including passwords, in
+plain text. It is not a file-transfer service and not a mail service.
+
+\textbf{FTP} (File Transfer Protocol) is the file-transfer service. It moves
+files between computers: uploading from the local machine to a server and
+downloading back. It is not a remote-login shell and not a mail protocol.
+
+The exam tests the triple together: Telnet logs in remotely, FTP moves files,
+and SMTP sends mail. Any option that swaps these roles --- ``Telnet transfers
+files'' or ``FTP sends mail'' --- is a planted near-neighbour distractor.
+
+\begin{definitionbox}{Telnet}
+A network service that provides remote login to another computer so the user
+can run commands on it.
+\end{definitionbox}
+
+\begin{definitionbox}{FTP}
+A network protocol used to transfer files between computers on a network.
+\end{definitionbox}
+
+\section{SMTP, POP3, and IMAP}
+Mail handling is split across three protocols, and the exam tests the split.
+\textbf{SMTP} (Simple Mail Transfer Protocol) \emph{sends} mail: it carries a
+message from the sender's machine toward the receiver's mail server.
+\textbf{POP3} (Post Office Protocol version 3) \emph{receives by download}:
+it pulls mail down to the local machine, typically removing it from the
+server. \textbf{IMAP} (Internet Message Access Protocol) \emph{receives by
+sync}: it keeps mail on the server so the same mailbox can be read from
+several devices.
+
+\begin{definitionbox}{SMTP / POP3 / IMAP roles}
+SMTP sends mail; POP3 downloads mail to the local machine; IMAP keeps mail on
+the server and synchronises it across devices.
+\end{definitionbox}
+
+Three attached traps come from real papers. First, an option saying
+``POP3 keeps mail synced on the server'' is wrong; that synced behaviour is
+IMAP (TRAP-17). Second, ``a digital signature encrypts the body so only the
+recipient can read it'' is wrong: a digital signature proves authenticity and
+integrity, while encryption provides confidentiality (TRAP-15). Third,
+``BCC hides the sender and the recipients from each other'' is wrong: BCC
+hides recipients from each other, the sender always knows everyone, and To
+and Cc names remain visible to all recipients (TRAP-16). Finally, in any mail
+address the \textbf{@} sign separates the user name from the domain name
+(TRAP-28).
+
+\begin{example}
+An item asks which protocol downloads mail to the local machine. The answer
+is POP3. If the stem instead asks which keeps the mailbox synced on the
+server across a phone and a desktop, the answer is IMAP, and if it asks
+which sends the message in the first place, the answer is SMTP.
+\end{example}
+
+\section{W3C and DHTML}
+The \textbf{W3C} (World Wide Web Consortium) develops the open standards of
+the World Wide Web, such as HTML and CSS. It is a standards body --- not a
+browser, not a search engine, and not an Internet service provider. The
+near-neighbour is the \textbf{ISP} (Internet Service Provider), which sells
+Internet access; W3C writes the standards that the access carries.
+
+\begin{definitionbox}{W3C}
+The World Wide Web Consortium: the international body that develops open
+standards for the World Wide Web.
+\end{definitionbox}
+
+\textbf{HTML} (HyperText Markup Language) marks up the static structure of a
+web page. \textbf{DHTML} (Dynamic HyperText Markup Language) is not a
+separate replacement language; it is the combination of HTML with styling and
+scripting that makes pages respond and change. The trap option calls DHTML a
+brand-new language that replaces HTML. The correct statement is that DHTML
+builds on HTML to add dynamic behaviour.
+
+\section{URL, DNS, and IP addresses}
+A \textbf{URL} (Uniform Resource Locator) is the full address of a resource
+on the web. A \textbf{domain name} is the human-readable part inside it. The
+\textbf{DNS} (Domain Name System) translates that human-readable name into a
+numeric address. The \textbf{IP address} is that numeric address: it
+identifies a device on the network.
+
+The chain in one line is: type a URL, DNS resolves its domain name, and the
+browser reaches the IP address. The exam swaps the links: an option saying
+``DNS is the numeric address'' confuses DNS with the IP address, and one
+saying ``the URL is the numeric address'' confuses the URL with the IP
+address.
+
+\section{IPv4 vs IPv6}
+\textbf{IPv4} uses 32-bit addresses, written as four decimal groups. The
+address space proved too small, so \textbf{IPv6} was introduced with 128-bit
+addresses and a fixed header of 40 bytes (PYQ-18).
+
+\begin{definitionbox}{IPv4 / IPv6 address size}
+IPv4 addresses are 32 bits long; IPv6 addresses are 128 bits long.
+\end{definitionbox}
+
+The single most repeated distractor on this topic claims IPv6 is 256-bit
+(TRAP-18, from JA 2026 Q78). It is always wrong: IPv6 is 128-bit, never
+256-bit. A second attached trap from the same paper concerns companion
+protocols: \textbf{ICMP} is a control and diagnostic protocol that carries no
+application data and uses no ports (TRAP-19); \textbf{BGP} routes between
+autonomous systems (inter-domain) and does not route inside one local network
+(TRAP-20); and \textbf{HTTP/3} runs over QUIC over UDP, not over TCP
+(TRAP-21, from JA 2026 Q79).
+
+\section{The seven OSI layers}
+The \textbf{OSI model} (Open Systems Interconnection) is the seven-layer
+reference model for networking. From top to bottom the layers are
+Application, Presentation, Session, Transport, Network, Data Link, and
+Physical. A memory hook is ``All People Seem To Need Data Processing''.
+
+\begin{definitionbox}{OSI model}
+A seven-layer reference model for network communication: Application,
+Presentation, Session, Transport, Network, Data Link, Physical.
+\end{definitionbox}
+
+The near-neighbour trap names four layers. Four is the layer count of the
+TCP/IP model, not the OSI model. When the stem says OSI, the number is
+always seven; an option offering four has imported the wrong model.
+
+\section{Physical vs logical ports}
+A \textbf{physical port} is a hardware socket on the machine: the place where
+a cable or device plugs in. A \textbf{logical port} is a number in networking
+software that identifies a service or process. The trap swaps them: a logical
+port number is not a hardware socket, and a physical socket is not a service
+number.
+
+\begin{definitionbox}{Physical vs logical port}
+A physical port is a hardware socket for cables or devices; a logical port is
+a number identifying a network service or process.
+\end{definitionbox}
+
+\section{Exam retrieval and common confusions}
+Nine distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item Circuit switching reserves a dedicated path; packet switching sends
+    independent packets with no reserved path.
+  \item Telnet gives remote login; FTP transfers files; SMTP sends mail. Do
+    not swap the three roles.
+  \item POP3 downloads mail to the local machine; IMAP keeps mail synced on
+    the server (TRAP-17).
+  \item A digital signature proves authenticity and integrity; encryption
+    provides confidentiality (TRAP-15).
+  \item BCC hides recipients from each other; the sender always knows all
+    recipients (TRAP-16).
+  \item IPv6 is 128-bit with a 40-byte header, never 256-bit (TRAP-18).
+  \item ICMP carries no application data; BGP is inter-domain; HTTP/3 uses
+    QUIC over UDP (TRAP-19, TRAP-20, TRAP-21).
+  \item The OSI model has seven layers; four layers is the TCP/IP model.
+  \item A physical port is a hardware socket; a logical port is a service
+    number.
+\end{enumerate}
+
+\begin{example}
+An item asks which statement is incorrect. Work each option against its
+near-neighbour: does the switching option reserve or share the path, does
+the protocol option match the service to its role, does the address option
+use 128-bit for IPv6, does the layer option say seven for OSI? The option
+that breaks its pair is the incorrect statement the stem asks for.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish circuit switching from packet switching in one sentence
+    each.
+  \item Match Telnet, FTP, and SMTP to their roles.
+  \item State the roles of SMTP, POP3, and IMAP, and say which one keeps mail
+    synced on the server.
+  \item Expand W3C, DHTML, URL, DNS, FTP, and SMTP.
+  \item State the bit lengths of IPv4 and IPv6, and name the OSI layers from
+    top to bottom.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Circuit switching reserves a dedicated path for the whole session
+    before data moves; packet switching breaks data into independently
+    travelling packets with no reserved path.
+  \item Telnet gives remote login to another computer; FTP transfers files
+    between computers; SMTP sends mail toward the receiver's server.
+  \item SMTP sends mail, POP3 downloads it to the local machine, and IMAP
+    keeps it on the server and syncs it; the synced-on-server protocol is
+    IMAP.
+  \item W3C --- World Wide Web Consortium; DHTML --- Dynamic HyperText Markup
+    Language; URL --- Uniform Resource Locator; DNS --- Domain Name System;
+    FTP --- File Transfer Protocol; SMTP --- Simple Mail Transfer Protocol.
+  \item IPv4 is 32-bit and IPv6 is 128-bit; the OSI layers from the top are
+    Application, Presentation, Session, Transport, Network, Data Link,
+    Physical.
+\end{enumerate}
+\endgroup
+\end{document}

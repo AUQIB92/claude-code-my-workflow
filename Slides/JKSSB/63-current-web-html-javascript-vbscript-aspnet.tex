@@ -1,0 +1,245 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current Web, HTML, JavaScript, VBScript \& ASP.NET}
+\subtitle{Lesson 63 --- Markup, Scripting and Web History}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Where This Lesson Sits}
+  \begin{itemize}
+    \item A web page can be \key{static} (same content for every visitor) or
+      \key{dynamic} (content built or changed at view time).
+    \item \key{Markup} describes structure: HTML lays out headings, text, and links.
+    \item \key{Scripting} adds behaviour: JavaScript and VBScript run small
+      programs inside the page.
+    \item \key{Server technology} such as ASP.NET builds pages on the server
+      before they reach the browser.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Markup structures the page; scripts make it act; the server can build it first.
+  \end{block}
+\end{frame}
+
+\begin{frame}{HTML: What It Is}
+  \begin{itemize}
+    \item \key{HTML} stands for HyperText Markup Language.
+    \item It is a \key{markup language}, not a programming language: it tags
+      text to say what each part is.
+    \item An HTML document is an \key{ASCII-text document}: it can be written
+      and read in any plain-text editor.
+    \item The browser reads the tags and \key{renders} the page; the tags
+      themselves are not shown.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    HTML describes structure; the browser decides appearance from those tags.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Tags and Attributes}
+  \begin{itemize}
+    \item A \key{tag} names an element, written in angle brackets such as
+      \texttt{<p>} and \texttt{</p>}.
+    \item Most elements have an \key{opening tag}, content, and a
+      \key{closing tag} with the slash.
+    \item An \key{attribute} adds detail inside the opening tag, as
+      \texttt{name="value"}, for example \texttt{<body bgcolor="yellow">}.
+    \item A \key{valid} tag or attribute is one the language defines; an
+      invented name is simply not recognised.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    In \texttt{<font size="4">Hello</font>}, \texttt{font} is the tag and
+    \texttt{size="4"} is the attribute.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The \texttt{h1} Heading}
+  \begin{itemize}
+    \item Headings run \key{\texttt{h1}} through \texttt{h6}.
+    \item \key{\texttt{h1}} is the \key{largest, top-level heading}; numbers
+      grow as headings shrink.
+    \item It is written as \texttt{<h1>Title</h1>}.
+    \item \muted{Exam depth: \texttt{h1} is biggest; \texttt{h6} is smallest.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Do not reverse the order: \key{\texttt{h1}} is largest, not smallest.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The \texttt{marquee} Tag}
+  \begin{itemize}
+    \item The \key{\texttt{marquee}} tag makes text \key{scroll} across the page.
+    \item It is written as \texttt{<marquee>Welcome</marquee>}.
+    \item It is a classic \key{presentation} tag: it moves text but adds no
+      structure.
+    \item \muted{It belongs to older, browser-specific HTML, not to strict
+      modern structure.}
+  \end{itemize}
+  \begin{block}{One-line memory hook}
+    \texttt{marquee} means moving text; \texttt{h1} means the biggest heading.
+  \end{block}
+\end{frame}
+
+\begin{frame}{DHTML: Dynamic HTML}
+  \begin{itemize}
+    \item \key{DHTML} stands for Dynamic HyperText Markup Language.
+    \item It is \key{not a separate language}: it is HTML plus style sheets
+      plus scripts working together.
+    \item It lets a page \key{change after loading}, for example text that
+      reacts when the mouse passes over it.
+    \item Contrast: plain HTML is \key{static}; DHTML pages are
+      \key{interactive}.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    HTML lays out a fixed page; DHTML makes that page respond without reloading.
+  \end{block}
+\end{frame}
+
+\begin{frame}{XML: What It Is}
+  \begin{itemize}
+    \item \key{XML} stands for eXtensible Markup Language.
+    \item It carries and \key{stores data}; it does not lay out a page the way
+      HTML does.
+    \item Tags are \key{user-defined}: the author invents tags such as
+      \texttt{<city>} to label the data.
+    \item Contrast: HTML uses a \key{fixed} tag set for display; XML uses an
+      \key{open} tag set for data.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    XML stores and transports data; it does not replace HTML for display.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Java vs JavaScript}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Java} & \textbf{JavaScript} \\
+      \midrule
+      Type & Full programming language & Page scripting language \\
+      Runs & Compiled to bytecode & Interpreted in the browser \\
+      Needs & Java platform & Just a browser \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    Similar names, different languages: \key{Java is not JavaScript}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{JavaScript: History in One Line}
+  \begin{itemize}
+    \item \key{JavaScript} is a lightweight scripting language for web pages.
+    \item It was developed at \key{Netscape} for the Navigator browser in the
+      mid-1990s.
+    \item It first shipped under other names (Mocha, then LiveScript) before
+      the \key{JavaScript} name was settled.
+    \item Despite the name, it was \key{not} a cut-down Java; the name was a
+      product of that era.
+  \end{itemize}
+  \begin{block}{Exam anchor}
+    JavaScript means Netscape; VBScript means Microsoft.
+  \end{block}
+\end{frame}
+
+\begin{frame}{JavaScript String Concatenation}
+  \begin{itemize}
+    \item In JavaScript, the \key{\texttt{+}} operator \key{joins (concatenates)}
+      strings.
+    \item \texttt{"Good" + "Morning"} gives \texttt{"GoodMorning"}.
+    \item Mixing text and a number with \texttt{+} joins as text:
+      \texttt{"Total: " + 5} gives \texttt{"Total: 5"}.
+    \item \muted{The same symbol adds numbers, but with strings it joins them.}
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    \texttt{"Web" + "Page"} evaluates to \texttt{"WebPage"} --- joined, not added.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{VBScript and \texttt{Dim}}
+  \begin{itemize}
+    \item \key{VBScript} stands for Visual Basic Scripting Edition, from Microsoft.
+    \item It scripts pages and small Windows tasks in a Basic-like style.
+    \item Variables are declared with the \key{\texttt{Dim}} statement, short
+      for Dimension.
+    \item \texttt{Dim city} declares a variable named \texttt{city}.
+  \end{itemize}
+  \begin{block}{Exam anchor}
+    See \texttt{Dim} and think VBScript variable declaration.
+  \end{block}
+\end{frame}
+
+\begin{frame}{ASP.NET and the \texttt{Session} Object}
+  \begin{itemize}
+    \item \key{ASP.NET} is Microsoft's framework for building dynamic web pages
+      on the \key{server}.
+    \item The server builds the page and sends plain HTML to the browser.
+    \item The \key{\texttt{Session}} object stores data for \key{one user
+      across many pages}, for example a login name.
+    \item Contrast: \texttt{Session} is per-user; \texttt{Application} state
+      is shared by all users.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    \texttt{Session} keeps one visitor's data; it is not shared across visitors.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Meta-Search Engines: Dogpile}
+  \begin{itemize}
+    \item A \key{search engine} keeps its own index; a \key{meta-search engine}
+      keeps none and queries other engines.
+    \item \key{Dogpile} is the classic exam example of a meta-search engine.
+    \item It collects results from several search engines and shows them together.
+    \item \muted{Google and Bing are search engines; Dogpile searches the
+      search engines.}
+  \end{itemize}
+  \begin{block}{One-line memory hook}
+    Dogpile piles up other engines' results.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Valid Tags and Attributes: Drill}
+  \begin{itemize}
+    \item Valid tags include \key{\texttt{h1}}, \texttt{p}, \texttt{marquee},
+      \texttt{font}, \texttt{body}, and \texttt{html}.
+    \item Valid attributes sit inside the opening tag as
+      \key{\texttt{name="value"}}, for example \texttt{size}, \texttt{bgcolor}.
+    \item A tag and an attribute are \key{different things}: \texttt{font} is
+      a tag; \texttt{size} is its attribute.
+    \item Case in the stem does not change the answer: match the \key{name},
+      not the capitalisation.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Facts to Keep Straight}
+  \begin{itemize}
+    \item HTML is an \key{ASCII-text} document, not a compiled binary.
+    \item \key{\texttt{h1}} is largest; \texttt{marquee} scrolls text.
+    \item \key{Java} is not JavaScript; \key{XML} carries data, HTML displays it.
+    \item \key{\texttt{+}} joins strings in JavaScript; \key{\texttt{Dim}}
+      declares in VBScript.
+    \item \key{\texttt{Session}} is per-user; \key{Dogpile} is meta-search.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 63: Recall}
+  \begin{itemize}
+    \item HTML (HyperText Markup Language) is a markup language stored as an
+      ASCII-text document; tags structure, attributes refine.
+    \item \texttt{h1} is the largest heading; \texttt{marquee} scrolls text.
+    \item DHTML is HTML plus styles plus scripts for pages that change after
+      loading; XML is extensible markup for carrying data.
+    \item Java is a full compiled language; JavaScript is a Netscape browser
+      scripting language, and \texttt{+} concatenates its strings.
+    \item VBScript declares variables with \texttt{Dim}; ASP.NET keeps one
+      user's data in the \texttt{Session} object.
+    \item Dogpile is the classic meta-search engine: it combines other
+      engines' results.
+  \end{itemize}
+\end{frame}
+\end{document}

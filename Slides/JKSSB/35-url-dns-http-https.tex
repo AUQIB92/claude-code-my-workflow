@@ -1,0 +1,257 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{URL, DNS, HTTP \& HTTPS}
+\subtitle{Lesson 35 --- Addresses and Secure Transfer}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Addresses Matter on the Internet}
+  \begin{itemize}
+    \item Every computer on the Internet is reached by a numeric
+      \key{IP address}, but people type readable names instead.
+    \item A \key{URL} names one exact page or file; \key{DNS} translates the
+      readable name into the numeric address.
+    \item \key{HTTP} carries web pages between browser and server;
+      \key{HTTPS} is HTTP protected by \key{TLS}.
+    \item This lesson follows one typed address all the way to a secure
+      page: \muted{URL $\rightarrow$ DNS $\rightarrow$ IP $\rightarrow$ server.}
+  \end{itemize}
+  \begin{block}{The one idea}
+    Names are for people; numbers are for machines; DNS connects the two,
+    and HTTPS protects the trip.
+  \end{block}
+\end{frame}
+
+\begin{frame}{What a URL Is}
+  \begin{itemize}
+    \item \key{URL} stands for Uniform Resource Locator.
+    \item It is the full \key{address of one resource}: one page, file, or
+      service on the Internet.
+    \item Every URL has two halves: \key{where and how} (scheme plus host)
+      and \key{exactly what} (port, path, and query).
+    \item Example used in this lesson: \\
+      \texttt{https://www.example.in:443/study/computer?topic=dns\&lang=en}
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    The URL addresses one resource; the domain name is only the host part
+    inside it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{URL Anatomy at a Glance}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.32\textwidth}p{0.38\textwidth}}
+      \toprule
+      \textbf{Part} & \textbf{Example piece} & \textbf{Role} \\
+      \midrule
+      Scheme & \texttt{https} & Protocol to use \\
+      Subdomain & \texttt{www} & Section of the site \\
+      Domain + TLD & \texttt{example.in} & Registered name \\
+      Port & \texttt{443} & Door number on the server \\
+      Path & \texttt{/study/computer} & Location of the page \\
+      Query & \texttt{?topic=dns} & Extra parameters \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Learn the order: scheme, host, optional port, path, then query.}
+\end{frame}
+
+\begin{frame}{Scheme: How to Connect}
+  \begin{itemize}
+    \item The \key{scheme} is the part before the colon: \texttt{https},
+      \texttt{http}, \texttt{ftp}, or \texttt{mailto}.
+    \item It tells the browser \key{which protocol} to speak to the server.
+    \item \key{http} means web transfer without built-in security;
+      \key{https} means the same transfer protected by TLS.
+    \item The \texttt{://} after the scheme simply separates the scheme from
+      the host name.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The scheme is the protocol word (\texttt{https}), not the domain name
+    that follows it.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Domain, Subdomain, and TLD}
+  \begin{itemize}
+    \item The \key{domain name} is the readable host, such as
+      \texttt{www.example.in}.
+    \item The \key{TLD} (Top-Level Domain) is the last label: \texttt{.in},
+      \texttt{.com}, \texttt{.org}, \texttt{.edu}, \texttt{.gov}.
+    \item The \key{subdomain} is a prefix section: \texttt{www},
+      \texttt{mail}, or \texttt{blog} in front of the registered domain.
+    \item One registered domain can carry many subdomains, each pointing to
+      a different service.
+  \end{itemize}
+  \begin{exampleblock}{Worked split}
+    In \texttt{mail.example.com}: \texttt{mail} is the subdomain,
+    \texttt{example} is the domain, and \texttt{.com} is the TLD.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Port, Path, and Query}
+  \begin{itemize}
+    \item The \key{port} is the door number on the server: 80 is the
+      default for HTTP, \key{443} is the default for HTTPS.
+    \item The \key{path} locates the page inside the site, such as
+      \texttt{/study/computer}.
+    \item The \key{query} passes parameters after a \texttt{?}, such as
+      \texttt{?topic=dns\&lang=en}.
+    \item Ports and queries are \key{optional}: browsers fill in the
+      default port when it is missing.
+  \end{itemize}
+  \begin{block}{Defaults to remember}
+    HTTP assumes port 80; HTTPS assumes port 443, so both are usually
+    hidden in the address bar.
+  \end{block}
+\end{frame}
+
+\begin{frame}{IP Address: The Real Destination}
+  \begin{itemize}
+    \item An \key{IP} (Internet Protocol) address is the numeric address of
+      a device on the network.
+    \item \key{IPv4} is 32-bit, written as four decimal groups, for example
+      \texttt{192.0.2.44}.
+    \item \key{IPv6} is 128-bit, written in hexadecimal groups; it is never
+      256-bit.
+    \item Servers, routers, and the office desktop each need an IP address
+      to send and receive data.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    IPv6 is \key{128-bit}, not 256-bit --- a repeated wrong option.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{DNS: The Phone Book of the Internet}
+  \begin{itemize}
+    \item \key{DNS} stands for Domain Name System.
+    \item It translates \key{domain names} (typed by people) into \key{IP
+      addresses} (used by machines).
+    \item DNS is a distributed, hierarchical system: resolvers ask servers
+      level by level until the answer is found.
+    \item Results are \key{cached}, so a repeated visit skips most of the
+      lookup steps.
+  \end{itemize}
+  \begin{block}{Definition}
+    DNS is the naming system that maps each domain name to the IP address
+    of its server.
+  \end{block}
+\end{frame}
+
+\begin{frame}{DNS Resolution Step by Step}
+  \begin{itemize}
+    \item The browser first checks its own \key{cache}: is this name already
+      known?
+    \item If not, the \key{resolver} (usually run by the ISP) asks the DNS
+      hierarchy: root, then TLD, then the domain's own server.
+    \item The domain's server returns the \key{authoritative} IP address for
+      that name.
+    \item The resolver caches the answer and hands the IP address back to
+      the browser.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop trace}
+    Typing \texttt{www.example.in} asks DNS for its IP (say
+    \texttt{192.0.2.44}); only then can the browser open the connection.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{HTTP: Carrying Web Pages}
+  \begin{itemize}
+    \item \key{HTTP} stands for Hypertext Transfer Protocol.
+    \item It is the \key{request--response} protocol of the web: the browser
+      requests a page, the server returns it.
+    \item HTTP runs by default over \key{port 80}.
+    \item Plain HTTP does \key{not} encrypt the data, so anyone on the path
+      can read it.
+  \end{itemize}
+  \begin{block}{Role in one line}
+    HTTP moves web content; it does not protect it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{HTTPS and TLS: HTTP Made Secure}
+  \begin{itemize}
+    \item \key{HTTPS} stands for Hypertext Transfer Protocol Secure.
+    \item It is \key{HTTP protected by TLS}: TLS (Transport Layer Security)
+      encrypts the whole exchange.
+    \item HTTPS runs by default over \key{port 443} and shows the padlock
+      in the address bar.
+    \item TLS gives \key{confidentiality} (encryption), \key{integrity}
+      (tamper detection), and server \key{authentication} (certificates).
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    HTTPS is HTTP \key{over TLS}; TLS replaced the older SSL, whose name
+    survives only in the phrase ``SSL/TLS''.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{HTTP vs HTTPS}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{HTTP} & \textbf{HTTPS} \\
+      \midrule
+      Security & No encryption & Encrypted by TLS \\
+      Default port & 80 & 443 \\
+      Address bar & \texttt{http://} & \texttt{https://} + padlock \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    Port 80 belongs to HTTP; port 443 belongs to HTTPS. Reversing them is a
+    common wrong answer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Full Flow: URL to Secure Page}
+  \begin{itemize}
+    \item Type the \key{URL}; the browser reads the scheme, host, port,
+      path, and query.
+    \item \key{DNS} resolves the host name to an \key{IP address}.
+    \item The browser opens a connection to that IP on the right
+      \key{port} (80 or 443).
+    \item Over \key{HTTPS}, a TLS handshake secures the channel; then the
+      HTTP request for the \key{path} travels inside it.
+  \end{itemize}
+  \begin{block}{The chain}
+    URL $\rightarrow$ DNS $\rightarrow$ IP $\rightarrow$ server $\rightarrow$
+    TLS (if https) $\rightarrow$ page.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trap Alert: Facts to Keep Straight}
+  \begin{itemize}
+    \item URL addresses \key{one resource}; the domain is only its host part.
+    \item DNS maps names to IPs; it does \key{not} assign addresses or carry
+      page content.
+    \item IPv4 is \key{32-bit}; IPv6 is \key{128-bit}, never 256-bit.
+    \item HTTP uses port \key{80}; HTTPS uses port \key{443}.
+    \item HTTPS is HTTP over \key{TLS}, not a different language; HTTP alone
+      gives no encryption.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 35: Recall}
+  \begin{itemize}
+    \item URL parts in order: scheme, subdomain, domain, TLD, port, path,
+      query.
+    \item URL stands for Uniform Resource Locator; DNS stands for Domain
+      Name System; HTTP stands for Hypertext Transfer Protocol; TLS stands
+      for Transport Layer Security.
+    \item DNS translates domain names into IP addresses through cached,
+      hierarchical lookups.
+    \item IPv4 is 32-bit; IPv6 is 128-bit.
+    \item HTTP (port 80) carries pages; HTTPS (port 443) is HTTP protected
+      by TLS.
+    \item The flow is URL $\rightarrow$ DNS $\rightarrow$ IP $\rightarrow$
+      server $\rightarrow$ secure page.
+  \end{itemize}
+\end{frame}
+\end{document}

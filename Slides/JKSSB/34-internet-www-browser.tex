@@ -1,0 +1,244 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Internet, WWW \& Browser}
+\subtitle{Lesson 34 --- The Web and Its Access Tools}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What the Internet Is}
+  \begin{itemize}
+    \item The \key{Internet} is a global network of connected computers and
+      networks.
+    \item It is a \key{network of networks}: smaller networks joined together
+      so any connected device can reach any other.
+    \item It carries many services --- the Web, e-mail, file transfer, and
+      more.
+    \item The Internet is the \key{physical infrastructure}: cables, routers,
+      servers, and the devices connected to them.
+  \end{itemize}
+  \begin{block}{The one idea}
+    The Internet is the network itself; the services that run on it, such as
+    the Web and e-mail, are not the same thing as the Internet.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Internet vs WWW}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Internet} & \textbf{WWW (World Wide Web)} \\
+      \midrule
+      What it is & Global network of networks & A service running on the Internet \\
+      Content & Carries all services & Linked web pages and sites \\
+      Access & Via an ISP connection & Via a browser over the Internet \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    The Internet and the Web are \key{not} the same. The \key{WWW --- World
+    Wide Web} --- is one service that uses the Internet.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Website vs Webpage vs Homepage}
+  \begin{itemize}
+    \item A \key{webpage} is a single document on the Web, shown in a browser.
+    \item A \key{website} is a collection of related webpages under one
+      address (domain).
+    \item The \key{homepage} is the main or starting page of a website.
+    \item Order of size: \key{homepage} (one page) $\rightarrow$ \key{webpage}
+      (any one page) $\rightarrow$ \key{website} (the whole collection).
+  \end{itemize}
+  \begin{block}{Keep the three straight}
+    One page is a webpage; the whole collection is a website; the front door
+    of that collection is the homepage.
+  \end{block}
+\end{frame}
+
+\begin{frame}{What a Browser Is}
+  \begin{itemize}
+    \item A \key{browser} is software used to open and view websites and
+      webpages.
+    \item It sends a request for a page and displays the page that comes back.
+    \item Common browsers: \key{Google Chrome}, \key{Mozilla Firefox},
+      \key{Microsoft Edge}, \key{Apple Safari}.
+    \item A browser is \key{software on the user's device} --- it is not the
+      Internet itself.
+  \end{itemize}
+  \begin{block}{Office desktop example}
+    On the office desktop, double-clicking the Chrome icon opens a browser;
+    typing an address then loads that site's homepage.
+  \end{block}
+\end{frame}
+
+\begin{frame}{What a Search Engine Is}
+  \begin{itemize}
+    \item A \key{search engine} is a website (service) that finds other
+      webpages matching typed keywords.
+    \item Examples: \key{Google}, \key{Bing}, \key{Yahoo}.
+    \item It is \key{reached through} a browser --- the browser is the tool,
+      the search engine is the site visited with it.
+    \item \muted{Searching needs both: a browser open on the device, and a
+      search-engine site loaded inside it.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Browser vs Search Engine}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Browser} & \textbf{Search engine} \\
+      \midrule
+      What it is & Software (application) & A website / service \\
+      Role & Opens and displays pages & Finds pages for keywords \\
+      Examples & Chrome, Firefox, Edge, Safari & Google, Bing, Yahoo \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    Chrome is a \key{browser}; Google is a \key{search engine}. Swapping the
+    two is a common wrong answer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Client}
+  \begin{itemize}
+    \item A \key{client} is the device or program that requests a service or
+      resource.
+    \item The office PC's browser asking for a webpage is acting as a client.
+    \item A client \key{asks}; it does not supply the page itself.
+    \item \muted{Client and server always appear as a pair: one requests, the
+      other serves.}
+  \end{itemize}
+  \begin{block}{The one idea}
+    Client = the requester; server = the supplier.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Server}
+  \begin{itemize}
+    \item A \key{server} is a computer (or program) that supplies services or
+      resources to clients.
+    \item A \key{web server} stores websites and sends pages to browsers that
+      ask for them.
+    \item One server can serve \key{many clients} at the same time.
+    \item Servers stay \key{switched on and connected} so clients can reach
+      them at any time.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Client and Server Together}
+  \begin{itemize}
+    \item Step 1: the \key{client} (browser) sends a request for a page.
+    \item Step 2: the \key{server} receives the request and sends the page
+      back.
+    \item Step 3: the browser \key{displays} the received page.
+    \item This request-and-response pair is the \key{client-server} model of
+      the Web.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    Typing a site address and pressing Enter sends a request; the site's
+    server returns the homepage, which the browser shows.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{ISP: Internet Service Provider}
+  \begin{itemize}
+    \item \key{ISP} stands for Internet Service Provider.
+    \item It is the company or organisation that \key{provides the Internet
+      connection} to homes and offices.
+    \item Without an ISP connection, the device cannot reach the Internet at
+      all.
+    \item The ISP link comes \key{before} everything else: no ISP, no
+      browsing, no search, no e-mail.
+  \end{itemize}
+  \begin{alertblock}{Exam fact (PYQ-34)}
+    ISP = \key{Internet Service Provider} (WO 2026 Q74). Do not expand it as
+    anything else.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Hyperlink}
+  \begin{itemize}
+    \item A \key{hyperlink} (link) is clickable text or an image that jumps to
+      another page or section.
+    \item Clicking it loads the \key{linked webpage}, which may sit on the
+      same site or a different one.
+    \item Links are what make the Web a ``web'' --- pages joined to pages.
+    \item \muted{A hyperlink points the way; the browser follows it when
+      clicked.}
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    A hyperlink \key{points} to a page; a browser \key{opens} it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Full-Form Ladder of This Lesson}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Short form} & \textbf{Full form} & \textbf{One-line role} \\
+      \midrule
+      ISP & Internet Service Provider & Gives the Internet connection \\
+      WWW & World Wide Web & Linked pages and sites \\
+      URL & Uniform Resource Locator & Address of a page or resource \\
+      HTTP & HyperText Transfer Protocol & Rules for requesting pages \\
+      HTML & HyperText Markup Language & Language webpages are written in \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Give the full form on first mention; direct-recall items ask the
+  expansion exactly.}
+\end{frame}
+
+\begin{frame}{URL and Homepage Address}
+  \begin{itemize}
+    \item A \key{URL --- Uniform Resource Locator} --- is the address of a
+      webpage or resource on the Web.
+    \item Typing the site's URL in the browser's \key{address bar} loads its
+      homepage.
+    \item Each webpage of a website has \key{its own URL}; the homepage URL is
+      the site's base address.
+    \item \muted{The URL names the page; the hyperlink jumps to it.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Web Facts to Keep Straight}
+  \begin{itemize}
+    \item Internet $\neq$ WWW: the Web is \key{one service} on the Internet.
+    \item Browser $\neq$ search engine: Chrome is a \key{browser}; Google is
+      a \key{search engine}.
+    \item Website $\neq$ webpage: the site is the \key{collection}; a
+      webpage is \key{one document}; the homepage is the \key{first page}.
+    \item Client \key{requests}; server \key{supplies}. (PYQ-34: ISP =
+      Internet Service Provider.)
+    \item A hyperlink \key{points}; only clicking (via the browser) follows
+      it.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 34: Recall}
+  \begin{itemize}
+    \item The Internet is the global network of networks; the WWW --- World
+      Wide Web --- is a service running on it.
+    \item A webpage is one document; a website is the collection; the
+      homepage is the main page.
+    \item A browser (Chrome, Firefox, Edge, Safari) opens pages; a search
+      engine (Google, Bing, Yahoo) finds pages.
+    \item The client requests and the server supplies; the ISP --- Internet
+      Service Provider --- gives the connection.
+    \item A hyperlink jumps to another page; a URL --- Uniform Resource
+      Locator --- is a page's address.
+    \item Full forms: ISP, WWW, URL, HTTP, HTML --- learn each expansion
+      exactly.
+  \end{itemize}
+\end{frame}
+\end{document}

@@ -157,14 +157,14 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 34 | Internet, WWW & Browser — Internet/WWW/website/webpage/homepage, browser vs search engine, client/server/ISP | `34-internet-www-browser` [ ] | [ ] | [ ] |
-| 35 | URL, DNS, HTTP & HTTPS — URL anatomy, scheme/subdomain/domain/TLD, DNS, IP, HTTP/HTTPS/TLS | `35-url-dns-http-https` [ ] | [ ] | [ ] |
-| 36 | Web Browsing, Search, Upload & Download — crawling/indexing/ranking, cookies/cache/history, upload/download/conversion | `36-web-browsing-search-upload-download` [ ] | [ ] | [ ] |
-| 37 | Email Basics — address, To/Cc/Bcc, subject/body, attachment, folders, reply/forward, webmail vs client | `37-email-basics` [ ] | [ ] | [ ] |
-| 38 | SMTP, POP & IMAP — SMTP/POP3/IMAP, mail-server flow, spam/phishing/spoofing, encryption/SSL-TLS | `38-smtp-pop-imap` [ ] | [ ] | [ ] |
-| 39 | E-Banking — online banking, UPI, ATM PIN vs UPI PIN vs CVV, OTP/MFA, QR/collect-request safety | `39-e-banking` [ ] | [ ] | [ ] |
-| 53 | Networking Legacy Services & Web Standards — packet vs circuit switching, Telnet, FTP, SMTP/POP/IMAP, W3C, DHTML, URL/DNS/IP, IPv4 vs IPv6, seven OSI layers, physical vs logical ports, service-role matching, negative stems | `53-networking-legacy-services-web-standards` [ ] | [ ] | [ ] |
-| 63 | Current Web, HTML, JavaScript, VBScript & ASP.NET — HTML h1/marquee/ASCII-text document, valid tags/attributes; DHTML/XML/Java; JS string concatenation; VBScript `Dim`; Netscape/JS history; ASP.NET `Session`; meta-search engines (Dogpile) | `63-current-web-html-javascript-vbscript-aspnet` [ ] | [ ] | [ ] |
+| 34 | Internet, WWW & Browser — Internet/WWW/website/webpage/homepage, browser vs search engine, client/server/ISP | `34-internet-www-browser` [x] | [x] | [x] |
+| 35 | URL, DNS, HTTP & HTTPS — URL anatomy, scheme/subdomain/domain/TLD, DNS, IP, HTTP/HTTPS/TLS | `35-url-dns-http-https` [x] | [x] | [x] |
+| 36 | Web Browsing, Search, Upload & Download — crawling/indexing/ranking, cookies/cache/history, upload/download/conversion | `36-web-browsing-search-upload-download` [x] | [x] | [x] |
+| 37 | Email Basics — address, To/Cc/Bcc, subject/body, attachment, folders, reply/forward, webmail vs client | `37-email-basics` [x] | [x] | [x] |
+| 38 | SMTP, POP & IMAP — SMTP/POP3/IMAP, mail-server flow, spam/phishing/spoofing, encryption/SSL-TLS | `38-smtp-pop-imap` [x] | [x] | [x] |
+| 39 | E-Banking — online banking, UPI, ATM PIN vs UPI PIN vs CVV, OTP/MFA, QR/collect-request safety | `39-e-banking` [x] | [x] | [x] |
+| 53 | Networking Legacy Services & Web Standards — packet vs circuit switching, Telnet, FTP, SMTP/POP/IMAP, W3C, DHTML, URL/DNS/IP, IPv4 vs IPv6, seven OSI layers, physical vs logical ports, service-role matching, negative stems | `53-networking-legacy-services-web-standards` [x] | [x] | [x] |
+| 63 | Current Web, HTML, JavaScript, VBScript & ASP.NET — HTML h1/marquee/ASCII-text document, valid tags/attributes; DHTML/XML/Java; JS string concatenation; VBScript `Dim`; Netscape/JS history; ASP.NET `Session`; meta-search engines (Dogpile) | `63-current-web-html-javascript-vbscript-aspnet` [x] | [x] | [x] |
 
 ### Unit 9 — Networking
 

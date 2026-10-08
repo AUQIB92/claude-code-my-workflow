@@ -1,0 +1,250 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{E-Banking}
+\subtitle{Lesson 39 --- PINs, OTPs and Safe Payments}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What E-Banking Means}
+  \begin{itemize}
+    \item \key{E-banking} means using banking services through the internet
+      instead of visiting the branch.
+    \item \key{Net banking} is banking through the bank's website on a
+      browser; \key{mobile banking} is banking through the bank's app.
+    \item \key{UPI} --- Unified Payments Interface --- apps move money
+      instantly between bank accounts using a phone.
+    \item ATM, net banking, mobile banking, and UPI are all channels; the
+      \key{account stays in the bank}, only the access channel changes.
+  \end{itemize}
+  \begin{block}{The one idea}
+    E-banking is remote access to the same bank account through a website,
+    an app, or UPI.
+  \end{block}
+\end{frame}
+
+\begin{frame}{UPI Basics}
+  \begin{itemize}
+    \item \key{UPI} stands for Unified Payments Interface.
+    \item A \key{VPA} (Virtual Payment Address, e.g.\ name@bank) identifies
+      the account without revealing the account number.
+    \item UPI transfers are \key{instant} and work \key{24 $\times$ 7},
+      including Sundays and holidays.
+    \item Every UPI payment is confirmed with a \key{UPI PIN}; without it the
+      money does not move.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    UPI needs the UPI PIN to \key{send} money --- receiving money needs no
+    PIN at all.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{ATM PIN vs UPI PIN}
+  \begin{itemize}
+    \item \key{ATM PIN} (Personal Identification Number) is entered at an
+      ATM or shop machine to use the \key{physical card}.
+    \item \key{UPI PIN} is entered in the phone to authorise a \key{UPI
+      payment}; it is set separately for each bank account in the UPI app.
+    \item The two PINs \key{can be different} and are used on different
+      channels --- ATM PIN never authorises a UPI payment.
+    \item Both are \key{secret} and are never asked for by the bank.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    ATM PIN = card channel; UPI PIN = UPI channel. Do not swap them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{CVV vs OTP}
+  \begin{itemize}
+    \item \key{CVV} --- Card Verification Value --- is the 3-digit number on
+      the \key{back of the card} (4 digits on the front for some cards).
+    \item CVV is used with the card number and expiry date for
+      \key{online card payments}; it proves the card is in hand.
+    \item \key{OTP} --- One-Time Password --- is a short code sent by
+      \key{SMS} that is valid for \key{one transaction only} and a few
+      minutes.
+    \item CVV is \key{printed and reusable}; OTP is \key{generated fresh}
+      each time and then expires.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    CVV is fixed on the card; OTP changes every time. Never share either.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Four Codes Side by Side}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Code} & \textbf{Where it lives} & \textbf{What it does} \\
+      \midrule
+      ATM PIN & In your memory & Authorises card use at ATM/shop \\
+      UPI PIN & In your memory & Authorises a UPI payment \\
+      CVV & Printed on the card & Proves card possession online \\
+      OTP & Sent by SMS & Approves one transaction, then expires \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Exam depth: entering any PIN means you are paying; OTP is single-use.}
+\end{frame}
+
+\begin{frame}{Authentication and MFA}
+  \begin{itemize}
+    \item \key{Authentication} means proving ``I am the account holder''
+      before the bank acts.
+    \item The three factors are \key{something you know} (password, PIN),
+      \key{something you have} (phone, card, OTP on SMS), and
+      \key{something you are} (fingerprint, face).
+    \item \key{MFA} --- Multi-Factor Authentication --- checks
+      \key{two or more} different factors together.
+    \item A login password \key{plus} an SMS OTP is the everyday MFA
+      example: password (know) + phone (have).
+  \end{itemize}
+  \begin{block}{The one idea}
+    One factor can be stolen; two different factors together are much harder
+    to steal.
+  \end{block}
+\end{frame}
+
+\begin{frame}{QR Code Payments}
+  \begin{itemize}
+    \item A \key{QR} (Quick Response) code is the square barcode the shop
+      displays; scanning it fills in the merchant's UPI address.
+    \item Always \key{verify the merchant name and amount} on your own
+      screen before entering the UPI PIN.
+    \item A QR never asks for your PIN or OTP by itself --- the
+      \key{phone screen} asks, after you verify the payee.
+    \item A QR sticker \key{pasted over} the original code is a classic
+      fraud; confirm the displayed name matches the shop.
+  \end{itemize}
+  \begin{exampleblock}{Office canteen example}
+    The canteen shows one QR; the phone displays ``Canteen Stores Rs.\ 50''.
+    Only that verified screen is approved with the UPI PIN.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Collect Requests: The Key Safety Rule}
+  \begin{itemize}
+    \item A \key{collect request} is a message asking \key{you} to pay
+      someone --- it appears in the UPI app as ``pay Rs.\ X to Y''.
+    \item Approving it and entering your UPI PIN \key{sends your money};
+      there is no ``receive'' step that needs a PIN.
+    \item \key{Decline or ignore} every collect request you did not expect,
+      even if the remark says ``refund'' or ``cashback''.
+    \item To \key{receive} money, share your VPA or QR; never enter a PIN.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Entering the UPI PIN always means paying. No refund or prize ever needs
+    your UPI PIN.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Safe-Banking Rules I}
+  \begin{itemize}
+    \item The bank \key{never} asks for OTP, CVV, ATM PIN, or UPI PIN by
+      call, SMS, or link --- any such ask is fraud.
+    \item \key{Never share} an OTP to ``cancel'', ``verify'', or ``receive''
+      a payment; sharing it completes the fraud.
+    \item Do not click \key{KYC-update or account-blocked} links; open the
+      bank's site or app yourself by typing its address.
+    \item \key{Never install} a screen-sharing app at a caller's request;
+      it shows the fraudster your OTPs and PINs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Safe-Banking Rules II}
+  \begin{itemize}
+    \item Use \key{typed addresses and official apps} from the app store;
+      check for the \key{padlock (https)} on the banking site.
+    \item Avoid \key{public Wi-Fi} for banking; prefer mobile data or a
+      trusted network.
+    \item \key{Log out} after net banking and clear a shared browser; lock
+      the UPI app with the device lock.
+    \item Keep \key{SMS and email alerts on} and check the statements, so an
+      unknown debit is noticed at once.
+  \end{itemize}
+  \begin{block}{Habit to keep}
+    Pause, verify on your own screen, then approve --- never approve in a
+    hurry on a caller's instructions.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Online Transfer Modes in One Line Each}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.68\textwidth}}
+      \toprule
+      \textbf{Mode} & \textbf{One-line use} \\
+      \midrule
+      UPI & Instant small payments by phone, 24 $\times$ 7, authorised by UPI PIN. \\
+      IMPS & Immediate Payment Service --- instant bank-to-bank transfer, 24 $\times$ 7. \\
+      NEFT & National Electronic Funds Transfer --- batched settlement, no minimum amount. \\
+      RTGS & Real Time Gross Settlement --- large-value, instant, with a minimum amount. \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{UPI and IMPS are instant; NEFT settles in batches; RTGS is for
+  large values.}
+\end{frame}
+
+\begin{frame}{Full-Form Ladder}
+  \begin{itemize}
+    \item UPI --- \key{Unified Payments Interface}
+    \item OTP --- \key{One-Time Password}
+    \item CVV --- \key{Card Verification Value}
+    \item PIN --- \key{Personal Identification Number}
+    \item QR --- \key{Quick Response} code
+    \item MFA --- \key{Multi-Factor Authentication}
+  \end{itemize}
+  \begin{alertblock}{Recall drill}
+    Cover the right column; UPI, OTP, CVV, and PIN expansions are direct
+    one-mark items.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Fraud Patterns to Recognise}
+  \begin{itemize}
+    \item \key{Fake refund/cashback} collect request asking for UPI PIN
+      approval.
+    \item \key{KYC/account-blocked} SMS with a link that harvests card
+      details and OTP.
+    \item \key{Screen-share} request (``install this support app'') during a
+      bank-sounding call.
+    \item The response to all three is the same: \key{stop, do not share any
+      code, and verify through the official app or branch}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: PIN, CVV and OTP Facts to Keep Straight}
+  \begin{itemize}
+    \item ATM PIN is for the \key{card}; UPI PIN is for \key{UPI} --- they
+      are not interchangeable.
+    \item CVV is \key{printed on the card} and reusable; OTP is
+      \key{sent fresh} for one transaction and expires.
+    \item Entering the UPI PIN \key{always pays}; receiving money needs
+      \key{no PIN}.
+    \item Password + OTP is \key{two-factor} authentication, not one.
+    \item The bank \key{never asks} for OTP, CVV, or any PIN.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 39: Recall}
+  \begin{itemize}
+    \item E-banking = net banking, mobile banking, and UPI on the same bank
+      account.
+    \item UPI (Unified Payments Interface) pays instantly, 24 $\times$ 7, by
+      VPA; each payment needs the UPI PIN.
+    \item ATM PIN is the card secret; UPI PIN is the UPI secret; CVV is
+      printed on the card; OTP is single-use over SMS.
+    \item MFA combines two or more factors: know, have, and are.
+    \item Scan QR only after verifying name and amount; decline unknown
+      collect requests.
+    \item Never share OTP/CVV/PIN; the bank never asks; avoid links,
+      screen-share apps, and public Wi-Fi.
+  \end{itemize}
+\end{frame}
+\end{document}

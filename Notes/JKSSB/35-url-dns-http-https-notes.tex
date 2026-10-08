@@ -1,0 +1,238 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{35.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{URL, DNS, HTTP and HTTPS --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What a URL is}
+A URL (Uniform Resource Locator) is the full address of one resource on the
+Internet: one page, file, image, or service. Typing a URL tells the browser
+both how to connect and exactly what to fetch.
+
+\begin{definitionbox}{URL}
+The complete address of a single Internet resource, naming the protocol
+(scheme), the host, and the location of the resource on that host,
+including the optional port, path, and query.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+URL & The full address of one resource, such as a page or file. \\
+Scheme & The protocol word before the colon, such as https or http. \\
+Domain name & The readable host name, such as www.example.in. \\
+TLD & Top-Level Domain: the last label, such as .in or .com. \\
+Subdomain & A prefix section of the name, such as www or mail. \\
+Port & The door number on the server (80 for HTTP, 443 for HTTPS). \\
+Path & The location of the page inside the site. \\
+Query & Parameters after a ?, such as ?topic=dns. \\
+IP address & The numeric address of a device (IPv4 is 32-bit, IPv6 is 128-bit). \\
+DNS & Domain Name System: translates domain names into IP addresses. \\
+HTTP & Hypertext Transfer Protocol: carries web pages. \\
+HTTPS & Hypertext Transfer Protocol Secure: HTTP protected by TLS. \\
+TLS & Transport Layer Security: encrypts the exchange (successor of SSL). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. A
+\textbf{URL} is the whole address; the \textbf{domain name} is only the host
+part inside it. \textbf{DNS} translates that host name into an \textbf{IP
+address}. \textbf{HTTP} moves the page, and \textbf{HTTPS} is HTTP carried
+inside a \textbf{TLS}-encrypted channel.
+
+\section{Anatomy of a URL}
+Consider the example used throughout this lesson:
+\begin{center}
+\texttt{https://www.example.in:443/study/computer?topic=dns\&lang=en}
+\end{center}
+Read it left to right. The \textbf{scheme} is \texttt{https}: the protocol
+the browser must speak. The \texttt{://} is only a separator between the
+scheme and the host. The host is \texttt{www.example.in}, in which
+\texttt{www} is the \textbf{subdomain}, \texttt{example} is the registered
+domain, and \texttt{.in} is the \textbf{TLD} (Top-Level Domain). Common TLDs
+include \texttt{.com}, \texttt{.org}, \texttt{.edu}, \texttt{.gov}, and
+country labels such as \texttt{.in}.
+
+After the host comes the optional \textbf{port}, \texttt{:443}: the door
+number on the server. The \textbf{path}, \texttt{/study/computer}, locates
+the page inside the site. The \textbf{query}, \texttt{?topic=dns\&lang=en},
+passes extra parameters to the server. Port and query are optional: when the
+port is missing, the browser fills in the default for the scheme.
+
+\begin{definitionbox}{TLD (Top-Level Domain)}
+The last label of a domain name, such as .com, .org, .edu, .gov, or a
+country label such as .in.
+\end{definitionbox}
+
+\begin{example}
+Split \texttt{mail.example.com}. The subdomain is \texttt{mail}, the
+registered domain is \texttt{example}, and the TLD is \texttt{.com}. One
+registered domain can carry many such subdomains (\texttt{www},
+\texttt{mail}, \texttt{blog}), each pointing to a different service, while
+the domain itself stays the same.
+\end{example}
+
+\section{Ports, paths, and queries}
+The \textbf{port} selects which service on the server receives the
+connection. Port \textbf{80} is the default for HTTP and port \textbf{443}
+is the default for HTTPS, which is why both numbers are usually hidden in
+the address bar. The \textbf{path} names the page or file within the site,
+and the \textbf{query} carries name--value pairs after a \texttt{?} mark.
+Neither the port nor the query changes which host is contacted; the host is
+fixed by the domain name alone.
+
+\section{IP addresses: the real destination}
+An IP (Internet Protocol) address is the numeric address every device uses
+to send and receive data on the network. People type names; machines route
+by numbers.
+
+\begin{definitionbox}{IP address}
+The numeric address of a device on a TCP/IP network, used for routing data
+to that device.
+\end{definitionbox}
+
+\textbf{IPv4} (Internet Protocol version 4) is \textbf{32-bit} and is
+written as four decimal groups, for example \texttt{192.0.2.44}.
+\textbf{IPv6} (Internet Protocol version 6) is \textbf{128-bit} and is
+written in hexadecimal groups. It is never 256-bit; that figure is a
+repeated wrong option. IPv6 exists because the IPv4 space is too small for
+the number of connected devices.
+
+\section{DNS: the phone book of the Internet}
+DNS (Domain Name System) is the distributed naming system that translates
+domain names into IP addresses. It does not carry page content and does not
+assign addresses to devices; it only answers the question ``which IP address
+belongs to this name?''
+
+\begin{definitionbox}{DNS}
+The hierarchical, distributed system that maps each domain name to the IP
+address of its server, with answers cached to speed up repeat visits.
+\end{definitionbox}
+
+Resolution runs as a short chain. The browser first checks its own cache
+for the name. If the name is unknown, the \textbf{resolver} (usually run by
+the ISP --- Internet Service Provider) asks the DNS hierarchy: the root
+servers, then the TLD servers for labels such as \texttt{.in}, then the
+domain's own authoritative server. That authoritative server returns the IP
+address, the resolver caches the answer for a fixed time, and the browser
+receives the number it can connect to.
+
+\begin{example}
+On the office desktop, typing \texttt{www.example.in} first triggers a DNS
+lookup. The resolver walks the hierarchy, learns the address (say
+\texttt{192.0.2.44}), caches it, and only then does the browser open a
+connection to that number. Typing the IP address directly would skip DNS,
+but nobody memorises numbers for every site.
+\end{example}
+
+\section{HTTP: carrying web pages}
+HTTP (Hypertext Transfer Protocol) is the request--response protocol of the
+web. The browser sends a request naming the path (and query); the server
+returns the page. HTTP runs by default over port 80. Plain HTTP provides no
+encryption: the request and the page travel in readable form, so anyone on
+the path between browser and server can read them.
+
+\begin{definitionbox}{HTTP}
+The protocol by which a web client requests a resource and the server
+returns it. Plain HTTP does not encrypt the exchange.
+\end{definitionbox}
+
+\section{HTTPS and TLS: the secure form}
+HTTPS (Hypertext Transfer Protocol Secure) is HTTP protected by TLS. TLS
+(Transport Layer Security) is the successor of the older SSL (Secure
+Sockets Layer); the phrase ``SSL/TLS'' survives only as a name for the same
+family of protection. Before any page moves, the browser and server run a
+TLS handshake: the server proves its identity with a certificate, and the
+two sides agree on encryption keys. The HTTP request and response then
+travel inside that encrypted channel.
+
+\begin{definitionbox}{HTTPS}
+HTTP carried inside a TLS-encrypted channel, by default over port 443 and
+shown with a padlock in the address bar.
+\end{definitionbox}
+
+TLS provides three things at once: \textbf{confidentiality} through
+encryption (only the two ends can read the data), \textbf{integrity}
+(tampering is detected), and server \textbf{authentication} (the certificate
+ties the site to its claimed name). HTTPS therefore protects the trip; it
+is not a different page language.
+
+\section{The full flow: from typed URL to secure page}
+Put the pieces together for \texttt{https://www.example.in/study/computer}.
+The browser parses the URL: scheme \texttt{https}, host
+\texttt{www.example.in}, path \texttt{/study/computer}. DNS resolves the
+host to an IP address. The browser opens a connection to that IP on port
+443, the HTTPS default. The TLS handshake secures the channel, and the HTTP
+request for the path travels inside it. The server returns the page, and the
+browser renders it with the padlock shown.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{URL} addresses one resource; the \textbf{domain name} is
+    only the host part inside it.
+  \item \textbf{DNS} translates names into IP addresses. It does not assign
+    addresses and does not carry page content.
+  \item \textbf{IPv4} is 32-bit; \textbf{IPv6} is 128-bit, never 256-bit.
+  \item \textbf{HTTP} uses port 80; \textbf{HTTPS} uses port 443. Do not
+    reverse them.
+  \item \textbf{HTTPS} is HTTP over \textbf{TLS}. HTTP alone gives no
+    encryption.
+  \item The \textbf{scheme} is the protocol word (\texttt{https}), not the
+    domain name that follows it.
+\end{enumerate}
+
+\begin{example}
+An item asks which part of \texttt{https://mail.example.com/inbox} is the
+subdomain. Trace the host \texttt{mail.example.com} from the right: the TLD
+is \texttt{.com}, the domain is \texttt{example}, and the remaining prefix
+\texttt{mail} is the subdomain. If the stem instead asks for the scheme,
+the answer is \texttt{https}; if it asks for the default port of that
+scheme, the answer is 443.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Expand URL, DNS, HTTP, HTTPS, TLS, IP, TLD, and ISP.
+  \item Label every part of \texttt{https://blog.example.org:443/notes/net?ch=1}.
+  \item Distinguish a URL from a domain name.
+  \item Describe the steps of DNS resolution when a name is not cached.
+  \item Contrast HTTP with HTTPS on security, default port, and address-bar
+    form.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item URL --- Uniform Resource Locator; DNS --- Domain Name System; HTTP
+    --- Hypertext Transfer Protocol; HTTPS --- Hypertext Transfer Protocol
+    Secure; TLS --- Transport Layer Security; IP --- Internet Protocol; TLD
+    --- Top-Level Domain; ISP --- Internet Service Provider.
+  \item Scheme \texttt{https}; subdomain \texttt{blog}; domain
+    \texttt{example}; TLD \texttt{.org}; port \texttt{443}; path
+    \texttt{/notes/net}; query \texttt{?ch=1}.
+  \item A URL is the full address of one resource (scheme, host, port,
+    path, query). A domain name is only the readable host part inside it.
+  \item The browser checks its cache; then the resolver asks the DNS
+    hierarchy (root, then TLD, then the authoritative server), which returns
+    the IP address; the resolver caches it and hands it to the browser.
+  \item HTTP carries pages without encryption over port 80
+    (\texttt{http://}); HTTPS is HTTP protected by TLS over port 443
+    (\texttt{https://} with a padlock).
+\end{enumerate}
+\endgroup
+\end{document}

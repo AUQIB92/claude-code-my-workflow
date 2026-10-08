@@ -1,0 +1,249 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Web Browsing, Search, Upload \& Download}
+\subtitle{Lesson 36 --- Search, Storage and Transfer}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What a Web Browser Does}
+  \begin{itemize}
+    \item A \key{web browser} is the software used to open and view web pages,
+      such as Google Chrome, Mozilla Firefox, and Microsoft Edge.
+    \item The browser sends a request for a page and displays the returned
+      text, images, and links.
+    \item The page address typed in the \key{address bar} is called the
+      \key{URL} --- Uniform Resource Locator.
+    \item Each open page lives in its own \key{tab}, so several pages can
+      stay open at once.
+  \end{itemize}
+  \begin{block}{The one idea}
+    The browser fetches pages; the search engine finds pages; tabs keep
+    several pages open together.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Tabs, Bookmarks, and History}
+  \begin{itemize}
+    \item \key{Tabs} let many pages stay open in one window; a new tab opens
+      with \key{Ctrl+T}.
+    \item A \key{bookmark} is a saved shortcut to a page so it can be opened
+      again without typing the address.
+    \item \key{Browsing history} is the list of pages visited earlier,
+      stored by date.
+    \item History answers ``where was I''; a bookmark answers ``where do I
+      want to return''.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    While preparing a report, the clerk keeps the office portal in one tab
+    and the search results in another, and bookmarks the portal for tomorrow.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{How a Search Engine Works: Crawling}
+  \begin{itemize}
+    \item A \key{search engine} (for example Google, Bing) finds pages that
+      match the typed words.
+    \item Step 1 --- \key{crawling}: automatic programs called
+      \key{crawlers} or spiders visit pages and follow their links.
+    \item Crawling discovers new and changed pages across the web.
+    \item Without crawling, the engine would never learn that a new page
+      exists.
+  \end{itemize}
+  \begin{block}{Pipeline position}
+    Crawling is the collection step: it gathers pages before anything else
+    can happen.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Indexing and Ranking}
+  \begin{itemize}
+    \item Step 2 --- \key{indexing}: the crawled pages are stored in a large
+      \key{index}, like the index at the back of a book.
+    \item Step 3 --- \key{ranking}: when words are typed, the engine picks
+      matching pages from the index and orders them by relevance.
+    \item The ordered list of matches is the \key{search results page}.
+    \item \muted{Order to remember: crawl, then index, then rank.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The index is built \key{before} the search; ranking happens only after
+    the words are typed.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Sponsored Results vs Organic Results}
+  \begin{itemize}
+    \item \key{Organic results} are the normal ranked matches chosen by
+      relevance.
+    \item \key{Sponsored results} (labelled Ad / Sponsored) are paid
+      placements shown because an advertiser paid, not because they ranked
+      highest.
+    \item A sponsored result always carries a visible \key{Ad} or
+      \key{Sponsored} label.
+    \item Being listed first on the page does \key{not} always mean being
+      the most relevant match.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Organic = ranked by relevance; sponsored = placed by payment.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cookies: What They Remember}
+  \begin{itemize}
+    \item A \key{cookie} is a small file a website stores on the computer to
+      remember that visitor.
+    \item Cookies keep a user logged in, remember items in a cart, and store
+      preferences such as language.
+    \item They are set \key{by websites} and read back on the next visit.
+    \item Deleting cookies signs the user out of sites and clears saved
+      preferences.
+  \end{itemize}
+  \begin{block}{One-line definition}
+    A cookie remembers \key{who the visitor is} for the website.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cache: What It Stores}
+  \begin{itemize}
+    \item The browser \key{cache} stores \key{copies of page parts} ---
+      images, styles, and scripts --- on the computer.
+    \item On the next visit the saved copies load from the disk instead of
+      being fetched again, so the page opens \key{faster}.
+    \item Cache is managed \key{by the browser}, not by the website.
+    \item Clearing the cache does not sign the user out; it only makes the
+      next visit slightly slower.
+  \end{itemize}
+  \begin{block}{One-line definition}
+    The cache remembers \key{page parts} so repeat visits load faster.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cookies vs Cache vs History}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Item} & \textbf{What it stores} & \textbf{Who stores it} \\
+      \midrule
+      Cookie & Visitor data (login, cart, choices) & Website \\
+      Cache & Copies of page files (images, styles) & Browser \\
+      History & List of visited page addresses & Browser \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{Trap alert}
+    Cookie = who you are; cache = saved page parts; history = where you went.
+    Do not swap the three.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Downloading}
+  \begin{itemize}
+    \item \key{Downloading} means copying a file \key{from the internet to
+      the computer}.
+    \item Examples: saving a form PDF from the office portal, saving a
+      photo from a web page.
+    \item A download moves data \key{down} to the user's machine and is
+      measured by \key{download speed}.
+    \item The saved file then opens without needing the internet.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    The clerk downloads the leave-application PDF from the portal to the
+    desktop, then fills it offline in a reader.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Uploading}
+  \begin{itemize}
+    \item \key{Uploading} means sending a file \key{from the computer to the
+      internet}.
+    \item Examples: attaching a document to an email, submitting a scanned
+      form on a portal.
+    \item An upload moves data \key{up} from the user's machine to a server.
+    \item Sending the file needs the internet connection at sending time.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Download = internet to computer; upload = computer to internet.
+    The direction is always judged from the user's machine.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Download Speed vs Upload Speed}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{Download} & \textbf{Upload} \\
+      \midrule
+      Direction & Server to computer & Computer to server \\
+      Use & Opening pages, saving files & Sending mail attachments, submitting forms \\
+      Typical speed & Faster & Slower \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Home and office plans usually give a faster download than upload.}
+\end{frame}
+
+\begin{frame}{File Conversion}
+  \begin{itemize}
+    \item \key{File conversion} means changing a file from one format to
+      another, keeping the same content.
+    \item Common office need: converting a Word document (\key{.docx}) to
+      \key{PDF} before submitting it on a portal.
+    \item Conversion changes the \key{format}, not the transfer direction:
+      a converted file must still be uploaded or downloaded separately.
+    \item The file \key{extension} (such as .pdf, .docx, .jpg) names the
+      format the file is stored in.
+  \end{itemize}
+  \begin{block}{Extension vs format}
+    The extension is the name tag (.png); the format is the storage method
+    (PNG). Do not conflate them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Safe and Correct Practice}
+  \begin{itemize}
+    \item Download files only from trusted sites; a free download can carry
+      a \key{virus}.
+    \item Check the file extension before opening: a document should not
+      arrive as an unknown program file.
+    \item Use \key{Ctrl+D} to bookmark the current page and \key{Ctrl+H} to
+      open browsing history.
+    \item Clear history to hide visited addresses; clear cookies to sign
+      out of sites.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Facts to Keep Straight}
+  \begin{itemize}
+    \item Search order: \key{crawl}, then \key{index}, then \key{rank}.
+    \item Sponsored = paid placement with an \key{Ad} label; organic =
+      ranked by relevance.
+    \item Cookie (website, visitor data) vs cache (browser, page copies)
+      vs history (browser, visited list).
+    \item Download = to the computer; upload = from the computer to the
+      server.
+    \item Conversion changes the \key{format}; transfer changes the
+      \key{location}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 36: Recall}
+  \begin{itemize}
+    \item Browsers fetch pages; tabs hold several pages; bookmarks save
+      shortcuts; history lists visited pages.
+    \item Search pipeline: crawlers collect pages, the index stores them,
+      ranking orders the matches; sponsored results are paid Ads.
+    \item Cookies remember the visitor (website); cache keeps page copies
+      (browser); history records visited addresses (browser).
+    \item Downloading copies from the internet to the computer; uploading
+      sends from the computer to the internet.
+    \item File conversion changes the format (for example .docx to PDF);
+      the extension names that format.
+  \end{itemize}
+\end{frame}
+\end{document}
