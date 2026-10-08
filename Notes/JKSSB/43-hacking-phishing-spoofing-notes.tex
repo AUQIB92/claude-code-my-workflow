@@ -1,0 +1,314 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{43.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Hacking, Phishing and Spoofing --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why attacks succeed}
+Most attacks on ordinary computer users do not defeat the machine by
+force. They persuade the person in front of the screen to hand over the
+key: a password, a One-Time Password, a click, or a file download. The
+attacker needs a weakness to use and a moment in which the victim acts
+without verifying. The weakness may be technical, such as a short reused
+password or outdated software, or human, such as trust in an
+authoritative-sounding caller, hurry, or fear of an account being
+blocked. This lesson stays at a safe awareness level: it names each
+attack, shows how to recognise it, and teaches the correct defensive
+response. It does not teach how to carry out any attack.
+
+\begin{definitionbox}{Attack chain}
+A \textbf{vulnerability} is a weakness in software, settings, or human
+habit that can be misused. An \textbf{exploit} is a method that takes
+advantage of such a weakness. An \textbf{attack} is the complete harmful
+act against a person or system. The \textbf{payload} is the harmful
+element the attack delivers, such as stolen credentials, stolen money,
+or a malicious file.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Hacking & Gaining unauthorised access to a computer, account, or network. \\
+Phishing & A fake message, mail, or call imitating a trusted sender to steal credentials or money. \\
+Spoofing & Faking an identity, such as a sender address, caller number, or website address. \\
+Social engineering & Tricking a person, rather than breaking software, into giving access. \\
+Password attack & An attempt to discover a password by guessing, a word list, exhaustive trial, or observation. \\
+Malicious link & A web address that leads to a fake page or an unwanted download. \\
+Malicious attachment & A file that harms the computer or steals data when opened. \\
+OTP & One-Time Password: a single-use code; never shared with anyone. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense.
+\textbf{Hacking} is the broad act of unauthorised access.
+\textbf{Phishing} is fraud by imitation that asks the victim to act.
+\textbf{Spoofing} is the forged identity that makes the fraud look
+genuine. \textbf{Social engineering} is the human manipulation behind
+both. A \textbf{vulnerability} is the weakness, the \textbf{exploit} is
+the method, and the \textbf{payload} is the harm delivered.
+
+\section{Hacking}
+\textbf{Hacking} means gaining \textbf{unauthorised access} to a
+computer system, an online account, or a network. A \textbf{hacker} is
+the person who performs this act. Access without permission is unlawful
+even when nothing is copied or damaged; the absence of permission is
+what defines the act, not the amount of harm that follows.
+
+An \textbf{ethical hacker} is a security tester who probes systems
+\textbf{with written permission} from the owner in order to find and fix
+weaknesses before criminals exploit them. The permission is the entire
+difference: the same technical step performed with written authorisation
+is a security test, and performed without it is an attack.
+
+\begin{definitionbox}{Hacking}
+Gaining access to a computer, account, or network without the owner's
+permission.
+\end{definitionbox}
+
+\begin{example}
+A student opens a colleague's mailbox by guessing the password and
+reads the mail. Even though nothing is deleted, this is hacking,
+because the access was unauthorised. A bank that hires a tester to try
+its login page, with a signed agreement, is instead conducting an
+ethical security test.
+\end{example}
+
+\section{Password attacks}
+Passwords remain the most common lock on an account, so attackers try
+to discover them first. Four methods appear repeatedly in examinations.
+
+\textbf{Guessing} tries obvious choices: the user's name, birth year,
+phone number, or common strings such as \texttt{password123}.
+\textbf{Dictionary attack} tries every entry in a list of common
+passwords automatically, which succeeds quickly against short familiar
+words. \textbf{Brute-force attack} tries every possible combination of
+characters until one works; it always succeeds eventually, but a longer
+password makes the search impractically slow. \textbf{Shoulder surfing}
+is direct observation: watching the keyboard or screen while the victim
+types a password or PIN.
+
+The defence follows from the methods. Use a \textbf{long} password that
+mixes letters, digits, and symbols, and never reuse one password across
+accounts. Never disclose a password or an \textbf{OTP (One-Time
+Password)} to anyone, including a caller who claims to represent the
+bank or the office. Lock the screen when leaving the desk, shield the
+keypad while typing, and switch on \textbf{two-step verification} (also
+called two-factor authentication) wherever it is offered, so that the
+password alone is not enough to enter the account.
+
+\begin{definitionbox}{Brute-force vs dictionary attack}
+A \textbf{dictionary attack} tries each word in a ready list of common
+passwords. A \textbf{brute-force attack} tries every possible character
+combination in turn.
+\end{definitionbox}
+
+\section{Social engineering}
+\textbf{Social engineering} is the practice of tricking a person into
+granting access, instead of breaking the software technically. Two
+named forms recur. \textbf{Pretexting} invents a false identity and
+story --- a bank officer verifying records, an IT support engineer
+fixing the account --- to extract a password, OTP, or remote-access
+permission. \textbf{Baiting} offers a lure --- a prize, a free recharge,
+free software --- that triggers the victim to click a link or download
+a file.
+
+The standard signal is manufactured urgency: words such as
+\textbf{urgent}, \textbf{blocked}, \textbf{suspended}, and \textbf{verify
+now}, combined with a demand to act immediately without checking. The
+safe response is fixed: slow down, verify the claim through an
+independently known channel (the published helpline or the real
+website), and never disclose a password or OTP under pressure.
+
+\begin{definitionbox}{Social engineering}
+Manipulating a person, rather than a machine, into revealing
+credentials or granting access.
+\end{definitionbox}
+
+\section{Phishing}
+\textbf{Phishing} is a fake message, email, text, or call that
+\textbf{imitates a trusted sender} --- a bank, an office, a delivery
+service --- in order to steal passwords, OTPs, card details, or money.
+The message always contains a call to action: click the enclosed link,
+open the attached file, or call back the given number. The link leads
+to a look-alike login page that records whatever is typed; the
+attachment installs the payload when opened.
+
+Named channels help classification. Fraudulent text messages are called
+\textbf{smishing} (SMS phishing) and fraudulent voice calls are called
+\textbf{vishing} (voice phishing), but both are phishing by the same
+definition: imitation plus a request for action. The recognition signs
+are stable: an urgent or threatening tone, spelling and grammar errors,
+a sender address that does not match the claimed organisation, and a
+link whose real address differs from the genuine website.
+
+\begin{definitionbox}{Phishing}
+A fraudulent message that imitates a trusted sender and asks the victim
+to click, open, reply, or pay, in order to steal credentials or money.
+\end{definitionbox}
+
+\begin{example}
+A clerk receives a mail headed ``Salary slip ready --- download within
+24 hours or the account will be blocked.'' The sender shows the office
+name, but the reply address is an unknown mailbox and the enclosed
+link points to a misspelled portal. The mail is phishing: imitation (the
+office name), pressure (blocking within 24 hours), and a call to action
+(the link). The safe response is to ignore the link, open the real
+portal by typing its known address, and report the message.
+\end{example}
+
+\section{Spoofing}
+\textbf{Spoofing} means \textbf{faking an identity} so that a message,
+call, or website appears to come from someone it does not. Three forms
+cover the examination scope. \textbf{Email spoofing} forges the
+``From'' address so the mail displays a trusted name that never sent
+it. \textbf{Caller ID spoofing} forges the number shown on the phone so
+the call appears to come from a bank or office. \textbf{Website (URL)
+spoofing} registers a look-alike address --- for instance
+\texttt{bank-verlfy.com} in place of the genuine
+\texttt{bank-verify.com} --- and hosts a fake login page there.
+
+Spoofing is best understood as a disguise rather than a complete fraud.
+A phishing message very often \textbf{uses} spoofing --- a forged
+sender address --- to look trustworthy, but spoofing can also appear
+without any message at all, as in a forged website waiting for
+visitors. The check is the same in every case: confirm the identity
+through a known channel instead of trusting what is displayed.
+
+\begin{definitionbox}{Spoofing}
+Presenting a forged sender address, caller number, or website address
+as though it were genuine.
+\end{definitionbox}
+
+\section{Phishing vs spoofing vs hacking}
+These three terms form the mandatory near-neighbour set of the lesson,
+and examination options deliberately mix them. \textbf{Hacking} is the
+broadest: any unauthorised access. \textbf{Phishing} is fraud by
+imitation that asks the victim to act: click, open, reply, or pay.
+\textbf{Spoofing} is the forged identity itself: the faked address,
+number, or site. A single incident can contain all three --- a forged
+sender address (spoofing) carries a fake bank mail asking for the OTP
+(phishing), and the stolen OTP is then used to enter the account
+(hacking) --- but each word answers a different question: was access
+taken without permission, was a fake message asking for action, or was
+an identity forged?
+
+\section{Malicious links and attachments}
+A \textbf{malicious link} is a web address that leads to a fake login
+page or starts an unwanted download. Before clicking, hover over the
+link with the mouse to reveal the real address, or long-press it on a
+phone to preview the destination. Safer still, ignore the link entirely
+and type the website's known address by hand. Shortened addresses,
+misspelled brand names, and extra words inserted into a familiar
+address, arriving inside an unexpected or urgent message, are warning
+signs.
+
+A \textbf{malicious attachment} is a file that harms the computer or
+steals data once opened. Never open an unexpected attachment, even when
+the displayed sender is a known name, because that name may itself be
+spoofed; confirm with the sender through a separate channel first. Be
+especially cautious with documents that ask the reader to ``enable
+macros'' or ``enable content'' on opening, since that step is what
+activates many payloads. In short: the link is the address, the
+attachment is the file, and both can carry the payload.
+
+\section{Safe habits and response after targeting}
+Four habits block the large majority of these attacks. First, verify
+every urgent request through a \textbf{known channel} --- the published
+helpline or the manually typed website --- before acting. Second, keep
+the operating system, browser, and \textbf{antivirus} software updated,
+and scan external drives before opening their files. Third, keep a
+regular \textbf{backup} of important files so that one incident cannot
+destroy the only copy. Fourth, use the mail client's \textbf{report
+phishing} option on a suspicious message rather than replying to it or
+forwarding it to colleagues.
+
+If a suspicious page has already been opened, do not type any password,
+OTP, or card details into it. Close the page, delete the message, and
+do not call back any number printed inside it. Change the affected
+password by visiting the real website directly, inform the bank or
+office through its published helpline, and preserve a record --- a
+screenshot and the sender's address --- for the complaint. The order is
+fixed: stop, verify on the real channel, change credentials, report.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item Phishing \textbf{imitates} a trusted sender to steal data or
+    money; spoofing \textbf{forges} the identity it wears; hacking is
+    the broader \textbf{unauthorised access}.
+  \item OTP stands for \textbf{One-Time Password}. No genuine bank,
+    office, or support desk ever asks for it by call or message.
+  \item A \textbf{dictionary} attack tries a ready word list; a
+    \textbf{brute-force} attack tries every combination.
+  \item A \textbf{vulnerability} is the weakness, an \textbf{exploit} is
+    the method that uses it, and the \textbf{payload} is the harm
+    delivered.
+  \item Ethical hacking requires \textbf{written permission}; without
+    it, access is unauthorised.
+  \item The safe response to any urgent message is fixed: do not click,
+    verify through a known channel, and report.
+\end{enumerate}
+
+\begin{example}
+An item describes a call in which the displayed number matches the
+bank's helpline and the caller demands the OTP to ``unblock'' the
+account. Trace the definitions: the displayed number is forged
+(spoofing), the call imitates the bank and demands the OTP (phishing by
+vishing, using social engineering), and any resulting entry into the
+account is unauthorised access (hacking). The correct answer names
+phishing, and the correct action is to refuse, disconnect, and verify
+through the published helpline.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define hacking, and state what separates an ethical security
+    test from an attack.
+  \item Distinguish a dictionary attack from a brute-force attack.
+  \item Define phishing and list four recognition signs of a phishing
+    message.
+  \item Distinguish phishing from spoofing in one sentence each, and
+    explain how they combine.
+  \item State the safe response when an unexpected message demands an
+    OTP urgently.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Hacking is gaining unauthorised access to a computer, account,
+    or network. An ethical security test is performed with the owner's
+    written permission in order to find and fix weaknesses; without
+    that permission the same act is an attack.
+  \item A dictionary attack tries each entry of a ready list of common
+    passwords; a brute-force attack tries every possible character
+    combination in turn, so longer passwords resist it.
+  \item Phishing is a fraudulent message imitating a trusted sender in
+    order to steal credentials or money. Signs: urgent or threatening
+    tone, spelling errors, a sender address that does not match the
+    claimed organisation, and a link whose real address differs from
+    the genuine site.
+  \item Phishing is fraud by imitation that asks the victim to act;
+    spoofing is the forged identity itself. A phishing message often
+    wears a spoofed sender address to look trustworthy.
+  \item Do not click, reply, or disclose the OTP; verify through an
+    independently known channel (published helpline or manually typed
+    website), change credentials on the real site if exposed, and
+    report the message.
+\end{enumerate}
+\endgroup
+\end{document}

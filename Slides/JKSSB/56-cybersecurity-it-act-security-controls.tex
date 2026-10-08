@@ -1,0 +1,282 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Cybersecurity, IT Act \& Security Controls}
+\subtitle{Lesson 56 --- Law, Threats and Controls}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Security Matters: The CIA Triad}
+  \begin{itemize}
+    \item A computer holds data worth protecting: marks, accounts,
+      personal records, and official files.
+    \item \key{Security} means protecting data and systems against theft,
+      damage, and misuse.
+    \item Three goals, remembered as \key{CIA}: \key{confidentiality}
+      (only authorised persons read), \key{integrity} (data is not
+      altered), \key{availability} (systems stay usable).
+    \item Every control in this lesson serves one or more of these goals.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Threats attack the CIA triad; controls defend it. Match each control
+    to what it does.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The IT Act, 2000}
+  \begin{itemize}
+    \item The \key{Information Technology Act, 2000} is India's law dealing
+      with electronic records, electronic governance, and cybercrime.
+    \item It gives \key{legal validity} to electronic records and electronic
+      signatures, so online transactions and e-governance have a legal basis.
+    \item It defines \key{cyber contraventions and offences}, such as
+      unauthorised access, damage to computer systems, and fraud committed
+      through a computer.
+    \item Year and scope are the exam facts: the Act is of \key{2000} and
+      covers \key{electronic records, e-governance, and cybercrime}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The IT Act is of \key{2000}, not 2008 as a new Act --- later changes
+    were amendments to the 2000 Act. Do not invent section numbers.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Malware Umbrella}
+  \begin{itemize}
+    \item \key{Malware} (malicious software) is the umbrella term for any
+      program written to harm a computer, steal data, or disrupt work.
+    \item The four named members: \key{virus}, \key{worm},
+      \key{Trojan horse}, and \key{ransomware}.
+    \item Related nuisance programs: \key{spyware} (secretly watches and
+      reports activity) and \key{adware} (shows unwanted advertisements).
+    \item Exam wording: malware is the \key{general} term; virus, worm,
+      Trojan, and ransomware are \key{specific} types under it.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Malware is the umbrella; each named threat is one rib of the umbrella.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Virus: Needs a Host and Human Action}
+  \begin{itemize}
+    \item A \key{virus} attaches itself to a host file or program and
+      spreads when that file is run or shared.
+    \item It \key{needs human action} --- opening an infected attachment or
+      running an infected file --- to spread.
+    \item It can corrupt, delete, or alter files once it runs.
+    \item Office-desktop picture: an infected document copy passed on a
+      pen drive infects the next machine that opens it.
+  \end{itemize}
+  \begin{alertblock}{Exam contrast}
+    Virus needs a \key{host file plus human action}; worm does not.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Worm: Self-Spreading Across Networks}
+  \begin{itemize}
+    \item A \key{worm} is standalone malware that \key{copies itself} and
+      spreads across a network \key{without} a host file.
+    \item It needs \key{no human action} to move from machine to machine;
+      it exploits the network itself.
+    \item Worms consume \key{bandwidth and system resources}, slowing or
+      crashing networks.
+    \item \muted{One infected machine can flood the office network while
+      nobody opens anything.}
+  \end{itemize}
+  \begin{block}{Virus vs worm}
+    Virus = host file + human action. Worm = self-copying, no host, no
+    click needed.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trojan Horse: Looks Useful, Hides Harm}
+  \begin{itemize}
+    \item A \key{Trojan horse} pretends to be useful software but hides a
+      harmful purpose inside.
+    \item Unlike a virus or worm, it \key{does not replicate} by itself.
+    \item The harm: it opens a \key{backdoor}, letting an attacker steal
+      passwords, spy on activity, or control the machine.
+    \item Office-desktop picture: a ``free'' utility that installs fine ---
+      and quietly hands the attacker the keyboard.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Trojan does \key{not} self-replicate. Replication belongs to virus
+    and worm.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Ransomware: Locks, Then Demands Payment}
+  \begin{itemize}
+    \item \key{Ransomware} \key{encrypts} the victim's files or locks the
+      screen, then demands payment (\key{ransom}) for release.
+    \item Payment does \key{not} guarantee recovery; the defence is a clean
+      \key{backup} kept separate from the machine.
+    \item It commonly arrives through phishing mail and infected downloads.
+    \item \muted{Exam one-liner: ransomware = locks data + demands money.}
+  \end{itemize}
+  \begin{exampleblock}{Worked contrast}
+    Virus corrupts files; worm floods the network; Trojan spies through a
+    backdoor; ransomware locks files and demands payment.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Antivirus and Quarantine}
+  \begin{itemize}
+    \item \key{Antivirus} software detects, blocks, and removes malware,
+      using known malware signatures and suspicious-behaviour checks.
+    \item It must be \key{updated regularly}, since new malware appears
+      every day.
+    \item \key{Quarantine} means isolating a suspicious file so it cannot
+      run or spread while awaiting a decision.
+    \item Quarantine is \key{isolation}, not deletion and not a backup.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Delete removes; quarantine isolates. An isolated file can still be
+    inspected or restored.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Phishing and Anti-Phishing}
+  \begin{itemize}
+    \item \key{Phishing} is a fake message (mail, SMS, or site) that
+      impersonates a trusted sender to steal passwords or money.
+    \item Warning signs: urgent threats, unexpected attachments, links that
+      do not match the claimed sender, requests for OTPs or passwords.
+    \item \key{Anti-phishing} defences: verify the sender, hover over links
+      before clicking, never share OTPs, and report the message.
+    \item A genuine bank or office \key{never} asks for a password or OTP
+      by mail or message.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Phishing steals \key{credentials by deception}; it is not a virus and
+    needs no malware to succeed.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Encryption vs Digital Signature}
+  \begin{itemize}
+    \item \key{Encryption} converts readable data (plaintext) into coded
+      form (ciphertext) so only authorised persons can read it ---
+      it gives \key{confidentiality}.
+    \item A \key{digital signature} proves who sent a message and that it
+      was not altered --- it gives \key{authenticity and integrity}.
+    \item A signature does \key{not} hide the message; encryption does.
+    \item \muted{This repeats the Lesson-16 email rule (TRAP-15): signature
+      $\ne$ encryption.}
+  \end{itemize}
+  \begin{block}{One line each}
+    Encryption hides content. Signature proves sender and intactness.
+  \end{block}
+\end{frame}
+
+\begin{frame}{SSL and TLS: Secure Transmission}
+  \begin{itemize}
+    \item \key{SSL} stands for Secure Sockets Layer; \key{TLS} stands for
+      Transport Layer Security.
+    \item TLS is the \key{successor} of SSL; the pair provides a secure,
+      encrypted channel over a network.
+    \item They protect data \key{in transit}: mail sending, web login, and
+      online forms (the padlock in the browser address bar).
+    \item Exam anchor (WO 2026 Q76): the secure email transmission protocol
+      is \key{SSL/TLS}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    SSL/TLS protect data in transit. They do not clean an infected file
+    and do not replace antivirus.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Firewall: The Network Barrier}
+  \begin{itemize}
+    \item A \key{firewall} is a barrier that filters incoming and outgoing
+      network traffic against a set of rules.
+    \item It \key{blocks unauthorised access} while letting permitted
+      traffic pass.
+    \item It can be \key{hardware}, \key{software}, or both.
+    \item \muted{Picture it as the gatekeeper at the office network door,
+      checking every packet against the list.}
+  \end{itemize}
+  \begin{exampleblock}{Worked contrast}
+    Firewall filters \key{traffic} at the boundary; antivirus cleans
+    \key{malware} inside the machine. They complement, not replace, each
+    other.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Patching and MFA: Two More Controls}
+  \begin{itemize}
+    \item \key{Patching} means installing vendor-supplied software updates
+      that fix security flaws; an unpatched machine stays open to known
+      attacks.
+    \item \key{MFA} stands for Multi-Factor Authentication: proving identity
+      with \key{two or more} checks, e.g.\ password plus OTP or fingerprint.
+    \item MFA protects \key{logins}; patching protects \key{software flaws}.
+    \item Strong, distinct \key{passwords} remain the first factor ---
+      MFA adds factors, it does not replace the password.
+  \end{itemize}
+  \begin{block}{Which control does what}
+    Patching closes holes in software. MFA closes the door against stolen
+    passwords.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Which Control Does What: Matching Map}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Control} & \textbf{Job} \\
+      \midrule
+      Firewall & Filters network traffic; blocks unauthorised access \\
+      Antivirus & Detects and removes malware on the machine \\
+      Quarantine & Isolates a suspicious file so it cannot run \\
+      Encryption (SSL/TLS) & Protects data in transit from reading \\
+      Digital signature & Proves sender and intactness \\
+      Patching & Fixes security flaws in software \\
+      MFA & Adds extra login checks beyond the password \\
+      Backup & Recovers data after ransomware or loss \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Read the stem's verb --- filters, cleans, isolates, hides,
+  proves, fixes, or recovers --- then pick the matching row.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Security Facts to Keep Straight}
+  \begin{itemize}
+    \item IT Act = \key{2000}; covers electronic records, e-governance,
+      and cybercrime.
+    \item Malware is the \key{umbrella}; virus, worm, Trojan, and
+      ransomware are types under it.
+    \item Virus needs host + action; worm self-spreads; Trojan does
+      \key{not} replicate; ransomware locks and demands payment.
+    \item Digital signature $\ne$ encryption: signature proves,
+      encryption hides. (TRAP-15)
+    \item SSL/TLS = secure \key{transmission}; firewall = traffic
+      \key{barrier}; quarantine = \key{isolation}; MFA = \key{extra login
+      checks}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 56: Recall}
+  \begin{itemize}
+    \item The Information Technology Act, 2000 gives legal validity to
+      electronic records and signatures and defines cyber contraventions
+      and offences.
+    \item Malware is the umbrella term; virus (host + action), worm
+      (self-spreading), Trojan (false-useful backdoor, no replication),
+      and ransomware (locks + demands payment) sit under it.
+    \item Antivirus detects and removes malware; quarantine isolates a
+      suspicious file; patching fixes software flaws.
+    \item Phishing steals credentials by deception; verify senders, never
+      share OTPs.
+    \item Encryption gives confidentiality; digital signature gives
+      authenticity and integrity; SSL/TLS secure data in transit;
+      firewall filters traffic; MFA adds login factors.
+  \end{itemize}
+\end{frame}
+\end{document}

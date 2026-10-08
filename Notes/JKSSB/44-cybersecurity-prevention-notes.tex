@@ -1,0 +1,281 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{44.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Cybersecurity Prevention --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Prevention and the CIA triad}
+Cleaning an infected machine is slow and uncertain, so the first goal of
+security is prevention: small repeated habits plus a few tools that each do
+one distinct job. The standard way to judge whether protection is complete is
+the \textbf{CIA triad}: \textbf{confidentiality}, \textbf{integrity}, and
+\textbf{availability}.
+
+\begin{definitionbox}{Confidentiality}
+Only authorised persons can read the data. Passwords, encryption, and MFA
+protect it.
+\end{definitionbox}
+
+\begin{definitionbox}{Integrity}
+The data is accurate and has not been changed by unauthorised means.
+Clean backups, digital signatures, and timely patching protect it.
+\end{definitionbox}
+
+\begin{definitionbox}{Availability}
+The data and systems are reachable when needed. Backups, antivirus software,
+and firewalls protect it.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Antivirus & Software that detects, blocks, and removes malicious programs. \\
+Signature & A stored pattern of a known virus, used for recognition. \\
+Real-time scanning & Checking files at the moment they are opened, downloaded, or copied. \\
+Quarantine & Holding a suspicious file in an isolated area so it cannot run. \\
+Firewall & A filter that allows or blocks network traffic by rule. \\
+Patch & A small vendor fix for a known security weakness. \\
+MFA --- Multi-Factor Authentication & Proving identity with two or more independent factors. \\
+Backup & A separate clean copy of data kept for recovery. \\
+HTTPS & The secure, encrypted form of web browsing. \\
+WPA2/WPA3 & Encryption standards that protect a Wi-Fi link. \\
+Autorun & The feature that launches programs automatically when a drive is connected. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+One attack can break more than one leg of the triad. Stealing a password over
+open Wi-Fi breaks confidentiality; altering marks in a result file breaks
+integrity; ransomware that locks every document breaks availability. The rest
+of this lesson maps each preventive control to the goal it serves.
+
+\section{Antivirus: signatures, scanning, and quarantine}
+\textbf{Antivirus} software detects, blocks, and removes malicious programs
+(malware). Its oldest method is the \textbf{signature}: a stored pattern of a
+known virus, like a fingerprint kept on record. The antivirus compares each
+file against its signature database and flags anything that matches. Because
+new malware appears every day, the signature database must be updated
+regularly; an outdated antivirus misses new threats.
+
+\begin{definitionbox}{Signature}
+A stored pattern identifying a known malicious program, against which files
+are compared.
+\end{definitionbox}
+
+Signatures catch known malware, but they cannot recognise a brand-new
+(zero-day) threat. Behaviour-based detection watches what a program
+\emph{does} --- for example, trying to encrypt every document --- and stops
+it even when no signature matches.
+
+Two scanning modes matter. \textbf{Real-time scanning} checks files at the
+moment they are opened, downloaded, or copied, before harm is done. A
+\textbf{full (on-demand) scan} checks the whole system when the user asks for
+it. When either mode finds something suspicious, the antivirus moves the file
+to \textbf{quarantine}: an isolated area where the file cannot run or spread.
+Quarantine is not deletion. The file is held safely until the user deletes it
+or restores it (for example, when a clean file was flagged by mistake).
+
+\begin{example}
+A pen drive is plugged into the office desktop and a file on it matches a
+known virus signature. Real-time scanning blocks the file the moment it is
+opened and moves it to quarantine, so it cannot run. The user then deletes the
+quarantined file. If instead the file had been a clean office template flagged
+by mistake, quarantine would allow restoring it --- deletion would not.
+\end{example}
+
+\section{Firewall: the network gatekeeper}
+A \textbf{firewall} monitors incoming and outgoing network traffic and blocks
+whatever its rules forbid. Its job is to stop unauthorised network access: a
+stranger on the internet reaching into the office computer, or a malicious
+program on the computer sending data out. A firewall can be software running
+on the computer or hardware placed at the network boundary; offices commonly
+use both.
+
+\begin{definitionbox}{Firewall}
+A hardware or software filter that allows or blocks network traffic
+according to a set of rules.
+\end{definitionbox}
+
+The firewall--antivirus boundary is a favourite exam trap. A firewall blocks
+bad \emph{traffic}; it does not remove viruses already saved on the disk.
+Antivirus removes bad \emph{files}; it does not, by itself, patrol the network
+boundary. The two complement each other and neither replaces the other.
+
+\section{Patching and updates}
+A \textbf{patch} is a small fix released by the vendor for a known security
+weakness, and a \textbf{software update} delivers such fixes (plus features).
+Attackers study published weaknesses, so any delay in installing patches
+leaves known doors open. The operating system, the web browser, and the
+antivirus itself must all be updated; each has flaws attackers can exploit.
+Automatic updates are the safest setting for most users.
+
+\begin{example}
+The office desktop offers an operating-system update. Installing it closes a
+published weakness the same week it became known. Postponing it for months
+means every attacker who read the same notice knows exactly which door is
+still open on that machine.
+\end{example}
+
+\section{Strong passwords and MFA}
+A \textbf{strong password} is long and mixes uppercase letters, lowercase
+letters, numbers, and symbols. It must be unique per site, never shared, and
+never left at its factory default: routers and office devices ship with
+well-known default passwords that must be changed immediately. A
+\textbf{password manager} stores one distinct strong password per site so the
+user only memorises a single master secret.
+
+\textbf{MFA} stands for Multi-Factor Authentication. It demands two or more
+independent proofs of identity: something you know (the password), plus
+something you have (a one-time code on the phone) or something you are (a
+fingerprint). Even when the password leaks, the attacker still lacks the
+second factor, so the account holds. Note the distinction the exam tests: a
+longer password is still one factor; MFA is the extra check, not a stronger
+password.
+
+\begin{definitionbox}{MFA (Multi-Factor Authentication)}
+An authentication method that requires two or more independent factors ---
+for example, a password plus a phone code or fingerprint.
+\end{definitionbox}
+
+\section{Backup: the availability control}
+A \textbf{backup} is a separate clean copy of important data, kept so work
+can continue when the original is lost, damaged, or locked by ransomware.
+Backup is the great protector of availability. Good backups are regular (so
+little work is lost), kept offline or off-site (so one fire, theft, or
+ransomware attack cannot destroy both copies), and tested by trial restores. A
+backup that cannot be restored is not a backup.
+
+The backup--antivirus boundary is another tested pair. Backup restores
+\emph{lost} data; antivirus removes \emph{malicious} data. A machine can have
+fresh antivirus and still lose a year's work to a failed disk if there is no
+backup.
+
+\section{Safe browsing}
+Most infections arrive through the browser, so browsing habits are a control
+in their own right. Look for \textbf{HTTPS} and the padlock symbol before
+entering passwords or bank details; HTTPS encrypts the session between the
+browser and the site. Treat unexpected links and attachments as hostile:
+\textbf{phishing} messages imitate trusted senders (a bank, an office, a
+colleague) to steal credentials. Download software only from official or
+trusted sources, log out on shared computers, and never save passwords on a
+machine others use.
+
+\section{Secure Wi-Fi}
+The wireless link needs its own protection. Home and office networks must use
+\textbf{WPA2 or WPA3} encryption with a strong password, and the router's
+default admin password must be changed. Open (password-free) public hotspots
+expose traffic, so sensitive logins --- banking, email, office accounts ---
+should wait for mobile data, a trusted network, or a \textbf{VPN} (Virtual
+Private Network), which encrypts traffic across untrusted links. Two extra
+habits help: turn off automatic connection to unknown hotspots, and keep
+software updated so known wireless flaws are patched. Note the layering the
+exam tests: HTTPS protects the website session, while WPA2/WPA3 protects the
+wireless link itself; both layers matter.
+
+\begin{definitionbox}{VPN (Virtual Private Network)}
+An encrypted tunnel that carries traffic safely across an untrusted network.
+\end{definitionbox}
+
+\section{Removable-media safety}
+USB drives and memory cards carry malware between machines. Scan every drive
+with antivirus \emph{before} opening its files, and never plug an unknown
+found drive into the office computer. Disable \textbf{autorun} so a
+newly connected drive cannot launch programs by itself. Handle drives gently
+at the end as well: use the safe-eject (safely remove hardware) option before
+pulling the device out, so files are not corrupted.
+
+\section{Which control does what}
+This table is the highest-yield page in the lesson; most questions are
+matching items built from its rows.
+
+\begin{center}
+\begin{tabular}{p{0.32\textwidth}p{0.58\textwidth}}
+\toprule
+\textbf{Control} & \textbf{Main job} \\
+\midrule
+Antivirus + signatures & Detect and remove known malware files. \\
+Real-time scanning + quarantine & Check on access; isolate suspects before harm. \\
+Firewall & Block unauthorised network traffic. \\
+Patching / updates & Close known software weaknesses. \\
+Strong password + MFA & Prove identity; block account theft. \\
+Backup & Restore data after loss or ransomware. \\
+HTTPS + safe browsing & Protect sessions; dodge phishing and bad downloads. \\
+WPA2/WPA3 + VPN & Protect data travelling on the network link. \\
+Scan USB + disable autorun & Stop malware entering on removable drives. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A useful habit: read the stem's verb. ``Remove'' points to antivirus,
+``block traffic'' to the firewall, ``prove identity'' to passwords and MFA,
+``restore'' to backup, and ``protect the link'' to WPA2/WPA3 or a VPN.
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The firewall blocks \textbf{traffic}; the antivirus removes
+    \textbf{files}. Do not swap them.
+  \item Quarantine \textbf{isolates}; deletion \textbf{removes}. A
+    quarantined file can be restored; a deleted one cannot.
+  \item MFA adds a \textbf{second proof of identity}; a longer password is
+    still one factor.
+  \item Backup restores \textbf{availability}; encryption protects
+    \textbf{confidentiality}. A backup is not an antivirus and an antivirus
+    is not a backup.
+  \item HTTPS protects the \textbf{website session}; WPA2/WPA3 protects the
+    \textbf{Wi-Fi link}.
+  \item Confidentiality keeps secrets secret, integrity keeps data correct,
+    and availability keeps systems reachable. Map each attack to the leg it
+    breaks before choosing the control.
+\end{enumerate}
+
+\begin{example}
+An item asks which control lets the office resume work after ransomware locks
+every document. Trace the verb: ``resume work after loss'' means restoring
+availability, so the answer is the offline backup. Antivirus (removes malware)
+and the firewall (blocks traffic) cannot unlock or recreate the lost files.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the three goals of the CIA triad in one line each.
+  \item Explain what a virus signature is and why it must be updated.
+  \item Distinguish quarantine from deletion.
+  \item Distinguish a firewall from antivirus software.
+  \item Explain why a long password alone is not MFA, and what MFA adds.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Confidentiality: only authorised persons can read the data.
+    Integrity: the data is accurate and unaltered by unauthorised means.
+    Availability: the data and systems are reachable when needed.
+  \item A signature is a stored pattern of a known virus used for recognition.
+    New malware appears daily, so the database must be updated or new threats
+    will not match anything on record.
+  \item Quarantine isolates a suspicious file in a safe area where it cannot
+    run, and the file can later be restored; deletion removes the file, and
+    it cannot be recovered from quarantine-style holding.
+  \item A firewall monitors network traffic and blocks what its rules forbid;
+    it does not clean infected files. Antivirus detects and removes malicious
+    files on the machine; it does not by itself patrol the network boundary.
+  \item A long password is still a single factor (something you know). MFA
+    (Multi-Factor Authentication) adds at least one independent factor, such
+    as a phone code or fingerprint, so a leaked password alone is not enough.
+\end{enumerate}
+\endgroup
+\end{document}

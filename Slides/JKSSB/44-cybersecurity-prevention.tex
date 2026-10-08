@@ -1,0 +1,268 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Cybersecurity Prevention}
+\subtitle{Lesson 44 --- Controls and the CIA Triad}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Prevention Comes First}
+  \begin{itemize}
+    \item Removing a virus after infection is costly; \key{blocking it first}
+      is cheaper and safer.
+    \item Prevention uses small daily habits plus a few tools that each do
+      \key{one distinct job}.
+    \item The exam favourite is matching: \key{which control does what}.
+    \item Learn each control as \muted{name $\rightarrow$ threat it stops
+      $\rightarrow$ what it cannot do}.
+  \end{itemize}
+  \begin{block}{The one idea}
+    No single tool stops everything; layered controls protect the CIA triad.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The CIA Triad}
+  \begin{itemize}
+    \item \key{Confidentiality}: only authorised persons can read the data.
+    \item \key{Integrity}: the data is accurate and has not been changed by
+      unauthorised means.
+    \item \key{Availability}: the data and systems are reachable when needed.
+  \end{itemize}
+  \begin{block}{One-line memory hook}
+    Confidentiality keeps secrets secret; integrity keeps data correct;
+    availability keeps systems up.
+  \end{block}
+\end{frame}
+
+\begin{frame}{CIA Triad: Which Attack Breaks What}
+  \begin{center}
+    \small
+    \begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Goal broken} & \textbf{Example attack} & \textbf{Protective control} \\
+      \midrule
+      Confidentiality & Stealing passwords over open Wi-Fi & Encryption, strong passwords, MFA \\
+      Integrity & Altering marks in a file & Clean backups, digital signatures, updates \\
+      Availability & Ransomware locks files & Backup, antivirus, firewall \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{One attack can break more than one goal at once.}
+\end{frame}
+
+\begin{frame}{Antivirus: Signatures}
+  \begin{itemize}
+    \item \key{Antivirus} software detects, blocks, and removes malicious
+      programs (malware).
+    \item A \key{signature} is a stored pattern of a known virus, like a
+      fingerprint on record.
+    \item The antivirus compares each file against its \key{signature
+      database} of known threats.
+    \item New viruses appear daily, so signatures must be \key{updated
+      regularly}; an outdated database misses new malware.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Signatures catch \key{known} malware. Unknown (zero-day) malware needs
+    behaviour-based detection instead.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Real-Time Scanning and Quarantine}
+  \begin{itemize}
+    \item \key{Real-time scanning} checks files as they are opened,
+      downloaded, or copied --- before harm is done.
+    \item A scheduled \key{full scan} checks the whole system on demand.
+    \item \key{Quarantine} isolates a suspicious file in a safe separate
+      area so it cannot run or spread.
+    \item Quarantine is \key{not} deletion: the file is held safely until the
+      user deletes or restores it.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Quarantine isolates; deletion removes. Quarantined files can be restored;
+    deleted files cannot.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Firewall: The Gatekeeper}
+  \begin{itemize}
+    \item A \key{firewall} monitors incoming and outgoing network traffic and
+      blocks what its rules forbid.
+    \item It stops \key{unauthorised network access}, such as a stranger
+      reaching into the office computer.
+    \item A firewall can be \key{software} (on the computer) or
+      \key{hardware} (on the network boundary).
+    \item It does \key{not} remove viruses already on the disk --- that is the
+      antivirus job.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Firewall blocks bad \key{traffic}; antivirus removes bad \key{files}. Do
+    not swap them.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Patching and Updates}
+  \begin{itemize}
+    \item A \key{patch} is a small fix released by the vendor for a known
+      security weakness.
+    \item \key{Software updates} close the holes that attackers exploit, so
+      install them promptly.
+    \item Update the \key{operating system, browser, and antivirus} alike;
+      all three have exploitable flaws.
+    \item \muted{Postponing updates leaves known doors open.}
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    The office PC shows an operating-system update notice. Installing it
+    patches a known weakness; clicking ``remind me later'' for weeks leaves
+    the machine exposed.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Strong Passwords}
+  \begin{itemize}
+    \item A \key{strong password} is long and mixes uppercase, lowercase,
+      numbers, and symbols.
+    \item Never reuse one password across sites, and never share it.
+    \item Change \key{default passwords} on routers and devices at once.
+    \item A \key{password manager} stores distinct passwords so the user
+      remembers only one master secret.
+  \end{itemize}
+  \begin{block}{Weak vs strong}
+    \texttt{rahul123} is weak; \texttt{RaHuL\#2026!Desk} is strong: longer,
+    mixed, and unpredictable.
+  \end{block}
+\end{frame}
+
+\begin{frame}{MFA: A Second Proof}
+  \begin{itemize}
+    \item \key{MFA} stands for Multi-Factor Authentication.
+    \item It asks for \key{two or more proofs}: something you know (password)
+      plus something you have (phone code) or are (fingerprint).
+    \item Even if the password leaks, the attacker still lacks the
+      \key{second factor}.
+    \item \muted{One-time passwords (OTPs) sent to the phone are the most
+      common second factor.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A password alone is one factor. MFA is the \key{extra} check, not a
+    stronger password.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Backup: The Availability Control}
+  \begin{itemize}
+    \item A \key{backup} is a separate clean copy of important data, used
+      when the original is lost, damaged, or locked by ransomware.
+    \item It protects \key{availability}: work continues even after data loss.
+    \item Keep backups \key{regular} and \key{offline or off-site}, so one
+      incident cannot destroy both copies.
+    \item Test restores: a backup that cannot be restored is \key{not} a
+      backup.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Backup restores \key{lost} data; antivirus removes \key{malicious} data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Safe Browsing}
+  \begin{itemize}
+    \item Look for \key{HTTPS} and the padlock before entering passwords or
+      bank details.
+    \item Do not click unknown links or attachments; \key{phishing} messages
+      imitate trusted senders.
+    \item Download software only from \key{official or trusted sources}.
+    \item Log out of shared computers and avoid saving passwords on them.
+  \end{itemize}
+  \begin{exampleblock}{Phishing example}
+    A message claims the bank blocked the account and demands an instant
+    login through its link. A safe user ignores the link and opens the bank
+    site by typing the address directly.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Secure Wi-Fi}
+  \begin{itemize}
+    \item Home and office Wi-Fi must use \key{WPA2 or WPA3} encryption with a
+      strong password.
+    \item \key{Open (password-free) public Wi-Fi} exposes traffic; attackers
+      can read what passes over it.
+    \item Avoid banking or official logins on open hotspots; use mobile data
+      or a trusted \key{VPN} instead.
+    \item Turn off auto-connect and change the router's \key{default admin
+      password}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The padlock (HTTPS) protects the website session; WPA2/WPA3 protects the
+    \key{wireless link}. Both layers matter.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Removable-Media Safety}
+  \begin{itemize}
+    \item Scan every \key{USB drive or memory card} with antivirus
+      \key{before} opening its files.
+    \item Disable \key{autorun} so a plugged-in drive cannot launch programs
+      by itself.
+    \item Do not plug unknown found drives into the office computer.
+    \item \key{Eject} the device safely before removal to avoid corrupting
+      files.
+  \end{itemize}
+  \begin{block}{Office desktop example}
+    A visitor offers files on a pen drive. The safe steps are: scan first,
+    open only the needed files, then eject --- never let it auto-run.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Which Control Does What}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Control} & \textbf{Main job} \\
+      \midrule
+      Antivirus + signatures & Detect and remove known malware files \\
+      Firewall & Block unauthorised network traffic \\
+      Patching / updates & Close known software weaknesses \\
+      Strong password + MFA & Prove identity; block account theft \\
+      Backup & Restore data after loss or ransomware \\
+      HTTPS + safe browsing & Protect sessions; dodge phishing and bad downloads \\
+      WPA2/WPA3 + VPN & Protect data on the network link \\
+      Scan USB + disable autorun & Stop malware entering on drives \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Read the stem's verb: remove, block, prove, restore, or protect.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Controls to Keep Straight}
+  \begin{itemize}
+    \item Firewall blocks \key{traffic}; antivirus removes \key{files}.
+    \item Quarantine \key{isolates}; deletion \key{removes}.
+    \item MFA adds a \key{second proof}; a long password is still
+      \key{one factor}.
+    \item Backup restores \key{availability}; encryption protects
+      \key{confidentiality}.
+    \item HTTPS protects the \key{session}; WPA2/WPA3 protects the
+      \key{Wi-Fi link}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 44: Recall}
+  \begin{itemize}
+    \item CIA triad: confidentiality (secrets kept), integrity (data
+      correct), availability (systems reachable).
+    \item Antivirus uses signatures for known malware; real-time scanning
+      checks on access; quarantine isolates.
+    \item Firewall blocks unauthorised traffic; it does not clean infected
+      files.
+    \item Patch promptly; use long unique passwords plus MFA (Multi-Factor
+      Authentication).
+    \item Keep regular offline backups; browse over HTTPS, avoid open Wi-Fi
+      for sensitive logins, and scan USB drives with autorun off.
+  \end{itemize}
+\end{frame}
+\end{document}

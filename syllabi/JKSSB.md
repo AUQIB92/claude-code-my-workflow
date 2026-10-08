@@ -178,11 +178,11 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 42 | Malware — malware umbrella; virus/worm/Trojan/ransomware/spyware/adware/rootkit/keylogger/bot/backdoor/logic bomb/cryptojacking | `42-malware` [ ] | [ ] | [ ] |
-| 43 | Hacking, Phishing & Spoofing — hacking, phishing, spoofing, social engineering, vulnerability/exploit | `43-hacking-phishing-spoofing` [ ] | [ ] | [ ] |
-| 44 | Cybersecurity Prevention — antivirus/signatures/real-time/quarantine, firewall, patching, MFA, backup, incident response, CIA triad | `44-cybersecurity-prevention` [ ] | [ ] | [ ] |
-| 56 | Cybersecurity, IT Act & Security Controls — IT Act 2000, malware umbrella, virus/worm/Trojan/ransomware, antivirus brands as historical distractors, anti-phishing, encryption, SSL/TLS, firewall, quarantine, patching, MFA, "which control does what" matching | `56-cybersecurity-it-act-security-controls` [ ] | [ ] | [ ] |
-| 64 | Current Cybersecurity, Cryptography & Cyber Law — parasitic/file-infector virus, DES 64-bit block size, packet-filtering vs stateful/application/proxy firewalls, phishing vs ransomware/DDoS/hacking, Internet-governance concerns, privacy/data protection, Copyright Act section matching, encryption vs digital signature | `64-current-cybersecurity-cryptography-cyber-law` [ ] | [ ] | [ ] |
+| 42 | Malware — malware umbrella; virus/worm/Trojan/ransomware/spyware/adware/rootkit/keylogger/bot/backdoor/logic bomb/cryptojacking | `42-malware` [x] | [x] | [x] |
+| 43 | Hacking, Phishing & Spoofing — hacking, phishing, spoofing, social engineering, vulnerability/exploit | `43-hacking-phishing-spoofing` [x] | [x] | [x] |
+| 44 | Cybersecurity Prevention — antivirus/signatures/real-time/quarantine, firewall, patching, MFA, backup, incident response, CIA triad | `44-cybersecurity-prevention` [x] | [x] | [x] |
+| 56 | Cybersecurity, IT Act & Security Controls — IT Act 2000, malware umbrella, virus/worm/Trojan/ransomware, antivirus brands as historical distractors, anti-phishing, encryption, SSL/TLS, firewall, quarantine, patching, MFA, "which control does what" matching | `56-cybersecurity-it-act-security-controls` [x] | [x] | [x] |
+| 64 | Current Cybersecurity, Cryptography & Cyber Law — parasitic/file-infector virus, DES 64-bit block size, packet-filtering vs stateful/application/proxy firewalls, phishing vs ransomware/DDoS/hacking, Internet-governance concerns, privacy/data protection, Copyright Act section matching, encryption vs digital signature | `64-current-cybersecurity-cryptography-cyber-law` [x] | [x] | [x] |
 
 ### Unit 11 — Governance & Integration
 

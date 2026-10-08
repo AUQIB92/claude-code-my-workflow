@@ -1,0 +1,265 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{64.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current Cybersecurity, Cryptography and Cyber Law --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Scope and study method}
+This lesson covers the current-affairs edge of the official Computer Awareness
+scope: computer virus and latest anti-virus, terms and abbreviations used in
+IT, and the role of IT in governance. It treats cybersecurity threats,
+cryptography basics, firewall types, and cyber law at awareness level. The
+exam depth is recall and classification, with at most a one-step scenario.
+The study method for every term is the near-neighbour contrast: what it is,
+what it is not, and the nearest confusion listed alongside it.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Malware & Hostile software, including virus, worm, Trojan horse, ransomware, spyware. \\
+Parasitic / file-infector virus & A virus that attaches itself to an executable file. \\
+Phishing & Fraudulent messages that trick the user into revealing credentials. \\
+Ransomware & Malicious code that locks or encrypts files and demands payment. \\
+DDoS & Distributed Denial of Service: flood of traffic from many machines. \\
+Hacking & Unauthorised access to a computer or account. \\
+DES --- Data Encryption Standard & Symmetric cipher working on 64-bit blocks. \\
+Encryption & Conversion of plaintext to ciphertext for confidentiality. \\
+Digital signature & Authenticity and integrity proof; not confidentiality. \\
+Firewall & Barrier between a trusted and an untrusted network. \\
+Personal data & Data identifying a person, protected by consent and purpose limits. \\
+Copyright & Owner's exclusive rights over an original work. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Malware and the parasitic virus}
+\textbf{Malware} is the general name for hostile software. A \textbf{virus}
+is malware that needs a host program and some human action, such as opening
+an attachment, to spread. A \textbf{worm} spreads on its own across a
+network without a host program. A \textbf{Trojan horse} looks like useful
+software but hides a harmful payload, and it does not self-replicate.
+
+\begin{definitionbox}{Parasitic (file-infector) virus}
+A virus that attaches itself to an executable file. When the infected program
+runs, the virus code runs first and then hands control back to the host
+program, spreading further as infected files are shared or copied.
+\end{definitionbox}
+
+The parasitic virus is the file-infecting member of the family: it lives
+inside executable files, activates when the host program runs, and travels
+with shared files. An \textbf{anti-virus} detects, blocks, and removes such
+infections, and its database must be kept updated against the latest strains.
+
+\begin{example}
+A student copies a free game from a friend's pen drive and runs it on the
+office desktop. The game file carries a file infector: the virus runs first,
+attaches to other executable files, and spreads when those files are shared
+further. Updating the anti-virus and scanning the drive before opening the
+files is the correct defence.
+\end{example}
+
+\section{Phishing, ransomware, DDoS, and hacking}
+These four threats differ in mechanism, and the exam swaps their definitions.
+\textbf{Phishing} attacks the user: a fraudulent mail or message, often styled
+as a bank or KYC notice, tricks the user into revealing a password or OTP on
+a fake login page. \textbf{Ransomware} attacks the data: malicious code
+locks or encrypts the victim's files and demands payment for the decryption
+key. \textbf{DDoS} (Distributed Denial of Service) attacks availability: a
+flood of traffic from many machines overwhelms a server so genuine users
+cannot reach it. A flood from a single machine is only DoS; the distributed
+prefix matters. \textbf{Hacking} is the broad term for unauthorised access to
+a computer or account; phishing, ransomware, and DDoS are specific methods or
+goals within that broad idea.
+
+\begin{definitionbox}{Ransomware}
+Malicious code that locks or encrypts the victim's files and demands payment
+for their release.
+\end{definitionbox}
+
+\begin{example}
+An item describes a clerk whose files are suddenly unreadable, with a message
+demanding payment for the key. Tracing the mechanism --- files locked,
+payment demanded --- gives ransomware. If the stem instead described a fake
+bank mail asking for an OTP, the same trace gives phishing; a server slowed to
+a halt under flood traffic gives DDoS.
+\end{example}
+
+\section{Cryptography and DES}
+\textbf{Cryptography} protects information by transforming it so only the
+intended recipient can read it. \textbf{Plaintext} is the readable message,
+\textbf{ciphertext} is the transformed message, and a \textbf{key} controls
+the transformation. \textbf{Encryption} converts plaintext to ciphertext and
+\textbf{decryption} converts it back. In \textbf{symmetric} cryptography the
+same key encrypts and decrypts; in \textbf{asymmetric} cryptography a public
+key and a private key form a pair.
+
+\begin{definitionbox}{DES (Data Encryption Standard)}
+A symmetric cipher that processes data in 64-bit blocks. Its key is 64 bits
+long, of which 56 bits are effective, the remaining 8 bits being parity.
+\end{definitionbox}
+
+The two numbers for DES must be kept apart. The \textbf{block size} is 64
+bits: that is the chunk of data processed at a time. The \textbf{effective
+key} is 56 bits. An option offering 128 bits confuses DES with a later
+cipher's block or key size.
+
+\section{Encryption vs digital signature}
+This is the TRAP-15 distinction and it recurs in papers. \textbf{Encryption}
+provides \textbf{confidentiality}: only the intended recipient can read the
+message. A \textbf{digital signature} provides \textbf{authenticity and
+integrity}: it proves who sent the message and that it was not altered in
+transit. A signature does not hide the message content, and encryption by
+itself does not prove the sender's identity.
+
+\begin{definitionbox}{Digital signature}
+A cryptographic proof attached to a message that establishes the sender's
+authenticity and the message's integrity, without by itself providing
+confidentiality.
+\end{definitionbox}
+
+\begin{example}
+An item states, ``A digital signature encrypts the message body so only the
+recipient can read it.'' This is wrong. Hiding the body is encryption
+(confidentiality). The signature answers two different questions: who sent it
+and whether it was changed. The wrong option has merged the two security
+verbs.
+\end{example}
+
+\section{Firewalls: three types}
+A \textbf{firewall} is a barrier between a trusted internal network and an
+untrusted external network. It permits or denies traffic according to a rule
+set. It filters packets and connections; it does not disinfect
+file-infecting viruses inside downloads that its rules allow through --- that
+is the anti-virus's job.
+
+A \textbf{packet-filtering} firewall examines each packet's headers ---
+source and destination address, port, and protocol --- and decides packet by
+packet. It is the fastest and simplest type but cannot judge a session as a
+whole. A \textbf{stateful-inspection} firewall examines the same headers plus
+the \textbf{connection state}: it remembers open sessions and drops packets
+that do not belong to a known session. An \textbf{application (proxy)}
+firewall sits between the client and the server as a go-between and inspects
+application-layer content and commands, such as web or mail requests.
+
+\begin{definitionbox}{Firewall}
+A network barrier that permits or denies traffic between a trusted internal
+network and an untrusted external network according to a rule set.
+\end{definitionbox}
+
+The ordering shorthand is: header only, then header plus state, then full
+content via proxy. Filtering checks the envelope, stateful inspection checks
+the conversation, and the proxy reads the letter inside.
+
+\section{Internet governance, privacy, and data protection}
+The Internet has no single owner; names and numbers are coordinated
+internationally, for example by ICANN (Internet Corporation for Assigned
+Names and Numbers). Governance concerns at awareness level are four: the
+\textbf{security} of networks, the \textbf{privacy} of personal data, fair
+\textbf{access} to the network, and which country's \textbf{law} applies when
+an act crosses borders. The positive side is the \textbf{role of IT in
+governance} (e-governance): online services, transparency, and delivery of
+benefits to citizens.
+
+\textbf{Personal data} is any data that identifies a person, such as a name
+combined with a phone number, biometrics, or account details. Protection
+principles at awareness level are: collect data with \textbf{consent}, use it
+only for the stated \textbf{purpose}, keep it \textbf{secure}, and retain it
+no longer than needed. Privacy settings, strong passwords, and OTP discipline
+are the user-side defences. Misuse or leakage of personal data can attract
+legal consequences under cyber law.
+
+\section{Cyber law and copyright: awareness-level map}
+Cyber law at this level means two things: unauthorised access, fraud, and
+data misuse attract punishment, and creators hold enforceable rights over
+their works. The \textbf{Copyright Act} protects original literary, artistic,
+musical, and software works from copying without permission. The
+awareness-level map matches each concept to its area: the \textbf{meaning of
+copyright} (what exclusive rights the owner holds), \textbf{first ownership}
+(who owns the work first), \textbf{infringement} (what counts as violation),
+\textbf{fair dealing} (limited permitted uses such as private study), and
+\textbf{offences} (punishment for wilful infringement). Software piracy ---
+copying licensed software without permission --- is the standard infringement
+example. Section numbers are recall only where the question itself supplies
+them; otherwise the concept match is what the exam tests.
+
+\section{Exam retrieval and common confusions}
+Seven distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item DES block size is \textbf{64 bits}; the effective key is 56 bits. Do
+    not offer 128 for either (DES fact).
+  \item Digital signature $\ne$ encryption: authenticity/integrity vs
+    confidentiality (TRAP-15/TRM-11).
+  \item A file infector attaches to \textbf{executable files}; it is not a
+    worm (self-spreading) or a Trojan (non-replicating disguise).
+  \item Packet filter checks headers only; stateful adds \textbf{connection
+    state}; proxy inspects \textbf{application content}.
+  \item Phishing steals \textbf{credentials}; ransomware locks \textbf{files};
+    DDoS blocks \textbf{access}; hacking is unauthorised access generally.
+  \item DDoS needs \textbf{many} machines (distributed); a single-machine
+    flood is only DoS.
+  \item Copyright protects the owner against \textbf{infringement}, with
+    limited \textbf{fair-dealing} exceptions such as study --- piracy is the
+    standard violation example.
+\end{enumerate}
+
+\begin{example}
+An item asks which firewall remembers open sessions and drops stray packets.
+Trace the triple: the packet filter decides per packet, the proxy inspects
+application content, and only stateful inspection tracks connection state.
+The answer is the stateful-inspection firewall. If the stem instead asked
+which device disinfects an infected executable, the answer leaves firewalls
+entirely and gives the anti-virus.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define a parasitic (file-infector) virus and distinguish it from a worm and a Trojan horse.
+  \item State the DES block size and effective key size, and expand the abbreviation DES.
+  \item Distinguish packet-filtering, stateful-inspection, and application/proxy firewalls.
+  \item Distinguish phishing, ransomware, DDoS, and hacking in one line each.
+  \item Explain why a digital signature is not encryption, using TRAP-15.
+  \item List the four Internet-governance concerns and the four data-protection principles from this lesson.
+  \item Match each copyright concept (meaning, first ownership, infringement, fair dealing, offences) to what it covers.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A parasitic virus attaches to an executable file, runs when the host
+    program runs, and spreads with shared files. A worm spreads on its own
+    across a network without a host; a Trojan horse disguises itself as useful
+    software and does not self-replicate.
+  \item DES (Data Encryption Standard) is a symmetric cipher with a 64-bit
+    block size and a 56-bit effective key (64 bits with parity).
+  \item Packet-filtering checks per-packet headers only; stateful inspection
+    adds connection-state tracking; the application/proxy firewall inspects
+    application-layer content as a go-between.
+  \item Phishing tricks the user into revealing credentials; ransomware locks
+    or encrypts files for ransom; DDoS floods a service from many machines so
+    genuine users cannot reach it; hacking is unauthorised access generally.
+  \item Encryption provides confidentiality (who can read it); a digital
+    signature provides authenticity and integrity (who sent it, whether it was
+    changed). Merging them is TRAP-15.
+  \item Governance concerns: security, privacy, access, jurisdiction
+    (applicable law). Data-protection principles: consent, stated purpose,
+    security, limited retention.
+  \item Meaning: the exclusive rights the owner holds; first ownership: who
+    owns the work first; infringement: what counts as violation (for example
+    software piracy); fair dealing: limited permitted uses such as private
+    study; offences: punishment for wilful infringement.
+\end{enumerate}
+\endgroup
+\end{document}

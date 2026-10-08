@@ -1,0 +1,315 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{56.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Cybersecurity, IT Act and Security Controls --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why security, and the CIA triad}
+A working computer holds records worth protecting: student marks, account
+details, personal files, and official correspondence on the office desktop.
+\textbf{Cybersecurity} is the practice of protecting computers, networks,
+and data against theft, damage, unauthorised access, and misuse. Three
+goals organise the whole topic, remembered as the \textbf{CIA triad}:
+\textbf{confidentiality} (only authorised persons can read the data),
+\textbf{integrity} (the data is not altered by unauthorised means), and
+\textbf{availability} (the system stays usable when needed). Every threat
+in this lesson attacks one of these goals, and every control defends one.
+
+\begin{definitionbox}{Cybersecurity}
+The protection of computer systems, networks, and data against theft,
+damage, disruption, and unauthorised access, so that confidentiality,
+integrity, and availability are preserved.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Malware & Umbrella term for malicious software written to harm or exploit. \\
+Virus & Malware that attaches to a host file and needs human action to spread. \\
+Worm & Standalone self-copying malware that spreads over a network unaided. \\
+Trojan horse & Malware disguised as useful software; opens a backdoor; does not replicate. \\
+Ransomware & Malware that locks or encrypts files and demands payment. \\
+Encryption & Coding data so only authorised persons can read it. \\
+SSL / TLS & Secure Sockets Layer / Transport Layer Security; secure transmission protocols. \\
+Firewall & Barrier filtering network traffic against rules. \\
+Quarantine & Isolation of a suspicious file so it cannot run. \\
+MFA & Multi-Factor Authentication; two or more identity checks at login. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense.
+\textbf{Malware} is always the general term, and virus, worm, Trojan, and
+ransomware are its specific types. \textbf{Encryption} always means hiding
+content (confidentiality), while \textbf{digital signature} always means
+proving the sender and intactness (authenticity and integrity). The exam
+tests exactly these pairings, so the wording here is kept fixed.
+
+\section{The Information Technology Act, 2000}
+The \textbf{Information Technology Act, 2000} is India's law for the
+electronic world. Its scope has three parts: it gives \textbf{legal
+validity to electronic records and electronic signatures}, so that online
+transactions and electronic governance stand on a legal footing; it enables
+\textbf{electronic governance} (official records, notices, and transactions
+in electronic form); and it defines \textbf{cyber contraventions and
+offences}, such as unauthorised access to a computer, damage to computer
+systems and data, and fraud or cheating committed through a computer.
+
+\begin{definitionbox}{Information Technology Act, 2000}
+India's legislation of the year 2000 that recognises electronic records
+and electronic signatures in law, supports electronic governance and
+electronic commerce, and provides for cyber contraventions and offences.
+\end{definitionbox}
+
+Two exam points follow. First, the year is \textbf{2000}; later changes to
+the law were amendments to the 2000 Act, not a fresh Act, so an option
+calling the Act itself ``the IT Act of 2008'' is wrong. Second, the scope
+words are \textbf{electronic records, electronic governance, and
+cybercrime}: an option that limits the Act to hardware prices, typing
+tests, or office furniture has left the scope entirely. No section numbers
+are needed for this lesson; the exam fact is the Act's year and its three
+branches of coverage.
+
+\section{Malware: the umbrella and its members}
+\textbf{Malware}, short for malicious software, is any program written to
+harm a computer, steal data, or disrupt work. It is the umbrella term: the
+question stem may say ``malware'' when it means the general class, and name
+virus, worm, Trojan, or ransomware when it means one member. Two further
+nuisance programs belong nearby: \textbf{spyware}, which secretly watches
+the user's activity and reports it, and \textbf{adware}, which displays
+unwanted advertisements.
+
+\begin{definitionbox}{Malware}
+Malicious software: any program designed to damage, disrupt, or gain
+unauthorised access to a computer system. Virus, worm, Trojan horse, and
+ransomware are types of malware.
+\end{definitionbox}
+
+A \textbf{virus} attaches itself to a host file or program and spreads when
+that file is run or shared. It needs human action --- opening an infected
+attachment, running an infected file, or carrying it on a pen drive --- and
+once it runs it can corrupt, delete, or alter files. A \textbf{worm}, by
+contrast, is standalone: it copies itself and spreads across a network
+without any host file and without waiting for a user to click. Worms
+consume bandwidth and system resources, so their signature effect is a
+slowed or crashed network. A \textbf{Trojan horse} pretends to be useful
+software --- a free utility, a game, a handy tool --- but hides a harmful
+purpose inside. It does not replicate by itself; instead it opens a
+\textbf{backdoor} through which an attacker can steal passwords, spy on the
+user, or control the machine. \textbf{Ransomware} encrypts the victim's
+files or locks the screen and demands payment (a ransom) for release.
+Paying does not guarantee recovery; the reliable defence is a clean
+\textbf{backup} kept separate from the machine.
+
+\begin{example}
+An item describes a program that ``looks like a useful download, does not
+copy itself, but lets an attacker read passwords.'' Trace the three
+contrasts: it needs no host file to be described (so not a virus), it does
+not self-spread (so not a worm), and it demands no payment (so not
+ransomware). The false-useful disguise plus the backdoor is the Trojan
+horse.
+\end{example}
+
+\section{Antivirus, quarantine, and patching}
+\textbf{Antivirus} software detects, blocks, and removes malware. It works
+by recognising known malware signatures and by flagging suspicious
+behaviour, and it must be updated regularly because new malware appears
+every day. When the antivirus meets a file it cannot yet judge, it places
+it in \textbf{quarantine}: an isolated holding area where the file cannot
+run or spread while the user or administrator decides its fate. Quarantine
+is isolation, not deletion and not a backup --- the file is still present
+but harmless while isolated.
+
+\begin{definitionbox}{Quarantine}
+The isolation of a suspicious file by security software so that it cannot
+execute or spread, pending inspection, removal, or restoration.
+\end{definitionbox}
+
+\textbf{Patching} is the companion hygiene step: installing the
+vendor-supplied updates that fix known security flaws in the operating
+system and applications. An unpatched machine remains open to attacks that
+the vendor has already fixed, so ``install updates promptly'' is the exam's
+standard correct advice. Antivirus cleans what is already inside,
+quarantine holds what is suspect, and patching closes the holes through
+which the next attack would enter.
+
+\section{Phishing and anti-phishing}
+\textbf{Phishing} is not malware at all but deception: a fake message ---
+mail, SMS, or website --- that impersonates a trusted sender (a bank, an
+office, a delivery firm) to steal passwords, OTPs, or money. Its warning
+signs are urgency and threat (``your account will be blocked''), unexpected
+attachments, links whose real destination does not match the claimed
+sender, and any request for a password or OTP. The defence, called
+\textbf{anti-phishing} practice, is procedural: verify the sender through a
+separate channel, hover over or long-press links to inspect them before
+clicking, never share an OTP or password by message, and report the message
+to the service provider or office.
+
+\begin{definitionbox}{Phishing}
+A fraudulent message impersonating a trusted sender, designed to trick the
+recipient into revealing passwords, OTPs, or financial details.
+\end{definitionbox}
+
+\begin{example}
+An item shows a mail reading ``Dear customer, your account is blocked;
+click here and enter your OTP to restore it.'' The correct response is to
+treat it as phishing: do not click, do not enter the OTP, and verify with
+the bank through its known number or site. A genuine bank or office never
+asks for a password or OTP by mail or message, so any option advising
+compliance is the trap.
+\end{example}
+
+\section{Encryption, digital signatures, and SSL/TLS}
+\textbf{Encryption} converts readable data (plaintext) into coded form
+(ciphertext) so that only authorised persons holding the key can read it.
+Its goal is confidentiality. A \textbf{digital signature}, by contrast,
+proves who sent a message and that it was not altered in transit; its goals
+are authenticity and integrity. The pair must never be swapped: a signature
+does not hide the message (anyone can still read it), and encryption by
+itself does not prove who sent it. This is the same distinction tested in
+the email lesson (TRAP-15), and it returns here because ransomware's
+``encryption'' step uses the same idea against the victim.
+
+\textbf{SSL} (Secure Sockets Layer) and its successor \textbf{TLS}
+(Transport Layer Security) provide a secure, encrypted channel over a
+network. They protect data \textbf{in transit}: mail submission, web
+logins, and online forms, signalled by the padlock in the browser address
+bar. The lesson's anchor fact, already seen in WO 2026 Q76, is that the
+secure email transmission protocol is \textbf{SSL/TLS}. Note the limit:
+SSL/TLS protect the journey, not the endpoints --- they do not clean an
+infected file and do not replace antivirus.
+
+\begin{definitionbox}{Encryption}
+The conversion of plaintext into ciphertext with a key, so that only
+authorised holders of the key can recover the original content.
+\end{definitionbox}
+
+\section{Firewall, MFA, and the matching map}
+A \textbf{firewall} is a barrier, implemented in hardware or software (or
+both), that filters incoming and outgoing network traffic against a set of
+rules. It blocks unauthorised access while letting permitted traffic pass,
+like a gatekeeper at the office network door checking every packet against
+the list. Its partner inside the machine is the antivirus: the firewall
+filters traffic at the boundary, while the antivirus cleans malware already
+inside. One does not replace the other.
+
+\textbf{MFA} (Multi-Factor Authentication) protects logins by demanding two
+or more independent checks --- for example, a password plus an OTP, or a
+password plus a fingerprint. It closes the door against stolen passwords:
+even a leaked password is useless without the second factor. Strong,
+distinct passwords remain the first factor; MFA adds factors rather than
+replacing them.
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Control} & \textbf{Job (the stem verb to watch)} \\
+\midrule
+Firewall & Filters network traffic; blocks unauthorised access. \\
+Antivirus & Detects and removes malware on the machine. \\
+Quarantine & Isolates a suspicious file so it cannot run. \\
+Encryption / SSL-TLS & Hides content; protects data in transit. \\
+Digital signature & Proves the sender and that content is intact. \\
+Patching & Fixes known security flaws by installing updates. \\
+MFA & Adds extra login checks beyond the password. \\
+Backup & Recovers data after ransomware, deletion, or failure. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The matching technique is mechanical: read the verb in the stem.
+``Filters traffic'' points to the firewall; ``cleans malware'' to the
+antivirus; ``isolates'' to quarantine; ``hides content'' to encryption;
+``proves sender'' to digital signature; ``fixes flaws'' to patching;
+``extra login check'' to MFA; ``recovers after loss'' to backup.
+
+\section{Exam retrieval and common confusions}
+Seven distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The IT Act is of \textbf{2000} and covers electronic records,
+    e-governance, and cybercrime; later changes were amendments.
+  \item Malware is the \textbf{umbrella}; virus, worm, Trojan, and
+    ransomware are specific types under it.
+  \item Virus needs a \textbf{host file plus human action}; worm is
+    standalone and \textbf{self-spreading}; Trojan \textbf{does not
+    replicate}; ransomware \textbf{locks files and demands payment}.
+  \item A digital signature \textbf{proves} (authenticity/integrity); it
+    does not \textbf{hide} --- encryption provides confidentiality
+    (TRAP-15).
+  \item \textbf{SSL/TLS} protect data \textbf{in transit}; they do not
+    clean infected files.
+  \item A \textbf{firewall} filters \textbf{traffic} at the boundary;
+    antivirus cleans \textbf{malware} inside; quarantine
+    \textbf{isolates} without deleting.
+  \item \textbf{MFA} adds login factors; \textbf{patching} fixes software
+    flaws; \textbf{backup} is the recovery answer to ransomware.
+\end{enumerate}
+
+\begin{example}
+An item asks which control ``proves that a message came from the claimed
+sender and was not altered.'' The verb ``proves'' selects the digital
+signature, not encryption (which hides) and not the firewall (which
+filters). If the stem instead says ``hides the content from
+eavesdroppers,'' the same map selects encryption; if it says ``blocks
+unauthorised packets,'' it selects the firewall.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the year and the three branches of scope of the Information
+    Technology Act covered in this lesson.
+  \item Define malware and place virus, worm, Trojan horse, and ransomware
+    under it in one sentence each.
+  \item Distinguish a virus from a worm on the two points of host file and
+    human action.
+  \item Why is a Trojan horse dangerous even though it does not replicate?
+  \item Explain why backup, rather than payment, is the correct response to
+    ransomware.
+  \item Contrast encryption with a digital signature: which goal does each
+    serve?
+  \item Using the matching map, assign one control to each verb: filters,
+    isolates, hides, proves, fixes.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item The Information Technology Act is of \textbf{2000}. It gives legal
+    validity to electronic records and electronic signatures, enables
+    electronic governance, and defines cyber contraventions and offences.
+  \item Malware is malicious software written to harm or exploit. A virus
+    attaches to a host file and needs human action; a worm self-copies
+    across networks unaided; a Trojan disguises itself as useful software
+    and opens a backdoor without replicating; ransomware locks or encrypts
+    files and demands payment.
+  \item A virus needs a host file and a human act (opening, running,
+    sharing) to spread; a worm is standalone, copies itself, and spreads
+    over the network without a host file or user action.
+  \item The Trojan's disguise persuades the user to install it, and the
+    hidden backdoor then lets the attacker steal passwords, spy, or
+    control the machine --- damage that needs no replication.
+  \item Payment does not guarantee recovery and rewards the attacker,
+    while a clean separate backup restores the data without negotiation;
+    hence backup is the reliable defence.
+  \item Encryption serves \textbf{confidentiality} (hides content);
+    a digital signature serves \textbf{authenticity and integrity}
+    (proves sender and intactness).
+  \item Filters --- firewall; isolates --- quarantine; hides ---
+    encryption (SSL/TLS in transit); proves --- digital signature;
+    fixes --- patching (installing updates).
+\end{enumerate}
+\endgroup
+\end{document}

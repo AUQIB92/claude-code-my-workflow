@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 64 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{A.} A parasitic (file-infector) virus attaches to an executable
+  file and runs when the host runs. B describes a worm (no host needed); C
+  describes a Trojan (disguise, no self-replication); D describes DDoS.
+\item \textbf{A.} DES is the Data Encryption Standard. B, C, and D are not
+  the correct full form.
+\item \textbf{C.} DES works on 64-bit blocks. A (32) and D (128) are other
+  ciphers' sizes; B (56) is the effective key size, not the block size.
+\item \textbf{D.} A signature proves authenticity (A), non-alteration (B),
+  and integrity (C); it does not hide the body --- that is encryption. D is
+  the false statement (TRAP-15).
+\item \textbf{A.} Encryption gives confidentiality; a signature gives
+  authenticity and integrity. B swaps the pair; C and D use availability,
+  which belongs to the DDoS threat, not to these two verbs.
+\item \textbf{A.} Per-packet header checks are packet filtering. Stateful (B)
+  adds connection state; the proxy (C) inspects application content; an
+  anti-virus (D) disinfects files rather than filtering packets.
+\item \textbf{B.} Tracking connection state and dropping stray packets is
+  stateful inspection. A decides per packet without sessions; C and D are
+  malware types, not firewalls.
+\item \textbf{C.} The go-between inspecting application content is the
+  application (proxy) firewall. A checks headers only; B tracks sessions; D
+  is only a mail-client feature.
+\item \textbf{A.} A fake bank/KYC mail harvesting OTPs is phishing. B locks
+  files for ransom; C floods a server; D is unrelated maintenance.
+\item \textbf{B.} Locked files plus a payment demand is ransomware. A steals
+  credentials via trickery; C floods a service; D describes no concrete
+  mechanism.
+\item \textbf{B.} This option assigns each threat its correct mechanism. A, C,
+  and D scramble the definitions (flood = DDoS, trick = phishing, lock =
+  ransomware; a firewall or backup is not a threat).
+\item \textbf{A.} DDoS is Distributed Denial of Service; the distributed
+  prefix (many machines) is the tested point. B, C, and D are not expansions.
+\item \textbf{B.} I and II are correct: DES is symmetric and uses 64-bit
+  blocks. III is false because secrecy of the body is encryption, not
+  signature (TRAP-15). A omits II; C and D include false III.
+\item \textbf{B.} Stateful inspection tracks connection state plus headers.
+  A and C swap the packet-filter and proxy roles; D assigns disinfection
+  (anti-virus work) to a packet filter.
+\item \textbf{A.} Cross-border applicable law (jurisdiction) is a genuine
+  governance concern, with security, privacy, and access. B, C, and D are
+  single-office trivia, not governance issues.
+\item \textbf{A.} Purpose limitation restricts use to the stated purpose.
+  Unlimited retention (B), sharing without consent (C), and default
+  publication (D) all violate protection principles.
+\item \textbf{A.} Unlicensed copying of software is infringement. Fair dealing
+  (B) covers limited uses such as study; first ownership (C) is who owns
+  first; a lawful backup (D) requires licence permission.
+\item \textbf{B.} Meaning = owner's exclusive rights; first ownership = who
+  owns first; infringement = what counts as violation; fair dealing = limited
+  permitted uses such as study. A, C, and D rotate the matches.
+\item \textbf{A.} ICANN is the Internet Corporation for Assigned Names and
+  Numbers. B, C, and D are not the correct full form.
+\item \textbf{A.} A multi-machine flood blocking access is DDoS, met at the
+  network barrier. B answers phishing, not flooding; C answers a file virus
+  with a printer driver; D treats an attack as a copyright exception.
+\end{enumerate}
+\end{document}

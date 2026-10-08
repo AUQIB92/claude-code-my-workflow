@@ -1,0 +1,267 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current Cybersecurity, Cryptography \& Cyber Law}
+\subtitle{Lesson 64 --- Crypto, Firewalls and Law}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Where This Lesson Fits}
+  \begin{itemize}
+    \item The syllabus also tests \key{computer virus \& latest anti-virus},
+      \key{terms and abbreviations used in IT}, and the \key{role of IT in governance}.
+    \item This lesson covers the current-affairs edge of that scope: threats,
+      crypto basics, firewalls, and cyber law at \key{awareness level}.
+    \item Depth stays at recall and classification (\muted{L1/L2}), with one
+      short scenario at most.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Know what each threat, tool, and term \key{does} --- and what its nearest
+    neighbour does instead.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Malware Family: Virus First}
+  \begin{itemize}
+    \item \key{Malware} is hostile software: virus, worm, Trojan horse,
+      ransomware, spyware.
+    \item A \key{virus} needs a host program and human action to spread; a
+      \key{worm} spreads on its own across a network.
+    \item A \key{Trojan horse} looks like useful software but hides a harmful
+      payload; it does \key{not} self-replicate.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Virus needs a host and help to spread; worm spreads by itself.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Parasitic (File-Infector) Virus}
+  \begin{itemize}
+    \item A \key{parasitic virus}, also called a \key{file-infector virus},
+      attaches itself to an executable file.
+    \item When the infected program runs, the virus code runs \key{first},
+      then hands control back to the host program.
+    \item It spreads as infected files are \key{shared or copied} to other
+      machines.
+    \item An \key{anti-virus} detects, blocks, and removes such infections;
+      its database must be kept \key{updated}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A file infector attaches to files. It is not a worm and not a Trojan.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Four Threats Side by Side}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Threat} & \textbf{What happens} \\
+      \midrule
+      Phishing & Fraudulent mail or message tricks the user into revealing passwords or OTPs \\
+      Ransomware & Malicious code locks or encrypts files, then demands payment \\
+      DDoS & Flood of traffic from many machines overwhelms a server \\
+      Hacking & Unauthorised access to a computer or account \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Each row is a different mechanism; the exam swaps their definitions.}
+\end{frame}
+
+\begin{frame}{Phishing vs Ransomware vs DDoS vs Hacking}
+  \begin{itemize}
+    \item \key{Phishing} attacks the \key{user}: fake bank or KYC mail, fake
+      login page, stolen credentials.
+    \item \key{Ransomware} attacks the \key{data}: files are encrypted and a
+      ransom is demanded for the key.
+    \item \key{DDoS} (Distributed Denial of Service) attacks
+      \key{availability}: the service is flooded until genuine users cannot
+      reach it.
+    \item \key{Hacking} is the broad term for \key{unauthorised access}; the
+      other three are specific methods or goals.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    A clerk gets a fake ``verify your account'' mail (phishing), while the
+    office server slows to a halt under flood traffic (DDoS) --- different
+    threats, different defences.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Cryptography in One Frame}
+  \begin{itemize}
+    \item \key{Cryptography} protects information by transforming it so only
+      the intended recipient can read it.
+    \item \key{Plaintext} is the readable message; \key{ciphertext} is the
+      transformed message; a \key{key} controls the transformation.
+    \item \key{Encryption} converts plaintext to ciphertext;
+      \key{decryption} converts it back.
+    \item Two broad families: \key{symmetric} (same key both sides) and
+      \key{asymmetric} (public key and private key pair).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{DES: The 64-Bit Block Fact}
+  \begin{itemize}
+    \item \key{DES} stands for Data Encryption Standard.
+    \item It is a \key{symmetric} cipher: the same key encrypts and decrypts.
+    \item DES works on \key{64-bit blocks} of data at a time.
+    \item Its key is 64 bits long, of which \key{56 bits} are effective (8
+      bits are parity).
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    DES block size is \key{64 bits}. Do not confuse block size with the 56-bit
+    effective key.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Encryption vs Digital Signature (TRAP-15)}
+  \begin{itemize}
+    \item \key{Encryption} provides \key{confidentiality}: only the intended
+      recipient can read the message.
+    \item A \key{digital signature} provides \key{authenticity and integrity}:
+      it proves who sent the message and that it was not altered.
+    \item A signature does \key{not} hide the message content; encryption
+      does \key{not} by itself prove the sender's identity.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Digital signature $\ne$ encryption. Signature = who sent it and unchanged;
+    encryption = who can read it. (TRAP-15/TRM-11)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Firewalls: What They Do}
+  \begin{itemize}
+    \item A \key{firewall} is a barrier between a trusted internal network and
+      an untrusted external network.
+    \item It permits or denies traffic according to a \key{rule set}.
+    \item It filters \key{packets and connections}, not file-infecting viruses
+      inside allowed downloads --- that is the anti-virus's job.
+    \item Three types tested: packet-filtering, stateful inspection, and
+      application (proxy) firewalls.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Three Firewall Types}
+  \begin{center}
+    \begin{tabular}{p{0.26\textwidth}p{0.28\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Type} & \textbf{Checks} & \textbf{Level} \\
+      \midrule
+      Packet-filtering & Source/destination address, port, protocol & Network layer, per packet \\
+      Stateful inspection & Same headers \key{plus connection state} & Tracks sessions, not single packets \\
+      Application / proxy & Content and commands of the application & Application layer; acts as go-between \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Order of depth: packet header only, then header plus state, then full
+  application content.}
+\end{frame}
+
+\begin{frame}{Firewall Ordering Drill}
+  \begin{itemize}
+    \item \key{Packet-filtering}: fastest and simplest; decides packet by
+      packet; cannot judge a session as a whole.
+    \item \key{Stateful inspection}: remembers open connections; drops packets
+      that do not belong to a known session.
+    \item \key{Application/proxy firewall}: sits between client and server and
+      inspects application commands (for example web or mail requests).
+    \item Exam shorthand: header only $\rightarrow$ header plus state
+      $\rightarrow$ full content via proxy.
+  \end{itemize}
+  \begin{block}{Keep the triple straight}
+    Filtering checks the envelope; stateful checks the conversation; proxy
+    reads the letter inside.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Internet Governance Concerns}
+  \begin{itemize}
+    \item The Internet has \key{no single owner}; addressing and names are
+      coordinated internationally (for example by ICANN for names and numbers).
+    \item Governance concerns tested at awareness level: \key{security} of
+      networks, \key{privacy} of personal data, fair \key{access}, and which
+      country's \key{law} applies to cross-border acts.
+    \item The \key{role of IT in governance} (e-governance) is the positive
+      side: online services, transparency, and delivery to citizens.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Privacy and Data Protection}
+  \begin{itemize}
+    \item \key{Personal data} is any data that identifies a person: name with
+      phone number, biometrics, account details.
+    \item Protection principles at awareness level: collect with
+      \key{consent}, use only for the stated \key{purpose}, keep data
+      \key{secure}, and retain it no longer than needed.
+    \item \key{Privacy settings}, strong passwords, and OTP discipline are the
+      user-side defences the exam names.
+    \item Leaking or misusing personal data can also attract \key{legal}
+      consequences under cyber law.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Copyright Act: Awareness-Level Map}
+  \begin{itemize}
+    \item The \key{Copyright Act} protects original literary, artistic,
+      musical, and software works from copying without permission.
+    \item Awareness-level mapping only: \key{meaning of copyright} (what rights
+      the owner holds), \key{first ownership} (who owns it first),
+      \key{infringement} (what counts as violation), \key{fair dealing}
+      (limited permitted uses such as study), \key{offences} (punishment for
+      wilful infringement).
+    \item Software piracy --- copying licensed software without permission ---
+      is the exam's standard infringement example.
+  \end{itemize}
+  \begin{block}{Exam depth}
+    Match the \key{concept} to its section area; section numbers are recall
+    only where the question itself supplies them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Abbreviation and Term Ladder}
+  \begin{itemize}
+    \item \key{DES} --- Data Encryption Standard; 64-bit blocks.
+    \item \key{DDoS} --- Distributed Denial of Service; flood from many machines.
+    \item \key{OTP} --- One Time Password; phishing target.
+    \item \key{ICANN} --- Internet Corporation for Assigned Names and Numbers.
+    \item \key{IP} --- Internet Protocol; the address a packet filter reads.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    DDoS needs many machines (distributed); a single-machine flood is only DoS.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Facts to Keep Straight}
+  \begin{itemize}
+    \item DES block size is \key{64 bits} (56-bit effective key) --- not 128.
+    \item Digital signature $\ne$ encryption: authenticity/integrity vs
+      confidentiality. (TRAP-15)
+    \item File infector attaches to \key{executable files}; it is not a worm.
+    \item Packet filter checks headers only; stateful adds \key{connection
+      state}; proxy inspects \key{application content}.
+    \item Phishing steals \key{credentials}; ransomware locks \key{files};
+      DDoS blocks \key{access}; hacking is unauthorised access generally.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 64: Recall}
+  \begin{itemize}
+    \item A parasitic (file-infector) virus attaches to executable files and
+      runs when the host program runs.
+    \item DES (Data Encryption Standard) is symmetric and works on 64-bit blocks.
+    \item Firewalls: packet-filtering (headers), stateful (plus connection
+      state), application/proxy (application content).
+    \item Phishing tricks the user; ransomware encrypts files for ransom; DDoS
+      floods a service; hacking is unauthorised access.
+    \item Encryption gives confidentiality; a digital signature gives
+      authenticity and integrity.
+    \item Governance concerns: security, privacy, access, jurisdiction;
+      copyright protects owners against infringement, with fair-dealing exceptions.
+  \end{itemize}
+\end{frame}
+\end{document}

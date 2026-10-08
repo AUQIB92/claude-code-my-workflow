@@ -1,0 +1,267 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Hacking, Phishing \& Spoofing}
+\subtitle{Lesson 43 --- Attacks and Deception}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Attacks Succeed}
+  \begin{itemize}
+    \item Many computer attacks do not break the machine; they
+      \key{trick the person} using it.
+    \item An attacker needs only two things: a \key{weakness} to use and
+      a \key{person} who responds without checking.
+    \item Weaknesses can be technical (weak password, old software) or
+      human (trust, hurry, fear).
+    \item This lesson teaches the names, the signs, and the
+      \key{safe response} --- not how to attack.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Attacks use deception or a known weakness; defence is verification
+    plus good habits.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Four Words to Keep Straight}
+  \begin{itemize}
+    \item \key{Vulnerability}: a weakness in software, settings, or
+      human habit that can be misused.
+    \item \key{Exploit}: a method that takes advantage of a
+      vulnerability.
+    \item \key{Attack}: the complete harmful act against a person or
+      system.
+    \item \key{Payload}: the harmful part delivered by the attack, such
+      as stolen data or a malicious file.
+  \end{itemize}
+  \begin{block}{Read it as a chain}
+    Vulnerability (weakness) $\rightarrow$ exploit (method)
+    $\rightarrow$ attack (act) $\rightarrow$ payload (harm).
+  \end{block}
+\end{frame}
+
+\begin{frame}{What Hacking Means}
+  \begin{itemize}
+    \item \key{Hacking} means gaining \key{unauthorised access} to a
+      computer, account, or network.
+    \item A \key{hacker} is the person who does it; unauthorised access
+      is unlawful even when no data is stolen.
+    \item An \key{ethical hacker} tests security \key{with written
+      permission} to find and fix weaknesses.
+    \item \muted{Exam depth: hacking is the broad act; phishing and
+      spoofing are specific deceptive methods inside it.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Hacking is unauthorised access. Permission separates an ethical
+    security test from an attack.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Password Attacks}
+  \begin{itemize}
+    \item \key{Guessing}: trying obvious passwords such as name, birth
+      year, or \texttt{password123}.
+    \item \key{Dictionary attack}: trying every word from a list of
+      common passwords automatically.
+    \item \key{Brute-force attack}: trying \key{every possible
+      combination} until one works; longer passwords resist it.
+    \item \key{Shoulder surfing}: watching the keyboard or screen while
+      the victim types.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Dictionary tries a word list; brute force tries every combination.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Strong Password Habits}
+  \begin{itemize}
+    \item Use a \key{long} password with mixed letters, digits, and
+      symbols; never reuse it across accounts.
+    \item Never share a password or an \key{OTP} (One-Time Password)
+      with anyone, including a caller who claims to be bank staff.
+    \item Lock the screen when leaving the desk; cover the keypad while
+      typing a PIN.
+    \item Use \key{two-step verification} where offered: password plus a
+      code on the phone.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    A clerk who uses the same short password for email and office login
+    loses both accounts from one guess; a long unique password with
+    two-step verification blocks the same attempt.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Social Engineering}
+  \begin{itemize}
+    \item \key{Social engineering} means tricking a person into giving
+      access, instead of breaking software.
+    \item \key{Pretexting}: inventing a false story (``bank officer'',
+      ``IT support'') to extract details.
+    \item \key{Baiting}: offering something free (prize, free recharge,
+      free software) to trigger a click or download.
+    \item Pressure words --- \key{urgent}, \key{blocked}, \key{verify
+      now} --- are the standard signal.
+  \end{itemize}
+  \begin{alertblock}{Safe response}
+    Slow down, verify through a known channel, and never disclose a
+    password or OTP under pressure.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Phishing}
+  \begin{itemize}
+    \item \key{Phishing} is a fake message, mail, or call that
+      \key{imitates a trusted sender} to steal passwords, OTPs, or
+      money.
+    \item The message carries a \key{malicious link} to a look-alike
+      login page, or a \key{malicious attachment} to open.
+    \item Common channels: email, \key{SMS smishing}, and voice-call
+      \key{vishing}.
+    \item Signs: urgent tone, spelling errors, unknown sender, and a
+      link that does \key{not} match the real website address.
+  \end{itemize}
+  \begin{block}{Definition}
+    Phishing steals credentials or money by imitation plus a link,
+    attachment, or call to action.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Spoofing}
+  \begin{itemize}
+    \item \key{Spoofing} means \key{faking an identity}: the sender
+      address, caller number, or website looks genuine but is forged.
+    \item \key{Email spoofing}: the ``From'' address shows a trusted
+      name that was never the real sender.
+    \item \key{Caller ID spoofing}: the displayed phone number is
+      forged to look like a bank or office.
+    \item \key{Website (URL) spoofing}: a look-alike address
+      (\texttt{bank-verlfy.com} for \texttt{bank-verify.com}) hosts a
+      fake login page.
+  \end{itemize}
+  \begin{block}{What spoofing is}
+    A forged identity used as a disguise; phishing often \key{uses}
+    spoofing to look trustworthy.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Phishing vs Spoofing vs Hacking}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Term} & \textbf{What it is} & \textbf{One-line test} \\
+      \midrule
+      Hacking & Unauthorised access & Was access taken without permission? \\
+      Phishing & Fraud to steal data/money & Was a fake message asking for action? \\
+      Spoofing & Forged identity & Was the sender or address faked? \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{alertblock}{Trap alert}
+    A phishing mail \key{uses} a spoofed address; spoofing is the mask,
+    phishing is the fraud, hacking is the broad act.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Malicious Links}
+  \begin{itemize}
+    \item A \key{malicious link} leads to a fake login page or starts an
+      unwanted download.
+    \item Hover over the link to read the \key{real address} before
+      clicking; on a phone, long-press to preview it.
+    \item Type the website address yourself instead of tapping a link in
+      an unexpected message.
+    \item Shortened or misspelled addresses in an urgent message are a
+      warning sign.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    A mail says the salary slip is ready and points to
+    \texttt{offlce-portal.com}; the real portal is
+    \texttt{office-portal.com}. Typing the known address avoids the
+    fake page.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Malicious Attachments}
+  \begin{itemize}
+    \item A \key{malicious attachment} is a file that harms the computer
+      or steals data when opened.
+    \item Do not open an unexpected attachment, even from a known name
+      --- confirm with the sender first.
+    \item Be cautious with files that ask to ``enable macros'' or
+      ``enable content'' on opening.
+    \item \muted{Exam depth: attachment is the file; link is the
+      address; both can carry the payload.}
+  \end{itemize}
+  \begin{block}{Safe habit}
+    Unexpected file $\rightarrow$ stop, verify the sender, delete if
+    unverified.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Safe Habits That Block Most Attacks}
+  \begin{itemize}
+    \item Verify the sender through a \key{known channel} before acting
+      on any urgent request.
+    \item Keep software and \key{antivirus} updated; scan external
+      drives before opening files.
+    \item Back up important files so one incident cannot destroy all
+      copies.
+    \item Report phishing messages using the mail client's
+      \key{report phishing} option instead of forwarding or replying.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{If You Are Targeted}
+  \begin{itemize}
+    \item Do \key{not} enter a password, OTP, or card details on a page
+      reached from a suspicious message.
+    \item Disconnect doubt: close the page, delete the message, and do
+      not call back numbers given in it.
+    \item Change the password from the \key{real website}, and inform
+      the bank or office through its published helpline.
+    \item Keep a record (screenshot, sender address) for the complaint.
+  \end{itemize}
+  \begin{alertblock}{Order of action}
+    Stop $\rightarrow$ verify on the real channel $\rightarrow$ change
+    credentials $\rightarrow$ report.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Attack Facts to Keep Straight}
+  \begin{itemize}
+    \item Phishing \key{imitates} a trusted sender to steal data; spoofing
+      \key{forges} the identity it wears.
+    \item OTP stands for \key{One-Time Password}; no genuine bank or
+      office asks for it by call or message.
+    \item Dictionary tries a \key{word list}; brute force tries
+      \key{every combination}.
+    \item Vulnerability is the \key{weakness}; exploit is the
+      \key{method}; payload is the \key{harm delivered}.
+    \item Ethical hacking needs \key{written permission}; without it,
+      access is unauthorised.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 43: Recall}
+  \begin{itemize}
+    \item Hacking is unauthorised access; ethical hacking has written
+      permission.
+    \item Social engineering tricks the person; pretexting invents a
+      story and baiting offers a lure.
+    \item Phishing is fake-message fraud for credentials or money;
+      spoofing is the forged identity it may wear.
+    \item Password attacks include guessing, dictionary, brute force,
+      and shoulder surfing; long unique passwords plus two-step
+      verification resist them.
+    \item Malicious links and attachments carry the payload; verify the
+      sender, type the address, and never share an OTP.
+    \item Vulnerability $\rightarrow$ exploit $\rightarrow$ attack
+      $\rightarrow$ payload is the chain to remember.
+  \end{itemize}
+\end{frame}
+\end{document}
