@@ -1,0 +1,73 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 41 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{B.} TCP stands for Transmission Control Protocol. A, C, and D
+  are not the correct expansion.
+\item \textbf{A.} DNS stands for Domain Name System. B, C, and D are not the
+  correct full forms.
+\item \textbf{C.} TCP is reliable, ordered, and connection-oriented. A
+  describes UDP, not TCP; B describes TCP, not UDP; D wrongly promises UDP
+  timing guarantees.
+\item \textbf{B.} TCP guarantees complete, ordered delivery through
+  sequencing and retransmission; it does not promise speed (A), encryption
+  (C), or name resolution (D).
+\item \textbf{C.} UDP gives no ordering guarantee, so this statement is NOT
+  true. Connectionless operation (A), best-effort delivery (B), and use for
+  streaming and DNS (D) are all true of UDP.
+\item \textbf{B.} IPv4 uses 32-bit addresses and IPv6 uses 128-bit addresses
+  (TRM-10). A reverses them; C and D use the 256-bit distractor (TRAP-18).
+\item \textbf{C.} IPv6 is 128-bit with a fixed 40-byte header (PYQ-18).
+  256-bit (A) is the known trap; four decimal octets (B) describe IPv4; a
+  20--60 byte header (D) describes IPv4.
+\item \textbf{B.} ICMP carries control and diagnostic messages (errors,
+  reachability) only. It is not a file-transfer (A), mail-sending (C), or
+  encryption (D) protocol.
+\item \textbf{A.} Ping and traceroute are the two ICMP diagnostic tools. Mail
+  merge and autosum (B, D) are Office features; FTP and Telnet (C) are
+  separate application protocols.
+\item \textbf{C.} DNS translates a domain name into its IP address. DHCP (A)
+  assigns addresses; ICMP (B) reports errors; SMTP (D) sends mail.
+\item \textbf{B.} Automatically handing out the address, mask, gateway, and
+  DNS server is DHCP. DNS (A) resolves names; ICMP (C) diagnoses; FTP (D)
+  moves files.
+\item \textbf{C.} HTTP is port 80 and plain text. A gives HTTP the HTTPS
+  port and property; B reverses the pair; D gives HTTPS the SMTP port and
+  role.
+\item \textbf{A.} SMTP (Simple Mail Transfer Protocol) sends outgoing mail.
+  Downloading (B) is POP3; syncing on the server (C) is IMAP; name
+  translation (D) is DNS.
+\item \textbf{B.} POP3 downloads received mail to the local machine. A gives
+  SMTP the IMAP role; C gives IMAP the SMTP role; D gives SMTP the DNS role.
+\item \textbf{B.} Statements I and II are correct: TCP is connection-oriented
+  and ordered, and IPv6 is 128-bit. III is false because ICMP transfers no
+  application data and uses no ports (TRAP-19). A omits II; C includes false
+  III and omits I; D includes false III.
+\item \textbf{C.} HTTP, FTP, SMTP, and DNS are Application-layer (layer 7)
+  protocols. TCP and UDP belong to the Transport layer, not the Network
+  layer (A); IP and ICMP belong to the Network layer, not Transport (B); the
+  Physical layer (D) carries bits, not IP or HTTP.
+\item \textbf{B.} The OSI order is Physical, Data Link, Network, Transport,
+  Session, Presentation, Application. A is the exact reverse; C and D
+  scramble the middle layers.
+\item \textbf{B.} SMTP is port 25 and DNS is port 53. A swaps FTP (21) and
+  Telnet (23); C swaps HTTP (80) and HTTPS (443); D swaps POP3 (110) and
+  IMAP (143).
+\item \textbf{D.} ICMP uses no ports and transfers no web pages, so this is
+  INCORRECT. FTP on 21 (A), Telnet on 23 (B), and DHCP address assignment
+  (C) are all correct.
+\item \textbf{A.} A successful ping proves the Network-layer path works
+  (ICMP control traffic), so the fault lies above it: DNS, proxy, or
+  application settings. B and C wrongly treat ICMP as page delivery; D names
+  a layer that does not exist.
+\end{enumerate}
+\end{document}

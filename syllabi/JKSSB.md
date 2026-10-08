@@ -170,9 +170,9 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 40 | Networking Basics — network/node/host/client/server, PAN/LAN/MAN/WAN/WLAN/intranet, topologies, media, NIC/hub/repeater/bridge/switch/router/gateway/modem/AP/firewall | `40-networking-basics` [ ] | [ ] | [ ] |
-| 41 | Networking Protocols — TCP/UDP/IP/DNS/DHCP/HTTP/HTTPS/FTP/Telnet/SMTP, OSI 7 layers, IPv4/IPv6, ports | `41-networking-protocols` [ ] | [ ] | [ ] |
-| 62 | Current Internet, Networking & Cloud IaaS — TCP guarantees/ordering vs UDP, ICMP, BGP inter-domain routing, IPv6 address space/no-broadcast, HTTP/3 & QUIC vs TCP, DNS & `.org`/PIR/ICANN, ARPANET/packet switching, router assertion–reason, IaaS responsibility model | `62-current-internet-networking-cloud-iaas` [ ] | [ ] | [ ] |
+| 40 | Networking Basics — network/node/host/client/server, PAN/LAN/MAN/WAN/WLAN/intranet, topologies, media, NIC/hub/repeater/bridge/switch/router/gateway/modem/AP/firewall | `40-networking-basics` [x] | [x] | [x] |
+| 41 | Networking Protocols — TCP/UDP/IP/DNS/DHCP/HTTP/HTTPS/FTP/Telnet/SMTP, OSI 7 layers, IPv4/IPv6, ports | `41-networking-protocols` [x] | [x] | [x] |
+| 62 | Current Internet, Networking & Cloud IaaS — TCP guarantees/ordering vs UDP, ICMP, BGP inter-domain routing, IPv6 address space/no-broadcast, HTTP/3 & QUIC vs TCP, DNS & `.org`/PIR/ICANN, ARPANET/packet switching, router assertion–reason, IaaS responsibility model | `62-current-internet-networking-cloud-iaas` [x] | [x] | [x] |
 
 ### Unit 10 — Cybersecurity & IT Law
 

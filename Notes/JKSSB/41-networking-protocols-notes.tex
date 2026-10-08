@@ -1,0 +1,269 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{41.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Networking Protocols --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Why protocols and addresses matter}
+Computers on a network can understand each other only because they follow
+agreed rules. A \textbf{protocol} is such a set of rules: it fixes what
+messages look like and in which order the machines exchange them. Different
+jobs need different protocols. Opening a web page, moving a file, sending an
+email, translating a name into an address, and handing out addresses to new
+devices are five different jobs, so they use five different protocols. The
+exam tests each protocol by its \textbf{exact English name} together with the
+single role it performs.
+
+\begin{definitionbox}{Protocol}
+A fixed set of rules governing communication between devices on a network,
+covering message format and exchange order. TCP, IP, DNS, DHCP, HTTP, HTTPS,
+FTP, Telnet, and SMTP are the protocols of this lesson.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+TCP & Transmission Control Protocol: reliable, ordered, connection-oriented delivery. \\
+UDP & User Datagram Protocol: fast, connectionless, best-effort delivery. \\
+IP & Internet Protocol: addressed, best-effort carriage of packets across networks. \\
+ICMP & Internet Control Message Protocol: control and diagnostic messages only. \\
+DNS & Domain Name System: translates names into IP addresses. \\
+DHCP & Dynamic Host Configuration Protocol: automatically assigns addresses. \\
+HTTP / HTTPS & HyperText Transfer Protocol (plain) and its Secure version for the web. \\
+FTP & File Transfer Protocol: moves files between computers. \\
+Telnet & Plain-text remote login protocol. \\
+SMTP & Simple Mail Transfer Protocol: sends outgoing mail. \\
+OSI model & The seven-layer reference model from Physical to Application. \\
+Port & A number naming the service on a machine (HTTP 80, HTTPS 443). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. \textbf{TCP}
+and \textbf{UDP} are the two transport protocols. \textbf{IP} names the
+addressing protocol with its two versions, IPv4 and IPv6. \textbf{ICMP} is the
+helper that reports errors, never the carrier of user data. \textbf{DNS} and
+\textbf{DHCP} are the two address services: one resolves names, the other
+assigns addresses. \textbf{HTTP}, \textbf{HTTPS}, \textbf{FTP},
+\textbf{Telnet}, and \textbf{SMTP} are application protocols, each with one
+job and one well-known port.
+
+\section{TCP and UDP}
+The transport layer offers two opposite bargains. \textbf{TCP} (Transmission
+Control Protocol) is connection-oriented: it sets up the connection, numbers
+every segment, retransmits whatever is lost, and delivers the bytes complete
+and in order. What TCP guarantees is \emph{ordering and correctness}; it does
+not promise when the data will arrive. \textbf{UDP} (User Datagram Protocol)
+is connectionless: it sends each datagram independently, with no setup, no
+ordering, and no retransmission. What UDP offers in return is speed and low
+overhead.
+
+\begin{definitionbox}{TCP}
+A connection-oriented transport protocol that delivers data reliably and in
+order through sequencing, acknowledgement, and retransmission.
+\end{definitionbox}
+
+\begin{definitionbox}{UDP}
+A connectionless transport protocol that sends independent datagrams quickly
+with no delivery, ordering, or error-recovery guarantee.
+\end{definitionbox}
+
+Choose between them by what the task values most. A file, a web page, or an
+email must arrive complete and correct, so it travels over TCP. Live voice, a
+video stream, or a quick DNS lookup values speed over perfection, so it
+travels over UDP, where a lost fragment is simply skipped.
+
+\begin{example}
+An item states, ``TCP guarantees fast delivery of every packet.'' This is
+wrong. TCP guarantees that the bytes arrive complete and in order (PYQ-18);
+speed is exactly what TCP sacrifices. The fast, best-effort protocol is UDP.
+\end{example}
+
+\section{IPv4 and IPv6}
+The \textbf{Internet Protocol (IP)} carries addressed packets from the sender
+to the receiver across networks. Each device holds an IP address, and routers
+read that address to forward the packet hop by hop. IP by itself is
+unreliable: delivery is best-effort, and it is TCP above it that adds
+reliability.
+
+\textbf{IPv4} uses 32-bit addresses written as four decimal octets, for
+example 192.168.1.10. Its header is variable in length (20 to 60 bytes).
+\textbf{IPv6} uses 128-bit addresses written as eight hexadecimal groups, for
+example 2001:0db8::1, and its header is fixed at 40 bytes (PYQ-18, TRM-10).
+The longer address space is the whole point of IPv6: it supplies vastly more
+addresses than IPv4.
+
+\begin{definitionbox}{IPv4}
+The 32-bit version of the Internet Protocol, with dotted-decimal addresses
+and a variable-length header.
+\end{definitionbox}
+
+\begin{definitionbox}{IPv6}
+The 128-bit version of the Internet Protocol, with hexadecimal addresses and
+a fixed 40-byte header.
+\end{definitionbox}
+
+\section{ICMP: the control channel}
+\textbf{ICMP} (Internet Control Message Protocol) carries control and
+diagnostic messages about the network itself: error reports such as
+``destination unreachable'' and reachability probes. Its two familiar tools
+are \textbf{ping}, which asks whether a host is reachable, and
+\textbf{traceroute}, which shows the path packets take. ICMP transfers no
+application data and uses no port numbers (TRAP-19). That last point is the
+exam's favourite trap: any option giving ICMP a port, a file transfer, or a
+mail delivery is wrong.
+
+\section{DNS and DHCP}
+\textbf{DNS} (Domain Name System) translates a human name such as
+\texttt{jkssb.nic.in} into the IP address the network needs. Without it every
+user would have to memorise numeric addresses. DNS queries travel mainly over
+UDP on port 53, falling back to TCP for large zone transfers.
+
+\textbf{DHCP} (Dynamic Host Configuration Protocol) automatically assigns an
+IP address, subnet mask, default gateway, and DNS server address to each
+device that joins the network. Without it every address would have to be
+typed in by hand. The home router and the office network each run a DHCP
+server; the joining laptop or phone acts as the DHCP client, using UDP ports
+67 and 68.
+
+\begin{definitionbox}{DNS}
+The distributed naming service that resolves a domain name into its IP
+address. It answers ``what number goes with this name?''
+\end{definitionbox}
+
+\begin{definitionbox}{DHCP}
+The service that automatically assigns IP configuration (address, mask,
+gateway, DNS server) to devices joining a network. It answers ``what address
+may this newcomer use?''
+\end{definitionbox}
+
+\begin{example}
+An item asks which service gives a newly connected office desktop its IP
+address. Trace the pair: DNS resolves names the user already has, while DHCP
+hands out addresses to newcomers. The answer is DHCP. If the stem instead
+asks what turns \texttt{jkssb.nic.in} into an address, the answer is DNS.
+\end{example}
+
+\section{Application protocols: web, files, remote login, mail}
+\textbf{HTTP} (HyperText Transfer Protocol, port 80) fetches web pages in
+plain text. \textbf{HTTPS} (HyperText Transfer Protocol Secure, port 443) is
+the same protocol with an SSL/TLS encryption layer, shown by
+\texttt{https://} and the padlock. The S stands for Secure (WO 2026 Q76
+territory).
+
+\textbf{FTP} (File Transfer Protocol, port 21) moves files between computers;
+it is neither email nor web browsing. \textbf{Telnet} (port 23) opens a
+plain-text remote login session and is today replaced by the encrypted SSH.
+\textbf{SMTP} (Simple Mail Transfer Protocol, port 25) sends outgoing mail to
+the server. Receiving is a separate job handled by \textbf{POP3} (Post Office
+Protocol version 3, port 110), which downloads mail to the local machine
+(PYQ-16, TRAP-17), and \textbf{IMAP} (Internet Message Access Protocol, port
+143), which keeps mail synced on the server.
+
+\section{The seven OSI layers}
+The \textbf{OSI model} (Open Systems Interconnection) is a seven-layer
+reference frame for describing network communication:
+
+\begin{center}
+\begin{tabular}{p{0.10\textwidth}p{0.22\textwidth}p{0.58\textwidth}}
+\toprule
+\textbf{No.} & \textbf{Layer} & \textbf{Job} \\
+\midrule
+7 & Application & Services the user sees: HTTP, FTP, SMTP, DNS, DHCP. \\
+6 & Presentation & Translation, encryption, compression. \\
+5 & Session & Opens, manages, and closes sessions between machines. \\
+4 & Transport & End-to-end delivery: TCP and UDP. \\
+3 & Network & Addressing and routing: IP (IPv4, IPv6) and ICMP. \\
+2 & Data Link & Frames on a single link: switch, MAC address. \\
+1 & Physical & Bits on the wire, cable, or radio signal. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Data moves down the layers on sending and up the layers on receiving, each
+layer adding (or reading) its own header. For this exam, three placements
+carry almost all the marks: the application names (HTTP, FTP, SMTP, DNS,
+DHCP) at layer 7, TCP and UDP at layer 4, and IP and ICMP at layer 3.
+
+\begin{example}
+Opening a web page uses HTTP at the Application layer, TCP at the Transport
+layer, and IP at the Network layer: one protocol per layer, working
+together. An item asking ``which layer does IP belong to'' is answered by
+the same table: the Network layer (layer 3).
+\end{example}
+
+\section{Port awareness}
+An \textbf{IP address} names the machine; a \textbf{port number} names the
+service on that machine. Ports 0--1023 are the well-known ports. The exam set
+is: FTP 21, Telnet 23, SMTP 25, DNS 53, HTTP 80, POP3 110, IMAP 143, HTTPS
+443. DHCP uses UDP ports 67 and 68, and ICMP uses no ports at all. The
+recommended drill is to cover the service names and recall the numbers in the
+chain 21--23--25--53--80--443.
+
+\section{Exam retrieval and common confusions}
+Seven distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item IPv6 is \textbf{128-bit}, never 256-bit; its header is fixed at 40
+    bytes (TRAP-18, TRM-10).
+  \item ICMP is \textbf{control/diagnostic} only: no application data, no
+    ports (TRAP-19).
+  \item TCP promises \textbf{order}, not timing; UDP promises neither
+    (PYQ-18).
+  \item \textbf{SMTP sends} mail; \textbf{POP3/IMAP receive} it (TRAP-17).
+  \item \textbf{DNS resolves} names to addresses; \textbf{DHCP assigns}
+    addresses to joining devices.
+  \item HTTP is port \textbf{80} and plain; HTTPS is port \textbf{443} with
+    SSL/TLS.
+  \item TCP and UDP live at the \textbf{Transport} layer; IP and ICMP at the
+    \textbf{Network} layer; HTTP, FTP, SMTP, DNS, and DHCP at the
+    \textbf{Application} layer.
+\end{enumerate}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish TCP from UDP on reliability, connection setup, and one
+    typical use each.
+  \item Contrast IPv4 with IPv6 on address length, notation, and header size.
+  \item Explain why ICMP is described as a control protocol and name its two
+    common tools.
+  \item Distinguish DNS from DHCP with one sentence on each role.
+  \item List the seven OSI layers in order with the protocols of this lesson
+    placed at their layers.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item TCP is connection-oriented, reliable, and ordered: it numbers
+    segments and retransmits losses; typical uses are web pages, email, and
+    file transfer. UDP is connectionless and best-effort: no setup, ordering,
+    or retransmission; typical uses are streaming, voice calls, and DNS
+    queries.
+  \item IPv4 is 32-bit, dotted-decimal (four octets), with a variable 20--60
+    byte header. IPv6 is 128-bit, hexadecimal (eight groups), with a fixed
+    40-byte header.
+  \item ICMP carries control and diagnostic messages about the network
+    (errors, reachability) rather than user data, and it uses no ports. Its
+    tools are ping (reachability) and traceroute (path).
+  \item DNS translates a domain name into its IP address. DHCP automatically
+    assigns an IP address and related configuration to a device joining the
+    network.
+  \item 7 Application (HTTP, HTTPS, FTP, Telnet, SMTP, POP3, IMAP, DNS,
+    DHCP); 6 Presentation; 5 Session; 4 Transport (TCP, UDP); 3 Network (IP,
+    ICMP); 2 Data Link; 1 Physical.
+\end{enumerate}
+\endgroup
+\end{document}

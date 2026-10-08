@@ -1,0 +1,335 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{62.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current Internet, Networking and Cloud IaaS --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{TCP: ordered and reliable, but with no timing promise}
+A running Internet conversation must survive lost, duplicated, and reordered
+packets. \textbf{TCP} (Transmission Control Protocol) is the transport
+protocol that hides this mess from the application. It is
+\emph{connection-oriented}: the two ends set up a connection before any data
+moves. Once the connection exists, TCP numbers every byte, acknowledges what
+arrives, and retransmits whatever is lost, so the receiving application sees
+the bytes in exactly the order they were sent. That is the double guarantee
+to memorise: \textbf{ordered} delivery and \textbf{reliable} delivery.
+
+What TCP does not promise is timing. It never claims the data will arrive
+within a fixed time, because retransmissions take as long as they take. This
+``no timing guarantee'' point is tested directly (PYQ-18): an option that
+claims TCP promises delivery by a deadline is wrong.
+
+\begin{definitionbox}{TCP}
+A connection-oriented transport protocol that delivers bytes in order and
+retransmits lost segments, with no guarantee about delivery time.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+TCP & Transmission Control Protocol; ordered and reliable transport. \\
+UDP & User Datagram Protocol; connectionless, fast, unreliable transport. \\
+ICMP & Internet Control Message Protocol; control and diagnostic messages only. \\
+BGP & Border Gateway Protocol; inter-domain routing between autonomous systems. \\
+IPv6 & 128-bit next-generation Internet addressing; no broadcast. \\
+QUIC & Quick UDP Internet Connections; the UDP-based transport under HTTP/3. \\
+DNS & Domain Name System; translates domain names into IP addresses. \\
+PIR & Public Interest Registry; operates the .org registry. \\
+ICANN & Internet Corporation for Assigned Names and Numbers; global name/number coordination. \\
+ARPANET & Advanced Research Projects Agency Network (1969); ancestor of the Internet. \\
+IaaS & Infrastructure as a Service; provider manages hardware, customer manages OS and above. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. \textbf{TCP}
+means ordered and reliable transport. \textbf{UDP} means the fast,
+connectionless alternative with neither guarantee. \textbf{ICMP} means the
+control-message protocol that never carries application data.
+\textbf{BGP} means routing between autonomous systems, never inside one LAN.
+\textbf{IPv6} means 128-bit addresses with no broadcast. \textbf{QUIC} means
+the UDP-based transport that HTTP/3 uses instead of TCP. \textbf{DNS} means
+the name-to-address directory. \textbf{PIR} runs the .org registry under
+\textbf{ICANN} coordination. \textbf{ARPANET} is the 1969 packet-switched
+ancestor of the Internet. \textbf{IaaS} splits responsibility so that the
+provider manages networking hardware while the customer manages the operating
+system, applications, and data.
+
+\section{UDP and the TCP/UDP contrast}
+\textbf{UDP} (User Datagram Protocol) is TCP's near-neighbour and the most
+common distractor for it. UDP is \emph{connectionless}: each datagram is sent
+independently with no setup. It provides no ordering guarantee, no
+reliability guarantee, and no retransmission. Its header is small, so it is
+faster and cheaper per packet than TCP.
+
+\begin{definitionbox}{UDP}
+A connectionless transport protocol that sends independent datagrams with no
+ordering, reliability, or retransmission guarantee.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+\toprule
+\textbf{Point} & \textbf{TCP} & \textbf{UDP} \\
+\midrule
+Connection & Connection-oriented & Connectionless \\
+Ordering & Guaranteed & Not guaranteed \\
+Reliability & Retransmits lost data & No retransmission \\
+Speed & Slower (acknowledgements, state) & Faster (light header) \\
+Typical use & Web pages, mail, file transfer & Live voice, video, games, DNS lookups \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The exam tests this pair by swapping one property: an option that says UDP
+guarantees order, or that TCP is connectionless, is always wrong. The anchor
+is the direction of the trade: TCP buys correctness at the cost of speed,
+while UDP buys speed at the cost of correctness.
+
+\begin{example}
+An item states, ``UDP guarantees ordered delivery of datagrams.'' This is
+wrong. Ordering is a TCP guarantee; UDP provides no ordering at all. The
+wrong option has moved a TCP property onto UDP.
+\end{example}
+
+\section{ICMP: the network's own messenger}
+While TCP and UDP carry user data, \textbf{ICMP} (Internet Control Message
+Protocol) carries messages \emph{about} the network. Routers and hosts use it
+to report errors --- destination unreachable, time exceeded, parameter
+problems --- and diagnostic tools such as \textbf{ping} (echo request and
+reply) and \textbf{traceroute} are built on ICMP messages.
+
+\begin{definitionbox}{ICMP}
+The control and diagnostic protocol of the Internet layer; reports errors and
+supports ping and traceroute, and never carries application data.
+\end{definitionbox}
+
+Three facts together close every ICMP trap (PYQ-18, PYQ-19, TRAP-19). First,
+ICMP transfers no application data: it never moves a file, a mail message,
+or a web page. Second, it uses no ports: ports belong to TCP and UDP, and an
+option that assigns ICMP a port number is wrong. Third, it is neither a
+routing protocol like BGP nor a mail protocol like SMTP; it only reports on
+conditions the other protocols encounter.
+
+\section{BGP: routing between autonomous systems}
+The Internet is not one network but a federation of large independently
+managed networks called \textbf{autonomous systems} (an ISP, a university
+backbone, a government network). \textbf{BGP} (Border Gateway Protocol) is
+the protocol that routes \emph{between} them. It exchanges reachability
+information across autonomous-system borders and selects the paths that
+traffic takes over the Internet backbone.
+
+\begin{definitionbox}{BGP}
+The inter-domain routing protocol that exchanges reachability between
+autonomous systems on the Internet backbone.
+\end{definitionbox}
+
+The tested contrast is BGP against the \emph{interior} protocols
+\textbf{OSPF} (Open Shortest Path First) and \textbf{RIP} (Routing
+Information Protocol), which route \emph{inside} a single domain (PYQ-19,
+TRAP-20). Any option that places BGP inside one small local network has
+swapped the two scopes. The one-word shortcut is ``inter-domain'': whenever
+the stem says inter-domain or between autonomous systems, the answer is BGP.
+
+\section{IPv6: address space, header, and no broadcast}
+\textbf{IPv4} uses 32-bit addresses (about 4.3 billion), which ran out under
+the growth of the Internet. \textbf{IPv6} replaces them with \textbf{128-bit}
+addresses, written as eight groups of hexadecimal digits, giving about
+$3.4 \times 10^{38}$ addresses. This vast space is the standard reason given
+for IPv6 removing the need for address-sharing workarounds such as
+\textbf{NAT} (Network Address Translation), which lets many private addresses
+share one public IPv4 address (PYQ-19).
+
+\begin{definitionbox}{IPv6 address}
+A 128-bit Internet-layer address, written as eight hexadecimal groups, with a
+fixed 40-byte header.
+\end{definitionbox}
+
+Two further IPv6 facts are tested. The fixed IPv6 header is \textbf{40 bytes}
+long (PYQ-18). And IPv6 has \textbf{no broadcast}: IPv4's three delivery
+styles (unicast to one receiver, multicast to a group, broadcast to everyone)
+become unicast, multicast, and anycast (nearest of several receivers) in
+IPv6, with a multicast to the all-nodes group replacing the broadcast. An
+option mentioning an ``IPv6 broadcast address'' is therefore self-defeating.
+The 256-bit figure that appears as a distractor is always wrong (TRAP-18).
+
+\begin{example}
+An item offers ``IPv6 uses 256-bit addresses'' as one option. This is wrong.
+IPv6 uses 128-bit addresses; 256 is double the correct size and matches no
+Internet-layer standard. The option confuses IPv6 with an unrelated larger
+number.
+\end{example}
+
+\section{HTTP/3 and QUIC}
+Web traffic travelled over TCP for decades: HTTP/1.1 and HTTP/2 both run
+over TCP. \textbf{HTTP/3} breaks that pattern. It runs over \textbf{QUIC}
+(Quick UDP Internet Connections), which itself runs over \textbf{UDP}, not
+over TCP. QUIC rebuilds the needed reliability, congestion control, and
+security on top of UDP, gaining faster connection setup and independent
+streams without head-of-line blocking across streams.
+
+\begin{definitionbox}{QUIC}
+A UDP-based transport protocol carrying HTTP/3, providing its own reliability
+and security instead of using TCP.
+\end{definitionbox}
+
+The trap writes itself: any option claiming HTTP/3 relies on TCP has the
+protocol stack backwards (PYQ-19, TRAP-21). The correct chain is HTTP/3 over
+QUIC over UDP.
+
+\section{DNS and the .org / PIR / ICANN chain}
+\textbf{DNS} (Domain Name System) is the Internet's directory: it translates
+human-readable domain names such as \texttt{example.org} into numeric IP
+addresses that routers can use. Resolution runs hierarchically from root
+servers down through top-level-domain servers to the domain's own
+authoritative servers. DNS is a lookup service, not a routing protocol and
+not a mail-transfer protocol, and confusing it with either is a standard
+wrong answer.
+
+The governance half of the topic names three actors. \textbf{.org} is a
+generic top-level domain originally meant for non-profit organisations.
+Its registry is operated by \textbf{PIR} (Public Interest Registry).
+\textbf{ICANN} (Internet Corporation for Assigned Names and Numbers)
+coordinates domain names and IP addresses at the global level. The exam
+distinction is role-based: PIR \emph{runs} the .org registry, while ICANN
+\emph{coordinates} the naming system as a whole.
+
+\section{ARPANET and packet switching}
+\textbf{ARPANET} (Advanced Research Projects Agency Network), live in
+\textbf{1969}, is the ancestor of the Internet. Its contribution was proving
+that \textbf{packet switching} works across long distances: splitting data
+into addressed packets that travel independently and are reassembled at the
+destination, with the network routing around failed links. Later ARPANET work
+produced the TCP/IP protocol family.
+
+\begin{definitionbox}{Packet switching}
+Splitting data into addressed packets that may take different routes and are
+reassembled at the destination.
+\end{definitionbox}
+
+The tested contrast is packet switching against \textbf{circuit switching},
+the older telephone model that holds one dedicated path for the whole call.
+The Internet uses packet switching; the traditional telephone call used
+circuit switching. Options that assign a dedicated reserved circuit to the
+Internet have the two models swapped.
+
+\section{The router: joining networks by reading IP addresses}
+A \textbf{router} connects different networks and forwards packets between
+them. It does this by reading each packet's destination \textbf{IP address}
+and choosing the next hop from its \textbf{routing table}. In
+assertion--reason form: the assertion (a router joins networks) and the
+reason (it reads the destination IP and consults its table) are both true,
+and the reason correctly explains the assertion, because address-reading is
+\emph{how} the router forwards between networks.
+
+The near-neighbours are the \textbf{switch}, which forwards \emph{inside} one
+network using MAC addresses, and the \textbf{hub}, which merely repeats
+everything it receives. An option that says a router forwards within one
+network using MAC addresses describes a switch, not a router.
+
+\section{IaaS: the provider manages the hardware}
+Cloud service models split responsibility between provider and customer.
+In \textbf{IaaS} (Infrastructure as a Service), the \textbf{provider} manages
+the physical infrastructure: servers, storage hardware, \textbf{networking
+hardware}, and virtualisation. The \textbf{customer} manages everything above
+that layer: the operating system, runtime, applications, and data. The exam
+anchor is the provider's side: in IaaS the provider manages the networking
+hardware (PYQ-20).
+
+\begin{definitionbox}{IaaS responsibility split}
+The provider manages infrastructure (networking and storage hardware,
+virtualisation); the customer manages the operating system, runtime,
+applications, and data.
+\end{definitionbox}
+
+Moving down the ladder, the provider manages more. In \textbf{PaaS}
+(Platform as a Service) the provider additionally manages the operating
+system and runtime, leaving the customer its applications and data. In
+\textbf{SaaS} (Software as a Service) the provider manages everything up to
+the finished application, and the customer only manages its own data and
+settings. The trap claims the IaaS provider manages the customer's OS or
+data; it never does (TRAP-22).
+
+\begin{example}
+An item states, ``In IaaS the provider manages the customer's operating
+system and data.'' This is wrong. Those belong to the customer; the provider
+stops at the infrastructure layer (networking and storage hardware plus
+virtualisation). The option describes SaaS, not IaaS.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Seven distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item TCP guarantees \textbf{order and reliability} but no timing; UDP
+    guarantees \textbf{neither} (PYQ-18).
+  \item ICMP carries \textbf{control messages only}: no application data, no
+    ports (TRAP-19).
+  \item BGP is \textbf{inter-domain} (between autonomous systems); OSPF and
+    RIP are intra-domain (TRAP-20).
+  \item IPv6 is \textbf{128-bit} with a \textbf{40-byte} header; 256-bit is
+    always wrong (PYQ-18, TRAP-18).
+  \item IPv6 has \textbf{no broadcast}; the replacement is
+    \textbf{multicast} to the all-nodes group (PYQ-19).
+  \item HTTP/3 uses \textbf{QUIC over UDP}, never TCP (TRAP-21).
+  \item In IaaS the \textbf{provider} manages networking hardware; the
+    \textbf{customer} manages the OS, applications, and data (TRAP-22).
+\end{enumerate}
+
+\begin{example}
+An item asks which protocol routes between autonomous systems on the
+Internet backbone. Trace the scope word: ``between autonomous systems'' is
+the definition of inter-domain routing, and the inter-domain protocol is BGP.
+OSPF and RIP are interior protocols, and ICMP is not a routing protocol at
+all, so all three are eliminated by scope.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the two guarantees TCP provides and the one it does not.
+  \item Distinguish TCP from UDP on connection, ordering, reliability, and
+    speed.
+  \item What does ICMP carry, and what two things does it never do?
+  \item Distinguish BGP from OSPF/RIP by scope.
+  \item State the IPv6 address size and header size, and explain what replaces
+    the broadcast.
+  \item Explain the HTTP/3 protocol stack in one chain of three names.
+  \item Distinguish the roles of PIR and ICANN for the .org domain.
+  \item State the IaaS responsibility split in two sentences.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item TCP guarantees ordered delivery and reliable delivery (lost segments
+    are retransmitted). It provides no timing guarantee.
+  \item TCP is connection-oriented, ordered, and reliable but slower; UDP is
+    connectionless, unordered, and unreliable (no retransmission) but faster.
+  \item ICMP carries control and diagnostic messages (errors, ping,
+    traceroute). It never transfers application data and never uses ports.
+  \item BGP routes between autonomous systems (inter-domain, Internet
+    backbone); OSPF and RIP route inside a single domain.
+  \item IPv6 uses 128-bit addresses with a fixed 40-byte header. It has no
+    broadcast; a multicast to the all-nodes group replaces it.
+  \item HTTP/3 runs over QUIC, which runs over UDP: HTTP/3 over QUIC over
+    UDP.
+  \item PIR operates the .org registry; ICANN coordinates domain names and
+    IP addresses globally.
+  \item The provider manages the infrastructure (networking and storage
+    hardware, virtualisation); the customer manages the operating system,
+    runtime, applications, and data.
+\end{enumerate}
+\endgroup
+\end{document}

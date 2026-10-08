@@ -1,0 +1,326 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Networking Basics}
+\subtitle{Lesson 40 --- Networks, Topologies and Devices}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is a Computer Network?}
+  \begin{itemize}
+    \item A \key{computer network} is two or more computers (and other
+      devices) connected so they can \key{share data and resources}.
+    \item Shared resources include files, printers, an internet connection,
+      and application software.
+    \item Every participant in the network is called a \key{node}.
+    \item A \key{host} is a node that can send or receive data over the
+      network, such as a computer or a printer.
+  \end{itemize}
+  \begin{block}{The one idea}
+    A network connects nodes so that data and resources can be shared.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Client and Server}
+  \begin{itemize}
+    \item A \key{client} is the device (or program) that \key{requests} a
+      service, such as a web page or a file.
+    \item A \key{server} is the computer that \key{provides} the service:
+      it stores shared files or pages and answers client requests.
+    \item In the common \key{client-server} arrangement, many clients ask and
+      one server answers.
+    \item \muted{The office desktop that opens a shared file is the client;
+      the machine storing that file is the server.}
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    The client requests; the server provides. Do not swap the roles.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Network Types by Area: PAN, LAN, MAN, WAN}
+  \begin{center}
+    \begin{tabular}{p{0.10\textwidth}p{0.26\textwidth}p{0.50\textwidth}}
+      \toprule
+      \textbf{Type} & \textbf{Full form} & \textbf{Coverage} \\
+      \midrule
+      PAN & Personal Area Network & One person: phone, laptop, earphones \\
+      LAN & Local Area Network & One building or campus: office, school \\
+      MAN & Metropolitan Area Network & One city: branches linked across town \\
+      WAN & Wide Area Network & Country or world: the Internet is the largest WAN \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Area grows from PAN (smallest) up to WAN (largest).}
+\end{frame}
+
+\begin{frame}{WLAN, Intranet and the Internet}
+  \begin{itemize}
+    \item A \key{WLAN} (Wireless Local Area Network) is a LAN built with
+      wireless signals instead of cables.
+    \item An \key{intranet} is a private network inside one organisation;
+      only its own staff can use it.
+    \item The \key{Internet} is the worldwide public network of connected
+      networks; anyone with access can use it.
+    \item An \key{ISP} (Internet Service Provider) is the company that gives
+      a customer access to the Internet.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    An intranet is \key{private} to one organisation; the Internet is
+    \key{public} and worldwide. Do not confuse the two words.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Network Topologies: What the Word Means}
+  \begin{itemize}
+    \item A \key{topology} is the arrangement (layout) by which nodes are
+      connected in a network.
+    \item The five topologies in this lesson are \key{bus, star, ring, mesh,
+      and tree}.
+    \item Each topology decides how data travels and what happens when one
+      cable or node fails.
+    \item \muted{Exam questions ask: which topology has a central device?
+      Which one fails fully when the main cable breaks?}
+  \end{itemize}
+  \begin{block}{How to remember them}
+    Bus = one line; star = centre; ring = circle; mesh = every-to-every;
+    tree = stars joined like branches.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Bus Topology}
+  \begin{itemize}
+    \item In a \key{bus} topology, all nodes share \key{one single main
+      cable} (the bus).
+    \item It is simple and cheap for a small network.
+    \item Data sent by one node travels along the whole bus and is received
+      by the addressed node.
+    \item If the \key{main cable breaks}, the whole network fails.
+  \end{itemize}
+  \begin{alertblock}{Bus: one-line weakness}
+    One shared cable is the strength (cheap) and the weakness (one break
+    stops everything).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Star Topology}
+  \begin{itemize}
+    \item In a \key{star} topology, every node connects to one
+      \key{central device} (a hub or switch).
+    \item All data passes through the centre.
+    \item If one cable fails, only that node is affected; the rest keep
+      working.
+    \item If the \key{central device} fails, the whole network stops.
+  \end{itemize}
+  \begin{block}{Star is the office standard}
+    The office LAN with one switch and many desktops is a star.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Ring Topology}
+  \begin{itemize}
+    \item In a \key{ring} topology, each node connects to exactly
+      \key{two neighbours}, forming a closed circle.
+    \item Data travels around the ring, usually in one direction, from node
+      to node until it reaches its destination.
+    \item Each node passes on (repeats) the data it is not addressed to.
+    \item A break at one point disturbs the whole ring unless a second
+      (dual) ring provides a backup path.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Mesh and Tree Topologies}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Mesh topology}
+      \begin{itemize}
+        \item Every node has a direct link to many (or all) other nodes.
+        \item Very \key{reliable}: if one path fails, another path carries
+          the data.
+        \item Costly: it needs the most cable and ports.
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Tree topology}
+      \begin{itemize}
+        \item Several \key{star} networks joined through a central backbone,
+          like branches of a tree.
+        \item Suits a large campus: each department is a star, joined at
+          the centre.
+        \item If the backbone fails, whole branches lose connection.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \muted{Mesh = most reliable and most costly; tree = stars joined together.}
+\end{frame}
+
+\begin{frame}{Topology Comparison at a Glance}
+  \begin{center}
+    \begin{tabular}{p{0.12\textwidth}p{0.30\textwidth}p{0.44\textwidth}}
+      \toprule
+      \textbf{Topology} & \textbf{Shape} & \textbf{Single point of failure} \\
+      \midrule
+      Bus & One shared cable & Main cable breaks: all fail \\
+      Star & Centre + spokes & Central hub/switch fails: all fail \\
+      Ring & Closed circle & One break disturbs the ring \\
+      Mesh & Many direct links & No single break stops it \\
+      Tree & Stars on a backbone & Backbone fails: branches fail \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Read this table once and the matching items answer themselves.}
+\end{frame}
+
+\begin{frame}{Transmission Media: Guided and Unguided}
+  \begin{itemize}
+    \item \key{Transmission media} are the paths that carry data signals
+      from one device to another.
+    \item \key{Guided (wired) media} confine the signal inside a cable:
+      twisted-pair cable, coaxial cable, and fibre-optic cable.
+    \item \key{Unguided (wireless) media} carry the signal through air or
+      space: radio waves, microwaves, satellite links, and infrared.
+    \item Guided media need a physical cable; unguided media need antennas
+      or line of sight.
+  \end{itemize}
+  \begin{block}{The one split}
+    Guided = through a cable; unguided = through the air.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Guided Media: The Three Cables}
+  \begin{itemize}
+    \item \key{Twisted-pair cable}: pairs of copper wires twisted together;
+      the common telephone and office-LAN cable. Cheap, short range.
+    \item \key{Coaxial cable}: a central copper wire with insulation and a
+      shield; used for cable TV and older LANs. Better shielding than
+      twisted pair.
+    \item \key{Fibre-optic cable}: thin glass or plastic strands carrying
+      \key{light} signals; fastest, longest range, immune to electrical
+      noise, but costliest.
+  \end{itemize}
+  \begin{alertblock}{Fibre is fastest}
+    Rank by speed and range: fibre-optic is fastest, then coaxial, then
+    twisted pair is slowest of the three.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Unguided Media: Wireless Signals}
+  \begin{itemize}
+    \item \key{Radio waves}: travel in all directions; used for FM radio and
+      WLAN/Bluetooth over short ranges.
+    \item \key{Microwaves}: travel in a straight line (line of sight); used
+      for point-to-point links between towers.
+    \item \key{Satellite links}: microwave signals relayed through a
+      satellite; cover very long distances but with delay.
+    \item \key{Infrared}: very short range, blocked by walls; used for TV
+      remotes.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Networking Devices I: NIC, Modem, Hub}
+  \begin{itemize}
+    \item \key{NIC} (Network Interface Card): the card (or built-in circuit)
+      that lets a computer physically connect to a network.
+    \item \key{Modem} (modulator-demodulator): converts digital computer
+      signals to analogue signals for a telephone line and back again; it
+      connects a home or office to the ISP.
+    \item \key{Hub}: connects several nodes in a star and \key{broadcasts}
+      every incoming signal to all ports; the addressed node accepts it.
+  \end{itemize}
+  \begin{block}{Hub vs everything later}
+    A hub sends data to \key{everyone}; a switch sends it only to the
+    addressed device.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Networking Devices II: Switch, Bridge, Repeater}
+  \begin{itemize}
+    \item \key{Switch}: connects nodes in a star and forwards each message
+      \key{only to the addressed} port. Smarter and faster than a hub.
+    \item \key{Bridge}: connects \key{two LAN segments} and filters traffic,
+      passing only data meant for the other side.
+    \item \key{Repeater}: \key{regenerates} a weak signal so it can travel
+      further along a long cable; it works at the signal level only.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Hub = to all; switch = to the addressed port; repeater = only strengthens
+    the signal, it does not choose a path.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Networking Devices III: Router, Gateway, Access Point, Firewall}
+  \begin{itemize}
+    \item \key{Router}: connects \key{different networks} (for example a home
+      LAN to the ISP) and \key{chooses the best path} for each packet.
+    \item \key{Gateway}: connects networks that use \key{different protocols}
+      or formats, translating between them.
+    \item \key{Access point}: the wireless base station that lets Wi-Fi
+      devices join a wired network.
+    \item \key{Firewall}: \key{blocks unauthorised access} while letting
+      legitimate traffic pass; a security device (hardware, software, or
+      both).
+  \end{itemize}
+  \begin{block}{Router vs gateway vs firewall}
+    Router chooses the path; gateway translates between different networks;
+    firewall guards the entry.
+  \end{block}
+\end{frame}
+
+\begin{frame}{High-Yield Drill: Device--Role Matching}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Device} & \textbf{One-line role} \\
+      \midrule
+      NIC & Connects a computer to the network \\
+      Modem & Digital $\leftrightarrow$ analogue for the phone line / ISP link \\
+      Hub & Broadcasts to all ports \\
+      Switch & Forwards only to the addressed port \\
+      Repeater & Regenerates a weak signal \\
+      Bridge & Joins two LAN segments, filters traffic \\
+      Router & Joins different networks, chooses the path \\
+      Gateway & Translates between different protocols \\
+      Access point & Lets wireless devices join the network \\
+      Firewall & Blocks unauthorised access \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Device--role matching is the highest-yield item type in this lesson.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Networking Facts to Keep Straight}
+  \begin{itemize}
+    \item A hub sends data to \key{all} nodes; a \key{switch} sends it only
+      to the addressed node.
+    \item A \key{repeater} only regenerates the signal; the \key{router}
+      chooses the path.
+    \item A \key{bridge} joins two similar LAN segments; a \key{gateway}
+      joins (translates between) different protocols.
+    \item \key{LAN} is one building; \key{MAN} is one city; \key{WAN} spans
+      countries; \key{PAN} is one person.
+    \item \key{Intranet} is private; the \key{Internet} is public.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 40: Recall}
+  \begin{itemize}
+    \item A network links nodes to share data; a client requests and a
+      server provides.
+    \item By area: PAN (person), LAN (building), MAN (city), WAN (world);
+      WLAN is wireless LAN; ISP = Internet Service Provider.
+    \item Topologies: bus (one cable), star (centre), ring (circle), mesh
+      (many links), tree (stars on a backbone).
+    \item Guided media: twisted pair, coaxial, fibre-optic (fastest);
+      unguided: radio, microwave, satellite, infrared.
+    \item Devices: NIC connects; modem converts for the line; hub
+      broadcasts; switch forwards to the address; repeater regenerates;
+      bridge joins LAN segments; router paths between networks; gateway
+      translates; access point admits Wi-Fi; firewall guards.
+  \end{itemize}
+\end{frame}
+\end{document}

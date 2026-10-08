@@ -1,0 +1,357 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{40.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Networking Basics --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What a network is: nodes, hosts, clients, servers}
+A computer network is formed when two or more computers and related devices
+are connected so that they can share data and resources. The shared
+resources include files, printers, an internet connection, and application
+software. On the office desktop, opening a shared folder, printing to a
+shared printer, and browsing the web all use the same underlying network.
+
+\begin{definitionbox}{Computer network}
+A set of two or more connected computing devices (nodes) that can exchange
+data and share resources such as files, printers, and an internet
+connection.
+\end{definitionbox}
+
+Every participant in a network is called a \textbf{node}. A node can be a
+computer, a printer, a switch, or any device with a network address. A
+\textbf{host} is a node that can send or receive data over the network, such
+as a desktop computer, a laptop, or a network printer. In practice every host
+is a node, but the word host is used when the device is an end point that
+produces or consumes data.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Network & Two or more connected devices that share data and resources. \\
+Node & Any participant device in the network. \\
+Host & A node (computer, printer) that sends or receives data. \\
+Client & The device or program that requests a service. \\
+Server & The computer that provides the service and answers requests. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The client--server pair is the most examined relationship in this block. The
+\textbf{client} is the device (or program) that requests a service --- a web
+page, a file, or a print job. The \textbf{server} is the computer that
+provides that service: it stores the shared files or pages and answers the
+requests of many clients. When the office desktop opens a file stored on the
+department's shared machine, the desktop is the client and the shared machine
+is the server.
+
+\begin{definitionbox}{Client and server}
+The client requests a service; the server stores the shared resource and
+provides it in response to client requests.
+\end{definitionbox}
+
+\section{Networks by area: PAN, LAN, MAN, WAN}
+Networks are classified by the geographical area they cover. Four names must
+be learned together with their full forms, because the exam tests both the
+expansion and the coverage in the same item.
+
+\begin{center}
+\begin{tabular}{p{0.12\textwidth}p{0.30\textwidth}p{0.48\textwidth}}
+\toprule
+\textbf{Type} & \textbf{Full form} & \textbf{Coverage and example} \\
+\midrule
+PAN & Personal Area Network & Around one person: phone, laptop, and earphones linked by Bluetooth. \\
+LAN & Local Area Network & One building or campus: an office, school, or laboratory network. \\
+MAN & Metropolitan Area Network & One city: a bank's branches linked across a town. \\
+WAN & Wide Area Network & A country or the world: the Internet is the largest WAN. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A \textbf{PAN} (Personal Area Network) covers the smallest area --- the
+devices around a single person, such as a phone connected to a laptop and
+wireless earphones. A \textbf{LAN} (Local Area Network) covers one building
+or campus, such as all the computers of one office floor connected through a
+switch. A \textbf{MAN} (Metropolitan Area Network) spans a city, for example
+the branches of one organisation linked across a town. A \textbf{WAN} (Wide
+Area Network) spans a country or the whole world; the Internet is the largest
+example of a WAN.
+
+\begin{definitionbox}{PAN, LAN, MAN, WAN}
+PAN covers one person; LAN covers one building or campus; MAN covers one
+city; WAN covers a country or the world.
+\end{definitionbox}
+
+\begin{example}
+A question gives four coverages --- one person, one building, one city, and
+the whole world --- and asks for the matching names. Read the area first:
+person means PAN, building means LAN, city means MAN, and worldwide means
+WAN. The area decides the answer before the full form is even expanded.
+\end{example}
+
+\section{WLAN, intranet, Internet, and ISP}
+Three further names complete the vocabulary. A \textbf{WLAN} (Wireless Local
+Area Network) is a LAN built with wireless signals instead of cables: the
+office Wi-Fi through which laptops connect without a cable is a WLAN. An
+\textbf{intranet} is a private network inside one organisation, usable only
+by its own staff --- for example the company's internal portal. The
+\textbf{Internet} is the worldwide public network of connected networks,
+open to anyone with access. The two words differ by one prefix and are a
+standing trap: intranet is private to one organisation, while the Internet
+is public and worldwide.
+
+An \textbf{ISP} (Internet Service Provider) is the company that provides a
+customer with access to the Internet. The home or office connects through its
+ISP --- over a phone line, cable, fibre, or mobile link --- and the ISP
+carries the traffic onward to the Internet.
+
+\begin{definitionbox}{WLAN, intranet, Internet, ISP}
+A WLAN is a wireless LAN; an intranet is a private organisational network;
+the Internet is the worldwide public network; an ISP (Internet Service
+Provider) gives customers access to the Internet.
+\end{definitionbox}
+
+\section{Topology: bus, star, ring, mesh, tree}
+The word \textbf{topology} means the arrangement by which nodes are connected
+in a network. Five topologies are examined: bus, star, ring, mesh, and tree.
+Each one decides how data travels and what happens when one cable or device
+fails, and the exam repeatedly asks exactly that: which topology has a
+central device, and which one fails fully when the main cable breaks.
+
+In a \textbf{bus} topology, all nodes share one single main cable called the
+bus. It is simple and cheap for a small network. Data sent by one node
+travels along the whole bus and is accepted by the addressed node. Its
+weakness follows from its shape: if the main cable breaks, the whole network
+fails.
+
+In a \textbf{star} topology, every node connects to one central device (a
+hub or a switch), and all data passes through that centre. If one spoke cable
+fails, only that node is affected and the rest keep working. But if the
+central device itself fails, the whole network stops. The ordinary office LAN
+--- one switch with many desktops plugged into it --- is a star, and it is
+the most common topology in exam examples.
+
+In a \textbf{ring} topology, each node connects to exactly two neighbours,
+forming a closed circle. Data travels around the ring, usually in one
+direction, passed from node to node until it reaches its destination. Each
+intermediate node repeats the data it is not addressed to. A break at one
+point disturbs the whole ring, unless a second (dual) ring provides a backup
+path.
+
+In a \textbf{mesh} topology, every node has a direct link to many (in a full
+mesh, all) other nodes. It is the most reliable topology: if one path fails,
+another path carries the data. It is also the costliest, because it needs the
+most cable and the most ports.
+
+In a \textbf{tree} topology, several star networks are joined through a
+central backbone, like the branches of a tree. It suits a large campus: each
+department is a star, and the stars join at the centre. Its weakness is the
+backbone: if the backbone fails, whole branches lose connection.
+
+\begin{center}
+\begin{tabular}{p{0.12\textwidth}p{0.30\textwidth}p{0.48\textwidth}}
+\toprule
+\textbf{Topology} & \textbf{Shape} & \textbf{What one failure does} \\
+\midrule
+Bus & One shared cable & Main cable breaks: the whole network fails. \\
+Star & Centre with spokes & One spoke fails: one node affected; centre fails: all fail. \\
+Ring & Closed circle & One break disturbs the ring. \\
+Mesh & Many direct links & One path fails: traffic uses another path. \\
+Tree & Stars joined on a backbone & Backbone fails: whole branches fail. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Topology}
+The physical or logical arrangement of nodes in a network: bus (one cable),
+star (central device), ring (closed circle), mesh (many direct links), and
+tree (stars joined on a backbone).
+\end{definitionbox}
+
+\begin{example}
+An item states, ``In which topology does the failure of the central device
+bring down the whole network?'' Trace the table: only the star routes every
+message through one centre, so the answer is star. If the stem instead says
+the main cable broke and everything stopped, the shape is the single shared
+cable, so the answer is bus.
+\end{example}
+
+\section{Transmission media: guided and unguided}
+\textbf{Transmission media} are the paths that carry data signals from one
+device to another. They divide into two families. \textbf{Guided (wired)
+media} confine the signal inside a physical cable. \textbf{Unguided
+(wireless) media} carry the signal through air or space without a cable.
+
+There are three guided media. \textbf{Twisted-pair cable} consists of pairs
+of copper wires twisted together; it is the ordinary telephone and office-LAN
+cable --- cheap and suitable for short ranges. \textbf{Coaxial cable} has a
+central copper wire with insulation and a metal shield around it; it is used
+for cable TV and older LANs and has better shielding than twisted pair.
+\textbf{Fibre-optic cable} uses thin glass or plastic strands carrying light
+signals; it is the fastest medium with the longest range and is immune to
+electrical noise, but it is also the costliest. Ranked by speed and range,
+fibre-optic comes first, then coaxial, then twisted pair.
+
+There are four unguided media at this level. \textbf{Radio waves} travel in
+all directions and are used for FM radio and for short-range WLAN and
+Bluetooth links. \textbf{Microwaves} travel in a straight line and need line
+of sight; they are used for point-to-point links between towers.
+\textbf{Satellite links} are microwave signals relayed through a satellite;
+they cover very long distances but introduce delay. \textbf{Infrared} works
+over a very short range, is blocked by walls, and is used for TV remotes.
+
+\begin{definitionbox}{Guided and unguided media}
+Guided media carry signals inside a cable (twisted pair, coaxial,
+fibre-optic); unguided media carry signals through air or space (radio
+waves, microwaves, satellite links, infrared).
+\end{definitionbox}
+
+\section{Networking devices and their roles}
+Ten devices are examined, and device--role matching is the highest-yield item
+type of this lesson. Each device has one role to memorise.
+
+A \textbf{NIC} (Network Interface Card) is the card --- or the built-in
+circuit on the motherboard --- that lets a computer physically connect to a
+network. Without it the machine has no network port to plug into.
+
+A \textbf{modem} (modulator-demodulator) converts digital computer signals
+into analogue signals for a telephone line and back again. It is the device
+that connects a home or office to the ISP over a line that cannot carry
+digital signals directly.
+
+A \textbf{hub} connects several nodes in a star and broadcasts every
+incoming signal to all of its ports; the addressed node accepts the data and
+the rest ignore it. A \textbf{switch} also connects nodes in a star, but it
+forwards each message only to the addressed port. The switch is therefore
+smarter and faster than the hub, because it does not flood every port with
+every message.
+
+A \textbf{repeater} regenerates a weak signal so that it can travel further
+along a long cable. It works at the signal level only: it does not choose a
+path and does not filter traffic. A \textbf{bridge} connects two LAN
+segments and filters traffic, passing across only the data meant for the
+other side.
+
+A \textbf{router} connects different networks --- for example a home LAN to
+the ISP's network --- and chooses the best path for each packet of data. A
+\textbf{gateway} connects networks that use different protocols or data
+formats, translating between them so the two sides can understand each
+other. An \textbf{access point} is the wireless base station that lets Wi-Fi
+devices join a wired network. A \textbf{firewall} blocks unauthorised access
+while letting legitimate traffic pass; it is a security device that can be
+hardware, software, or both.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Device} & \textbf{Role (one line)} \\
+\midrule
+NIC (Network Interface Card) & Connects a computer to the network. \\
+Modem & Converts digital to analogue and back; links the site to the ISP. \\
+Hub & Broadcasts every incoming signal to all ports. \\
+Switch & Forwards each message only to the addressed port. \\
+Repeater & Regenerates a weak signal for a longer run. \\
+Bridge & Joins two LAN segments and filters traffic between them. \\
+Router & Joins different networks and chooses the best path. \\
+Gateway & Translates between networks using different protocols. \\
+Access point & Lets wireless (Wi-Fi) devices join the wired network. \\
+Firewall & Blocks unauthorised access; a security device. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{The four most confused pairs}
+Hub sends to all, switch sends to the addressed port; repeater regenerates
+the signal, router chooses the path; bridge joins two similar LAN segments,
+gateway translates between different protocols; modem connects to the line,
+firewall guards the entry.
+\end{definitionbox}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The client \textbf{requests} and the server \textbf{provides}. Do not
+    swap the roles.
+  \item Read the area first: one person is PAN, one building is LAN, one
+    city is MAN, worldwide is WAN.
+  \item \textbf{Intranet} is private to one organisation; the
+    \textbf{Internet} is public and worldwide.
+  \item A hub broadcasts to \textbf{all} ports; a switch forwards only to
+    the \textbf{addressed} port.
+  \item A repeater only \textbf{regenerates} the signal; the router
+    \textbf{chooses the path}. A bridge joins two LAN segments; a gateway
+    translates between \textbf{different} protocols.
+  \item Fibre-optic is the \textbf{fastest} guided medium; twisted pair is
+    the slowest of the three cables.
+\end{enumerate}
+
+\begin{example}
+An item asks which device ``connects different networks and selects the best
+path for each packet.'' Walk the device table: the hub and switch stay inside
+one network, the repeater only strengthens the signal, and the gateway
+translates protocols --- only the router joins different networks and
+chooses paths, so the answer is router.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish a node, a host, a client, and a server.
+  \item Expand PAN, LAN, MAN, WAN, WLAN, NIC, and ISP, and state the coverage
+    of each network type.
+  \item Distinguish an intranet from the Internet.
+  \item Describe the five topologies and state, for each, what a single
+    failure does.
+  \item Distinguish guided from unguided transmission media, giving the three
+    cables and the four wireless media of this lesson.
+  \item Match each of the ten devices of this lesson to its one-line role.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item A node is any participant device in the network. A host is a node
+    (computer, printer) that sends or receives data. A client is the device
+    or program that requests a service; a server is the computer that
+    provides the service and answers client requests.
+  \item PAN --- Personal Area Network (around one person); LAN --- Local Area
+    Network (one building or campus); MAN --- Metropolitan Area Network (one
+    city); WAN --- Wide Area Network (a country or the world); WLAN ---
+    Wireless Local Area Network (a LAN built with wireless signals); NIC ---
+    Network Interface Card (lets a computer connect to a network); ISP ---
+    Internet Service Provider (gives customers Internet access).
+  \item An intranet is a private network inside one organisation, usable only
+    by its staff. The Internet is the worldwide public network of connected
+    networks, open to anyone with access.
+  \item Bus: one shared cable; a break in the main cable fails the whole
+    network. Star: every node joins one centre; a spoke failure affects one
+    node, a centre failure stops all. Ring: closed circle of neighbours; one
+    break disturbs the ring. Mesh: many direct links; one failed path leaves
+    others. Tree: stars joined on a backbone; a backbone failure drops whole
+    branches.
+  \item Guided media confine the signal in a cable: twisted-pair (cheap,
+    short range), coaxial (shielded, e.g.\ cable TV), and fibre-optic
+    (light signals; fastest, longest range, costliest). Unguided media use
+    air or space: radio waves (all directions, short range), microwaves
+    (straight line, towers), satellite links (long distance, with delay),
+    and infrared (very short range, blocked by walls).
+  \item NIC connects the computer; modem converts digital--analogue for the
+    line to the ISP; hub broadcasts to all ports; switch forwards to the
+    addressed port; repeater regenerates a weak signal; bridge joins two LAN
+    segments with filtering; router joins different networks and chooses the
+    path; gateway translates between different protocols; access point admits
+    Wi-Fi devices; firewall blocks unauthorised access.
+\end{enumerate}
+\endgroup
+\end{document}

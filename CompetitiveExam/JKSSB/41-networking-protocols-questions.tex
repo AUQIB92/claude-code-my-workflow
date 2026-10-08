@@ -1,0 +1,174 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 41 Practice: Networking Protocols}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 questions are original JKSSB-pattern
+questions (\textit{[Original]}); none reproduces an official paper item.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Expand TCP.
+  \begin{enumerate}[label=\Alph*.]
+    \item Transfer Control Program
+    \item Transmission Control Protocol
+    \item Transport Communication Process
+    \item Tele Communication Procedure
+  \end{enumerate}
+\item \textit{[Original]} Expand DNS.
+  \begin{enumerate}[label=\Alph*.]
+    \item Domain Name System
+    \item Data Network Service
+    \item Digital Number Sequence
+    \item Direct Node Setup
+  \end{enumerate}
+\item \textit{[Original]} Which pair correctly matches the transport protocol
+  with its behaviour?
+  \begin{enumerate}[label=\Alph*.]
+    \item TCP --- fast, connectionless, no retransmission
+    \item UDP --- reliable, ordered, connection-oriented
+    \item TCP --- reliable, ordered, connection-oriented
+    \item UDP --- ordered delivery with guaranteed timing
+  \end{enumerate}
+\item \textit{[Original]} TCP guarantees:
+  \begin{enumerate}[label=\Alph*.]
+    \item fast arrival time of every packet.
+    \item complete and ordered delivery of bytes.
+    \item encryption of the message body.
+    \item translation of names into addresses.
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} true of UDP?
+  \begin{enumerate}[label=\Alph*.]
+    \item It is connectionless.
+    \item It offers best-effort delivery without retransmission.
+    \item It guarantees ordered delivery of all datagrams.
+    \item It is preferred for streaming and DNS queries.
+  \end{enumerate}
+\item \textit{[Original]} IPv4 uses \underline{\hspace{2.2cm}} addresses,
+  whereas IPv6 uses \underline{\hspace{2.2cm}} addresses.
+  \begin{enumerate}[label=\Alph*.]
+    \item 128-bit; 32-bit
+    \item 32-bit; 128-bit
+    \item 64-bit; 256-bit
+    \item 32-bit; 256-bit
+  \end{enumerate}
+\item \textit{[Original]} Which statement about IPv6 is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item IPv6 addresses are 256-bit long.
+    \item IPv6 uses four decimal octets.
+    \item IPv6 addresses are 128-bit long with a fixed 40-byte header.
+    \item IPv6 headers vary between 20 and 60 bytes.
+  \end{enumerate}
+\item \textit{[Original]} ICMP is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item a file-transfer protocol with its own port number.
+    \item a control and diagnostic protocol carrying errors and probes.
+    \item a mail-sending protocol for outgoing messages.
+    \item an encryption layer for secure web pages.
+  \end{enumerate}
+\item \textit{[Original]} Which tool pair belongs to ICMP?
+  \begin{enumerate}[label=\Alph*.]
+    \item ping and traceroute
+    \item mail merge and autosum
+    \item FTP and Telnet
+    \item ping and mail merge
+  \end{enumerate}
+\item \textit{[Original]} The service that translates
+  \texttt{jkssb.nic.in} into an IP address is:
+  \begin{enumerate}[label=\Alph*.]
+    \item DHCP
+    \item ICMP
+    \item DNS
+    \item SMTP
+  \end{enumerate}
+\item \textit{[Original]} A newly connected office desktop receives its IP
+  address, mask, gateway, and DNS server automatically. This service is:
+  \begin{enumerate}[label=\Alph*.]
+    \item DNS
+    \item DHCP
+    \item ICMP
+    \item FTP
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item HTTP --- port 443, encrypted with SSL/TLS
+    \item HTTPS --- port 80, plain text
+    \item HTTP --- port 80, plain text
+    \item HTTPS --- port 25, used for sending mail
+  \end{enumerate}
+\item \textit{[Original]} SMTP is used to:
+  \begin{enumerate}[label=\Alph*.]
+    \item send outgoing mail to the server.
+    \item download received mail to the local machine.
+    \item keep mail synced on the server.
+    \item translate a domain name into an address.
+  \end{enumerate}
+\item \textit{[Original]} Which pairing correctly matches the mail protocol
+  with its role?
+  \begin{enumerate}[label=\Alph*.]
+    \item SMTP --- receives and syncs mail on the server
+    \item POP3 --- downloads received mail to the local machine
+    \item IMAP --- sends outgoing mail to the server
+    \item SMTP --- translates names into IP addresses
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item TCP is connection-oriented and delivers bytes in order.
+    \item IPv6 addresses are 128-bit long.
+    \item ICMP transfers application data over a dedicated port.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I only
+    \item I and II only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} Which layer pair is correctly matched in the OSI
+  model?
+  \begin{enumerate}[label=\Alph*.]
+    \item TCP and UDP --- Network layer
+    \item IP and ICMP --- Transport layer
+    \item HTTP, FTP, SMTP, DNS --- Application layer
+    \item IP and HTTP --- Physical layer
+  \end{enumerate}
+\item \textit{[Original]} In the OSI model, the correct order from layer 1 to
+  layer 7 is:
+  \begin{enumerate}[label=\Alph*.]
+    \item Application, Presentation, Session, Transport, Network, Data Link,
+      Physical
+    \item Physical, Data Link, Network, Transport, Session, Presentation,
+      Application
+    \item Physical, Network, Data Link, Session, Transport, Application,
+      Presentation
+    \item Data Link, Physical, Transport, Network, Application, Session,
+      Presentation
+  \end{enumerate}
+\item \textit{[Original]} Which port pairing is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item FTP --- 23; Telnet --- 21
+    \item SMTP --- 25; DNS --- 53
+    \item HTTP --- 443; HTTPS --- 80
+    \item POP3 --- 143; IMAP --- 110
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{INCORRECT}?
+  \begin{enumerate}[label=\Alph*.]
+    \item FTP moves files between computers (port 21).
+    \item Telnet opens a plain-text remote login session (port 23).
+    \item DHCP assigns addresses to devices joining the network.
+    \item ICMP uses port 80 to transfer web pages.
+  \end{enumerate}
+\item \textit{[Original]} An office PC cannot open any website, but a ping to
+  the gateway succeeds. Which conclusion follows?
+  \begin{enumerate}[label=\Alph*.]
+    \item The network path works, so the fault lies above it (DNS, proxy,
+      or application settings).
+    \item The ping proves the web server has sent the page.
+    \item ICMP has delivered the web page to the browser.
+    \item The Translate layer of the OSI model has failed.
+  \end{enumerate}
+\end{enumerate}
+\end{document}

@@ -1,0 +1,274 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Networking Protocols}
+\subtitle{Lesson 41 --- Protocols, OSI Layers and Addresses}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Protocols Exist}
+  \begin{itemize}
+    \item Computers on a network follow agreed rules so that data sent by one
+      machine can be understood by another.
+    \item A \key{protocol} is such a set of rules for communication: what
+      messages look like and in which order they are exchanged.
+    \item Different jobs need different protocols: moving files, opening web
+      pages, sending email, and finding addresses each use their own protocol.
+    \item Every protocol has an \key{exact English name}; the exam tests the
+      name and its role together.
+  \end{itemize}
+  \begin{block}{The one idea}
+    One protocol, one job: match each name (TCP, DNS, HTTP) to the single
+    task it performs.
+  \end{block}
+\end{frame}
+
+\begin{frame}{TCP vs UDP: The Transport Pair}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{TCP} & \textbf{UDP} \\
+      \midrule
+      Full form & Transmission Control Protocol & User Datagram Protocol \\
+      Delivery & Reliable, ordered, error-checked & Fast, best-effort, no guarantee \\
+      Connection & Connection-oriented & Connectionless \\
+      Typical use & Web, email, file transfer & Streaming, DNS queries, voice calls \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{TCP guarantees order, not speed; UDP gives up guarantees for speed.}
+\end{frame}
+
+\begin{frame}{TCP Gives Order, Not Timing}
+  \begin{itemize}
+    \item \key{TCP} numbers every segment and retransmits lost ones, so bytes
+      arrive complete and \key{in order}.
+    \item TCP does \key{not} promise when data arrives --- only that it
+      arrives correctly ordered. (PYQ-18)
+    \item \key{UDP} sends datagrams with no connection, no ordering, and no
+      retransmission.
+    \item Use TCP when correctness matters (a file, a page, a message); use
+      UDP when speed matters more (live audio, video, DNS lookups).
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    TCP guarantees \key{ordering}, never timing. ``TCP delivers fast'' is a
+    wrong answer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{IP: Every Machine Needs an Address}
+  \begin{itemize}
+    \item The \key{Internet Protocol (IP)} carries addressed packets from the
+      sender to the receiver across networks.
+    \item Each device gets an \key{IP address}; routers read it to forward
+      the packet hop by hop.
+    \item IP by itself is \key{unreliable}: delivery is best-effort, and TCP
+      sitting above it adds the reliability.
+    \item Two versions exist: \key{IPv4} (32-bit) and \key{IPv6} (128-bit).
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    IP finds the address; TCP makes the delivery reliable.
+  \end{block}
+\end{frame}
+
+\begin{frame}{IPv4 vs IPv6}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{IPv4} & \textbf{IPv6} \\
+      \midrule
+      Length & 32-bit & 128-bit (TRM-10) \\
+      Written as & Four decimal octets & Eight hexadecimal groups \\
+      Example & 192.168.1.10 & 2001:0db8::1 \\
+      Header & Variable, 20--60 bytes & Fixed at 40 bytes \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap alert}
+    IPv6 is \key{128-bit}, never 256-bit. (TRAP-18)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{ICMP: Control, Not Data}
+  \begin{itemize}
+    \item \key{ICMP} stands for Internet Control Message Protocol.
+    \item It carries \key{control and diagnostic} messages about the network
+      itself: errors and reachability reports.
+    \item Its tools are \key{ping} (is the host reachable?) and
+      \key{traceroute} (which path do packets take?).
+    \item ICMP transfers \key{no application data} and uses \key{no port
+      numbers}. (TRAP-19)
+  \end{itemize}
+  \begin{block}{Office desktop example}
+    When a page will not load, a ping tests whether the network path works;
+    the ping itself carries no page content.
+  \end{block}
+\end{frame}
+
+\begin{frame}{DNS: Names to Numbers}
+  \begin{itemize}
+    \item \key{DNS} stands for Domain Name System.
+    \item It translates a human name such as \texttt{jkssb.nic.in} into the
+      \key{IP address} the network needs.
+    \item Without DNS, every user would have to memorise numeric addresses.
+    \item DNS runs mainly over \key{UDP} on port \key{53}, falling back to
+      TCP for large transfers.
+  \end{itemize}
+  \begin{alertblock}{One-line recall}
+    DNS = the phone book of the Internet: names in, numbers out.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{DHCP: Automatic Addresses}
+  \begin{itemize}
+    \item \key{DHCP} stands for Dynamic Host Configuration Protocol.
+    \item It \key{automatically assigns} an IP address, subnet mask, gateway,
+      and DNS server to each device that joins the network.
+    \item Without DHCP, every address would have to be typed in by hand.
+    \item A home router and an office network both run a DHCP server; the
+      joining laptop or phone is the DHCP client.
+  \end{itemize}
+  \begin{block}{DNS vs DHCP}
+    DNS resolves names to addresses; DHCP hands out addresses to newcomers.
+    Do not swap them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{HTTP vs HTTPS: The Web Pair}
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{Point} & \textbf{HTTP} & \textbf{HTTPS} \\
+      \midrule
+      Full form & HyperText Transfer Protocol & HyperText Transfer Protocol Secure \\
+      Port & 80 & 443 \\
+      Security & Plain text & Encrypted with SSL/TLS \\
+      Shows as & \texttt{http://} & \texttt{https://} + padlock \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{HTTPS is HTTP plus an SSL/TLS security layer; the S stands for
+  Secure.}
+\end{frame}
+
+\begin{frame}{FTP, Telnet, SMTP: Three More Roles}
+  \begin{itemize}
+    \item \key{FTP} (File Transfer Protocol, port 21) moves files between
+      computers; it is not email and not web browsing.
+    \item \key{Telnet} (port 23) opens a plain-text remote login session; it
+      is replaced today by the encrypted SSH.
+    \item \key{SMTP} (Simple Mail Transfer Protocol, port 25) \key{sends}
+      outgoing mail to the server.
+    \item Receiving mail is a different job: \key{POP3} (port 110) downloads
+      it, \key{IMAP} (port 143) keeps it synced on the server.
+  \end{itemize}
+  \begin{block}{Send vs receive}
+    SMTP sends; POP3 and IMAP receive. Do not swap them.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The OSI Model: Seven Layers}
+  \begin{center}
+    \begin{tabular}{p{0.10\textwidth}p{0.28\textwidth}p{0.48\textwidth}}
+      \toprule
+      \textbf{No.} & \textbf{Layer} & \textbf{One-line job} \\
+      \midrule
+      7 & Application & Services the user sees (HTTP, FTP, SMTP, DNS) \\
+      6 & Presentation & Translation, encryption, compression \\
+      5 & Session & Opens and manages sessions between machines \\
+      4 & Transport & Reliable or fast delivery (TCP, UDP) \\
+      3 & Network & Addressing and routing (IP, ICMP) \\
+      2 & Data Link & Frames on one link (switch, MAC address) \\
+      1 & Physical & Bits on the wire or air \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Read top-down for services, bottom-up for the journey of one bit.}
+\end{frame}
+
+\begin{frame}{Where Each Protocol Lives}
+  \begin{itemize}
+    \item \key{Application} layer: HTTP, HTTPS, FTP, Telnet, SMTP, POP3,
+      IMAP, DNS, DHCP.
+    \item \key{Transport} layer: TCP and UDP --- the only two names to place
+      here at this exam depth.
+    \item \key{Network} layer: IP (IPv4, IPv6) and ICMP.
+    \item Data moves \key{down} the layers on sending and \key{up} the layers
+      on receiving; each layer adds its own header.
+  \end{itemize}
+  \begin{exampleblock}{Worked mapping}
+    Opening a web page uses HTTP at layer 7, TCP at layer 4, and IP at layer
+    3 --- one protocol per layer, working together.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Port Awareness: Numbers Name the Service}
+  \begin{itemize}
+    \item A \key{port number} tells the receiving machine which service a
+      packet is for; the IP address names the machine, the port names the
+      service.
+    \item Ports 0--1023 are the \key{well-known ports} every candidate must
+      recognise.
+    \item FTP 21, Telnet 23, SMTP 25, DNS 53, HTTP 80, POP3 110, IMAP 143,
+      HTTPS 443.
+    \item ICMP has \key{no ports at all}; DHCP uses UDP ports 67 and 68.
+  \end{itemize}
+  \begin{block}{Exam drill}
+    Cover the service names, recall the numbers: 21--23--25--53--80--443.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Near-Neighbour Contrasts}
+  \begin{itemize}
+    \item TCP is \key{reliable and ordered}; UDP is \key{fast and
+      best-effort}.
+    \item HTTP is \key{plain}; HTTPS adds \key{SSL/TLS encryption}.
+    \item FTP moves \key{files}; SMTP sends \key{mail}; Telnet opens a
+      \key{remote session}.
+    \item DNS \key{resolves names}; DHCP \key{assigns addresses}; ICMP
+      reports \key{errors}.
+    \item IPv4 is \key{32-bit dotted decimal}; IPv6 is \key{128-bit
+      hexadecimal} with a \key{40-byte} header.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Protocol Facts to Keep Straight}
+  \begin{itemize}
+    \item IPv6 = \key{128-bit}, never 256-bit; header fixed at 40 bytes.
+      (TRAP-18, TRM-10)
+    \item ICMP is \key{control/diagnostic} only: no data, no ports.
+      (TRAP-19)
+    \item TCP promises \key{order}, not timing; UDP promises neither.
+      (PYQ-18)
+    \item SMTP \key{sends} mail; POP3/IMAP \key{receive} it.
+    \item DNS resolves names; DHCP assigns addresses; HTTP is port 80 and
+      HTTPS is port 443.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 41: Recall}
+  \begin{itemize}
+    \item TCP is reliable, ordered, and connection-oriented; UDP is fast,
+      connectionless, and best-effort.
+    \item IPv4 is 32-bit; IPv6 is 128-bit with a fixed 40-byte header.
+    \item ICMP carries control and diagnostic messages (ping, traceroute);
+      it transfers no data and uses no ports.
+    \item DNS translates names to IP addresses; DHCP automatically assigns
+      addresses to joining devices.
+    \item HTTP (port 80) fetches web pages; HTTPS (port 443) adds SSL/TLS;
+      FTP (21) moves files; Telnet (23) gives remote login; SMTP (25) sends
+      mail.
+    \item The OSI layers run Physical, Data Link, Network, Transport,
+      Session, Presentation, Application; ports name the service on a
+      machine.
+  \end{itemize}
+\end{frame}
+\end{document}

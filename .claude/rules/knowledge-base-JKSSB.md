@@ -7,9 +7,9 @@ term: "JKSSB recruitment cycle 2025-2026"
 level: "competitive-exam prep (post-secondary; no formal programme)"
 status: active
 schema_version: 2
-kb_version: 0.10.0
+kb_version: 0.11.0
 last_updated: 2026-10-08
-lectures_recorded: 55
+lectures_recorded: 58
 paths:
   - "syllabi/JKSSB.md"
   - "Slides/JKSSB/**/*.tex"
@@ -357,6 +357,7 @@ unverified or generated item.
 | 2026-10-08 | 0.8.0 | Built Unit 11 (lessons 47, 57): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 11 video links when supplied |
 | 2026-10-08 | 0.9.0 | Built Unit 7 (lessons 22-33, 54, 55, 61): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 7 video links when supplied |
 | 2026-10-08 | 0.10.0 | Built Unit 8 (lessons 34-39, 53, 63): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 8 video links when supplied |
+| 2026-10-08 | 0.11.0 | Built Unit 9 (lessons 40, 41, 62): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 9 video links when supplied |
 
 <!-- Not yet captured: the full CI 2025 computer block (Q8 onward) and the non-computer
      sections of WO/JA; the exact WO section structure; the cut-off figures. Add as

@@ -1,0 +1,181 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 62 Practice: Current Internet, Networking and Cloud IaaS}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 questions are original JKSSB-pattern
+questions (\textit{[Original]}); concepts drawn from PYQ-18/PYQ-19/PYQ-20;
+none reproduces an official paper item.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Expand TCP.
+  \begin{enumerate}[label=\Alph*.]
+    \item Transfer Control Program
+    \item Transmission Control Protocol
+    \item Transport Communication Process
+    \item Tele Communication Protocol
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly describes TCP delivery
+  guarantees?
+  \begin{enumerate}[label=\Alph*.]
+    \item TCP guarantees ordered and reliable delivery, but provides no timing
+      guarantee.
+    \item TCP guarantees delivery within a fixed time but not the order.
+    \item TCP delivers datagrams without setup and without retransmission.
+    \item TCP transfers only control messages and uses no acknowledgements.
+  \end{enumerate}
+\item \textit{[Original]} Which pairing of transport protocol and property is
+  correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item UDP --- guarantees ordered delivery of datagrams
+    \item TCP --- connectionless with no retransmission
+    \item UDP --- connectionless, fast, with no ordering or reliability
+      guarantee
+    \item TCP --- transfers only diagnostic messages using no ports
+  \end{enumerate}
+\item \textit{[Original]} Expand ICMP.
+  \begin{enumerate}[label=\Alph*.]
+    \item Internet Control Message Protocol
+    \item Internal Computer Mail Protocol
+    \item Internet Communication Management Process
+    \item Inter-Connected Media Protocol
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} true of ICMP?
+  \begin{enumerate}[label=\Alph*.]
+    \item It carries control and diagnostic messages about the network.
+    \item It supports tools such as ping and traceroute.
+    \item It transfers application data such as files and web pages.
+    \item It reports errors such as destination unreachable.
+  \end{enumerate}
+\item \textit{[Original]} Expand BGP.
+  \begin{enumerate}[label=\Alph*.]
+    \item Basic Gateway Process
+    \item Border Gateway Protocol
+    \item Broadband Group Protocol
+    \item Binary Gateway Program
+  \end{enumerate}
+\item \textit{[Original]} BGP is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item an inter-domain routing protocol that routes between autonomous
+      systems.
+    \item a protocol for routing inside a single small local network.
+    \item a mail-transfer protocol that downloads mail to the local device.
+    \item a diagnostic protocol that carries no routing information.
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes BGP from
+  OSPF and RIP?
+  \begin{enumerate}[label=\Alph*.]
+    \item BGP routes between autonomous systems; OSPF and RIP route inside a
+      single domain.
+    \item OSPF routes between autonomous systems; BGP routes inside one LAN.
+    \item RIP is inter-domain; BGP and OSPF are mail protocols.
+    \item All three transfer application data over ports.
+  \end{enumerate}
+\item \textit{[Original]} IPv6 addresses are:
+  \begin{enumerate}[label=\Alph*.]
+    \item 32-bit long.
+    \item 64-bit long.
+    \item 128-bit long.
+    \item 256-bit long.
+  \end{enumerate}
+\item \textit{[Original]} Which statement about IPv6 is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item IPv6 uses a fixed 40-byte header and has no broadcast address.
+    \item IPv6 uses a fixed 20-byte header and relies on broadcast delivery.
+    \item IPv6 uses 256-bit addresses with a broadcast address for all nodes.
+    \item IPv6 is a routing protocol that runs between autonomous systems.
+  \end{enumerate}
+\item \textit{[Original]} The reason IPv6 removes the need for NAT is:
+  \begin{enumerate}[label=\Alph*.]
+    \item its vastly larger 128-bit address space.
+    \item its use of TCP instead of UDP.
+    \item its support for broadcast delivery.
+    \item its ability to transfer application data.
+  \end{enumerate}
+\item \textit{[Original]} HTTP/3 differs from HTTP/1.1 and HTTP/2 in that it:
+  \begin{enumerate}[label=\Alph*.]
+    \item runs over TCP like the earlier versions.
+    \item runs over QUIC over UDP instead of TCP.
+    \item transfers only control messages with no ports.
+    \item routes between autonomous systems on the backbone.
+  \end{enumerate}
+\item \textit{[Original]} Expand DNS.
+  \begin{enumerate}[label=\Alph*.]
+    \item Domain Name System
+    \item Data Network Service
+    \item Digital Number Sequence
+    \item Direct Node Switch
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly describes DNS?
+  \begin{enumerate}[label=\Alph*.]
+    \item It translates domain names into IP addresses through a hierarchy of
+      servers.
+    \item It routes packets between autonomous systems on the backbone.
+    \item It downloads mail from the server to the local device.
+    \item It encrypts message bodies for confidentiality.
+  \end{enumerate}
+\item \textit{[Original]} Match each Internet-governance actor to its role:
+  \begin{enumerate}[label=\Alph*.]
+    \item PIR --- operates the .org registry; ICANN --- coordinates domain
+      names and IP addresses globally.
+    \item PIR --- coordinates all IP addresses; ICANN --- operates the .org
+      registry.
+    \item PIR --- routes between autonomous systems; ICANN --- transfers mail.
+    \item PIR --- assigns TCP ports; ICANN --- sends diagnostic messages.
+  \end{enumerate}
+\item \textit{[Original]} ARPANET is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item the 1969 packet-switched ancestor of the Internet.
+    \item a circuit-switched telephone network with dedicated calls.
+    \item a cloud service model managing networking hardware.
+    \item a mail protocol that syncs mail across devices.
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly distinguishes packet
+  switching from circuit switching?
+  \begin{enumerate}[label=\Alph*.]
+    \item Packet switching splits data into addressed packets taking possibly
+      different routes; circuit switching holds one dedicated path.
+    \item Circuit switching splits data into packets; packet switching holds a
+      dedicated circuit.
+    \item Both hold a dedicated path for the whole session.
+    \item Both deliver packets with guaranteed timing.
+  \end{enumerate}
+\item \textit{[Original]} Consider the assertion and reason about a router.
+  Assertion (A): A router connects different networks and forwards packets
+  between them. Reason (R): A router reads the destination IP address and
+  chooses the next hop from its routing table.
+  \begin{enumerate}[label=\Alph*.]
+    \item Both A and R are true, and R is the correct explanation of A.
+    \item Both A and R are true, but R is not the correct explanation of A.
+    \item A is true but R is false.
+    \item A is false but R is true.
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item TCP guarantees ordered and reliable delivery but no timing
+      guarantee.
+    \item ICMP transfers application data such as files and web pages.
+    \item In IaaS, the provider manages the networking hardware while the
+      customer manages the operating system, applications, and data.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and III only
+    \item II only
+    \item I, II, and III
+    \item I and II only
+  \end{enumerate}
+\item \textit{[Original]} Which pairing is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item BGP --- routes inside one LAN; ICMP --- transfers files
+    \item HTTP/3 --- uses QUIC over UDP; IPv6 --- 128-bit with no broadcast
+    \item IaaS provider --- manages the customer OS and data; PIR ---
+      coordinates TCP ports
+    \item UDP --- guarantees order; TCP --- connectionless and fast
+  \end{enumerate}
+\end{enumerate}
+\end{document}

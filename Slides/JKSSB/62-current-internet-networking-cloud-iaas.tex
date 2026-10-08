@@ -1,0 +1,300 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current Internet, Networking \& Cloud IaaS}
+\subtitle{Lesson 62 --- Modern Protocols and Cloud Responsibility}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{TCP: Ordered and Reliable Delivery}
+  \begin{itemize}
+    \item \key{TCP} stands for \key{Transmission Control Protocol}.
+    \item It is \key{connection-oriented}: the two ends set up a connection
+      before any data moves.
+    \item It guarantees \key{ordered} delivery: bytes arrive in the order they
+      were sent.
+    \item It guarantees \key{reliable} delivery: lost segments are detected
+      and \key{retransmitted}.
+    \item It provides \key{no timing guarantee}: delivery is correct and
+      ordered, but not promised within a fixed time.
+  \end{itemize}
+  \begin{block}{One line}
+    TCP = ordered + reliable, but with no promise about \key{when}. (PYQ-18)
+  \end{block}
+\end{frame}
+
+\begin{frame}{UDP: Fast but Unreliable}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{TCP} & \textbf{UDP} \\
+      \midrule
+      Full form & Transmission Control Protocol & User Datagram Protocol \\
+      Connection & Connection-oriented & \key{Connectionless} \\
+      Ordering & Guaranteed order & \key{No} ordering guarantee \\
+      Reliability & Retransmits lost data & \key{No} retransmission \\
+      Speed & Slower (overhead) & \key{Faster} (light header) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{UDP suits live voice, video, and games, where speed matters more than
+  every byte arriving.}
+\end{frame}
+
+\begin{frame}{ICMP: Control Messages, Not Data Transfer}
+  \begin{itemize}
+    \item \key{ICMP} stands for \key{Internet Control Message Protocol}.
+    \item It carries \key{control and diagnostic} messages about the network
+      itself.
+    \item It reports \key{errors} (destination unreachable, time exceeded) and
+      supports tools such as \key{ping} and \key{traceroute}.
+    \item It has \key{no ports} and carries \key{no application data}: it does
+      not move files, mail, or web pages.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    ICMP never transfers application data. It only reports and diagnoses.
+    (PYQ-18, PYQ-19, TRAP-19)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{BGP: Routing Between Networks}
+  \begin{itemize}
+    \item \key{BGP} stands for \key{Border Gateway Protocol}.
+    \item It is the \key{inter-domain} routing protocol: it routes between
+      \key{autonomous systems} (large independently managed networks).
+    \item It decides the \key{paths between} ISPs and organisations on the
+      Internet backbone.
+    \item It is \key{not} a protocol for routing inside one small local
+      network.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    BGP = \key{between} networks, not within one LAN. Interior protocols such
+    as OSPF and RIP work inside a domain. (PYQ-19, TRAP-20)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{BGP vs Interior Routing}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{BGP} & \textbf{OSPF / RIP} \\
+      \midrule
+      Scope & \key{Inter-domain} (between autonomous systems) & Intra-domain
+      (inside one network) \\
+      Where used & Internet backbone, between ISPs & Inside one organisation
+      or campus \\
+      What it answers & Which networks to cross & Which router to use next
+      inside the network \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Exam shortcut: the word ``inter-domain'' points to BGP.}
+\end{frame}
+
+\begin{frame}{IPv6: A Vast Address Space}
+  \begin{itemize}
+    \item \key{IPv6} uses \key{128-bit} addresses (written as eight groups of
+      hexadecimal digits).
+    \item 128 bits give about $3.4 \times 10^{38}$ addresses --- vastly more
+      than the 32-bit IPv4 space.
+    \item The fixed IPv6 header is \key{40 bytes} long.
+    \item This space is the reason IPv6 removes the need for address-sharing
+      workarounds such as \key{NAT} (Network Address Translation).
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    IPv6 = \key{128-bit}, never 256-bit. (PYQ-18, TRAP-18)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{IPv6 Has No Broadcast}
+  \begin{itemize}
+    \item IPv4 supports three delivery styles: \key{unicast} (one receiver),
+      \key{multicast} (a group), and \key{broadcast} (everyone on the
+      network).
+    \item IPv6 keeps \key{unicast}, \key{multicast}, and \key{anycast} (nearest
+      of several receivers) --- but it has \key{no broadcast}.
+    \item The IPv6 replacement for a broadcast is a \key{multicast} to the
+      ``all-nodes'' group.
+    \item So ``IPv6 broadcast address'' is a \key{contradiction}: no such
+      address exists.
+  \end{itemize}
+  \begin{block}{Remember}
+    IPv6 drops broadcast; use multicast instead. (PYQ-19)
+  \end{block}
+\end{frame}
+
+\begin{frame}{HTTP/3 Runs on QUIC, Not TCP}
+  \begin{itemize}
+    \item \key{HTTP} versions 1.1 and 2 run over \key{TCP}.
+    \item \key{HTTP/3} is different: it uses \key{QUIC} (Quick UDP Internet
+      Connections).
+    \item \key{QUIC} runs over \key{UDP}, not over TCP, and builds reliability
+      and security into itself.
+    \item Result: faster connection setup and no head-of-line blocking across
+      streams.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    HTTP/3 uses \key{QUIC over UDP} --- never TCP. (PYQ-19, TRAP-21)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{DNS: Names to Addresses}
+  \begin{itemize}
+    \item \key{DNS} stands for \key{Domain Name System}.
+    \item It translates human-readable \key{domain names} (such as
+      \texttt{example.org}) into numeric \key{IP addresses}.
+    \item Resolution runs \key{hierarchically}: root servers, then
+      top-level-domain servers, then the domain's own servers.
+    \item DNS is a \key{directory lookup}, not a routing protocol and not a
+      mail-transfer protocol.
+  \end{itemize}
+  \begin{block}{One line}
+    DNS answers ``what number belongs to this name''.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Who Runs .org: PIR Under ICANN}
+  \begin{itemize}
+    \item \key{.org} is a generic top-level domain, originally for
+      non-profit organisations.
+    \item The \key{.org} registry is operated by \key{PIR} (Public Interest
+      Registry).
+    \item \key{ICANN} (Internet Corporation for Assigned Names and Numbers)
+      coordinates domain names and IP addresses at the global level.
+    \item Keep the roles apart: \key{PIR} runs the .org registry;
+      \key{ICANN} coordinates the naming system as a whole.
+  \end{itemize}
+  \begin{block}{Remember}
+    .org $\rightarrow$ \key{PIR}; global name/IP coordination $\rightarrow$
+    \key{ICANN}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{ARPANET: The First Packet Network}
+  \begin{itemize}
+    \item \key{ARPANET} (Advanced Research Projects Agency Network) went live
+      in \key{1969} and is the ancestor of the Internet.
+    \item It proved that \key{packet switching} works across long distances.
+    \item Its key ideas --- decentralised routing and surviving the loss of
+      individual links --- became the design of the Internet.
+    \item Later work on ARPANET produced the \key{TCP/IP} protocol family.
+  \end{itemize}
+  \begin{block}{One line}
+    ARPANET (1969) = the first working packet-switched network.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Packet Switching vs Circuit Switching}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Packet switching} & \textbf{Circuit switching} \\
+      \midrule
+      Data handling & Split into addressed \key{packets} & One dedicated
+      \key{circuit} for the call \\
+      Path & Packets may take \key{different} routes & Fixed path held for
+      the whole session \\
+      Efficiency & Shares links; robust to failure & Reserves capacity even
+      when silent \\
+      Example & Internet, ARPANET & Traditional telephone call \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{The Internet uses packet switching; the old telephone network used
+  circuit switching.}
+\end{frame}
+
+\begin{frame}{Router: Assertion--Reason Reading}
+  \begin{itemize}
+    \item \key{Assertion (A):} A router connects \key{different networks} and
+      forwards packets between them.
+    \item \key{Reason (R):} A router reads the destination \key{IP address}
+      and chooses the next hop from its \key{routing table}.
+    \item Both A and R are \key{true}, and R is the \key{correct explanation}
+      of A: reading the address is \key{how} the router forwards between
+      networks.
+    \item Do not confuse the router with the \key{switch} (forwards inside one
+      network using MAC addresses) or the \key{hub} (repeats everything).
+  \end{itemize}
+  \begin{exampleblock}{Worked reading}
+    A office PC sends a packet to another branch: the \good{router} reads the
+    destination IP and forwards it toward that network.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{IaaS: Who Manages What}
+  \begin{itemize}
+    \item \key{IaaS} stands for \key{Infrastructure as a Service}.
+    \item The \key{provider} manages the physical infrastructure:
+      \key{networking hardware}, servers, storage hardware, and
+      virtualisation.
+    \item The \key{customer} manages everything above that: the
+      \key{operating system}, runtime, applications, and data.
+    \item Exam anchor: in IaaS, the provider manages the \key{networking
+      hardware}. (PYQ-20)
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    The IaaS provider does \bad{not} manage your OS or your data. (TRAP-22)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{IaaS vs PaaS vs SaaS}
+  \begin{center}
+    \begin{tabular}{p{0.14\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Model} & \textbf{Provider manages} & \textbf{Customer manages} \\
+      \midrule
+      IaaS & Hardware, networking, storage, virtualisation & OS, runtime,
+      apps, data \\
+      PaaS & All of the above \key{plus} OS and runtime & Apps and data \\
+      SaaS & \key{Everything} up to the finished app & Only its own data
+      and settings \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Move down the list and the provider manages more.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Near-Neighbour Distinctions}
+  \begin{itemize}
+    \item TCP = \key{ordered + reliable}; UDP = \key{neither}. (PYQ-18)
+    \item ICMP = \key{control messages only}, no data, no ports. (TRAP-19)
+    \item BGP = \key{inter-domain} (between autonomous systems). (TRAP-20)
+    \item IPv6 = \key{128-bit}, 40-byte header, \key{no broadcast}.
+    \item HTTP/3 = \key{QUIC over UDP}, not TCP. (TRAP-21)
+    \item .org $\rightarrow$ \key{PIR}; coordination $\rightarrow$
+      \key{ICANN}.
+    \item IaaS provider = \key{networking hardware}; customer = \key{OS,
+      apps, data}. (TRAP-22)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 62: Recall}
+  \begin{itemize}
+    \item \key{TCP} guarantees order and reliability but no timing; \key{UDP}
+      is connectionless and fast.
+    \item \key{ICMP} carries control/diagnostic messages; it transfers no
+      application data and uses no ports.
+    \item \key{BGP} routes \key{between} autonomous systems; OSPF/RIP route
+      inside one domain.
+    \item \key{IPv6} = 128-bit addresses, 40-byte header, no broadcast
+      (multicast replaces it); its space removes the need for NAT.
+    \item \key{HTTP/3} uses \key{QUIC over UDP}, not TCP.
+    \item \key{DNS} maps names to IP addresses; \key{PIR} runs .org under
+      \key{ICANN} coordination.
+    \item \key{ARPANET} (1969) proved \key{packet switching}, the basis of the
+      Internet.
+    \item A \key{router} joins networks by reading destination IPs; in
+      \key{IaaS} the provider manages networking hardware while the customer
+      manages OS, apps, and data.
+  \end{itemize}
+\end{frame}
+\end{document}

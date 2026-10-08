@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 62 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} All 20 items are original JKSSB-pattern
+questions (\textit{[Original]}); concepts drawn from PYQ-18/PYQ-19/PYQ-20;
+none reproduces an official paper item.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{B.} TCP stands for Transmission Control Protocol. A, C, and D
+  are not the correct expansion.
+\item \textbf{A.} TCP gives ordered and reliable delivery with no timing
+  promise (PYQ-18). B invents a timing guarantee and drops ordering; C
+  describes UDP; D describes ICMP.
+\item \textbf{C.} UDP is connectionless and fast with neither ordering nor
+  reliability. A moves a TCP property onto UDP; B reverses TCP into
+  connectionless; D describes ICMP, not TCP.
+\item \textbf{A.} ICMP stands for Internet Control Message Protocol. B, C,
+  and D are not the correct full forms.
+\item \textbf{C.} ICMP never transfers application data such as files or web
+  pages; it carries control and diagnostic messages only (TRAP-19). A, B,
+  and D are all true of ICMP.
+\item \textbf{B.} BGP stands for Border Gateway Protocol. A, C, and D are not
+  the correct expansion.
+\item \textbf{A.} BGP is the inter-domain protocol routing between autonomous
+  systems (PYQ-19, TRAP-20). B describes an interior protocol; C describes a
+  mail protocol; D denies that BGP carries routing information.
+\item \textbf{A.} BGP is inter-domain while OSPF and RIP are intra-domain.
+  B swaps the scopes; C mislabels all three; D claims routing protocols
+  transfer application data.
+\item \textbf{C.} IPv6 addresses are 128-bit long (PYQ-18, TRAP-18). A is the
+  IPv4 size; B is an intermediate distractor; D doubles the correct size.
+\item \textbf{A.} IPv6 has a fixed 40-byte header and no broadcast address
+  (multicast replaces it). B gives the IPv4 header size and a broadcast
+  claim; C uses the 256-bit distractor with a broadcast; D mislabels IPv6 as
+  a routing protocol.
+\item \textbf{A.} The 128-bit space is so large that address-sharing via NAT
+  is unnecessary (PYQ-19). B, C, and D name mechanisms unrelated to address
+  supply.
+\item \textbf{B.} HTTP/3 runs over QUIC over UDP, unlike HTTP/1.1 and HTTP/2
+  over TCP (PYQ-19, TRAP-21). A states the old stack; C describes ICMP; D
+  describes BGP.
+\item \textbf{A.} DNS stands for Domain Name System. B, C, and D are not the
+  correct expansion.
+\item \textbf{A.} DNS maps names to IP addresses hierarchically. B describes
+  BGP; C describes POP3; D describes encryption.
+\item \textbf{A.} PIR operates the .org registry while ICANN coordinates
+  names and numbers globally. B swaps the two roles; C and D assign routing,
+  mail, port, and diagnostic roles neither body holds.
+\item \textbf{A.} ARPANET (1969) is the packet-switched ancestor of the
+  Internet. B describes circuit-switched telephony; C describes IaaS; D
+  describes a mail protocol.
+\item \textbf{A.} Packet switching uses independent addressed packets while
+  circuit switching holds one dedicated path. B swaps the two; C and D
+  describe properties neither model has as stated.
+\item \textbf{A.} Both the assertion and the reason are true, and reading the
+  destination IP from the routing table is exactly how the router forwards
+  between networks, so R correctly explains A. B denies the explanatory link;
+  C and D each falsely mark one part false. A switch (MAC, one network) or a
+  hub (repeats all) fits neither part.
+\item \textbf{A.} Statements I and III are correct: TCP gives order and
+  reliability without timing, and IaaS splits responsibility with networking
+  hardware at the provider (PYQ-18, PYQ-20, TRAP-22). II is false because
+  ICMP never transfers application data (TRAP-19). B selects only the false
+  statement; C includes it; D pairs a true statement with the false one.
+\item \textbf{B.} HTTP/3 uses QUIC over UDP and IPv6 is 128-bit with no
+  broadcast, so both halves match. A swaps BGP inside a LAN and gives ICMP a
+  file-transfer role; C gives the IaaS provider the customer OS and data and
+  misstates PIR's role; D swaps the TCP/UDP properties.
+\end{enumerate}
+\end{document}
