@@ -1,0 +1,282 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Programming Foundations, Compiler \& Data Structures}
+\subtitle{Lesson 51 --- Languages, Translators and Basic Structures}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Why Programming Languages Have Levels}
+  \begin{itemize}
+    \item A computer finally understands only \key{machine language}:
+      sequences of binary 0s and 1s.
+    \item Writing directly in 0s and 1s is slow, error-prone, and
+      machine-specific.
+    \item Programs are therefore written in easier languages and then
+      \key{translated} into machine language.
+    \item Languages are grouped by \key{level}: low-level (machine,
+      assembly) and high-level.
+    \item \muted{Lower level = closer to hardware; higher level = closer to
+      human language.}
+  \end{itemize}
+  \begin{block}{The one idea}
+    Every program must finally become machine language before the CPU can
+    run it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Machine Language}
+  \begin{itemize}
+    \item \key{Machine language} is the only language the CPU executes
+      directly.
+    \item It is written in \key{binary}: sequences of 0s and 1s.
+    \item It is \key{machine-dependent}: each processor family has its own
+      instruction set.
+    \item It is fast (no translation needed) but very difficult to write
+      and debug.
+    \item \muted{Also called the \key{first-generation language}, and it is a
+      low-level language.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Assembly Language}
+  \begin{itemize}
+    \item \key{Assembly language} uses short \key{mnemonics} such as ADD,
+      MOV, and SUB instead of binary codes.
+    \item It is still \key{machine-dependent}: one assembly language per
+      processor family.
+    \item It maps closely to machine instructions: about one mnemonic per
+      machine instruction.
+    \item It must be translated into machine language by an
+      \key{assembler}.
+  \end{itemize}
+  \begin{alertblock}{Level check}
+    Assembly language is a \key{second-generation} (low-level) language,
+    not a high-level language.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{High-Level Languages}
+  \begin{itemize}
+    \item \key{High-level languages} use English-like words and
+      mathematical notation.
+    \item Examples: \key{C, C++, Java, Python, COBOL, FORTRAN}.
+    \item They are \key{machine-independent}: the same program runs on
+      different machines after translation.
+    \item They are easier to learn, write, read, and maintain.
+    \item They must be translated by a \key{compiler} or an
+      \key{interpreter}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Translators: Assembler, Compiler, Interpreter}
+  \begin{itemize}
+    \item A \key{translator} converts a program from one language to
+      another, usually into machine language.
+    \item \key{Assembler}: translates \key{assembly language} into machine
+      code.
+    \item \key{Compiler}: translates a \key{high-level} program into
+      machine code \key{as a whole}, producing object code.
+    \item \key{Interpreter}: translates and executes a high-level program
+      \key{line by line}.
+    \item \muted{All three produce a runnable result; they differ in input
+      language and method.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Compiler vs Interpreter}
+  \begin{center}
+    \begin{tabular}{p{0.18\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Compiler} & \textbf{Interpreter} \\
+      \midrule
+      Input & Whole program at once & One statement at a time \\
+      Output & Object code file & No separate object file \\
+      Speed & Faster to execute & Slower to execute \\
+      Errors & Reported after full compile & Reported line by line \\
+      Debugging & Harder & Easier \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \begin{alertblock}{Trap alert}
+    A compiler translates the \key{whole program at once}; an interpreter
+    works \key{line by line}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Source Code, Object Code, Machine Code}
+  \begin{itemize}
+    \item \key{Source code}: the program as written by the programmer in a
+      high-level or assembly language; it is human-readable.
+    \item The compiler translates source code into \key{object code}.
+    \item \key{Object code}: machine-readable, relocatable code produced by
+      the translator; it is not yet linked.
+    \item \key{Machine code}: the final binary instructions the CPU
+      executes directly.
+    \item \muted{Source code is human-readable; object and machine code are
+      machine-readable.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+  \begin{itemize}
+    \item An \key{algorithm} is a \key{finite, step-by-step} procedure to
+      solve a problem.
+    \item It has a clear \key{start} and \key{end}, and every step is
+      unambiguous.
+    \item It is language-independent: it can be written in plain English or
+      pseudocode.
+    \item A program is simply the algorithm expressed in a programming
+      language.
+  \end{itemize}
+  \begin{exampleblock}{Worked example}
+    Add two numbers: (1) start, (2) read $a$ and $b$, (3) compute
+    $sum = a + b$, (4) display $sum$, (5) stop.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Flowchart}
+  \begin{itemize}
+    \item A \key{flowchart} is a \key{pictorial} representation of an
+      algorithm.
+    \item It uses standard symbols joined by arrows to show the flow of
+      control.
+  \end{itemize}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.50\textwidth}}
+      \toprule
+      \textbf{Symbol} & \textbf{Meaning} \\
+      \midrule
+      Oval (terminator) & Start / End \\
+      Parallelogram & Input / Output \\
+      Rectangle & Process (computation) \\
+      Diamond (rhombus) & Decision \\
+      Arrow & Flow line \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Debugging and Types of Errors}
+  \begin{itemize}
+    \item \key{Debugging} is the process of finding and fixing \key{errors
+      (bugs)} in a program.
+    \item \key{Syntax error}: a grammar or spelling mistake; the compiler
+      catches it (e.g. a missing semicolon).
+    \item \key{Logical error}: the program runs but gives a wrong result;
+      the hardest to find.
+    \item \key{Runtime error}: occurs while the program is running (e.g.
+      division by zero).
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A logical error is \key{not} reported by the compiler --- the program
+    compiles and runs but the answer is wrong.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Object-Oriented Programming (OOP) Basics}
+  \begin{itemize}
+    \item \key{OOP} stands for \key{Object-Oriented Programming}.
+    \item \key{Class}: the blueprint or template; \key{Object}: an instance
+      of a class.
+    \item \key{Encapsulation}: binding data and methods together, with data
+      hiding.
+    \item \key{Inheritance}: a class acquires the properties of another
+      class.
+    \item \key{Polymorphism}: one name, many forms.
+    \item \key{Abstraction}: hiding implementation details and showing only
+      the essential features.
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    A class is the blueprint; an object is the thing built from it.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Stack and LIFO}
+  \begin{itemize}
+    \item A \key{stack} is a linear data structure that works on
+      \key{LIFO}: Last In, First Out.
+    \item Insertion is called \key{PUSH}; deletion is called \key{POP}.
+    \item Operations take place at one end, the \key{top}; the other end is
+      the bottom.
+    \item The last element pushed is the first one popped.
+  \end{itemize}
+  \begin{exampleblock}{Office example}
+    A stack of files: the last file placed on top is the first one taken
+    off.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Basic Data Structures}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{Structure} & \textbf{Defining property} \\
+      \midrule
+      Array & Fixed-size, same-type elements in contiguous locations; \\
+            & accessed by an index \\
+      Stack & LIFO; push and pop at the top \\
+      Queue & FIFO; insertion at the rear, deletion at the front \\
+      Linked list & Nodes holding data and a pointer; not contiguous; \\
+                  & can grow dynamically \\
+      Tree & Hierarchical; a root with child nodes \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Data-Structure Identification}
+  \begin{itemize}
+    \item To identify a structure, look for its \key{defining rule}:
+      \begin{itemize}
+        \item same type + fixed size + index $\rightarrow$ \key{array}.
+        \item Last In First Out $\rightarrow$ \key{stack}.
+        \item First In First Out (a queue at a counter) $\rightarrow$
+          \key{queue}.
+        \item data plus pointer nodes, dynamic $\rightarrow$ \key{linked
+          list}.
+        \item root and branches, hierarchy $\rightarrow$ \key{tree}.
+      \end{itemize}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A stack is LIFO; a queue is FIFO. Do not swap them.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Terms to Keep Straight}
+  \begin{itemize}
+    \item Compiler: whole program at once; interpreter: line by line.
+    \item Assembler translates assembly; compiler and interpreter translate
+      high-level code.
+    \item Source code is human-readable; object and machine code are
+      machine-readable.
+    \item Algorithm is a step-by-step procedure; a flowchart is its
+      diagram.
+    \item Stack is LIFO; queue is FIFO.
+    \item A logical error is not caught by the compiler.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 51: Recall}
+  \begin{itemize}
+    \item Languages by level: machine (1st, binary), assembly (2nd,
+      mnemonics), high-level (3rd).
+    \item Translators: assembler (assembly), compiler (whole high-level
+      program), interpreter (line by line).
+    \item Source code is human-readable; object and machine code are
+      machine-readable.
+    \item Algorithm = step-by-step procedure; flowchart = diagram with
+      standard symbols.
+    \item Debugging removes syntax, logical, and runtime errors.
+    \item OOP: class/object, encapsulation, inheritance, polymorphism,
+      abstraction.
+    \item Stack = LIFO (push/pop); queue = FIFO; arrays, linked lists, and
+      trees.
+  \end{itemize}
+\end{frame}
+\end{document}

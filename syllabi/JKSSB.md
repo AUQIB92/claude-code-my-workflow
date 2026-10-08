@@ -131,7 +131,7 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 51 | Programming Foundations, Compiler & Data Structures — machine/assembly/high-level languages, assembler/compiler/interpreter, source/object/machine code, algorithm/flowchart, debugging, OOP, stack & LIFO, basic data-structure identification | `51-programming-foundations-compiler-data-structures` [ ] | [ ] | [ ] |
+| 51 | Programming Foundations, Compiler & Data Structures — machine/assembly/high-level languages, assembler/compiler/interpreter, source/object/machine code, algorithm/flowchart, debugging, OOP, stack & LIFO, basic data-structure identification | `51-programming-foundations-compiler-data-structures` [x] | [x] | [x] |
 
 ### Unit 7 — Office Applications & File Formats
 

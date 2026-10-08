@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{51.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Programming Foundations, Compiler and Data Structures --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Programming languages and their levels}
+A computer can act only on instructions given in its own \textbf{machine
+language}, a pattern of binary 0s and 1s. Writing whole programs in that form
+is slow, error-prone, and tied to one processor. Programmers therefore write
+in languages that are easier for humans, and a translator converts the
+resulting program into machine language. Languages are placed on a
+\textbf{level} scale: low-level languages (machine and assembly) are close to
+the hardware, while high-level languages are closer to human language. The
+lower the level, the more closely the code reflects the actual machine
+instructions.
+
+\begin{definitionbox}{Level of a programming language}
+How close a language is to the underlying machine. Machine and assembly
+languages are low-level; C, C++, Java, and Python are high-level.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.20\textwidth}p{0.46\textwidth}}
+\toprule
+\textbf{Language} & \textbf{Generation} & \textbf{Main feature} \\
+\midrule
+Machine language & First & Binary 0s and 1s; only language the CPU runs directly \\
+Assembly language & Second & Short mnemonics such as ADD and MOV; machine-dependent \\
+High-level language & Third & English-like and mathematical; machine-independent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Machine language}
+\textbf{Machine language} is the only language a processor executes directly.
+It is written entirely in binary, and it is \emph{machine-dependent}: each
+processor family has its own instruction set, so a program written for one
+machine does not run on another. Machine language needs no translation, so it
+is fast to run, but it is very difficult to write, read, and debug by hand. It
+is also called the \emph{first-generation language}.
+
+\section{Assembly language}
+\textbf{Assembly language} replaces binary instruction codes with short
+\emph{mnemonics} such as ADD, SUB, and MOV. It is still
+\emph{machine-dependent}, because each processor family has its own assembly
+language, and it maps almost one-to-one onto machine instructions. Assembly
+code cannot run directly; it must be translated into machine language by an
+\textbf{assembler}. Assembly language is called the \emph{second-generation
+language} and is a low-level language.
+
+A common exam trap is to call assembly language a high-level language. It is
+not: assembly language is a low-level, second-generation language because its
+statements correspond closely to machine instructions. High-level languages,
+by contrast, are machine-independent and use English-like statements.
+
+\section{High-level languages}
+\textbf{High-level languages} use English-like words and mathematical
+notation. Examples are C, C++, Java, Python, COBOL, and FORTRAN. They are
+\emph{machine-independent}: after translation, the same source program can run
+on different machines. They are easier to learn, write, read, and maintain
+than low-level languages, but they must be translated by a \textbf{compiler}
+or an \textbf{interpreter} before the CPU can run them.
+
+\section{Generations of programming languages}
+Languages are also grouped into generations, which run parallel to the level
+scale above. The first three generations match the three levels exactly.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.26\textwidth}p{0.38\textwidth}}
+\toprule
+\textbf{Generation} & \textbf{Example} & \textbf{Main feature} \\
+\midrule
+First (1GL) & Machine language & Binary 0s and 1s; run directly \\
+Second (2GL) & Assembly language & Mnemonics; needs an assembler \\
+Third (3GL) & C, C++, Java & High-level; needs a compiler or interpreter \\
+Fourth (4GL) & SQL & Non-procedural; states what, not how \\
+Fifth (5GL) & Logic / AI languages & Problem-solving and constraints \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For this exam, the high-yield rows are the first three: machine language is
+first generation, assembly language is second generation, and a high-level
+language such as C or Java is third generation.
+
+\section{Language translators: assembler, compiler, interpreter}
+A \textbf{translator} is a program that converts source code written in one
+language into another form, usually machine language. There are three common
+translators, each matched to a different input language and method.
+
+\begin{definitionbox}{Assembler}
+A translator that converts an \emph{assembly-language} program into machine
+code.
+\end{definitionbox}
+
+\begin{definitionbox}{Compiler}
+A translator that converts a \emph{high-level} program into machine code (object
+code) as a whole, translating the entire program before it runs.
+\end{definitionbox}
+
+\begin{definitionbox}{Interpreter}
+A translator that converts and executes a high-level program
+\emph{line by line}, without producing a separate object file.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Compiler} & \textbf{Interpreter} \\
+\midrule
+Input & Whole program at once & One statement at a time \\
+Output & Object code file & No separate object file \\
+Execution speed & Faster & Slower \\
+Errors & Reported after full translation & Reported line by line \\
+Debugging & Harder & Easier \\
+Typical examples & C, C++ & Python, JavaScript \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The compiler translates the whole program in one pass and produces object
+code, so execution is fast, but a single error can delay the whole build and
+debugging is harder. The interpreter takes one statement at a time, translates
+it, and executes it immediately; execution is slower, but errors are shown
+line by line, which makes debugging easier.
+
+\section{Source code, object code, and machine code}
+These three terms describe a program at different stages of translation.
+
+\begin{definitionbox}{Source code}
+The program as written by the programmer in a high-level or assembly language;
+it is human-readable text.
+\end{definitionbox}
+
+\begin{definitionbox}{Object code}
+The machine-readable, relocatable code produced by a compiler or assembler
+from source code; it is not yet linked into a final runnable program.
+\end{definitionbox}
+
+\begin{definitionbox}{Machine code}
+The final binary instructions, in the processor's own language, that the CPU
+executes directly.
+\end{definitionbox}
+
+The path is: the programmer writes \textbf{source code}; the translator
+converts it into \textbf{object code}; after linking, the result is
+\textbf{machine code} that the processor runs. Source code is human-readable;
+object code and machine code are machine-readable.
+
+A common exam trap is to ask which of these is written by the programmer. The
+answer is \textbf{source code}. Object code and machine code are produced by
+the translator, not written by hand, and they are stored as binary patterns
+rather than readable text.
+
+\subsection*{How a program is translated}
+The translation of a high-level program follows a fixed sequence:
+\begin{enumerate}[label=\arabic*.]
+  \item The programmer writes the program as \textbf{source code}.
+  \item A \textbf{compiler} translates the whole source file and produces an
+    \textbf{object file}.
+  \item A \textbf{linker} joins the object file with any library code needed.
+  \item The result is a \textbf{machine-code} executable that the CPU runs.
+\end{enumerate}
+An interpreter shortens this path: it takes each statement of the source
+program, translates it, and executes it immediately, so no separate object
+file is produced.
+
+\section{Algorithm}
+An \textbf{algorithm} is a finite, step-by-step procedure for solving a
+problem. It has a clear start and end, and every step is unambiguous so that
+anyone following it reaches the same result. An algorithm is
+language-independent: it can be written in plain English or in pseudocode,
+without committing to a particular programming language. A program is the
+algorithm expressed in a programming language.
+
+\begin{definitionbox}{Algorithm}
+A finite, ordered set of unambiguous steps that solves a problem, with a
+defined start and end.
+\end{definitionbox}
+
+\begin{example}
+Adding two numbers is a small algorithm: (1) start, (2) read values $a$ and
+$b$, (3) compute $sum = a + b$, (4) display $sum$, (5) stop. The same steps
+can later be written in any programming language.
+\end{example}
+
+\section{Flowchart}
+A \textbf{flowchart} is a pictorial, diagrammatic representation of an
+algorithm. It uses standard symbols joined by arrows to show the order in
+which steps are carried out, which makes the flow of control easy to see at a
+glance.
+
+\begin{center}
+\begin{tabular}{p{0.34\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+Oval (terminator) & Start and end of the process \\
+Parallelogram & Input or output \\
+Rectangle & Process (a computation or action) \\
+Diamond (rhombus) & Decision (yes/no branch) \\
+Arrow & Flow line showing direction \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A flowchart for the add-two-numbers algorithm uses these symbols in order: an
+oval for start, a parallelogram to read the two inputs, a rectangle to compute
+the sum, a parallelogram to display the result, and an oval for stop. When a
+step involves a choice, a diamond is used, and two arrows leave it, one for
+each outcome.
+
+\section{Debugging and types of errors}
+\textbf{Debugging} is the process of finding and correcting errors, called
+\emph{bugs}, in a program. Three kinds of error are commonly distinguished.
+
+\begin{definitionbox}{Syntax error}
+A violation of the rules of the language, such as a missing semicolon or a
+misspelled keyword. It is reported by the compiler.
+\end{definitionbox}
+
+\begin{definitionbox}{Logical error}
+An error in the logic of the program: it compiles and runs but produces a
+wrong result. It is the hardest kind to find.
+\end{definitionbox}
+
+\begin{definitionbox}{Runtime error}
+An error that occurs while the program is running, such as dividing by zero
+or reading a file that does not exist.
+\end{definitionbox}
+
+A compiler catches syntax errors but not logical errors. A program with a
+logical error compiles and runs, and only the output reveals that something
+is wrong.
+
+\section{Object-oriented programming basics}
+\textbf{OOP} stands for \textbf{Object-Oriented Programming}. It organises a
+program around objects rather than around a sequence of actions. Two central
+terms are the class and the object.
+
+\begin{definitionbox}{Class and object}
+A \emph{class} is a blueprint or template that defines the data and methods;
+an \emph{object} is a single instance created from that class.
+\end{definitionbox}
+
+Four features define the object-oriented approach.
+
+\begin{itemize}
+  \item \textbf{Encapsulation}: binding the data and the methods that operate
+    on it into one unit, with the data hidden from outside access.
+  \item \textbf{Inheritance}: a new class acquires the properties and methods
+    of an existing class.
+  \item \textbf{Polymorphism}: ``one name, many forms'' --- the same operation
+    behaves differently for different objects.
+  \item \textbf{Abstraction}: hiding the implementation details and showing
+    only the essential features.
+\end{itemize}
+
+As an illustration, \emph{Student} can be a class that defines the data
+(roll number, name, marks) and the methods (enrol, show result). A particular
+student such as one with roll number 12 is then an \emph{object} of that class.
+The class describes the shape; each object is one concrete example of it.
+
+\section{Stack and LIFO}
+A \textbf{stack} is a linear data structure in which insertion and deletion
+take place at only one end, called the \emph{top}. It follows the order
+\textbf{LIFO}: Last In, First Out. The last element pushed onto the stack is
+the first element popped from it.
+
+\begin{definitionbox}{Stack (LIFO)}
+A linear data structure that works on the Last In, First Out rule, with
+insertion and deletion performed at the top.
+\end{definitionbox}
+
+Insertion into a stack is called \textbf{PUSH} and deletion is called
+\textbf{POP}. The other end of the stack is the \emph{bottom}, and no
+insertion or deletion happens there.
+
+\begin{example}
+A stack of files on a desk behaves in exactly this way. The file placed on top
+last is the first one picked up next. That is the LIFO rule in everyday form.
+\end{example}
+
+\section{Basic data structures}
+A data structure is a way of organising data so that it can be used
+efficiently. The common structures tested at this level are the array, stack,
+queue, linked list, and tree.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.64\textwidth}}
+\toprule
+\textbf{Structure} & \textbf{Defining property} \\
+\midrule
+Array & Fixed-size elements of the same type, stored in contiguous memory and accessed by an index \\
+Stack & Last In, First Out (LIFO); push and pop take place at the top \\
+Queue & First In, First Out (FIFO); insertion at the rear, deletion at the front \\
+Linked list & Nodes that hold data and a pointer to the next node; not contiguous and can grow dynamically \\
+Tree & A hierarchical structure with a root node and child nodes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+To identify a structure in an exam item, look for its defining rule: same type,
+fixed size, and index access means an \textbf{array}; Last In, First Out means
+a \textbf{stack}; First In, First Out (like people in a queue) means a
+\textbf{queue}; data-plus-pointer nodes that grow dynamically mean a
+\textbf{linked list}; and a root with branches means a \textbf{tree}.
+
+The two most commonly confused structures are the stack and the queue. They
+differ only in the order in which elements leave the structure.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Stack} & \textbf{Queue} \\
+\midrule
+Order & LIFO (Last In, First Out) & FIFO (First In, First Out) \\
+Insertion & Push, at the top & Enqueue, at the rear \\
+Deletion & Pop, at the top & Dequeue, at the front \\
+Both ends used? & No, one end only & Yes, front and rear \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+The following distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item A \textbf{compiler} translates the \textbf{whole program at once}; an
+    \textbf{interpreter} works \textbf{line by line}.
+  \item An \textbf{assembler} translates \textbf{assembly language}; a
+    \textbf{compiler} and an \textbf{interpreter} translate
+    \textbf{high-level} languages.
+  \item \textbf{Source code} is human-readable; \textbf{object code} and
+    \textbf{machine code} are machine-readable.
+  \item An \textbf{algorithm} is a step-by-step procedure; a
+    \textbf{flowchart} is its pictorial representation.
+  \item A \textbf{stack} is \textbf{LIFO}; a \textbf{queue} is
+    \textbf{FIFO}. Do not swap them.
+  \item A \textbf{logical error} is not caught by the compiler; the program
+    runs but the result is wrong.
+  \item \textbf{OOP} stands for Object-Oriented Programming; a class is a
+    blueprint and an object is an instance of it.
+\end{enumerate}
+
+\begin{example}
+An item asks which translator produces a separate object file before
+execution. Trace the definitions: the compiler translates the whole
+high-level program and produces object code, so the answer is the compiler. If
+the stem instead says ``translates and executes line by line'', the answer is
+the interpreter, and if it says ``translates assembly language'', the answer
+is the assembler.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Distinguish machine language, assembly language, and a high-level
+    language by level and by dependence on the machine.
+  \item State the difference between an assembler, a compiler, and an
+    interpreter.
+  \item Differentiate source code, object code, and machine code.
+  \item Define an algorithm and explain how a flowchart represents one.
+  \item Distinguish a syntax error, a logical error, and a runtime error.
+  \item Explain LIFO and name the two operations of a stack.
+  \item Identify the data structure: (a) elements of the same type in
+    contiguous memory, (b) Last In First Out, (c) a root with child nodes.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Machine language is the first-generation, binary, machine-dependent
+    language the CPU runs directly. Assembly language is the second
+    generation, uses mnemonics, and is also machine-dependent. A high-level
+    language is third generation, uses English-like statements, and is
+    machine-independent.
+  \item An assembler translates assembly language into machine code. A
+    compiler translates a high-level program as a whole and produces object
+    code. An interpreter translates and executes a high-level program line by
+    line.
+  \item Source code is the program written by the programmer in a high-level
+    or assembly language and is human-readable. Object code is the
+    machine-readable code produced by the translator and is not yet linked.
+    Machine code is the final binary code the CPU executes directly.
+  \item An algorithm is a finite, step-by-step, unambiguous procedure to solve
+    a problem. A flowchart represents it pictorially using standard symbols
+    (oval, parallelogram, rectangle, diamond, arrow) joined by flow lines.
+  \item A syntax error breaks the rules of the language and is reported by
+    the compiler. A logical error lets the program run but gives a wrong
+    result. A runtime error occurs while the program is running.
+  \item LIFO means Last In, First Out: the last element pushed is the first
+    element popped. The two operations are push (insertion) and pop
+    (deletion), both performed at the top.
+  \item (a) Array, (b) Stack, (c) Tree.
+\end{enumerate}
+\endgroup
+\end{document}
