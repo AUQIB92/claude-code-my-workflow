@@ -188,8 +188,8 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 47 | Humanware & IT Governance — humanware/users/operators/administrators; IT governance basics | `47-humanware-it-governance` [ ] | [ ] | [ ] |
-| 57 | Digital Platforms & E-Governance Recognition — e-NAM & agricultural marketing, G2C/G2G/G2B/G2E, Digital India, NeGP/e-Kranti/NeGD distinctions, citizen portal, electronic records, authentication, named-platform matching | `57-digital-platforms-e-governance` [ ] | [ ] | [ ] |
+| 47 | Humanware & IT Governance — humanware/users/operators/administrators; IT governance basics | `47-humanware-it-governance` [x] | [x] | [x] |
+| 57 | Digital Platforms & E-Governance Recognition — e-NAM & agricultural marketing, G2C/G2G/G2B/G2E, Digital India, NeGP/e-Kranti/NeGD distinctions, citizen portal, electronic records, authentication, named-platform matching | `57-digital-platforms-e-governance` [x] | [x] | [x] |
 
 ### Unit 12 — Mastery, Retrieval & Audit
 
