@@ -1,0 +1,281 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{58.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{PYQ-Calibrated Final Retrieval and Audit --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What this capstone is}
+This lesson is the exam-eve mixed-retrieval capstone for the JKSSB Computer
+Awareness course. It does not introduce new syllabus facts. It teaches the
+candidate how to attack each JKSSB item format, how to audit negative stems,
+how to handle defective options, and how to write an answer rationale that
+names the trap in every distractor. The accompanying drill set holds the
+course depth ratio: 50\% L1 direct recall, 35\% L2 contrast and
+classification, 15\% L3 one-step application. All worked mini-examples below
+are original items (\textit{[Original]}) built on concepts from the
+Real-PYQ Evidence Registry and the trap registry; none reproduces an
+official paper item verbatim.
+
+\begin{definitionbox}{Retrieval at exam depth}
+Answering a mixed set spanning all units under the real depth mix and the
+real penalty (minus one-quarter mark per wrong answer, blank scoring zero),
+using a fixed per-format attack and a written rationale for every item.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Negative stem & A stem containing NOT, EXCEPT, incorrect, or CANNOT. \\
+Near-neighbour & A distractor formed by swapping one word of a confusable pair. \\
+Statement-evaluation & An item with statements I/II/III and combination options. \\
+Defective option & Official option wording too loose to stand as fact. \\
+Rationale & Why the key is right plus why each distractor is wrong. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Format attacks}
+\subsection*{NOT/EXCEPT items}
+Circle NOT, EXCEPT, or incorrect before reading the options. Mark each option
+True or False in the margin and pick the odd one out. The three true options
+are deliberately attractive, so never select the first true statement seen.
+The worked pattern, after PYQ-03 (\textit{[Original]}): ``Which is NOT true
+of cache?'' with options on recent data, speed, backup, and locality. The
+backup option is the single false one, because cache holds copies of data
+that live in RAM and is not a backup.
+
+\subsection*{Near-neighbour items}
+Retrieve the triple for every key term: what it is, what it is not, and the
+nearest confusion. The productive pairs are RAM vs ROM, POP3 vs IMAP, Section
+Break vs Page Break, digital signature vs encryption, MICR vs OCR vs OMR,
+and compiler vs interpreter. The pattern after TRAP-15
+(\textit{[Original]}): ``A digital signature encrypts the mail body so only
+the recipient can read it'' is wrong, because a signature provides
+authenticity and integrity while encryption provides confidentiality. One
+swapped verb flips the item.
+
+\subsection*{Abbreviation and shortcut items}
+Say the full form on first sight: POP3 is Post Office Protocol version 3, ISP
+is Internet Service Provider, MICR is Magnetic Ink Character Recognition. For
+shortcuts, keep the exact key: F5 starts the slide show from the beginning,
+F7 runs spell check, and an Excel formula must start with the equals sign.
+Single-letter swaps (IMAP vs a coined variant, POP3 vs SMTP) are the standard
+distractors, so spell each abbreviation out rather than recognising its shape.
+
+\subsection*{Statement-evaluation items}
+Judge each statement alone, writing T or F beside I, II, and III, and only
+then keep the option whose combination matches. The pattern after PYQ-03 and
+PYQ-04 (\textit{[Original]}): I. Registers are the fastest storage (true).
+II. Cache is faster than main memory (true). III. RAM is non-volatile
+(false). The surviving combination is I and II only. The false statement is
+usually the volatility claim or the Program Counter claim.
+
+\subsection*{Matching items}
+Lock one certain pair first and strike out every option that breaks it. The
+device drills decide most of these: the plotter and the sound card are
+output, the scanner and the light pen are input, MICR reads magnetic ink, and
+the BIOS initialises hardware and loads the operating system. The pattern
+after PYQ-08 (\textit{[Original]}): among four device-to-role pairings, only
+the MICR-to-magnetic-ink pairing survives. When two options survive, compare
+only the pairs on which they differ.
+
+\subsection*{Assertion--reason items}
+Judge the assertion alone, judge the reason alone, and then ask whether the
+reason explains the assertion. Both statements true but unlinked is the
+standard trap. The pattern after PYQ-18 (\textit{[Original]}): the assertion
+that IPv6 uses 128-bit addresses is true, and the reason that HTTP/3 runs
+over QUIC rather than TCP is true, but the reason does not explain the
+assertion, so the ``explains'' option must be rejected.
+
+\begin{example}
+A stem reads: ``Which of the following is NOT an input device?''
+(\textit{[Original]}). Step 1: the format is NOT/EXCEPT, so the answer is
+the single output device. Step 2: mark each option --- keyboard (input,
+true), mouse (input, true), scanner (input, true), plotter (output, false).
+Step 3: the plotter is the odd one out and the answer. Step 4: re-read the
+stem to confirm the negative question was answered.
+\end{example}
+
+\section{The negative-stem audit method}
+\begin{enumerate}
+  \item Underline NOT, EXCEPT, incorrect, or CANNOT in the stem before
+    reading any option.
+  \item Convert the stem to its positive form: find the three true
+    statements, because the leftover wins.
+  \item Test every option with a written T/F mark; select the single False
+    one.
+  \item Re-read the stem once more before marking the OMR to confirm the
+    negative question was answered.
+\end{enumerate}
+The discipline matters because the penalty is minus one-quarter mark per
+wrong answer while a blank scores zero. A misread NOT-stem therefore costs
+the mark plus the penalty. Guess only after eliminating at least two options.
+
+\section{The defective-option audit method}
+Some official options use wording too loose to stand as fact. The method,
+per AP-02, is: quote the wording verbatim, flag the defect explicitly, and
+teach the stable concept. Two instances recur in this course.
+
+First, quoted verbatim: ``Program Counter stores the address of the
+\textit{current} instruction being executed.'' Flag: the word \textit{current}
+is defective. The stable concept is that the Program Counter holds the
+address of the \textit{next} instruction to fetch (TRAP-04). Any option built
+on the ``current instruction'' wording must be marked false.
+
+Second, quoted verbatim from the option wording: ``BCC hides sender and
+recipients from \textit{each other}.'' Flag: the phrase is defective. The
+stable concept is that BCC hides recipients from \textit{each other}; the
+sender always knows all recipients, and the To and Cc fields remain visible
+to all (TRAP-16). Any option claiming the sender is hidden, or that BCC
+works like encryption, must be marked false.
+
+The Tier-1 final answer key always wins over any single option's wording, so
+when wording and concept conflict, the concept above is what the candidate
+carries into the hall.
+
+\begin{example}
+An option states ``ROM allows normal read and write''
+(\textit{[Original]}, pattern after TRAP-02). Quote it, flag it: the words
+``and write'' are defective. The stable concept is that ROM is read-only in
+normal operation and writing to it needs a special process. The option is
+false, and the rationale names the trap rather than memorising the sentence.
+\end{example}
+
+\section{Answer-rationale rules}
+Every answer carries two halves: why the key is right, and why each
+distractor is wrong. For each distractor, name the trap it instantiates (for
+example, ``reverses RAM and ROM,'' ``swaps Section Break with Page Break,''
+or ``states IPv6 as 256-bit''). Keep exam wording exact: abbreviations, full
+forms, software names, protocol names, commands, and shortcut keys verbatim,
+with explanatory prose in plain simple English. One fact per line. Never
+invent a paper number, page, or key date. Never label a generated item as a
+real PYQ; every item in the drill set is \textit{[Original]}.
+
+\section{Per-unit quick-hit list}
+Unit 1, Fundamentals and data representation: the smallest unit of data is
+the bit; decimal 10 is binary 1010; ICs arrived in the third generation and
+microprocessors in the fourth; BCD encodes each decimal digit in 4 bits; the
+1024 ladder applies unless the option says otherwise.
+
+Unit 2, CPU and architecture: the Program Counter holds the next
+instruction's address; interrupts are handled at instruction boundaries, not
+after the whole program; cycle counts vary by instruction; two's-complement
+overflow is a wrong-sign result, not a carry out of the MSB; zero extension
+is for unsigned widening; scenario items ask for the stated bottleneck, not
+``slow CPU.''
+
+Unit 3, Memory: RAM is volatile and ROM is non-volatile; cache is faster
+than main memory and holds copies, not a backup; the CPU works through main
+memory and never accesses secondary storage directly; the speed order is
+registers, cache, RAM, secondary storage.
+
+Unit 4, Input, output, and ports: the light pen, punch-card reader,
+digitizer tablet, and scanner are input; the plotter, drum printer, and
+sound card are output; MICR reads magnetic ink, OCR reads printed text, OMR
+reads marks; large engineering drawings call for a plotter; the Section
+Break, not the Page Break, enables different headers and footers.
+
+Unit 5, Software and operating systems: a device driver is software and the
+operating system is system software; the BIOS initialises hardware and loads
+the operating system; open-source means the source can be viewed, changed,
+and shared, which is distinct from freeware and shareware; multitasking runs
+more than one program at a time.
+
+Unit 6, Programming: machine, assembly, and high-level languages in order of
+abstraction; assembler, compiler, and interpreter kept distinct; source code
+vs object code; the stack follows last-in-first-out order.
+
+Unit 7, Office and file formats: an Excel formula must start with the equals
+sign; nested IF behaviour on blank and non-numeric input must be traced, not
+guessed; COUNTIFS takes range-criterion pairs while SUMPRODUCT with
+multiplication also counts under multiple conditions; Mail Merge combines
+letters with an address database; a Select query retrieves data on a
+condition; F5 starts the slide show from the beginning and F7 runs spell
+check; the extension and the format are named separately.
+
+Unit 8, Internet, web, and email: ISP is Internet Service Provider; the
+at-sign separates the user name and the domain name; POP3 downloads mail to
+the local machine while IMAP keeps it synced on the server; secure
+transmission uses SSL/TLS; BCC hides recipients from each other.
+
+Unit 9, Networking: IPv6 addresses are 128-bit with a fixed 40-byte header;
+TCP orders delivery while UDP does not; ICMP is a control and diagnostic
+protocol that transfers no application data; BGP routes between autonomous
+systems (inter-domain) while OSPF and RIP work inside one domain; HTTP/3
+uses QUIC over UDP, not TCP; the IaaS provider manages infrastructure while
+the customer manages the operating system, runtime, applications, and data.
+
+Unit 10, Cybersecurity: malware types kept distinct (virus, worm, Trojan,
+ransomware, spyware, adware); a digital signature gives authenticity and
+integrity while encryption gives confidentiality; phishing, spoofing, and
+social engineering are recognition items; antivirus quarantine, firewall,
+patching, backup, and multi-factor authentication each map to one control.
+
+Unit 11, Governance and integration: e-NAM serves agricultural marketing;
+G2C, G2G, G2B, and G2E expansions are direct recall; Digital India, NeGP,
+e-Kranti, and NeGD roles are kept distinct; humanware, operator, and
+administrator roles are named exactly.
+
+\section{Exam retrieval and common confusions}
+Ten distinctions prevent most errors on a mixed paper. RAM is volatile and
+ROM is non-volatile. The Program Counter holds the next address, not the
+current one. Cache is faster than main memory and is not a backup. Section
+Break, not Page Break, changes headers and footers. A digital signature is
+not encryption. POP3 downloads while IMAP syncs. IPv6 is 128-bit, never
+256-bit. BGP is inter-domain. HTTP/3 uses QUIC over UDP. The IaaS provider
+manages infrastructure, not the customer's operating system and data. Each
+maps to a trap in the registry, and each appears in the drill set with its
+distractors drawn from that trap.
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Convert the stem ``Which is NOT true of ROM?'' into its positive
+    audit form, and state the selection rule.
+  \item Quote verbatim one defective option discussed in this lesson, flag
+    the defective word, and state the stable concept.
+  \item For a statement-evaluation item with statements I, II, and III,
+    describe the order in which the statements and the options are judged.
+  \item For an assertion--reason item in which both statements are true but
+    unlinked, state the correct verdict and explain why the ``explains''
+    option is wrong.
+  \item Write a two-half rationale for this item: ``IPv6 addresses are
+    256-bit.'' State the verdict and name the trap.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Positive form: find the three true statements about ROM; the
+    leftover false statement wins. Mark each option True or False and select
+    the single False one, then re-read the stem before marking.
+  \item Either ``Program Counter stores the address of the current
+    instruction being executed'' (defective word: current; stable concept:
+    the PC holds the next instruction's address) or ``BCC hides sender and
+    recipients from each other'' (defective phrase: sender and recipients
+    from each other; stable concept: BCC hides recipients from each other
+    only).
+  \item Judge each statement alone first, writing T or F beside I, II, and
+    III; only then keep the option whose combination matches the T/F
+    pattern.
+  \item Verdict: both statements true, but the reason is not the explanation
+    of the assertion. The ``explains'' option claims a direct link that does
+    not hold, so it must be rejected even though each statement is true.
+  \item Verdict: false. IPv6 addresses are 128-bit (TRAP-18); the option
+    states the 256-bit distractor. The correction is one line: 128-bit
+    addresses with a fixed 40-byte header.
+\end{enumerate}
+\endgroup
+\end{document}

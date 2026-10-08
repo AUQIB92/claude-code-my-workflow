@@ -1,0 +1,223 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{48.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{MCQ Masterclass --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{How to use this capstone}
+
+This lesson is a rapid-revision drill over the whole Computer Awareness
+course. It does not introduce new topics. It collects, unit by unit, the
+must-remember ladder (the facts worth one mark each) and the trap catalogue
+(the wrong beliefs the distractors rely on). Read each section as a pair:
+first the ladder sentence, then the trap that inverts it. Where a trap has a
+course registry ID (TRAP-01 and so on), the ID is given so the item can be
+traced back to the evidence.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Must-remember ladder & The one-line fact per unit that directly answers a recall item. \\
+Trap catalogue & The near-neighbour wrong belief the examiner plants as a distractor. \\
+Near-neighbour contrast & The discipline of stating what a term is, what it is not, and its nearest confusion. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Memory and storage ladder}
+
+The speed order, fastest first, is registers, cache (L1, L2, L3), main memory
+(RAM), secondary storage (SSD/HDD), then tertiary or offline storage. RAM
+(Random Access Memory) is volatile primary memory: its contents are lost when
+power goes off. ROM (Read-Only Memory) is non-volatile and read-only in
+normal operation; it holds firmware such as the BIOS startup instructions.
+Cache is faster than main memory and holds recently and frequently used data;
+it keeps copies of data that live in RAM and is therefore not a backup. The
+CPU works directly with main memory and does not access secondary storage
+directly.
+
+\begin{definitionbox}{Volatile vs non-volatile}
+Volatile memory loses its contents without power (RAM, cache, registers).
+Non-volatile memory retains its contents without power (ROM, SSD, HDD,
+magnetic tape).
+\end{definitionbox}
+
+The traps: RAM is non-volatile (TRAP-01), ROM allows normal read and write
+(TRAP-02), and the CPU accesses secondary storage directly (TRAP-03) are all
+false. Cache being slower than RAM, or cache being a backup, inverts the same
+ladder.
+
+\section{Hardware, software and device ladder}
+
+A device driver is software, and the operating system is system software
+(TRAP-10). Open-source means the licence permits viewing, changing, and
+sharing the source; it is not the same as freeware (free of cost) or shareware
+(trial) (TRAP-23). The firmware that initialises the hardware and loads the
+operating system is the BIOS, Basic Input/Output System (TRAP-24). The control
+unit controls the operation sequence and data flow. Input devices in the
+exam's drill set are the light pen, punch-card reader, digitizer tablet, and
+scanner; output devices are the plotter, drum printer, and sound card
+(TRAP-12). MICR reads magnetic-ink characters, OCR reads printed text, and OMR
+reads marks (TRAP-25). Large engineering drawings call for a plotter; ICs
+arrived in the third generation and microprocessors in the fourth (TRAP-26).
+The smallest unit of data is the bit; 8 bits make one byte (TRAP-27).
+
+\begin{example}
+An item lists plotter, scanner, sound card, and digitizer tablet and asks which
+is input. Trace the drill: plotter is output, sound card is output, scanner is
+input, digitizer tablet is input. Any option calling the plotter an input
+device is the planted distractor.
+\end{example}
+
+\section{Operating system ladder}
+
+The operating system is the layer that provides a user-friendly interface
+between the user and the hardware. While it runs, it is resident in primary
+storage (main memory). Multitasking means running more than one program at a
+time. Android is the open-source mobile OS of the syllabus. These four
+sentences answer four distinct direct-recall items, so memorise them verbatim.
+
+\section{MS Word, Excel, Access and PowerPoint ladder}
+
+In MS Word, F7 runs spell check and Mail Merge combines letters with an
+address database (TRAP-29). A Section Break, not a Page Break, enables
+different headers and footers in different parts of a document (TRAP-13). In
+MS Excel, every formula must start with \texttt{=}; \texttt{\$A\$1} is an
+absolute reference that does not shift when copied; COUNTIFS counts rows
+meeting several criteria, and SUMPRODUCT with multiplication does equivalent
+multi-criterion counting (TRAP-14, TRAP-30). In MS Access, the Select query
+retrieves data on a condition, while Update, Append, and Delete modify data
+(TRAP-31). In PowerPoint, F5 starts the slide show from the beginning; Shift
+plus F5 starts from the current slide (TRAP-32). The string \texttt{.png} is an
+extension; PNG is the format --- never conflate the two (TRAP-34).
+
+\begin{example}
+An item asks which break allows different headers in the two halves of a
+document. The Page Break option is the trap: a Page Break only pushes content
+to a new page. Only a Section Break restarts headers and footers, so it is the
+correct choice.
+\end{example}
+
+\section{Internet, web and email ladder}
+
+The Internet is the global network of networks; the WWW (World Wide Web) is
+the system of linked pages served over it. An ISP --- Internet Service
+Provider --- provides the connection. A URL (Uniform Resource Locator) is the
+address of a resource, and DNS (Domain Name System) resolves names to IP
+addresses. IPv4 is 32-bit; IPv6 is 128-bit with a fixed 40-byte header
+(TRAP-18). In an email address, \texttt{@} separates the user name from the
+domain name (TRAP-28). BCC hides recipients from each other while the sender
+always knows and To/Cc stay visible (TRAP-16). POP3 --- Post Office Protocol
+version 3 --- downloads mail to the local machine; IMAP keeps mail synced on
+the server (TRAP-17). Secure transmission uses SSL/TLS. Decimal 10 equals
+binary 1010.
+
+\section{Networking, security and cloud ladder}
+
+BGP is an inter-domain routing protocol used between autonomous systems; OSPF
+and RIP are intra-domain (TRAP-20). ICMP is a control and diagnostic protocol
+that carries no application data and uses no ports (TRAP-19). HTTP/3 uses QUIC
+over UDP, not TCP (TRAP-21). TCP provides ordering with no timing guarantee;
+UDP is connectionless. A virus needs a host program, a worm self-propagates
+across networks, and a Trojan poses as useful software. Encryption provides
+confidentiality while a digital signature provides authenticity and integrity
+(TRAP-15). In the IaaS responsibility model, the provider manages the
+infrastructure (networking and storage hardware) and the customer manages the
+OS, runtime, applications, and data (TRAP-22).
+
+\section{IT Act and e-governance ladder}
+
+The Information Technology Act, 2000 is India's primary cyber law. Section 43
+covers unauthorised access and data damage (penalty and compensation), and
+Section 66 covers computer-related offences. The e-governance service models
+are G2C (Government to Citizen), G2B (Government to Business), G2G
+(Government to Government), and G2E (Government to Employees). The anchor
+programmes are Digital India, NeGP/e-Kranti, and the NeGD (National
+e-Governance Division). Keep the Section 43/66 pair and the G2C/G2B pair
+straight: 43 is unauthorised access, 66 is computer offences; G2C serves the
+citizen, G2B serves business.
+
+\begin{definitionbox}{G2x models}
+G2C delivers services to citizens, G2B to businesses, G2G between government
+departments, and G2E to government employees.
+\end{definitionbox}
+
+\section{Exam retrieval and common confusions}
+
+Ten distinctions prevent most errors across the whole paper.
+\begin{enumerate}
+  \item RAM is volatile; ROM is non-volatile and read-only (TRAP-01, TRAP-02).
+  \item Cache is faster than RAM and is not a backup; the CPU never touches
+    secondary storage directly (TRAP-03).
+  \item Plotter, drum printer, and sound card are output; scanner, light pen,
+    and digitizer are input (TRAP-12).
+  \item A device driver is software; BIOS boots the machine (TRAP-10,
+    TRAP-24).
+  \item Section Break changes headers; Page Break does not (TRAP-13).
+  \item Formulas start with \texttt{=}; \texttt{\$A\$1} is absolute;
+    Select query retrieves (TRAP-30, TRAP-31).
+  \item F5 runs the show from the beginning; F7 checks spelling (TRAP-32).
+  \item IPv6 is 128-bit; \texttt{@} separates user name and domain name
+    (TRAP-18, TRAP-28).
+  \item POP3 downloads locally; BCC hides recipients from each other
+    (TRAP-16, TRAP-17).
+  \item Signature is not encryption; BGP is inter-domain; HTTP/3 is QUIC over
+    UDP; IaaS provider manages hardware only (TRAP-15, TRAP-20, TRAP-21,
+    TRAP-22).
+\end{enumerate}
+
+\begin{example}
+An item states three claims: cache is faster than RAM; POP3 downloads mail to
+the local machine; IPv6 addresses are 256-bit. The first two trace to the
+ladder and are true; the third inverts TRAP-18 (IPv6 is 128-bit) and is false.
+Eliminate any option that asserts all three.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the memory speed order and the volatility of RAM and ROM.
+  \item Classify plotter, scanner, sound card, and digitizer tablet as input
+    or output, with one line of reasoning each.
+  \item Distinguish Section Break from Page Break and F5 from F7.
+  \item Explain the meaning of \texttt{=}, \texttt{\$A\$1}, and COUNTIFS in
+    one line each.
+  \item Contrast POP3 with IMAP and BCC with Cc.
+  \item State the roles of BGP, ICMP, and QUIC in one line each.
+  \item Expand G2C, G2B, G2G, and G2E, and name the Act and sections behind
+    Sections 43 and 66.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Registers, cache (L1/L2/L3), RAM, secondary storage, tertiary/offline.
+    RAM is volatile; ROM is non-volatile and read-only in normal operation.
+  \item Plotter: output (draws); scanner: input (reads in); sound card: output
+    (plays sound); digitizer tablet: input (captures strokes).
+  \item Section Break restarts headers/footers; Page Break only starts a new
+    page. F5 starts the slide show from the beginning; F7 runs spell check.
+  \item \texttt{=} marks a formula; \texttt{\$A\$1} fixes both column and row;
+    COUNTIFS counts rows meeting several criteria.
+  \item POP3 downloads mail locally; IMAP syncs with the server. BCC hides
+    recipients from each other; Cc stays visible to all recipients.
+  \item BGP routes between autonomous systems; ICMP carries control and
+    diagnostic messages, not data; QUIC over UDP carries HTTP/3.
+  \item G2C: to Citizen; G2B: to Business; G2G: to Government; G2E: to
+    Employees. Information Technology Act, 2000: Section 43, unauthorised
+    access and data damage; Section 66, computer-related offences.
+\end{enumerate}
+\endgroup
+\end{document}

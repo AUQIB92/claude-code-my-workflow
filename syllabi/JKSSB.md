@@ -195,9 +195,9 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 48 | MCQ Masterclass — full-course rapid revision with direct-recall, contrast, classification and trap revision | `48-mcq-masterclass` [ ] | optional | drill set (this lesson *is* the MCQ artifact) |
-| 58 | PYQ-Calibrated Final Retrieval & Audit — full-course mixed revision at 50% L1 / 35% L2 / 15% L3; negative-stem audit, defective-option audit, answer-rationale rules | `58-pyq-calibrated-final-retrieval-audit` [ ] | optional | drill set |
-| 66 | Current-Paper Depth Audit & Technical-Post Routing — latest-paper revision workflow; tag items Core-General / Current-General / Technical-Post / Version-Sensitive; official source ledger | `66-current-paper-depth-audit-technical-post-routing` [ ] | optional | audit checklist |
+| 48 | MCQ Masterclass — full-course rapid revision with direct-recall, contrast, classification and trap revision | `48-mcq-masterclass` [x] | [x] | [x] drill set (this lesson *is* the MCQ artifact) |
+| 58 | PYQ-Calibrated Final Retrieval & Audit — full-course mixed revision at 50% L1 / 35% L2 / 15% L3; negative-stem audit, defective-option audit, answer-rationale rules | `58-pyq-calibrated-final-retrieval-audit` [x] | [x] | [x] drill set |
+| 66 | Current-Paper Depth Audit & Technical-Post Routing — latest-paper revision workflow; tag items Core-General / Current-General / Technical-Post / Version-Sensitive; official source ledger | `66-current-paper-depth-audit-technical-post-routing` [x] | [x] | [x] audit checklist |
 
 ---
 

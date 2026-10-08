@@ -1,0 +1,320 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{66.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current-Paper Depth Audit and Technical-Post Routing --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What this capstone does}
+
+This lesson is a method, not a topic. Earlier lessons taught computer facts;
+this one teaches how to keep those facts current and how to study them at the
+right depth for the post applied for. The method has two parts. The
+\textbf{depth audit} checks notes and practice items against the latest
+official paper and answer keys. \textbf{Technical-post routing} directs deeper
+material only to the candidates whose notification actually tests it, instead
+of generalising Website Operator or Computer Instructor depth to every post.
+
+\begin{definitionbox}{Depth audit}
+A repeatable check in which each computer item from the latest official paper
+is collected, tagged by depth, compared across the provisional and final
+answer keys, screened for version sensitivity, and used to route study time by
+post.
+\end{definitionbox}
+
+\begin{definitionbox}{Technical-post routing}
+The rule that deeper, computational, or engineering-level material is studied
+deeply only for the technical posts whose papers contain it, and is read
+lightly or skipped by general-post candidates.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.26\textwidth}p{0.64\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Core-General & Stable fundamentals every post tests. \\
+Current-General & Stable concept whose current form must be re-checked each cycle. \\
+Technical-Post & Deeper material asked only of Website Operator / Computer Instructor. \\
+Version-Sensitive & Any claim whose answer depends on a software or protocol version. \\
+Tier 1 & JKSSB itself: notifications, papers, provisional and final keys. \\
+Final key & The post's final answer key; it settles every dispute for that post. \\
+Provisional key & The first key released; subject to change; never memorised as final. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Why papers drift}
+
+Three forces make last year's notes stale. First, each recruitment cycle
+carries its own notification with its own scope, marks, and penalty rule, so
+the boundary of what is asked moves by post. Second, each paper is followed by
+a provisional key and then a final key, and answers on disputed or defective
+items can change between the two. Third, the subject itself moves: Office
+menus and shortcuts shift between versions, and protocol facts (which
+transport a version uses, how a mail protocol behaves) depend on the version
+named. A note that was correct last year is therefore only a draft until it
+has been checked against the newest Tier-1 set.
+
+\section{The five-step revision workflow}
+
+Run these steps once per recruitment cycle, before revising any topic lesson.
+
+\textbf{Step 1: collect the newest Tier-1 set.} Gather the notification and
+syllabus scope, the question paper for the target post, and both the
+provisional and the final answer key. Record which key is final and which is
+still provisional.
+
+\textbf{Step 2: tag every computer item.} Assign each item exactly one depth
+tag (definitions in the next section), and add a version flag wherever the
+answer could depend on a software or protocol version.
+
+\textbf{Step 3: diff the keys.} Place the provisional key beside the final key
+and mark every item where the answer changed, was dropped, or gained an
+alternate answer. Changed items are signals of defective or disputed wording,
+not new facts to memorise blindly.
+
+\textbf{Step 4: screen for version sensitivity.} For each item about Office,
+mail, or protocols, tie the claim to its version using vendor documentation
+or the standard. If no version is stated and the answer depends on one, flag
+the item as under-specified rather than memorising it.
+
+\textbf{Step 5: route study by post.} Allocate deep study to the tags the
+target post actually tests. A Junior Assistant candidate masters the
+Core-General tag deeply and reads the other tags lightly; a Computer
+Instructor candidate masters the Technical-Post tag as well.
+
+\begin{example}
+A candidate holds last year's Office notes and this year's paper. Step 1
+collects the new notification, paper, and both keys. Step 2 tags the Office
+menu items as Version-Sensitive and the recall items as Core-General. Step 3
+finds one answer changed between the provisional and final keys, so that stem
+is flagged as disputed wording. Step 4 ties the surviving Office claims to the
+prescribed version. Step 5 routes the general-post candidate back to the
+Core-General items first.
+\end{example}
+
+\section{The four depth tags}
+
+\textbf{Core-General} covers stable fundamentals in the Junior Assistant
+Unit IV scope: the bit is the smallest unit of data, RAM is volatile, F5
+starts a slide show from the beginning, a formula must start with \texttt{=},
+IPv6 is 128-bit. These items are safe to drill for every post.
+
+\textbf{Current-General} covers concepts whose stable core must be refreshed
+against current sources: computer virus and latest anti-virus, terms and
+abbreviations in current use, and the role of IT in governance (portal and
+scheme facts). The concept is permanent; its current instance changes.
+
+\textbf{Technical-Post} covers deeper material found in the Website Operator
+and Computer Instructor papers but not in the general scope: cache levels,
+encoding details such as UTF-8 variable length, binary conversions with
+fractional parts, and statement-evaluation items over engineering concepts.
+This tag is studied deeply only by technical-post candidates.
+
+\textbf{Version-Sensitive} is a flag added to any of the above whenever the
+answer depends on a version: which tab or menu holds an Office command, the
+exact behaviour of a shortcut in a stated version, POP3 download against IMAP
+sync, or which transport a protocol version uses. A version-sensitive claim
+without a stated version is flagged, not memorised.
+
+\begin{definitionbox}{Tagging test}
+Ask in order: (1) does the Junior Assistant scope name this concept --- if
+yes, start at Core-General; (2) does the answer change with time, portal, or
+version --- if yes, add Current-General or Version-Sensitive; (3) does it need
+engineering depth or computation --- if yes, mark Technical-Post.
+\end{definitionbox}
+
+\begin{example}
+``F5 starts a slide show from the beginning'' is Core-General: stable, in
+scope, version-free. ``Which menu holds this Word option'' is
+Version-Sensitive: answerable only for a stated Office version. ``Binary
+11010101.01 equals 213.25'' is Technical-Post: a computation drill from the
+technical papers. ``Latest anti-virus'' is Current-General: the concept is
+stable but the instance must be refreshed.
+\end{example}
+
+\section{The official source ledger}
+
+Authority flows downward: Tier 1 settles disputes, Tier 2 supplies practice,
+Tier 3 explains concepts. The ledger below mirrors the course knowledge base
+source registry. No page numbers, paper serials, or key dates are cited here
+beyond what the registry records; anything not yet confirmed is marked TBD.
+
+\begin{center}
+\begin{tabular}{p{0.14\textwidth}p{0.76\textwidth}}
+\toprule
+\textbf{ID} & \textbf{Source and what it settles} \\
+\midrule
+SRC-01 & Notification 08 of 2025 with the official Junior Assistant computer scope (Unit IV) and the 10-mark Computer Applications annexure. Settles what is in scope. \\
+SRC-02 & JKSSB question-paper index. Settles which papers exist per year and post. \\
+SRC-03 & Junior Assistant 2026 paper, computer block Q61--80. Settles real JA item formats, concepts, and traps. \\
+SRC-04 & Website Operator 2026 paper, computer block circa Q61--80. Settles WO item formats and foundational concepts. \\
+SRC-05 & Computer Instructor-Operator 2025 paper, 120 items. Settles technical-post depth and the penalty rule. \\
+SRC-06 & Junior Assistant 2026 final answer key. Settles disputed JA items. \\
+SRC-07 & Website Operator 2026 provisional key. Provisional only; always mark its status. \\
+SRC-08 & Computer Instructor/Operator 2025 final key. Settles disputed technical-post items. \\
+\midrule
+SRC-09/10 & Tier-2 banks (Sanfoundry and standard compilations). Practice composition and distractor mining only; never authoritative; label adapted items accordingly. \\
+SRC-11/12/13 & Tier-3 references (portal pages, vendor docs, textbooks). Concept exposition only; vendor claims tied to the prescribed Office version. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The single most important rule of the ledger is precedence: a Tier-1 final
+key supersedes every bank, tutorial, and textbook on a disputed item. A lower
+tier is never used to overrule a higher one.
+
+\section{How to check answer-key changes}
+
+Take the provisional key and the final key for the same post and compare them
+item by item. For each computer item, record one of four outcomes: unchanged,
+changed, dropped, or given an alternate answer. For every item that is not
+unchanged, go back to the stem and quote its option wording verbatim, then
+flag the defect (ambiguous wording, two defensible answers, version-free menu
+claim) and teach the stable concept underneath instead of memorising the new
+letter. Keep this diff with the notes as the cycle's audit trail, and never
+carry a provisional answer into a mock once the final key has been published.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Key-diff outcome} & \textbf{What to record and do} \\
+\midrule
+Unchanged & No action; the item confirms the notes as written. \\
+Changed & Quote the stem verbatim; flag the wording defect; teach the stable concept; learn the final letter. \\
+Dropped & Quote the stem verbatim; note the topic as dispute-prone; do not drill the dropped letter. \\
+Alternate answer allowed & Note both acceptances; teach the concept so either option is derivable. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two cautions belong here. First, a changed answer never means ``the concept
+changed''; it means the wording admitted two readings and the board has now
+picked one. Students who memorise only the new letter without the flagged
+wording will fall for the same trap when it returns in paraphrase. Second, a
+provisional key is never quoted as authority in a dispute with a fellow
+candidate; only the final key, with its post and status named, settles the
+argument.
+
+\section{Why technical-post depth must not be generalised}
+
+The Junior Assistant paper is dominated by recall and classification at the
+intro-to-core level, while the Computer Instructor paper adds computation and
+engineering depth. Generalising the deeper block to every candidate has two
+costs: the general-post candidate wastes time on material the notification
+never tests and absorbs L4/L5 distractors, while the technical-post candidate
+who studies only the general block arrives under-prepared. The correction is
+the routing rule: tag each item first, then allocate study time by tag. Binary
+conversions with fractional parts, encoding internals, and cache-level
+internals are Technical-Post; they are required for Computer Instructor,
+optional background for Junior Assistant. Foundational recall (bit as smallest
+unit, ISP expansion, \texttt{@} separating user name and domain name) is
+Core-General; it is required for every post.
+
+\section{Version sensitivity: Office and protocols}
+
+Office items split into two kinds. Stable Office facts (Mail Merge combines
+letters with an address database; a formula must start with \texttt{=}; a
+Select query retrieves data on a condition) are Core-General and safe to
+drill. Menu-path, tab-location, and shortcut-detail items are
+Version-Sensitive: they are trustworthy only when tied to the prescribed
+Office version through vendor documentation, and an item that names no version
+but depends on one is flagged as under-specified.
+
+The table below works the tagging test through on items anchored in the
+course's real-PYQ evidence registry, so the routing decision is visible in one
+place. Each row gives the item, its tag, and the reason in one line.
+
+\begin{center}
+\begin{tabular}{p{0.40\textwidth}p{0.20\textwidth}p{0.30\textwidth}}
+\toprule
+\textbf{Item} & \textbf{Tag} & \textbf{Why this tag} \\
+\midrule
+Bit is the smallest unit of data & Core-General & Stable recall, in every post's scope \\
+F5 starts a slide show & Core-General & Stable, version-free behaviour \\
+ISP expands to Internet Service Provider & Core-General & Exact abbreviation recall \\
+Latest anti-virus & Current-General & Concept stable, instance refreshable \\
+Role of IT in governance & Current-General & Portal and scheme facts change \\
+Binary 11010101.01 to decimal & Technical-Post & Computation drill, technical papers \\
+UTF-8 variable-length, ASCII-compatible & Technical-Post & Encoding internals, technical papers \\
+Which tab holds this Word command (no version) & Version-Sensitive & Answer moves between Office versions \\
+HTTP version transport claim & Version-Sensitive & Depends on the protocol version named \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A Junior Assistant candidate drills the first three rows deeply, refreshes the
+next two against current sources, reads the technical rows lightly, and
+refuses to memorise the version-sensitive rows until a version is stated. A
+Computer Instructor candidate adds deep drill on the technical rows. Neither
+candidate generalises the other's depth.
+
+Protocol items behave the same way. The stable splits do not move with
+versions: IPv6 is 128-bit with a 40-byte header, POP3 downloads to the local
+machine while IMAP syncs, HTTP/3 uses QUIC over UDP rather than TCP, a
+digital signature provides authenticity and integrity while encryption
+provides confidentiality, and BCC hides recipients from each other. What is
+version-sensitive is any claim about a specific protocol version's transport
+or behaviour; those claims are settled by the final key together with the
+standard, never by a bank alone.
+
+\section{Exam retrieval and common confusions}
+
+Five audit-stage confusions cause most errors on this kind of material.
+\begin{enumerate}
+  \item A \textbf{provisional key} is treated as final. The correction is to
+    mark its status and re-check every disputed item against the final key.
+  \item A \textbf{generated practice item} is treated as a real PYQ. The
+    correction is the provenance label: generated items carry
+    \textit{[Original]}; only verbatim official items carry a PYQ label.
+  \item \textbf{Technical-post depth} is studied as if every post tested it.
+    The correction is the tag: Technical-Post material is deep study only for
+    the technical posts.
+  \item A \textbf{defective option} is memorised as fact. The correction is to
+    quote it verbatim, flag the defect, and teach the stable concept.
+  \item A \textbf{Tier-2 bank} is used to overrule a Tier-1 key. The
+    correction is precedence: the final key always wins.
+\end{enumerate}
+
+\begin{example}
+An item states, ``POP3 keeps mail synced on the server, so it is the best
+choice for multi-device sync.'' The routing check tags the concept as
+Version-Sensitive and the claim as false under the stable split: POP3
+downloads to the local machine while IMAP syncs. The bank that suggested the
+stem does not overrule the standard or the final key, and the defective
+wording is flagged rather than memorised.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the five steps of the revision workflow in order.
+  \item Define the four depth tags and give one example of each.
+  \item List the Tier-1 ledger entries and state what each one settles.
+  \item Explain how to check provisional-versus-final key changes and what to do with a changed item.
+  \item Explain why Website Operator / Computer Instructor depth must not be generalised, with one example.
+  \item Distinguish a stable Office fact from a version-sensitive Office claim, with one example of each.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Collect the newest Tier-1 set; tag every computer item; diff the provisional against the final key; screen for version sensitivity; route study by post.
+  \item Core-General: stable fundamentals every post tests (F5 starts a slide show). Current-General: stable concept with a refreshable instance (latest anti-virus). Technical-Post: deeper material for technical posts (binary conversion drills). Version-Sensitive: answer depends on a version (menu-path or protocol-transport claims).
+  \item SRC-01 notification and scope; SRC-02 paper index; SRC-03 JA 2026 paper; SRC-04 WO 2026 paper; SRC-05 CI 2025 paper; SRC-06 JA final key; SRC-07 WO provisional key (provisional only); SRC-08 CI final key. Papers settle formats and concepts; final keys settle disputes.
+  \item Compare the two keys item by item; mark changed, dropped, or alternate-answer items; quote the stem verbatim, flag the defect, teach the stable concept; never carry a provisional answer into a mock once the final key exists.
+  \item Because the general papers test recall and classification while the technical papers add computation and depth; generalising wastes general candidates' time and under-prepares no one correctly. Example: fractional binary conversion is required for Computer Instructor but optional for Junior Assistant.
+  \item Stable: Mail Merge combines letters with a database, or formulas start with \texttt{=}. Version-sensitive: which tab holds a command, or the exact shortcut detail in a stated version --- trustworthy only when tied to the prescribed version.
+\end{enumerate}
+\endgroup
+\end{document}

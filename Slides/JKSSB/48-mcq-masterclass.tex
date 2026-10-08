@@ -1,0 +1,254 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{MCQ Masterclass}
+\subtitle{Lesson 48 --- Full-Course Rapid Revision}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{How to Use This Deck}
+  \begin{itemize}
+    \item This is a \key{capstone drill}: one high-yield trap per frame, drawn
+      from every unit of the course.
+    \item For each frame ask yourself the question \key{before} reading the
+      answer box.
+    \item \key{Gold} marks the fact the examiner will test; \muted{gray}
+      marks the wrong belief the distractor relies on.
+    \item The trap IDs (TRAP-01, \dots) match the course trap registry.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Every JKSSB computer item is a near-neighbour contrast: what it is, what
+    it is not, and the nearest confusion.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Memory Volatility: RAM vs ROM}
+  \begin{itemize}
+    \item \key{RAM} (Random Access Memory) is \key{volatile}: contents are lost
+      when power goes off.
+    \item \key{ROM} (Read-Only Memory) is \key{non-volatile}: it keeps its
+      contents without power.
+    \item In normal operation ROM is read-only; rewriting it needs a special
+      process.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-01, TRAP-02)}
+    \muted{RAM is non-volatile / ROM allows normal read and write} --- both
+    are swapped pairs. RAM is volatile; ROM is non-volatile and read-only.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Memory Order and Cache}
+  \begin{itemize}
+    \item Speed order, fastest first: \key{registers $\rightarrow$ cache
+      (L1, L2, L3) $\rightarrow$ main memory (RAM) $\rightarrow$ secondary
+      storage}.
+    \item \key{Cache is faster} than main memory; it holds recently and
+      frequently used data.
+    \item Cache holds \muted{copies} of data that live in RAM; it is
+      \key{not} a backup.
+    \item The \key{CPU} works with main memory; it does \key{not} access
+      secondary storage directly.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-03)}
+    \muted{CPU reads the hard disk directly} --- wrong. Secondary storage is
+    reached via main memory and the OS.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Input vs Output Classification}
+  \begin{itemize}
+    \item \key{Input}: light pen, punch-card reader, digitizer tablet,
+      scanner, MICR reader.
+    \item \key{Output}: plotter, drum printer, sound card.
+    \item Large engineering drawings $\rightarrow$ \key{plotter};
+      magnetic-ink characters $\rightarrow$ \key{MICR}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-12, TRAP-25)}
+    \muted{Plotter / printer are input; sound card is input} --- all output.
+    Keep MICR (magnetic ink), OCR (printed text), and OMR (marks) distinct.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Hardware vs Software, and BIOS}
+  \begin{itemize}
+    \item A \key{device driver} is \key{software}; the \key{operating system}
+      is \key{system software}.
+    \item \key{Open-source} means the licence lets you view, change, and share
+      the source --- not merely free of cost.
+    \item The firmware that initialises hardware and loads the OS is the
+      \key{BIOS} (Basic Input/Output System).
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-10, TRAP-23, TRAP-24)}
+    \muted{Driver is hardware; open-source = freeware; the kernel loads the
+    OS} --- wrong on all three. Driver = software; BIOS boots the machine.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Operating System Facts}
+  \begin{itemize}
+    \item The OS is the layer that provides a \key{user-friendly interface}
+      between user and hardware.
+    \item While running, the OS is resident in \key{primary storage} (main
+      memory).
+    \item \key{Multitasking} means running more than one program at a time.
+    \item \key{Android} is the open-source mobile OS; the control unit controls
+      the \key{operation sequence and data flow}.
+  \end{itemize}
+  \begin{exampleblock}{Quick check}
+    OS in primary storage + multitasking + Android-as-open-source: three
+    direct-recall items from one frame.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{MS Word: Checks, Merges, Breaks}
+  \begin{itemize}
+    \item \key{F7} runs spell check; \key{Mail Merge} combines letters with an
+      address database.
+    \item A \key{Section Break} enables different headers and footers; a Page
+      Break does not.
+    \item Smallest unit of data: \key{bit}; 8 bits = 1 byte.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-13, TRAP-27, TRAP-29)}
+    \muted{Page Break changes headers; byte is smallest; mail merge =
+    track changes} --- all wrong. Section Break, bit, Mail Merge.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{MS Excel: The Three Symbols}
+  \begin{itemize}
+    \item Every formula must start with \key{=}.
+    \item \key{\$A\$1} is an absolute reference: neither column nor row moves
+      when copied.
+    \item \key{COUNTIFS} counts rows meeting several criteria;
+      \key{SUMPRODUCT} with multiplication does the same job.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-14, TRAP-30)}
+    \muted{A formula can start with + or \%} --- the exam answer is \key{=}.
+    Master the \$A\$1 / COUNTIFS pair; it recurs every cycle.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Access, PowerPoint, PDF and Extensions}
+  \begin{itemize}
+    \item The query that retrieves data on a condition is the \key{Select
+      query}; Update, Append, and Delete modify data.
+    \item \key{F5} starts the slide show from the beginning.
+    \item Say \key{extension} and \key{format} separately: \texttt{.png} is an
+      extension; PNG is the format.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-31, TRAP-32, TRAP-34)}
+    \muted{F7 starts the show; any query retrieves} --- wrong. F5; Select
+    query. Never conflate extension with format.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Internet, WWW and ISP}
+  \begin{itemize}
+    \item The \key{Internet} is the global network; the \key{WWW} (World Wide
+      Web) is the system of linked pages served over it.
+    \item \key{ISP} --- Internet Service Provider --- provides the connection.
+    \item Decimal 10 = binary \key{1010}; third generation = \key{ICs}, fourth
+      = microprocessors.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-26)}
+    \muted{ICs arrived in the fourth generation} --- wrong. ICs $\rightarrow$
+    third; microprocessors $\rightarrow$ fourth.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{URL, DNS and @}
+  \begin{itemize}
+    \item A \key{URL} (Uniform Resource Locator) is the address of a resource;
+      \key{DNS} (Domain Name System) resolves names to IP addresses.
+    \item \key{IPv4} = 32-bit; \key{IPv6} = 128-bit with a fixed 40-byte
+      header.
+    \item In an email address, \key{@} separates the \key{user name} from the
+      \key{domain name}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-18, TRAP-28)}
+    \muted{IPv6 is 256-bit; @ separates domain and host} --- both wrong.
+    128-bit; user name vs domain name.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Email: BCC, POP3, SSL/TLS}
+  \begin{itemize}
+    \item \key{BCC} hides recipients from each other; the sender always knows,
+      and To/Cc stay visible.
+    \item \key{POP3} --- Post Office Protocol version 3 --- \key{downloads}
+      mail to the local machine; IMAP syncs with the server.
+    \item Secure transmission uses \key{SSL/TLS}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-16, TRAP-17)}
+    \muted{BCC hides everyone from everyone; POP3 keeps mail synced} ---
+    wrong. BCC hides recipients from each other; POP3 downloads locally.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Networking Devices and Protocols}
+  \begin{itemize}
+    \item \key{BGP} is inter-domain (between autonomous systems); OSPF and RIP
+      are intra-domain.
+    \item \key{ICMP} is a control/diagnostic protocol --- no ports, no
+      application data transfer.
+    \item \key{HTTP/3} uses \key{QUIC over UDP}, not TCP.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-19, TRAP-20, TRAP-21)}
+    \muted{BGP routes a LAN; ICMP carries data; HTTP/3 runs on TCP} --- all
+    three reversed. Inter-domain; diagnostic; QUIC over UDP.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Malware, Encryption and Cloud}
+  \begin{itemize}
+    \item Keep virus, worm, and Trojan distinct: a \key{virus} needs a host,
+      a \key{worm} self-propagates, a \key{Trojan} poses as useful software.
+    \item \key{Encryption} gives confidentiality; a \key{digital signature}
+      gives authenticity and integrity.
+    \item In \key{IaaS}, the provider manages infrastructure (networking and
+      storage hardware); the customer manages OS, runtime, apps, and data.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-15, TRAP-22)}
+    \muted{Signature encrypts the body; IaaS provider manages the OS} ---
+    wrong. Signature $\ne$ encryption; provider manages hardware only.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{IT Act and E-Governance}
+  \begin{itemize}
+    \item The \key{Information Technology Act, 2000} is India's primary
+      cyber law; \key{Section 43} covers unauthorised access and data damage,
+      \key{Section 66} covers computer-related offences.
+    \item \key{G2C} = Government to Citizen; \key{G2B} = Government to
+      Business; \key{G2G} = Government to Government; \key{G2E} = Government
+      to Employees.
+    \item Anchor services: \key{Digital India}, \key{NeGP/e-Kranti}, and the
+      \key{NeGD} (National e-Governance Division).
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Section 43 = unauthorised access; Section 66 = computer offences. G2C
+    serves the citizen; G2B serves business.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lesson 48: Recall}
+  \begin{itemize}
+    \item RAM volatile / ROM non-volatile; cache faster than RAM, not a
+      backup; CPU never touches secondary storage directly.
+    \item Plotter, drum printer, sound card = output; scanner, light pen,
+      digitizer = input; driver = software; BIOS boots.
+    \item F7 checks spelling, F5 runs the show; Section Break changes headers;
+      Mail Merge joins letters to a database.
+    \item Formula starts with =; \$A\$1 is absolute; Select query retrieves;
+      extension $\ne$ format.
+    \item IPv6 = 128-bit; POP3 downloads, IMAP syncs; BCC hides recipients
+      from each other; encryption $\ne$ signature.
+    \item BGP is inter-domain; ICMP is diagnostic; HTTP/3 = QUIC over UDP;
+      IT Act 2000, G2C/G2B/G2G/G2E.
+  \end{itemize}
+\end{frame}
+\end{document}
