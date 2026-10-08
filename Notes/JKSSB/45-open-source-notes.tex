@@ -1,0 +1,397 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{45.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Open Source --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Source code and what it means}
+Every program begins as \textbf{source code}: the set of instructions a
+programmer writes in a programming language such as C, Java, or Python. Source
+code is \emph{human-readable} --- a person can open the file, read it, and
+change it. Before the computer can run the program, a \textbf{compiler} or an
+\textbf{interpreter} converts the source code into a machine-readable form.
+That machine-readable form is called \textbf{object code}, or simply the
+executable, and it is what the processor actually executes. Ordinary users of
+a finished program normally receive only this compiled form and never see the
+source code.
+
+\begin{definitionbox}{Source code}
+The human-readable set of instructions, written in a programming language,
+that defines what a program does; it is converted into machine-readable
+object code by a compiler or an interpreter.
+\end{definitionbox}
+
+The important consequence is that whoever holds the source code controls how
+the software can be studied, changed, and shared. The whole topic of open
+source versus proprietary software grows out of this single fact.
+
+\section{Open source versus proprietary software}
+Software falls into two broad camps according to what is done with its source
+code.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Open source} & \textbf{Proprietary (closed source)} \\
+\midrule
+Source code & Publicly available & Kept secret \\
+View or modify & Allowed, subject to the licence & Not allowed without permission \\
+Redistribute & Allowed, subject to the licence & Not allowed \\
+Typical user gets & Source code plus executable & Only the compiled executable \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Open-source software} makes its source code public. Anyone is allowed
+to inspect it, modify it, and redistribute it, subject to the terms of its
+licence. \textbf{Proprietary software} keeps its source code confidential; the
+user receives only the compiled executable and may not view, change, or share
+the source without the owner's permission. Examples of proprietary software
+include Microsoft Windows, Apple macOS, Microsoft Office, Adobe Photoshop, and
+Oracle Database. The deciding factor between the two is the source code, not
+the price: some open-source software is sold, and some proprietary software is
+given away free of cost.
+
+\begin{definitionbox}{Open source}
+A software development model in which the source code is made publicly
+available so that anyone may view, modify, and redistribute it under the
+terms of its licence.
+\end{definitionbox}
+
+\section{The open-source idea: view, modify, share}
+The meaning that examiners most often test is the three-part permission of an
+open-source licence. First, a user may \textbf{view} the source code and see
+exactly how the software works. Second, a user may \textbf{modify} it --- fix a
+bug, improve it, or add a new feature. Third, a user may \textbf{share} it,
+redistributing copies and modified versions to others. These permissions are
+granted by the software's licence, so the exact conditions differ from one
+project to another; but the underlying spirit is the same three freedoms in
+the code.
+
+\begin{example}
+An item states, ``An open-source licence allows a user to view, change, and
+share the source code.'' This is the standard, correct description and is the
+answer expected in the exam. An option that says only ``software available
+free of cost'' describes \emph{freeware}, not open source.
+\end{example}
+
+\section{Freeware, free software, public domain, commercial, shareware}
+Several labels are often mixed up with open source. Each has a distinct
+meaning.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Term} & \textbf{What is free} & \textbf{Source code} \\
+\midrule
+Open source & Use, study, change, share & Available \\
+Freeware & Cost only & Usually not provided \\
+Free software & The user's freedom & Available \\
+Shareware & A limited trial period & Not provided \\
+Public domain & No copyright at all & No restrictions \\
+Commercial & Nothing (it is sold) & Usually not provided \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Freeware} is software given away free of cost, but its source code is
+usually not provided. \textbf{Free software} is about freedom, not price: the
+user is free to study, change, and share it. \textbf{Public domain} software
+has no copyright owner, so anyone may use, modify, and redistribute it without
+any restriction. \textbf{Shareware} is distributed as a free trial, working
+for a limited period or with limited features; to keep using it, the user must
+pay. \textbf{Commercial software} is developed and sold for profit and is
+often, though not always, proprietary.
+
+\begin{definitionbox}{Freeware}
+Software distributed free of cost, whose source code is usually not made
+available; it is free in price, not in freedom.
+\end{definitionbox}
+
+\begin{definitionbox}{Shareware}
+Software distributed as a trial version, free for a limited time or with
+limited features, after which payment is required to continue using it.
+\end{definitionbox}
+
+\section{Free software and its four freedoms}
+The term \textbf{free software} comes from the \textbf{Free Software
+Foundation (FSF)}, founded by \textbf{Richard Stallman}. In this context,
+``free'' refers to liberty, not price --- the well-known phrase is ``free as in
+freedom, not free as in free beer''. The FSF defines four freedoms: the freedom
+to run the program for any purpose; the freedom to study how it works and
+change it; the freedom to redistribute copies to help others; and the freedom
+to distribute modified versions to the public. Free software and open source
+are closely related and frequently overlap, but they are not identical labels.
+Free software stresses the ethical freedom of the user; open source stresses
+the practical benefits of a publicly available source code.
+
+\begin{definitionbox}{Free software}
+Software that grants the user the freedom to run, study, change, and
+redistribute it and its modified versions; ``free'' here means freedom, not
+zero cost.
+\end{definitionbox}
+
+\section{The Open Source Initiative}
+Alongside the Free Software Foundation stands the \textbf{Open Source
+Initiative (OSI)}, founded in 1998. The OSI maintains the \textbf{Open Source
+Definition}, the set of criteria a licence must satisfy to be called an
+open-source licence, and it reviews and approves licences against those
+criteria. The term \textbf{open source} itself was popularised in 1998 as a
+more business-friendly label than ``free software''. The two movements
+overlap heavily: most licences approved by the OSI are also free-software
+licences. An umbrella term often seen in questions is \textbf{FOSS}, meaning
+Free and Open-Source Software, or \textbf{FLOSS} (Free/Libre and Open-Source
+Software), which covers both traditions together.
+
+The Open Source Definition lays down the conditions a licence must meet. The
+software must be freely redistributable; the source code must be included or
+easily obtainable; derived works and modifications must be allowed; the
+licence must not discriminate against any person, group, or field of use; and
+the rights must apply to everyone who receives the software. A licence that
+satisfies these conditions is called an \textbf{OSI-approved} licence. This is
+why ``open source'' is a matter of the licence, not simply of whether the
+software is free of cost.
+
+\begin{example}
+Two programs are both free to download. Program A ships with its source code
+under an OSI-approved licence that permits modification and redistribution;
+Program B ships only compiled files and forbids copying. A is open source; B
+is \emph{freeware}. The download price is identical, but the licences differ,
+and the licence is what decides the category.
+\end{example}
+
+\section{Benefits and limitations of open source}
+Open source is chosen for several practical reasons. The licence cost is
+usually zero, so organisations avoid per-seat fees. The source code can be
+inspected, which lets many people review it for bugs and security weaknesses.
+Users are not locked in to a single vendor, and the software can be
+customised to local needs. A large community often provides documentation and
+support.
+
+Open source also has limitations that a fair answer should acknowledge. A
+popular project may have no formal commercial support contract, so support
+depends on the community or on paid third-party vendors. Compatibility with
+proprietary formats and integration with existing systems can be difficult.
+The total cost of ownership is not always zero, because training, migration,
+and maintenance still cost money. These points are occasionally tested as
+``which of the following is a limitation of open source''.
+
+\section{Full forms and key names to remember}
+Direct-recall items often ask for an expansion or for the name behind a term.
+The following are the ones most worth memorising.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Short form} & \textbf{Full form / meaning} \\
+\midrule
+GPL & GNU General Public License \\
+FSF & Free Software Foundation \\
+OSI & Open Source Initiative \\
+FOSS & Free and Open-Source Software \\
+FLOSS & Free/Libre and Open-Source Software \\
+AOSP & Android Open Source Project \\
+MIT & MIT License (a permissive software licence) \\
+BSD & Berkeley Software Distribution (its licence family) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Remember too the names behind the ideas: the Free Software Foundation was
+founded by \textbf{Richard Stallman}, and \textbf{Git} was created by Linus
+Torvalds to manage the Linux kernel's source code. \textbf{GitHub},
+\textbf{GitLab}, \textbf{Bitbucket}, and \textbf{SourceForge} are the
+best-known hosting sites for open-source repositories.
+
+\section{Repositories and community development}
+Open-source projects live in a \textbf{repository} (often shortened to
+``repo''). A repository is a storage location that holds a project's source
+code together with every change ever made to it. \textbf{Version control}
+records this history, so an earlier version can be restored if needed.
+\textbf{Git} is the most widely used distributed version-control system, and
+popular hosting sites for repositories include \textbf{GitHub}, \textbf{GitLab},
+\textbf{Bitbucket}, and \textbf{SourceForge}.
+
+Open-source software is usually built by a \textbf{community} of contributors
+spread around the world. A contributor may \textbf{fork} a project, that is,
+make a personal copy for experimenting or improving. A \textbf{pull request}
+is then a proposal to merge those changes back into the main project, where
+\textbf{maintainers} review them. An \textbf{issue tracker} records bugs and
+feature requests. Because many people can inspect and improve the code,
+community review is treated as a key strength of open-source development.
+
+\section{Basic licensing concepts}
+By default, \textbf{copyright} gives the creator of a work exclusive rights
+over it. A \textbf{licence} is the legal permission that states what others
+may do with the software. Open-source and free-software licences fall into two
+broad families.
+
+\textbf{Copyleft} licences, such as the GNU General Public License (GPL),
+require that modified versions of the software be released under the
+\emph{same} licence. This keeps the software and its derivatives open.
+\textbf{Permissive} licences, such as the MIT License, the Apache License 2.0,
+and the BSD License, allow the code to be reused with very few conditions,
+including inside proprietary projects, provided the licence notice is kept.
+The licence, not the price, decides whether software is truly open source.
+
+\begin{definitionbox}{Copyleft}
+A licence condition that requires any modified or extended version of the
+software to be distributed under the same licence, so the work cannot be
+closed.
+\end{definitionbox}
+
+\section{Copyright, licences, and piracy}
+It helps to separate three ideas. \textbf{Copyright} is the creator's legal
+ownership of the work. A \textbf{licence} is the permission the owner grants
+for specific uses. \textbf{Piracy} is the use, copying, or distribution of
+software in a way the licence forbids --- for example, installing a
+proprietary program without a valid licence, or copying it to machines the
+licence does not cover. Open-source software is not ``unlicensed'': it is
+licensed, and its licence grants broad permissions. Public-domain software,
+by contrast, has no owner and therefore needs no licence at all. The exam
+sometimes tests this by asking whether open-source software is ``free of
+copyright''; the answer is no, because the copyright remains with the authors
+and the licence grants the freedoms.
+
+\begin{example}
+A student installs the same licensed copy of a proprietary office suite on
+five computers when the licence permits only one. This is \textbf{piracy}.
+Installing an open-source office suite such as LibreOffice on all five
+computers, in line with its licence, is not piracy. The difference is not the
+price paid but whether the use matches what the licence allows.
+\end{example}
+
+\section{Common licences at a glance}
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Licence} & \textbf{Type} & \textbf{Main condition} \\
+\midrule
+GNU GPL & Copyleft & Derivative works must use the same licence \\
+MIT License & Permissive & Reuse allowed; keep the licence notice \\
+Apache License 2.0 & Permissive & Few limits, plus an explicit patent grant \\
+BSD License & Permissive & Very few conditions \\
+Creative Commons & Content licence & For creative works, not usually software \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Note that \textbf{Creative Commons} licences are designed for creative works
+such as text, images, and music; they are not typically used to license
+software. For software, the GPL, MIT, Apache, and BSD licences are the ones to
+recognise.
+
+\section{Well-known open-source and proprietary software}
+Familiar examples help fix the concepts.
+
+\begin{center}
+\begin{tabular}{p{0.46\textwidth}p{0.46\textwidth}}
+\toprule
+\textbf{Open source} & \textbf{Proprietary} \\
+\midrule
+Linux (operating system) & Microsoft Windows \\
+Android (mobile operating system) & Apple macOS, iOS \\
+Mozilla Firefox (browser) & Microsoft Office \\
+Chromium (Chrome's open-source base) & Adobe Photoshop \\
+LibreOffice (office suite) & Oracle Database \\
+VLC media player, GIMP, Blender & \\
+Apache HTTP Server, MySQL, Python, Git, WordPress & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Android} is the open-source \textbf{mobile operating system}, built on
+the open-source Linux kernel. This is a directly tested fact: when a question
+asks for the open-source mobile OS, the answer is Android. In contrast, iOS is
+a proprietary mobile operating system, and Windows and macOS are proprietary
+desktop operating systems.
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The test of open source is the \textbf{source code}, not the price. An
+    open-source licence lets users \textbf{view, change, and share} the source
+    (PYQ-26).
+  \item \textbf{Freeware} is free of \textbf{cost}; \textbf{free software} is
+    about \textbf{freedom}. Do not treat the two as the same (TRAP-23).
+  \item \textbf{Open source}, \textbf{freeware}, and \textbf{shareware} are
+    three different things: one shares the source, one is free of cost, one is
+    a paid trial (TRAP-23).
+  \item The open-source \textbf{mobile operating system} is \textbf{Android}
+    (PYQ-24); iOS is proprietary.
+  \item \textbf{GPL} is copyleft (derivatives stay open); \textbf{MIT},
+    \textbf{Apache 2.0}, and \textbf{BSD} are permissive.
+\end{enumerate}
+
+\begin{example}
+An item asks, ``Which of the following is an open-source mobile operating
+system?'' Trace the options: Android is open source (built on the Linux
+kernel), while iOS, Windows, and macOS are proprietary. The answer is Android.
+If the stem instead asks what an open-source licence permits, the answer is the
+right to view, change, and share the source code.
+\end{example}
+
+\subsection*{Revision at a glance}
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.32\textwidth}p{0.38\textwidth}}
+\toprule
+\textbf{Term} & \textbf{What it is} & \textbf{What it is not} \\
+\midrule
+Open source & Source code is public and licensed for view/change/share & Not merely free of cost \\
+Proprietary & Source kept secret; only the executable is distributed & Not necessarily paid \\
+Freeware & Free of cost & Not necessarily open source \\
+Free software & Freedom to run, study, change, share & Not about zero price \\
+Public domain & No copyright owner & Not the same as open source \\
+Shareware & Free trial, then pay & Not free forever \\
+Commercial & Sold for profit & Not necessarily proprietary or open \\
+Copyleft (GPL) & Derivatives must stay open & Not permissive \\
+Permissive (MIT) & Reuse with few conditions & Not copyleft \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define source code and explain how it differs from object code.
+  \item State the three things an open-source licence typically permits a user
+    to do with the source code.
+  \item Distinguish freeware from free software.
+  \item Explain what public domain software is and how it differs from
+    open-source software.
+  \item Name one copyleft licence and one permissive licence, and state the
+    main condition of each.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Source code is the human-readable set of instructions written by a
+    programmer in a programming language. It is converted by a compiler or
+    interpreter into object code, the machine-readable form the computer
+    actually runs.
+  \item View the source code, modify it, and share (redistribute) it, subject
+    to the licence terms.
+  \item Freeware is free of cost but its source code is usually not provided.
+    Free software is about freedom: the user may study, change, and share the
+    software; ``free'' means liberty, not price.
+  \item Public domain software has no copyright owner and carries no
+    restrictions at all. Open-source software is still copyrighted, but its
+    licence grants the freedom to view, change, and share the source.
+  \item Copyleft: the GNU GPL, which requires modified versions to be released
+    under the same licence. Permissive: the MIT License (or Apache 2.0 / BSD),
+    which allows reuse with few conditions, such as keeping the licence
+    notice.
+\end{enumerate}
+\endgroup
+\end{document}

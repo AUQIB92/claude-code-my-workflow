@@ -1,0 +1,248 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Software Categories}
+\subtitle{Lesson 18 --- Types and Licensing Models}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is Software?}
+  \begin{itemize}
+    \item \key{Software} is a set of programs (instructions) that tell the
+      computer what to do.
+    \item Hardware is the \muted{physical} part; software is the
+      \key{logical} part of a computer system.
+    \item Programs are stored in memory and executed by the \key{CPU}.
+    \item Without software, hardware cannot perform any useful task.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Hardware is what you can touch; software is the set of instructions that
+    makes that hardware work.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Main Software Categories}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Category} & \textbf{One-line role} \\
+      \midrule
+      System software & Controls hardware and provides a platform for other software \\
+      Application software & Helps the user perform specific tasks \\
+      Utility software & Performs maintenance and housekeeping tasks \\
+      Programming software & Used to write and translate programs \\
+      Embedded software & Built into a device to control that device \\
+      Middleware & Connects different applications and systems \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{These categories overlap in use, but each answers a different
+  question about ``what the program is for''.}
+\end{frame}
+
+\begin{frame}{System Software}
+  \begin{itemize}
+    \item \key{System software} manages and controls the computer hardware.
+    \item It provides the \key{platform} on which application software runs.
+    \item Examples: the operating system, device drivers, firmware (BIOS),
+      and utility programs.
+    \item It runs close to the hardware and usually starts when the machine
+      is switched on.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A device driver is \key{software}, not hardware, and the operating system
+    is \key{system software} (TRAP-10).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Operating System}
+  \begin{itemize}
+    \item The \key{operating system (OS)} is the main system software.
+    \item It acts as an \key{interface} between the user and the hardware.
+    \item It manages memory, files, processes, and input/output devices.
+    \item Examples: Windows, Linux, macOS, and Android.
+  \end{itemize}
+  \begin{block}{Why it matters}
+    The OS is the first layer of software a program depends on; without it,
+    an application cannot reach the hardware.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Application Software}
+  \begin{itemize}
+    \item \key{Application software} helps the user perform a \key{specific
+      task}.
+    \item It runs \muted{on top of} the system software.
+    \item Examples: MS Word, MS Excel, web browsers, media players, and
+      accounting packages.
+    \item It is written for the user's work, not to manage the machine.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{General-Purpose vs Specific-Purpose}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{General-purpose}
+      \begin{itemize}
+        \item Ready-made packages sold to many users
+        \item Examples: MS Word, MS Excel, a web browser
+        \item Also called \emph{application packages}
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Specific-purpose (custom)}
+      \begin{itemize}
+        \item Built for one organisation or one task
+        \item Examples: a payroll system, a railway reservation system
+        \item Also called \emph{tailor-made} software
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Utility Software}
+  \begin{itemize}
+    \item \key{Utility software} is a small program that performs
+      \key{maintenance} tasks.
+    \item Examples: antivirus programs, disk cleanup, disk defragmentation,
+      backup, and file compression.
+    \item It keeps the system healthy, fast, and safe.
+    \item It belongs to the \muted{system software} family.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A utility \key{maintains the system}; an application helps the user do
+    \key{work}. Do not call antivirus an application for producing documents.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Programming Software and Translators}
+  \begin{itemize}
+    \item \key{Programming software} is used to write, translate, and test
+      programs.
+    \item \key{Language translators}: compiler, interpreter, and assembler.
+    \item Supporting tools: linker, loader, debugger, and text editor.
+    \item An \key{IDE} (Integrated Development Environment) combines an
+      editor, a compiler, and a debugger in one tool.
+  \end{itemize}
+  \begin{block}{Compilers and interpreters}
+    A compiler translates the whole program at once; an interpreter
+    translates and runs it line by line.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Embedded Software}
+  \begin{itemize}
+    \item \key{Embedded software} is built into a device to control that
+      device.
+    \item It is usually stored in \key{ROM} as firmware.
+    \item It runs automatically when the device is switched on.
+    \item Examples: a washing machine, a microwave oven, a router, and a car
+      engine-control unit.
+  \end{itemize}
+  \begin{block}{Key point}
+    Embedded software is hidden inside the device and is written for one
+    dedicated job.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Middleware}
+  \begin{itemize}
+    \item \key{Middleware} connects different applications and systems so
+      they can work together.
+    \item It sits \muted{between} the operating system and application
+      software.
+    \item It provides common services such as messaging, authentication, and
+      data exchange.
+    \item Example: an application server that links a web front end to a
+      database.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Licensing Models: Overview}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Model} & \textbf{Key point} \\
+      \midrule
+      Proprietary & Source code closed; use governed by a licence \\
+      Open-source & Source code available to view, modify, and redistribute \\
+      Free software & Freedom to run, study, modify, and share \\
+      Freeware & Free of cost, but source may be closed \\
+      Shareware & Trial version; payment needed for full use \\
+      Public domain & No copyright; free for any use \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Commercial software is sold for profit and is usually proprietary.}
+\end{frame}
+
+\begin{frame}{Proprietary vs Open-Source}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      \textbf{Proprietary}
+      \begin{itemize}
+        \item Source code is not published
+        \item Licence restricts copying and modification
+        \item Examples: MS Windows, MS Office
+      \end{itemize}
+    \column{0.46\textwidth}
+      \textbf{Open-source}
+      \begin{itemize}
+        \item Source code is published
+        \item Licence allows viewing, changing, and sharing
+        \item Examples: Linux, Mozilla Firefox, LibreOffice
+      \end{itemize}
+  \end{columns}
+  \vspace{0.3cm}
+  \begin{alertblock}{Note}
+    ``Open-source'' refers to \key{source-code availability}, not to price.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Freeware, Shareware, Free Software, Public Domain}
+  \begin{itemize}
+    \item \key{Freeware}: distributed free of cost; the source code may not
+      be available.
+    \item \key{Shareware}: offered as a limited trial; payment is needed for
+      continued or full use.
+    \item \key{Free software}: gives the user freedom to run, study, modify,
+      and redistribute it (``free'' as in freedom, not price).
+    \item \key{Public-domain software}: has no copyright and may be used
+      freely.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Trap Alert: Three Terms, Three Meanings}
+  \begin{alertblock}{TRAP-23}
+    Open-source $\neq$ freeware $\neq$ shareware.
+  \end{alertblock}
+  \begin{itemize}
+    \item \key{Open-source}: the \key{source code} is available.
+    \item \key{Freeware}: free of \key{cost}, but source may be closed.
+    \item \key{Shareware}: a \key{trial}; pay to continue.
+  \end{itemize}
+  \vspace{0.2cm}
+  \muted{The nearest-neighbour confusion here is the single most common
+  licensing distractor.}
+\end{frame}
+
+\begin{frame}{Lesson 18: Recall}
+  \begin{itemize}
+    \item Software is a set of programs; hardware is the physical part.
+    \item System software manages hardware (OS, device drivers, firmware);
+      application software helps the user do work.
+    \item Utility software performs maintenance; programming software writes
+      and translates programs; embedded software controls a device;
+      middleware connects systems.
+    \item Licensing: proprietary (closed), open-source (source available),
+      free software (four freedoms), freeware (free of cost), shareware
+      (trial then pay), public domain (no copyright).
+    \item TRAP-23: open-source, freeware, and shareware are \key{not} the
+      same.
+  \end{itemize}
+\end{frame}
+\end{document}

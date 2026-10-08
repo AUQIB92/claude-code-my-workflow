@@ -1,0 +1,273 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{19.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Operating System --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What an operating system is}
+A computer's hardware cannot be used directly by a person or by ordinary
+application programs. Something must sit between the user and the machine,
+accept the user's instructions, and control the hardware on the user's behalf.
+That something is the \textbf{operating system}. An operating system (OS) is
+the main piece of \textbf{system software} that controls the whole computer. It
+starts the machine, runs other programs, and manages every resource. It makes
+the computer usable, because without an OS the hardware alone cannot run
+application software.
+
+\begin{definitionbox}{Operating system}
+The main system software that sits between the user and the computer hardware,
+provides a user-friendly interface, and manages the computer's resources such
+as the processor, memory, storage, and input/output devices.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
+\textbf{Term} & \textbf{Meaning in this lesson} \\
+\midrule
+Kernel & The core part of the OS that interacts directly with the hardware. \\
+Booting & Starting the computer and loading the OS into main memory. \\
+GUI & Graphical User Interface --- interaction through icons, windows, and clicks. \\
+CLI & Command Line Interface --- interaction by typing text commands. \\
+Process & A program that is currently executing. \\
+Multitasking & Running more than one program at a time. \\
+Time-sharing & Sharing one computer among several users at the same time. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The rest of this lesson uses these terms in one consistent sense. The
+\textbf{kernel} is the privileged core of the OS. \textbf{Booting} is the
+startup sequence. A \textbf{GUI} is a graphical interface and a \textbf{CLI}
+is a text-command interface. A \textbf{process} is a running program.
+\textbf{Multitasking} and \textbf{time-sharing} are two ways of sharing the
+CPU.
+
+\section{The OS as interface and resource manager}
+The operating system has \textbf{two main jobs}. The first is to provide a
+\textbf{user-friendly interface}: the user gives instructions and receives
+results through the OS, without needing to understand the hardware. This is
+the definition of the OS as an interface layer, and it is a regularly tested
+idea (PYQ-21). The second job is to act as a \textbf{resource manager}: the OS
+shares the CPU, main memory, storage, and devices among all the programs that
+are running, so that each one gets a fair turn and none interferes with the
+others.
+
+It is important to know \textbf{where} the operating system is. The OS is
+stored permanently on secondary storage, such as an SSD or HDD. At startup it
+is loaded into \textbf{primary storage}, that is, main memory. While the
+computer is running, the OS is \emph{resident in primary storage} (PYQ-22): it
+stays in main memory for the whole session so that it can respond instantly
+whenever the hardware or an application needs it.
+
+\begin{example}
+An item states that the OS is kept in secondary storage while the computer is
+running. This is wrong. The OS is stored on secondary storage when the machine
+is off, but once the computer starts it is copied into primary storage (main
+memory) and remains there while running. The wrong option confuses the place
+where the OS is stored with the place where it runs.
+\end{example}
+
+\section{Functions of an operating system}
+The work of an OS is usually grouped into a few large functions, each of which
+is a favourite exam topic:
+
+\begin{enumerate}
+  \item \textbf{Process management}: creating processes, scheduling the CPU
+    among them, and removing them when they finish.
+  \item \textbf{Memory management}: deciding how much main memory each
+    program gets and keeping programs apart.
+  \item \textbf{File management}: organising data into files and folders and
+    handling their creation, reading, writing, and deletion.
+  \item \textbf{Device management}: controlling input and output devices
+    through device drivers.
+  \item \textbf{Security}: managing user accounts, logins, and permissions, and
+    applying updates.
+  \item \textbf{User interface}: presenting either a GUI or a CLI to the user.
+\end{enumerate}
+
+\section{The kernel}
+The \textbf{kernel} is the \textbf{core} of the operating system. It is the
+part of the OS that interacts \textbf{directly with the hardware}, and it
+always stays in main memory while the computer runs. The kernel provides the
+most important services: process scheduling, memory handling, and device
+control. Other software, including the user interface, relies on the kernel to
+reach the hardware.
+
+\begin{definitionbox}{Kernel}
+The central, privileged part of the operating system that manages the hardware
+and provides the fundamental services on which all other software depends.
+\end{definitionbox}
+
+\section{User interfaces: GUI and CLI}
+Two broad kinds of interface are used to work with a computer. A
+\textbf{Graphical User Interface (GUI)} lets the user interact through
+pictures, icons, windows, menus, and clicks; it is easier for beginners. A
+\textbf{Command Line Interface (CLI)} requires the user to type text commands;
+it gives precise control but demands that the commands be known. Windows,
+macOS, and Linux desktops are examples of GUIs, while the command prompt and
+the terminal are examples of CLIs.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
+\toprule
+\textbf{Point} & \textbf{GUI} & \textbf{CLI} \\
+\midrule
+Full form & Graphical User Interface & Command Line Interface \\
+Input method & Clicks, icons, windows & Typed text commands \\
+Ease of use & Easier for beginners & Needs the commands to be known \\
+Example & Windows desktop, icons & Command prompt, terminal \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Booting the computer}
+\textbf{Booting} is the process of starting a computer and loading the
+operating system into main memory. A \textbf{cold boot} starts from the
+power-off state, while a \textbf{warm boot} restarts a computer that is already
+on. The startup firmware, \textbf{BIOS} (Basic Input/Output System) or its
+modern replacement \textbf{UEFI}, first checks the hardware and then finds and
+loads the operating system from secondary storage. BIOS/UEFI initialises the
+hardware and hands control to the OS; it is not the kernel and it is not a
+device driver.
+
+\section{Process management}
+A \textbf{process} is a program that is currently executing. A program sitting
+on disk is passive; once it is loaded and running it becomes an active
+process. The operating system creates processes, gives each a turn on the CPU
+through \textbf{CPU scheduling}, lets them communicate where necessary, and
+removes them when they finish. Scheduling decides which process runs next and
+for how long, which is what allows several programs to make progress.
+
+\section{Memory management}
+The operating system decides \textbf{how much main memory} each program
+receives. It keeps one program's memory \textbf{separate} from another's so
+that programs cannot overwrite each other's data. It frees memory when a
+program ends so that the space can be reused. Where needed, the OS uses
+\textbf{virtual memory} to give programs more space than the physical RAM
+provides.
+
+\section{File management}
+The OS organises data on storage devices into \textbf{files} and
+\textbf{folders}. It handles creating, reading, writing, renaming, and deleting
+files, and it keeps a \textbf{directory} that records where each file is
+stored. It also controls \textbf{permissions}: which accounts may open, change,
+or delete a given file. Together these tasks are called the \textbf{file
+system}, the way the OS names, stores, and finds files.
+
+\section{Device management}
+The operating system controls all \textbf{input/output devices}: the keyboard,
+mouse, printer, disk, and so on. Each device communicates with the OS through a
+\textbf{device driver}. A device driver is \textbf{software}, not hardware ---
+a point that is regularly tested (TRAP-10). The OS also uses \textbf{spooling}
+to queue print jobs and feed the printer at the printer's own speed, so that
+the computer does not have to wait for a slow device to finish.
+
+\section{Multitasking and time-sharing}
+\textbf{Multitasking} means that the operating system runs \textbf{more than
+one program at a time} (PYQ-23). The CPU switches between programs so quickly
+that they appear to run together, even though a single CPU core does only one
+thing at any instant. \textbf{Time-sharing} lets \textbf{many users} share one
+computer at the same time, each receiving a slice of CPU time in turn. Both
+multitasking and time-sharing depend on the OS \textbf{scheduler}.
+
+\begin{example}
+An item defines multitasking as using more than one monitor, or as storing more
+than one file on a disk. Both are wrong. Multitasking is about the
+\textbf{processor} running more than one program at a time. The number of
+monitors and the number of files stored are unrelated to multitasking.
+\end{example}
+
+\section{Security, user accounts and updates}
+The operating system provides \textbf{user accounts}, each with a username and
+password. \textbf{Authentication} (the login step) verifies who is using the
+computer. \textbf{Permissions} decide which files and settings each account may
+use, so that one user cannot disturb another's work. Finally, system and
+software \textbf{updates} should be applied regularly, because they fix
+security holes and add improvements. Keeping the OS up to date is one of the
+simplest ways to protect the machine.
+
+\section{Examples of operating systems}
+Common operating systems include \textbf{Microsoft Windows}, the open-source
+\textbf{Linux} family, and Apple's \textbf{macOS} on desktops and laptops, plus
+the mobile operating systems \textbf{Android} and \textbf{iOS}. Android is
+built on the Linux kernel. An application such as MS Word or a web browser is
+\emph{not} an operating system; it runs on top of one.
+
+\section{Exam retrieval and common confusions}
+The following distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item The OS is \textbf{system software}, not application software. A device
+    driver is \textbf{software}, not hardware (TRAP-10).
+  \item While running, the OS is resident in \textbf{primary storage} (main
+    memory); it is only \emph{stored} on secondary storage (PYQ-22).
+  \item The OS provides a \textbf{user-friendly interface} between the user and
+    the hardware (PYQ-21).
+  \item \textbf{Multitasking} means running more than one program at a time;
+    \textbf{time-sharing} shares one machine among several users (PYQ-23).
+  \item \textbf{BIOS/UEFI} initialises the hardware and loads the OS; it is not
+    the kernel and not a device driver (TRAP-24).
+  \item A \textbf{program} on disk is passive; once running it becomes a
+    \textbf{process}.
+\end{enumerate}
+
+\begin{example}
+An item asks where the operating system is loaded when the computer starts.
+Trace the startup sequence: the machine is switched on, BIOS/UEFI checks the
+hardware, and the OS is loaded from secondary storage into \textbf{primary
+storage} (main memory), where it remains while the computer runs. If the stem
+instead asks which component is the core of the OS, the answer is the
+\textbf{kernel}.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define an operating system and state its two main roles.
+  \item Where is the operating system stored, and where is it resident while
+    the computer is running?
+  \item List four core functions of an operating system.
+  \item What is the kernel, and why is it important?
+  \item Distinguish a GUI from a CLI.
+  \item What does multitasking mean, and how does it differ from
+    time-sharing?
+  \item State three ways an operating system helps to keep a computer secure.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item An operating system is the main system software that sits between the
+    user and the hardware. Its two main roles are to provide a user-friendly
+    interface and to manage the computer's resources.
+  \item It is stored permanently on secondary storage (such as an SSD or HDD)
+    and is resident in primary storage (main memory) while the computer is
+    running.
+  \item Any four of: process management, memory management, file management,
+    device management, security, and the user interface.
+  \item The kernel is the core part of the operating system that interacts
+    directly with the hardware. It is important because it provides the
+    fundamental services --- scheduling, memory handling, and device control
+    --- on which all other software depends.
+  \item A GUI (Graphical User Interface) uses icons, windows, and clicks and is
+    easier for beginners; a CLI (Command Line Interface) requires the user to
+    type text commands and gives precise control.
+  \item Multitasking means the OS runs more than one program at a time by
+    switching the CPU among them. Time-sharing means many users share one
+    computer at the same time, each getting a slice of CPU time.
+  \item Three of: user accounts with usernames and passwords; authentication at
+    login; permissions that limit access to files and settings; and regular
+    security updates.
+\end{enumerate}
+\endgroup
+\end{document}

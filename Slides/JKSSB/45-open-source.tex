@@ -1,0 +1,275 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Open Source}
+\subtitle{Lesson 45 --- Source Code and Licensing Models}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is Source Code?}
+  \begin{itemize}
+    \item \key{Source code} is the set of instructions written by a programmer
+      in a programming language such as C, Java, or Python.
+    \item It is \key{human-readable}: a person can open it, read it, and
+      change it.
+    \item A \key{compiler} or \key{interpreter} converts source code into the
+      machine-readable form the computer runs.
+    \item The machine-readable form is called \key{object code} or the
+      executable; ordinary users rarely see it.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Whoever holds the source code controls how the software can be studied,
+    changed, and shared.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Open Source vs Proprietary}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Open source} & \textbf{Proprietary} \\
+      \midrule
+      Source code & Available to the public & Kept secret (closed source) \\
+      View / modify & Allowed, subject to the licence & Not allowed without permission \\
+      Redistribute & Allowed, subject to the licence & Not allowed \\
+      Typical user gets & Source code + executable & Only the compiled executable \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{The deciding factor is the source code, not the price.}
+\end{frame}
+
+\begin{frame}{What ``Open Source'' Allows}
+  \begin{itemize}
+    \item \key{View} the source code: anyone may read how the software works.
+    \item \key{Modify} it: a user may change it, fix bugs, or add features.
+    \item \key{Share} it: copies and modified versions may be redistributed.
+    \item These permissions are granted by the software's \key{licence}, so the
+      exact terms differ from one project to another.
+  \end{itemize}
+  \begin{alertblock}{Exam key (PYQ-26)}
+    An \key{open-source licence} lets users view, change, and share the source
+    code. That three-part meaning is the tested idea.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Proprietary (Closed-Source) Software}
+  \begin{itemize}
+    \item \key{Proprietary software} keeps its source code \key{secret}.
+    \item The user receives only the \key{compiled executable}, not the source.
+    \item Copying, modifying, or redistributing it is not allowed without the
+      owner's permission.
+    \item Examples: \key{Microsoft Windows}, \key{Apple macOS},
+      \key{Microsoft Office}, \key{Adobe Photoshop}, \key{Oracle Database}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Freeware Is Not Free Software}
+  \begin{itemize}
+    \item \key{Freeware} is software given away \key{free of cost}, but its
+      source code is usually \key{not} provided.
+    \item \key{Free software} is about \key{freedom}, not price: the user is
+      free to study, change, and share it.
+    \item ``Free'' in free software means ``free as in freedom'', not
+      ``free as in free beer''.
+    \item A program can be freeware and still be proprietary.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-23)}
+    ``Free'' in \key{freeware} means \key{zero cost}; ``free'' in \key{free
+    software} means \key{liberty}. Do not treat the two as the same.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Free Software and Its Four Freedoms}
+  \begin{itemize}
+    \item The \key{Free Software Foundation (FSF)} was founded by
+      \key{Richard Stallman} to promote software freedom.
+    \item Freedom 0: run the program for any purpose.
+    \item Freedom 1: study how it works and change it.
+    \item Freedom 2: redistribute copies to help others.
+    \item Freedom 3: distribute modified versions to the public.
+  \end{itemize}
+  \begin{block}{Keep it straight}
+    Free software, open source, and freeware are three different ideas. Only
+    the first two are about source-code freedom.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Public Domain Software}
+  \begin{itemize}
+    \item \key{Public domain} software has \key{no copyright} owner.
+    \item Anyone may use, modify, and redistribute it \key{without any
+      restriction}.
+    \item No licence is needed, because no exclusive rights remain.
+    \item This differs from open source: open-source software is still
+      copyrighted, but a licence grants the freedoms.
+  \end{itemize}
+  \begin{block}{Definition}
+    Public domain means the work belongs to everyone; open source means the
+    work is owned but licensed for public use.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Commercial and Shareware Software}
+  \begin{itemize}
+    \item \key{Commercial software} is developed and \key{sold for profit}.
+      It is often proprietary, but not always.
+    \item \key{Shareware} is distributed as a \key{free trial}: it works for a
+      limited period or with limited features.
+    \item To keep using shareware after the trial, the user must \key{pay}.
+    \item Shareware is not open source: the source code stays hidden.
+  \end{itemize}
+  \begin{alertblock}{Trap alert (TRAP-23)}
+    Open source, freeware, and shareware are \key{not} the same. Open source
+    shares the \key{source}; freeware is free of \key{cost}; shareware is a
+    \key{trial}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Repositories: Where Code Lives}
+  \begin{itemize}
+    \item A \key{repository} (repo) stores a project's source code and every
+      change made to it.
+    \item \key{Version control} records the history, so older versions can be
+      restored.
+    \item \key{Git} is the most widely used distributed version-control system.
+    \item Popular hosting sites: \key{GitHub}, \key{GitLab}, \key{Bitbucket},
+      and \key{SourceForge}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Community Development}
+  \begin{itemize}
+    \item Open-source projects are built by a \key{community} of contributors
+      around the world.
+    \item A \key{fork} is a contributor's own copy of the project for
+      experimenting or improving.
+    \item A \key{pull request} proposes changes back to the main project for
+      review.
+    \item \key{Maintainers} review changes, and an \key{issue tracker} records
+      bugs and feature requests.
+  \end{itemize}
+  \begin{block}{Why it matters}
+    Many hands can inspect and improve the code, which is why community review
+    is treated as a strength of open source.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Basic Licensing Concepts}
+  \begin{itemize}
+    \item \key{Copyright} gives the creator exclusive rights by default.
+    \item A \key{licence} is the legal permission that says what others may do
+      with the software.
+    \item \key{Copyleft} licences require modified versions to stay under the
+      \key{same} licence.
+    \item \key{Permissive} licences allow reuse in other projects, including
+      proprietary ones, with few conditions.
+  \end{itemize}
+  \begin{alertblock}{Remember}
+    The licence, not the price, decides whether software is truly open source.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Copyleft vs Permissive Licences}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.30\textwidth}p{0.38\textwidth}}
+      \toprule
+      \textbf{Type} & \textbf{Examples} & \textbf{Main condition} \\
+      \midrule
+      Copyleft & GNU GPL & Derivative works must use the same licence \\
+      Permissive & MIT, Apache 2.0, BSD & Reuse allowed with licence notice; few limits \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{GPL = GNU General Public License. Apache 2.0 adds an explicit patent
+  grant.}
+\end{frame}
+
+\begin{frame}{Common Open-Source Licences}
+  \begin{itemize}
+    \item \key{GNU GPL} --- GNU General Public License; a strong copyleft
+      licence.
+    \item \key{MIT License} --- very permissive; requires the licence notice to
+      be kept.
+    \item \key{Apache License 2.0} --- permissive, with an explicit patent
+      grant.
+    \item \key{BSD License} --- permissive, with minimal conditions.
+    \item \key{Creative Commons} --- used for creative works, not usually for
+      software.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Known Open-Source Software}
+  \begin{itemize}
+    \item Operating systems and kernels: \key{Linux}, \key{Android}.
+    \item Web browsers: \key{Mozilla Firefox}; \key{Chromium} (the open-source
+      base of Google Chrome).
+    \item Office and productivity: \key{LibreOffice}.
+    \item Media and graphics: \key{VLC media player}, \key{GIMP},
+      \key{Blender}.
+    \item Servers and languages: \key{Apache HTTP Server}, \key{MySQL},
+      \key{Python}, \key{Git}, \key{WordPress}.
+  \end{itemize}
+  \muted{Many are free of cost as well, but it is the open source code, not the
+  price, that defines them.}
+\end{frame}
+
+\begin{frame}{PYQ Focus: Android and the Licence Test}
+  \begin{itemize}
+    \item \key{PYQ-24}: the open-source \key{mobile operating system} is
+      \key{Android}.
+    \item Android is built on the open-source \key{Linux} kernel.
+    \item \key{PYQ-26}: an open-source licence allows users to \key{view,
+      change, and share} the source code.
+    \item By contrast, \muted{Microsoft Windows and Apple macOS} are
+      proprietary, and \muted{iOS} is a proprietary mobile OS.
+  \end{itemize}
+  \begin{alertblock}{Takeaway}
+    If the question names a mobile OS, \key{Android} is the open-source answer.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Three Confused Terms}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.42\textwidth}p{0.24\textwidth}}
+      \toprule
+      \textbf{Term} & \textbf{What is free} & \textbf{Source code?} \\
+      \midrule
+      Open source & Use, study, change, share & Available \\
+      Freeware & Cost only & Usually hidden \\
+      Shareware & A limited trial & Hidden \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \begin{alertblock}{Trap alert (TRAP-23)}
+    Do not write ``open-source = freeware = shareware''. They differ in what is
+    free and whether the source code is available.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 45: Recall}
+  \begin{itemize}
+    \item \key{Source code} is human-readable; a compiler or interpreter turns
+      it into machine code.
+    \item \key{Open source} lets users view, change, and share the source code,
+      subject to its \key{licence}; \key{proprietary} keeps the source secret.
+    \item \key{Freeware} is free of \key{cost}; \key{free software} is about
+      \key{freedom} (FSF, Richard Stallman, four freedoms).
+    \item \key{Public domain} has no copyright; \key{shareware} is a paid
+      trial; \key{commercial} software is sold for profit.
+    \item \key{Repositories} (Git, GitHub, GitLab) and \key{community
+      development} (forks, pull requests, maintainers) drive open source.
+    \item \key{GPL} is copyleft; \key{MIT}, \key{Apache 2.0}, and \key{BSD} are
+      permissive.
+    \item \key{Android} is the open-source mobile OS (PYQ-24); open source is
+      not freeware or shareware (TRAP-23).
+  \end{itemize}
+\end{frame}
+\end{document}

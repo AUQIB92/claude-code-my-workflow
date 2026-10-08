@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{60.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Current OS, Processes, Linux and Utilities --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Deadlock and its four necessary conditions}
+A \key{deadlock} is a situation in which a group of processes are each waiting
+for a resource that is held by another process in the group, so that none of
+them can ever proceed. A simple picture is two processes: process A holds a
+printer and waits for a scanner, while process B holds the scanner and waits
+for the printer. Each waits for the other, and both stay stuck forever.
+
+For a deadlock to be possible, four conditions must hold \emph{at the same
+time}. They are usually listed as follows.
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Condition} & \textbf{Meaning} \\
+\midrule
+Mutual exclusion & A resource is held by only one process at a time. \\
+Hold and wait & A process holds at least one resource while waiting for more. \\
+No preemption & A resource cannot be forcibly taken away from its holder. \\
+Circular wait & A cycle of processes exists, each waiting for a resource held by the next. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Deadlock}
+A state in which a set of processes are each blocked waiting for a resource
+held by another process in the same set, so no process can make progress.
+\end{definitionbox}
+
+\begin{definitionbox}{No preemption (as a condition)}
+The rule that a resource already allocated to a process cannot be taken away
+by force; it must be released voluntarily. Its opposite, \key{preemption}, is
+used to \emph{recover} from a deadlock.
+\end{definitionbox}
+
+\section{Deadlock recovery by resource preemption}
+Once a deadlock has been detected, the operating system must break it. One
+recovery method is \key{resource preemption}: the system takes a resource away
+from one of the processes and gives it to another process that needs it,
+breaking the circular wait. The chosen process is usually rolled back to a
+safe earlier state, or restarted. Preemption is also used to break the
+\emph{no-preemption} condition directly, since it removes the guarantee that a
+resource stays with its holder.
+
+\begin{example}[The exam contrast]
+An item asks for a method of \emph{recovering} from deadlock. The correct
+answer is \good{resource preemption} --- the system forcibly reclaims a
+resource. A distractor may name ``mutual exclusion'' or ``circular wait'',
+but those are \bad{necessary conditions} for a deadlock, not recovery
+methods. The other trap is to think preemption is one of the four conditions;
+the condition is actually \key{no preemption}. (PYQ-10)
+\end{example}
+
+\section{Processes and the scheduler}
+A \key{process} is a program in execution. When a program is launched, the
+operating system creates a process for it and keeps the information needed to
+run it --- its state, its program counter, and the resources it holds. Because
+many processes are usually ready at once but only one can run on a given CPU
+core at a time, the operating system includes a \key{scheduler} that decides
+which ready process gets the CPU next.
+
+Scheduling may be \key{non-preemptive}, where a running process keeps the CPU
+until it finishes or blocks, or \key{preemptive}, where the operating system
+can interrupt a running process and switch to another. Priorities are one of
+the most common ways to choose between processes, and it is the combination of
+\emph{priorities} and \emph{preemption} that produces the problems studied in
+the next sections: priority inversion and starvation.
+
+\begin{definitionbox}{Process}
+A program in execution, together with the state and resources the operating
+system maintains for it.
+\end{definitionbox}
+
+\begin{definitionbox}{Scheduler}
+The operating system component that selects which ready process is given the
+CPU next.
+\end{definitionbox}
+
+\section{Priority inversion versus priority inheritance}
+In a priority-based system, a task with a higher priority is supposed to run
+before one with a lower priority. \key{Priority inversion} breaks that rule.
+It happens when a \key{high-priority} task is blocked because a
+\key{low-priority} task currently holds a resource the high-priority task
+needs. While the low-priority task holds that resource, a
+\key{medium-priority} task can preempt it and run. The result is that the
+high-priority task ends up waiting behind the medium-priority task, even
+though it should have run first --- its priority has effectively been
+inverted.
+
+The standard fix is \key{priority inheritance}. While the low-priority task
+holds the resource, it temporarily \key{inherits} the high priority of the
+task that is waiting for it, so it runs at that high priority, releases the
+resource quickly, and then returns to its original low priority. This lets the
+high-priority task obtain the resource without waiting behind the
+medium-priority task.
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Priority inversion} & \textbf{Priority inheritance} \\
+\midrule
+What it is & A problem in which priority order is reversed. & A solution that temporarily raises the holder's priority. \\
+Cause & A low-priority task holds a needed resource. & Applied while a resource is held and awaited. \\
+Effect & High-priority task waits behind a medium-priority task. & Low-priority holder finishes fast, so the high-priority task proceeds. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Priority inversion}
+A condition in which a high-priority task is indirectly preempted by a
+lower-priority task, typically because a low-priority task holds a shared
+resource.
+\end{definitionbox}
+
+\begin{example}[What does \emph{not} fix inversion]
+An item asks which method prevents priority inversion. \key{Round-robin}
+scheduling gives every ready process a turn but knows nothing about resource
+holding, so by itself it does \bad{not} prevent inversion. The correct method
+is \good{priority inheritance} (or the related priority-ceiling protocol).
+(PYQ-11)
+\end{example}
+
+\section{Starvation and aging}
+\key{Starvation} (indefinite blocking) is different from deadlock. A starved
+process is \emph{ready} to run and could run in principle, but it is
+\key{repeatedly passed over} by the scheduler, so it may wait for an
+unbounded time. A common case is a low-priority process in a strict priority
+system: as long as higher-priority processes keep arriving, the low-priority
+process never gets the CPU.
+
+The standard remedy for starvation is \key{aging}: the system gradually
+\key{raises the priority} of a process the longer it waits, so that eventually
+it becomes the highest-priority ready process and runs.
+
+\begin{definitionbox}{Starvation}
+A scheduling condition in which a ready process is indefinitely denied the
+resources it needs because other processes are repeatedly preferred.
+\end{definitionbox}
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Starvation} & \textbf{Deadlock} \\
+\midrule
+Can the process ever run? & Yes, in principle & No, not without outside action \\
+Cause & Scheduling choices (long wait) & A circular resource dependency \\
+Cure & Aging (raise priority with waiting time) & Detection + recovery (for example preemption) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Preemptive priority scheduling}
+In \key{priority scheduling}, the scheduler always picks the ready process with
+the \key{highest priority}. The scheme is \key{preemptive} when a process that
+is currently running can be \key{interrupted} as soon as a process with a
+higher priority becomes ready; the higher-priority process then runs. It is
+\key{non-preemptive} when the running process keeps the CPU until it either
+finishes or blocks for input/output. Preemptive priority scheduling gives
+quick service to important tasks, but with strict priorities it can starve
+low-priority tasks unless aging is added.
+
+\section{Real-time operating systems (RTOS)}
+An \key{RTOS} is a \key{Real-Time Operating System}. It is designed so that
+the system responds within a \key{bounded time}, allowing \key{deadlines} to be
+met. Correctness in a real-time system depends not only on the \emph{result}
+but also on \emph{when} the result is produced.
+
+\begin{definitionbox}{Real-time operating system (RTOS)}
+An operating system designed to process data and events within guaranteed
+time limits, so that deadline requirements are satisfied.
+\end{definitionbox}
+
+Real-time systems are classified by what happens when a deadline is missed. In
+a \key{hard real-time} system a missed deadline is a \bad{failure} and can have
+serious or catastrophic consequences. In a \key{soft real-time} system a
+missed deadline only \good{degrades} the quality of the result; the result is
+still useful. The trap is to think an RTOS is simply ``a very fast operating
+system''. Speed helps, but the defining property is \key{meeting deadlines}.
+
+\section{The Linux kernel}
+The \key{kernel} is the \key{core of the operating system}. It is the part
+that runs with full control of the hardware and provides the basic services
+every other program relies on. In Linux, the kernel manages
+\key{processes} (through the scheduler), \key{memory}, \key{devices} (through
+device drivers), and \key{file systems}.
+
+The kernel runs in a privileged mode called \key{kernel space}, while ordinary
+application programs run in \key{user space}. A user program asks the kernel
+for a service --- reading a file, for example --- through a \key{system call};
+the kernel performs the operation and returns the result. The Linux kernel is
+\key{open-source}: its source code can be viewed, modified, and shared.
+
+\begin{definitionbox}{Kernel}
+The central component of an operating system that manages the hardware
+resources (processes, memory, devices, and file systems) and mediates between
+applications and the hardware.
+\end{definitionbox}
+
+The \key{shell} is frequently confused with the kernel. The shell is the
+\emph{command interpreter} that a user types commands into; it is not the
+kernel. The shell passes the user's requests to the kernel, which does the
+actual work.
+
+\section{\texttt{/root} versus \texttt{/home}}
+Linux stores the personal files of each user in that user's \key{home
+directory}. The \key{superuser}, whose account name is \key{root}, has its
+home directory at \key{\texttt{/root}}. Ordinary users' home directories are
+normally placed under \key{\texttt{/home}}, for example
+\texttt{/home/alice}.
+
+It is important not to confuse two different things with similar names:
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Path} & \textbf{Meaning} \\
+\midrule
+\texttt{/} & The \key{root of the whole file system} --- the single top directory from which all other directories branch. \\
+\texttt{/root} & The \key{home directory of the root (superuser)} account. \\
+\texttt{/home} & The parent directory holding the home directories of \key{ordinary users}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The trap is to read ``\texttt{/root}'' as ``the root of the file system''. The
+top of the file system is \texttt{/} (a single slash). \texttt{/root} is only
+the superuser's own home folder.
+
+\section{File systems}
+A \key{file system} is the method an operating system uses to organise, store,
+and retrieve files and folders on a storage device. Different systems use
+different file systems.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.22\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{File system} & \textbf{Full form} & \textbf{Typical use} \\
+\midrule
+NTFS & New Technology File System & Default for modern Windows installations. \\
+FAT32 & File Allocation Table, 32-bit & Older system; widely compatible with small drives and memory cards. \\
+ext4 & Fourth Extended file system & Native and common default file system for Linux. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The exam cue is the pairing: \key{NTFS = Windows}, \key{ext4 = Linux}, and
+\key{FAT32 = broad compatibility}. Full forms are commonly asked directly.
+
+\section{Windows utilities: Store, WordPad/Notepad, Disk Cleanup}
+The \key{Windows Store} (now the \key{Microsoft Store}) is the built-in
+\key{online marketplace} in Windows. Users \key{search, download, install, and
+update} apps from it, so applications come from a trusted catalogue rather
+than from arbitrary websites.
+
+Windows includes two simple text editors that are easy to confuse.
+
+\begin{center}
+\begin{tabular}{p{0.14\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Notepad} & \textbf{WordPad} \\
+\midrule
+Text handling & \key{Plain text} only; no formatting & \key{Basic formatting}: bold, italic, fonts, colour \\
+Typical save & \texttt{.txt} & \texttt{.rtf} (rich text format) \\
+Capability & The smallest, fastest text editor & Can insert pictures and objects \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\key{Notepad} is a plain-text editor: it displays and saves characters without
+any formatting. \key{WordPad} supports \emph{basic} rich-text formatting and
+can include pictures, but it is still lighter than a full word processor such
+as MS Word.
+
+\key{Disk Cleanup} is a built-in Windows utility that \key{frees disk space}.
+It deletes files that are not needed, such as temporary files, thumbnail
+caches, downloaded program files, and the contents of the \key{Recycle Bin}.
+It is the tool to reach for when a drive is running short of free space.
+
+\section{Defragmenter and the SSD caution}
+On a traditional \key{hard disk drive (HDD)}, a file can become
+\key{fragmented}: its pieces are scattered in different places on the rotating
+disk, which makes reading slower. The \key{Disk Defragmenter} rearranges the
+pieces so that each file is stored \key{contiguously} (in one run), which
+improves access speed.
+
+\textbf{SSD caution.} A \key{solid-state drive (SSD)} has \key{no moving
+parts}. Defragmenting it gives no speed benefit and only adds
+\key{unnecessary writes}, which reduce the drive's working life. SSDs should
+\bad{not} be defragmented; Windows uses the \key{TRIM} command for SSDs
+instead.
+
+\begin{definitionbox}{Defragmentation}
+The process of rearranging the fragments of files on a hard disk so that each
+file occupies contiguous space, improving read performance.
+\end{definitionbox}
+
+\section{Imaging Fax and the \texttt{xcopy /s} command}
+\key{Windows Fax and Scan} is the built-in \key{imaging and fax} utility in
+Windows. With a scanner it can \key{scan} a document and save it as an image;
+with a fax modem or fax service it can \key{send and receive faxes}. This is
+the tool the exam means by ``Imaging Fax''.
+
+\key{xcopy} is a Windows \key{command-line} command that copies files and
+whole directory trees. Its switch \key{\texttt{/s}} copies the named directory
+\emph{including its subdirectories}, but it does not copy empty ones. Adding
+\key{\texttt{/e}} copies empty subdirectories as well. The exact form to
+remember is \key{\texttt{xcopy /s}}: ``copy with subdirectories''.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Command / tool} & \textbf{What it does} \\
+\midrule
+\texttt{xcopy /s} & Copies files and subdirectories (empty ones excluded). \\
+\texttt{xcopy /s /e} & Also copies empty subdirectories. \\
+Windows Fax and Scan & Scans documents and sends/receives faxes (Imaging Fax). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Exam retrieval and common confusions}
+Six distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item Deadlock's four conditions are mutual exclusion, hold and wait,
+    \key{no preemption}, and circular wait. \key{Preemption} is a
+    \key{recovery} method, not a condition (PYQ-10).
+  \item \key{Priority inversion} is the problem; \key{priority inheritance} is
+    the cure. Round-robin by itself does \bad{not} prevent inversion (PYQ-11).
+  \item \key{Starvation} is indefinite \emph{scheduling} delay, not deadlock;
+    \key{aging} fixes starvation.
+  \item An \key{RTOS} is defined by \key{meeting deadlines} (hard vs soft), not
+    merely by being fast.
+  \item The Linux \key{kernel} is the core; the \key{shell} is the command
+    interpreter. \texttt{/root} is the superuser's home; \texttt{/} is the top
+    of the file system; \texttt{/home} holds ordinary users' homes.
+  \item \key{Notepad} = plain text; \key{WordPad} = basic rich text. Disk
+    Cleanup frees space; \key{never defragment an SSD} (use TRIM);
+    \texttt{xcopy /s} copies subdirectories.
+\end{enumerate}
+
+\begin{example}[Tracing a mixed item]
+An item lists statements and asks which are true:
+(I) Preemption is one of the four necessary conditions for deadlock.
+(II) Priority inheritance reduces priority inversion.
+(III) Aging helps prevent starvation.
+Statement I is \bad{false}: preemption is a recovery method; the condition is
+\emph{no} preemption. Statements II and III are \good{true}. The answer is
+``II and III only''.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item List the four necessary conditions for deadlock, and name one method
+    of recovering from a deadlock.
+  \item Explain priority inversion and state which technique resolves it.
+  \item Distinguish starvation from deadlock, and name the standard remedy for
+    starvation.
+  \item What is an RTOS? Give the difference between a hard and a soft
+    real-time system.
+  \item State the meaning of \texttt{/root} and \texttt{/home} in Linux, and
+    name the default file system of Windows and of Linux.
+  \item Explain why an SSD should not be defragmented, and state what
+    \texttt{xcopy /s} does.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Mutual exclusion, hold and wait, no preemption, and circular wait. A
+    deadlock can be recovered from by resource preemption (taking a resource
+    away from one process and giving it to another).
+  \item Priority inversion is when a high-priority task waits because a
+    low-priority task holds a needed resource, while a medium-priority task
+    runs. \key{Priority inheritance} resolves it: the low-priority holder
+    temporarily inherits the high priority and releases the resource quickly.
+  \item A starved process is ready but repeatedly passed over, so it may wait
+    indefinitely; a deadlocked process can never proceed because of a circular
+    resource dependency. \key{Aging} --- gradually raising the waiting
+    process's priority --- prevents starvation.
+  \item An RTOS (Real-Time Operating System) guarantees a response within a
+    bounded time so deadlines are met. In a \key{hard} real-time system a
+    missed deadline is a failure; in a \key{soft} real-time system a missed
+    deadline only degrades quality.
+  \item \texttt{/root} is the home directory of the superuser (root);
+    \texttt{/home} holds the home directories of ordinary users. Windows uses
+    \key{NTFS}; Linux uses \key{ext4}.
+  \item An SSD has no moving parts, so defragmenting gives no speed benefit and
+    only adds wear; SSDs use \key{TRIM} instead. \texttt{xcopy /s} copies a
+    directory including its subdirectories, excluding empty ones.
+\end{enumerate}
+\endgroup
+\end{document}

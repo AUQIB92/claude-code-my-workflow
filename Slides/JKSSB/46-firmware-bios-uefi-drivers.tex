@@ -1,0 +1,262 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Firmware, BIOS, UEFI \& Drivers}
+\subtitle{Lesson 46 --- The Boot Firmware Layer}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is Firmware?}
+  \begin{itemize}
+    \item \key{Firmware} is a special kind of software stored in
+      \key{non-volatile} memory on the hardware itself.
+    \item It gives a device its basic, low-level startup instructions.
+    \item It runs \key{before} the operating system and starts the hardware.
+    \item Firmware is programmed into a read-only memory (ROM) or a flash
+      chip, not loaded from a file each time.
+  \end{itemize}
+  \begin{block}{The one idea}
+    Firmware sits between hardware and higher-level software; without it the
+    hardware does not know how to start.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Where Firmware Is Stored}
+  \begin{itemize}
+    \item Firmware is kept in \key{non-volatile} memory, so it survives when
+      the power is off.
+    \item Common locations: \key{ROM} (Read-Only Memory), PROM, EPROM, EEPROM,
+      and \key{flash} memory.
+    \item Because it is non-volatile, the startup instructions are ready the
+      moment the machine is switched on.
+    \item This is why a computer can begin working before any file is read
+      from disk.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Firmware lives in ROM/flash, \key{not} in RAM. RAM is volatile and is
+    empty at power-on.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{System Firmware: The BIOS}
+  \begin{itemize}
+    \item \key{BIOS} stands for \key{Basic Input/Output System}.
+    \item It is the firmware stored on the motherboard of a PC.
+    \item It runs \key{first} when the computer is switched on.
+    \item It \key{initialises the hardware} and then \key{loads the operating
+      system}.
+  \end{itemize}
+  \begin{block}{Exam fact}
+    The firmware that initialises hardware and loads the OS is the BIOS
+    (PYQ-28).
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Power-On Boot Sequence}
+  \begin{itemize}
+    \item The machine follows a fixed chain each time it starts:
+      \begin{enumerate}
+        \item Power on.
+        \item Firmware (\key{BIOS/UEFI}) runs.
+        \item Hardware initialisation and \key{POST}.
+        \item Firmware finds and loads the \key{operating system}.
+        \item The OS starts and loads \key{device drivers}.
+        \item \key{Application} programs run.
+      \end{enumerate}
+  \end{itemize}
+  \vspace{0.2cm}
+  \muted{power-on $\rightarrow$ firmware $\rightarrow$ initialisation
+  $\rightarrow$ OS $\rightarrow$ driver $\rightarrow$ application}
+\end{frame}
+
+\begin{frame}{POST: Power-On Self-Test}
+  \begin{itemize}
+    \item \key{POST} stands for \key{Power-On Self-Test}.
+    \item It is one of the first things the BIOS does after power-on.
+    \item It checks that key hardware (CPU, RAM, keyboard, disks) is present
+      and working.
+    \item If POST fails, the computer may beep or show an error instead of
+      booting.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    POST is a BIOS step and runs \key{before} the operating system, not
+    after it.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{What the BIOS Does}
+  \begin{itemize}
+    \item Runs the \key{POST} to test the basic hardware.
+    \item \key{Initialises} and configures the basic hardware.
+    \item Reads settings such as the \key{boot order}.
+    \item Finds the boot device and hands control to the \key{operating
+      system}.
+    \item Provides basic input/output services to the OS at an early stage.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{BIOS Setup and CMOS}
+  \begin{itemize}
+    \item BIOS settings --- date/time, boot order, passwords --- are stored in
+      a small battery-backed chip called \key{CMOS}.
+    \item The BIOS Setup utility is opened with a key during startup,
+      commonly \key{Del} or \key{F2}.
+    \item Keeping these settings on a battery-backed chip is why the clock
+      and boot order are remembered between sessions.
+  \end{itemize}
+  \vspace{0.2cm}
+  \muted{The exact setup key varies by manufacturer.}
+\end{frame}
+
+\begin{frame}{UEFI: The Modern Firmware}
+  \begin{itemize}
+    \item \key{UEFI} stands for \key{Unified Extensible Firmware Interface}.
+    \item It is the modern replacement for the legacy BIOS.
+    \item It starts the machine \key{faster}, supports large disks (GPT), and
+      offers a graphical setup utility.
+    \item It adds \key{Secure Boot}, which helps block unauthorised software
+      from loading at startup.
+  \end{itemize}
+  \begin{block}{For the exam}
+    The firmware that boots the machine may be called BIOS or UEFI depending
+    on the age of the system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{BIOS vs UEFI}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.40\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{BIOS} & \textbf{UEFI} \\
+      \midrule
+      Full form & Basic Input/Output System & Unified Extensible Firmware Interface \\
+      Age & Legacy (older) & Modern \\
+      Boot speed & Slower & Faster \\
+      Disk support & MBR (about 2 TB limit) & GPT (very large disks) \\
+      Interface & Mostly text-based & Graphical \\
+      Security & No Secure Boot & Secure Boot available \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Device Drivers}
+  \begin{itemize}
+    \item A \key{device driver} is \key{software} that lets the operating
+      system talk to a specific hardware device.
+    \item Each device --- printer, graphics card, network card --- needs its
+      own driver.
+    \item The driver translates general OS commands into device-specific
+      instructions.
+    \item Drivers are loaded \key{by the operating system}, not before it.
+  \end{itemize}
+  \begin{block}{Keep it straight}
+    A driver is software, \key{not} hardware, and it works \key{after} the OS
+    has started.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Drivers in the Boot Chain}
+  \begin{itemize}
+    \item Sequence: firmware boots, the \key{OS} starts, then the OS loads
+      the \key{drivers}.
+    \item \key{BIOS/UEFI} starts the machine; drivers run only once the OS is
+      running.
+    \item A driver is matched to the exact device and OS version.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The layer that first initialises hardware and loads the OS is
+    \key{BIOS/UEFI}, never the device driver (TRAP-24).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Firmware vs Driver vs Operating System}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.21\textwidth}p{0.20\textwidth}p{0.31\textwidth}}
+      \toprule
+      \textbf{Layer} & \textbf{Stored} & \textbf{Runs} & \textbf{Role} \\
+      \midrule
+      Firmware & On the hardware (ROM/flash) & First, at power-on & Starts the machine; loads the OS \\
+      Device driver & On disk, with the OS & After the OS starts & Talks to one device \\
+      Operating system & On disk & After firmware & Manages resources and the user interface \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Keep the three roles separate --- a favourite exam confusion.}
+\end{frame}
+
+\begin{frame}{Firmware Updates (Flashing)}
+  \begin{itemize}
+    \item A \key{firmware update} replaces the firmware stored on a device.
+    \item The process is commonly called \key{flashing}.
+    \item Updates fix bugs, add features, and patch security flaws.
+    \item Firmware updates are much \key{rarer} than ordinary software
+      updates.
+  \end{itemize}
+  \begin{block}{Best practice}
+    Always use the manufacturer's update for the exact model and keep a
+    stable power supply during the update.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Risks of a Firmware Update}
+  \begin{itemize}
+    \item Firmware is low-level, so a failed update can leave a device
+      unusable.
+    \item Interrupting power during flashing can ``brick'' the device.
+    \item Loading the \key{wrong firmware} for the model can damage it.
+  \end{itemize}
+  \begin{alertblock}{Warning}
+    Never switch off or restart the machine in the middle of a firmware
+    update.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Worked Example}
+  \begin{exampleblock}{A PC reports ``no boot device found''}
+    Follow the boot chain. The firmware (BIOS/UEFI) runs, then the POST
+    passes, then the firmware looks for a boot device. It cannot find the
+    operating system, so it stops and shows the message. The failing layer is
+    the \key{firmware/boot configuration}, not the application.
+  \end{exampleblock}
+  \vspace{0.2cm}
+  \muted{Walk the chain in order: firmware $\rightarrow$ POST $\rightarrow$ OS
+  $\rightarrow$ driver $\rightarrow$ application.}
+\end{frame}
+
+\begin{frame}{Trap Alert: Keep the Boot Roles Straight}
+  \begin{itemize}
+    \item Firmware that initialises hardware and loads the OS is
+      \key{BIOS/UEFI}, not a driver or kernel (TRAP-24, PYQ-28).
+    \item A \key{device driver} is software; the OS is system software
+      (TRAP-10).
+    \item Firmware is stored in ROM/flash (non-volatile); RAM is volatile.
+    \item \key{POST} runs before the OS, not after.
+    \item A driver is loaded \key{by the OS}, after the firmware.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 46: Recall}
+  \begin{itemize}
+    \item \key{Firmware} is software in non-volatile memory (ROM/flash) that
+      starts and controls hardware.
+    \item \key{BIOS} = Basic Input/Output System; it initialises hardware and
+      loads the OS.
+    \item \key{POST} = Power-On Self-Test, run by the BIOS before the OS.
+    \item \key{UEFI} = Unified Extensible Firmware Interface; the modern
+      firmware with fast boot, GPT, and Secure Boot.
+    \item The startup chain is power-on $\rightarrow$ firmware
+      $\rightarrow$ initialisation $\rightarrow$ OS $\rightarrow$ driver
+      $\rightarrow$ application.
+    \item A \key{device driver} is software loaded by the OS; firmware is not
+      a driver.
+    \item A firmware update is called \key{flashing}; interrupting it can
+      damage the device.
+  \end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,343 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{20.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Windows Explorer --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What Windows Explorer is}
+\textbf{Windows Explorer} is the file-management program built into the
+Windows operating system. Its job is to let the user see and manage
+everything stored on the computer: drives, folders, and files. In Windows 10
+and Windows 11 the same program is presented to the user as \textbf{File
+Explorer}. Internally it is the same program, whose executable file is
+\textbf{explorer.exe}. From one Explorer window a user can browse the entire
+tree of storage and perform the everyday operations of copying, moving,
+renaming, and deleting files.
+
+\begin{definitionbox}{Windows Explorer (File Explorer)}
+The file-management program of Windows that displays drives, folders, and
+files in a graphical window and lets the user copy, move, rename, and delete
+them. It is launched from the executable \texttt{explorer.exe}.
+\end{definitionbox}
+
+The main parts of the Explorer window are:
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Part} & \textbf{What it shows} \\
+\midrule
+Navigation pane & The tree of drives and folders on the left. \\
+Address bar & The full path of the folder that is currently open. \\
+File list & The files and subfolders inside the current folder. \\
+Ribbon / command bar & The tabs (New, Cut, Copy, Paste, Delete, View) for actions. \\
+Search box & Files found inside the current folder matching the typed text. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Drives, folders, subfolders, and files}
+Storage is organised as a tree. At the top is a \textbf{drive}, identified by
+a drive letter. The hard disk is usually \textbf{C:}, and a USB flash drive
+might appear as \textbf{E:} or \textbf{F:}. A drive contains
+\textbf{folders}. A folder (also called a \textbf{directory}) is a container
+that holds files and other folders. A folder placed inside another folder is
+a \textbf{subfolder}. A \textbf{file} is a single item of stored data --- a
+document, an image, a song, or a program.
+
+\begin{definitionbox}{Drive}
+A storage device or partition on which folders and files are kept, named by
+a drive letter such as \texttt{C:} or \texttt{E:}.
+\end{definitionbox}
+
+\begin{definitionbox}{Folder (directory)}
+A named container that holds files and other folders. A folder inside a
+folder is called a subfolder.
+\end{definitionbox}
+
+Because folders can hold subfolders, and those can hold more subfolders, the
+whole arrangement looks like an inverted tree --- the drive is the root, the
+folders are branches, and the files are the leaves. The top-most folder of a
+drive, directly under the drive letter, is called the \textbf{root folder}.
+
+\section{The file path}
+Every file and folder has one exact \textbf{path}: the address that tells
+Windows where it lives. The parts of a path are separated by a
+\textbf{backslash} (\verb|\|). For example:
+\[
+\texttt{C:\textbackslash Users\textbackslash Student\textbackslash
+Documents\textbackslash report.docx}
+\]
+Reading left to right, \texttt{C:} is the drive, \texttt{Users},
+\texttt{Student}, and \texttt{Documents} are the successive folders, and
+\texttt{report.docx} is the file name including its extension. The path is
+shown in the Explorer \textbf{address bar}, and the same information is given
+in a file's Properties as its \textbf{location}.
+
+\begin{definitionbox}{Path}
+The complete address of a file or folder, from the drive letter through the
+chain of folders to the item's own name, with parts separated by a backslash.
+\end{definitionbox}
+
+\section{File names and extensions}
+A file name normally has two parts joined by a dot: the \textbf{name} and the
+\textbf{extension}. In \texttt{report.docx}, \texttt{report} is the name and
+\texttt{.docx} is the extension. The extension tells Windows which program
+should open the file and what kind of data it holds. Common extensions
+include \texttt{.txt} for a text file, \texttt{.docx} for a Word document,
+\texttt{.xlsx} for an Excel workbook, \texttt{.pptx} for a PowerPoint
+presentation, \texttt{.pdf} for a portable document, \texttt{.jpg} for a
+photo, and \texttt{.exe} for a program.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.62\textwidth}}
+\toprule
+\textbf{Extension} & \textbf{Type of file / format} \\
+\midrule
+\texttt{.txt} & Plain text file \\
+\texttt{.docx} & Microsoft Word document \\
+\texttt{.xlsx} & Microsoft Excel workbook \\
+\texttt{.pptx} & Microsoft PowerPoint presentation \\
+\texttt{.pdf} & Portable Document Format \\
+\texttt{.jpg} & JPEG image \\
+\texttt{.exe} & Executable program \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Extension}
+The letters after the last dot in a file name (for example \texttt{.docx})
+that indicate the file's type and the program that opens it.
+\end{definitionbox}
+
+One common confusion is between an \emph{extension} and a \emph{format}. An
+extension is the label at the end of the name, such as \texttt{.png}; the
+format is the way the data is actually encoded, such as PNG. The two usually
+match, but the words name different things, so they should not be used as
+interchangeable (TRM-09, TRAP-34).
+
+\section{Hidden files and attributes}
+Every file and folder carries \textbf{attributes}: settings that tell Windows
+how to treat it. The common attributes are \textbf{Read-only}, \textbf{Hidden},
+\textbf{System}, and \textbf{Archive}. A \textbf{hidden file} or folder has
+the \textbf{Hidden} attribute set and is therefore not displayed by default.
+Windows hides important system files so that a user does not move or delete
+them by mistake. To display hidden items, open the \textbf{View} tab, choose
+\textbf{Show}, and then \textbf{Hidden items} (in Windows 10 and 11). In older
+versions the setting is reached through \textbf{Folder Options}.
+
+\begin{definitionbox}{File attribute}
+A property that controls how Windows treats a file or folder, such as
+Read-only, Hidden, System, or Archive.
+\end{definitionbox}
+
+\section{Properties}
+\textbf{Properties} is the dialog box that displays the details of a selected
+file, folder, or drive. It is opened by pressing \textbf{Alt}\,+\,
+\textbf{Enter} or by choosing \textbf{right-click $\rightarrow$ Properties}.
+For a file, Properties shows the type (format), the size, the date created,
+the date modified, the location (path), and the attributes. For a drive, it
+shows the total size, the used space, and the free space. Properties is a
+read-and-sometimes-edit view: changes to attributes may be made there, but
+the file's contents are not shown.
+
+\section{Selecting files}
+Before a file can be copied, moved, renamed, or deleted it must be selected.
+A single file is selected by clicking it once. A \textbf{contiguous range} of
+files is selected by clicking the first file, holding \textbf{Shift}, and
+clicking the last file. \textbf{Non-contiguous} files are selected by holding
+\textbf{Ctrl} and clicking each file in turn. All files in a folder are
+selected with \textbf{Ctrl}\,+\,\textbf{A}.
+
+\begin{center}
+\begin{tabular}{p{0.42\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Selection} & \textbf{Method} \\
+\midrule
+One file & Click once. \\
+A block of files in a row & Click the first, hold Shift, click the last. \\
+Separate files scattered in the list & Hold Ctrl and click each. \\
+Every file in the folder & Ctrl\,+\,A. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Copy}
+\textbf{Copy} makes a duplicate of the selected item while leaving the
+original where it is. The usual method is to press \textbf{Ctrl}\,+\,\textbf{C}
+to copy, open the destination folder, and press \textbf{Ctrl}\,+\,\textbf{V}
+to paste. The same steps can be done with \textbf{right-click $\rightarrow$
+Copy} followed by \textbf{Paste}. Holding \textbf{Ctrl} while dragging an
+item also copies it. The key point about copy is that after the operation
+there are \emph{two} copies: the original and the new one.
+
+\begin{example}
+A student copies \texttt{report.docx} from \texttt{Documents} to a USB drive.
+After pasting, the file exists in both places. The copy in
+\texttt{Documents} is unchanged, because Copy never removes the original.
+\end{example}
+
+\section{Move}
+\textbf{Move} shifts the selected item to a new location and removes it from
+the old one. The standard way is to \textbf{cut} with
+\textbf{Ctrl}\,+\,\textbf{X}, open the destination, and \textbf{paste} with
+\textbf{Ctrl}\,+\,\textbf{V}. Cut followed by Paste is therefore the standard
+move operation. Alternatively, dragging a file to a folder on the
+\textbf{same drive} moves it. Dragging to a folder on a \textbf{different
+drive} copies it instead, because Windows assumes you intend to transfer a
+copy between separate devices.
+
+\begin{definitionbox}{Move}
+Relocating a file or folder from one place to another so that it no longer
+exists at the old location. Cut\,+\,Paste performs a move.
+\end{definitionbox}
+
+\section{Rename}
+\textbf{Rename} changes only the \textbf{name} of a file or folder; its
+contents are untouched. The quickest method is to select the item and press
+\textbf{F2}, type the new name, and press \textbf{Enter}. The same command is
+available by right-clicking the item and choosing \textbf{Rename}. A warning
+worth remembering: changing the text after the dot can change the file's
+recognised type, so the extension should be left alone unless the type is
+genuinely being changed.
+
+\section{Delete and the Recycle Bin}
+Pressing the \textbf{Delete} key on a selected item moves it to the
+\textbf{Recycle Bin}. The Recycle Bin is a special folder that temporarily
+holds deleted items, giving the user a chance to recover them. An item in the
+Recycle Bin may be \textbf{restored} to its original location; the
+\textbf{Restore} command puts it back. Choosing \textbf{Empty Recycle Bin}
+deletes everything held in the Bin permanently.
+
+\begin{definitionbox}{Recycle Bin}
+A special Windows folder that temporarily stores files and folders deleted
+with the Delete key, so that they can be restored or removed permanently.
+\end{definitionbox}
+
+\section{Recycle Bin vs permanent deletion}
+An item deleted with \textbf{Delete} is recoverable, because it sits in the
+Recycle Bin until the Bin is emptied. Permanent deletion happens when the
+user presses \textbf{Shift}\,+\,\textbf{Delete}, when the Recycle Bin is
+emptied, or when an item is deleted from a \textbf{USB drive}, a
+\textbf{network drive}, or another location that does not use the Recycle
+Bin. Once deleted permanently, a file cannot be restored through the normal
+Windows interface.
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Recycle Bin (Delete)} & \textbf{Permanent deletion} \\
+\midrule
+Shortcut & Delete key & Shift\,+\,Delete \\
+Recoverable & Yes, can be restored & No, cannot be restored \\
+Stored where & Recycle Bin folder & Removed from the disk \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Permanent deletion does not mean the storage space is instantly overwritten;
+the freed space is simply marked as available for reuse. For exam purposes
+the distinction is the one that matters: Delete is recoverable, Shift+Delete
+is not.
+
+\section{Keyboard shortcuts and drag-and-drop}
+The following shortcuts are high-yield for the exam and should be memorised
+exactly.
+
+\begin{center}
+\begin{tabular}{p{0.40\textwidth}p{0.52\textwidth}}
+\toprule
+\textbf{Action} & \textbf{Shortcut} \\
+\midrule
+Copy & Ctrl\,+\,C \\
+Cut (move) & Ctrl\,+\,X \\
+Paste & Ctrl\,+\,V \\
+Undo & Ctrl\,+\,Z \\
+Select all & Ctrl\,+\,A \\
+Rename & F2 \\
+Refresh & F5 \\
+Properties & Alt\,+\,Enter \\
+New folder & Ctrl\,+\,Shift\,+\,N \\
+Delete to Recycle Bin & Delete \\
+Permanent delete & Shift\,+\,Delete \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Drag-and-drop follows a fixed rule. Dragging an item to a folder on the
+\textbf{same drive moves} it; dragging to a folder on a \textbf{different
+drive copies} it. Holding \textbf{Ctrl} while dragging always \textbf{copies},
+and holding \textbf{Shift} while dragging always \textbf{moves}, regardless
+of the drives involved.
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Copy} leaves the original in place; \textbf{move}
+    (Cut\,+\,Paste) removes it. Do not confuse the two.
+  \item The \textbf{Delete} key sends a file to the \textbf{Recycle Bin}; it
+    is not a permanent erase. \textbf{Shift\,+\,Delete} is the permanent
+    erase and bypasses the Bin.
+  \item Deleting from a \textbf{USB drive} or \textbf{network drive} bypasses
+    the Recycle Bin even when the plain Delete key is used.
+  \item An \textbf{extension} is the label after the dot (for example
+    \texttt{.png}); it is not the same as the \textbf{format} (PNG)
+    (TRM-09).
+  \item Same-drive drag \textbf{moves}; different-drive drag \textbf{copies}.
+    \textbf{Ctrl+drag} forces a copy; \textbf{Shift+drag} forces a move.
+\end{enumerate}
+
+\begin{example}
+An item asks where a file goes when the Delete key is pressed. Trace the rule:
+the Delete key moves the item to the Recycle Bin, from which it can still be
+restored. If the stem instead says the file must be removed so that it cannot
+be recovered, the required operation is Shift+Delete (or emptying the Recycle
+Bin), not the plain Delete key.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item What is Windows Explorer called in Windows 11, and what is the name
+    of its executable program?
+  \item Distinguish between a folder and a subfolder, and define a file path.
+  \item What is a file extension, and why is an extension not the same as a
+    file format?
+  \item Explain the difference between Copy and Move, and give the keyboard
+    shortcut for each.
+  \item A file is deleted with the Delete key. Can it be recovered? Explain,
+    and state one way to delete a file permanently.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item In Windows 11 it is called \textbf{File Explorer}. Its executable
+    program is \textbf{explorer.exe}.
+  \item A folder is a container that holds files and other folders; a folder
+    placed inside another folder is a subfolder. A path is the complete
+    address of a file or folder, from the drive letter through the chain of
+    folders to the item's own name, with parts separated by a backslash.
+  \item An extension is the letters after the last dot in a file name (for
+    example \texttt{.docx}) that indicate the file's type. It is not the same
+    as the format, because the extension is only the label at the end of the
+    name, while the format is the way the data is actually encoded.
+  \item \textbf{Copy} duplicates the item and leaves the original in place
+    (Ctrl\,+\,C, then Ctrl\,+\,V). \textbf{Move} relocates the item and
+    removes it from the old location (Ctrl\,+\,X, then Ctrl\,+\,V).
+  \item Yes, a file deleted with the Delete key can normally be recovered,
+    because it goes to the Recycle Bin and can be restored. It can be deleted
+    permanently with \textbf{Shift\,+\,$\boxed{\text{Delete}}$} (or by
+    emptying the Recycle Bin).
+\end{enumerate}
+\endgroup
+\end{document}

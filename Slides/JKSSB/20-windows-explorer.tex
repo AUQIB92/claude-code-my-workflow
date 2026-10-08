@@ -1,0 +1,271 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Windows Explorer}
+\subtitle{Lesson 20 --- Files, Paths and File Operations}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Windows Explorer Is}
+  \begin{itemize}
+    \item \key{Windows Explorer} is the file-management program of the Windows
+      operating system.
+    \item In Windows 10 and Windows 11 it is called \key{File Explorer}.
+    \item Its program file is \key{explorer.exe}.
+    \item It lets you browse drives, folders, and files, and perform
+      operations such as copy, move, rename, and delete.
+  \end{itemize}
+  \begin{block}{The one idea}
+    File Explorer is the window through which the user sees and manages all
+    the files stored on the computer.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Parts of the Window}
+  \begin{itemize}
+    \item \key{Navigation pane} (left): shows the tree of drives and folders.
+    \item \key{Address bar} (top): shows the full \key{path} of the current
+      folder.
+    \item \key{File list} (centre): shows the contents of the open folder.
+    \item \key{Ribbon / Command bar} (top): holds the tabs for actions such as
+      New, Cut, Copy, Paste, Delete, and View.
+    \item \key{Search box}: finds files inside the current folder.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Drives, Folders, Subfolders, Files}
+  \begin{itemize}
+    \item A \key{drive} is a storage location named by a drive letter, such as
+      \key{C:} (hard disk) or \key{E:} (USB drive).
+    \item A \key{folder} (also called a \key{directory}) is a container that
+      holds files and other folders.
+    \item A folder inside another folder is a \key{subfolder}.
+    \item A \key{file} is a single item of stored data, such as a document,
+      image, or program.
+  \end{itemize}
+  \begin{exampleblock}{Nesting}
+    A folder can contain subfolders, and each subfolder can contain more
+    subfolders --- this forms a tree of folders.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The File Path}
+  \begin{itemize}
+    \item A \key{path} is the complete address that tells Windows exactly
+      where a file or folder is located.
+    \item Parts are separated by a \key{backslash} (\textbackslash).
+    \item Example: \key{\texttt{C:\textbackslash Users\textbackslash
+      Student\textbackslash Documents\textbackslash report.docx}}
+    \begin{itemize}
+      \item \muted{\texttt{C:} is the drive}
+      \item \muted{\texttt{Users}, \texttt{Student}, \texttt{Documents} are
+        folders}
+      \item \muted{\texttt{report.docx} is the file name with extension}
+    \end{itemize}
+    \item The top-most folder of a drive is the \key{root folder}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{File Names and Extensions}
+  \begin{itemize}
+    \item A file name is written as \key{name.extension}, for example
+      \key{report.docx}.
+    \item The \key{extension} is the letters after the last dot; it tells
+      Windows which program opens the file and what \key{format} the data is
+      in.
+    \item Common extensions: \key{.txt} (text), \key{.docx} (Word document),
+      \key{.xlsx} (Excel workbook), \key{.pptx} (PowerPoint),
+      \key{.pdf} (portable document), \key{.jpg} (image), \key{.exe}
+      (program).
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    An \key{extension} is not the same as a \key{format}. \texttt{.png} is an
+    extension; PNG is the format (TRM-09, TRAP-34).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Hidden Files and File Attributes}
+  \begin{itemize}
+    \item Every file and folder has \key{attributes} --- properties that
+      control how Windows treats it.
+    \item The main attributes are \key{Read-only}, \key{Hidden},
+      \key{System}, and \key{Archive}.
+    \item A \key{hidden file} or folder has the \key{Hidden} attribute set, so
+      it is not shown by default.
+    \item To see hidden items: \key{View} tab $\rightarrow$ \key{Show}
+      $\rightarrow$ \key{Hidden items}.
+  \end{itemize}
+  \begin{block}{Why hidden files exist}
+    Windows marks important system files as hidden so that users do not move
+    or delete them by accident.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Properties}
+  \begin{itemize}
+    \item \key{Properties} show the details of a selected file, folder, or
+      drive.
+    \item Open them with \key{Alt\,+\,$\boxed{\text{Enter}}$} or by
+      \key{right-click $\rightarrow$ Properties}.
+    \item A file's Properties show its \key{type (format)}, \key{location
+      (path)}, \key{size}, \key{date created} and \key{date modified}, and its
+      \key{attributes}.
+    \item A drive's Properties show \key{used space} and \key{free space}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Selecting Files}
+  \begin{itemize}
+    \item \key{Single file}: click it once.
+    \item \key{Contiguous range}: click the first file, hold \key{Shift}, then
+      click the last file.
+    \item \key{Non-contiguous files}: hold \key{Ctrl} and click each file.
+    \item \key{All files}: \key{Ctrl\,+\,$\boxed{\text{A}}$}.
+  \end{itemize}
+  \begin{exampleblock}{Office desktop example}
+    To copy three separate invoices, hold \key{Ctrl} and click each one --- a
+    \key{Ctrl+click} adds a file to the current selection.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Copy}
+  \begin{itemize}
+    \item \key{Copy} makes a \key{duplicate} of the selected item; the
+      \key{original stays in place}.
+    \item Method 1: \key{Ctrl\,+\,$\boxed{\text{C}}$}, then open the
+      destination and press \key{Ctrl\,+\,$\boxed{\text{V}}$} (paste).
+    \item Method 2: right-click $\rightarrow$ \key{Copy}, then
+      \key{Paste} in the destination.
+    \item \key{Ctrl\,+\,$\boxed{\text{drag}}$} also copies, even within the
+      same drive.
+  \end{itemize}
+  \begin{alertblock}{Remember}
+    Copy leaves the original file untouched and creates a second copy.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Move}
+  \begin{itemize}
+    \item \key{Move} shifts the selected item to a new place; the
+      \key{original is removed} from the old location.
+    \item Fastest method: \key{Ctrl\,+\,$\boxed{\text{X}}$} (cut), open the
+      destination, then \key{Ctrl\,+\,$\boxed{\text{V}}$} (paste).
+    \item \key{Dragging} a file to another folder on the \key{same drive}
+      moves it.
+    \item Dragging to a folder on a \key{different drive} copies it.
+  \end{itemize}
+  \begin{exampleblock}{Cut is a move}
+    \key{Cut + Paste} is the standard way to move a file. Nothing is copied;
+    the file is relocated.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Rename}
+  \begin{itemize}
+    \item \key{Rename} changes only the \key{name} of a file or folder; the
+      contents are not changed.
+    \item Method 1: select the item and press \key{F2}, type the new name,
+      and press \key{Enter}.
+    \item Method 2: right-click $\rightarrow$ \key{Rename}.
+    \item Changing the part after the dot may change the file's
+      \muted{type}, so be careful with the extension.
+  \end{itemize}
+  \begin{alertblock}{Shortcut}
+    \key{F2} is the keyboard shortcut for Rename.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Delete and the Recycle Bin}
+  \begin{itemize}
+    \item Pressing the \key{Delete} key moves the selected item to the
+      \key{Recycle Bin}.
+    \item The \key{Recycle Bin} is a special folder that temporarily stores
+      deleted items.
+    \item An item in the Recycle Bin can be \key{restored} to its original
+      location with \key{Restore}.
+    \item \key{Empty Recycle Bin} deletes everything in it permanently.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Recycle Bin vs Permanent Deletion}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Recycle Bin (Delete)} & \textbf{Permanent deletion} \\
+      \midrule
+      Shortcut & \key{Delete} & \key{Shift\,+\,$\boxed{\text{Delete}}$} \\
+      Recoverable & Yes, restore possible & No, cannot be restored \\
+      Stored where & Recycle Bin folder & Removed from disk \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Permanent deletion can also happen by emptying the Recycle Bin or by
+  deleting from a USB drive or network drive, which bypasses the Bin.}
+\end{frame}
+
+\begin{frame}{Key Keyboard Shortcuts}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
+      \toprule
+      \textbf{Action} & \textbf{Shortcut} & \textbf{Action} \\
+      \midrule
+      Copy & \key{Ctrl\,+\,$\boxed{\text{C}}$} & \key{Ctrl\,+\,$\boxed{\text{A}}$} --- Select all \\
+      Cut (move) & \key{Ctrl\,+\,$\boxed{\text{X}}$} & \key{F2} --- Rename \\
+      Paste & \key{Ctrl\,+\,$\boxed{\text{V}}$} & \key{Delete} --- To Recycle Bin \\
+      Undo & \key{Ctrl\,+\,$\boxed{\text{Z}}$} & \key{Shift+Delete} --- Permanent delete \\
+      Properties & \key{Alt\,+\,$\boxed{\text{Enter}}$} & \key{F5} --- Refresh \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Drag-and-Drop Behaviour}
+  \begin{itemize}
+    \item \key{Drag} within the \key{same drive}: the file is \key{moved}.
+    \item \key{Drag} between \key{different drives}: the file is \key{copied}.
+    \item \key{Ctrl\,+\,$\boxed{\text{drag}}$}: always \key{copies}, even in
+      the same drive.
+    \item \key{Shift\,+\,$\boxed{\text{drag}}$}: always \key{moves}, even
+      across drives.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Same-drive drag \key{moves}; different-drive drag \key{copies}. Do not
+    reverse these two.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: File Operations to Keep Straight}
+  \begin{itemize}
+    \item \key{Copy} leaves the original; \key{move} (Cut + Paste) removes it.
+    \item The \key{Delete} key sends a file to the Recycle Bin; it does not
+      erase it at once.
+    \item \key{Shift\,+\,$\boxed{\text{Delete}}$} deletes permanently and
+      \key{bypasses} the Recycle Bin.
+    \item Deleting from a \key{USB drive} or \key{network drive} also bypasses
+      the Recycle Bin.
+    \item An \key{extension} is not the \key{format} (TRM-09).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 20: Recall}
+  \begin{itemize}
+    \item \key{Windows Explorer} (now \key{File Explorer}) is the Windows
+      file manager; its program is \key{explorer.exe}.
+    \item A \key{drive} holds \key{folders}; folders contain \key{subfolders}
+      and \key{files}; the \key{path} gives a file's full location.
+    \item The \key{extension} after the dot shows the file type; an extension
+      is not the same as a format.
+    \item \key{Hidden} is a file attribute; see hidden items via \key{View
+      $\rightarrow$ Show}.
+    \item \key{Ctrl+C} copy, \key{Ctrl+X} cut (move), \key{Ctrl+V} paste,
+      \key{F2} rename, \key{Alt+Enter} properties.
+    \item \key{Delete} sends to the Recycle Bin (restorable);
+      \key{Shift+Delete} deletes permanently.
+  \end{itemize}
+\end{frame}
+\end{document}

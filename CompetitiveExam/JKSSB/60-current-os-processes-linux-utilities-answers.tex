@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 60 Practice: Answers and Rationales}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{PYQ provenance:} Q1 adapts JKSSB Junior Assistant 2026 Q70
+(deadlock recovery by resource preemption) and Q3 adapts JA 2026 Q71
+(priority inversion/inheritance). The cited key is the official final key for
+JA 2026, and both adaptations are paraphrased, not verbatim.
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textbf{A.} Resource preemption recovers from deadlock by forcibly
+  taking a resource from one process and giving it to another, breaking the
+  cycle. B, C, and D are necessary \emph{conditions} for deadlock, not
+  recovery methods.
+\item \textbf{C.} The four necessary conditions are mutual exclusion, hold and
+  wait, \emph{no preemption}, and circular wait. ``Preemption'' is used to
+  \emph{recover} from deadlock, so it is not a condition. A, B, and D are
+  genuine conditions.
+\item \textbf{A.} A high-priority task waiting behind a low-priority holder
+  that is itself preempted by a medium-priority task is priority inversion. B
+  is the cure, not the problem; C requires a circular resource dependency; D
+  concerns memory, not priorities.
+\item \textbf{B.} Priority inheritance temporarily raises the holder to the
+  waiting task's priority so it releases the resource quickly. Time slicing
+  (A), spooling (C), and paging (D) do not address priority inversion.
+\item \textbf{C.} Round-robin gives each ready process a turn but ignores
+  resource holding, so by itself it does not prevent priority inversion.
+  Priority inheritance (A), the priority ceiling protocol (B), and priority
+  boosting (D) all address inversion.
+\item \textbf{A.} Being repeatedly passed over while others are served is
+  starvation. Deadlock (B) is a circular wait with no progress possible;
+  thrashing (C) is excessive paging; fragmentation (D) concerns memory or
+  disk layout.
+\item \textbf{A.} Aging gradually raises the priority of a long-waiting
+  process so it eventually runs. Swapping (B), spooling (C), and caching (D)
+  are unrelated storage techniques.
+\item \textbf{B.} Preemptive priority scheduling interrupts the running
+  process as soon as a higher-priority process becomes ready. A and C describe
+  non-preemptive behaviour; D is not a preemption trigger.
+\item \textbf{A.} RTOS expands to Real-Time Operating System, designed to meet
+  time deadlines. B, C, and D are incorrect expansions.
+\item \textbf{C.} Statements I and III are true. II is false: round-robin by
+  itself does not prevent priority inversion. A includes false II; B includes
+  II and omits I; D includes II.
+\item \textbf{A.} The core that manages processes, memory, devices, and file
+  systems is the Linux kernel. The shell (B) is the command interpreter; GNOME
+  (C) is a desktop environment; GRUB (D) is a bootloader.
+\item \textbf{A.} \texttt{/root} is the home directory of the superuser;
+  \texttt{/home} holds ordinary users' home directories. B reverses the two;
+  C mislabels \texttt{/root}; D mislabels \texttt{/home} as the top of the
+  file system (which is \texttt{/}).
+\item \textbf{B.} ext4 is the native, common default file system for Linux.
+  NTFS (A) is the Windows default; FAT32 (C) is used for broad compatibility;
+  exFAT (D) is a removable-media file system, not the Linux native default.
+\item \textbf{B.} NTFS is the default for modern Windows installations. ext4
+  (A) and ext3 (C) are Linux file systems; HFS+ (D) is an older Apple file
+  system.
+\item \textbf{C.} The Windows Store (Microsoft Store) is the built-in online
+  marketplace for downloading and installing apps. It is not a compression
+  tool (A), a defragmenter (B), or a Linux package manager (D).
+\item \textbf{B.} Notepad is a plain-text editor, while WordPad supports basic
+  rich-text formatting such as bold and fonts. A swaps them; C mislabels both
+  as spreadsheets; D is false, since WordPad can save files (for example in
+  \texttt{.rtf}).
+\item \textbf{A.} Disk Cleanup frees disk space by removing temporary files
+  and the Recycle Bin contents. The Defragmenter (B) rearranges file
+  fragments; Device Manager (C) manages hardware; Task Scheduler (D) runs
+  tasks on a schedule.
+\item \textbf{A.} An SSD has no moving parts, so defragmenting gives no speed
+  benefit and only adds write wear; Windows uses TRIM instead. B is
+  irrelevant to defragmentation; C is false (an SSD is non-volatile); D is
+  false.
+\item \textbf{A.} Windows Fax and Scan is the imaging and fax utility used to
+  scan documents and send or receive faxes. WordPad (B) is a text editor;
+  Disk Cleanup (C) frees space; the Windows Store (D) installs apps.
+\item \textbf{A.} \texttt{xcopy /s} copies the named directory including its
+  subdirectories, excluding empty ones. It does not delete files (B), rename a
+  file (C), or format a disk (D).
+\end{enumerate}
+\end{document}

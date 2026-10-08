@@ -1,0 +1,249 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Operating System}
+\subtitle{Lesson 19 --- Functions, Kernel and Management}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Defining the Operating System}
+  \begin{itemize}
+    \item An \key{operating system (OS)} is the main \key{system software} that
+      controls the whole computer.
+    \item It sits between the \key{user} and the \key{hardware}.
+    \item It makes the machine usable: without an OS, the hardware alone cannot
+      run application programs.
+    \item It starts the computer, runs programs, and manages every resource.
+  \end{itemize}
+  \begin{block}{The one idea}
+    The OS is the layer that provides a \key{user-friendly interface} so the
+    user can work without knowing the hardware details.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Two Jobs of an Operating System}
+  \begin{itemize}
+    \item \key{Interface}: it lets the user give instructions and receive
+      results in an easy way.
+    \item \key{Resource manager}: it shares the CPU, memory, storage, and
+      devices among all running programs.
+    \item Every other program depends on the OS to talk to the hardware.
+  \end{itemize}
+  \begin{block}{Interface and manager}
+    The OS is at once the friendly face of the computer and the manager of all
+    its resources.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Where the Operating System Lives}
+  \begin{itemize}
+    \item The OS is stored permanently in \key{secondary storage} (such as an
+      SSD or HDD).
+    \item At startup it is loaded into \key{primary storage} (main memory).
+    \item While the computer is running, the OS is \key{resident in primary
+      storage}.
+    \item It stays in main memory throughout the session so it can control the
+      machine instantly.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A running OS is in \key{primary storage} (main memory), not in secondary
+    storage and not on the CPU chip.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Core Functions at a Glance}
+  \begin{center}
+    \begin{tabular}{p{0.36\textwidth}p{0.54\textwidth}}
+      \toprule
+      \textbf{Function} & \textbf{What it controls} \\
+      \midrule
+      Process management & Creating, scheduling, and finishing running programs \\
+      Memory management & Allocating main memory to programs \\
+      File management & Creating, reading, writing, and deleting files \\
+      Device management & Driving input/output devices via drivers \\
+      Security & Logins, accounts, permissions, updates \\
+      User interface & GUI or CLI for user interaction \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{The Kernel}
+  \begin{itemize}
+    \item The \key{kernel} is the \key{core} of the operating system.
+    \item It is the part that interacts \key{directly with the hardware}.
+    \item It always stays in main memory while the computer runs.
+    \item It provides the most important services: process scheduling, memory
+      handling, and device control.
+  \end{itemize}
+  \begin{block}{Kernel}
+    The central, privileged part of the OS that manages hardware and provides
+    the services other software depends on.
+  \end{block}
+\end{frame}
+
+\begin{frame}{User Interfaces: GUI vs CLI}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}p{0.28\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{GUI} & \textbf{CLI} \\
+      \midrule
+      Full form & Graphical User Interface & Command Line Interface \\
+      Input & Clicks, icons, windows & Typed text commands \\
+      Ease & Easier for beginners & Needs commands to be known \\
+      Example & Windows desktop, icons & Command prompt, terminal \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{GUI = Graphical User Interface; CLI = Command Line Interface.}
+\end{frame}
+
+\begin{frame}{Booting the Computer}
+  \begin{itemize}
+    \item \key{Booting} is the process of starting the computer and loading
+      the operating system into main memory.
+    \item \key{Cold boot}: starting from the power-off state.
+    \item \key{Warm boot}: restarting a computer that is already on.
+    \item The firmware \key{BIOS/UEFI} first checks the hardware, then finds
+      and loads the OS from secondary storage.
+  \end{itemize}
+  \begin{block}{Who starts the boot}
+    BIOS/UEFI initialises the hardware and hands control to the operating
+    system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Process Management}
+  \begin{itemize}
+    \item A \key{process} is a program that is currently executing.
+    \item The OS creates processes, gives each a turn on the CPU, and removes
+      them when they finish.
+    \item \key{CPU scheduling} decides which process runs next and for how
+      long.
+    \item It also allows processes to communicate and protects them from each
+      other.
+  \end{itemize}
+  \begin{block}{Program vs process}
+    A program on disk is passive; once it is loaded and running it becomes an
+    active process.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Memory Management}
+  \begin{itemize}
+    \item The OS decides \key{how much main memory} each program gets.
+    \item It keeps one program's memory \key{separate} from another's.
+    \item It frees memory when a program ends, so it can be reused.
+    \item It may use \key{virtual memory} to give programs more space than the
+      physical RAM provides.
+  \end{itemize}
+  \begin{block}{Why it matters}
+    Without memory management, two programs could overwrite each other's data.
+  \end{block}
+\end{frame}
+
+\begin{frame}{File Management}
+  \begin{itemize}
+    \item The OS organises data into \key{files} and \key{folders}.
+    \item It handles creating, reading, writing, renaming, and deleting files.
+    \item It keeps a \key{directory} that records where each file is stored.
+    \item It controls \key{permissions}: who may open, change, or delete a
+      file.
+  \end{itemize}
+  \begin{block}{A file system}
+    The way the OS names, stores, and finds files on a storage device.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Device Management}
+  \begin{itemize}
+    \item The OS controls all \key{input/output devices}: keyboard, mouse,
+      printer, disk, and so on.
+    \item Each device talks to the OS through a \key{device driver}.
+    \item A device driver is \key{software}, not hardware.
+    \item \key{Spooling} lets the OS queue print jobs and feed the printer at
+      its own speed.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A device driver is \key{software}; the operating system itself is
+    \key{system software}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Multitasking and Time-Sharing}
+  \begin{itemize}
+    \item \key{Multitasking} means the OS runs \key{more than one program at a
+      time}.
+    \item The CPU switches between programs so quickly that they appear to run
+      together.
+    \item \key{Time-sharing} lets \key{many users} share one computer at the
+      same time, each getting a slice of CPU time.
+    \item Both rely on the OS \key{scheduler}.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    Multitasking = running more than one program at a time; time-sharing =
+    sharing one machine among several users.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Security, User Accounts and Updates}
+  \begin{itemize}
+    \item The OS provides \key{user accounts} with a username and password.
+    \item \key{Authentication} (login) verifies who is using the computer.
+    \item \key{Permissions} decide which files and settings each account may
+      use.
+    \item Regular system and software \key{updates} fix security holes and add
+      improvements.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Common Operating Systems}
+  \begin{itemize}
+    \item \key{Microsoft Windows}: widely used desktop and laptop OS.
+    \item \key{Linux}: an open-source OS family; Android is built on it.
+    \item \key{macOS}: Apple's desktop and laptop OS.
+    \item \key{Android} and \key{iOS}: mobile operating systems.
+  \end{itemize}
+  \muted{An application such as MS Word is not an operating system; it runs on
+  top of one.}
+\end{frame}
+
+\begin{frame}{Trap Alert: OS Facts to Keep Straight}
+  \begin{itemize}
+    \item The OS is \key{system software}, not application software. (TRAP-10)
+    \item While running, the OS is resident in \key{primary storage}
+      (main memory). (PYQ-22)
+    \item The OS gives a \key{user-friendly interface} between user and
+      hardware. (PYQ-21)
+    \item \key{Multitasking} = running more than one program at a time.
+      (PYQ-23)
+    \item \key{BIOS/UEFI} initialises hardware and loads the OS; it is not the
+      kernel or a device driver. (TRAP-24)
+    \item A device driver is \key{software}, not hardware. (TRAP-10)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 19: Recall}
+  \begin{itemize}
+    \item The OS is system software that provides a user-friendly interface
+      and manages all resources.
+    \item It is stored on secondary storage but is resident in \key{primary
+      storage} while running.
+    \item Core functions: process, memory, file, and device management, plus
+      security and the user interface.
+    \item The \key{kernel} is the core part that talks directly to hardware.
+    \item \key{GUI} = Graphical User Interface; \key{CLI} = Command Line
+      Interface.
+    \item \key{Booting} loads the OS; BIOS/UEFI starts the process.
+    \item \key{Multitasking} runs more than one program at a time;
+      \key{time-sharing} shares one machine among many users.
+    \item User accounts, authentication, permissions, and updates provide
+      security.
+  \end{itemize}
+\end{frame}
+\end{document}

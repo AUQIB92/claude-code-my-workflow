@@ -1,0 +1,404 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{46.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Firmware, BIOS, UEFI and Drivers --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{What firmware is}
+Every computer has two broad parts: the hardware, which is the physical
+circuitry, and the software, which is the set of instructions. Between them
+sits a special kind of software called \textbf{firmware}. Firmware is
+software that is stored in non-volatile memory on the hardware itself and
+that gives the device its basic, low-level instructions. It is not opened by
+the user like a word processor or a web browser; it is fixed in the device
+and runs by itself.
+
+Firmware runs \emph{before} the operating system. When a computer is switched
+on, its memory is empty and no program is running, so something must tell the
+hardware how to begin. That ``something'' is the firmware. It starts the
+hardware, checks it, and then hands control to the operating system.
+
+\begin{definitionbox}{Firmware}
+Software stored in non-volatile memory that is programmed into a hardware
+device and provides its basic, low-level startup and control instructions,
+running before the operating system.
+\end{definitionbox}
+
+Firmware is different from ordinary application software in three ways. It is
+stored on the device rather than installed like a program; it is tied closely
+to the exact hardware; and it starts the machine rather than being started by
+the user.
+
+\section{Where firmware is stored}
+Firmware must be available the instant the machine is switched on, so it is
+kept in \textbf{non-volatile} memory --- memory that keeps its contents
+without power. If firmware were stored in RAM, it would be lost the moment
+the power was switched off, and the machine could never start.
+
+Common homes for firmware are \textbf{ROM} (Read-Only Memory), \textbf{PROM}
+(Programmable ROM), \textbf{EPROM} (Erasable PROM), \textbf{EEPROM}
+(Electrically Erasable PROM), and \textbf{flash memory}. Flash memory is the
+modern choice because it can be erased and rewritten while still installed,
+which is what makes firmware updates possible.
+
+\begin{definitionbox}{Non-volatile memory}
+Memory that retains its contents when the power is removed. ROM, flash
+memory, an SSD, and an HDD are non-volatile. RAM is the common volatile
+memory.
+\end{definitionbox}
+
+The important contrast is with RAM. RAM is volatile and is empty at
+power-on; firmware is non-volatile and is present at power-on. A common wrong
+statement is that firmware is loaded into RAM before the machine starts --- in
+fact the firmware resides in ROM/flash and runs from there.
+
+It is worth naming the members of the ROM family, because exam papers often
+ask which memory type can be rewritten. \textbf{ROM} is programmed at the
+factory and cannot be changed. \textbf{PROM} (Programmable ROM) can be
+written once by the user. \textbf{EPROM} (Erasable PROM) can be erased with
+ultraviolet light and reprogrammed. \textbf{EEPROM} (Electrically Erasable
+PROM) can be erased and rewritten electrically. \textbf{Flash memory} is a
+fast, block-erasable form of EEPROM and is the type used for modern firmware,
+which is why firmware can be updated in place.
+
+\begin{example}
+An item states, ``The firmware of a modern PC is stored in RAM so that it can
+be updated.'': This is wrong on the first point. Firmware is stored in
+non-volatile ROM or flash memory, not in volatile RAM. Flash memory is what
+makes the firmware updatable, not RAM.
+\end{example}
+
+\section{Hardware, software, and firmware}
+It helps to place firmware among the three basic layers of a computer.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.36\textwidth}p{0.38\textwidth}}
+\toprule
+\textbf{Layer} & \textbf{What it is} & \textbf{Example} \\
+\midrule
+Hardware & The physical parts of the computer & Processor, motherboard, keyboard \\
+Firmware & Software fixed in non-volatile memory that controls the hardware & BIOS, UEFI \\
+Software & Programs that the user runs or that run on the OS & MS Word, a web browser \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Hardware is the body, software is the instruction set, and firmware is the
+low-level bridge that tells the hardware how to begin. Firmware is software
+by nature, but it is treated separately because it is stored on the device
+and is not installed or removed like an ordinary program.
+
+\section{Firmware on everyday devices}
+System firmware is not unique to computers. Many devices carry firmware that
+gives them their basic behaviour. A printer has firmware that controls
+printing; a Wi-Fi router has firmware that runs its networking; a smartphone
+has firmware plus an operating system; a modern television has firmware for
+its tuner and menu. Updating such a device usually means updating its
+firmware, again by flashing. This is why a firmware fix can repair a device
+without any change to the user's applications.
+
+\section{System firmware: the BIOS}
+On a personal computer, the most familiar firmware is the \textbf{BIOS},
+which stands for \textbf{Basic Input/Output System}. It is stored on a chip
+on the motherboard. When the computer is switched on, the BIOS runs first. It
+performs the power-on self-test, initialises the basic hardware, reads its
+settings, and then loads the operating system.
+
+The single most important exam fact on this topic is that the firmware which
+initialises the hardware and loads the operating system is the BIOS. This is
+directly tested (PYQ-28). The BIOS is sometimes confused with a device driver
+or with the kernel; neither of these loads the operating system. A device
+driver is loaded \emph{by} the operating system, and the kernel is part
+\emph{of} the operating system.
+
+\begin{definitionbox}{BIOS}
+The Basic Input/Output System: the system firmware on a PC motherboard that
+runs first at power-on, initialises the hardware, and loads the operating
+system.
+\end{definitionbox}
+
+\section{The power-on boot sequence}
+The machine follows a fixed chain each time it starts. Learning this chain
+makes the roles of firmware, the OS, and drivers easy to separate.
+
+\begin{enumerate}
+  \item \textbf{Power on.} Electrical power reaches the motherboard.
+  \item \textbf{Firmware runs.} The BIOS or UEFI begins executing from
+    ROM/flash.
+  \item \textbf{Hardware initialisation and POST.} The firmware tests and
+    configures the basic hardware.
+  \item \textbf{Operating system loads.} The firmware finds the boot device,
+    reads the bootloader, and hands control to the OS.
+  \item \textbf{Drivers load.} Once the OS is running, it loads the device
+    drivers it needs.
+  \item \textbf{Applications run.} User programs start on top of the OS.
+\end{enumerate}
+
+The chain can be written compactly as: power-on $\rightarrow$ firmware
+$\rightarrow$ initialisation $\rightarrow$ OS $\rightarrow$ driver
+$\rightarrow$ application. Any question that asks ``which comes first?'' is
+answered by walking this chain from left to right.
+
+The step in which the firmware hands control to the operating system is worth
+a little more detail. The firmware locates the boot device according to its
+configured boot order, reads a small program called the
+\textbf{bootloader}, and runs it. The bootloader then loads the main part of
+the operating system into memory. Under the legacy BIOS, the bootloader is
+found through the MBR (Master Boot Record); under UEFI it is found through
+the GPT (GUID Partition Table) scheme and a dedicated EFI system partition.
+
+\begin{definitionbox}{Bootloader}
+A small program that the firmware runs to load the operating system into
+memory and start it.
+\end{definitionbox}
+
+\section{Boot devices and boot order}
+The firmware does not decide by itself which device to start from. It follows
+the \textbf{boot order} stored in its settings: a list such as hard disk
+first, then optical drive, then USB. The firmware tries each device in turn
+until it finds one that can start the operating system. The boot order is the
+reason a machine can be made to start from a USB drive by moving that drive
+to the top of the list, and it is one of the first things a technician checks
+when a computer reports that no boot device is found.
+
+\begin{example}
+A computer is switched on and shows, ``No boot device found.'' Walking the
+chain helps: the firmware runs, the POST passes, and the firmware then looks
+through the boot order for a startable device. If the disk has failed or its
+entry has moved down the list, no operating system is found and the firmware
+stops with this message. The failing layer is the firmware's boot
+configuration or the boot disk, not the application software.
+\end{example}
+
+\section{POST: the power-on self-test}
+\textbf{POST} stands for \textbf{Power-On Self-Test}. It is one of the first
+things the BIOS does after power-on. During POST the firmware checks that the
+essential hardware --- CPU, RAM, keyboard, disk controller, and video --- is
+present and responding. If a component fails, the machine may beep in a code,
+show an error message, or refuse to continue.
+
+POST is a step \emph{inside} the firmware's work. It runs \emph{before} the
+operating system, not after it. A frequent trap is to place the POST after
+the OS has started; the correct order is firmware (including POST) first,
+then the OS.
+
+\begin{definitionbox}{POST}
+The Power-On Self-Test: the hardware check the BIOS runs at startup before
+loading the operating system.
+\end{definitionbox}
+
+\section{BIOS setup and CMOS}
+The BIOS keeps a small set of settings: the system date and time, the order
+in which the machine should look for a boot device, hardware options, and
+sometimes passwords. These settings are stored in a tiny battery-backed
+memory chip called \textbf{CMOS} (Complementary
+Metal-Oxide-Semiconductor). Because the chip is battery-backed, the clock
+and boot order are remembered between sessions, even when the main power is
+off.
+
+The BIOS Setup utility (sometimes called the CMOS setup) is opened by
+pressing a key during startup. That key is commonly \textbf{Del} or
+\textbf{F2}, but the exact key varies by manufacturer. Inside setup, the
+user can change the boot order, enable or disable built-in devices, and set
+passwords.
+
+\section{UEFI: the modern firmware}
+\textbf{UEFI} stands for \textbf{Unified Extensible Firmware Interface}. It
+is the modern replacement for the legacy BIOS and performs the same basic
+job: it starts the hardware and loads the operating system. UEFI adds
+several improvements.
+
+\begin{itemize}
+  \item It boots the machine \textbf{faster}.
+  \item It supports very large disks through the \textbf{GPT} (GUID
+    Partition Table) scheme, instead of the older MBR scheme with its
+    practical limit of about 2 TB.
+  \item It provides a \textbf{graphical} setup utility, often with mouse
+    support.
+  \item It offers \textbf{Secure Boot}, which helps prevent unauthorised
+    software from loading at startup.
+\end{itemize}
+
+For exam questions, remember that ``the firmware that boots the OS'' may be
+either BIOS or UEFI depending on the age of the system. Both initialise the
+hardware and load the operating system; they are firmware, never drivers.
+
+\section{BIOS versus UEFI}
+The two system-firmware generations can be compared on a few clear points.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.34\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Point} & \textbf{BIOS} & \textbf{UEFI} \\
+\midrule
+Full form & Basic Input/Output System & Unified Extensible Firmware Interface \\
+Age & Legacy (older) & Modern \\
+Boot speed & Slower & Faster \\
+Disk support & MBR (about 2 TB limit) & GPT (very large disks) \\
+Interface & Mostly text-based & Graphical \\
+Security & No Secure Boot & Secure Boot available \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Device drivers}
+A \textbf{device driver} is software that lets the operating system
+communicate with a specific hardware device. Each device --- a printer, a
+graphics card, a network card, a sound card --- needs its own driver, because
+a driver translates the general commands of the operating system into the
+particular instructions that one device understands.
+
+Drivers are loaded \textbf{by the operating system}, after the firmware has
+started the machine. They are matched to the exact device and the exact OS
+version. Because a driver is software, it is wrong to call it hardware, and
+because it is loaded by the OS, it is wrong to say that a driver initialises
+the hardware and loads the OS.
+
+\begin{definitionbox}{Device driver}
+Software that enables the operating system to communicate with a particular
+hardware device by translating general OS commands into device-specific
+instructions.
+\end{definitionbox}
+
+The three layers are easy to mix up, so keep their roles separate:
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.30\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Layer} & \textbf{Stored where} & \textbf{Role} \\
+\midrule
+Firmware (BIOS/UEFI) & On the hardware (ROM/flash) & Starts the machine; initialises hardware; loads the OS \\
+Device driver & With the OS, on disk & Talks to one specific device \\
+Operating system & On disk & Manages all resources and provides the user interface \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}
+A question asks, ``Which software initialises the hardware and loads the
+operating system?'' A device driver is offered as an option. This is the
+classic near-neighbour trap. The correct answer is the \textbf{BIOS/UEFI}
+firmware. A device driver cannot do this job: it is itself loaded by the OS,
+and it controls one device rather than starting the whole machine.
+\end{example}
+
+\section{Firmware, driver, OS, and kernel}
+Four terms are often mixed up because they all describe ``software close to
+the hardware''. Their roles are different, and the exam tests the
+differences.
+
+\begin{center}
+\begin{tabular}{p{0.15\textwidth}p{0.40\textwidth}p{0.35\textwidth}}
+\toprule
+\textbf{Term} & \textbf{What it does} & \textbf{When it runs} \\
+\midrule
+Firmware (BIOS/UEFI) & Initialises hardware and loads the OS & First, at power-on \\
+Kernel & The core of the OS; manages memory, processes, and devices & After the OS starts loading \\
+Device driver & Communicates with one specific device & After the OS is running \\
+Operating system & Manages all resources and provides the interface & After firmware, before applications \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The kernel is part of the operating system, not separate firmware. A driver
+is loaded by the OS once the kernel is running. Only firmware runs before the
+OS. If an item asks which layer ``starts the machine and loads the OS'', the
+answer must be firmware --- BIOS or UEFI --- and never a driver or the
+kernel.
+
+\section{Firmware updates and flashing}
+A \textbf{firmware update} replaces the firmware stored on a device with a
+newer version. The process is commonly called \textbf{flashing}, because the
+new firmware is written into flash memory. Updates are issued to fix bugs,
+add features, and patch security flaws.
+
+Firmware updates are much rarer than ordinary software updates, and they
+carry more risk. Firmware is low-level, so a failed update can leave a device
+unusable --- often described as ``bricking'' it. Interrupting the power
+during flashing, or loading the wrong firmware for the model, can damage the
+device permanently. For this reason the standard advice is to use only the
+manufacturer's update for the exact model and to keep a stable power supply
+throughout the update.
+
+\begin{example}
+A candidate reads, ``A firmware update is called formatting.'' This is wrong.
+Formatting prepares a storage volume for files; it does not rewrite firmware.
+The correct term for a firmware update is \textbf{flashing}.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+The following distinctions prevent most errors on this topic.
+
+\begin{enumerate}
+  \item Firmware that initialises hardware and loads the OS is
+    \textbf{BIOS/UEFI}, not a device driver or the kernel (TRAP-24, PYQ-28).
+  \item A \textbf{device driver} is \textbf{software}; the OS is system
+    software (TRAP-10).
+  \item Firmware is stored in \textbf{ROM/flash} and is non-volatile; RAM is
+    volatile and empty at power-on.
+  \item \textbf{POST} runs \textbf{before} the operating system, as part of
+    the firmware's startup work.
+  \item A driver is loaded \textbf{by the operating system}, after the
+    firmware has started the machine.
+  \item The startup order is power-on, firmware, initialisation, OS, driver,
+    application.
+  \item A firmware update is called \textbf{flashing}; interrupting it can
+    damage the device.
+\end{enumerate}
+
+\begin{example}
+An item asks which layer runs first when a computer is switched on. Trace the
+chain: firmware runs before the OS, and the OS runs before any driver, which
+runs before any application. The answer is the firmware (BIOS/UEFI). If the
+stem instead asks what tests the hardware at startup, the answer is the POST;
+if it asks what lets the OS talk to one device, the answer is the device
+driver.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define firmware and state where it is normally stored.
+  \item List the steps of the power-on boot sequence from power-on to
+    application.
+  \item Expand BIOS, UEFI, and POST, and give one role of each.
+  \item Distinguish firmware, a device driver, and an operating system.
+  \item What is a firmware update called, and what is the main risk during
+    one?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Firmware is software stored in non-volatile memory that gives a
+    device its basic, low-level startup and control instructions. It is
+    normally stored in ROM or flash memory on the hardware itself.
+  \item Power on $\rightarrow$ firmware (BIOS/UEFI) runs $\rightarrow$
+    hardware initialisation and POST $\rightarrow$ the operating system
+    loads $\rightarrow$ device drivers load $\rightarrow$ application
+    programs run.
+  \item BIOS = Basic Input/Output System: system firmware that initialises
+    hardware and loads the OS. UEFI = Unified Extensible Firmware Interface:
+    the modern firmware with fast boot, GPT disk support, and Secure Boot.
+    POST = Power-On Self-Test: the hardware check the BIOS runs at startup.
+  \item Firmware is stored on the hardware in ROM/flash and starts the
+    machine and loads the OS. A device driver is software loaded by the OS
+    that talks to one specific device. The operating system is the large
+    system-software layer that manages all resources and provides the user
+    interface.
+  \item A firmware update is called flashing. The main risk is that
+    interrupting the power during flashing, or using the wrong firmware, can
+    leave the device unusable.
+\end{enumerate}
+\endgroup
+\end{document}

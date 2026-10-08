@@ -1,0 +1,233 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Hardware, Software \& Firmware}
+\subtitle{Lesson 17 --- The Layered Computing Stack}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{What Is Hardware?}
+  \begin{itemize}
+    \item \key{Hardware} means the \key{physical, tangible} parts of a
+      computer --- the parts you can see and touch.
+    \item Examples: the CPU, motherboard, RAM, hard disk, keyboard, mouse,
+      monitor, and printer.
+    \item Hardware by itself does \muted{nothing useful}; it needs
+      instructions to operate.
+    \item It is the part of the system that physically \key{executes} work.
+  \end{itemize}
+  \begin{block}{Definition}
+    Hardware is the physical equipment of a computer system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Categories of Hardware}
+  \begin{center}
+    \begin{tabular}{p{0.26\textwidth}p{0.62\textwidth}}
+      \toprule
+      \textbf{Category} & \textbf{Examples} \\
+      \midrule
+      Input & Keyboard, mouse, scanner \\
+      Output & Monitor, printer, speaker \\
+      Processing & CPU, GPU \\
+      Memory & RAM, ROM, cache \\
+      Storage & Hard disk drive, solid-state drive \\
+      Communication & Network interface card, motherboard \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Every physical part of the machine belongs to one of these groups.}
+\end{frame}
+
+\begin{frame}{What Is Software?}
+  \begin{itemize}
+    \item \key{Software} is a set of \key{programs and instructions} that
+      tell the hardware what to do.
+    \item It is \key{intangible}: you cannot touch it.
+    \item It is stored on secondary storage and loaded into memory when it
+      runs.
+    \item Two broad kinds: \key{system software} and \key{application
+      software}.
+  \end{itemize}
+  \begin{block}{Definition}
+    Software is the collection of programs, procedures, and related data that
+    direct the operation of a computer.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Hardware vs Software}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Hardware} & \textbf{Software} \\
+      \midrule
+      Nature & Physical, tangible & Logical, intangible \\
+      Touched? & Yes & No \\
+      Role & Executes work & Gives instructions \\
+      Example & CPU, printer & MS Word, driver \\
+      Failure & Wears out, breaks & Bugs, corruption \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.15cm}
+  \muted{Both are needed: one without the other cannot run a computer.}
+\end{frame}
+
+\begin{frame}{System Software vs Application Software}
+  \begin{itemize}
+    \item \key{System software} runs and manages the computer itself: the
+      operating system, device drivers, and utilities.
+    \item \key{Application software} helps the user do a task: MS Word, a
+      browser, a game.
+    \item The \key{operating system} is \key{system software}. (PYQ-06)
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The operating system is system software, not application software.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{What Is Firmware?}
+  \begin{itemize}
+    \item \key{Firmware} is \key{software embedded in hardware}, stored in
+      \key{non-volatile} memory.
+    \item It is kept in ROM, EPROM, or flash memory inside the device.
+    \item It gives a device its \key{low-level control} instructions and
+      starts it up.
+    \item Examples: \key{BIOS/UEFI} on a PC, and the firmware inside a
+      printer, router, or keyboard.
+  \end{itemize}
+  \begin{block}{Definition}
+    Firmware is software permanently stored in a hardware device; it is
+    software by nature, hardware by storage.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Firmware vs Ordinary Software}
+  \begin{center}
+    \begin{tabular}{p{0.20\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Firmware} & \textbf{Software} \\
+      \midrule
+      Tied to & A specific device & General-purpose \\
+      Stored in & ROM / flash on the device & Secondary storage \\
+      Updated & Rarely, by flashing & Often, by install \\
+      Example & BIOS, printer firmware & MS Word, a driver \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.2cm}
+  \muted{Firmware is software locked to one device; ordinary software is
+  portable.}
+\end{frame}
+
+\begin{frame}{Device Driver}
+  \begin{itemize}
+    \item A \key{device driver} is a small \key{program} that lets the
+      operating system communicate with a piece of hardware.
+    \item It \key{translates} general OS commands into the signals a specific
+      device understands.
+    \item It is \key{software}, although it is tied to a hardware device.
+      (TRAP-10)
+    \item Example: a \key{printer driver} lets the OS print on a particular
+      printer model.
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A device driver is \key{software}, not hardware. (TRAP-10)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Humanware}
+  \begin{itemize}
+    \item \key{Humanware} (also called \key{peopleware}) means the
+      \key{people} who use and run the computer system.
+    \item It includes end users, programmers, system administrators, and
+      operators.
+    \item Hardware and software are useless without the human element.
+  \end{itemize}
+  \begin{block}{Definition}
+    Humanware is the human component of a computing system.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Layered Computing Stack}
+  \begin{center}
+    \begin{tabular}{p{0.30\textwidth}p{0.58\textwidth}}
+      \toprule
+      \textbf{Layer} & \textbf{Role} \\
+      \midrule
+      Hardware & The physical components \\
+      Firmware & Stored on the hardware; starts and controls it \\
+      Device driver & Lets the OS talk to the hardware \\
+      Operating system & Manages all resources and services \\
+      Application software & Lets the user do a task \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.15cm}
+  \muted{Each layer relies on the layer below it.}
+\end{frame}
+
+\begin{frame}{Reading the Stack}
+  \begin{itemize}
+    \item The stack runs from \key{hardware} at the bottom up to
+      \key{application software} at the top.
+    \item \muted{Order:} Hardware $\rightarrow$ Firmware $\rightarrow$
+      Device driver $\rightarrow$ Operating system $\rightarrow$
+      Application.
+    \item The \key{operating system} sits above the driver and firmware, and
+      below the applications.
+    \item A command from an application passes \key{down} the stack until it
+      reaches the hardware.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Classify Each Item}
+  \begin{itemize}
+    \item CPU $\rightarrow$ \key{hardware}.
+    \item Windows (an operating system) $\rightarrow$ \key{system software}.
+    \item A printer driver $\rightarrow$ \key{software}.
+    \item BIOS chip code $\rightarrow$ \key{firmware}.
+    \item MS Word $\rightarrow$ \key{application software}.
+    \item The person using the PC $\rightarrow$ \key{humanware}.
+  \end{itemize}
+  \begin{exampleblock}{Exam habit}
+    Ask first: is it physical? If not, is it a program tied to a device
+    (firmware), a helper for hardware (driver), or a user task (application)?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Hardware or Software?}
+  \begin{itemize}
+    \item A device driver is \key{software}, not hardware. (TRAP-10)
+    \item The operating system is \key{system software}, not application
+      software. (PYQ-06)
+    \item Firmware is \key{software} stored in non-volatile memory inside
+      hardware.
+    \item Humanware means \key{people}, not a physical device.
+  \end{itemize}
+  \begin{alertblock}{Remember}
+    Tangible $=$ hardware. Instructions and programs $=$ software.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 17: Recall}
+  \begin{itemize}
+    \item Hardware is the physical equipment; software is the set of programs
+      and instructions.
+    \item System software manages the machine; application software does user
+      tasks. The operating system is system software.
+    \item Firmware is software embedded in hardware and stored in
+      non-volatile memory, such as the BIOS.
+    \item A device driver is software that lets the OS communicate with
+      hardware.
+    \item Humanware (peopleware) is the human component of the system.
+    \item The stack, bottom to top: Hardware $\rightarrow$ Firmware $\rightarrow$
+      Device driver $\rightarrow$ Operating system $\rightarrow$ Application.
+  \end{itemize}
+\end{frame}
+\end{document}

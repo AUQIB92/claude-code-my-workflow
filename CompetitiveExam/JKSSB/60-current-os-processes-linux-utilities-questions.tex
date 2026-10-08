@@ -1,0 +1,194 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 60 Practice: Current OS, Processes, Linux and Utilities}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 18 original JKSSB-pattern questions
+(\textit{[Original]}) and two paraphrased adaptations of the JKSSB Junior
+Assistant 2026 computer block (Q70 deadlock recovery by resource preemption,
+and Q71 priority inversion/inheritance; final key). The adaptations at Q1 and
+Q3 are reworded, not verbatim reproductions; no item in this set reproduces an
+official paper item verbatim.
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q70; final key;
+  paraphrased]} A system is in a deadlock. Which method recovers from the
+  deadlock by taking a resource away from one process and giving it to
+  another?
+  \begin{enumerate}[label=\Alph*.]
+    \item Resource preemption
+    \item Mutual exclusion
+    \item Hold and wait
+    \item Circular wait
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} one of the
+  four necessary conditions for deadlock?
+  \begin{enumerate}[label=\Alph*.]
+    \item Mutual exclusion
+    \item Hold and wait
+    \item Preemption
+    \item Circular wait
+  \end{enumerate}
+\item \textit{[PYQ-adapted: JKSSB Junior Assistant 2026 Q71; final key;
+  paraphrased]} A low-priority task holds a resource that a high-priority
+  task needs, and meanwhile a medium-priority task preempts the low-priority
+  task and runs. This situation is called:
+  \begin{enumerate}[label=\Alph*.]
+    \item priority inversion
+    \item priority inheritance
+    \item deadlock
+    \item fragmentation
+  \end{enumerate}
+\item \textit{[Original]} Which technique resolves priority inversion by
+  temporarily raising the priority of the task that holds the needed
+  resource?
+  \begin{enumerate}[label=\Alph*.]
+    \item Time slicing
+    \item Priority inheritance
+    \item Spooling
+    \item Paging
+  \end{enumerate}
+\item \textit{[Original]} Which of the following does \textbf{NOT} by itself
+  prevent priority inversion?
+  \begin{enumerate}[label=\Alph*.]
+    \item Priority inheritance
+    \item Priority ceiling protocol
+    \item Round-robin scheduling
+    \item Priority boosting
+  \end{enumerate}
+\item \textit{[Original]} A ready process is repeatedly passed over and waits
+  for an indefinite time because higher-priority processes keep arriving.
+  This condition is called:
+  \begin{enumerate}[label=\Alph*.]
+    \item starvation
+    \item deadlock
+    \item thrashing
+    \item fragmentation
+  \end{enumerate}
+\item \textit{[Original]} Which scheduling technique gradually increases the
+  priority of a long-waiting process so that it eventually runs?
+  \begin{enumerate}[label=\Alph*.]
+    \item Aging
+    \item Swapping
+    \item Spooling
+    \item Caching
+  \end{enumerate}
+\item \textit{[Original]} In preemptive priority scheduling, the CPU is taken
+  away from the running process when:
+  \begin{enumerate}[label=\Alph*.]
+    \item the running process finishes only.
+    \item a process with a higher priority becomes ready.
+    \item the running process performs an input/output operation only.
+    \item the running process requests more memory only.
+  \end{enumerate}
+\item \textit{[Original]} Expand RTOS.
+  \begin{enumerate}[label=\Alph*.]
+    \item Real-Time Operating System
+    \item Rapid Task Operating System
+    \item Remote Terminal Operating System
+    \item Read-Only Operating System
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item In priority inheritance, a low-priority task holding a needed
+      resource temporarily inherits the priority of the high-priority task
+      waiting for it.
+    \item Round-robin scheduling by itself prevents priority inversion.
+    \item Starvation means a process may wait indefinitely while other
+      processes are repeatedly served.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and II only
+    \item II and III only
+    \item I and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} The core part of the Linux operating system, which
+  manages processes, memory, and devices, is called the:
+  \begin{enumerate}[label=\Alph*.]
+    \item Linux kernel
+    \item Linux shell
+    \item GNOME desktop
+    \item GRUB bootloader
+  \end{enumerate}
+\item \textit{[Original]} In Linux, which pairing of a directory with its
+  purpose is correct?
+  \begin{enumerate}[label=\Alph*.]
+    \item \texttt{/root} --- the home directory of the superuser (root user)
+    \item \texttt{/home} --- the home directory of the superuser
+    \item \texttt{/root} --- the home directories of ordinary users
+    \item \texttt{/home} --- the root of the whole file system
+  \end{enumerate}
+\item \textit{[Original]} Which file system is native to Linux and is commonly
+  its default?
+  \begin{enumerate}[label=\Alph*.]
+    \item NTFS
+    \item ext4
+    \item FAT32
+    \item exFAT
+  \end{enumerate}
+\item \textit{[Original]} Which file system is the default for modern Windows
+  installations?
+  \begin{enumerate}[label=\Alph*.]
+    \item ext4
+    \item NTFS
+    \item ext3
+    \item HFS+
+  \end{enumerate}
+\item \textit{[Original]} What is the Windows Store (Microsoft Store)?
+  \begin{enumerate}[label=\Alph*.]
+    \item A file compression utility
+    \item A disk defragmentation tool
+    \item An online marketplace used to download and install apps for Windows
+    \item A Linux package manager
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly contrasts Notepad and
+  WordPad?
+  \begin{enumerate}[label=\Alph*.]
+    \item Notepad supports rich text formatting, while WordPad is plain text
+      only.
+    \item Notepad is a plain-text editor, while WordPad supports basic
+      formatting such as bold and font styles.
+    \item Both are spreadsheet programs.
+    \item WordPad cannot save a file in any format.
+  \end{enumerate}
+\item \textit{[Original]} Which built-in Windows utility deletes unnecessary
+  files such as temporary files and the Recycle Bin contents to free disk
+  space?
+  \begin{enumerate}[label=\Alph*.]
+    \item Disk Cleanup
+    \item Disk Defragmenter
+    \item Device Manager
+    \item Task Scheduler
+  \end{enumerate}
+\item \textit{[Original]} Why should a solid-state drive (SSD) generally
+  \textbf{NOT} be defragmented?
+  \begin{enumerate}[label=\Alph*.]
+    \item It has no moving parts, so defragmenting gives no speed benefit and
+      only adds unnecessary write wear; TRIM is used instead.
+    \item It is faster than RAM and does not need any maintenance.
+    \item It is volatile and loses data when defragmented.
+    \item It stores data only in RAM.
+  \end{enumerate}
+\item \textit{[Original]} Which Windows utility is used to scan documents and
+  send or receive faxes (the imaging and fax tool)?
+  \begin{enumerate}[label=\Alph*.]
+    \item Windows Fax and Scan
+    \item WordPad
+    \item Disk Cleanup
+    \item Windows Store
+  \end{enumerate}
+\item \textit{[Original]} What does the command \texttt{xcopy /s} do?
+  \begin{enumerate}[label=\Alph*.]
+    \item Copies files and subdirectories, but excludes empty ones.
+    \item Deletes files and subdirectories permanently.
+    \item Renames a single file only.
+    \item Formats a disk.
+  \end{enumerate}
+\end{enumerate}
+\end{document}

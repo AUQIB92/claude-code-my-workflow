@@ -1,0 +1,233 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{OS PYQ Traps \& System Utilities}
+\subtitle{Lesson 52 --- Resolving the Classic OS Traps}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{This Lesson Is a Trap Drill}
+  \begin{itemize}
+    \item The computer section of JKSSB papers reuses a small set of
+      \key{near-neighbour} terms.
+    \item A wrong option is usually not random --- it is the \key{closest
+      confusion} to the right answer.
+    \item In this lesson every question is built around one of those real
+      trap patterns.
+    \item \key{Read each option as a claim to be tested}, not merely as a
+      phrase to recognise.
+    \item \muted{Keep one fact per line and preserve the exact English term.}
+  \end{itemize}
+  \begin{alertblock}{Trap drill}
+    The wrong option is usually the ``sounds right'' neighbour --- check the
+    exact wording before you choose.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Operating System: What It Is}
+  \begin{itemize}
+    \item The \key{operating system (OS)} is \key{system software}.
+    \item It provides a \key{user-friendly interface} between the user and
+      the hardware (PYQ-21).
+    \item It manages hardware resources: processor, memory, storage, and
+      input/output devices.
+    \item It provides services to application programs.
+    \item \muted{Examples: Windows, Linux, UNIX, MS-DOS, Android, macOS.}
+  \end{itemize}
+  \begin{block}{Definition}
+    The OS is the system software that controls the hardware and offers a
+    user interface and services to programs.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Where the OS Lives While Running}
+  \begin{itemize}
+    \item An OS is stored permanently on \key{secondary storage} (the disk).
+    \item While the computer is \key{running}, the OS is loaded into
+      \key{primary memory (RAM)} (PYQ-22).
+    \item The CPU can execute OS code only from main memory.
+    \item \muted{Power off clears RAM; the OS is reloaded from disk at the
+      next boot.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    The OS is not executed from secondary storage. At run time it resides in
+    primary memory.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Three Software Categories}
+  \begin{center}
+    \begin{tabular}{p{0.24\textwidth}p{0.34\textwidth}p{0.32\textwidth}}
+      \toprule
+      \textbf{Category} & \textbf{Role} & \textbf{Examples} \\
+      \midrule
+      System software & Runs and manages the machine & OS, device drivers, utility programs, translators \\
+      Application software & Does a user's task & MS Word, Excel, a browser \\
+      Utility software & Maintains and optimises the system & Disk Cleanup, Disk Defragmenter, antivirus \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Utility software is a maintenance category closely tied to system
+  software.}
+\end{frame}
+
+\begin{frame}{Device Drivers Are Software}
+  \begin{itemize}
+    \item A \key{device driver} is a small \key{software program} that lets
+      the OS talk to a specific hardware device.
+    \item It translates OS commands into device-specific instructions.
+    \item Every device --- printer, keyboard, graphics card --- needs a
+      matching driver.
+    \item \muted{The driver is software; the device it controls is
+      hardware.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A device driver is \key{software}, not hardware (TRAP-10). The OS itself
+    is \key{system software}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{DMA: Transferring Data Without the CPU}
+  \begin{itemize}
+    \item \key{DMA} stands for \key{Direct Memory Access}.
+    \item A DMA controller transfers data directly between an \key{I/O
+      device} and \key{main memory}.
+    \item The CPU does \key{not} handle each individual byte of the transfer
+      --- it is bypassed.
+    \item The CPU starts the transfer and is notified (by interrupt) when it
+      finishes.
+    \item This frees the CPU for other work and speeds up bulk transfers.
+  \end{itemize}
+  \begin{block}{Definition}
+    DMA is a method in which a controller moves data between a device and
+    main memory without the CPU's continuous involvement.
+  \end{block}
+\end{frame}
+
+\begin{frame}{DMA Trap Alert}
+  \begin{itemize}
+    \item DMA moves data between \key{an I/O device and main memory}, not
+      between the CPU and the device.
+    \item The CPU is \key{bypassed} during the transfer, not made faster.
+    \item DMA does \key{not} increase RAM size and does not encrypt data.
+    \item \muted{The CPU still initiates and completes the transfer.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    ``DMA = the CPU does the copying faster'' is wrong. DMA removes the CPU
+    from the per-byte copying.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{RTOS: Real-Time Operating System}
+  \begin{itemize}
+    \item \key{RTOS} stands for \key{Real-Time Operating System}.
+    \item It is designed so that tasks finish within \key{fixed time
+      deadlines}.
+    \item It is used in embedded and control systems: machinery, medical
+      devices, vehicle electronics.
+    \item \muted{Chosen for timing guarantees, not for word processing or
+      graphics design.}
+  \end{itemize}
+  \begin{block}{Definition}
+    An RTOS is an operating system that guarantees a response within a
+    bounded time.
+  \end{block}
+\end{frame}
+
+\begin{frame}{DOS, UNIX, and Linux Distributions}
+  \begin{itemize}
+    \item \key{DOS} = \key{Disk Operating System}; a command-line OS
+      (MS-DOS).
+    \item \key{UNIX} is a multi-user, multitasking operating system.
+    \item \key{Linux} is an open-source, UNIX-like OS; it comes in
+      \key{distributions}.
+    \item Common Linux distributions: \key{Ubuntu}, \key{Fedora},
+      \key{Debian}, \key{Linux Mint}.
+    \item \muted{Windows and macOS are operating systems too, but they are
+      not Linux distributions.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Exact OS Recognition}
+  \begin{itemize}
+    \item Ask first: does the option actually name an \key{operating
+      system}?
+    \item Operating systems: \key{Windows}, \key{Linux}, \key{UNIX},
+      \key{MS-DOS}, \key{Android}, \key{macOS}.
+    \item \key{Not} operating systems: MS Word, MS Excel, MS Access,
+      Chrome, Firefox --- these are applications.
+    \item \muted{MS Access is a database application, not an operating
+      system.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    A familiar brand name alone does not make a system an OS --- check
+    whether it is system software.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Internal vs External Hardware}
+  \begin{center}
+    \begin{tabular}{p{0.22\textwidth}p{0.30\textwidth}p{0.38\textwidth}}
+      \toprule
+      \textbf{Location} & \textbf{Meaning} & \textbf{Examples} \\
+      \midrule
+      Internal & Inside the system unit / cabinet & motherboard, CPU, RAM, hard disk \\
+      External (peripheral) & Outside the system unit, joined by ports & monitor, keyboard, mouse, printer, scanner \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{The classification depends on position relative to the system unit.}
+\end{frame}
+
+\begin{frame}{The Windows Run Box and \texttt{winword}}
+  \begin{itemize}
+    \item The Windows \key{Run} box (Windows + R) starts a program when you
+      type its command.
+    \item Typing \key{\texttt{winword}} opens \key{MS Word}.
+    \item \key{\texttt{notepad}} opens Notepad; \key{\texttt{wordpad}} opens
+      WordPad.
+    \item \key{\texttt{cmd}} opens the Command Prompt.
+    \item \muted{Match the exact command to the exact program.}
+  \end{itemize}
+  \begin{alertblock}{Trap alert}
+    \texttt{winword} = MS Word. Do not confuse it with \texttt{wordpad} (a
+    different editor) or \texttt{notepad}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Trap Alert: Terms to Keep Straight}
+  \begin{itemize}
+    \item Device driver = \key{software}; OS = \key{system software}
+      (TRAP-10).
+    \item DMA moves data between a device and main memory, \key{bypassing
+      the CPU}.
+    \item RTOS = \key{Real-Time Operating System} (deadline-driven).
+    \item Utility = maintenance software; application = the user's task.
+    \item Linux distributions: Ubuntu, Fedora, Debian; \key{MS Access is
+      not an OS}.
+    \item \texttt{winword} opens MS Word.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson 52: Recall}
+  \begin{itemize}
+    \item The OS is system software; it provides a user interface, manages
+      resources, and runs from primary memory.
+    \item Software categories: system, application, and utility.
+    \item A device driver is \key{software}; the OS is \key{system
+      software}.
+    \item DMA = Direct Memory Access; data moves between device and main
+      memory with the CPU bypassed.
+    \item RTOS = Real-Time Operating System.
+    \item DOS = Disk Operating System; Linux distributions include Ubuntu,
+      Fedora, and Debian.
+    \item Internal vs external hardware; \texttt{winword} opens MS Word.
+  \end{itemize}
+\end{frame}
+\end{document}

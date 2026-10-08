@@ -117,15 +117,15 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
 |---|--------|:---:|:---:|:---:|
-| 17 | Hardware, Software & Firmware — hardware, software, firmware, driver, humanware | `17-hardware-software-firmware` [ ] | [ ] | [ ] |
-| 18 | Software Categories — system/application/utility/programming/embedded/middleware; proprietary/open-source/freeware/free/public-domain/commercial | `18-software-categories` [ ] | [ ] | [ ] |
-| 19 | Operating System — kernel, GUI/CLI, boot, process/memory/file/device management, multitasking/time-sharing | `19-operating-system` [ ] | [ ] | [ ] |
-| 20 | Windows Explorer — drives, folders, paths, extensions, hidden files, copy/move/delete, Recycle Bin | `20-windows-explorer` [ ] | [ ] | [ ] |
-| 21 | Keyboard Shortcuts — high-yield Ctrl/Alt/Shift/Function-key combinations | `21-keyboard-shortcuts` [ ] | [ ] | [ ] |
-| 45 | Open Source — source code, open source vs proprietary, freeware/free software/public domain/commercial | `45-open-source` [ ] | [ ] | [ ] |
-| 46 | Firmware, BIOS, UEFI & Drivers — firmware, BIOS, UEFI, device drivers | `46-firmware-bios-uefi-drivers` [ ] | [ ] | [ ] |
-| 52 | OS PYQ Traps & System Utilities — device driver as software, DMA/CPU bypass, RTOS, system vs application vs utility, DOS/UNIX/Linux distros, internal vs external hardware, `Winword`/Run, exact OS recognition | `52-os-pyq-traps-system-utilities` [ ] | [ ] | [ ] |
-| 60 | Current OS, Processes, Linux & Utilities — deadlock recovery by preemption, priority inversion/inheritance, starvation, preemptive priority scheduling, RTOS, Linux kernel, `/root` vs `/home`, file systems, Windows Store, WordPad vs Notepad, Disk Cleanup, Defragmenter + SSD caution, Imaging Fax, `xcopy /s` | `60-current-os-processes-linux-utilities` [ ] | [ ] | [ ] |
+| 17 | Hardware, Software & Firmware — hardware, software, firmware, driver, humanware | `17-hardware-software-firmware` [x] | [x] | [x] |
+| 18 | Software Categories — system/application/utility/programming/embedded/middleware; proprietary/open-source/freeware/free/public-domain/commercial | `18-software-categories` [x] | [x] | [x] |
+| 19 | Operating System — kernel, GUI/CLI, boot, process/memory/file/device management, multitasking/time-sharing | `19-operating-system` [x] | [x] | [x] |
+| 20 | Windows Explorer — drives, folders, paths, extensions, hidden files, copy/move/delete, Recycle Bin | `20-windows-explorer` [x] | [x] | [x] |
+| 21 | Keyboard Shortcuts — high-yield Ctrl/Alt/Shift/Function-key combinations | `21-keyboard-shortcuts` [x] | [x] | [x] |
+| 45 | Open Source — source code, open source vs proprietary, freeware/free software/public domain/commercial | `45-open-source` [x] | [x] | [x] |
+| 46 | Firmware, BIOS, UEFI & Drivers — firmware, BIOS, UEFI, device drivers | `46-firmware-bios-uefi-drivers` [x] | [x] | [x] |
+| 52 | OS PYQ Traps & System Utilities — device driver as software, DMA/CPU bypass, RTOS, system vs application vs utility, DOS/UNIX/Linux distros, internal vs external hardware, `Winword`/Run, exact OS recognition | `52-os-pyq-traps-system-utilities` [x] | [x] | [x] |
+| 60 | Current OS, Processes, Linux & Utilities — deadlock recovery by preemption, priority inversion/inheritance, starvation, preemptive priority scheduling, RTOS, Linux kernel, `/root` vs `/home`, file systems, Windows Store, WordPad vs Notepad, Disk Cleanup, Defragmenter + SSD caution, Imaging Fax, `xcopy /s` | `60-current-os-processes-linux-utilities` [x] | [x] | [x] |
 
 ### Unit 6 — Programming & Data Structures
 

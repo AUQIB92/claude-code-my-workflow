@@ -1,0 +1,178 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\title{Lesson 46 Practice: Firmware, BIOS, UEFI and Drivers}
+\author{JKSSB Computer Awareness}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent\textbf{Provenance:} 19 items are original JKSSB-pattern questions
+(\textit{[Original]}); 1 item is a real previous-year question
+(\textit{[PYQ WO 2026 Q68, key:provisional]}).
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\item \textit{[Original]} Expand BIOS.
+  \begin{enumerate}[label=\Alph*.]
+    \item Basic Input/Output System
+    \item Binary Input/Output System
+    \item Basic Internal Operating System
+    \item Basic Input/Output Software
+  \end{enumerate}
+\item \textit{[Original]} Expand UEFI.
+  \begin{enumerate}[label=\Alph*.]
+    \item Universal Embedded Firmware Interface
+    \item Unified Extensible Firmware Interface
+    \item Unified External File Interface
+    \item Universal Extensible Firmware Integration
+  \end{enumerate}
+\item \textit{[Original]} Expand POST.
+  \begin{enumerate}[label=\Alph*.]
+    \item Power-Off System Test
+    \item Primary Operating System Test
+    \item Power-On Self-Test
+    \item Post-Operation Startup Task
+  \end{enumerate}
+\item \textit{[PYQ WO 2026 Q68, key:provisional]} Which firmware initialises
+  the hardware and loads the operating system when a computer is switched on?
+  \begin{enumerate}[label=\Alph*.]
+    \item Device driver
+    \item BIOS
+    \item Application program
+    \item Compiler
+  \end{enumerate}
+\item \textit{[Original]} Firmware is best described as:
+  \begin{enumerate}[label=\Alph*.]
+    \item temporary data stored in RAM while a program runs.
+    \item software stored in non-volatile memory that gives a device its
+      basic, low-level instructions.
+    \item a program that the user opens from the desktop.
+    \item the physical circuits inside a processor.
+  \end{enumerate}
+\item \textit{[Original]} Firmware is normally stored in:
+  \begin{enumerate}[label=\Alph*.]
+    \item RAM
+    \item a CPU register
+    \item ROM or flash memory
+    \item the cache
+  \end{enumerate}
+\item \textit{[Original]} What does the POST do at startup?
+  \begin{enumerate}[label=\Alph*.]
+    \item Loads the user's application programs
+    \item Tests whether the basic hardware is present and working
+    \item Formats the hard disk
+    \item Installs device drivers
+  \end{enumerate}
+\item \textit{[Original]} Which item comes FIRST in the power-on sequence?
+  \begin{enumerate}[label=\Alph*.]
+    \item Application programs
+    \item Device drivers
+    \item Firmware (BIOS/UEFI)
+    \item Operating system
+  \end{enumerate}
+\item \textit{[Original]} A device driver is:
+  \begin{enumerate}[label=\Alph*.]
+    \item hardware that plugs into the motherboard.
+    \item software that lets the operating system communicate with a
+      specific device.
+    \item the same as the BIOS.
+    \item a type of cache memory.
+  \end{enumerate}
+\item \textit{[Original]} In which order does the computer normally start
+  these layers?
+  \begin{enumerate}[label=\Alph*.]
+    \item application $\rightarrow$ OS $\rightarrow$ driver $\rightarrow$
+      firmware
+    \item firmware $\rightarrow$ OS $\rightarrow$ driver $\rightarrow$
+      application
+    \item OS $\rightarrow$ firmware $\rightarrow$ application $\rightarrow$
+      driver
+    \item driver $\rightarrow$ firmware $\rightarrow$ OS $\rightarrow$
+      application
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is \textbf{NOT} a function
+  of the BIOS?
+  \begin{enumerate}[label=\Alph*.]
+    \item Running the power-on self-test
+    \item Initialising the basic hardware
+    \item Finding and loading the operating system
+    \item Compiling the user's source code
+  \end{enumerate}
+\item \textit{[Original]} Which statement correctly contrasts BIOS and UEFI?
+  \begin{enumerate}[label=\Alph*.]
+    \item BIOS is the modern firmware and UEFI is the legacy firmware.
+    \item UEFI is the modern firmware; it boots faster, supports large GPT
+      disks, and can provide Secure Boot.
+    \item BIOS and UEFI are identical in every feature.
+    \item UEFI is a device driver, while BIOS is firmware.
+  \end{enumerate}
+\item \textit{[Original]} Which option is an advantage of UEFI over the
+  legacy BIOS?
+  \begin{enumerate}[label=\Alph*.]
+    \item It removes the need for any firmware.
+    \item It supports very large disks using GPT and offers a graphical
+      setup.
+    \item It works only on 32-bit computers.
+    \item It makes device drivers unnecessary.
+  \end{enumerate}
+\item \textit{[Original]} A student claims that the program which initialises
+  the hardware and starts the operating system is a device driver. Which is
+  the correct term?
+  \begin{enumerate}[label=\Alph*.]
+    \item Application software
+    \item BIOS/UEFI firmware
+    \item Compiler
+    \item Device Manager
+  \end{enumerate}
+\item \textit{[Original]} A firmware update is commonly called:
+  \begin{enumerate}[label=\Alph*.]
+    \item flashing
+    \item formatting
+    \item partitioning
+    \item compiling
+  \end{enumerate}
+\item \textit{[Original]} What is the main risk during a firmware update?
+  \begin{enumerate}[label=\Alph*.]
+    \item The screen resolution may change.
+    \item Interrupting power during flashing can leave the device unusable.
+    \item The mouse will stop working.
+    \item The font size will change.
+  \end{enumerate}
+\item \textit{[Original]} Evaluate the statements:
+  \begin{enumerate}[label=\Roman*.]
+    \item Firmware is stored in non-volatile memory.
+    \item Device drivers are loaded by the operating system.
+    \item The POST runs after the operating system has started.
+  \end{enumerate}
+  \begin{enumerate}[label=\Alph*.]
+    \item I and II only
+    \item I and III only
+    \item II and III only
+    \item I, II, and III
+  \end{enumerate}
+\item \textit{[Original]} BIOS settings such as boot order and system
+  date/time are stored in:
+  \begin{enumerate}[label=\Alph*.]
+    \item RAM
+    \item the CMOS (battery-backed) chip
+    \item the cache
+    \item a device driver
+  \end{enumerate}
+\item \textit{[Original]} Which of the following is software that runs before
+  the operating system?
+  \begin{enumerate}[label=\Alph*.]
+    \item A word processor
+    \item Firmware (BIOS/UEFI)
+    \item A web browser
+    \item A device driver
+  \end{enumerate}
+\item \textit{[Original]} Which pairing is correctly matched?
+  \begin{enumerate}[label=\Alph*.]
+    \item BIOS --- a device driver for printers
+    \item UEFI --- the legacy firmware with a text-only setup
+    \item Firmware --- permanent software stored in ROM/flash
+    \item POST --- the application that loads the OS
+  \end{enumerate}
+\end{enumerate}
+\end{document}

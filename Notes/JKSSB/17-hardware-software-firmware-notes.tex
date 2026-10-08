@@ -1,0 +1,341 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{17.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Hardware, Software and Firmware --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Hardware}
+Hardware is the set of physical, tangible parts of a computer system --- the
+parts you can see and touch. A computer's hardware includes the central
+processing unit (CPU), the motherboard, random access memory (RAM), the hard
+disk drive or solid-state drive, the keyboard, the mouse, the monitor, the
+printer, and every other physical component. Hardware carries out the actual
+work of the machine: it executes instructions, stores data, and moves signals.
+
+Hardware alone does nothing useful. A processor with no instructions to run
+is only silicon and metal. The instructions come from software, and the two
+together make a working computer. For exam purposes, the test for hardware is
+simple: if it is a physical object that you can touch, it is hardware.
+
+\begin{definitionbox}{Hardware}
+The physical equipment of a computer system --- the tangible components such
+as the CPU, memory, storage, input devices, output devices, and communication
+hardware.
+\end{definitionbox}
+
+Hardware is usually grouped by function. Input devices, such as the keyboard,
+mouse, and scanner, bring data into the computer. Output devices, such as the
+monitor, printer, and speaker, present results. Processing hardware, mainly
+the CPU and the graphics processing unit (GPU), performs computation. Memory
+hardware, such as RAM, ROM, and cache, holds data and instructions. Storage
+hardware, such as the hard disk drive (HDD) and solid-state drive (SSD),
+keeps files without power. Communication hardware, such as the network
+interface card and the motherboard, connects the parts together.
+
+Hardware is also described as internal or external. \textbf{Internal
+hardware} is fixed inside the computer case --- the motherboard, CPU, RAM, and
+internal drives. \textbf{External hardware}, also called a peripheral, is
+connected from outside, such as the keyboard, mouse, monitor, printer, and an
+external drive. A question may ask whether a named part is internal or
+external; the touch test still applies, because both kinds are physical and
+both are hardware.
+
+A single concrete machine runs through this course: the \textbf{office
+desktop} --- a personal computer with a CPU, memory, a disk, a keyboard, a
+mouse, a monitor, and a printer, running an operating system and MS Word.
+Every term in this lesson can be pointed at on that one machine, which makes
+the abstract layers easier to remember.
+
+\section{Software}
+Software is the set of programs and instructions that tell the hardware what
+to do. Unlike hardware, software is intangible: you cannot touch it. It is
+kept on secondary storage, such as a hard disk or solid-state drive, and it
+is loaded into main memory when it runs. Software is what turns a collection
+of physical parts into a usable computer.
+
+\begin{definitionbox}{Software}
+The collection of programs, procedures, and related data that direct the
+operation of a computer. Software is logical and intangible, and it instructs
+the hardware.
+\end{definitionbox}
+
+Software falls into two broad kinds. \textbf{System software} runs and manages
+the computer itself --- the operating system, device drivers, and utility
+programs. \textbf{Application software} helps the user perform a task --- a
+word processor such as MS Word, a web browser, a spreadsheet, or a game. Every
+program a candidate meets in JKSSB questions belongs to one of these two
+kinds, but the boundary matters: the operating system is system software, not
+application software.
+
+Software is kept on secondary storage as files. When it is launched, the
+operating system copies it into main memory, and the CPU executes it from
+there. This is why a program must be \emph{loaded} before it can run, and why
+data held only in RAM is lost when the power goes off. The permanent copy
+lives on disk; the running copy lives in memory.
+
+\section{Hardware vs software}
+The two are easy to confuse only when the wording is careless, so hold the
+contrasts in a table.
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Point} & \textbf{Hardware} & \textbf{Software} \\
+\midrule
+Nature & Physical and tangible & Logical and intangible \\
+Can be touched? & Yes & No \\
+Role & Executes the work & Gives the instructions \\
+Stored or fixed & Fixed as physical parts & Stored as files, loaded to run \\
+Example & CPU, printer, keyboard & MS Word, a driver, an OS \\
+How it fails & Wears out, breaks, burns out & Bugs, corruption, wrong logic \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Neither can work alone. Hardware and software together form a computer system,
+and a question that names one and describes the other is usually testing this
+single distinction. A candidate should be able to sort a mixed list --- a CPU,
+MS Word, a printer driver, the BIOS, and a user --- into its correct class at a
+glance.
+
+\begin{example}
+A question lists ``CPU, MS Word, printer driver, BIOS, operator'' and asks
+which are software. \textbf{MS Word} and the \textbf{printer driver} are
+software. The CPU is hardware; the BIOS is firmware (software stored in
+hardware); and the operator is a person, that is, humanware. Sorting is done
+by asking, for each item, whether it is physical, a program, embedded code, or
+a person.
+\end{example}
+
+\section{System software and application software}
+\textbf{System software} manages the machine and provides services to other
+programs. The operating system is the main example, together with device
+drivers and system utilities. \textbf{Application software} is written to let
+the user accomplish a task, and it depends on the system software beneath it.
+
+For the exam, the stable rule is: the operating system is system software.
+This is the point tested by the real Junior Assistant 2026 concept recorded as
+PYQ-06 (device driver = software; OS = system software). A device driver, too,
+is system software --- it is a program, not a physical part.
+
+\section{Firmware}
+Firmware is software that is embedded in hardware and stored in non-volatile
+memory. It is held in read-only memory (ROM), erasable programmable ROM
+(EPROM), or flash memory inside the device, so it is available the moment the
+device is powered on. Firmware provides the low-level control instructions a
+device needs and starts it up.
+
+\begin{definitionbox}{Firmware}
+Software permanently stored in a hardware device, usually in non-volatile
+memory such as ROM or flash. It is software by nature but is treated as part
+of the hardware because it is fixed to a specific device.
+\end{definitionbox}
+
+Common examples of firmware include the \textbf{BIOS} (Basic Input Output
+System) or \textbf{UEFI} on a personal computer, which initialises the
+hardware and begins loading the operating system; the firmware inside a
+printer, a router, a keyboard, or a solid-state drive. Firmware is usually
+described as sitting between hardware and software. It is a program, so it is
+software; it is stored on the physical device, so it behaves like part of the
+hardware.
+
+Firmware differs from ordinary software in how tightly it is bound to the
+device. Firmware is written for one specific piece of hardware, is stored in
+ROM or flash on that device, and changes rarely (it is updated by a process
+called flashing). Ordinary software is general-purpose, is stored on secondary
+storage, and is installed and updated frequently.
+
+Firmware is the \textbf{first software to run} when a device is switched on. On
+a personal computer, the CPU executes the BIOS or UEFI firmware from ROM before
+any operating system is available; that firmware checks the hardware and then
+hands control to the operating system. This is exactly why firmware must be
+non-volatile: it has to be present even before anything can be loaded. A
+candidate should not confuse firmware with the operating system --- the
+firmware runs first and \emph{starts} the computer, while the operating system
+is what the machine is finally running.
+
+\section{Device drivers}
+A device driver is a small program that lets the operating system communicate
+with a piece of hardware. It acts as a translator: the operating system sends
+a general request such as ``print this page'', and the driver converts it into
+the exact signals that a specific printer understands. A printer driver, for
+example, lets the operating system print on one particular printer model.
+
+\begin{definitionbox}{Device driver}
+A program that enables the operating system to communicate with, and control,
+a specific hardware device by translating general commands into
+device-specific signals.
+\end{definitionbox}
+
+The single most important exam point about a driver is that it is
+\textbf{software}, even though it is tied to hardware and is often named after
+a device. A candidate may be tempted to call a driver hardware because it
+belongs to a printer or a keyboard, but that is wrong. The driver is a program,
+it is stored like software, and a device will not work properly without the
+right driver installed. This is TRAP-10, and it is also the heart of the real
+Junior Assistant 2026 concept PYQ-06.
+
+\begin{example}
+A question states, ``A device driver is a hardware component that connects the
+printer to the computer.'' This is wrong on two counts: the driver is a
+\textbf{program}, not a physical component, and it is software, not hardware.
+The physical cable and port are hardware; the driver that makes the printer
+work is software. The trap is that the driver carries the device's name.
+\end{example}
+
+\section{Humanware}
+Humanware, also called \textbf{peopleware}, is the human component of a
+computer system. It covers everyone involved: the end users who operate the
+machine, the programmers who write software, the system administrators who
+maintain it, and the operators who run it. A computer system is usually
+described as hardware, software, and humanware together.
+
+\begin{definitionbox}{Humanware}
+The people who design, operate, maintain, and use a computer system; the human
+component that hardware and software ultimately serve.
+\end{definitionbox}
+
+Humanware is not a device and not a program. In a classification question, if
+the named item is a person or a role --- user, programmer, operator,
+administrator --- it is humanware. It is the layer that makes decisions and
+uses the results, and without it the hardware and software would have no
+purpose.
+
+\section{The layered computing stack}
+The parts of a computer system can be arranged as a stack of layers, each one
+resting on the layer below. The order, from the bottom up, is:
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.58\textwidth}}
+\toprule
+\textbf{Layer} & \textbf{Role} \\
+\midrule
+Hardware & The physical components at the base of the system \\
+Firmware & Stored on the hardware; starts it and controls it at a low level \\
+Device driver & Lets the operating system communicate with the hardware \\
+Operating system & Manages all resources and provides services to programs \\
+Application software & Lets the user perform a task \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Reading the stack from the bottom, the physical parts come first. Firmware sits
+directly on them and brings the hardware to life. The device driver sits above
+the firmware and gives the operating system a clean way to talk to each device.
+The operating system manages memory, files, processes, and devices, and offers
+services to the programs above it. The application software at the top is what
+the user actually opens and works in. A command travels \emph{down} the stack
+--- from an application, through the operating system and the driver, to the
+hardware --- and results travel back up.
+
+This stack is the single mental picture for the whole lesson: hardware at the
+bottom, software above it, and firmware and drivers as the thin bridges that
+connect the two.
+
+\section{Why the stack matters}
+The layered stack is not only a way to sort terms; it explains the order in
+which work is done. When a user clicks Print in a word processor, the command
+begins at the application-software layer. The application asks the operating
+system to print; the operating system passes the job to the device driver for
+that printer; the driver translates the request into the signals the printer
+hardware understands; and the printer's own firmware controls the physical
+printing. The result then travels back up the stack to the user. Every layer
+depends on the one below it, and a fault in any single layer can stop the
+whole chain --- which is why ``reinstall the driver'' is such a common fix.
+
+\begin{example}
+A printer fails to print although the paper and ink are fine. Because the
+system has layers, the fault could lie in the application (a wrong page range),
+the operating system (a stuck print queue), the driver (missing or outdated),
+or the hardware (a loose cable). Testing from the bottom up checks each layer
+in turn. In exam terms, the layer that ``lets the operating system talk to the
+printer'' is the \textbf{device driver}.
+\end{example}
+
+\section{Exam retrieval and common confusions}
+Five distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item Hardware is \textbf{physical and tangible}; software is
+    \textbf{logical and intangible}. The simple test is touch: if you can
+    touch it, it is hardware.
+  \item A \textbf{device driver} is \textbf{software}, not hardware. Its name
+    follows the device, but it is a program (TRAP-10; PYQ-06).
+  \item The \textbf{operating system} is \textbf{system software}, not
+    application software (PYQ-06).
+  \item \textbf{Firmware} is software stored in non-volatile memory inside
+    hardware, such as the BIOS; it is software by nature, hardware by storage.
+  \item \textbf{Humanware} (peopleware) is the \textbf{people} in the system,
+    not a device or a program.
+\end{enumerate}
+
+\begin{example}
+An item asks, ``Which of the following is software?'' with options CPU, a
+printer, a device driver, and a keyboard. The answer is the \textbf{device
+driver}: it is a program, whereas the CPU, the printer, and the keyboard are
+physical. If the options instead are an operating system, MS Word, a BIOS
+chip, and a game, the item is testing system software versus application
+software and firmware, and the operating system is the system software.
+\end{example}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item Define hardware and software, and give one example of each.
+  \item Distinguish system software from application software. To which kind
+    does the operating system belong?
+  \item What is firmware, where is it stored, and why is it called ``between
+    hardware and software''?
+  \item Explain why a device driver is classified as software even though it
+    is named after a hardware device.
+  \item What is humanware? Give two roles it includes.
+  \item List the layers of the computing stack from the bottom (hardware) to
+    the top (application).
+  \item Give one example each of internal hardware and external hardware.
+  \item Using the print command as an example, explain how a request travels
+    down the computing stack.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Hardware is the physical, tangible equipment of a computer, such as
+    the CPU or a printer. Software is the programs and instructions that tell
+    the hardware what to do, such as MS Word or a device driver.
+  \item System software runs and manages the computer itself --- the operating
+    system, device drivers, and utilities. Application software lets the user
+    do a task, such as a word processor or a game. The operating system is
+    \textbf{system software}.
+  \item Firmware is software embedded in a hardware device and stored in
+    non-volatile memory such as ROM or flash, for example the BIOS. It is
+    software by nature but is fixed to a specific device, so it is described
+    as sitting between hardware and software.
+  \item A device driver is a program, so it is software. It is named after the
+    device it serves, which tempts a candidate to call it hardware, but it is
+    stored and works like other software; it merely translates the operating
+    system's commands for one specific device.
+  \item Humanware, or peopleware, is the human component of a computer system.
+    It includes roles such as end users and system administrators (also
+    programmers or operators).
+  \item Hardware, then firmware, then device driver, then operating system,
+    then application software.
+  \item Internal hardware: the motherboard (also the CPU, RAM, or an internal
+    drive). External hardware: the keyboard (also the mouse, monitor, printer,
+    or an external drive).
+  \item The user clicks Print in the application software. The application
+    asks the operating system, which passes the job to the printer's device
+    driver. The driver translates the command into the signals the printer
+    hardware understands, and the printer's firmware controls the physical
+    printing. The result returns up the stack to the user.
+\end{enumerate}
+\endgroup
+\end{document}

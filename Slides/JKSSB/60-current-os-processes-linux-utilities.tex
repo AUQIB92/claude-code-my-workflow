@@ -1,0 +1,290 @@
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{JKSSB}
+
+\title{Current OS, Processes, Linux \& Utilities}
+\subtitle{Lesson 60 --- Processes, Linux and Windows Utilities}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Deadlock and Its Four Necessary Conditions}
+  \begin{itemize}
+    \item A \key{deadlock} is a state in which a set of processes each wait
+      for a resource held by another, so none can proceed.
+    \item Four conditions must hold together for a deadlock to occur.
+  \end{itemize}
+  \begin{center}
+    \begin{tabular}{p{0.26\textwidth}p{0.60\textwidth}}
+      \toprule
+      \textbf{Condition} & \textbf{Meaning} \\
+      \midrule
+      Mutual exclusion & A resource is held by only one process at a time. \\
+      Hold and wait & A process holds one resource while waiting for others. \\
+      No preemption & A resource cannot be forcibly taken away. \\
+      Circular wait & Each process waits for a resource held by the next. \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Deadlock Recovery by Resource Preemption}
+  \begin{itemize}
+    \item Once a deadlock is detected, the system must \key{recover}.
+    \item One recovery method is \key{resource preemption}: take a resource
+      away from one process and give it to another so the cycle breaks.
+    \item Preemption of a resource is thus a \key{recovery technique}, not
+      one of the four necessary conditions.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    \key{Preemption} is \bad{not} one of the four necessary conditions for
+    deadlock. The condition is \key{no preemption}; preemption itself is used
+    to recover. (PYQ-10)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Priority Inversion}
+  \begin{itemize}
+    \item \key{Priority inversion} happens when a \key{high-priority} task is
+      blocked because a \key{low-priority} task holds a resource it needs.
+    \item While the low-priority task holds the resource, a
+      \key{medium-priority} task can preempt it and run.
+    \item The high-priority task therefore waits behind a lower-priority one
+      --- the priority order is \bad{inverted}.
+  \end{itemize}
+  \begin{block}{One line}
+    A high-priority task waits for a low-priority task, which is itself pushed
+    aside by a medium-priority task.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Priority Inheritance: The Fix}
+  \begin{itemize}
+    \item \key{Priority inheritance}: while the low-priority task holds the
+      resource, it \key{temporarily inherits} the high priority of the task
+      waiting for it.
+    \item It then runs at the inherited priority, releases the resource
+      quickly, and drops back to its own priority.
+    \item \key{Round-robin} scheduling by itself does \bad{not} prevent
+      priority inversion. (PYQ-11)
+  \end{itemize}
+  \begin{block}{Keep the pair straight}
+    Inversion = the problem; inheritance = the cure.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Starvation and Aging}
+  \begin{itemize}
+    \item \key{Starvation} (indefinite blocking): a process is ready to run
+      but is \key{repeatedly passed over}, so it may wait forever.
+    \item It commonly affects \key{low-priority} processes when
+      higher-priority work keeps arriving.
+    \item \key{Aging} is the standard cure: gradually \key{raise the priority}
+      of a waiting process so it eventually runs.
+  \end{itemize}
+  \begin{alertblock}{Starvation vs deadlock}
+    A starved process can still run in principle; a deadlocked process
+    \bad{cannot} proceed at all. Starvation is a scheduling problem, deadlock
+    is a resource-cycle problem.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Preemptive Priority Scheduling}
+  \begin{itemize}
+    \item In \key{priority scheduling}, the ready process with the
+      \key{highest priority} is chosen to run.
+    \item It is \key{preemptive} when a running process can be
+      \key{interrupted} the moment a higher-priority process becomes ready.
+    \item It is \key{non-preemptive} when the running process keeps the CPU
+      until it finishes or blocks.
+  \end{itemize}
+  \begin{block}{Watch out for}
+    Strict preemptive priority scheduling tends to starve low-priority
+    processes unless \key{aging} is added.
+  \end{block}
+\end{frame}
+
+\begin{frame}{RTOS: Real-Time Operating System}
+  \begin{itemize}
+    \item \key{RTOS} stands for \key{Real-Time Operating System}.
+    \item It is an operating system designed to respond within a
+      \key{bounded time}, so that \key{deadlines} are met.
+    \item \key{Hard real-time}: a missed deadline is a failure (a serious or
+      catastrophic result).
+    \item \key{Soft real-time}: a missed deadline only degrades quality; the
+      result is still useful.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    An RTOS is defined by \key{meeting time deadlines}, \bad{not} by being
+    fast in general. A very fast system that misses deadlines is not
+    real-time.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{The Linux Kernel}
+  \begin{itemize}
+    \item The \key{kernel} is the \key{core of the operating system}.
+    \item It manages \key{processes} (scheduling), \key{memory},
+      \key{devices} (through drivers), and \key{file systems}.
+    \item It runs in \key{kernel space}; ordinary programs run in
+      \key{user space} and request services through system calls.
+    \item The Linux kernel is \key{open-source} (its source can be viewed,
+      changed, and shared).
+  \end{itemize}
+  \begin{block}{Contrast}
+    The \key{shell} is the command interpreter a user talks to; the
+    \key{kernel} is the core that actually controls the hardware.
+  \end{block}
+\end{frame}
+
+\begin{frame}{\texttt{/root} vs \texttt{/home}}
+  \begin{center}
+    \begin{tabular}{p{0.16\textwidth}p{0.70\textwidth}}
+      \toprule
+      \textbf{Path} & \textbf{Meaning} \\
+      \midrule
+      \texttt{/root} & The \key{home directory of the superuser} (the root user). \\
+      \texttt{/home} & The parent directory that normally holds the home directories of \key{ordinary users} (for example \texttt{/home/alice}). \\
+      \texttt{/} & The \key{root of the whole file system} (a single slash), different again from \texttt{/root}. \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \begin{alertblock}{Trap}
+    \texttt{/root} is the \bad{superuser's home}, not the top of the file
+    system. The top of the file system is \texttt{/} (single slash).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Windows and Linux File Systems}
+  \begin{itemize}
+    \item A \key{file system} organises how files and folders are stored and
+      retrieved on a disk.
+    \item \key{NTFS} = New Technology File System --- the \key{default for
+      modern Windows}.
+    \item \key{FAT32} = an older, widely compatible file system used for
+      small drives and memory cards.
+    \item \key{ext4} = the \key{native and common default file system for
+      Linux}.
+  \end{itemize}
+  \begin{block}{Remember}
+    NTFS $\rightarrow$ Windows; ext4 $\rightarrow$ Linux; FAT32 $\rightarrow$
+    broad compatibility.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Windows Store}
+  \begin{itemize}
+    \item The \key{Windows Store} (now the \key{Microsoft Store}) is the
+      built-in \key{online marketplace} in Windows.
+    \item It is used to \key{search, download, and install} apps for Windows,
+      and to keep them updated.
+    \item Apps installed this way come from a \key{trusted catalogue} rather
+      than from any website.
+  \end{itemize}
+  \begin{alertblock}{Trap}
+    The Store is a \key{source of applications}, \bad{not} a disk-cleanup or
+    defragmentation tool. Do not confuse it with the maintenance utilities.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{WordPad vs Notepad}
+  \begin{center}
+    \begin{tabular}{p{0.14\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+      \toprule
+      \textbf{Point} & \textbf{Notepad} & \textbf{WordPad} \\
+      \midrule
+      Text & \key{Plain text}, no formatting & \key{Basic formatting} (bold, italic, fonts, colour) \\
+      Typical save & \texttt{.txt} & \texttt{.rtf} (rich text) \\
+      Extra & Smallest, fastest text editor & Can insert pictures and objects \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  \muted{Notepad = plain text; WordPad = light rich text --- neither is a
+  full word processor like MS Word.}
+\end{frame}
+
+\begin{frame}{Disk Cleanup}
+  \begin{itemize}
+    \item \key{Disk Cleanup} is a built-in Windows utility that
+      \key{frees disk space}.
+    \item It removes \key{unnecessary files}: temporary files, thumbnails,
+      downloaded program files, and the \key{Recycle Bin} contents.
+    \item You choose which categories to delete; the files are not part of
+      your live documents.
+  \end{itemize}
+  \begin{block}{Use}
+    When a drive is running low on space, Disk Cleanup deletes safe,
+    non-essential files to recover capacity.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Defragmenter and the SSD Caution}
+  \begin{itemize}
+    \item A \key{hard disk drive (HDD)} stores a file in
+      \key{fragments} spread over the disk.
+    \item The \key{Disk Defragmenter} rearranges those fragments so each file
+      is \key{contiguous}, which speeds up reading.
+    \item \key{Caution}: do \bad{not} defragment a \key{solid-state drive
+      (SSD)}.
+  \end{itemize}
+  \begin{alertblock}{Why not an SSD?}
+    An SSD has \key{no moving parts}, so defragmenting gives no speed benefit
+    and only adds \key{needless writes}, which shorten its life. Windows uses
+    \key{TRIM} for SSDs instead. (Lesson scope)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Imaging Fax: Windows Fax and Scan}
+  \begin{itemize}
+    \item \key{Windows Fax and Scan} is the built-in imaging and fax utility
+      in Windows.
+    \item It can \key{scan} a document (with a scanner) and
+      \key{send or receive faxes} through a fax modem or fax service.
+    \item Scanned items can be saved, viewed, and faxed as \key{images}.
+  \end{itemize}
+  \begin{block}{Remember}
+    Imaging Fax in Windows = the \key{Windows Fax and Scan} app.
+  \end{block}
+\end{frame}
+
+\begin{frame}{\texttt{xcopy /s}}
+  \begin{itemize}
+    \item \key{xcopy} is a Windows \key{command-line} command that copies
+      files and directory trees.
+    \item The switch \key{\texttt{/s}} copies the chosen directory
+      \key{including its subdirectories}, but skips empty ones.
+    \item Adding \key{\texttt{/e}} also copies \key{empty} subdirectories.
+  \end{itemize}
+  \begin{alertblock}{Exact term}
+    Remember the command as written: \key{\texttt{xcopy /s}}. The \texttt{/s}
+    means ``with subdirectories''.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Lesson 60: Recall}
+  \begin{itemize}
+    \item Deadlock needs mutual exclusion, hold and wait, no preemption, and
+      circular wait together.
+    \item \key{Resource preemption} is a deadlock \key{recovery} method ---
+      not one of the four conditions.
+    \item \key{Priority inversion} = a high-priority task waits behind a
+      low-priority holder; \key{priority inheritance} cures it.
+    \item Round-robin by itself does \key{not} prevent priority inversion.
+    \item \key{Starvation} = indefinite waiting; \key{aging} prevents it.
+    \item Preemptive priority scheduling interrupts a running process for a
+      higher-priority one.
+    \item \key{RTOS} = Real-Time Operating System; defined by meeting
+      deadlines (hard vs soft).
+    \item The Linux \key{kernel} is the core; \texttt{/root} is the
+      superuser's home, \texttt{/home} holds users' homes.
+    \item NTFS = Windows; ext4 = Linux; FAT32 = compatibility.
+    \item Notepad = plain text; WordPad = basic rich text; Disk Cleanup frees
+      space; do not defragment an SSD; \texttt{xcopy /s} copies
+      subdirectories.
+  \end{itemize}
+\end{frame}
+\end{document}

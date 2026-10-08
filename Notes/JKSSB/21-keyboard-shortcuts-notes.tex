@@ -1,0 +1,410 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\input{../../Preambles/header}
+\coursecode{JKSSB}
+\renewcommand{\thesection}{21.\arabic{section}}
+\newtheorem{example}{Example}[section]
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+\title{Keyboard Shortcuts --- Detailed Lecture Notes}
+\author{JKSSB Computer Awareness}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{How to read a keyboard shortcut}
+A keyboard shortcut is a key, or a combination of keys, that performs a
+command directly without opening a menu. Shortcuts save time and reduce the
+need for the mouse, and they are a favourite topic in the JKSSB Computer
+Awareness paper because the answer is a single exact letter or key. In a
+combination written with a plus sign, such as \textbf{Ctrl+C}, the plus means:
+hold the first key down, then press the second key. You do not type the plus
+sign. Where three keys are written, such as \texttt{Ctrl+Shift+N}, hold the
+first two and tap the third.
+
+\begin{definitionbox}{Keyboard shortcut}
+A key or key combination that runs a command directly --- the same command a
+menu offers --- so the user reaches it from the keyboard instead of with the
+mouse.
+\end{definitionbox}
+
+The keys used to build combinations are called modifier keys. They are
+\textbf{Ctrl} (Control), \textbf{Alt} (Alternate), \textbf{Shift}, and the
+\textbf{Windows (Win)} key. A modifier key does very little on its own; it
+changes what the next key does. The \textbf{function keys} \textbf{F1} through
+\textbf{F12} run along the top row of the keyboard and are usually pressed on
+their own, without a modifier.
+
+\begin{center}
+\begin{tabular}{p{0.16\textwidth}p{0.28\textwidth}p{0.48\textwidth}}
+\toprule
+\textbf{Key} & \textbf{Full form} & \textbf{Main role} \\
+\midrule
+Ctrl & Control & Acts on content: copy, cut, paste, save, find. \\
+Alt & Alternate & Acts on windows and menus: switch, close. \\
+Shift & Shift & Changes what is typed or selected; builds ranges. \\
+Win & Windows key & Opens or controls system features: desktop, Explorer, lock. \\
+Fn & Function (laptop) & Gives a second job to the F-keys on many laptops. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A practical split helps memory. The \textbf{Ctrl} combinations mostly act on
+\emph{content} --- copying, cutting, saving, finding. The \textbf{Alt}
+combinations mostly act on \emph{windows} --- switching and closing. The
+\textbf{Windows} key opens or controls system-level features such as the
+desktop, File Explorer, and the lock screen. Function keys are single keys
+whose job depends on the application that is active.
+
+Most shortcut letters are chosen to be easy to remember. \textbf{C} stands for
+Copy, and \textbf{X} looks like a cross over the text, so it stands for Cut.
+\textbf{V} sits next to X on the keyboard and stands for Paste. \textbf{Z} is
+Undo and \textbf{Y} is Redo, the two editing-history keys. \textbf{A} is All
+(Select All), \textbf{S} is Save, \textbf{P} is Print, \textbf{F} is Find, and
+\textbf{H} opens the find-and-replace box. Learning the letter is more reliable
+than memorising a list, because the letter usually hints at the command.
+
+\section{Copy, cut, and paste}
+The three most common shortcuts form the clipboard group. The
+\textbf{clipboard} is the temporary holding area in memory where copied or cut
+items wait before being pasted.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action} \\
+\midrule
+Ctrl+C & Copy the selected item; the original stays where it is. \\
+Ctrl+X & Cut the selected item; the original is removed. \\
+Ctrl+V & Paste the copied or cut item at the current position. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Clipboard}
+A temporary area in the computer's memory that holds text, images, or files
+after they are copied or cut, until they are pasted.
+\end{definitionbox}
+
+The distinction to hold is that \textbf{Copy} and \textbf{Cut} both place the
+selection on the clipboard, but only \textbf{Cut} removes the original. A
+question that offers \texttt{Ctrl+C} and \texttt{Ctrl+X} as two options is
+testing exactly this difference: \texttt{Ctrl+C} leaves the original in place,
+and \texttt{Ctrl+X} does not. \texttt{Ctrl+V} only reads the clipboard; it
+never decides whether the item was copied or cut.
+
+\begin{example}
+A candidate reads, ``Which shortcut copies selected text without removing it
+from its original place?'' The answer is \texttt{Ctrl+C}. \texttt{Ctrl+X} also
+puts the text on the clipboard, but it deletes the selection from the
+document, so it does not satisfy the phrase ``without removing it''.
+\end{example}
+
+\section{Undo, redo, and select all}
+Three Ctrl shortcuts control the editing history and the current selection.
+
+\begin{itemize}
+  \item \textbf{Ctrl+Z} --- Undo the last action. It steps backward through
+    recent changes.
+  \item \textbf{Ctrl+Y} --- Redo the action that was just undone. It steps
+    forward again.
+  \item \textbf{Ctrl+A} --- Select All the content of the current window or
+    document.
+\end{itemize}
+
+Undo and redo are a matched pair and must not be swapped. \texttt{Ctrl+Z}
+reverses a change; \texttt{Ctrl+Y} reapplies a change that was reversed.
+\texttt{Ctrl+A} does not select one word; it selects everything that can be
+selected in the current context. In MS Office the redo key is \texttt{Ctrl+Y};
+a few non-Office programs use \texttt{Ctrl+Shift+Z}, but for this exam the
+standard answer is \texttt{Ctrl+Y}.
+
+\section{Save, print, find, and replace}
+These four shortcuts cover saving a file and working with text inside it.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action} \\
+\midrule
+Ctrl+S & Save the current file. \\
+Ctrl+P & Print. \\
+Ctrl+F & Find (open the search box for text). \\
+Ctrl+H & Replace (find a word and substitute another). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Find} and \textbf{Replace} are near neighbours. \texttt{Ctrl+F} only
+locates the search text and highlights it; \texttt{Ctrl+H} opens the
+find-and-replace function, which can also change every occurrence to a new
+word. Similarly, \texttt{Ctrl+S} saves and \texttt{Ctrl+P} prints; the two are
+often offered together as distractors. \texttt{Ctrl+S} does not print, and
+\texttt{Ctrl+P} does not save.
+
+\begin{example}
+A user types a report and wants to change every occurrence of the word
+``received'' to ``recd''. \texttt{Ctrl+F} would only find the word and stop
+there. The correct shortcut is \texttt{Ctrl+H}, which opens Replace and lets
+the user substitute the new text, one occurrence at a time or all at once.
+\end{example}
+
+\section{Alt-key combinations}
+The Alt key builds the window-management shortcuts.
+
+\begin{itemize}
+  \item \textbf{Alt+Tab} --- Switch between open windows or running
+    applications. Repeatedly pressing Tab while holding Alt cycles through the
+    open windows.
+  \item \textbf{Alt+F4} --- Close the active window or application.
+\end{itemize}
+
+On the desktop with no application window active, \texttt{Alt+F4} opens the
+shutdown or sign-out dialog. The concept to keep clear is that \texttt{Alt+Tab}
+\emph{switches} between windows and does not close any of them, while
+\texttt{Alt+F4} \emph{closes} the active window. A common wrong answer reverses
+the two. Note that \texttt{Alt+F4} closes the whole window; saving the file is
+still the job of \texttt{Ctrl+S}.
+
+\section{Function keys}
+A function key is a single key, \texttt{F1} to \texttt{F12}, on the top row of
+the keyboard. Its action depends on the application that is running. For the
+exam, four function keys are high-yield.
+
+\begin{center}
+\begin{tabular}{p{0.14\textwidth}p{0.78\textwidth}}
+\toprule
+\textbf{Key} & \textbf{Standard action} \\
+\midrule
+F1 & Help. \\
+F2 & Rename the selected file or folder (for example in File Explorer). \\
+F5 & Refresh the window or folder; in PowerPoint, start the slide show from
+     the beginning. \\
+F7 & Spelling and grammar check (in MS Word). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definitionbox}{Function key}
+One of the keys F1 to F12 on the top row of the keyboard, whose effect is
+decided by the active application rather than by a fixed system command.
+\end{definitionbox}
+
+In \textbf{PowerPoint}, \texttt{F5} starts a slide show from the beginning and
+\texttt{Shift+F5} starts it from the current slide. In \textbf{Windows}, on a
+folder or desktop, \texttt{F5} refreshes the view. \texttt{F7} in MS Word
+launches the spelling and grammar check. A documented JKSSB item asked the key
+that starts a slide show from the beginning, and the answer was \texttt{F5}
+(PYQ WO 2026 Q80, provisional key).
+
+\begin{example}
+A candidate sees four keys: F1, F2, F5, F7. If the stem asks for Help, the
+answer is F1; for Rename, F2; for Refresh or slide show, F5; for the spell
+check, F7. Read the stem's verb first, then pick the key that matches that verb.
+\end{example}
+
+The table below fixes the near neighbours that JKSSB likes to mix. Each row is
+one function key; the middle column is its job; the last column is the trap
+(the job a careless candidate might wrongly attach to it).
+
+\begin{center}
+\begin{tabular}{p{0.10\textwidth}p{0.32\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Key} & \textbf{Correct job} & \textbf{Common wrong answer} \\
+\midrule
+F1 & Help & Rename or Refresh \\
+F2 & Rename a selected file or folder & Help or New \\
+F5 & Refresh; start slide show & Spell check or Save \\
+F7 & Spelling and grammar check & Slide show or Help \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Windows-key shortcuts}
+The Windows key (the key with the Windows logo) builds system-level shortcuts.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action} \\
+\midrule
+Win+D & Show the desktop (minimise all open windows). \\
+Win+E & Open File Explorer. \\
+Win+L & Lock the computer. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Mnemonic: \textbf{D} for Desktop, \textbf{E} for Explorer, \textbf{L} for
+Lock. These three are system shortcuts, not content shortcuts, so they do not
+depend on which file is open. \texttt{Win+D} does not delete files, and
+\texttt{Win+L} does not shut the computer down; it only locks the session, and
+the user must sign in again.
+
+The \textbf{Shift} key is a modifier too. It produces capital letters and the
+upper symbol of a key, and \texttt{Shift+Click} selects a range of items
+between two clicks. \texttt{Shift+F5} starts a PowerPoint slide show from the
+current slide. On its own with a letter, Shift does not save, close, or print;
+it changes what is typed or selected.
+
+\section{Other high-yield keys}
+The shortcuts above are the core of the lesson. A few adjacent keys and
+combinations appear often enough in Office documents that they are worth
+learning alongside them.
+
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.64\textwidth}}
+\toprule
+\textbf{Shortcut / key} & \textbf{Action} \\
+\midrule
+Ctrl+O & Open an existing file. \\
+Ctrl+N & Create a new file (new document or window). \\
+Ctrl+W & Close the current document or window. \\
+Ctrl+B / Ctrl+I / Ctrl+U & Bold / Italic / Underline the selection. \\
+Esc & Cancel the current action or close a dialog. \\
+Delete & Delete the selected item; in text, erase forward. \\
+Backspace & Erase the character to the left of the cursor. \\
+Home / End & Move to the start / end of the line. \\
+Ctrl+Home / Ctrl+End & Move to the top / bottom of the document. \\
+Page Up / Page Down & Move up / down one screen. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two cautions. First, \texttt{Ctrl+O} opens and \texttt{Ctrl+N} creates; do not
+confuse the two. Second, \texttt{Ctrl+W} closes a \emph{document}, while
+\texttt{Alt+F4} closes the \emph{window or application}; in a browser,
+\texttt{Ctrl+W} closes the current tab.
+
+\section{Special keys that stand alone}
+A few keys send a command on their own, so they are never written with a plus
+sign. They are not combinations, but they are learned together with shortcuts.
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.70\textwidth}}
+\toprule
+\textbf{Key} & \textbf{Action} \\
+\midrule
+Enter & Confirm a command or start a new line. \\
+Esc & Cancel the current action or close a dialog. \\
+Tab & Move to the next field, cell, or control. \\
+Caps Lock & Toggle capital letters on or off. \\
+Backspace & Erase the character to the left of the cursor. \\
+Delete & Erase the selected item, or the character to the right. \\
+Insert & Toggle Insert and Overtype modes in text editors. \\
+Home / End & Move to the start or the end of the current line. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Caps Lock} and \textbf{Shift} both produce capitals, and this is a
+common confusion. Caps Lock changes every letter until it is switched off
+again, while Shift changes only the key pressed at that moment. \textbf{Delete}
+removes the selection or the character ahead of the cursor; \textbf{Backspace}
+removes what is behind the cursor.
+
+\section{Shortcuts in the office desktop workflow}
+A short walk-through on the office desktop ties the keys together. A clerk
+opens an existing letter with \texttt{Ctrl+O}, types the body, and underlines a
+heading with \texttt{Ctrl+U}. The heading is copied with \texttt{Ctrl+C} and
+pasted elsewhere with \texttt{Ctrl+V}; a wrong sentence is removed with
+\texttt{Ctrl+X}. A mistake is reversed with \texttt{Ctrl+Z}. The clerk searches
+the letter for a name with \texttt{Ctrl+F} and changes an old address to a new
+one with \texttt{Ctrl+H}. The finished letter is saved with \texttt{Ctrl+S} and
+printed with \texttt{Ctrl+P}. While the letter is open, the clerk switches to
+the spreadsheet with \texttt{Alt+Tab}, and when the letter is done, the window
+is closed with \texttt{Alt+F4}. Later, \texttt{Win+D} shows the desktop,
+\texttt{Win+E} opens File Explorer to find last month's folder, and \texttt{Win+L}
+locks the machine before the clerk steps away. This single sequence uses almost
+every shortcut in the lesson, which is why a scenario item is easy to build
+from it.
+
+\section{Exam retrieval and common confusions}
+Seven distinctions prevent most errors on this topic.
+\begin{enumerate}
+  \item \textbf{Ctrl+C} copies and keeps the original; \textbf{Ctrl+X} cuts and
+    removes the original. Do not treat them as the same command.
+  \item \textbf{Ctrl+Z} is Undo; \textbf{Ctrl+Y} is Redo. Reversing this pair
+    is a common wrong answer.
+  \item \textbf{Ctrl+F} is Find; \textbf{Ctrl+H} is Replace. Find only locates;
+    Replace also substitutes.
+  \item \textbf{Ctrl+S} is Save; \textbf{Ctrl+P} is Print. Save stores the
+    file; Print sends it to the printer.
+  \item \textbf{Alt+Tab} switches between windows; \textbf{Alt+F4} closes the
+    active window.
+  \item \textbf{F1} is Help, \textbf{F2} is Rename, \textbf{F5} is Refresh or
+    slide show, and \textbf{F7} is the spell check (TRAP-32). Do not move a
+    job from one key to another.
+  \item \textbf{Win+D} shows the desktop, \textbf{Win+E} opens File Explorer,
+    and \textbf{Win+L} locks the computer.
+\end{enumerate}
+
+\begin{example}
+An item asks which key is used to check spelling and grammar in MS Word. Trace
+the function keys: F1 is Help, F2 is Rename, F5 is Refresh or slide show, F7 is
+the spelling and grammar check. The answer is F7. If the stem instead asked for
+Rename, the answer would be F2, and if it asked for Help, the answer would be
+F1.
+\end{example}
+
+\section{Quick-reference sheet}
+Keep this single table for last-minute revision. It gathers every shortcut in
+this lesson.
+
+\begin{center}
+\begin{tabular}{p{0.15\textwidth}p{0.28\textwidth}p{0.15\textwidth}p{0.28\textwidth}}
+\toprule
+\textbf{Shortcut} & \textbf{Action} & \textbf{Shortcut} & \textbf{Action} \\
+\midrule
+Ctrl+C & Copy & Ctrl+S & Save \\
+Ctrl+X & Cut & Ctrl+P & Print \\
+Ctrl+V & Paste & Ctrl+F & Find \\
+Ctrl+Z & Undo & Ctrl+H & Replace \\
+Ctrl+Y & Redo & F1 & Help \\
+Ctrl+A & Select All & F2 & Rename \\
+Alt+Tab & Switch window & F5 & Refresh / slide show \\
+Alt+F4 & Close window & F7 & Spell check \\
+Win+D & Show desktop & Win+E & File Explorer \\
+Win+L & Lock computer & Shift+F5 & Slide show from current \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Exercises}
+\begin{enumerate}[label=\arabic*.]
+  \item State the action of Ctrl+C, Ctrl+X, and Ctrl+V.
+  \item Distinguish Ctrl+Z from Ctrl+Y, and Ctrl+F from Ctrl+H.
+  \item What do Alt+Tab and Alt+F4 do, and how are they different?
+  \item Give the standard action of F1, F2, F5, and F7.
+  \item What do Win+D, Win+E, and Win+L do? What does Shift+F5 do in
+    PowerPoint?
+  \item Why is the plus sign in \texttt{Ctrl+C} not typed by the user?
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}[label=\arabic*.]
+  \item Ctrl+C copies the selection (the original stays); Ctrl+X cuts it (the
+    original is removed); Ctrl+V pastes the copied or cut item at the current
+    position.
+  \item Ctrl+Z undoes the last action, while Ctrl+Y redoes the action that was
+    undone. Ctrl+F opens Find, which only locates text; Ctrl+H opens Replace,
+    which can also substitute new text for the found text.
+  \item Alt+Tab switches between open windows or applications without closing
+    any of them; Alt+F4 closes the active window or application. One switches,
+    the other closes.
+  \item F1 is Help; F2 renames the selected file or folder; F5 refreshes the
+    window (or, in PowerPoint, starts the slide show from the beginning); F7
+    runs the spelling and grammar check in MS Word.
+  \item Win+D shows the desktop, Win+E opens File Explorer, and Win+L locks
+    the computer. Shift+F5 starts a PowerPoint slide show from the current
+    slide.
+  \item The plus sign is only a way of writing the combination. It means
+    ``hold the first key, then press the second''; it is not a character to be
+    typed.
+\end{enumerate}
+\endgroup
+\end{document}
