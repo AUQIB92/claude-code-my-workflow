@@ -102,6 +102,8 @@ Video references: [Lesson 04](https://youtu.be/92XQ_n1t_cc), [Lesson 05](https:/
 | 10 | Storage Devices — HDD/SSD, magnetic/optical/flash/tape/cloud, CD/DVD/Blu-ray, random vs sequential access | `10-storage-devices` [x] | [x] | [x] |
 | 11 | Backup Types — backup vs storage, full/incremental/differential/image/file, 3-2-1, offline/off-site, RAID vs backup | `11-backup-types` [x] | [x] | [x] |
 
+Video references: [Lesson 07](https://youtu.be/Y2LTKvlu-nI), [Lesson 08](https://youtu.be/7tFTBom4adA), [Lesson 09](https://youtu.be/mJXtHmwRWOA), [Lesson 10](https://youtu.be/-TIvdPLp8dg), and [Lesson 11](https://youtu.be/-FOTFlnupgs).
+
 ### Unit 4 — I/O, Peripherals & Multimedia
 
 | # | Lesson | Revision Slides | Detailed Notes | MCQs + PYQs |
