@@ -7,8 +7,8 @@ term: "JKSSB recruitment cycle 2025-2026"
 level: "competitive-exam prep (post-secondary; no formal programme)"
 status: active
 schema_version: 2
-kb_version: 1.0.0
-last_updated: 2026-10-08
+kb_version: 1.1.0
+last_updated: 2026-10-10
 lectures_recorded: 66
 paths:
   - "syllabi/JKSSB.md"
@@ -134,6 +134,8 @@ other source** on a disputed item.
 | SRC-07 | Website Operator 2026 provisional key | Provisional only — mark status | `https://jkssb.nic.in/Pdf/PROVISIONAL_ANSWERKEY_WEBSITEOPERATOR_08022026.pdf` |
 | SRC-08 | Computer Instructor/Operator 2025 final key | Settles disputed CI items | `https://jkssb.nic.in/Pdf/Final_Answer_Key_16022025_24042025.pdf` |
 | SRC-14 | Local official-paper store + source index | Offline copies of all Tier-1 papers + the download/read procedure | `master_supporting_docs/JKSSB/index.md` (papers in `official_papers/`) |
+| SRC-16 | JKSSB Finance Accounts Assistant (FAA) 2024 official paper archive + final answer key | Official archive and key; match each transcribed item to the correct paper/set | `https://jkssb.nic.in/QP.html`; `https://jkssb.nic.in/Pdf/FINAL_ANSWER_KEY_FAA_09022024.pdf` |
+| SRC-17 | JKSSB Police Sub-Inspector 2022 revised answer key | Official revised key dated 19.04.2022; pair with an independently checked paper copy | `https://jkssb.nic.in/Pdf/Revised_Answer_Key_Sub_Inspector__Police_19042022.pdf` |
 
 **Derived / internal artifacts (not external authority).**
 
@@ -149,6 +151,11 @@ mine distractors, then re-scope to the JKSSB syllabus and re-verify.
 |----|--------|-----|-------|
 | SRC-09 | **Sanfoundry** (`sanfoundry.com`) — Computer Fundamentals, Operating System, Data Structures, Networking, DBMS, Cyber Security MCQ banks | Practice-item composition + distractor mining | (a) Filter to the JKSSB syllabus scope; do **not** import engineering-depth (L4/L5) material. (b) Re-word into JKSSB item formats (§2). (c) Re-verify every answer; Sanfoundry keys are not authoritative — label `[Adapted: Sanfoundry]`. (d) Never present an unverified Sanfoundry item as a JKSSB PYQ. |
 | SRC-10 | Standard CS/IT MCQ compilations (Testbook, GeeksforGeeks quizzes, etc.) | Same as SRC-09 | Same rules as SRC-09; lowest trust within Tier 2. |
+| SRC-18 | SSC CGL 2025 Tier-II Paper-I computer response-sheet transcription (19-Jan-2026) | Secondary transcript of candidate response-sheet questions with SSC-marked answers; key version unspecified | UnlockIAS item pages provide date, paper, and Q number. Cite the exact item URL, independently check the computer fact, and retain the answer-key uncertainty. Example: `https://www.unlockias.in/ssc-cgl-question-paper/ssc-cgl-2025-tier-2-paper-1-19-january-2026/q6-during-instruction-cycle-specific-register-holds-instruction`. |
+| SRC-19 | QCRIAS topic-indexed JKSSB FAA 2024 computer questions | Secondary question/answer transcription; locator only until checked against SRC-16 | `https://qcrias.com/pyq/jkssb-faa-2024`; items carry internal reference IDs, not official paper question numbers. |
+| SRC-20 | JKSSB Police Sub-Inspector 2022 paper copy | Secondary-host paper copy; use official revised answer key in SRC-17 | `https://www.adda247.com/jobs/wp-content/uploads/sites/22/2024/12/30133112/JKSSB-Sub-Inspector-27-March-2022-English.pdf`; discovery page: `https://www.jkas.in/2022/03/jkssb-sub-inspector-police-question.html`. |
+| SRC-21 | JKSSB Finance Accounts Assistant 2022 computer paper transcription | QCRIAS secondary transcription of 10 computer items; check exact item text against an available paper copy before attributing | `https://qcrias.com/pyq/jkssb-faa-2022` |
+| SRC-22 | JKSSB Police Sub-Inspector 2022 computer paper transcription | QCRIAS secondary transcription of 13 computer items; compare item and answer with paper and SRC-17 | `https://qcrias.com/pyq/jkssb-sub-inspector-2022` |
 
 **Tier 3 — Reference/exposition only.** General/standard treatment. Cite concepts,
 never invent a page or a paper number.
@@ -244,8 +251,11 @@ checked the citations · `stale` → source replaced/re-issued after last verify
 | PYQ-47 | CI 2025 Q7 | Mail Merge (Word) | SRC-05 |
 
 **Provenance labels a practice item may carry:** `[PYQ <post> <year> Q<n>, key:final|provisional]`
-· `[PYQ-adapted]` · `[Adapted: Sanfoundry]` · `[Original]`. **Never** `[PYQ]` on an
-unverified or generated item.
+· `[PYQ-adapted: <exam> <year> <paper/date> Q<n>, source:<SRC-id>]`
+· `[Adapted: Sanfoundry]` · `[Original]` · `[Original, MSQ drill]`. For secondary
+transcriptions, cite the item URL or stable source ID and preserve any answer-key
+uncertainty. Never label generated/adapted content as a verbatim `[PYQ]`, and never
+imply the original exam used an MSQ format when it did not.
 
 ---
 
@@ -317,6 +327,7 @@ unverified or generated item.
 | AP-07 | Use a lower-tier source to "settle" something a Tier-1 source answers | Introduces drift from the official answer | Tier-1 key always wins (§3) |
 | AP-08 | Cite a page from an `unindexed` book | Hallucination risk | Chapter-level only until `/index-textbook` runs (§3) |
 | AP-09 | Quote an answer key date or cut-off from memory | Factual error | Only from SRC-06/07/08; else `TBD` |
+| AP-10 | Trust a secondary PYQ transcription's answer label without checking its options and available official key | A transcription/key mismatch can become a false teaching fact | Compare the answer label to the printed options and official key; unresolved mismatch means exclude the PYQ claim and write a separate, clearly labeled original item |
 
 ---
 
@@ -360,6 +371,7 @@ unverified or generated item.
 | 2026-10-08 | 0.11.0 | Built Unit 9 (lessons 40, 41, 62): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 9 video links when supplied |
 | 2026-10-08 | 0.12.0 | Built Unit 10 (lessons 42, 43, 44, 56, 64): slides + notes + MCQ/answer sets; published to the course hub. No video links yet (to be supplied) | Add Unit 10 video links when supplied |
 | 2026-10-08 | 1.0.0 | Built Unit 12 capstones (lessons 48, 58, 66): slides + notes + MCQ/answer drill sets; published to the course hub. All 66 lessons complete. No video links yet (to be supplied) | Add video links for all unlinked lessons when supplied |
+| 2026-10-10 | 1.1.0 | Registered FAA 2022/2024 and Police SI 2022 source trails, official keys, and SSC CGL 2025 Tier-II transcriptions; tightened provenance rules for adaptations and MSQ drills | Check each item against its paper/options and authoritative key before inclusion |
 
 <!-- Not yet captured: the full CI 2025 computer block (Q8 onward) and the non-computer
      sections of WO/JA; the exact WO section structure; the cut-off figures. Add as
