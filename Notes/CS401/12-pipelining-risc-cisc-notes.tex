@@ -1,0 +1,534 @@
+% =============================================================================
+% 12-pipelining-risc-cisc-notes.tex -- Lecture Notes for Week 12
+% DERIVED ARTIFACT. Source of truth:
+% Slides/CS401/12-pipelining-risc-cisc.tex.
+% The Notes reorganize the deck by topic while preserving its content,
+% notation, worked examples, and citations.
+%
+% Anchor reading:
+%   * Patterson & Hennessy ARM 5e Ch. 1, §1.6 (p. 28); Ch. 4,
+%     §§4.5--4.8 (pp. 283, 297, 316, 328); Ch. 6, §§6.2--6.3
+%     (pp. 518, 523); App. D (pp. D-2--D-43).
+%   * Stallings 11e Ch. 16 §16.4 (PDF pp. 667--685), Ch. 17 §17.5
+%     (PDF p. 730) and §17.9 (PDF p. 752), and Ch. 20 §20.1 (PDF p. 847).
+%     The repository keeps the historical Stallings2015 bibliography key.
+%
+% Compile from Notes/CS401 on Windows/MiKTeX:
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-notes.tex
+%   BIBINPUTS="../..;" bibtex 12-pipelining-risc-cisc-notes
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-notes.tex
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-notes.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{array}
+\usepackage{caption}
+\input{../../Preambles/header}
+\coursecode{CS401}
+
+\renewcommand{\thesection}{12.\arabic{section}}
+\renewcommand{\thefigure}{12.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+
+\title{Instruction Pipelining and RISC vs. CISC\\\large Lecture Notes --- Week 12}
+\author{Dr. Auqib Hamid Lone\\\small Assistant Professor in Computer Science \& Engineering}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{The Course Arc and the Performance Question}
+\label{sec:arc}
+
+Week 11 ended with a precise warning about overlap: parallel work is useful
+only when the machine preserves the meaning of the instruction stream. A
+five-stage pipeline can expose structural, data, and control hazards. The
+usual remedies---forwarding, stalls, scheduling, prediction, and recovery---
+trade hardware or control complexity for useful throughput. Week 12 widens the
+question. Pipelining is the mechanism that moves instruction work through
+overlapped stages; RISC and CISC are different design philosophies for
+describing and implementing that work.
+
+The first discipline is to measure a program rather than infer its speed from
+one attractive label. For a workload with instruction count $\mathrm{IC}$,
+average cycles per instruction $\mathrm{CPI}$, and clock rate $f$, the CPU time
+is
+\[
+  T_{CPU}=\frac{\mathrm{IC}\times\mathrm{CPI}}{f}.
+\]
+This is the same performance equation used in Week 1 and in Patterson and
+Hennessy, Ch.~1, §1.6 (p.~28)
+\cite{PattersonHennessy2017_computer_organization_design}. A pipeline can
+reduce the effective CPI of a long stream, but pipeline fill, drain, stalls,
+flushes, cache misses, and the instruction count remain part of the measured
+time. The instruction set, compiler, datapath, memory hierarchy, and workload
+therefore meet in the final result; no single label wins in isolation.
+
+For the motivating two-processor comparison, Processor A completes one
+instruction per cycle at 2~GHz, so its CPI is 1 and its time per instruction is
+$1/(2\times10^9)$ seconds. Processor B has a 3~GHz clock but an average CPI of
+2, so its time per instruction is $2/(3\times10^9)$ seconds. Thus A takes
+$0.5$~ns per instruction while B takes approximately $0.667$~ns: the higher
+clock rate does not win because B spends more cycles per instruction.
+
+The running comparison for this chapter is the operation
+\texttt{A[i] = A[i] + 1}. The operation requires an element to be loaded, one
+to be added, and the result to be stored. An ISA determines where those
+operands live and how much of that work an architectural instruction names.
+The chapter develops four connected questions: how pipeline timing determines
+latency and throughput, what regularity or expressiveness buys an ISA, how a
+workload determines the relevant trade-off, and how the whole course can be
+recalled through a compact diagnostic procedure.
+
+\section{Pipelining: Latency, Throughput, and Hazards}
+\label{sec:pipeline}
+
+\subsection{The five-stage model}
+
+\begin{definitionbox}{Five-stage pipeline}
+The teaching model divides an instruction path into IF (instruction fetch), ID
+(decode and register read), EX (ALU operation or branch work), MEM (data memory
+access), and WB (register write). The same instruction visits all five stages,
+while different instructions occupy different stages simultaneously.
+\end{definitionbox}
+
+Pipeline registers separate the stages and carry an instruction's control and
+data state across clock boundaries. The clock period is constrained by the
+slowest stage plus the overhead of the pipeline registers. The five-stage
+functions are therefore useful for timing reasoning even though an actual
+processor may divide or combine them differently.
+
+\begin{definitionbox}{Latency, throughput, and speedup}
+\textbf{Latency} is the time from an instruction's IF stage to its WB stage.
+\textbf{Throughput} is the interval between completed results in an instruction
+stream. \textbf{Speedup} compares the total completion time of an overlapped
+implementation with the total time of a non-overlapped baseline.
+\end{definitionbox}
+
+The distinction matters. Once a $k$-stage pipeline is full, an ideal stream
+can complete one instruction every clock cycle, but one instruction still
+traverses all $k$ stages. Thus the pipeline improves steady-state throughput;
+it does not make the latency of every instruction one cycle.
+
+\subsection{Fill, drain, and finite-stream speedup}
+
+\begin{example}[Six independent instructions]
+Assume $n=6$ independent instructions, $k=5$ balanced stages, one cycle per
+stage, no hazards, and no extra pipeline-register cost. Without overlap, every
+instruction occupies all five stage-cycles, so
+\[
+  T_{seq}=nk=6\times5=30\text{ cycles}.
+\]
+
+With overlap, the first instruction needs five cycles to pass through the
+pipeline. Each of the remaining five instructions enters one cycle after its
+predecessor, so the last instruction completes at
+\[
+  T_{pipe}=k+(n-1)=5+5=10\text{ cycles}.
+\]
+The complete schedule makes the fill and drain visible:
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}c|cccccccccc@{}}
+\toprule
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+\midrule
+$I_1$ & IF & ID & EX & MEM & WB & & & & &\\
+$I_2$ & & IF & ID & EX & MEM & WB & & & &\\
+$I_3$ & & & IF & ID & EX & MEM & WB & & &\\
+$I_4$ & & & & IF & ID & EX & MEM & WB & &\\
+$I_5$ & & & & & IF & ID & EX & MEM & WB &\\
+$I_6$ & & & & & & IF & ID & EX & MEM & WB\\
+\bottomrule
+\end{tabular}
+\end{center}
+The finite-stream speedup is therefore
+\[
+  S=\frac{30}{10}=3.0\times.
+\]
+The result is below the ideal fivefold speedup because this finite stream pays
+for filling the stages at the beginning and draining them at the end.
+\end{example}
+
+For a general independent stream, the same reasoning gives
+\[
+  T_{pipe}=\bigl(k+n-1\bigr)T_c,
+  \qquad
+  S_{ideal}=\frac{nk}{k+n-1},
+\]
+where $T_c$ is the clock period. The ideal latency is approximately $kT_c$,
+whereas the ideal steady-state throughput is one completed instruction per
+$T_c$. As $n\to\infty$, $S_{ideal}\to k$ only when the stages are balanced and
+the stream supplies enough independent work.
+
+\subsection{Bubbles and the load-use dependence}
+
+\begin{example}[A pipeline with one bubble]
+Assume that a load's data becomes available after MEM. The immediately
+following ALU instruction needs that value at EX, so forwarding alone cannot
+make the value arrive soon enough. Consider
+\[
+\texttt{LW R1,0(R2)},\quad
+\texttt{ADD R3,R1,R4},\quad
+\texttt{SUB R5,R3,R6},\quad
+\texttt{OR R7,R8,R9}.
+\]
+The schedule is:
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}c|ccccccccc@{}}
+\toprule
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\
+\midrule
+\texttt{LW R1,0(R2)} & IF & ID & EX & MEM & WB & & & &\\
+\texttt{ADD R3,R1,R4} & & IF & ID & \textbf{stall} & EX & MEM & WB & &\\
+\texttt{SUB R5,R3,R6} & & & IF & \textbf{stall} & ID & EX & MEM & WB &\\
+\texttt{OR R7,R8,R9} & & & & & IF & ID & EX & MEM & WB\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Without the bubble, the ADD would request the value before MEM had produced
+it. The dependence is a true read-after-write (RAW) hazard. The one bubble
+delays the ADD until the load result can be forwarded to its EX input; the
+stream therefore completes in 9 rather than the ideal 8 cycles. Its achieved
+CPI is shaped by the instruction mix and hazard rate, not only by the nominal
+number of stages.
+\end{example}
+
+The Socratic conclusion is consequently precise: a five-stage pipeline that
+completes six instructions in ten cycles has not made each instruction five
+times faster. The total time fell from 30 to 10 cycles, giving a $3\times$
+speedup for this finite workload. A complete performance report separates
+latency and throughput, then accounts for bubbles, flushes, memory stalls, and
+fill/drain effects.
+
+\subsection{Pipeline design knobs}
+
+Each design choice exchanges a possible gain for a new cost.
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.8cm}@{}}
+\toprule
+\textbf{Choice} & \textbf{Potential gain} & \textbf{New cost} & \textbf{Question}\\
+\midrule
+Deeper pipeline & Shorter stage delay; higher $f$ & More registers and branch penalty & Is useful work predictable?\\
+Duplicate resources & Fewer structural hazards & Area, power, verification & Is the conflict frequent?\\
+Forwarding & Fewer RAW stalls & Muxes, comparators, timing paths & Does the value arrive in time?\\
+Prediction & Fewer control bubbles & Predictor state and flush recovery & What is $P_{flush}$?\\
+\bottomrule
+\end{tabular}
+\end{center}
+Stallings 11e treats instruction pipelining in §16.4 (PDF pp.~667--685); its
+Ch.~17 RISC discussion connects regular instruction execution to pipelining in
+§17.5 (PDF p.~730). These are indexed chapter and section anchors rather than
+claims that the constructed examples are quotations from the books.
+
+\section{RISC and CISC as Design Philosophies}
+\label{sec:risc-cisc}
+
+\begin{definitionbox}{RISC and CISC}
+\textbf{RISC} is a tendency toward a relatively small, regular instruction set
+with simple operations and a register-centered execution model. \textbf{CISC}
+is a tendency toward a richer instruction set in which an individual
+instruction may express more complex operations or addressing forms.
+\end{definitionbox}
+
+These are tendencies, not universal rankings. It is too strong to say that
+every RISC instruction is simple or every CISC instruction is slow. A fair
+comparison concerns the complete implementation: encoding, decode,
+micro-operations, compiler, memory system, and target workload. Stallings
+11e discusses RISC execution, RISC pipelining, and the RISC/CISC comparison in
+§17.9 (PDF p.~752).
+
+\subsection{The running operation in two instruction streams}
+
+For \texttt{A[i] = A[i] + 1}, a register-centered or RISC tendency might make
+the load, add, and store explicit:
+\begin{center}
+\texttt{LOAD R1,[R2+R3]}\\
+\texttt{ADD R1,R1,1}\\
+\texttt{STORE [R2+R3],R1}
+\end{center}
+A memory-rich or CISC tendency might expose a compact architectural operation
+such as \texttt{INC [R2+R3]}. The operation is the same, but the visible
+instruction stream differs. The CISC-like instruction may be split internally
+into simpler micro-operations before execution. This is a conceptual
+comparison, not a claim about one specific ISA's exact encoding. Patterson and
+Hennessy App.~D surveys RISC addressing modes and formats (pp.~D-2--D-43).
+The comparison can be tabulated as follows:
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{5.6cm}@{}}
+\toprule
+\textbf{Register-centered / RISC tendency} & \textbf{Memory-rich / CISC tendency}\\
+\midrule
+\texttt{LOAD R1,[R2+R3]} & \texttt{INC [R2+R3]}\\
+\texttt{ADD R1,R1,1} & \textit{one architectural instruction may name the memory update}\\
+\texttt{STORE [R2+R3],R1} & \textit{decode/execute may internally split the work}\\
+More instructions, regular formats, explicit loads/stores & Fewer visible instructions, richer formats, more decode work\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Regularity can help a pipeline in several related ways:
+\begin{itemize}
+  \item Fixed or clustered instruction formats simplify fetch boundaries and
+        decode timing.
+  \item A large register file reduces frequent memory operands and exposes
+        values to forwarding paths. This is a RISC design tendency, not a law.
+  \item Load/store separation makes the memory stage's role predictable: ALU
+        instructions can use EX without also requesting data memory.
+  \item Predictable stage work makes balancing and hazard detection easier,
+        while the compiler carries more scheduling responsibility.
+\end{itemize}
+The cost can move into the rest of the system. More instructions can increase
+$\mathrm{IC}$, register traffic, code size, instruction-cache pressure, or
+branch exposure for a particular workload.
+
+Expressiveness can also be valuable. A complex instruction may reduce the
+visible instruction count for a dense operation or a legacy software
+interface. Rich addressing modes can express array, pointer, stack, or string
+operations compactly. Compatibility and code density matter when instruction
+memory, binary size, or an established software ecosystem dominates. The cost
+does not disappear: decode width, variable-length boundaries, micro-operation
+expansion, precise exceptions, and verification can complicate the front end.
+
+\begin{example}[Avoiding an overstrong comparison]
+The following statements are reasonable tendencies:
+\begin{enumerate}
+  \item RISC often favors regular formats and register operands.
+  \item CISC can express more work per architectural instruction.
+\end{enumerate}
+The statement ``RISC always has fewer instructions and CISC always has lower
+CPI'' is too strong. Instruction count, CPI, clock rate, stalls, code size,
+and workload interact through $T_{CPU}=\mathrm{IC}\times\mathrm{CPI}/f$.
+The appropriate comparison fixes the workload and measures total execution
+time rather than selecting one favorable ISA statistic.
+\end{example}
+
+\section{Workload-Based Architectural Choice}
+\label{sec:workload}
+
+\begin{example}[Two workload sketches]
+Consider an embedded-control workload with a tight power budget, predictable
+loops, limited memory, and fixed sensor operations. Its likely priorities are
+predictability, energy, and a compact implementation. A regular pipeline,
+simple decode, and compiler-visible registers may help, while code expansion
+and instruction-memory pressure are risks.
+
+Now consider cloud analytics with a large software base, diverse branches,
+high throughput, and frequent vector or multicore parallelism. Compatibility,
+scalable parallel work, and a capable front end may matter more. Decode and
+recovery complexity and memory bottlenecks remain risks. Patterson and
+Hennessy Ch.~6 emphasizes that parallel performance depends on the program and
+its communication and coordination costs (pp.~516--579).
+
+The two sketches can be compared directly:
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{4.0cm}@{}}
+\toprule
+\textbf{Criterion} & \textbf{Embedded control} & \textbf{Cloud analytics}\\
+\midrule
+Likely priority & Predictability, energy, compact implementation & Throughput, compatibility, scalable parallel work\\
+Helpful tendency & Regular pipeline, simple decode, compiler-visible registers & Strong ecosystem, capable front end, SIMD/vector and multicore support\\
+Main risk & Code expansion and instruction-memory pressure & Decode/recovery complexity and memory bottlenecks\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Neither row proves a universal winner. Each row identifies what should be
+measured for the workload.
+\end{example}
+
+\begin{example}[Compare total time, not labels]
+A RISC-like implementation executes $1.20\times10^9$ instructions at
+$\mathrm{CPI}=1.1$ and $f=2.4$~GHz. A CISC-like implementation executes
+$0.80\times10^9$ instructions at $\mathrm{CPI}=2.0$ and $f=3.0$~GHz. Applying
+the performance equation gives
+\begin{align*}
+  T_R &= \frac{1.20\times10^9\times1.1}{2.4\times10^9}
+       =0.55~\text{s},\\
+  T_C &= \frac{0.80\times10^9\times2.0}{3.0\times10^9}
+       \approx0.533~\text{s}.
+\end{align*}
+The CISC-like system wins this workload by about $3.0\%$ despite its higher
+CPI, because it executes fewer instructions at a higher clock. A different
+workload, cache behavior, or branch rate can reverse the result. The
+measurement is the conclusion; the labels are hypotheses.
+\end{example}
+
+\subsection{The ISA boundary and the pipeline}
+
+ISA decisions reappear as pipeline constraints.
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{4.2cm}@{}}
+\toprule
+\textbf{Pipeline concern} & \textbf{Regular instruction stream helps} & \textbf{Rich instruction stream may require}\\
+\midrule
+Fetch/decode & Predictable boundaries and widths & Boundary detection and wider decode\\
+Data hazards & Explicit register dependencies & Internal micro-op dependencies\\
+Structural hazards & Regular stage/resource demand & Variable resource demand per instruction\\
+Control recovery & Explicit branch behavior & Precise recovery across expanded work\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This is the course-level connection. Week 5's addressing modes, Weeks 6--7's
+control units, Weeks 9--10's memory hierarchy, and Week 11's hazards all
+reappear as constraints on instruction throughput. The final design question
+is always ``fit to which workload?''
+
+\section{Course Review and Exam Procedure}
+\label{sec:review}
+
+\subsection{One performance thread through CS401}
+
+The course can be read as a sequence of increasingly complete performance
+questions:
+\begin{enumerate}
+  \item \key{Representation:} bits, two's complement, and IEEE 754 determine
+        what values hardware can encode.
+  \item \key{Execution:} registers, buses, addressing modes, and control units
+        move and transform those values.
+  \item \key{Communication:} I/O and interrupts connect the processor to
+        devices without making every transfer a busy wait.
+  \item \key{Storage:} caches, virtual memory, and secondary storage trade
+        capacity, latency, protection, and persistence.
+  \item \key{Overlap:} parallel organizations and pipelines raise throughput
+        when hazards are identified and paid for explicitly.
+  \item \key{Choice:} the ISA and organization should be judged by the
+        workload's measured time, energy, reliability, and software constraints.
+\end{enumerate}
+
+When a problem looks unfamiliar, ask six questions:
+\begin{enumerate}
+  \item What is the representation: bits, fields, signedness, or format?
+  \item Where is the operand: register, memory, cache, page, or device?
+  \item Which hardware state changes: PC, IR, MAR/MDR, register, flag, or
+        control word?
+  \item What is the bottleneck: clock, CPI, bus, memory, I/O, or hazard?
+  \item What is the unit of comparison: latency, throughput, speedup, hit
+        rate, miss penalty, or total CPU time?
+  \item Which assumption makes the shortcut valid, and what breaks it?
+\end{enumerate}
+A strong exam solution names the model before doing arithmetic.
+
+\begin{example}[Integrating the course topics]
+Suppose a workload has many independent vector operations, frequent branches,
+and a large working set. It runs on a multicore processor with a pipelined
+front end. Inspect Week 11 and Week 12 for SIMD or MIMD opportunity, pipeline
+hazards, branch penalty, and instruction-stream choice. Inspect Weeks 9--10
+for cache locality, TLB/page behavior, and storage misses that may dominate an
+otherwise fast pipeline. Finally, return to Week 1 and evaluate total time
+through $\mathrm{IC}\times\mathrm{CPI}/f$ rather than inferring performance from
+clock rate alone.
+\end{example}
+
+For exam and assignment problems, the same procedure becomes a checklist:
+\begin{itemize}
+  \item \textbf{Performance:} write the equation, normalize units, and
+        compare total time or speedup.
+  \item \textbf{Instruction cycle/control:} name the state and write RTL
+        transfers with \texttt{PC}, \texttt{IR}, \texttt{MAR}, and \texttt{MDR}.
+  \item \textbf{Memory:} split addresses into tag/index/offset or page/offset
+        before translating or computing a hit.
+  \item \textbf{I/O:} identify who waits, who owns the bus, and where the
+        data moves.
+  \item \textbf{Pipeline:} draw a cycle table; classify each hazard; count
+        every stall and flush.
+  \item \textbf{RISC/CISC:} state the workload, measured variables, and
+        trade-off before defending a design choice.
+\end{itemize}
+
+The recurring course question is how a finite amount of hardware can keep
+common work moving quickly, correctly, and predictably. Representation makes
+operations possible; organization moves operands and generates control;
+hierarchy hides slow capacity behind fast common cases; parallelism overlaps
+work while hazards expose dependencies; and RISC/CISC choices shape the
+instruction work. The workload decides whether the trade-off pays. Therefore,
+do not ask which architecture is universally best. Ask which design makes
+this workload's useful work per unit time highest, and state the assumptions
+that make the answer true.
+
+\subsection*{Exercises}
+\begin{enumerate}
+  \item Six independent instructions run on a balanced five-stage pipeline,
+        one cycle per stage. Compute sequential time, ideal pipelined time,
+        finite-stream speedup, and the limiting large-stream speedup.
+  \item For the sequence \texttt{LW R1,0(R2)}, \texttt{ADD R3,R1,R4},
+        \texttt{SUB R5,R3,R6}, and \texttt{OR R7,R8,R9}, identify the true
+        dependences, insert the required bubble, and state which result can be
+        forwarded.
+  \item Explain why ``RISC always has fewer instructions and CISC always has
+        lower CPI'' is not a valid universal conclusion. Name the variables
+        that must be measured instead.
+  \item A RISC-like processor executes $0.90\times10^9$ instructions at
+        CPI $=1.4$ and $f=2.1$~GHz. A CISC-like processor executes
+        $0.60\times10^9$ instructions at CPI $=2.2$ and $f=2.8$~GHz. Compute
+        both CPU times and identify the faster implementation for this
+        workload.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}
+  \item Sequential time is $6\times5=30$ cycles. Ideal pipelined time is
+        $5+(6-1)=10$ cycles. Speedup is $30/10=3.0\times$. As the stream
+        becomes very long, the ideal speedup approaches five, provided the
+        stages are balanced and the stream supplies independent work.
+  \item The load produces $R1$, which ADD reads, so the first edge is a true
+        RAW load-use dependence and requires one bubble before ADD's EX stage.
+        ADD produces $R3$, which SUB reads; that ALU result can be forwarded
+        to SUB without an additional bubble. The final OR is independent of
+        those values in the shown stream.
+  \item The performance equation is
+        $T_{CPU}=\mathrm{IC}\times\mathrm{CPI}/f$. Instruction count, CPI,
+        clock rate, stalls, code size, cache behavior, branch behavior, and
+        the workload interact, so neither ISA label determines total time by
+        itself.
+  \item For the RISC-like processor,
+        \[
+          T_R=\frac{0.90\times10^9\times1.4}{2.1\times10^9}=0.60~\text{s}.
+        \]
+        For the CISC-like processor,
+        \[
+          T_C=\frac{0.60\times10^9\times2.2}{2.8\times10^9}=0.4714~\text{s}
+          \text{ (approximately)}.
+        \]
+        The CISC-like implementation is faster for this workload because its
+        lower instruction count and higher clock outweigh its higher CPI.
+\end{enumerate}
+\endgroup
+
+\section*{References and Source Boundaries}
+
+The deck's references are retained without changing their scope. Stallings,
+\emph{Computer Organization and Architecture: Designing for Performance},
+11th ed. (the repository key is retained as Stallings2015), is used for
+instruction pipelining in Ch.~16 §16.4 (PDF pp.~667--685), RISC pipelining in
+Ch.~17 §17.5 (PDF p.~730), the RISC/CISC comparison in §17.9 (PDF p.~752),
+and the brief stream-taxonomy connection in Ch.~20 §20.1 (PDF p.~847).
+Patterson and Hennessy, \emph{Computer Organization and Design: The
+Hardware/Software Interface}, ARM 5e, is used for the performance equation in
+Ch.~1 §1.6 (p.~28), the five-stage and hazard model in Ch.~4 §§4.5--4.8
+(pp.~283, 297, 316, 328), workload/parallelism framing in Ch.~6 §§6.2--6.3
+(pp.~518, 523), and the RISC survey in App.~D (pp.~D-2--D-43). The worked
+comparisons in this chapter are constructed examples: their numbers illustrate
+the performance equation and pipeline model, and are not quotations or
+measurements from either book.
+
+\begingroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+\endgroup
+
+\end{document}

@@ -1,0 +1,569 @@
+% =============================================================================
+% 11-parallel-pipeline-hazards-notes.tex -- Lecture Notes for Week 11
+% DERIVED ARTIFACT. Source of truth:
+% Slides/CS401/11-parallel-pipeline-hazards.tex.
+% The Notes reorganize the deck by topic while preserving its content,
+% notation, worked examples, and citations.
+%
+% Anchor reading:
+%   * Hamacher, Computer Organization and Embedded Systems, Chs. 5 and 10.
+%     These are chapter-level course anchors; the current repository index does
+%     not page-verify these chapters.
+%   * Stallings, Computer Organization and Architecture, 11th ed., S16.4
+%     (Instruction Pipelining, PDF pp. 667--685) and S20.1 (PDF p. 847).
+%     The repository keeps the historical Stallings2015 bibliography key.
+%
+% Compile from Notes/CS401 on Windows/MiKTeX:
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-notes.tex
+%   BIBINPUTS="../..;" bibtex 11-parallel-pipeline-hazards-notes
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-notes.tex
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-notes.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{array}
+\usepackage{caption}
+\input{../../Preambles/header}
+\coursecode{CS401}
+
+\renewcommand{\thesection}{11.\arabic{section}}
+\renewcommand{\thefigure}{11.\arabic{figure}}
+\newtheorem{example}{Example}[section]
+
+\newenvironment{definitionbox}[1]{%
+  \par\noindent\textbf{Definition (#1).}\ \itshape
+}{\par\vspace{0.3em}}
+
+\title{Parallel Processing and Pipeline Hazards\\\large Lecture Notes --- Week 11}
+\author{PCC CS-401: Computer Organization and Architecture}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{From Latency Hiding to Instruction-Level Parallelism}
+\label{sec:motivation}
+
+Week 9 used locality to hide DRAM latency behind cache, and Week 10 used
+pages, frames, and storage to give a process a larger, protected address space
+than physical memory alone could provide. Both mechanisms ask the same
+question: how can the machine keep useful work moving while one operation is
+slow? This week asks the question at the processor itself. If several useful
+operations are ready at once, the processor can overlap them, but only when
+the required resources and data dependencies permit the overlap.
+
+The running instruction stream for this chapter is
+\begin{center}
+\texttt{LW R1,0(R2)}; \texttt{ADD R3,R1,R4}; \texttt{SUB R5,R3,R6};
+\texttt{BEQ R5,R0,L}; \texttt{OR R7,R8,R9}.
+\end{center}
+It will let us identify dependencies and then ask which mechanism pays for
+each one. The chapter proceeds in four connected topics: classifying the kind
+of parallel work, constructing a five-stage pipeline, diagnosing hazards, and
+choosing a resolution whose throughput gain justifies its cost.
+
+\section{Flynn's Classification and Scales of Parallelism}
+\label{sec:flynn}
+
+\subsection{Instruction and Data Streams}
+
+The first question is not ``how many ALUs are present?'' It is ``how many
+instruction streams and data streams are moving?'' An instruction stream is
+the sequence of operations being issued. A data stream is the sequence of
+operands or data elements consumed by those operations. Flynn's taxonomy
+classifies a computer by the number of concurrent streams; it is a taxonomy of
+organization, not a ranking from bad to good. This is the standard course
+treatment in Hamacher, Ch.~5 \cite{Hamacher2002_computer_organization}, while
+Stallings gives a brief parallel-organization discussion in S20.1
+\cite{Stallings2015_computer_organization}.
+
+\begin{definitionbox}{Flynn's taxonomy}
+Flynn's taxonomy classifies an organization by its number of instruction
+streams and data streams. The four labels are SISD (single instruction,
+single data), SIMD (single instruction, multiple data), MISD (multiple
+instruction, single data), and MIMD (multiple instruction, multiple data).
+\end{definitionbox}
+
+The four classes can be read directly from the following table.
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{5.0cm}@{}}
+\toprule
+\textbf{Class} & \textbf{Instruction streams} & \textbf{Data streams} &
+\textbf{Typical interpretation} \\
+\midrule
+SISD & One & One & Conventional sequential core; one instruction acts on one data item \\
+SIMD & One & Many & One operation applied across a vector or image row \\
+MISD & Many & One & Rare and specialized; multiple operations inspect one stream \\
+MIMD & Many & Many & Multicore, multiprocessor, or cluster with independent work \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+One physical chip can support more than one mode at different levels. For
+example, multiple cores may each run an SISD-like stream while a vector unit
+executes SIMD operations. Therefore the classification should be tied to the
+level being described, not assigned once to the whole chip without saying
+which organization is under discussion.
+
+\begin{example}[Classifying three workloads]
+\label{ex:flynn}
+Consider the following workloads.
+\begin{enumerate}
+  \item Add two 1024-element vectors using one vector instruction per chunk.
+  \item Run four independent matrix tiles on four cores.
+  \item Apply several independent filters to the same sensor stream.
+\end{enumerate}
+The first workload is SIMD: one operation pattern is applied to many data
+elements. The second is MIMD: the cores execute independent instruction
+streams over independent data regions. The third resembles MISD under a
+strict stream definition because several operations inspect one input stream,
+but in practice it is often implemented as MIMD workers sharing an input
+buffer. The taxonomy describes the organization; the workload determines
+whether that organization is useful.
+\end{example}
+
+\subsection{DLP, TLP, and ILP}
+
+Flynn's classes describe streams, while data-level, thread-level, and
+instruction-level parallelism describe where useful concurrency comes from.
+\begin{definitionbox}{Data-level parallelism (DLP)}
+Data-level parallelism applies the same operation to many elements, as in
+vector addition or image pixels.
+\end{definitionbox}
+\begin{definitionbox}{Thread-level parallelism (TLP)}
+Thread-level parallelism executes independent instruction sequences on
+separate cores or hardware threads.
+\end{definitionbox}
+\begin{definitionbox}{Instruction-level parallelism (ILP)}
+Instruction-level parallelism exists when one instruction stream contains
+independent instructions that a processor can overlap.
+\end{definitionbox}
+
+These are different descriptions. A processor with four cores, each running a
+different loop iteration, has TLP because four independent instruction
+streams execute on separate cores. If each core also contains a five-stage
+pipeline, it has ILP because each core overlaps instructions within its own
+stream. It is not automatically SIMD: the cores may execute different
+instructions or different control paths. A good classification names the
+level and the evidence rather than counting only the number of cores.
+
+The rest of this chapter focuses on ILP inside one instruction stream. That is
+where hazards become the price of overlap: an instruction may be independent
+enough to share the machine with another instruction, or it may need a
+resource or value that is not ready yet.
+
+\section{The Five-Stage Pipeline Model}
+\label{sec:pipeline}
+
+\subsection{Why Overlap Helps}
+
+Suppose every instruction needs five stages: fetch, decode, execute, memory,
+and writeback. If one instruction occupies the whole path before the next
+starts, four stage resources sit idle for most of the time. A \key{pipeline}
+places pipeline registers between stages and overlaps different instructions
+in different stages. After the pipeline fills, one completed instruction can
+emerge each cycle even though each individual instruction still requires all
+five stages. The promise is throughput, not a magical reduction of every
+instruction's latency. This is the standard pipeline motivation in Hamacher,
+Ch.~10 \cite{Hamacher2002_computer_organization}, and Stallings 11e, S16.4,
+PDF pp.~667--685 \cite{Stallings2015_computer_organization}.
+
+\begin{definitionbox}{Five-stage pipeline}
+The teaching model divides an instruction path into IF (instruction fetch),
+ID (decode and register read), EX (ALU operation or branch work), MEM (data
+memory access), and WB (register write). The same instruction visits all five
+stages, while different instructions occupy different stages simultaneously.
+\end{definitionbox}
+
+Each stage advances on a clock edge. Pipeline registers hold the intermediate
+results and control information needed by the next stage. The slowest stage,
+plus the pipeline-register overhead, constrains the clock period. Real
+processors may split, merge, or repeat these functions; the five-stage model
+is a deliberately useful abstraction for reasoning about timing and hazards.
+
+\subsection{Filling the Pipeline}
+
+\begin{example}[Four independent instructions]
+\label{ex:fill}
+Assume four independent instructions and one cycle per stage. With no hazards,
+the schedule is:
+\begin{center}
+\begin{tabular}{@{}c|cccccccc@{}}
+\toprule
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+$I_1$ & IF & ID & EX & MEM & WB & & & \\
+$I_2$ & & IF & ID & EX & MEM & WB & & \\
+$I_3$ & & & IF & ID & EX & MEM & WB & \\
+$I_4$ & & & & IF & ID & EX & MEM & WB \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Without overlap, each instruction occupies five stage-cycles, so the total is
+$4\times5=20$ stage-cycles. With overlap, the first instruction takes five
+cycles to emerge and each of the remaining three takes one additional cycle:
+$5+(4-1)=8$ cycles. The finite-stream speedup is therefore
+\[
+  \frac{20}{8}=2.5.
+\]
+It is below the ideal five because the stream must first fill the pipeline and
+then drain it. The timing table makes both effects visible: cycle 1 contains
+only $I_1$'s IF stage, and after $I_4$ enters, the already-started
+instructions still need to finish.
+\end{example}
+
+\subsection{Latency, Throughput, and Speedup}
+
+Three quantities answer three different questions. \key{Latency} is the time
+from an instruction's IF to its WB. \key{Throughput} is how often completed
+instructions emerge. \key{Speedup} compares total completion time with a
+non-overlapped baseline. Confusing latency with throughput produces the false
+claim that a five-stage pipeline makes every instruction take one cycle.
+
+With $k$ balanced stages and $n$ independent instructions, the idealized
+pipelined time is
+\[
+  T_{\mathrm{pipe}}\approx k+(n-1)\text{ cycles},
+\]
+whereas sequential time is $nk$ cycles. For large $n$, ideal speedup
+approaches $k$, provided stages are balanced and hazards, fill, drain, and
+pipeline-register overhead are negligible. An individual instruction still
+traverses all $k$ stages, so its latency remains about $k$ cycles in this
+model. The valid claim is that, after fill, independent instructions can
+complete at a rate of one per cycle.
+
+Stalls and flushes reduce achieved throughput. A stall appears as a bubble in
+the timing chart; a flush appears as work that was fetched but is discarded.
+A deeper pipeline can raise clock frequency by shortening individual stages,
+but it can also increase branch penalty, register overhead, and recovery cost.
+
+\subsection{Questions That Shape a Pipeline}
+
+Pipeline design is an architectural choice because it determines CPI, area,
+power, and verification burden. The designer must ask:
+\begin{enumerate}
+  \item \textbf{Stage balance:} can work be divided so no stage dominates the
+        clock period?
+  \item \textbf{Pipeline registers:} what state must cross each boundary, and
+        what setup and clock-to-q overhead is added?
+  \item \textbf{Resource replication:} can instruction fetch and data access
+        happen together, or must they share one memory port?
+  \item \textbf{Dependence handling:} where can a value be forwarded, and
+        when must the pipeline wait?
+  \item \textbf{Control recovery:} how many younger stages must be flushed
+        after a branch is resolved?
+\end{enumerate}
+
+\section{Hazard Taxonomy}
+\label{sec:hazards}
+
+\begin{definitionbox}{Pipeline hazard}
+A pipeline hazard is a condition that prevents the next instruction from
+executing in its intended cycle. The remedy must match the cause: add or
+duplicate a resource, move or forward data, or predict and recover from
+control flow.
+\end{definitionbox}
+
+There are three principal categories. A \key{structural hazard} occurs when
+two stages need the same hardware at once. A \key{data hazard} occurs when an
+instruction depends on a value whose production or writeback has not
+completed. A \key{control hazard} occurs when the next instruction address is
+uncertain, usually because of a branch or exception.
+
+\subsection{Structural Hazards}
+
+In a five-stage pipeline, suppose $I_1$ is in MEM while $I_2$ is in IF. If one
+single-ported memory serves both instruction fetches and data accesses, both
+stages request the same port in the same cycle. The problem is resource
+demand, not a relationship between the values computed by the instructions.
+
+There are three direct responses:
+\begin{enumerate}
+  \item Stall one instruction, inserting a bubble.
+  \item Split instruction and data memories or caches so the accesses proceed
+        in parallel.
+  \item Use multiported or time-multiplexed hardware, paying an area, energy,
+        or timing cost.
+\end{enumerate}
+
+\subsection{Data Hazards and Dependence Names}
+
+The running stream begins:
+\begin{center}
+\texttt{LW R1,0(R2)}\\
+\texttt{ADD R3,R1,R4}\\
+\texttt{SUB R5,R3,R6}
+\end{center}
+The ADD needs the value produced by the LW, so the pair has a read-after-write
+(RAW) dependence. The SUB needs the value produced by the ADD, so a second RAW
+dependence chains the stream. These are true dependences: the consumer really
+needs the producer's value.
+
+Write-after-read (WAR) and write-after-write (WAW) hazards can arise when
+instructions execute or complete out of order. In a simple in-order
+five-stage pipeline, RAW is the central hazard because the normal stage order
+already limits the false name conflicts.
+
+\begin{example}[A load-use stall]
+\label{ex:load-use}
+Assume a load's data becomes available after MEM, while the dependent ALU
+instruction needs it at the start of EX. Even with forwarding, the value is
+available one stage too late for the immediately following ADD. The schedule
+therefore contains one bubble:
+\begin{center}
+\begin{tabular}{@{}c|cccccccc@{}}
+\toprule
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+\texttt{LW}  & IF & ID & EX & MEM & WB & & & \\
+\texttt{ADD} & & IF & ID & \textbf{stall} & EX & MEM & WB & \\
+\texttt{SUB} & & & IF & \textbf{stall} & ID & EX & MEM & WB \\
+\bottomrule
+\end{tabular}
+\end{center}
+The hazard unit freezes the PC and the IF/ID pipeline register for one cycle,
+while inserting a bubble into EX by clearing the control fields entering that
+stage. After the wait, the load result can be forwarded from the MEM/WB
+boundary to the dependent ADD's EX input. The stall is not a failure of
+forwarding; it is the one cycle needed because memory data arrives too late.
+\end{example}
+
+\subsection{Control Hazards}
+
+A branch changes the instruction stream. The fetch unit may fetch a fall-through
+instruction before the branch condition and target are known. If the branch is
+taken, those instructions are wrong-path work and must be prevented from
+changing architectural state. The penalty is the number of younger stages
+that must be flushed or redirected when the branch resolves.
+
+The designer can delay the decision, which is simple but inserts bubbles; can
+predict and recover, which keeps fetching but flushes on a misprediction; or
+can move branch resolution earlier, which reduces the penalty but lengthens an
+earlier stage and may add hardware to the critical path.
+
+\begin{example}[Diagnosing three hazards]
+\label{ex:taxonomy}
+\begin{enumerate}
+  \item If one memory port is requested by IF and MEM in the same cycle, the
+        hazard is structural. Duplicate, split, or schedule the resource.
+  \item If an ADD reads a register before a preceding load produces it, the
+        hazard is data/RAW. Forward when possible and otherwise stall.
+  \item If a conditional branch has not resolved its target, the hazard is
+        control. Predict, delay, or flush wrong-path work.
+\end{enumerate}
+In each case, a complete answer gives both the category and the mechanism that
+pays for avoiding it.
+\end{example}
+
+\section{Resolving Hazards and Spending the Throughput Budget}
+\label{sec:resolution}
+
+\subsection{Stalls and Bubbles}
+
+When the next instruction cannot safely advance, the hazard unit holds the
+blocked instructions and inserts a no-op bubble into the following stage. The
+program's meaning is preserved because the dependent operation waits for the
+required resource or value. A stall can freeze the PC, freeze an inter-stage
+register, and clear the control fields entering the next stage.
+
+The cost is extra cycles. If a fraction $s$ of instructions incurs an average
+of $b$ bubbles, then, before other effects are included,
+\[
+  \mathrm{CPI}=1+s\times b.
+\]
+Thus a hazard remedy should be evaluated by the useful work it preserves and
+the cycles it adds, not merely by whether it keeps a stage occupied.
+
+\subsection{Forwarding and Bypassing}
+
+Suppose an ALU result is already at the EX/MEM boundary. The next ALU
+operation can consume that result directly instead of waiting for WB to write
+the register file and ID to read it. Comparators detect whether a source
+register matches a destination register in a later stage, and multiplexers
+select the newest available value for each ALU input. Forwarding or data
+bypassing removes many ALU-to-ALU RAW stalls. It cannot remove a load-use delay
+when memory data arrives too late. Forwarding is part of the indexed pipeline
+treatment in Stallings 11e, S16.4, and its RISC discussion is cited in the
+deck with the same source \cite{Stallings2015_computer_organization}.
+
+\subsection{Scheduling, Renaming, and Readiness Tracking}
+
+The compiler can move an independent instruction into a delay slot or between
+a producer and consumer when the ISA permits it. Register renaming gives
+independent writes different physical destinations, removing false WAR and
+WAW name conflicts. Scoreboarding and reservation stations track operand
+readiness and resource availability so independent instructions can proceed.
+
+These techniques expose more ILP, but require metadata, selection logic,
+recovery rules, and stronger verification. No scheduling trick can remove a
+true RAW dependence: the consumer still needs the producer's value.
+
+\subsection{Prediction and Recovery}
+
+A branch predictor guesses direction and sometimes the target so that fetch
+continues without waiting for full branch resolution. A correct prediction
+turns a control hazard into useful work. A wrong prediction requires a
+\key{flush}: younger instructions are invalidated and fetch restarts from the
+correct target. The expected branch cost is approximately
+\[
+  \Delta\mathrm{CPI}\approx f_{br}\,p_{miss}\,P_{flush},
+\]
+where $f_{br}$ is branch frequency, $p_{miss}$ is the misprediction rate, and
+$P_{flush}$ is the recovery penalty. Deeper pipelines can increase
+$P_{flush}$ even when their clock is faster.
+
+\subsection{A Design Comparison}
+
+Every architecture choice spends some part of a throughput budget.
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{3.0cm}@{}}
+\toprule
+\textbf{Choice} & \textbf{Potential gain} & \textbf{New cost} &
+\textbf{Question to ask} \\
+\midrule
+Deeper pipeline & Shorter stage delay; higher clock & More registers, bubbles, branch penalty & Are hazards predictable enough? \\
+Duplicate resources & Fewer structural conflicts & Area, power, coherence/consistency & Is the conflict frequent? \\
+Forwarding network & Fewer RAW stalls & Comparators, multiplexers, timing paths & Can the value arrive in time? \\
+Branch prediction & Higher control-flow throughput & Predictor state and flush recovery & What is the miss penalty? \\
+Out-of-order issue & More ILP exposed & Rename, queues, precise recovery & Is added complexity worth it? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The design principle is to maximize useful completed work per unit time, not
+merely the clock rate or the number of stages.
+
+\begin{example}[A complete diagnosis of the running stream]
+\label{ex:running-stream}
+Consider again:
+\begin{center}
+\texttt{LW R1,0(R2)}; \texttt{ADD R3,R1,R4}; \texttt{SUB R5,R3,R6};
+\texttt{BEQ R5,R0,L}; \texttt{OR R7,R8,R9}.
+\end{center}
+The LW to ADD edge is a true RAW dependence. In the five-stage timing model,
+it requires forwarding plus one load-use stall. The ADD to SUB edge is another
+true RAW dependence, but ALU forwarding can avoid an additional stall. The SUB
+to BEQ edge means that the branch depends on a just-produced comparison value,
+so forwarding or delayed branch resolution matters. Finally, the BEQ to OR
+edge is a control hazard: fetch may need prediction and a flush if the branch
+is taken or mispredicted.
+
+A timing diagram is therefore a proof of the schedule. For each dependence,
+mark the producer stage, consumer stage, available bypass path, and every
+inserted bubble. This prevents the common mistake of saying ``forwarding
+solves hazards'' without checking when the value actually becomes available.
+\end{example}
+
+\subsection{Choosing the Cheapest Correct Fix}
+
+If an ALU result is ready at the end of EX, its consumer enters EX in the next
+cycle, and an ALU bypass path already exists, the hazard unit should forward
+the result; no bubble is needed. If the producer is a load, the hazard unit
+must stall until the data is available and then forward it. The correct
+resolution depends on when the value becomes available, not only on the fact
+that a dependence exists.
+
+\section{Decision Procedure and Week 12 Bridge}
+\label{sec:synthesis}
+
+For an unfamiliar parallel or pipeline problem, use the following procedure.
+\begin{enumerate}
+  \item Identify the streams: count the instruction streams and data streams.
+  \item For a pipeline conflict, name the blocked stage and the requested
+        resource or operand.
+  \item Classify the hazard as structural, data, or control.
+  \item Ask whether duplication, forwarding, scheduling, prediction, or a
+        stall resolves it without changing program meaning.
+  \item Count the bubbles or flushes and update the timing diagram.
+  \item State the trade-off in throughput, latency, area, power, complexity,
+        and recovery cost.
+\end{enumerate}
+
+The central discipline is to connect a label to evidence. ``Many ALUs'' does
+not establish SIMD; a dependence does not by itself determine whether a stall
+is needed; and a faster clock does not by itself establish higher throughput.
+The organization, timing, and available resources must all be named.
+
+Next week turns these mechanisms into worked instruction-pipelining problems
+and compares RISC and CISC choices that make hazards easier or harder to
+manage.
+
+\subsection*{Exercises}
+\begin{enumerate}
+  \item Classify each workload as SISD, SIMD, MISD, or MIMD and justify the
+        classification by naming its instruction and data streams: (a) one
+        scalar core sums an array; (b) one vector instruction adds eight array
+        elements; (c) four cores run independent matrix tiles.
+  \item For six independent instructions in a balanced five-stage pipeline,
+        compute the sequential time, ideal pipelined time, and finite-stream
+        speedup. State the limiting large-stream speedup.
+  \item Diagnose each hazard and give its cheapest correct response: (a) IF
+        and MEM request one single-ported memory; (b) an ALU result is ready at
+        the end of EX and its consumer enters EX next cycle; (c) a load's data
+        is available only after MEM.
+  \item For the running stream, identify every true dependence and the
+        control hazard. State which dependence needs one load-use bubble and
+        which can be handled by ALU forwarding.
+  \item A workload has branch frequency $f_{br}=0.20$, misprediction rate
+        $p_{miss}=0.05$, and flush penalty $P_{flush}=3$ cycles. Compute the
+        approximate branch contribution to CPI and explain what happens if a
+        deeper pipeline raises the penalty to 5 cycles.
+\end{enumerate}
+
+\subsection*{Solutions}
+\begingroup\small
+\begin{enumerate}
+  \item (a) SISD: one instruction stream operates on one scalar data stream.
+        (b) SIMD: one instruction stream applies the same operation to many
+        data elements. (c) MIMD: the cores run independent instruction streams
+        over independent data regions.
+  \item Sequential time is $6\times5=30$ stage-cycles. The ideal pipelined
+        time is $5+(6-1)=10$ cycles. The finite-stream speedup is $30/10=3$.
+        For a large independent stream, the ideal speedup approaches 5, not
+        1, because one instruction can complete each cycle after fill.
+  \item (a) Structural hazard: split or duplicate the memory if the conflict
+        justifies its area and power; otherwise insert a bubble. (b) Data/RAW
+        hazard with a value available in time: forward the ALU result, with no
+        bubble. (c) Data/RAW load-use hazard: stall until MEM produces the
+        value, then forward it.
+  \item The LW produces $R1$, which ADD reads: true RAW and one load-use stall.
+        ADD produces $R3$, which SUB reads: true RAW handled by ALU
+        forwarding. SUB produces the comparison value used by BEQ: another
+        true RAW whose handling depends on branch-resolution timing. BEQ
+        changes the next instruction address, so the following OR is exposed
+        to a control hazard and may be flushed after a wrong prediction.
+  \item The branch contribution is
+        \[
+          \Delta\mathrm{CPI}\approx0.20\times0.05\times3=0.03.
+        \]
+        If the penalty rises to 5 cycles, it becomes
+        $0.20\times0.05\times5=0.05$ CPI. The clock may be faster, but each
+        misprediction costs more cycles, so useful throughput depends on both
+        effects.
+\end{enumerate}
+\endgroup
+
+\section*{References and Source Boundaries}
+
+The deck's references are retained without changing their scope. Hamacher,
+Vranesic, Zaky, and Manjikian, \emph{Computer Organization and Embedded
+Systems}, 6th ed., Chs.~5 and 10, is a chapter-level course anchor; the
+current repository index does not page-verify these chapters
+\cite{Hamacher2002_computer_organization}. Stallings, \emph{Computer
+Organization and Architecture: Designing for Performance}, 11th ed. (the
+repository key is retained as Stallings2015), is cited for S16.4,
+``Instruction Pipelining,'' PDF pp.~667--685, and S20.1, ``Multiple Processor
+Organizations,'' PDF p.~847 \cite{Stallings2015_computer_organization}.
+Flynn's taxonomy is not attributed to Stallings here: its treatment in the
+indexed 11th edition is brief, so the course anchor remains Hamacher Ch.~5.
+Page numbers are used only where the deck itself marks them as checkable.
+
+\begingroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+\endgroup
+
+\end{document}

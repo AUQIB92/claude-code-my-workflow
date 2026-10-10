@@ -1,0 +1,681 @@
+% =============================================================================
+% 10-virtual-memory-storage.tex -- Week 10: Associative memory, virtual memory,
+% paging/segmentation, main-memory allocation, and secondary storage
+%
+% Course: Computer Organization and Architecture (PCC CS-401)
+%
+% Anchor reading and citation discipline:
+%   * Stallings, 11e: CAM in Sec. 5.2 (PDF pp. 193--194); internal memory
+%     Sec. 6.1 (PDF pp. 226--236); external memory Ch. 7, especially
+%     Secs. 7.1--7.4 (PDF pp. 265--292); memory management Sec. 9.3
+%     (PDF pp. 376--389). The directory/key says Stallings2015, but the
+%     indexed PDF is the 11th edition. Page citations use PDF pages where
+%     the index provides them.
+%   * Patterson & Hennessy, ARM 5e: virtual memory Sec. 5.7 (p. 441),
+%     RAID Sec. 5.11 (p. 481), and the cache/VM framework in Ch. 5.
+%   * Hamacher Ch. 8 is the syllabus anchor, but its current index is not
+%     page-verified for this topic; references to it remain chapter-level.
+%
+% Compile from Slides/CS401 with Windows MiKTeX/XeLaTeX:
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 10-virtual-memory-storage.tex
+%   BIBINPUTS="../..;" bibtex 10-virtual-memory-storage
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 10-virtual-memory-storage.tex
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 10-virtual-memory-storage.tex
+% =============================================================================
+
+\documentclass[aspectratio=169]{beamer}
+\input{header}
+\coursecode{CS401}
+
+\title{Virtual Memory and Secondary Storage}
+\subtitle{Week 10 --- Associative Lookup, Address Translation, Allocation, and RAID}
+\author[Dr. Auqib Hamid Lone]{%
+  \textbf{Dr. Auqib Hamid Lone}\\
+  \small Assistant Professor in Computer Science \& Engineering
+}
+\institute[GCET Ganderbal]{%
+  \small\textbf{PCC CS-401: Computer Organization and Architecture}\\[0.3em]
+  Department of Computer Science \& Engineering\\
+  Government College of Engineering \& Technology (GCET), Ganderbal
+}
+\date[\today]{\small\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% =============================================================================
+% ACT 0 -- RECAP AND ROADMAP
+% =============================================================================
+\section{Recap and Roadmap}
+
+\begin{frame}{Where Week 9 Left Us}
+  \begin{block}{One hierarchy, one recurring design problem}
+    \begin{itemize}
+      \item Week 9 placed a small, fast cache between the CPU and a larger,
+        slower main memory.
+      \item A cache line is found by \key{mapping} an address and checking a
+        \key{tag}; a miss fetches a block and may trigger \key{replacement}.
+      \item The design goal was not to make all memory fast. It was to make
+        the \emph{common case} fast by exploiting locality.
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock}{The question for today}
+    What if the program's address space is larger than physical main memory?
+    Can the same ``small fast level stands in for a large slow level'' idea
+    work between \emph{DRAM and storage}?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Roadmap: Six Questions, One Running Program}
+  \begin{enumerate}
+    \item How can hardware find a value by its \key{content}, not only by an
+      address? (Associative memory and CAM.)
+    \item How does a virtual address become a physical address? (Paging and
+      the TLB.)
+    \item What happens when the needed page is not in main memory? (A page
+      fault and demand paging.)
+    \item How do operating systems divide main memory among processes?
+      (Partitioning, fragmentation, and allocation.)
+    \item How do HDDs, optical media, and RAID trade capacity, latency,
+      reliability, and throughput?
+    \item Can we compress Unit III into a decision procedure before the class
+      test?
+  \end{enumerate}
+  \vspace{0.15cm}
+  \begin{alertblock}{Running example}
+    A process has a 16-bit virtual address, 256-byte pages, and 8 physical
+    frames. We will translate virtual address $\texttt{0x2F34}$, then follow
+    its page fault and storage consequences.
+  \end{alertblock}
+\end{frame}
+
+\transitionslide{First: sometimes the lookup key is the content itself.}
+
+% =============================================================================
+% ACT 1 -- ASSOCIATIVE MEMORY
+% =============================================================================
+\section{Associative Memory}
+
+\begin{frame}{Motivation: An Address Is Not Always the Best Key}
+  \begin{exampleblock}{The cache question from Week 9}
+    The CPU presents an address. The cache must answer: ``Is the block with
+    this tag present?'' Under fully associative mapping, the tag may be in
+    any line, so checking one fixed address is not enough.
+  \end{exampleblock}
+  \begin{itemize}
+    \item A conventional RAM lookup is \key{address $\to$ contents}.
+    \item An associative lookup is \key{content pattern $\to$ matching row}:
+      compare the search key against many stored entries in parallel.
+    \item This is powerful but expensive: parallel comparators and match
+      circuitry consume area and energy.
+  \end{itemize}
+  \muted{The indexed source's concrete hardware example is content-addressable
+  memory (CAM), used to make associative cache lookup possible
+  \cite[\S5.2, PDF pp.~193--194]{Stallings2015_computer_organization}.}
+\end{frame}
+
+\begin{frame}{CAM: Compare Many Tags at Once}
+  \begin{center}
+    % Diagram: CAM lookup with four fixed-width rows and one search key.
+    % Coordinates: (x, y)
+    %   Search key at (0, 2.4), w=2.4, h=0.7
+    %   CAM rows at (4.0, 3.6), (4.0, 2.4), (4.0, 1.2), (4.0, 0.0),
+    %   each w=3.0, h=0.7; match outputs at (8.0, y), w=1.6, h=0.7.
+    %   Every arrow uses a clear horizontal corridor; labels are above arrows.
+    \begin{tikzpicture}[scale=0.78, transform shape,
+        every node/.style={font=\scriptsize}]
+      \node[draw=primary-gold, thick, fill=white, minimum width=2.4cm,
+            minimum height=0.7cm, align=center] (KEY) at (0,2.4)
+            {search tag\\\texttt{10110}};
+      \node[draw=primary-blue, fill=light-bg, minimum width=3.0cm,
+            minimum height=0.7cm, align=center] (R0) at (4.0,3.6)
+            {row 0: \texttt{00101}};
+      \node[draw=primary-blue, fill=light-bg, minimum width=3.0cm,
+            minimum height=0.7cm, align=center] (R1) at (4.0,2.4)
+            {row 1: \texttt{10110}};
+      \node[draw=primary-blue, fill=light-bg, minimum width=3.0cm,
+            minimum height=0.7cm, align=center] (R2) at (4.0,1.2)
+            {row 2: \texttt{11001}};
+      \node[draw=primary-blue, fill=light-bg, minimum width=3.0cm,
+            minimum height=0.7cm, align=center] (R3) at (4.0,0.0)
+            {row 3: \texttt{00011}};
+      \node[draw=positive, thick, fill=light-bg, minimum width=1.6cm,
+            minimum height=0.7cm, align=center] (M0) at (8.0,3.6) {no};
+      \node[draw=positive, thick, fill=light-bg, minimum width=1.6cm,
+            minimum height=0.7cm, align=center] (M1) at (8.0,2.4) {MATCH};
+      \node[draw=positive, thick, fill=light-bg, minimum width=1.6cm,
+            minimum height=0.7cm, align=center] (M2) at (8.0,1.2) {no};
+      \node[draw=positive, thick, fill=light-bg, minimum width=1.6cm,
+            minimum height=0.7cm, align=center] (M3) at (8.0,0.0) {no};
+      \draw[->, thick, primary-gold] (KEY.east) -- (2.0,2.4);
+      \node[primary-gold] at (1.0,2.75) {broadcast compare};
+      \draw[->] (R0.east) -- (M0.west);
+      \draw[->] (R1.east) -- (M1.west);
+      \draw[->] (R2.east) -- (M2.west);
+      \draw[->] (R3.east) -- (M3.west);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item The match vector identifies a row; the row's data can then be read.
+    \item In a TLB, the content being compared is typically a virtual page
+      number plus address-space information; the result supplies a physical
+      frame number.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Socratic Check: What Does Associativity Buy?}
+  \begin{alertblock}{Question}
+    A four-entry lookup table receives a key that can match any row. What is
+    the benefit of comparing all four rows in parallel, and what is the cost?
+  \end{alertblock}
+  \begin{itemize}
+    \item \good{Benefit:} placement is flexible; a key need not be assigned to
+      one predetermined row, reducing conflict misses.
+    \item \bad{Cost:} four comparisons and match-selection logic operate in
+      parallel; area, wiring, power, and verification complexity increase.
+    \item \key{Connection:} fully associative cache mapping and TLB lookup use
+      this same placement-versus-hardware trade-off.
+  \end{itemize}
+  \muted{Do not confuse associative memory with ``memory that is random.''
+  The adjective describes the lookup method, not the data.}
+\end{frame}
+
+\transitionslide{Now use the same hierarchy idea between DRAM and storage.}
+
+% =============================================================================
+% ACT 2 -- VIRTUAL MEMORY AND PAGING
+% =============================================================================
+\section{Virtual Memory and Paging}
+
+\begin{frame}{Motivation: Give Each Process a Private, Large Address Space}
+  \begin{block}{The software view}
+    A process should be able to use a simple, contiguous address space without
+    knowing which physical locations are free or which other process owns them.
+  \end{block}
+  \begin{itemize}
+    \item A \key{virtual address} is generated by the CPU for the process.
+    \item The memory-management unit (MMU) translates it to a \key{physical
+      address} in main memory.
+    \item Pages are the virtual-memory analogue of cache blocks; physical
+      frames are the fixed-size slots that hold them.
+    \item If the page is absent, the hardware raises a \key{page fault}; the
+      operating system can fetch it from secondary storage
+      \cite[\S5.7, p.~441]{PattersonHennessy2017_computer_organization_design}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Running System: Virtual Address Fields}
+  \begin{exampleblock}{Given}
+    Virtual address width $V=16$ bits; page size $=256=2^8$ bytes; physical
+    memory has 8 frames $=2^3$ frames.
+  \end{exampleblock}
+  \begin{itemize}
+    \item Virtual address space: $2^{16}$ bytes $=64$~KiB.
+    \item Number of virtual pages: $2^{16}/2^8=2^8=256$ pages.
+    \item Physical memory: $8\times256=2048$ bytes $=2$~KiB.
+    \item Therefore a virtual address splits into
+      \key{virtual page number (VPN), 8 bits} and \key{page offset, 8 bits}.
+    \item A physical address splits into \key{physical frame number, 3 bits}
+      and the same \key{8-bit offset}.
+  \end{itemize}
+  \vspace{0.1cm}
+  \textbf{Invariant:} translation changes the page/frame field, never the
+  offset within a page.
+\end{frame}
+
+\begin{frame}{Paging Translation: The Page Table Is the Map}
+  \begin{center}
+    % Diagram: virtual address to page table to physical address.
+    % Coordinates: (x, y)
+    %   VA strip at (0, 3.4), w=4.0, h=0.8; page table at (5.0, 2.0),
+    %   w=3.2, h=2.8; PA strip at (10.0, 3.4), w=4.0, h=0.8.
+    %   Arrow corridors run above the table; no line crosses a box.
+    \begin{tikzpicture}[scale=0.78, transform shape,
+        every node/.style={font=\scriptsize}]
+      \node[draw=primary-blue, thick, fill=light-bg, minimum width=4.0cm,
+            minimum height=0.8cm, align=center] (VA) at (0,3.4)
+            {virtual address\\VPN \textbar\ offset};
+      \node[draw=primary-blue, thick, fill=light-bg, minimum width=3.2cm,
+            minimum height=2.8cm, text width=2.8cm, align=center] (PT) at (5.0,2.0)
+            {page table\\VPN $\to$ PFN\\valid bit\\protection bits};
+      \node[draw=primary-gold, thick, fill=white, minimum width=4.0cm,
+            minimum height=0.8cm, align=center] (PA) at (10.0,3.4)
+            {physical address\\PFN \textbar\ same offset};
+      \draw[->, thick] (VA.east) -- (3.0,3.4) -- (3.0,4.4) --
+            (5.0,4.4) -- (5.0,3.4);
+      \node at (4.0,4.75) {index with VPN};
+      \draw[->, thick, primary-gold] (PT.east) -- (7.0,2.0) -- (7.0,4.4) --
+            (10.0,4.4) -- (10.0,3.8);
+      \node[primary-gold] at (8.5,4.75) {replace VPN by PFN};
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item The page table records the current physical frame, validity, and
+      access permissions for each virtual page.
+    \item A valid entry gives a fast translation; an invalid entry signals that
+      the operating system must intervene.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Translate \texttt{0x2F34}}
+  \begin{exampleblock}{Step 1: split the virtual address}
+    $\texttt{0x2F34}=0010\,1111\,0011\,0100_2$. With 8 offset bits:
+    \[
+      \underbrace{0010\,1111}_{\text{VPN}=\texttt{0x2F}=47}\quad
+      \underbrace{0011\,0100}_{\text{offset}=\texttt{0x34}=52}.
+    \]
+  \end{exampleblock}
+  \begin{itemize}
+    \item Suppose the page table entry for VPN $47$ is valid and maps it to
+      physical frame $5$ ($101_2$).
+    \item Physical address $= 5\times256+52=\key{1332}$ bytes.
+    \item In hex, the physical address is
+      $\texttt{0x5}\,||\,\texttt{0x34}=\key{\texttt{0x534}}$.
+    \item Check: the low eight bits stayed $\texttt{0x34}$; only the page
+      number changed.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The TLB: Cache the Translation, Not the Data}
+  \begin{block}{Translation Lookaside Buffer}
+    A \key{TLB} is a small associative cache of recent page-table mappings:
+    VPN $\to$ PFN. It is checked before the larger page table
+    \cite[\S5.7, p.~441]{PattersonHennessy2017_computer_organization_design}.
+  \end{block}
+  \begin{enumerate}
+    \item CPU emits a virtual address; split it into VPN and offset.
+    \item TLB compares the VPN against its stored entries in parallel.
+    \item \good{TLB hit:} obtain PFN, concatenate PFN with offset, access DRAM.
+    \item \bad{TLB miss:} consult the page table; if valid, fill the TLB and
+      retry. If invalid, take a page fault.
+  \end{enumerate}
+  \vspace{0.1cm}
+  \muted{The TLB is associative because the desired VPN may occupy any TLB
+  entry; its match is a content lookup.}
+\end{frame}
+
+\begin{frame}{Page Fault: When Translation Finds No Resident Page}
+  \begin{alertblock}{A page fault is not automatically a program error}
+    It means the requested virtual page is not currently resident in a physical
+    frame. The operating system must make the reference legal before the
+    instruction can continue.
+  \end{alertblock}
+  \begin{enumerate}
+    \item Hardware traps to the operating-system page-fault handler.
+    \item The handler checks the access: illegal address or permission failure
+      means terminate; otherwise locate the page in storage.
+    \item If no free frame exists, choose a victim page; write it back if
+      dirty, then read the requested page into the frame.
+    \item Update the page table and TLB, mark the page valid, and restart the
+      faulting instruction.
+  \end{enumerate}
+  \muted{This is demand paging: storage is a backing level, not a substitute
+  for the latency of DRAM. The standard hierarchy treatment is covered in
+  Stallings \S9.3, PDF pp.~376--389.}
+\end{frame}
+
+\begin{frame}{Socratic Check: Page Size Is a Trade-off}
+  \begin{alertblock}{Question}
+    Why not make every page enormous so that one page fault transfers lots of
+    nearby data? Why not make every page one byte?
+  \end{alertblock}
+  \begin{itemize}
+    \item \key{Larger pages:} fewer page-table entries and better transfer
+      efficiency when spatial locality is strong, but more wasted space when
+      only a small part of a page is used and more data is moved on a fault.
+    \item \key{Smaller pages:} less internal waste and finer protection, but
+      larger page tables and more translation overhead.
+    \item The useful page size balances page-table cost, transfer cost,
+      fragmentation, and the program's locality.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{Paging is not the only way to describe a process's memory.}
+
+% =============================================================================
+% ACT 3 -- SEGMENTATION AND ALLOCATION
+% =============================================================================
+\section{Segmentation and Main-Memory Allocation}
+
+\begin{frame}{Segmentation: Preserve Logical Units}
+  \begin{block}{A segment is a variable-sized logical region}
+    Instead of splitting an address space into equal pages, segmentation names
+    units such as code, data, stack, or a shared library. A logical address is
+    \key{(segment number, offset)}.
+  \end{block}
+  \begin{itemize}
+    \item A segment table entry supplies a base address, a limit, and access
+      permissions.
+    \item Translation checks $0\leq\text{offset}<\text{limit}$, then forms
+      $\text{physical address}=\text{base}+\text{offset}$.
+    \item Protection and sharing can follow program structure: code can be
+      read/execute, while data can be read/write.
+    \item Variable sizes make external fragmentation possible; paging avoids
+      external fragmentation by using fixed-size frames.
+  \end{itemize}
+  \muted{Stallings treats segmentation as part of memory management in
+  \S9.3, PDF pp.~376--389; the syllabus's Hamacher Ch. 8 is the course-level
+  anchor for the same standard treatment.}
+\end{frame}
+
+\begin{frame}{Paging and Segmentation: What Problem Are We Solving?}
+  \scriptsize
+  \begin{center}
+    \begin{tabular}{@{}p{2.2cm}p{3.6cm}p{3.6cm}p{2.8cm}@{}}
+      \toprule
+      \textbf{Scheme} & \textbf{Allocation unit} & \textbf{Strength} & \textbf{Main cost} \\
+      \midrule
+      Paging & Fixed-size page/frame & Simple placement; no external fragmentation; easy swapping & Internal fragmentation; page-table/\-TLB overhead \\
+      Segmentation & Variable-size logical segment & Natural protection/sharing; programmer-visible units & External fragmentation; compaction or complex allocation \\
+      Paged segmentation & Segments divided into pages & Combines logical protection with fixed-size placement & Two-level translation and more metadata \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.15cm}
+  \begin{alertblock}{Exam habit}
+    State the unit first. If the unit is fixed-size, discuss pages, frames, and
+    internal fragmentation. If it is variable-size, discuss segments, holes,
+    and external fragmentation.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Main-Memory Allocation: The Hole-Selection Problem}
+  \begin{exampleblock}{Contiguous allocation setup}
+    Free memory contains holes of $100$~KiB, $500$~KiB, $200$~KiB, $300$~KiB,
+    and $600$~KiB. A process requests $212$~KiB.
+  \end{exampleblock}
+  \begin{itemize}
+    \item \key{First fit:} place the process in the first hole large enough:
+      $500$~KiB. Fast search; leaves a $288$~KiB remainder.
+    \item \key{Best fit:} choose the smallest adequate hole: $300$~KiB.
+      Leaves an $88$~KiB remainder, but may create many tiny holes.
+    \item \key{Worst fit:} choose the largest hole: $600$~KiB. Leaves a
+      $388$~KiB remainder, preserving medium-sized holes elsewhere.
+    \item After placement, the chosen hole is split into an allocated block and
+      a smaller free hole.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fragmentation: Capacity Can Exist but Be Unusable}
+  \begin{block}{Two distinct losses}
+    \begin{itemize}
+      \item \key{Internal fragmentation:} unused space inside an allocated
+        fixed-size unit, such as the unused tail of a page or frame.
+      \item \key{External fragmentation:} enough total free space exists, but
+        it is split into non-contiguous holes and cannot satisfy one contiguous
+        request.
+    \end{itemize}
+  \end{block}
+  \begin{itemize}
+    \item Paging largely removes external fragmentation because any free frame
+      can hold any page.
+    \item Paging does not remove internal fragmentation: the last page of a
+      process is often only partly occupied.
+    \item Segmentation matches logical units well, but allocation must manage
+      holes; compaction moves allocated segments and is expensive.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Socratic Check: Choose the Allocation Policy}
+  \begin{alertblock}{Scenario}
+    A real-time allocator receives many requests between $90$ and $120$~KiB.
+    It must respond quickly, and future requests are unknown. Which policy is
+    a defensible default, and what evidence would change your choice?
+  \end{alertblock}
+  \begin{itemize}
+    \item \key{First fit} is a defensible default: it usually searches less
+      and leaves the remainder pattern to be measured rather than guessed.
+    \item Choose best fit only if measurements show that preserving larger holes
+      is more valuable than the extra search and small-hole production.
+    \item Choose worst fit only if the workload benefits from retaining useful
+      medium-sized holes and the larger-hole loss is acceptable.
+    \item The correct engineering answer names the workload and metric, not
+      only the policy label.
+  \end{itemize}
+\end{frame}
+
+\transitionslide{A page fault turns a memory reference into a storage request.}
+
+% =============================================================================
+% ACT 4 -- SECONDARY STORAGE
+% =============================================================================
+\section{Secondary Storage}
+
+\begin{frame}{HDD Anatomy: Capacity, Position, and Time}
+  \begin{block}{Magnetic disk access is not one constant delay}
+    An HDD stores bits magnetically on rotating platters. A request must select
+    a surface and track, wait for the desired sector to rotate under the head,
+    then transfer the data.
+  \end{block}
+  \begin{itemize}
+    \item \key{Seek time:} move the actuator to the target track.
+    \item \key{Rotational latency:} wait for the sector; average latency is
+      approximately half a rotation.
+    \item \key{Transfer time:} read or write the sector once positioned.
+    \item Approximate access time:
+      $T_{access}=T_{seek}+T_{rotation}+T_{transfer}+T_{controller}$.
+    \item Sequential access amortizes seek and rotation; random page faults
+      can be dominated by positioning time.
+  \end{itemize}
+  \muted{These components and magnetic-disk geometry follow Stallings,
+  \S7.1, PDF p.~265.}
+\end{frame}
+
+\begin{frame}{HDD Geometry: Why Locality Matters Again}
+  \begin{center}
+    % Diagram: two platters with tracks, heads, and one highlighted cylinder.
+    % Coordinates: (x, y)
+    %   platter disks centered at (2.0,2.2) and (2.0,0.0), radius 1.35;
+    %   heads at (5.0,2.2) and (5.0,0.0), w=1.4, h=0.6;
+    %   actuator at (7.0,1.1), w=1.6, h=2.8. The cylinder line is dashed
+    %   between platter centers and the heads; labels are offset from paths.
+    \begin{tikzpicture}[scale=0.72, transform shape,
+        every node/.style={font=\scriptsize}]
+      \draw[draw=primary-blue, thick] (2.0,2.2) circle (1.35);
+      \draw[draw=primary-blue] (2.0,2.2) circle (0.85);
+      \draw[draw=primary-blue, thick] (2.0,0.0) circle (1.35);
+      \draw[draw=primary-blue] (2.0,0.0) circle (0.85);
+      \node[draw=primary-gold, fill=white, minimum width=1.4cm,
+            minimum height=0.6cm, align=center] (H1) at (5.0,2.2) {head 1};
+      \node[draw=primary-gold, fill=white, minimum width=1.4cm,
+            minimum height=0.6cm, align=center] (H2) at (5.0,0.0) {head 2};
+      \node[draw=primary-blue, fill=light-bg, minimum width=1.6cm,
+            minimum height=2.8cm, text width=1.4cm, align=center] (ACT) at
+            (7.0,1.1) {actuator\\moves heads together};
+      \draw[dashed, primary-gold] (2.85,2.2) -- (4.3,2.2);
+      \draw[dashed, primary-gold] (2.85,0.0) -- (4.3,0.0);
+      \node[primary-gold] at (3.55,2.65) {same track};
+      \node[primary-gold] at (3.55,-0.45) {same cylinder};
+      \draw[->] (H1.east) -- (ACT.west);
+      \draw[->] (H2.east) -- (ACT.west);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item A cylinder is the set of tracks at the same radius across surfaces.
+    \item Keeping related blocks nearby reduces movement and improves effective
+      throughput; this is storage-level spatial locality.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RAID: Use Several Disks as One Dependable System}
+  \begin{block}{Redundant Array of Independent Disks}
+    RAID combines multiple physical disks and presents a logical storage
+    system. The design dimensions are \key{striping} for parallelism,
+    \key{mirroring} or \key{parity} for recovery, and the number of disks
+    available after redundancy.
+  \end{block}
+  \begin{center}
+    \scriptsize
+    \begin{tabular}{@{}p{1.0cm}p{5.0cm}p{5.0cm}@{}}
+      \toprule
+      \textbf{Level} & \textbf{Idea} & \textbf{Trade-off} \\
+      \midrule
+      RAID 0 & Block striping, no redundancy & High throughput; one disk failure loses the array \\
+      RAID 1 & Mirroring & Simple recovery; about half raw capacity \\
+      RAID 5 & Striping with distributed single parity & One-disk failure tolerance; parity-write cost \\
+      RAID 6 & Striping with distributed dual parity & Two-disk failure tolerance; more parity overhead \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \muted{RAID levels and their performance/reliability trade-offs are indexed in
+  Stallings \S7.2, PDF pp.~276--288, and P\&H \S5.11, p.~481.}
+\end{frame}
+
+\begin{frame}{Worked Example: RAID 5 Parity Recovery}
+  \begin{exampleblock}{Three data blocks and one parity block}
+    Suppose corresponding bytes on three disks are
+    $D_0=1010$, $D_1=0110$, and $D_2=1100$. RAID 5 stores parity
+    $P=D_0\oplus D_1\oplus D_2$ on a rotating disk.
+  \end{exampleblock}
+  \begin{itemize}
+    \item Compute parity:
+      $1010\oplus0110=1100$ and $1100\oplus1100=\key{0000}$.
+    \item If disk $D_1$ fails, reconstruct it as
+      $D_1=D_0\oplus D_2\oplus P$.
+    \item $1010\oplus1100\oplus0000=\key{0110}$, exactly the missing block.
+    \item One failure is recoverable because parity preserves the XOR relation;
+      two simultaneous failures require more independent parity, as in RAID 6.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Optical Storage: CD, DVD, and Blu-ray}
+  \begin{block}{Read the surface with a laser}
+    Optical media encode information in a spiral track of pits and lands. A
+    laser reads the changing reflectivity; the drive converts that signal into
+    bits.
+  \end{block}
+  \begin{itemize}
+    \item \key{CD:} compact-disc format; approximately $700$~MB for a common
+      data disc.
+    \item \key{DVD:} higher-density optical format; approximately $4.7$~GB for
+      a single-layer, single-sided disc.
+    \item \key{Blu-ray:} shorter-wavelength blue-violet laser and tighter track
+      geometry; commonly $25$~GB for a single-layer disc.
+    \item Read-only, recordable, and rewritable variants differ in how the
+      recording layer changes; optical media are removable and inexpensive per
+      disc, but slower and less convenient for frequent updates than SSDs.
+  \end{itemize}
+  \muted{The optical-media treatment is standard secondary-storage content;
+  Stallings indexes CD/DVD/Blu-ray under \S7.4, PDF p.~292.}
+\end{frame}
+
+\begin{frame}{Secondary Storage: Choose by the Workload}
+  \scriptsize
+  \begin{center}
+    \begin{tabular}{@{}p{2.3cm}p{3.0cm}p{3.0cm}p{3.9cm}@{}}
+      \toprule
+      \textbf{Medium} & \textbf{Strength} & \textbf{Weakness} & \textbf{Good fit} \\
+      \midrule
+      HDD & Low cost per bit; large capacity & Mechanical seek and rotation & Bulk data, sequential files, cold storage \\
+      SSD/flash & Low latency; no moving head & Write/erase limits; higher cost per bit & OS/apps, random access, active working sets \\
+      Optical & Removable; useful for distribution/archive & Slow updates; lower capacity per medium & Media distribution and offline copies \\
+      RAID array & Parallelism plus optional redundancy & More controllers, disks, parity or mirror overhead & Servers needing throughput and availability \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.15cm}
+  \textbf{Design question:} Is the bottleneck latency, throughput, capacity, failure
+  recovery, or cost? The medium follows from the bottleneck.
+\end{frame}
+
+\transitionslide{Unit III review: translate, allocate, store, and justify.}
+
+% =============================================================================
+% ACT 5 -- UNIT III SYNTHESIS
+% =============================================================================
+\section{Unit III Review}
+
+\begin{frame}{One Pattern Across the Memory Hierarchy}
+  \begin{block}{The same four-part design pattern}
+    \begin{enumerate}
+      \item \key{Unit:} line, page, segment, block, or stripe.
+      \item \key{Lookup/placement:} tag comparison, page table/TLB,
+        hole-selection policy, disk geometry, or RAID mapping.
+      \item \key{Miss/failure response:} fetch a block, handle a page fault,
+        split/compact a hole, seek/transfer, or reconstruct from redundancy.
+      \item \key{Cost:} hardware, latency, capacity waste, fragmentation,
+        bandwidth, or redundancy overhead.
+    \end{enumerate}
+  \end{block}
+  \begin{itemize}
+    \item Week 9: cache makes DRAM appear faster.
+    \item Week 10: virtual memory makes storage-backed capacity appear like a
+      larger private memory, while page faults expose the true cost.
+    \item No level removes the cost; it changes when and where the cost is paid.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Socratic Check: Diagnose the Failure}
+  \begin{alertblock}{Scenario}
+    A program repeatedly touches a small set of pages, but its TLB miss rate
+    and page-fault rate are both high. Which facts should you investigate?
+  \end{alertblock}
+  \begin{itemize}
+    \item \key{TLB capacity/associativity:} too many active VPNs may evict
+      translations even when all pages are resident.
+    \item \key{Physical frames:} too few frames for the working set can cause
+      repeated page faults and thrashing.
+    \item \key{Page size/locality:} a poor page size may fetch irrelevant data
+      or create excessive table/translation overhead.
+    \item \key{Access pattern:} alternating across many pages can defeat a
+      replacement policy even when total memory seems large.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Unit III Exam Checklist}
+  \footnotesize
+  \begin{enumerate}
+    \item For address translation, split the address into VPN and offset; use
+      the page table/TLB to replace only the VPN; preserve the offset.
+    \item For a page fault, state the trap, validity/protection check, victim
+      selection, dirty write-back, page-in, table/TLB update, and restart.
+    \item For paging versus segmentation, name the unit and distinguish
+      internal from external fragmentation.
+    \item For allocation, show the hole list before and after first fit, best
+      fit, or worst fit; do not merely name the policy.
+    \item For HDD access, decompose seek, rotational latency, transfer, and
+      controller time; locality reduces positioning cost.
+    \item For RAID, distinguish striping, mirroring, parity, capacity,
+      throughput, and the number of failures tolerated.
+    \item For associative memory, explain parallel comparison and its hardware
+      cost; connect CAM/TLB lookup to Week 9's fully associative mapping.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[shrink=5]{Summary and Bridge to Week 11}
+  \begin{exampleblock}{Today in one sentence}
+    Virtual memory combines page-based placement, associative translation, and
+    storage-backed recovery so each process can use a protected address space
+    larger than physical DRAM.
+  \end{exampleblock}
+  \begin{itemize}
+    \item \key{Associative memory:} content lookup enables flexible placement;
+      CAM/TLB parallelism costs area and energy.
+    \item \key{Paging:} VPN $\to$ PFN plus unchanged offset; TLB hits are fast,
+      page faults are expensive OS events.
+    \item \key{Segmentation/allocation:} logical units and hole policies trade
+      protection, flexibility, and fragmentation.
+    \item \key{Storage:} HDD positioning, optical density, SSD latency, and RAID
+      redundancy answer different workload constraints.
+  \end{itemize}
+  \vspace{0.1cm}
+  \textbf{Bridge:} once memory hierarchy and storage are organized, Week 11
+  asks how multiple instruction streams and processors can use that system in
+  parallel without creating hazards.
+\end{frame}
+
+\begin{frame}[shrink=5]{References}
+  \tiny
+  \bibliographystyle{plain}
+  \bibliography{../../Bibliography_base}
+  \vspace{0.2cm}
+  \scriptsize
+  \muted{Anchor reading for this week: Stallings 11e Ch.~7 (external memory),
+  Ch.~9 \S9.3 (memory management), and Ch.~6 \S6.1 (internal memory);
+  Patterson \& Hennessy ARM 5e Ch.~5 \S5.7 (virtual memory) and \S5.11
+  (RAID); Hamacher Ch.~8 (chapter-level only --- not page-verified for this
+  course).}
+\end{frame}
+
+\end{document}
