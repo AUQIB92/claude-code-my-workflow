@@ -187,4 +187,45 @@
     \end{tikzpicture}
   \end{frame}
   \endgroup
-} 
+}
+
+% -----------------------------------------------------------------------------
+% Channel watermark — "Concepts That Click" (YouTube).
+%
+% Article-class files (CompetitiveExam Q/A sets, Notes, Assignments) get a
+% light diagonal draft watermark on every page plus a centered footer naming
+% the channel. Beamer decks get a subtle TikZ background watermark instead
+% (the footline already carries the course code). Centralized here so every
+% MCQ PDF is branded without per-file edits.
+% -----------------------------------------------------------------------------
+\makeatletter
+\@ifclassloaded{article}{%
+  \usepackage{draftwatermark}
+  \SetWatermarkText{Concepts That Click}
+  \SetWatermarkScale{1}
+  \SetWatermarkFontSize{2cm}
+  \SetWatermarkLightness{0.86}
+  \SetWatermarkAngle{45}
+  \usepackage{fancyhdr}
+  \pagestyle{fancy}
+  \fancyhf{}
+  \fancyfoot[C]{\footnotesize\textcolor{neutral}{Concepts That Click~|~YouTube: \href{https://www.youtube.com/@concepts.thatclick}{@concepts.thatclick}}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyfoot[C]{\footnotesize\textcolor{neutral}{Concepts That Click~|~YouTube: \href{https://www.youtube.com/@concepts.thatclick}{@concepts.thatclick}}}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+  }
+}{}
+\@ifclassloaded{beamer}{%
+  \setbeamertemplate{background}{%
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[rotate=45, opacity=0.055, align=center]
+        at (current page.center)
+        {\Huge\textcolor{neutral}{Concepts That Click}};
+    \end{tikzpicture}%
+  }
+}{}
+\makeatother 

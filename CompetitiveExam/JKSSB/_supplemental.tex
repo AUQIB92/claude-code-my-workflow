@@ -1,0 +1,2165 @@
+\newcommand{\JKSSBItem}[5]{%
+  \ifnum\JKSSBAnswers=1
+    \item \textbf{#4.} #5
+  \else
+    \item \textit{#1} #2
+      \begin{enumerate}[label=\Alph*.]
+        #3
+      \end{enumerate}
+  \fi
+}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\ifnum\JKSSBLessonID=50
+  \setcounter{enumi}{26}
+\else\ifnum\JKSSBLessonID=59
+  \setcounter{enumi}{27}
+\else
+  \setcounter{enumi}{25}
+\fi\fi
+\ifnum\JKSSBLessonID=1
+\JKSSBItem{[Original]}{In the IPO cycle, which stage converts processed data into information for a user?}
+  {\item Input
+   \item Processing
+   \item Output
+   \item Storage}
+  {C}{Output presents the processed result. Input supplies data, processing transforms it, and storage retains it.}
+\JKSSBItem{[Original]}{Which property describes a computer's ability to repeat a task for long periods without tiring?}
+  {\item Diligence
+   \item Versatility
+   \item Accuracy
+   \item Automation}
+  {A}{Diligence means sustained work without fatigue. Versatility is range of uses, accuracy concerns correct results, and automation is operation without continuous manual control.}
+\JKSSBItem{[Original]}{A list of unprocessed daily sales entries is best described as:}
+  {\item Information
+   \item Data
+   \item Knowledge
+   \item Output}
+  {B}{Raw facts are data. Information is data organized or processed into a meaningful form; knowledge and output are not synonyms for raw entries.}
+\JKSSBItem{[Original]}{Which statement is a limitation of a computer?}
+  {\item It can process data rapidly.
+   \item It can store large amounts of data.
+   \item It does not independently decide its goals without instructions.
+   \item It can perform repetitive work consistently.}
+  {C}{A computer follows instructions and does not set its own goals. The other options describe speed, storage, and diligence.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about the IPO cycle are correct?}
+  {\item Input provides data or instructions.
+   \item Processing applies operations to data.
+   \item Output presents a result.
+   \item Storage is the same stage as input.}
+  {A, B, C}{Input, processing, and output have distinct roles. Storage retains data or results; it is not the same as input.}
+\fi
+\ifnum\JKSSBLessonID=2
+\JKSSBItem{[Original]}{A computer that represents values using continuously varying physical quantities is:}
+  {\item Digital
+   \item Analog
+   \item Hybrid
+   \item Microcomputer}
+  {B}{Analog computers represent continuous quantities. Digital computers use discrete values; hybrid systems combine analog and digital processing; microcomputer classifies size/use.}
+\JKSSBItem{[Original]}{A system combining analog measurement with digital control is a:}
+  {\item Hybrid computer
+   \item Mainframe
+   \item Minicomputer
+   \item General-purpose digital computer}
+  {A}{A hybrid computer combines analog and digital characteristics. The other options identify size/use categories or a digital-only class.}
+\JKSSBItem{[Original]}{Which class is designed to support very large numbers of users and high-volume transaction processing?}
+  {\item Mainframe
+   \item Tablet computer
+   \item Embedded controller
+   \item Analog computer}
+  {A}{Mainframes serve many concurrent users and transaction workloads. Tablets are personal devices, embedded controllers serve dedicated functions, and analog describes data representation.}
+\JKSSBItem{[Original]}{Which classification is based primarily on the kind of data represented rather than physical size?}
+  {\item Analog, digital, hybrid
+   \item Micro, mini, mainframe
+   \item Laptop, desktop, tablet
+   \item Client, server, workstation}
+  {A}{Analog/digital/hybrid describes representation. The remaining sets classify by size/form factor or role.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which pairings are valid?}
+  {\item Analog computer --- continuous quantities
+   \item Digital computer --- discrete values
+   \item Hybrid computer --- combination of analog and digital features
+   \item Mainframe --- a type of analog representation}
+  {A, B, C}{The first three match data-representation categories. Mainframe describes a computer class by scale and workload, not representation.}
+\fi
+\ifnum\JKSSBLessonID=3
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q72, provisional key; SRC-04/SRC-07]}{What is the smallest unit of data?}
+  {\item Bit
+   \item Byte
+   \item Nibble
+   \item Word}
+  {A}{A bit is a single binary digit. A nibble is four bits, a byte is eight bits, and a word is processor-dependent. The cited answer key is provisional.}
+\JKSSBItem{[Original]}{How many bits are in one byte?}
+  {\item 4
+   \item 8
+   \item 16
+   \item 32}
+  {B}{One byte contains eight bits. Four is a nibble; 16 and 32 bits are larger groups.}
+\JKSSBItem{[Original]}{How many nibbles make one byte?}
+  {\item One
+   \item Two
+   \item Four
+   \item Eight}
+  {B}{A nibble is four bits and a byte is eight bits, so one byte contains two nibbles.}
+\JKSSBItem{[Original]}{Using the binary convention, how many bytes are in 1 KiB?}
+  {\item 1000
+   \item 1024
+   \item 100
+   \item 2048}
+  {B}{1 KiB is 1024 bytes. 1000 is the decimal kilobyte convention; 100 and 2048 are not the stated unit sizes.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item A nibble contains four bits.
+   \item A byte contains eight bits.
+   \item A bit can represent 0 or 1.
+   \item A byte contains four nibbles.}
+  {A, B, C}{A nibble is four bits and a byte is eight bits, so a byte has two nibbles, not four.}
+\fi
+\ifnum\JKSSBLessonID=4
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q65, provisional key; SRC-04/SRC-07]}{Which unit directs the sequence of operations and controls data flow inside the CPU?}
+  {\item Arithmetic Logic Unit
+   \item Control Unit
+   \item Main memory
+   \item Input unit}
+  {B}{The Control Unit sequences operations and directs data flow. The ALU performs arithmetic/logic; memory stores data; input supplies data. The cited key is provisional.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q61, final key; SRC-03/SRC-06]}{Which CPU component performs arithmetic and logical operations on binary data?}
+  {\item Control Unit
+   \item Arithmetic Logic Unit
+   \item Program Counter
+   \item Input unit}
+  {B}{The ALU performs arithmetic and logical operations. The Control Unit directs execution, the Program Counter holds an instruction address, and the input unit supplies data.}
+\JKSSBItem{[Original]}{Which bus carries the address of a memory location selected by the CPU?}
+  {\item Address bus
+   \item Data bus
+   \item Control bus
+   \item Expansion bus}
+  {A}{The address bus carries location addresses. The data bus carries data; the control bus carries timing/control signals; expansion buses connect peripherals.}
+\JKSSBItem{[Original]}{Which sequence best describes a basic computer system's information flow?}
+  {\item Output, processing, input
+   \item Input, processing, output
+   \item Storage, output, input
+   \item Processing, output, input}
+  {B}{Input supplies data, processing transforms it, and output presents results. The other sequences reverse that basic order.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are functional units of a general-purpose computer?}
+  {\item Input unit
+   \item Memory unit
+   \item Central Processing Unit
+   \item Output unit}
+  {A, B, C, D}{A general-purpose computer has input, memory, processing (CPU), and output functions.}
+\fi
+\ifnum\JKSSBLessonID=5
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q6; SRC-18]}{Which register holds the instruction currently being decoded?}
+  {\item Memory Address Register
+   \item Program Counter
+   \item Instruction Register
+   \item Accumulator}
+  {C}{The Instruction Register holds the fetched instruction during decode/execute. MAR holds an address, PC holds the next instruction address, and the accumulator stores intermediate results.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q64, final key; SRC-03/SRC-06]}{Which register normally holds the address of the next instruction to be fetched?}
+  {\item Instruction Register
+   \item Program Counter
+   \item Accumulator
+   \item Memory Data Register}
+  {B}{The Program Counter holds the next instruction address. The IR holds the instruction itself, the accumulator holds results, and MDR holds data transferred to/from memory.}
+\JKSSBItem{[Original]}{Which register temporarily holds the address of a memory location being accessed?}
+  {\item MAR
+   \item IR
+   \item Accumulator
+   \item Status register}
+  {A}{The Memory Address Register holds a memory address. IR holds an instruction, the accumulator stores results, and a status register stores condition flags.}
+\JKSSBItem{[Original]}{The clock rate of a processor is commonly expressed in:}
+  {\item Bytes per second
+   \item Hertz
+   \item Pixels per inch
+   \item Revolutions per minute}
+  {B}{Clock rate is cycles per second, measured in hertz. The other units measure data rate, image density, and rotational speed.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match each register with its common role.}
+  {\item PC --- address of the next instruction
+   \item IR --- current instruction being decoded
+   \item MAR --- memory address for a transfer
+   \item Accumulator --- intermediate arithmetic/logic result}
+  {A, B, C, D}{All four register-role pairings are correct.}
+\fi
+\ifnum\JKSSBLessonID=6
+\JKSSBItem{[Original]}{Which processor is generally optimized for a wide range of sequential general-purpose tasks?}
+  {\item CPU
+   \item GPU
+   \item Network interface card
+   \item Sound card}
+  {A}{A CPU is a general-purpose processor. GPUs specialize in parallel graphics/data workloads; a NIC and sound card are peripheral controllers.}
+\JKSSBItem{[Original]}{A graphics workload applies the same operation to many pixels in parallel. Which component is commonly suited to this work?}
+  {\item GPU
+   \item Hard disk
+   \item Keyboard controller
+   \item ROM}
+  {A}{A GPU has many parallel processing elements suited to graphics operations. Storage, input control, and firmware memory do not perform this computation.}
+\JKSSBItem{[Original]}{A microcontroller is most likely to combine a CPU with:}
+  {\item Only an external display
+   \item Memory and input/output peripherals on one chip
+   \item A separate supercomputer
+   \item A printer interface only}
+  {B}{A microcontroller integrates processing, memory, and peripherals for embedded control. The other choices do not describe that integrated design.}
+\JKSSBItem{[Original]}{Which is a typical example of an embedded-system use for a microcontroller?}
+  {\item Dedicated washing-machine control
+   \item A large-scale weather simulation
+   \item A multi-user banking database server
+   \item A general-purpose desktop operating system}
+  {A}{A washing-machine controller performs a dedicated embedded task. The other workloads typically use general-purpose or high-performance computer systems.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are generally correct?}
+  {\item CPUs are designed for broad general-purpose processing.
+   \item GPUs can execute many similar operations in parallel.
+   \item Microcontrollers commonly serve embedded control tasks.
+   \item A GPU is another name for a hard disk.}
+  {A, B, C}{The first three describe processor roles. A GPU processes data; a hard disk stores it.}
+\fi
+\ifnum\JKSSBLessonID=7
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q63, final key; SRC-03/SRC-06]}{Which memory is typically faster than main memory and holds copies of recently used data?}
+  {\item Cache
+   \item HDD
+   \item Optical disc
+   \item Magnetic tape}
+  {A}{Cache sits between CPU and RAM to reduce access time. HDDs, optical discs, and tape are secondary storage and are slower.}
+\JKSSBItem{[Original]}{In the usual speed hierarchy, which is fastest?}
+  {\item Registers
+   \item RAM
+   \item SSD
+   \item Magnetic tape}
+  {A}{Registers are closest to the CPU and fastest. RAM, SSD, and tape are progressively slower storage levels.}
+\JKSSBItem{[Original]}{As capacity increases and cost per bit generally falls, memory in a computer is usually:}
+  {\item Faster at every level
+   \item Slower at each lower level of the hierarchy
+   \item Volatile at every level
+   \item Removed from the CPU}
+  {B}{Larger, cheaper storage is generally slower, which motivates the hierarchy. Not all levels are volatile, and memory is not removed from the CPU.}
+\JKSSBItem{[Original]}{Which pair is correctly ordered from faster to slower?}
+  {\item RAM, registers, cache
+   \item Registers, cache, RAM
+   \item SSD, RAM, registers
+   \item Tape, cache, registers}
+  {B}{The usual order is registers, cache, then RAM. The other options reverse one or more levels.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements describe the memory hierarchy?}
+  {\item Registers are very small and fast.
+   \item Cache can reduce average access time.
+   \item Secondary storage is generally non-volatile.
+   \item Magnetic tape is faster than CPU registers.}
+  {A, B, C}{Registers are small/fast, cache reduces access time, and secondary storage retains data without power. Tape is much slower than registers.}
+\fi
+\ifnum\JKSSBLessonID=8
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 391; SRC-17/SRC-22]}{What normally happens to data held only in RAM when power is switched off?}
+  {\item It is retained permanently.
+   \item It is lost.
+   \item It is copied automatically to ROM.
+   \item It is stored in the CPU cache.}
+  {B}{RAM is volatile, so its contents are lost when power is removed. It is not automatically copied to ROM or cache.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 551; SRC-17/SRC-21]}{Which memory type is traditionally associated with storing startup firmware such as BIOS?}
+  {\item RAM
+   \item ROM
+   \item CPU cache
+   \item Register file}
+  {B}{Firmware must be available at startup and stored in non-volatile memory, traditionally ROM. The other listed memories are not the standard firmware store.}
+\JKSSBItem{[Original]}{Which memory type is volatile?}
+  {\item RAM
+   \item ROM
+   \item SSD
+   \item DVD}
+  {A}{RAM loses its contents without power. ROM, SSDs, and optical discs are non-volatile.}
+\JKSSBItem{[Original]}{Which type of RAM is commonly built from flip-flop circuits and does not need periodic refreshing?}
+  {\item DRAM
+   \item SRAM
+   \item ROM
+   \item Flash memory}
+  {B}{SRAM uses flip-flop cells and does not require periodic refresh. DRAM uses capacitors and must be refreshed; ROM and flash are non-volatile.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item RAM is normally volatile.
+   \item ROM is non-volatile.
+   \item DRAM requires periodic refresh.
+   \item SRAM is slower than DRAM in the memory hierarchy.}
+  {A, B, C}{RAM is normally volatile, ROM retains data, and DRAM needs refresh. SRAM is generally faster than DRAM, not slower.}
+\fi
+\ifnum\JKSSBLessonID=9
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q62, final key; SRC-03/SRC-06]}{Virtual memory uses part of which resource to extend the apparent capacity of main memory?}
+  {\item Secondary storage
+   \item CPU register file
+   \item Printer buffer
+   \item ROM firmware area}
+  {A}{Virtual memory uses storage space, usually on an SSD/HDD, as backing for memory pages. Registers, printer buffers, and firmware ROM do not provide this backing store.}
+\JKSSBItem{[Original]}{A page currently used by a process is absent from RAM but present in its backing store. The operating system typically responds with a:}
+  {\item Page fault
+   \item Cache hit
+   \item Power failure
+   \item Print spool}
+  {A}{A page fault signals that the referenced page is not resident in RAM and must be fetched. A cache hit, power failure, and print spool are different events.}
+\JKSSBItem{[Original]}{Virtual memory allows a process to address a space that can be:}
+  {\item Larger than the available physical RAM
+   \item Stored only in CPU registers
+   \item Volatile only when the disk is disconnected
+   \item Equal to the size of the cache}
+  {A}{Virtual addressing can provide a larger apparent address space than physical RAM. Registers and cache do not define the process's full virtual address space.}
+\JKSSBItem{[Original]}{Which statement best distinguishes virtual memory from cache?}
+  {\item Virtual memory extends the apparent main-memory space; cache speeds up frequent access.
+   \item Both are permanent backups.
+   \item Cache replaces the operating system.
+   \item Virtual memory is a CPU register.}
+  {A}{Virtual memory uses storage as backing for memory pages, while cache keeps copies of data for speed. Neither is a permanent backup, OS replacement, or register.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about virtual memory are correct?}
+  {\item It is managed with operating-system support.
+   \item A page fault can occur when a needed page is not in RAM.
+   \item Backing storage may be used for non-resident pages.
+   \item It makes secondary storage as fast as registers.}
+  {A, B, C}{The OS manages virtual memory, faults locate missing pages, and backing storage can hold non-resident pages. Storage remains much slower than registers.}
+\fi
+\ifnum\JKSSBLessonID=10
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q67, provisional key; SRC-04/SRC-07]}{Which listed secondary storage device generally has the highest transfer rate?}
+  {\item Magnetic tape
+   \item HDD
+   \item SSD
+   \item CD-ROM}
+  {C}{An SSD has no moving read/write head and generally transfers data faster than HDDs, tape, or optical discs. The cited key is provisional.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 550; SRC-21]}{Hard-disk rotational speed is commonly specified in:}
+  {\item RPM
+   \item Pixels per inch
+   \item Hertz of the CPU clock
+   \item Bits per byte}
+  {A}{RPM means revolutions per minute. The alternatives measure display density, CPU frequency, and data grouping.}
+\JKSSBItem{[Original]}{Which medium is optical storage?}
+  {\item DVD
+   \item SSD
+   \item HDD
+   \item Magnetic tape}
+  {A}{A DVD stores data optically. SSDs use flash, HDDs use magnetic platters, and tape is magnetic sequential storage.}
+\JKSSBItem{[Original]}{Which storage medium is most commonly associated with sequential access and archival backup?}
+  {\item Magnetic tape
+   \item CPU cache
+   \item RAM
+   \item Register}
+  {A}{Magnetic tape is a removable sequential-access medium commonly used for backup/archive. The others are volatile CPU/main memory.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are non-volatile secondary storage media?}
+  {\item SSD
+   \item HDD
+   \item DVD
+   \item CPU register}
+  {A, B, C}{SSDs, HDDs, and DVDs retain data without power. CPU registers are volatile internal storage.}
+\fi
+\ifnum\JKSSBLessonID=11
+\JKSSBItem{[Original]}{Which backup type copies all selected data each time it runs?}
+  {\item Full backup
+   \item Incremental backup
+   \item Differential backup
+   \item Transaction log only}
+  {A}{A full backup copies the entire selected set. Incremental copies changes since the latest backup; differential copies changes since the latest full backup.}
+\JKSSBItem{[Original]}{After a full backup, an incremental backup normally copies files changed since:}
+  {\item The previous backup of any kind
+   \item The previous full backup only
+   \item The computer was purchased
+   \item The last restore test}
+  {A}{Incremental backups record changes since the most recent backup. Differential backups use the last full backup as their reference point.}
+\JKSSBItem{[Original]}{Which backup usually grows cumulatively until the next full backup?}
+  {\item Differential
+   \item Incremental
+   \item Mirror deletion
+   \item Temporary cache}
+  {A}{Each differential backup includes changes since the last full backup, so the set can grow. Incrementals reset their comparison after each backup.}
+\JKSSBItem{[Original]}{The 3-2-1 backup rule recommends keeping:}
+  {\item Three copies, on two media types, with one copy off-site
+   \item Three files, on one device, with two deleted
+   \item Two copies only, both online
+   \item One copy in RAM and two in cache}
+  {A}{The rule calls for three copies, two different media, and one off-site copy. The other choices do not provide this redundancy.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which practices improve backup resilience?}
+  {\item Keep an off-site copy.
+   \item Test restoration from backups.
+   \item Keep at least one copy isolated from routine access.
+   \item Treat RAID as a complete substitute for backup.}
+  {A, B, C}{Off-site, tested, and isolated copies improve recoverability. RAID improves availability but does not protect against deletion, corruption, or every disaster.}
+\fi
+\ifnum\JKSSBLessonID=12
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q68, final key; SRC-03/SRC-06]}{Which device is used to enter hand-drawn strokes directly into a computer?}
+  {\item Digitizer tablet
+   \item Plotter
+   \item Projector
+   \item Speaker}
+  {A}{A digitizer tablet is an input device. A plotter, projector, and speaker present output.}
+\JKSSBItem{[Original]}{Which device captures still images or video as computer input?}
+  {\item Webcam
+   \item Plotter
+   \item Projector
+   \item Printer}
+  {A}{A webcam captures visual input. Plotters, projectors, and printers are output devices.}
+\JKSSBItem{[Original]}{A user moves a pointer by rolling a ball mounted on a stationary pointing device. Which device is this?}
+  {\item Trackball
+   \item Joystick
+   \item Scanner
+   \item Light pen}
+  {A}{A trackball moves the pointer by rotating a ball while the device remains stationary. The other devices use a stick, capture images, or detect a screen position.}
+\JKSSBItem{[Original]}{Which input device is most suitable for recording spoken instructions?}
+  {\item Microphone
+   \item Monitor
+   \item Plotter
+   \item Speaker}
+  {A}{A microphone converts sound to input. A monitor, plotter, and speaker deliver output.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are input devices?}
+  {\item Scanner
+   \item Keyboard
+   \item Microphone
+   \item Plotter}
+  {A, B, C}{Scanner, keyboard, and microphone provide input. A plotter produces output.}
+\fi
+\ifnum\JKSSBLessonID=13
+\JKSSBItem{[Original]}{Which technology converts printed characters into editable text?}
+  {\item OCR
+   \item OMR
+   \item MICR
+   \item MIDI}
+  {A}{OCR recognizes printed characters as text. OMR detects marked responses, MICR reads magnetic-ink characters, and MIDI describes music data.}
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q70, provisional key; SRC-04/SRC-07]}{Which technology is used to read characters printed in magnetic ink on bank cheques?}
+  {\item OMR
+   \item OCR
+   \item MICR
+   \item QR recognition}
+  {C}{MICR reads magnetic-ink characters. OMR detects marks, OCR recognizes ordinary printed text, and QR recognition reads two-dimensional codes. The cited key is provisional.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 553; SRC-21]}{A scanned page must be converted into editable text. Which technology is the best fit?}
+  {\item OCR
+   \item OMR
+   \item MICR
+   \item Barcode printing}
+  {A}{OCR recognizes character shapes in an image and produces text. OMR detects marks, MICR reads magnetic ink, and barcode printing creates codes rather than extracting text.}
+\JKSSBItem{[Original]}{OMR is particularly useful for:}
+  {\item Detecting shaded response bubbles on forms
+   \item Reading cheque account numbers in magnetic ink
+   \item Converting speech to audio output
+   \item Printing a document}
+  {A}{OMR detects marked regions, such as answer bubbles. MICR reads cheque characters; the other choices concern audio output and printing.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match each recognition technology to its task.}
+  {\item OCR --- printed text recognition
+   \item OMR --- mark detection
+   \item MICR --- magnetic-ink character reading
+   \item OMR --- magnetic-ink character reading}
+  {A, B, C}{OCR, OMR, and MICR have distinct roles. Option D assigns MICR's role to OMR.}
+\fi
+\ifnum\JKSSBLessonID=14
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q69, provisional key; SRC-04/SRC-07]}{Which output device is designed for producing large engineering drawings?}
+  {\item Plotter
+   \item Joystick
+   \item Scanner
+   \item Microphone}
+  {A}{A plotter produces large-format drawings. The other devices provide input. The cited answer key is provisional.}
+\JKSSBItem{[Original]}{A monitor displays a report on screen without making a paper copy. This is:}
+  {\item Soft copy output
+   \item Hard copy output
+   \item Input
+   \item Secondary storage}
+  {A}{A screen display is soft copy output. Hard copy is printed output; input and storage have different roles.}
+\JKSSBItem{[Original]}{Which device provides visual output on a large screen for an audience?}
+  {\item Projector
+   \item Scanner
+   \item Barcode reader
+   \item Trackball}
+  {A}{A projector displays visual output. The other devices capture input or move a pointer.}
+\JKSSBItem{[Original]}{A tactile display primarily presents information through:}
+  {\item Raised or refreshable tactile elements
+   \item Magnetic ink
+   \item Printed barcodes
+   \item Audio sampling only}
+  {A}{A tactile display conveys information through touch, often with refreshable braille cells. The other options describe unrelated media/encoding.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are output devices?}
+  {\item Monitor
+   \item Speaker
+   \item Plotter
+   \item Scanner}
+  {A, B, C}{Monitor, speaker, and plotter deliver output. A scanner captures input.}
+\fi
+\ifnum\JKSSBLessonID=15
+\JKSSBItem{[Original]}{Which printer forms characters by striking an inked ribbon against paper?}
+  {\item Dot-matrix printer
+   \item Inkjet printer
+   \item Laser printer
+   \item Thermal printer}
+  {A}{A dot-matrix printer is an impact printer that strikes a ribbon. Inkjet sprays droplets, laser uses toner and a drum, and thermal printing uses heat-sensitive media.}
+\JKSSBItem{[Original]}{Which printer is generally classified as non-impact?}
+  {\item Laser printer
+   \item Daisy-wheel printer
+   \item Dot-matrix printer
+   \item Line printer}
+  {A}{A laser printer forms images without striking paper. Daisy-wheel, dot-matrix, and line printers use impact mechanisms.}
+\JKSSBItem{[Original]}{Which device produces a hard copy?}
+  {\item Printer
+   \item Monitor
+   \item Speaker
+   \item Projector}
+  {A}{A printer produces a physical paper copy. The others provide soft-copy visual or audio output.}
+\JKSSBItem{[Original]}{A laser printer typically uses which consumable?}
+  {\item Toner
+   \item Magnetic ink ribbon
+   \item Liquid ink cartridge only
+   \item Thermal paper roll only}
+  {A}{Laser printers use toner. Ink ribbons are common in impact printers, liquid ink is used in inkjets, and thermal paper is used by thermal printers.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item Dot-matrix printing is impact printing.
+   \item Laser printing is non-impact printing.
+   \item Inkjet printers place ink droplets on media.
+   \item A monitor is a hard-copy device.}
+  {A, B, C}{The first three describe printer technologies. A monitor produces soft-copy output, not hard copy.}
+\fi
+\ifnum\JKSSBLessonID=16
+\JKSSBItem{[Original]}{Which connector is commonly used to carry digital video and audio from a computer to a display?}
+  {\item HDMI
+   \item RJ-11
+   \item PS/2
+   \item VGA only}
+  {A}{HDMI commonly carries digital audio and video. RJ-11 is associated with telephone wiring, PS/2 with legacy keyboard/mouse connections, and VGA carries analog video.}
+\JKSSBItem{[Original]}{Which interface is commonly used for a wired Ethernet connection?}
+  {\item RJ-45
+   \item HDMI
+   \item 3.5 mm audio jack
+   \item VGA}
+  {A}{RJ-45 is commonly used for Ethernet. HDMI and VGA serve displays; a 3.5 mm jack serves analog audio.}
+\JKSSBItem{[Original]}{Which statement about USB Type-C is correct?}
+  {\item Its plug is reversible.
+   \item It is an analog-only video connector.
+   \item It is used only for telephone lines.
+   \item It is a logical network port number.}
+  {A}{USB Type-C is a reversible physical connector. It can carry different signals depending on implementation; the other options confuse it with unrelated interfaces.}
+\JKSSBItem{[Original]}{Which port number is a logical transport-layer endpoint rather than a physical socket?}
+  {\item TCP port 80
+   \item HDMI socket
+   \item USB-A receptacle
+   \item VGA connector}
+  {A}{TCP port 80 is a logical endpoint number. The others are physical connectors.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match the interface to a common use.}
+  {\item HDMI --- digital audio/video
+   \item RJ-45 --- Ethernet
+   \item USB --- peripheral/data connection
+   \item VGA --- magnetic-ink character reading}
+  {A, B, C}{The first three pairings are standard uses. MICR, not VGA, reads magnetic-ink characters.}
+\fi
+\ifnum\JKSSBLessonID=17
+\JKSSBItem{[Original]}{Which term describes the physical components of a computer?}
+  {\item Hardware
+   \item Software
+   \item Firmware
+   \item Data}
+  {A}{Hardware is the physical equipment. Software is instructions, firmware is low-level software stored in non-volatile memory, and data is processed content.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2024, QCRIAS item 668; SRC-16/SRC-19]}{Firmware is typically stored in which kind of memory?}
+  {\item Volatile RAM only
+   \item Non-volatile memory such as ROM/flash
+   \item CPU cache only
+   \item A printer buffer only}
+  {B}{Firmware must be available at startup and is stored in non-volatile memory, commonly flash/EEPROM. The other listed memories do not serve as its normal persistent store.}
+\JKSSBItem{[Original]}{A device driver is best classified as:}
+  {\item Software that helps the operating system communicate with hardware
+   \item A physical input device
+   \item A storage medium
+   \item A type of CPU register}
+  {A}{A driver is software that controls or communicates with a device. It is not hardware, storage, or a register.}
+\JKSSBItem{[Original]}{Which is an example of application software?}
+  {\item Word processor
+   \item Device driver
+   \item Boot firmware
+   \item Memory controller hardware}
+  {A}{A word processor helps users perform tasks and is application software. A driver and firmware are system-level software; a memory controller is hardware.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements correctly classify components?}
+  {\item A keyboard is hardware.
+   \item A device driver is software.
+   \item Firmware is low-level software associated with hardware control.
+   \item A spreadsheet file is a CPU register.}
+  {A, B, C}{Keyboard, driver, and firmware classifications are correct. A spreadsheet file is data/document content, not a register.}
+\fi
+\ifnum\JKSSBLessonID=18
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 329; SRC-17/SRC-22]}{Which software is designed to control computer hardware and provide services for applications?}
+  {\item System software
+   \item Application software
+   \item User data
+   \item Presentation theme}
+  {A}{System software manages hardware and provides services. Application software performs user tasks; data and themes are not software categories for hardware control.}
+\JKSSBItem{[Original]}{Which is a utility program?}
+  {\item Disk cleanup tool
+   \item Word processor
+   \item Presentation file
+   \item Device cable}
+  {A}{Disk cleanup is a system utility. A word processor is application software; a presentation file is data, and a cable is hardware.}
+\JKSSBItem{[Original]}{Freeware is primarily classified by its:}
+  {\item Price to the user
+   \item Source-code license alone
+   \item Processor architecture
+   \item Storage medium}
+  {A}{Freeware is distributed at no monetary cost, but this alone does not establish open-source freedoms. Processor architecture and storage medium are unrelated.}
+\JKSSBItem{[Original]}{Open-source software is distinguished primarily by access to its:}
+  {\item Source code under a license that permits specified use/modification
+   \item Hardware schematics in every case
+   \item Free support hotline
+   \item User's private data}
+  {A}{Open-source licenses grant rights concerning source code. They do not guarantee free support, hardware schematics, or access to user data.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are software categories or licensing/distribution labels?}
+  {\item System software
+   \item Application software
+   \item Utility software
+   \item Open source}
+  {A, B, C, D}{System/application/utility classify roles; open source describes source availability and license terms.}
+\fi
+\ifnum\JKSSBLessonID=19
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q61, provisional key; SRC-04/SRC-07]}{Which software layer provides common services and an interface between users/applications and computer hardware?}
+  {\item Operating system
+   \item Spreadsheet
+   \item Web page
+   \item Device cable}
+  {A}{The operating system manages resources and provides services to applications/users. The other options are an application, content, or hardware. The cited key is provisional.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q70, final key; SRC-03/SRC-06]}{Which action is a recognized way an operating system can recover from deadlock?}
+  {\item Resource preemption
+   \item Increasing screen brightness
+   \item Formatting every disk automatically
+   \item Changing a document font}
+  {A}{Resource preemption can reclaim resources to break a deadlock. The other actions do not resolve process-resource deadlock.}
+\JKSSBItem{[Original]}{Which OS function organizes files into named folders and manages their storage?}
+  {\item File-system management
+   \item Slide animation
+   \item OCR
+   \item Mail merge}
+  {A}{File-system management organizes stored files/directories. The other options belong to presentation, text recognition, and document automation.}
+\JKSSBItem{[Original]}{In a multitasking operating system, the CPU can:}
+  {\item Switch among several tasks so they make progress
+   \item Execute every program on a separate physical CPU
+   \item Store all programs permanently in registers
+   \item Eliminate the need for memory}
+  {A}{Multitasking schedules CPU time among tasks. It does not require one physical CPU per program or eliminate storage/memory.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are common operating-system responsibilities?}
+  {\item Process scheduling
+   \item Memory management
+   \item File management
+   \item Editing a user's video as its only purpose}
+  {A, B, C}{Scheduling processes, managing memory, and managing files are OS responsibilities. Video editing is an application task.}
+\fi
+\ifnum\JKSSBLessonID=20
+\JKSSBItem{[Original]}{Which path format identifies a file by its drive and folders in Windows?}
+  {\item C:\textbackslash Users\textbackslash Asha\textbackslash report.docx
+   \item https://example.com
+   \item user@example.com
+   \item 192.0.2.10}
+  {A}{A drive-letter path with folders identifies a Windows file location. The other options are a URL, email address, and IP address.}
+\JKSSBItem{[Original]}{A file extension usually appears:}
+  {\item After the final period in a filename
+   \item Before the drive letter
+   \item In place of the file contents
+   \item Only inside the Recycle Bin}
+  {A}{An extension is the filename suffix after the final period, such as `.docx`. It does not replace contents or require the Recycle Bin.}
+\JKSSBItem{[Original]}{Which Windows action normally moves a deleted local file to the Recycle Bin rather than immediately erasing it?}
+  {\item Delete
+   \item Rename
+   \item Refresh
+   \item Search}
+  {A}{Delete commonly moves a file to the Recycle Bin. Rename changes its name, Refresh updates a view, and Search locates items.}
+\JKSSBItem{[Original]}{Which operation creates another copy while leaving the original file in place?}
+  {\item Copy
+   \item Move
+   \item Cut
+   \item Delete}
+  {A}{Copy creates a duplicate. Move relocates the original; Cut prepares it for moving; Delete removes it from its current location.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about files/folders are correct?}
+  {\item A folder can contain files and other folders.
+   \item A path identifies a location in a file system.
+   \item Renaming normally changes a file's name, not its stored contents.
+   \item Copying a file necessarily deletes the original.}
+  {A, B, C}{Folders can contain items, paths locate them, and renaming changes the name. Copying leaves the original in place.}
+\fi
+\ifnum\JKSSBLessonID=21
+\JKSSBItem{[Original]}{Which shortcut commonly saves the active document in Windows applications?}
+  {\item Ctrl+S
+   \item Ctrl+P
+   \item Ctrl+Z
+   \item Ctrl+F}
+  {A}{Ctrl+S saves. Ctrl+P prints, Ctrl+Z undoes, and Ctrl+F searches.}
+\JKSSBItem{[Original]}{Which shortcut commonly undoes the most recent action?}
+  {\item Ctrl+Z
+   \item Ctrl+Y
+   \item Ctrl+N
+   \item Ctrl+O}
+  {A}{Ctrl+Z is Undo. Ctrl+Y commonly redoes, Ctrl+N creates a new item, and Ctrl+O opens a file.}
+\JKSSBItem{[Original]}{In many Windows applications, Alt+Tab is used to:}
+  {\item Switch between open applications
+   \item Save the current document
+   \item Insert a hyperlink
+   \item Close the computer}
+  {A}{Alt+Tab switches among open windows. The other actions use different commands or controls.}
+\JKSSBItem{[Original]}{Which shortcut usually selects all text or items in the active document/list?}
+  {\item Ctrl+A
+   \item Ctrl+X
+   \item Ctrl+V
+   \item Ctrl+K}
+  {A}{Ctrl+A selects all. Ctrl+X cuts, Ctrl+V pastes, and Ctrl+K commonly inserts a hyperlink in Office applications.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match the common shortcut to its action.}
+  {\item Ctrl+C --- copy
+   \item Ctrl+V --- paste
+   \item Ctrl+X --- cut
+   \item Ctrl+P --- save}
+  {A, B, C}{Ctrl+C copies, Ctrl+V pastes, and Ctrl+X cuts. Ctrl+P opens Print; Ctrl+S saves.}
+\fi
+\ifnum\JKSSBLessonID=22
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q14; SRC-18]}
+  {A report starts a new section on the next page. Which setting can be changed
+  for that section without changing the previous section?}
+  {\item AutoCorrect replacement list
+   \item Page orientation and margins
+   \item Normal style's font face
+   \item Document Properties metadata}
+  {B}{Page setup belongs to each section, so orientation and margins can differ.
+  AutoCorrect is application-wide, the Normal style applies through the document,
+  and Properties describe the file rather than one section.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q73, key:final; SRC-03/SRC-06]}
+  {Which break is needed when a later part of a Word document must use a different
+  header or footer?}
+  {\item Section Break
+   \item Page Break
+   \item Line Break
+   \item Column Break}
+  {A}{A Section Break creates a new section with independent header/footer
+  settings. A Page Break only starts a page; line and column breaks change text
+  flow without creating a section.}
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q77, key:provisional; SRC-04/SRC-07]}
+  {Which Word feature combines a main document with a recipient list to produce
+  personalized letters?}
+  {\item Track Changes
+   \item Mail Merge
+   \item SmartArt
+   \item Word Count}
+  {B}{Mail Merge combines a main document with a recipient data source. Track
+  Changes records edits, SmartArt creates diagrams, and Word Count reports text
+  statistics. The cited key is provisional.}
+\JKSSBItem{[Original]}
+  {Which shortcut opens the Find and Replace dialog in Word?}
+  {\item Ctrl+H
+   \item Ctrl+P
+   \item Ctrl+B
+   \item Ctrl+K}
+  {A}{Ctrl+H opens Find and Replace. Ctrl+P opens Print, Ctrl+B toggles bold, and
+  Ctrl+K inserts a hyperlink.}
+\JKSSBItem{[Original, MSQ drill]}
+  {\textbf{(MSQ: select ALL correct options.)} Which settings can be specific to
+  a Word section?}
+  {\item Page orientation
+   \item Page margins
+   \item Headers and footers
+   \item The font definition of the Normal style}
+  {A, B, C}{Orientation, margins, and headers/footers can vary by section. The
+  Normal style is a document-level style, not a per-section setting.}
+\fi
+\ifnum\JKSSBLessonID=23
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q16; SRC-18]}{A user changes one heading's appearance but wants other headings using the same style to remain unchanged. What is the safest approach?}
+  {\item Modify only that instance's direct formatting
+   \item Redefine the shared style
+   \item Change the document template for every file
+   \item Use AutoCorrect}
+  {A}{Direct formatting changes only the selected instance. Redefining a shared style changes all text using it; templates and AutoCorrect do not isolate one heading.}
+\JKSSBItem{[Original]}{Which shortcut commonly opens the Find and Replace dialog in Word?}
+  {\item Ctrl+H
+   \item Ctrl+P
+   \item Ctrl+S
+   \item Ctrl+L}
+  {A}{Ctrl+H opens Find and Replace. Ctrl+P prints, Ctrl+S saves, and Ctrl+L commonly aligns text left.}
+\JKSSBItem{[Original]}{Which key commonly starts spelling and grammar checking in Word?}
+  {\item F1
+   \item F5
+   \item F7
+   \item F12}
+  {C}{F7 starts spelling and grammar review in common Word versions. F1 opens help, F5 navigates/goes to, and F12 opens Save As.}
+\JKSSBItem{[Original]}{Which feature records insertions and deletions so a reviewer can accept or reject them?}
+  {\item Track Changes
+   \item Word Count
+   \item Mail Merge
+   \item Page Color}
+  {A}{Track Changes records edits for review. The other features count words, create personalized documents, or change page appearance.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which features support document review/collaboration?}
+  {\item Comments
+   \item Track Changes
+   \item Accept/Reject Changes
+   \item Mail Merge}
+  {A, B, C}{Comments and tracked changes support review; Accept/Reject resolves tracked edits. Mail Merge generates personalized documents.}
+\fi
+\ifnum\JKSSBLessonID=24
+\JKSSBItem{[Original]}{The intersection of a worksheet row and column is a:}
+  {\item Cell
+   \item Workbook
+   \item Formula bar
+   \item Ribbon}
+  {A}{A cell is the intersection of a row and column. A workbook contains worksheets; the formula bar and Ribbon are interface elements.}
+\JKSSBItem{[Original]}{A collection of worksheets saved in one Excel file is a:}
+  {\item Workbook
+   \item Cell range
+   \item Chart area
+   \item Field}
+  {A}{A workbook is the Excel file that can contain worksheets. A range is a set of cells; chart area and field have different meanings.}
+\JKSSBItem{[Original]}{Which box displays the address of the active cell and can be used to jump to a cell reference?}
+  {\item Name Box
+   \item Status bar
+   \item Formula bar
+   \item Title bar}
+  {A}{The Name Box displays the active cell reference and accepts a destination. The Formula bar displays cell content; the status and title bars report other information.}
+\JKSSBItem{[Original]}{In the reference B7, which part identifies the column?}
+  {\item B
+   \item 7
+   \item B7
+   \item Neither part}
+  {A}{The letter identifies the column; the number identifies the row.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which Excel terms are matched correctly?}
+  {\item Workbook --- file containing worksheets
+   \item Worksheet --- grid of rows and columns
+   \item Cell --- intersection of a row and column
+   \item Formula bar --- identifies only the active worksheet tab}
+  {A, B, C}{The first three definitions are correct. The Formula bar displays or edits the active cell's contents; worksheet tabs identify sheets.}
+\fi
+\ifnum\JKSSBLessonID=25
+\JKSSBItem{[Original]}{Which symbol makes both the row and column absolute in the reference \$A\$1?}
+  {\item Dollar sign (\$)
+   \item Percent sign (\%)
+   \item Hash sign (\#)
+   \item Ampersand (\&)}
+  {A}{The dollar signs lock the column and row when a formula is copied. The other symbols do not create absolute references.}
+\JKSSBItem{[Original]}{When the formula =A1 is copied one column to the right, a relative reference normally becomes:}
+  {\item =B1
+   \item =\$A\$1
+   \item =A\$1
+   \item =A2}
+  {A}{A relative reference shifts with the copy location, so the column changes from A to B. The other options lock a dimension or change the row.}
+\JKSSBItem{[Original]}{Which reference locks the row but allows the column to change?}
+  {\item A\$1
+   \item \$A1
+   \item \$A\$1
+   \item A1}
+  {A}{A\$1 fixes row 1 but leaves the column relative. \$A1 locks the column; \$A\$1 locks both; A1 locks neither.}
+\JKSSBItem{[Original]}{Which operator combines text values in many Excel formulas?}
+  {\item \&
+   \item \^{}
+   \item /
+   \item >}
+  {A}{The ampersand concatenates text. The other symbols represent exponentiation, division, and comparison.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are valid Excel cell references?}
+  {\item A1
+   \item \$B\$7
+   \item C\$4
+   \item \$D8}
+  {A, B, C, D}{All four are valid A1-style references; dollar signs indicate absolute row/column components.}
+\fi
+\ifnum\JKSSBLessonID=26
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q4; SRC-18]}
+  {Which Excel function counts cells that satisfy one specified condition?}
+  {\item COUNT
+   \item COUNTBLANK
+   \item COUNTIF
+   \item SUMIF}
+  {C}{COUNTIF counts cells meeting a criterion. COUNT counts numeric cells
+  without a criterion, COUNTBLANK counts empty cells, and SUMIF adds matching
+  values rather than counting them.}
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q9; SRC-18]}
+  {A teacher needs to show only rows where marks exceed 75 while keeping the
+  remaining records in the worksheet. Which tool should be used?}
+  {\item Sort
+   \item Filter
+   \item Remove Duplicates
+   \item Subtotal}
+  {B}{Filter temporarily displays rows that meet criteria. Sort changes order,
+  Remove Duplicates deletes repeated records, and Subtotal inserts grouped
+  summaries.}
+\JKSSBItem{[Original]}
+  {Which function counts non-empty cells, including cells containing text?}
+  {\item COUNTA
+   \item COUNT
+   \item COUNTBLANK
+   \item SUM}
+  {A}{COUNTA counts non-empty cells. COUNT counts numeric cells, COUNTBLANK
+  counts empty cells, and SUM adds numeric values.}
+\JKSSBItem{[Original]}
+  {In a formula, which function tests a condition and returns one value when it
+  is true and another when it is false?}
+  {\item MAX
+   \item IF
+   \item AVERAGE
+   \item ROUND}
+  {B}{IF evaluates a logical test and selects between two results. MAX returns
+  the largest value, AVERAGE calculates a mean, and ROUND changes numeric
+  precision.}
+\JKSSBItem{[Original, MSQ drill]}
+  {\textbf{(MSQ: select ALL correct options.)} Which statements about Excel
+  counting functions are correct?}
+  {\item COUNT counts cells containing numbers.
+   \item COUNTA counts non-empty cells.
+   \item COUNTBLANK counts empty cells.
+   \item COUNTIF sums the values that meet a criterion.}
+  {A, B, C}{COUNT, COUNTA, and COUNTBLANK perform the stated counts. COUNTIF
+  counts matching cells; SUMIF, not COUNTIF, sums their values.}
+\fi
+\ifnum\JKSSBLessonID=27
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q9; SRC-18]}{A teacher needs to show only rows where marks exceed 75 while keeping other records. Which tool should be used?}
+  {\item Filter
+   \item Remove Duplicates
+   \item Delete Sheet
+   \item Sort A to Z}
+  {A}{Filter displays rows meeting criteria without deleting the rest. Remove Duplicates removes records; deleting a sheet removes content; sorting changes order.}
+\JKSSBItem{[Original]}{Which Excel feature summarizes and reorganizes a large data table by categories?}
+  {\item PivotTable
+   \item AutoCorrect
+   \item Mail Merge
+   \item Slide Master}
+  {A}{A PivotTable summarizes and rearranges data by fields. The other features belong to text correction, Word, or PowerPoint.}
+\JKSSBItem{[Original]}{Which chart is generally suitable for showing a trend over time?}
+  {\item Line chart
+   \item Pie chart
+   \item Doughnut chart
+   \item Radar chart}
+  {A}{A line chart makes change over an ordered time axis easy to see. Pie/doughnut charts emphasize parts of a whole; radar charts compare dimensions.}
+\JKSSBItem{[Original]}{Which tool adds drop-down controls to choose which records are displayed?}
+  {\item AutoFilter
+   \item Goal Seek
+   \item Spell Check
+   \item Page Break Preview}
+  {A}{AutoFilter provides criteria drop-downs. Goal Seek solves for an input; the other tools serve unrelated functions.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about Excel data tools are correct?}
+  {\item Sorting changes record order.
+   \item Filtering hides non-matching rows from the current view.
+   \item A PivotTable can aggregate data by fields.
+   \item Removing duplicates only changes font formatting.}
+  {A, B, C}{Sorting changes order, filtering changes visible rows, and PivotTables aggregate. Remove Duplicates changes records, not just formatting.}
+\fi
+\ifnum\JKSSBLessonID=28
+\JKSSBItem{[Original]}{In a relational database table, a row is commonly called a:}
+  {\item Record
+   \item Field
+   \item Query
+   \item Form}
+  {A}{A row is a record; a column is a field. Queries retrieve/process data and forms provide an interface.}
+\JKSSBItem{[Original]}{In MS Access, a field corresponds most closely to a table:}
+  {\item Column
+   \item Row
+   \item Report
+   \item Database file}
+  {A}{A field is a column storing one attribute. A row is a record; reports and database files are higher-level objects.}
+\JKSSBItem{[Original]}{Which data type is most appropriate for a field storing a calendar date?}
+  {\item Date/Time
+   \item Currency
+   \item Attachment
+   \item Yes/No}
+  {A}{Date/Time stores date and time values. Currency stores money; Attachment stores files; Yes/No stores Boolean values.}
+\JKSSBItem{[Original]}{A DBMS primarily helps users:}
+  {\item Define, store, retrieve, and manage data
+   \item Design computer circuits
+   \item Print only slide presentations
+   \item Replace all operating systems}
+  {A}{A DBMS manages databases and access to their data. The other options describe unrelated tasks.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are common database objects in Access?}
+  {\item Tables
+   \item Queries
+   \item Forms
+   \item Reports}
+  {A, B, C, D}{Tables store data, queries retrieve/process it, forms support entry/viewing, and reports format output.}
+\fi
+\ifnum\JKSSBLessonID=29
+\JKSSBItem{[Original]}{A primary key should identify each record in a table:}
+  {\item Uniquely
+   \item With a duplicate value in every row
+   \item Only by display color
+   \item Using a blank value}
+  {A}{A primary key uniquely identifies records and cannot be null. The other choices defeat reliable identification.}
+\JKSSBItem{[Original]}{A foreign key is used primarily to:}
+  {\item Reference a related record in another table
+   \item Encrypt the database file
+   \item Sort a report alphabetically
+   \item Store an image only}
+  {A}{A foreign key links a record to a key in another table and supports referential integrity. The alternatives are unrelated.}
+\JKSSBItem{[Original]}{A key made from two or more fields is called a:}
+  {\item Composite key
+   \item Foreign form
+   \item Query key
+   \item Null key}
+  {A}{A composite key uses multiple fields together to identify a record. The other terms are not standard key categories.}
+\JKSSBItem{[Original]}{Referential integrity helps ensure that:}
+  {\item Relationships between tables remain valid
+   \item Every field is printed in bold
+   \item Passwords are stored as plain text
+   \item A query has no criteria}
+  {A}{Referential integrity constrains relationships, such as preventing unmatched foreign-key references. The other options are unrelated.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about keys are correct?}
+  {\item A primary key uniquely identifies a row.
+   \item A foreign key can reference a primary key in another table.
+   \item A composite key contains multiple fields.
+   \item A primary key should contain duplicate values.}
+  {A, B, C}{The first three statements are correct. Duplicate primary-key values make records ambiguous.}
+\fi
+\ifnum\JKSSBLessonID=30
+\JKSSBItem{[Original]}{Which Access object retrieves selected records based on criteria?}
+  {\item Query
+   \item Form
+   \item Report
+   \item Macro}
+  {A}{A query selects or manipulates data based on criteria. Forms support interaction, reports format output, and macros automate actions.}
+\JKSSBItem{[Original]}{Which object is primarily designed for a formatted, printable summary of data?}
+  {\item Report
+   \item Table
+   \item Relationship
+   \item Module}
+  {A}{A report formats data for viewing or printing. Tables store records; relationships connect tables; modules contain code.}
+\JKSSBItem{[Original]}{Which Access object is commonly used as a user-friendly screen for entering records?}
+  {\item Form
+   \item Report
+   \item Index
+   \item Relationship}
+  {A}{Forms provide an interface to enter or view data. Reports present formatted output; indexes and relationships support data organization.}
+\JKSSBItem{[Original]}{A SELECT query is generally used to:}
+  {\item Retrieve records meeting conditions
+   \item Delete the database application
+   \item Change the computer's BIOS
+   \item Print a PowerPoint slide}
+  {A}{A SELECT query returns records from one or more tables based on criteria. The other choices are unrelated.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match each Access object to its typical role.}
+  {\item Table --- store records
+   \item Query --- retrieve selected data
+   \item Form --- data entry/view interface
+   \item Report --- formatted presentation of data}
+  {A, B, C, D}{All four are standard roles of Access objects.}
+\fi
+\ifnum\JKSSBLessonID=31
+\JKSSBItem{[Original]}{A PowerPoint slide layout controls the:}
+  {\item Arrangement of placeholders on a slide
+   \item Order of files in a folder
+   \item Worksheet cell address
+   \item Email server protocol}
+  {A}{A layout arranges slide placeholders. The other options concern file management, Excel, or email.}
+\JKSSBItem{[Original]}{Which PowerPoint feature stores common formatting and repeated slide elements?}
+  {\item Slide Master
+   \item Formula bar
+   \item Navigation Pane
+   \item Mail Merge}
+  {A}{Slide Master controls shared design and layout elements. The alternatives are Excel/Word features.}
+\JKSSBItem{[Original]}{A placeholder on a slide is intended to:}
+  {\item Hold content such as text, pictures, or charts
+   \item Store an operating system
+   \item Save an email password
+   \item Execute a database query}
+  {A}{Placeholders reserve positions for slide content. They do not store an OS, credentials, or run database queries.}
+\JKSSBItem{[Original]}{Which view is designed to rearrange slide thumbnails quickly?}
+  {\item Slide Sorter
+   \item Notes Page
+   \item Reading View
+   \item Outline view}
+  {A}{Slide Sorter presents thumbnails for rearranging slides. Notes Page emphasizes speaker notes; Reading View presents the show; Outline view focuses on text.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are common PowerPoint views?}
+  {\item Normal view
+   \item Slide Sorter view
+   \item Notes Page view
+   \item Slide Master view}
+  {A, B, C, D}{All four are PowerPoint views used for editing, arranging, notes, or shared design.}
+\fi
+\ifnum\JKSSBLessonID=32
+\JKSSBItem{[Original]}{A transition effect occurs when:}
+  {\item Moving from one slide to another
+   \item A word is selected in a text box
+   \item A spreadsheet is recalculated
+   \item A file is renamed}
+  {A}{Transitions apply between slides. Animations apply to objects within a slide; the other actions are unrelated.}
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q80, provisional key; SRC-04/SRC-07]}{Which key starts a PowerPoint slide show from the beginning?}
+  {\item F5
+   \item Shift+F5
+   \item F7
+   \item Ctrl+S}
+  {A}{F5 starts from the beginning. Shift+F5 starts from the current slide, F7 commonly checks spelling, and Ctrl+S saves. The cited key is provisional.}
+\JKSSBItem{[Original]}{Which shortcut commonly starts a slide show from the current slide?}
+  {\item Shift+F5
+   \item F5
+   \item Ctrl+P
+   \item Alt+F4}
+  {A}{Shift+F5 starts at the current slide. F5 starts at the beginning; Ctrl+P prints; Alt+F4 closes the active window.}
+\JKSSBItem{[Original]}{An animation effect is applied to:}
+  {\item An object or content within a slide
+   \item The change between two files in a folder
+   \item A worksheet's row height only
+   \item The computer boot process}
+  {A}{Animations affect objects on a slide; transitions govern movement between slides. The other choices are unrelated.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item F5 starts the slide show from the beginning.
+   \item Shift+F5 starts from the current slide.
+   \item A transition is between slides.
+   \item An animation is always the same as a transition.}
+  {A, B, C}{The first three describe standard functions. Animation and transition refer to different scopes.}
+\fi
+\ifnum\JKSSBLessonID=33
+\JKSSBItem{[Original]}{Which file extension is commonly associated with a modern Word document?}
+  {\item .docx
+   \item .xlsx
+   \item .pptx
+   \item .accdb}
+  {A}{.docx is Word, .xlsx is Excel, .pptx is PowerPoint, and .accdb is Access.}
+\JKSSBItem{[Original]}{A PDF is primarily designed to preserve:}
+  {\item Document layout across devices
+   \item Spreadsheet formulas as the only content
+   \item Executable program instructions
+   \item Audio channels only}
+  {A}{PDF is a page-description/document format intended to preserve layout. It is not a spreadsheet-only or executable format.}
+\JKSSBItem{[Original]}{Which file format is commonly used for plain comma-separated tabular data?}
+  {\item CSV
+   \item PPTX
+   \item PNG
+   \item EXE}
+  {A}{CSV stores delimited text rows and columns. PPTX is a presentation package, PNG is an image format, and EXE is an executable extension.}
+\JKSSBItem{[Original]}{Which format is an image format?}
+  {\item PNG
+   \item DOCX
+   \item XLSX
+   \item PPTX}
+  {A}{PNG is a raster image format. DOCX, XLSX, and PPTX are Office document formats.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which extension-to-file-type pairings are correct?}
+  {\item .docx --- word-processing document
+   \item .xlsx --- spreadsheet workbook
+   \item .pptx --- presentation
+   \item .png --- database file}
+  {A, B, C}{The first three pairings are correct. PNG is an image format, not a database file.}
+\fi
+\ifnum\JKSSBLessonID=34
+\JKSSBItem{[Original]}{The World Wide Web is best described as:}
+  {\item A system of interlinked resources accessed over the Internet
+   \item The physical cables of the Internet
+   \item A single search engine
+   \item A computer's operating system}
+  {A}{The Web is an information system of linked resources that uses the Internet. It is not the network infrastructure, one search engine, or an OS.}
+\JKSSBItem{[Original]}{Which application retrieves and displays web pages?}
+  {\item Web browser
+   \item Search engine
+   \item Spreadsheet
+   \item Mail server}
+  {A}{A browser requests and displays web resources. A search engine helps locate resources; the other choices serve different roles.}
+\JKSSBItem{[Original]}{A search engine primarily helps users:}
+  {\item Find indexed web content
+   \item Route packets at the network layer
+   \item Edit local spreadsheets
+   \item Store BIOS firmware}
+  {A}{Search engines index and retrieve web information. Routing is a network function; spreadsheets and firmware storage are unrelated.}
+\JKSSBItem{[Original]}{A single document available on the Web is a:}
+  {\item Web page
+   \item Website
+   \item Browser
+   \item Domain registrar}
+  {A}{A web page is an individual resource/document. A website is a collection of related pages; the other options are software/services.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item The Internet is a global network of networks.
+   \item The Web uses Internet infrastructure.
+   \item A browser and a search engine are different tools.
+   \item Every Internet service is a web page.}
+  {A, B, C}{The Internet supports many services; the Web is one of them. Browsers and search engines also have distinct roles.}
+\fi
+\ifnum\JKSSBLessonID=35
+\JKSSBItem{[Original]}{In a URL, the scheme identifies the:}
+  {\item Access method or protocol
+   \item User's computer model
+   \item Page's font size
+   \item Local file extension only}
+  {A}{The scheme, such as https, indicates the access protocol. The other details are not what a URL scheme encodes.}
+\JKSSBItem{[Original]}{Which service translates a domain name into an IP address?}
+  {\item DNS
+   \item DHCP
+   \item SMTP
+   \item FTP}
+  {A}{DNS resolves names to records such as IP addresses. DHCP assigns network configuration; SMTP sends mail; FTP transfers files.}
+\JKSSBItem{[Original]}{HTTPS adds which security protocol to web communication?}
+  {\item TLS
+   \item POP3
+   \item OMR
+   \item RAID}
+  {A}{HTTPS uses HTTP protected by TLS. POP3 receives email, OMR reads marks, and RAID organizes disks.}
+\JKSSBItem{[Original]}{Which component of the URL `example.org` is the top-level domain?}
+  {\item .org
+   \item example
+   \item https
+   \item /}
+  {A}{`.org` is the top-level domain. `example` is the domain label; https is a scheme, and slash separates path components.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about web addressing/security are correct?}
+  {\item DNS can resolve domain names to IP addresses.
+   \item HTTPS uses TLS to protect a connection.
+   \item A URL can include a scheme and host.
+   \item DNS assigns an email password to a user.}
+  {A, B, C}{DNS resolves names, HTTPS uses TLS, and URLs include components such as scheme and host. DNS does not manage passwords.}
+\fi
+\ifnum\JKSSBLessonID=36
+\JKSSBItem{[Original]}{Downloading a file means transferring it:}
+  {\item From a remote system to the local device
+   \item From the local device to a remote system
+   \item From RAM to the CPU register file only
+   \item From a monitor to a printer}
+  {A}{Download means receiving data from a remote service. Sending data from the local device is upload.}
+\JKSSBItem{[Original]}{A website crawler primarily:}
+  {\item Discovers and visits web pages for indexing
+   \item Encrypts every email attachment
+   \item Replaces the browser's operating system
+   \item Assigns IP addresses on a LAN}
+  {A}{A crawler discovers pages that may be indexed by a search engine. The other options describe unrelated security, OS, or network services.}
+\JKSSBItem{[Original]}{Browser cache is used mainly to:}
+  {\item Temporarily store resources for faster reuse
+   \item Permanently back up a user's documents
+   \item Replace DNS
+   \item Prevent all malware infections}
+  {A}{Cache can speed repeat access by storing copies temporarily. It is not a permanent backup, DNS replacement, or complete security tool.}
+\JKSSBItem{[Original]}{Which action sends a local file to a website or remote service?}
+  {\item Upload
+   \item Download
+   \item Refresh
+   \item Bookmark}
+  {A}{Upload sends data from local to remote. Download receives remote data; refresh reloads a page; bookmark saves a link.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item Browser history can record visited pages.
+   \item Cookies can store site-related data in a browser.
+   \item Upload sends data to a remote service.
+   \item Browser cache is a guaranteed disaster-recovery backup.}
+  {A, B, C}{History records visits, cookies store site data, and upload sends data outward. Cache is temporary and is not a guaranteed backup.}
+\fi
+\ifnum\JKSSBLessonID=37
+\JKSSBItem{[Original]}{Which email field hides listed recipients from other recipients?}
+  {\item Bcc
+   \item To
+   \item Cc
+   \item Subject}
+  {A}{Bcc hides those recipients from other recipients. To and Cc recipients are visible; Subject is the message topic.}
+\JKSSBItem{[Original]}{A file sent along with an email is called an:}
+  {\item Attachment
+   \item Header
+   \item Signature
+   \item Folder}
+  {A}{An attachment is a file included with a message. Headers carry routing/message metadata; a signature identifies the sender; a folder organizes mail.}
+\JKSSBItem{[Original]}{Which email action sends a received message to another recipient?}
+  {\item Forward
+   \item Reply
+   \item Draft
+   \item Archive}
+  {A}{Forward sends a received message onward. Reply responds to its sender; Draft stores an unfinished message; Archive files a message.}
+\JKSSBItem{[Original]}{In an email address, the `@` symbol separates the:}
+  {\item User name and domain name
+   \item Scheme and file path
+   \item Subject and message body
+   \item Password and server port}
+  {A}{The local part identifies the mailbox/user; the domain identifies the mail domain. The other pairs are unrelated.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about email fields are correct?}
+  {\item To lists primary recipients.
+   \item Cc lists visible copied recipients.
+   \item Bcc conceals listed recipients from other recipients.
+   \item Subject contains the attachment bytes by definition.}
+  {A, B, C}{To, Cc, and Bcc serve recipient roles. Subject is a text topic field; attachments are separate message parts.}
+\fi
+\ifnum\JKSSBLessonID=38
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 399; SRC-17/SRC-22]}{Which protocol is commonly used by an email client to retrieve messages from a remote server?}
+  {\item SMTP
+   \item POP3
+   \item SNMP
+   \item UDP}
+  {B}{POP3 retrieves mail from a server. SMTP sends/transfers email; SNMP manages network devices; UDP is a transport protocol.}
+\JKSSBItem{[Original]}{Which protocol is primarily used to send email from a client to a mail server?}
+  {\item SMTP
+   \item IMAP
+   \item POP3
+   \item DNS}
+  {A}{SMTP handles mail submission/transfer. IMAP and POP3 retrieve/access mail; DNS resolves names.}
+\JKSSBItem{[Original]}{Which protocol typically keeps messages synchronized between a client and a mail server?}
+  {\item IMAP
+   \item POP3 only
+   \item FTP
+   \item ARP}
+  {A}{IMAP is designed for server-based mailbox access and synchronization. POP3 commonly downloads messages; FTP transfers files; ARP resolves local addresses.}
+\JKSSBItem{[Original]}{TLS applied to SMTP is intended to protect:}
+  {\item The transport connection between mail systems
+   \item The physical paper envelope
+   \item The computer's RAM contents at shutdown
+   \item Printer output resolution}
+  {A}{TLS can protect a connection hop. It does not by itself provide end-to-end message encryption across every mail server.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match the email protocol to its common role.}
+  {\item SMTP --- sending/transfer
+   \item POP3 --- retrieval/download
+   \item IMAP --- server mailbox access/synchronization
+   \item DNS --- composing email text}
+  {A, B, C}{SMTP, POP3, and IMAP have the listed mail roles. DNS resolves domain names, not message composition.}
+\fi
+\ifnum\JKSSBLessonID=39
+\JKSSBItem{[Original]}{An OTP is best described as:}
+  {\item A one-time verification code
+   \item A permanent account password
+   \item A bank account number
+   \item A card's magnetic strip}
+  {A}{An OTP is a temporary one-time code for authentication. It is not a permanent password or payment identifier.}
+\JKSSBItem{[Original]}{Which detail should never be shared with an unsolicited caller asking to authorize a payment?}
+  {\item UPI PIN
+   \item Public merchant name
+   \item Payment date
+   \item Transaction category}
+  {A}{A UPI PIN authorizes transactions and must remain secret. Public transaction context does not substitute for an authentication secret.}
+\JKSSBItem{[Original]}{A collect request in a payment app should be treated as:}
+  {\item A request to approve a payment, which must be checked carefully
+   \item Proof that money has already arrived
+   \item A harmless receipt
+   \item A request to disclose an OTP to the sender}
+  {A}{Approving a collect request may authorize a debit. Check the payee and purpose; it is not proof of receipt and never requires sharing an OTP.}
+\JKSSBItem{[Original]}{Which security practice adds a second verification factor beyond a password?}
+  {\item Multi-factor authentication
+   \item Reusing the same password
+   \item Disabling screen lock
+   \item Saving a PIN in a public note}
+  {A}{MFA combines distinct factors. The other choices weaken security.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are safe digital-payment practices?}
+  {\item Verify the recipient before confirming.
+   \item Never disclose a UPI PIN or OTP to another person.
+   \item Reject unexpected collect requests.
+   \item Enter a PIN to receive money into an account.}
+  {A, B, C}{Verify recipient details and protect secrets. Receiving money does not require disclosing or entering a UPI PIN to a requester.}
+\fi
+\ifnum\JKSSBLessonID=40
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 547; SRC-21]}{The Internet is an example of which network type by geographic scope?}
+  {\item LAN
+   \item MAN
+   \item WAN
+   \item PAN}
+  {C}{The Internet spans large geographic areas and interconnected networks, so it is a WAN. LAN, MAN, and PAN cover smaller scopes.}
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 408; SRC-17/SRC-22]}{Which device directs traffic between networks?}
+  {\item Router
+   \item Hub
+   \item Keyboard
+   \item Plotter}
+  {A}{A router forwards packets between networks. A hub repeats local signals; keyboard is input and plotter is output.}
+\JKSSBItem{[Original]}{Which topology connects each node to a central device?}
+  {\item Star
+   \item Ring
+   \item Bus
+   \item Mesh only}
+  {A}{In a star topology each node connects to a central hub/switch. Ring and bus use different arrangements; mesh uses multiple inter-node paths.}
+\JKSSBItem{[Original]}{A device that connects a computer to a network is commonly a:}
+  {\item NIC
+   \item Plotter
+   \item OCR reader
+   \item Projector}
+  {A}{A Network Interface Card (NIC) provides network connectivity. The others are output or recognition devices.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item A LAN covers a limited local area.
+   \item A router forwards traffic between networks.
+   \item A switch commonly connects devices within a LAN.
+   \item A hub makes routing decisions using IP addresses.}
+  {A, B, C}{LAN, router, and switch roles are correctly described. A hub repeats signals and does not route using IP addresses.}
+\fi
+\ifnum\JKSSBLessonID=41
+\JKSSBItem{[PYQ-adapted: JKSSB JKP Constable 2024, QCRIAS item 747; SRC-02]}{In HTTPS, what does the letter S stand for?}
+  {\item Selected
+   \item Secure
+   \item Software
+   \item System}
+  {B}{The S in HTTPS means Secure. The other options are not expansions of HTTPS.}
+\JKSSBItem{[PYQ-adapted: JKSSB JKP Constable 2024, QCRIAS item 765; SRC-02]}{Which organization develops standards for the World Wide Web?}
+  {\item W3C
+   \item WHO
+   \item OPEC
+   \item UNESCO}
+  {A}{W3C is the World Wide Web Consortium. The other organizations have different mandates.}
+\JKSSBItem{[Original]}{Which protocol provides reliable, ordered delivery between applications?}
+  {\item TCP
+   \item UDP
+   \item ARP
+   \item ICMP}
+  {A}{TCP provides reliable, ordered transport. UDP is connectionless without that delivery guarantee; ARP and ICMP serve other network functions.}
+\JKSSBItem{[Original]}{Which protocol translates a domain name into an IP address?}
+  {\item DNS
+   \item SMTP
+   \item FTP
+   \item POP3}
+  {A}{DNS resolves names. SMTP sends mail, FTP transfers files, and POP3 retrieves email.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are application-layer protocols/services?}
+  {\item HTTP
+   \item SMTP
+   \item FTP
+   \item Ethernet framing}
+  {A, B, C}{HTTP, SMTP, and FTP are application-layer protocols. Ethernet framing belongs to the data-link layer.}
+\fi
+\ifnum\JKSSBLessonID=42
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 556; SRC-21]}{Which virus type attaches itself to executable files and activates when an infected file runs?}
+  {\item Direct-action file virus
+   \item Boot-sector virus
+   \item Macro virus
+   \item Overwrite virus only}
+  {A}{A direct-action file virus infects executable files such as .EXE/.COM files. Boot-sector viruses target boot records; macro viruses use document macros.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2024, QCRIAS item 664; SRC-16/SRC-19]}{Which option is an antivirus product?}
+  {\item Trojan horse
+   \item Worm
+   \item Macro virus
+   \item Norton}
+  {D}{Norton is antivirus software. A Trojan, worm, and macro virus are malware types.}
+\JKSSBItem{[Original]}{Malware that encrypts a victim's files and demands payment is commonly called:}
+  {\item Ransomware
+   \item Adware
+   \item Cookie
+   \item Device driver}
+  {A}{Ransomware encrypts or locks data and demands a ransom. Adware displays advertisements; a cookie is browser data; a driver is software for a device.}
+\JKSSBItem{[Original]}{Which malware is commonly disguised as legitimate software and relies on a user running it?}
+  {\item Trojan horse
+   \item Worm
+   \item Firewall
+   \item Patch}
+  {A}{A Trojan appears benign but carries a hidden malicious purpose. A worm self-propagates; firewalls and patches are defensive controls.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are malware categories?}
+  {\item Virus
+   \item Worm
+   \item Trojan horse
+   \item Firewall}
+  {A, B, C}{Virus, worm, and Trojan horse are malware. A firewall is a security control.}
+\fi
+\ifnum\JKSSBLessonID=43
+\JKSSBItem{[Original]}{A fraudulent message that impersonates a trusted organization to steal credentials is an example of:}
+  {\item Phishing
+   \item Defragmentation
+   \item Encryption
+   \item Load balancing}
+  {A}{Phishing uses deceptive communication to obtain sensitive information. The other terms describe storage, security, or traffic-management processes.}
+\JKSSBItem{[Original]}{Forging the apparent sender address of an email is called:}
+  {\item Spoofing
+   \item Patching
+   \item Hashing
+   \item Sandboxing}
+  {A}{Spoofing falsifies an identity or source. Patching updates software; hashing computes a digest; sandboxing isolates execution.}
+\JKSSBItem{[Original]}{An attack that tricks a person into revealing confidential information primarily exploits:}
+  {\item Social engineering
+   \item Disk formatting
+   \item Data compression
+   \item Routing}
+  {A}{Social engineering manipulates people rather than relying solely on a technical vulnerability. The other options are unrelated operations.}
+\JKSSBItem{[Original]}{A software weakness that could be exploited by an attacker is a:}
+  {\item Vulnerability
+   \item Patch
+   \item Backup
+   \item Checksum}
+  {A}{A vulnerability is a weakness; an exploit takes advantage of it. A patch fixes defects, a backup preserves data, and a checksum detects changes.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are common signs of phishing?}
+  {\item A mismatched sender/domain
+   \item An urgent request to disclose a password
+   \item A link whose destination differs from its displayed text
+   \item A routine operating-system update from the configured updater}
+  {A, B, C}{Sender mismatches, credential pressure, and deceptive links are warning signs. A routine configured update is not by itself evidence of phishing.}
+\fi
+\ifnum\JKSSBLessonID=44
+\JKSSBItem{[Original]}{Which security property means that information is accessible only to authorized parties?}
+  {\item Confidentiality
+   \item Availability
+   \item Redundancy
+   \item Compression}
+  {A}{Confidentiality restricts disclosure to authorized parties. Availability concerns access when needed; redundancy and compression are different concepts.}
+\JKSSBItem{[Original]}{A firewall primarily helps to:}
+  {\item Control network traffic according to rules
+   \item Create a backup copy of every document
+   \item Repair broken monitor pixels
+   \item Convert scanned pages to editable text}
+  {A}{A firewall filters or controls network traffic. Backups, monitor repair, and OCR are separate functions.}
+\JKSSBItem{[Original]}{Why should security updates be installed promptly?}
+  {\item They can fix known vulnerabilities
+   \item They guarantee that no attack can occur
+   \item They replace all backups
+   \item They make passwords unnecessary}
+  {A}{Updates often patch known weaknesses but cannot guarantee complete security or replace backups/authentication.}
+\JKSSBItem{[Original]}{Which control is most directly used to restore files after accidental deletion or disk failure?}
+  {\item Backup
+   \item Firewall
+   \item Screen saver
+   \item Spam filter}
+  {A}{A backup provides a recoverable copy. Firewalls filter traffic, screen savers lock/display, and spam filters classify email.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which practices strengthen account security?}
+  {\item Use multi-factor authentication.
+   \item Use unique strong passwords.
+   \item Install security updates.
+   \item Reuse one password on every service.}
+  {A, B, C}{MFA, unique passwords, and updates strengthen security. Password reuse increases the impact of a compromised account.}
+\fi
+\ifnum\JKSSBLessonID=45
+\JKSSBItem{[Original]}{Open-source software generally makes which material available under its license?}
+  {\item Source code
+   \item The user's password database
+   \item Private files of all users
+   \item A computer's BIOS password}
+  {A}{Open-source licenses provide rights to inspect/use/modify source under their terms. They do not expose private user data or credentials.}
+\JKSSBItem{[Original]}{Freeware and open-source are:}
+  {\item Different concepts; free price does not necessarily grant source-code rights
+   \item Always identical terms
+   \item Both hardware categories
+   \item Names for trial versions only}
+  {A}{Freeware concerns price; open source concerns source access and license freedoms. They may overlap but are not synonymous.}
+\JKSSBItem{[Original]}{Which license-related statement is most accurate?}
+  {\item Users must follow the software's license terms.
+   \item Open-source software has no license.
+   \item Public-domain software is always proprietary.
+   \item Freeware may never be copyrighted.}
+  {A}{Open-source and other software are distributed under licenses/terms. The other claims are false generalizations.}
+\JKSSBItem{[Original]}{A proprietary application is usually distributed with:}
+  {\item Restrictions defined by its owner/license
+   \item Automatic public rights to modify its source
+   \item No copyright protection
+   \item Mandatory source publication}
+  {A}{Proprietary licensing typically restricts use/modification according to the owner's terms. Source publication and modification rights are not automatic.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements about software distribution are correct?}
+  {\item Freeware may be free of charge while remaining closed-source.
+   \item Open-source software is governed by a license.
+   \item Shareware may be distributed as a trial.
+   \item All free-of-charge software is public domain.}
+  {A, B, C}{Freeware, open-source, and shareware describe different distribution/licensing properties. No-cost distribution does not automatically place software in the public domain.}
+\fi
+\ifnum\JKSSBLessonID=46
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2024, QCRIAS item 668; SRC-16/SRC-19]}{Firmware is commonly stored in:}
+  {\item Cache
+   \item RAM
+   \item External printer memory only
+   \item ROM or flash memory}
+  {D}{Firmware must persist without power and is commonly stored in ROM/flash. Cache and RAM are volatile; printer memory is not the general answer.}
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q68, provisional key; SRC-04/SRC-07]}{Which firmware initializes hardware and begins the boot process on a traditional PC?}
+  {\item BIOS
+   \item Device driver
+   \item Spreadsheet
+   \item Web browser}
+  {A}{BIOS firmware initializes hardware and starts booting. Drivers are loaded for device operation; spreadsheet/browser are applications. The cited key is provisional.}
+\JKSSBItem{[Original]}{UEFI is best described as:}
+  {\item A modern firmware interface used during startup
+   \item A type of spreadsheet formula
+   \item A printer cable
+   \item A file-compression format}
+  {A}{UEFI is firmware interface technology used to initialize the system and start the boot process. The other choices are unrelated.}
+\JKSSBItem{[Original]}{A device driver primarily enables:}
+  {\item The operating system to communicate with a hardware device
+   \item A monitor to store files permanently
+   \item A user to change the CPU clock by typing a document
+   \item A network to replace the operating system}
+  {A}{Drivers let the OS control/communicate with hardware. The other options confuse storage, applications, and system software.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item Firmware is low-level software associated with a device.
+   \item ROM/flash can retain firmware without power.
+   \item BIOS/UEFI participates in startup.
+   \item A device driver is a physical circuit board.}
+  {A, B, C}{Firmware is software stored persistently; BIOS/UEFI participates in boot. A driver is software, not a circuit board.}
+\fi
+\ifnum\JKSSBLessonID=47
+\JKSSBItem{[Original]}{In an information system, the people who use, operate, or manage the system are sometimes collectively called:}
+  {\item Humanware
+   \item Firmware
+   \item Shareware
+   \item Middleware}
+  {A}{Humanware refers to people involved with computer systems. Firmware, shareware, and middleware are software terms.}
+\JKSSBItem{[Original]}{IT governance is primarily concerned with:}
+  {\item Ensuring IT supports organizational goals and is responsibly managed
+   \item Increasing screen resolution only
+   \item Replacing all staff with computers
+   \item Removing accountability for systems}
+  {A}{IT governance aligns and oversees technology, risk, and accountability in support of organizational objectives. The other choices are too narrow or incorrect.}
+\JKSSBItem{[Original]}{Which role is most associated with managing user accounts and access permissions?}
+  {\item System administrator
+   \item End user only
+   \item Printer operator only
+   \item Search engine crawler}
+  {A}{System administrators commonly manage users, permissions, and systems. The other roles do not generally control organization-wide access.}
+\JKSSBItem{[Original]}{An end user is someone who primarily:}
+  {\item Uses an application or system to perform a task
+   \item Writes every operating-system kernel
+   \item Manufactures all processors
+   \item Routes every Internet packet}
+  {A}{An end user uses the system for work or personal tasks. The other options describe specialized engineering or network functions.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are stakeholders in IT governance?}
+  {\item Senior management
+   \item IT staff
+   \item System users
+   \item External auditors or regulators where applicable}
+  {A, B, C, D}{Governance involves organizational leaders, IT teams, users, and relevant external oversight stakeholders.}
+\fi
+\ifnum\JKSSBLessonID=48
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 391; SRC-17/SRC-22]}{What happens to data held in volatile RAM when power is removed?}
+  {\item It is lost
+   \item It becomes permanent ROM
+   \item It is printed automatically
+   \item It is sent to a network router}
+  {A}{Volatile RAM loses its contents without power. It is not automatically converted, printed, or transmitted.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 551; SRC-17/SRC-21]}{Which memory is traditionally used to store BIOS firmware?}
+  {\item RAM
+   \item ROM
+   \item Cache
+   \item Register}
+  {B}{Firmware is stored in non-volatile ROM/flash. RAM, cache, and registers are volatile working storage.}
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q70, provisional key; SRC-04/SRC-07]}{Which method reads magnetic-ink characters on bank cheques?}
+  {\item MICR
+   \item OCR
+   \item OMR
+   \item Barcode scanner}
+  {A}{MICR reads magnetic-ink characters. OCR recognizes printed text, OMR detects marks, and barcode scanners read barcodes.}
+\JKSSBItem{[Original]}{Which shortcut commonly pastes copied content?}
+  {\item Ctrl+V
+   \item Ctrl+C
+   \item Ctrl+X
+   \item Ctrl+P}
+  {A}{Ctrl+V pastes. Ctrl+C copies, Ctrl+X cuts, and Ctrl+P opens Print.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which pairs are correctly matched?}
+  {\item RAM --- volatile memory
+   \item MICR --- magnetic-ink character reading
+   \item Ctrl+V --- paste
+   \item Router --- printer output device}
+  {A, B, C}{The first three pairs are correct. A router forwards network traffic; it is not a printer.}
+\fi
+\ifnum\JKSSBLessonID=49
+\JKSSBItem{[Original]}{First-generation electronic computers primarily used:}
+  {\item Vacuum tubes
+   \item Integrated circuits
+   \item Microprocessors
+   \item Transistors only}
+  {A}{First-generation computers used vacuum tubes. Transistors, integrated circuits, and microprocessors characterize later generations.}
+\JKSSBItem{[Original]}{Integrated circuits are most closely associated with which generation?}
+  {\item First
+   \item Second
+   \item Third
+   \item Fifth}
+  {C}{Third-generation computers used integrated circuits. First used vacuum tubes, second transistors, and fourth microprocessors.}
+\JKSSBItem{[Original]}{The microprocessor is most closely associated with which computer generation?}
+  {\item First
+   \item Second
+   \item Third
+   \item Fourth}
+  {D}{Fourth-generation computers are associated with microprocessors. The other options correspond to earlier technologies.}
+\JKSSBItem{[Original]}{Which technology replaced vacuum tubes in second-generation computers?}
+  {\item Transistors
+   \item Integrated circuits
+   \item Microprocessors
+   \item Optical fibers}
+  {A}{Transistors replaced vacuum tubes in second-generation systems. Integrated circuits came later.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match technology to generation.}
+  {\item Vacuum tubes --- first
+   \item Transistors --- second
+   \item Integrated circuits --- third
+   \item Microprocessors --- fourth}
+  {A, B, C, D}{All four are the standard technology-generation associations.}
+\fi
+\ifnum\JKSSBLessonID=50
+\JKSSBItem{[Original]}{What is the decimal value of binary 1010?}
+  {\item 8
+   \item 10
+   \item 12
+   \item 14}
+  {B}{Binary 1010 equals 8+2=10 in decimal. The other options do not match its place-value sum.}
+\JKSSBItem{[Original]}{In hexadecimal notation, the digit A represents decimal:}
+  {\item 8
+   \item 9
+   \item 10
+   \item 11}
+  {C}{Hexadecimal digits A through F represent decimal 10 through 15.}
+\JKSSBItem{[Original]}{BCD represents each decimal digit using:}
+  {\item Four bits
+   \item One byte
+   \item Three bits
+   \item Sixteen bits}
+  {A}{Binary-coded decimal encodes each decimal digit separately in four bits.}
+\JKSSBItem{[Original]}{Which logic gate outputs 1 only when its two inputs differ?}
+  {\item XOR
+   \item AND
+   \item OR
+   \item NOT}
+  {A}{XOR is 1 when inputs differ. AND requires both inputs 1; OR requires at least one; NOT has one input.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item One hexadecimal digit represents four binary bits.
+   \item A byte contains eight bits.
+   \item BCD encodes each decimal digit in four bits.
+   \item Decimal 10 is binary 1110.}
+  {A, B, C}{The first three are correct. Binary 1110 equals decimal 14; decimal 10 is binary 1010.}
+\fi
+\ifnum\JKSSBLessonID=51
+\JKSSBItem{[Original]}{Which translator converts an entire high-level program before execution?}
+  {\item Compiler
+   \item Interpreter
+   \item Text editor
+   \item Linker only}
+  {A}{A compiler translates a program into another form before execution. An interpreter executes through translation as it runs; an editor edits text; a linker combines object modules.}
+\JKSSBItem{[Original]}{Which data structure follows the LIFO principle?}
+  {\item Stack
+   \item Queue
+   \item Array only
+   \item Graph}
+  {A}{A stack is last-in, first-out. A queue is FIFO; arrays and graphs are not defined by LIFO behavior.}
+\JKSSBItem{[Original]}{A written step-by-step procedure for solving a problem is an:}
+  {\item Algorithm
+   \item Operating system
+   \item Database record
+   \item Device driver}
+  {A}{An algorithm is a finite procedure for solving a problem. The other terms describe software/system/data objects.}
+\JKSSBItem{[Original]}{Which language is closest to the processor's native instruction representation?}
+  {\item Machine language
+   \item High-level language
+   \item Natural language
+   \item Spreadsheet formula language only}
+  {A}{Machine language is represented in processor instructions. High-level languages are more abstract; natural language is not processor code.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which pairings are correct?}
+  {\item Stack --- LIFO
+   \item Queue --- FIFO
+   \item Compiler --- translates a program before execution
+   \item Debugging --- intentionally adds errors}
+  {A, B, C}{The first three are correct. Debugging identifies and fixes errors rather than adding them.}
+\fi
+\ifnum\JKSSBLessonID=52
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 329; SRC-17/SRC-22]}{Which software category controls computer operations and coordinates hardware?}
+  {\item System software
+   \item Application software
+   \item User data
+   \item Presentation theme}
+  {A}{System software, including the OS, manages resources and hardware. Application software performs user tasks; data and themes are not that software category.}
+\JKSSBItem{[Original]}{In Linux, which command commonly lists files in a directory?}
+  {\item ls
+   \item cd
+   \item pwd
+   \item rm}
+  {A}{`ls` lists directory contents. `cd` changes directory, `pwd` prints the current path, and `rm` removes files.}
+\JKSSBItem{[Original]}{Which Windows utility is intended to remove selected temporary files and free disk space?}
+  {\item Disk Cleanup
+   \item Paint
+   \item Notepad
+   \item Character Map}
+  {A}{Disk Cleanup removes selected temporary/unneeded files. The other utilities edit/draw text or inspect characters.}
+\JKSSBItem{[Original]}{Which type of operating system is designed to respond within defined timing constraints?}
+  {\item Real-time operating system
+   \item Batch-only database
+   \item Spreadsheet system
+   \item Web browser}
+  {A}{An RTOS is designed for bounded timing behavior. The other options are not operating-system classes.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match the command to its common Linux role.}
+  {\item ls --- list directory entries
+   \item pwd --- show current working directory
+   \item cd --- change directory
+   \item rm --- rename a directory only}
+  {A, B, C}{The first three are common command roles. `rm` removes files/directories; renaming is commonly done with `mv`.}
+\fi
+\ifnum\JKSSBLessonID=53
+\JKSSBItem{[PYQ-adapted: JKSSB JKP Constable 2024, QCRIAS item 765; SRC-02]}{Which organization develops standards for the World Wide Web?}
+  {\item W3C
+   \item WHO
+   \item OPEC
+   \item UNESCO}
+  {A}{W3C is the World Wide Web Consortium, which develops Web standards. The other organizations have different mandates.}
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 399; SRC-17/SRC-22]}{Which protocol is commonly used by an email client to retrieve messages from a remote server?}
+  {\item SMTP
+   \item POP3
+   \item SNMP
+   \item UDP}
+  {B}{POP3 retrieves email. SMTP sends/transfers it; SNMP manages network devices; UDP is a transport protocol.}
+\JKSSBItem{[Original]}{Which Internet service transfers files between a client and server?}
+  {\item FTP
+   \item DNS
+   \item ARP
+   \item ICMP}
+  {A}{FTP is a file-transfer protocol. DNS resolves names, ARP resolves local addresses, and ICMP carries control/diagnostic messages.}
+\JKSSBItem{[Original]}{Which legacy protocol provides remote terminal access without encryption by default?}
+  {\item Telnet
+   \item HTTPS
+   \item SFTP
+   \item IMAPS}
+  {A}{Telnet is a legacy plaintext remote-terminal protocol. HTTPS, SFTP, and IMAPS are secure protocol variants/services.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match protocol/service to its common role.}
+  {\item DNS --- name resolution
+   \item SMTP --- email sending/transfer
+   \item FTP --- file transfer
+   \item ICMP --- web page markup}
+  {A, B, C}{DNS, SMTP, and FTP match their roles. ICMP is for network control/diagnostics, not HTML markup.}
+\fi
+\ifnum\JKSSBLessonID=54
+\JKSSBItem{[Original]}{Which shortcut commonly opens the Print dialog in Office applications?}
+  {\item Ctrl+P
+   \item Ctrl+H
+   \item Ctrl+K
+   \item Ctrl+Z}
+  {A}{Ctrl+P opens Print. Ctrl+H opens Find/Replace, Ctrl+K inserts a hyperlink, and Ctrl+Z undoes.}
+\JKSSBItem{[Original]}{Which Word shortcut commonly inserts a hyperlink?}
+  {\item Ctrl+K
+   \item Ctrl+L
+   \item Ctrl+M
+   \item Ctrl+W}
+  {A}{Ctrl+K opens the hyperlink action in common Office versions. The other shortcuts have different or application-dependent uses.}
+\JKSSBItem{[Original]}{Which key starts a PowerPoint slide show from the current slide?}
+  {\item Shift+F5
+   \item F5
+   \item F7
+   \item Ctrl+P}
+  {A}{Shift+F5 starts from the current slide; F5 starts from the beginning. F7 and Ctrl+P are not that action.}
+\JKSSBItem{[Original]}{Which key commonly starts spelling and grammar review in Word?}
+  {\item F7
+   \item F5
+   \item F1
+   \item F12}
+  {A}{F7 invokes spelling/grammar review in common Word versions. F1 is Help, F5 is navigation/go-to, and F12 opens Save As.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match common shortcuts to actions.}
+  {\item Ctrl+S --- save
+   \item Ctrl+P --- print
+   \item Ctrl+Z --- undo
+   \item Ctrl+C --- paste}
+  {A, B, C}{Ctrl+S saves, Ctrl+P prints, Ctrl+Z undoes, and Ctrl+C copies. Ctrl+V pastes.}
+\fi
+\ifnum\JKSSBLessonID=55
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 554; SRC-21]}{Which listed device is a flash-memory device?}
+  {\item Hard disk drive
+   \item RAM
+   \item USB drive
+   \item Blu-ray disc}
+  {C}{A USB drive uses flash memory. HDDs use magnetic storage, RAM is working memory, and Blu-ray is optical.}
+\JKSSBItem{[Original]}{Which extension is commonly associated with a PowerPoint presentation?}
+  {\item .pptx
+   \item .xlsx
+   \item .docx
+   \item .accdb}
+  {A}{.pptx is PowerPoint; .xlsx is Excel, .docx is Word, and .accdb is Access.}
+\JKSSBItem{[Original]}{Which statement correctly distinguishes a file extension from a file format?}
+  {\item `.png` is an extension; PNG is the format name.
+   \item PNG is an extension and `.png` is the format.
+   \item They always indicate the file's actual contents with certainty.
+   \item An extension is a storage device.}
+  {A}{The dot-suffix in a filename is an extension; PNG names the format. Extensions can be misleading and do not guarantee contents.}
+\JKSSBItem{[Original]}{Which file type is typically plain-text tabular data and does not preserve rich workbook formatting?}
+  {\item CSV
+   \item XLSX
+   \item PPTX
+   \item DOCX}
+  {A}{CSV stores delimited text data. XLSX is a workbook format; PPTX and DOCX are presentation and word-processing formats.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which pairs are correctly matched?}
+  {\item .docx --- Word document
+   \item .xlsx --- Excel workbook
+   \item .pptx --- PowerPoint presentation
+   \item .png --- database file}
+  {A, B, C}{The first three are correct. PNG is an image format, not a database format.}
+\fi
+\ifnum\JKSSBLessonID=56
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2022, QCRIAS item 556; SRC-21]}{Which virus type attaches itself to executable files such as .EXE or .COM files?}
+  {\item Direct-action file virus
+   \item Boot-sector virus
+   \item Macro virus
+   \item Overwrite virus only}
+  {A}{A direct-action file virus infects executable files. Boot-sector viruses target boot records; macro viruses use document macros.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2024, QCRIAS item 664; SRC-16/SRC-19]}{Which option is antivirus software?}
+  {\item Trojan horse
+   \item Worm
+   \item Macro virus
+   \item Norton}
+  {D}{Norton is an antivirus product. A Trojan, worm, and macro virus are malware.}
+\JKSSBItem{[Original]}{Which security control filters network traffic according to rules?}
+  {\item Firewall
+   \item Spreadsheet
+   \item Defragmenter
+   \item OCR}
+  {A}{A firewall filters network traffic. The other choices are an application, storage utility, and text-recognition technology.}
+\JKSSBItem{[Original]}{A file that appears harmless but contains a hidden malicious purpose is a:}
+  {\item Trojan horse
+   \item Patch
+   \item Backup
+   \item Firewall}
+  {A}{A Trojan disguises malicious behavior as benign software. Patches, backups, and firewalls are defensive measures.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are security controls?}
+  {\item Antivirus software
+   \item Firewall
+   \item Multi-factor authentication
+   \item Phishing email}
+  {A, B, C}{Antivirus, firewall, and MFA are controls. A phishing email is an attack vector.}
+\fi
+\ifnum\JKSSBLessonID=57
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2024, QCRIAS item 672; SRC-16/SRC-19]}{The UMANG app enables citizens to access:}
+  {\item Virtual-reality games
+   \item Streaming movies
+   \item Government services and information
+   \item Online fitness classes}
+  {C}{UMANG is a government-service access platform. The other choices describe entertainment or fitness apps.}
+\JKSSBItem{[PYQ-adapted: JKSSB FAA 2024, QCRIAS item 671; SRC-16/SRC-19]}{Smart Governance primarily involves:}
+  {\item Making governance processes more complicated
+   \item Integrating IT to improve service delivery and decisions
+   \item Avoiding technology
+   \item Reducing transparency}
+  {B}{Smart Governance uses technology to improve efficiency, transparency, and service delivery. The other choices contradict those aims.}
+\JKSSBItem{[Original]}{A service that lets a citizen access services from central and state agencies through one mobile platform is an example of:}
+  {\item Integrated e-governance delivery
+   \item Disk defragmentation
+   \item Local file indexing
+   \item Spreadsheet recalculation}
+  {A}{Integrated e-governance platforms provide access to services across agencies. The other options are local computer operations.}
+\JKSSBItem{[Original]}{A Government-to-Citizen service is abbreviated:}
+  {\item G2C
+   \item G2G
+   \item G2B
+   \item G2E}
+  {A}{G2C means Government to Citizen. G2G is government-to-government, G2B government-to-business, and G2E government-to-employee.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are common e-governance interaction categories?}
+  {\item G2C
+   \item G2G
+   \item G2B
+   \item B2C means Government to Citizen}
+  {A, B, C}{G2C, G2G, and G2B are standard categories. B2C means Business to Consumer, not Government to Citizen.}
+\fi
+\ifnum\JKSSBLessonID=58
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q78, provisional key; SRC-04/SRC-07]}{What character must begin a standard Excel formula?}
+  {\item =
+   \item \#
+   \item @
+   \item \&}
+  {A}{Excel formulas normally begin with an equals sign. The other characters do not serve as the standard formula prefix.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q78, final key; SRC-03/SRC-06]}{How many bits are in an IPv6 address?}
+  {\item 32
+   \item 64
+   \item 128
+   \item 256}
+  {C}{IPv6 addresses are 128 bits. IPv4 uses 32 bits; 64 and 256 are not the address width.}
+\JKSSBItem{[Original]}{Which of the following is NOT a storage device?}
+  {\item Keyboard
+   \item SSD
+   \item HDD
+   \item USB flash drive}
+  {A}{A keyboard is an input device. SSD, HDD, and USB flash drive store data.}
+\JKSSBItem{[Original]}{Which action best protects against losing files after accidental deletion or hardware failure?}
+  {\item Maintain and test backups
+   \item Increase monitor brightness
+   \item Rename the desktop folder
+   \item Disable all updates}
+  {A}{Backups provide recovery copies and should be tested. The other actions do not protect data and disabling updates can increase risk.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Select the accurate statements.}
+  {\item RAM is volatile.
+   \item IPv6 addresses are 128 bits.
+   \item Excel formulas commonly begin with `=`.
+   \item A section break is the same as a page break.}
+  {A, B, C}{The first three statements are correct. A section break creates a new section; a page break alone does not.}
+\fi
+\ifnum\JKSSBLessonID=59
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q6; SRC-18]}{Which register holds the instruction currently being decoded and executed?}
+  {\item MAR
+   \item PC
+   \item IR
+   \item Accumulator}
+  {C}{The Instruction Register holds the current instruction. MAR stores an address, PC the next instruction address, and the accumulator an intermediate result.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q65, final key; SRC-03/SRC-06]}{In BCD, each decimal digit is represented using:}
+  {\item Four bits
+   \item Eight bits
+   \item One bit
+   \item Sixteen bits}
+  {A}{BCD encodes each decimal digit in four bits. It is not the same as converting the whole number to pure binary.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q65, final key; SRC-03/SRC-06]}{For unsigned widening, which method fills the newly added high-order bits with zeros?}
+  {\item Zero extension
+   \item Sign extension
+   \item Sign inversion
+   \item Carry propagation}
+  {A}{Zero extension pads an unsigned value with zeros. Sign extension copies the sign bit for signed values.}
+\JKSSBItem{[Original]}{In a pipelined processor, a data hazard can occur when:}
+  {\item An instruction depends on a result not yet produced by an earlier instruction
+   \item A printer runs out of paper
+   \item A file extension is hidden
+   \item A keyboard key is repeated}
+  {A}{A data hazard is a dependency conflict between overlapping instructions. The other choices are peripheral or file-management issues.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are standard CPU architecture concepts?}
+  {\item Program Counter stores the next instruction address.
+   \item Instruction Register holds the current instruction.
+   \item A carry-out and signed overflow are always identical.
+   \item BCD uses four bits per decimal digit.}
+  {A, B, D}{PC, IR, and BCD statements are correct. Carry-out is not generally equivalent to signed overflow.}
+\fi
+\ifnum\JKSSBLessonID=60
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q70, final key; SRC-03/SRC-06]}{Which deadlock recovery method takes a resource away from a process to resolve a resource cycle?}
+  {\item Resource preemption
+   \item Increasing display resolution
+   \item Formatting the keyboard
+   \item Renaming a user account}
+  {A}{Resource preemption reclaims a resource to break deadlock. The other actions do not change process-resource allocation.}
+\JKSSBItem{[Original]}{In Linux, which command prints the current working directory?}
+  {\item pwd
+   \item ls
+   \item cd
+   \item rm}
+  {A}{`pwd` prints the current directory. `ls` lists entries, `cd` changes directory, and `rm` removes files.}
+\JKSSBItem{[Original]}{Which command is commonly used to list directory contents in Linux?}
+  {\item ls
+   \item pwd
+   \item mkdir
+   \item rmdir}
+  {A}{`ls` lists directory entries. `pwd` prints the path; `mkdir` and `rmdir` create/remove directories.}
+\JKSSBItem{[Original]}{Which scheduling policy gives each ready process a fixed time slice in turn?}
+  {\item Round-robin
+   \item First-come, first-served only
+   \item Shortest job first only
+   \item Non-preemptive batch sorting}
+  {A}{Round-robin cycles through ready processes using a time quantum. The other options do not specify that rotating time-slice policy.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are common operating-system concepts?}
+  {\item A process is a program in execution.
+   \item Deadlock involves processes waiting on resources.
+   \item A file system organizes stored files.
+   \item A device driver is a physical keyboard.}
+  {A, B, C}{Processes, deadlocks, and file systems are OS concepts. A driver is software that helps control a device.}
+\fi
+\ifnum\JKSSBLessonID=61
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q14; SRC-18]}{Which setting can be changed for one Word section without changing the previous section?}
+  {\item Page orientation and margins
+   \item AutoCorrect replacement list
+   \item Normal style definition
+   \item File Properties metadata}
+  {A}{Page setup is section-specific. AutoCorrect is application-wide; styles and Properties are not unique page-layout settings for one section.}
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q4; SRC-18]}{Which Excel function counts cells that meet one criterion?}
+  {\item COUNT
+   \item COUNTBLANK
+   \item COUNTIF
+   \item SUMIF}
+  {C}{COUNTIF counts matching cells. COUNT counts numeric cells without a criterion; COUNTBLANK counts empties; SUMIF sums matching values.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q76, final key; SRC-03/SRC-06]}{Which email field hides listed recipients from other recipients?}
+  {\item To
+   \item Cc
+   \item Bcc
+   \item Subject}
+  {C}{Bcc conceals those recipients from other recipients. To and Cc recipients are visible; Subject identifies the topic.}
+\JKSSBItem{[Original]}{Which feature in Word records edits for later review?}
+  {\item Track Changes
+   \item Mail Merge
+   \item AutoSum
+   \item Slide Sorter}
+  {A}{Track Changes records revisions. Mail Merge personalizes documents; AutoSum is an Excel feature; Slide Sorter is a PowerPoint view.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which distinctions are accurate?}
+  {\item Section Break can enable different page setup for a new section.
+   \item Bcc conceals recipients from other recipients.
+   \item COUNTIF counts cells meeting criteria.
+   \item Digital signatures are the same as message encryption.}
+  {A, B, C}{Section setup, Bcc, and COUNTIF are correctly described. Digital signatures support authenticity/integrity; encryption supports confidentiality.}
+\fi
+\ifnum\JKSSBLessonID=62
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q78, final key; SRC-03/SRC-06]}{How many bits are in an IPv6 address?}
+  {\item 32
+   \item 64
+   \item 128
+   \item 256}
+  {C}{IPv6 addresses are 128 bits. IPv4 addresses are 32 bits.}
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q3; SRC-18]}{Which OSI layer routes packets across networks using logical addressing?}
+  {\item Data Link
+   \item Session
+   \item Network
+   \item Transport}
+  {C}{The Network layer provides logical addressing and routing. Data Link handles local frames; Session manages dialogues; Transport provides end-to-end services.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q79, final key; SRC-03/SRC-06]}{HTTP/3 uses which transport protocol through QUIC?}
+  {\item UDP
+   \item TCP
+   \item ICMP
+   \item ARP}
+  {A}{HTTP/3 uses QUIC over UDP. TCP is used by earlier HTTP versions; ICMP and ARP have other network roles.}
+\JKSSBItem{[Original]}{Which cloud service model gives a customer virtual machines, storage, and networking while the customer manages the operating system?}
+  {\item IaaS
+   \item SaaS
+   \item PaaS
+   \item BIOS}
+  {A}{IaaS provides infrastructure resources; the customer manages the guest OS and applications. SaaS delivers an application; PaaS provides a managed platform.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which statements are correct?}
+  {\item IPv6 uses 128-bit addresses.
+   \item Routers forward packets between networks.
+   \item UDP is connectionless.
+   \item HTTP/3 uses TCP through QUIC.}
+  {A, B, C}{The first three are correct. QUIC runs over UDP, not TCP.}
+\fi
+\ifnum\JKSSBLessonID=63
+\JKSSBItem{[PYQ-adapted: JKSSB Sub-Inspector 2022, QCRIAS item 359; SRC-17/SRC-22]}{Which markup language is commonly used to add dynamic effects to a web page in older exam terminology?}
+  {\item DHTML
+   \item XML only
+   \item C language
+   \item Assembly language}
+  {A}{DHTML describes combining HTML, scripting, and style changes for dynamic page behavior. The other choices do not name that presentation concept.}
+\JKSSBItem{[Original]}{Which language primarily structures the content of a web page?}
+  {\item HTML
+   \item SMTP
+   \item SQL only
+   \item BIOS}
+  {A}{HTML marks up web content. SMTP transfers email, SQL queries databases, and BIOS is firmware.}
+\JKSSBItem{[Original]}{Which technology is primarily used to add client-side interactivity to a web page?}
+  {\item JavaScript
+   \item JPEG
+   \item FTP
+   \item ROM}
+  {A}{JavaScript is commonly used for client-side behavior. JPEG is an image format, FTP transfers files, and ROM is memory.}
+\JKSSBItem{[Original]}{XML is primarily designed to:}
+  {\item Mark up and structure data
+   \item Route IP packets
+   \item Replace all programming languages
+   \item Print magnetic-ink characters}
+  {A}{XML structures and describes data. Packet routing, replacing all languages, and MICR printing are unrelated.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are web-related technologies/languages?}
+  {\item HTML
+   \item JavaScript
+   \item XML
+   \item SMTP}
+  {A, B, C}{HTML, JavaScript, and XML are web technologies/languages. SMTP is an email-transfer protocol.}
+\fi
+\ifnum\JKSSBLessonID=64
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q5; SRC-18]}{Which option provides message-level email encryption to protect content from unauthorized access?}
+  {\item S/MIME
+   \item IMAP
+   \item SSL alone
+   \item SMTP}
+  {A}{S/MIME can encrypt the message itself. IMAP retrieves mail, SMTP transfers it, and TLS/SSL on one connection hop is transport protection rather than end-to-end message encryption.}
+\JKSSBItem{[PYQ-adapted: SSC CGL 2025 Tier-II Paper-I, 19-Jan-2026 Q11; SRC-18]}{What is a common purpose of a Trojan horse?}
+  {\item Disguise malicious activity as a benign program
+   \item Self-replicate as a worm
+   \item Filter network packets as a firewall
+   \item Repair operating-system vulnerabilities}
+  {A}{A Trojan hides a malicious purpose inside something that appears benign. Self-replication describes a worm; the other options describe defensive controls.}
+\JKSSBItem{[Original]}{Which property does encryption primarily provide when only authorized parties can read the content?}
+  {\item Confidentiality
+   \item Availability
+   \item Non-repudiation only
+   \item Compression}
+  {A}{Encryption protects confidentiality. Availability concerns access; signatures can support non-repudiation/integrity; compression reduces size.}
+\JKSSBItem{[Original]}{A digital signature primarily helps verify:}
+  {\item Authenticity and integrity
+   \item Secrecy of the message content by itself
+   \item Internet connection speed
+   \item File size reduction}
+  {A}{A digital signature supports sender authenticity and message integrity. Encryption, not signing alone, provides confidentiality.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Match security concept to purpose.}
+  {\item Encryption --- confidentiality
+   \item Digital signature --- authenticity/integrity
+   \item Firewall --- traffic control
+   \item Antivirus --- guaranteed prevention of every attack}
+  {A, B, C}{The first three are standard roles. Antivirus reduces risk but cannot guarantee prevention of every attack.}
+\fi
+\ifnum\JKSSBLessonID=65
+\JKSSBItem{[PYQ-adapted: JKSSB Website Operator 2026 Q69, provisional key; SRC-04/SRC-07]}{Which device is used to produce large engineering drawings?}
+  {\item Plotter
+   \item Microphone
+   \item Scanner
+   \item Trackball}
+  {A}{A plotter produces large-format output. The other devices provide input.}
+\JKSSBItem{[PYQ-adapted: JKSSB Junior Assistant 2026 Q68, final key; SRC-03/SRC-06]}{Which device is an output device?}
+  {\item Plotter
+   \item Scanner
+   \item Light pen
+   \item Digitizer tablet}
+  {A}{A plotter outputs drawings. A scanner, light pen, and digitizer tablet provide input.}
+\JKSSBItem{[Original]}{Sampling in digital audio converts a continuous signal into:}
+  {\item Measurements taken at discrete time intervals
+   \item A printed paper page
+   \item A file-system directory
+   \item A network address}
+  {A}{Sampling records signal values at discrete times. The other choices are unrelated.}
+\JKSSBItem{[Original]}{Which file format commonly stores compressed still images?}
+  {\item JPEG
+   \item DOCX
+   \item CSV
+   \item EXE}
+  {A}{JPEG is an image format commonly using lossy compression. DOCX is a document package, CSV is delimited text, and EXE is executable.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which are multimedia output devices?}
+  {\item Monitor
+   \item Speaker
+   \item Projector
+   \item Scanner}
+  {A, B, C}{Monitor, speaker, and projector output visual/audio content. A scanner captures input.}
+\fi
+\ifnum\JKSSBLessonID=66
+\JKSSBItem{[Original]}{A question copied from a past paper should be labeled as a PYQ only when:}
+  {\item Its exam identity and source are traceable
+   \item It resembles a familiar exam style
+   \item It appears in an uncredited mock test
+   \item Its answer seems obvious}
+  {A}{A PYQ claim requires a traceable paper identity/source. Similar style or plausibility does not establish provenance.}
+\JKSSBItem{[Original]}{If a secondary transcription's answer conflicts with the official final key, which should govern the answer?}
+  {\item Official final key
+   \item Secondary transcription
+   \item A generated explanation
+   \item Whichever option appears first}
+  {A}{The official final answer key is authoritative over a secondary transcription or generated explanation.}
+\JKSSBItem{[Original]}{An MSQ written for practice based on a single-answer exam topic should be labeled:}
+  {\item Original MSQ drill
+   \item Verbatim PYQ
+   \item Official multi-select question
+   \item Final answer key}
+  {A}{A newly authored multi-select item is an original MSQ drill. It must not imply the source exam used that format.}
+\JKSSBItem{[Original]}{Which information belongs in a reliable PYQ provenance note?}
+  {\item Exam/post, year, question identity, and source/key status when known
+   \item Only the topic name
+   \item The writer's guess about the year
+   \item A generated question's difficulty label only}
+  {A}{Useful provenance identifies the paper/item and answer-key status. Topic or difficulty alone cannot establish authenticity.}
+\JKSSBItem{[Original, MSQ drill]}{\textbf{(MSQ: select ALL correct options.)} Which curation practices protect PYQ integrity?}
+  {\item Keep generated questions labeled as original.
+   \item Preserve the exact exam/date/question source for a PYQ.
+   \item Check disputed answers against the official key.
+   \item Label every exam-style question as an authentic PYQ.}
+  {A, B, C}{The first three preserve provenance. Exam-style similarity does not make an item an authentic PYQ.}
+\fi
+\end{enumerate}
