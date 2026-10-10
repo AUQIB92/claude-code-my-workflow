@@ -27,7 +27,26 @@ Local copies in `official_papers/` (downloaded 2026-10-06 from `jkssb.nic.in`).
 | JA 2026 final key | `https://jkssb.nic.in/Pdf/FinalAnswerKeyJunior_Assistant_24062026.pdf` | final |
 | Website Operator 2026 provisional key | `https://jkssb.nic.in/Pdf/PROVISIONAL_ANSWERKEY_WEBSITEOPERATOR_08022026.pdf` | provisional |
 | Computer Instructor/Operator 2025 final key | `https://jkssb.nic.in/Pdf/Final_Answer_Key_16022025_24042025.pdf` | final |
+| Finance Accounts Assistant 2024 final key | `https://jkssb.nic.in/Pdf/FINAL_ANSWER_KEY_FAA_09022024.pdf` | final; match items to the correct paper/set |
+| Police Sub-Inspector 2022 revised key | `https://jkssb.nic.in/Pdf/Revised_Answer_Key_Sub_Inspector__Police_19042022.pdf` | revised; dated 19-04-2022 |
 | JKSSB PYQ index | `https://jkssb.nic.in/QP.html` | — |
+
+## Additional exam-paper references
+
+These are secondary-hosted copies/transcriptions, not official publications. Use
+them to locate candidate items; the official JKSSB keys above settle answers.
+
+| Exam | Paper/source | Verification notes |
+|------|--------------|--------------------|
+| Finance Accounts Assistant (FAA), 2024 | [Official JKSSB paper archive](https://jkssb.nic.in/QP.html); [QCRIAS computer-question index](https://qcrias.com/pyq/jkssb-faa-2024) | QCRIAS lists 11 computer items with internal IDs, not official question numbers. Check each stem/options and corresponding final-key entry individually. |
+| Finance Accounts Assistant (FAA), 2022 | [QCRIAS computer-question index](https://qcrias.com/pyq/jkssb-faa-2022) | QCRIAS lists 10 computer items. Secondary transcription; item-level paper question numbers are not supplied in its index. |
+| Police Sub-Inspector, 2022 | [Adda247 paper copy](https://www.adda247.com/jobs/wp-content/uploads/sites/22/2024/12/30133112/JKSSB-Sub-Inspector-27-March-2022-English.pdf); [JKAS paper notice](https://www.jkas.in/2022/03/jkssb-sub-inspector-police-question.html) | Paper date is 27-03-2022; use the official revised key above, not third-party answer labels. |
+| SSC CGL 2025 Tier-II Paper-I, 19-01-2026 | [UnlockIAS computer-question index](https://www.unlockias.in/ssc-cgl-previous-year-questions/computer-knowledge) | Secondary transcription of a candidate response sheet; item pages give Q numbers and SSC-marked answers, but the key version is unspecified. Cite exact item URLs and preserve that uncertainty. |
+
+**Mismatch warning:** Secondary answer labels can conflict with option text. The
+QCRIAS FAA 2024 digital-signature item currently labels option B as "eSign Desk"
+while option B is printed as "BeSign Desk". Do not include it as a verified PYQ
+unless the official paper and final key resolve the mismatch.
 
 **Download note:** `jkssb.nic.in` blocks some fetchers but is reachable from the
 shell — use `Invoke-WebRequest`/`curl`, not the browser-fetch tool.

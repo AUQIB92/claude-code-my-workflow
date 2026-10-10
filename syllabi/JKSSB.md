@@ -56,12 +56,14 @@ Every lesson produces three study artifacts plus one video lesson. The video is 
 |-------------|------------|-------------|-----------------|
 | **Revision Slides** | Compact, animated, exam-focused deck — every definition, full form, classification, contrast and trap on one scannable pass | `/create-lecture` (Beamer `.tex`) | `Slides/JKSSB/<NN>-<slug>.tex` |
 | **Detailed Notes** | Full prose expansion of the slides — worked examples, expanded contrasts, the "what it is / what it is not / where used / nearest confusion" for every distinction | `/lecture-notes` | `Notes/JKSSB/<NN>-<slug>-notes.tex` |
-| **MCQs + PYQs** | Practice set: verified real past-year questions (Chain-of-Verification, provenance-labelled) **plus** original exam-pattern questions filling topic gaps, with an answer key and "why the other options are wrong" rationales | `/competitive-exam-questions` | `CompetitiveExam/JKSSB/<NN>-<slug>-questions.tex` · `-answers.tex` |
+| **MCQs + PYQs** | 30-item practice set per lesson (Lessons 50 and 59 retain their existing 26/27 items plus five additions); source-linked PYQ adaptations plus original exam-pattern and MSQ drills, with a matching answer key and rationale for every option | `/competitive-exam-questions` | `CompetitiveExam/JKSSB/<NN>-<slug>-questions.tex` · `-answers.tex` |
 | *Video lesson* | The 6–10-minute animation-heavy explanation lesson itself (Manim precision layer + realistic 3D only where it aids recognition; Hinglish narration, Kokoro `hm_omega`) | `prompt2render.py new … ` / `build` | `<NN>-<slug>` project slug |
 
 **Deck tag:** every Beamer deck sets `\coursecode{JKSSB}` right after `\input{header}`.
 
-**MCQ provenance rule (non-negotiable).** Original practice questions are never presented as real PYQs. Every set labels each item `[PYQ <post> <year>, key status]`, `[PYQ-adapted]`, or `[Original]`. Ambiguous or defective items are flagged and the stable concept taught, per the docx's source-and-maintenance note.
+**MCQ provenance rule (non-negotiable).** Original practice questions are never presented as real PYQs. Cite verified questions as `[PYQ <post> <year> Q<n>, key:final|provisional]`; paraphrases as `[PYQ-adapted: <exam> <year> <paper/date> Q<n>, source:<SRC-id>]`; generated questions as `[Original]`. A generated multi-select question is labeled `[Original, MSQ drill]` and is never represented as an exam's authentic question format. Secondary-transcription answer-key uncertainty stays visible; an item whose options conflict with its keyed answer is excluded as a PYQ until resolved. See the source ledger in `master_supporting_docs/JKSSB/index.md` and the operating rules in `.claude/rules/knowledge-base-JKSSB.md`.
+
+**Channel branding.** Every questions and answer-key PDF imports the shared `Preambles/header.tex`, which adds the diagonal "Concepts That Click" watermark and a footer link to <https://www.youtube.com/@concepts.thatclick>. Keep branding in the shared preamble rather than duplicating it in lesson files.
 
 ---
 
@@ -214,6 +216,8 @@ This is a competitive-exam prep course, not a graded semester course — there i
 | Simulated exam practice in the exact JKSSB item formats | **MCQs + PYQs** | `/competitive-exam-questions` |
 
 **Item formats every MCQ set must include** (per the docx PYQ-calibration block): at least one NOT/EXCEPT/incorrect-statement item, one near-neighbour distractor set, one exact abbreviation/shortcut/command item, and a "why the other options are wrong" rationale for each item.
+
+Each lesson set also contains five supplemental items: four exam-source adaptations or original single-answer practice items, plus one clearly labeled original MSQ with every correct option keyed in the answer file. Lessons 50 and 59 had 26 and 27 existing questions respectively, so their resulting totals are 31 and 32; the other lessons now have 30.
 
 **Optional quality gates before a lesson ships:** `/verify-claims` (factual/citation audit of every PYQ claim), `/proofread`, and `/qa-notes` (Notes-vs-slides parity).
 
