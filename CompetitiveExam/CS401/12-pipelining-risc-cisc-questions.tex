@@ -1,0 +1,120 @@
+% =============================================================================
+% CompetitiveExam/CS401/12-pipelining-risc-cisc-questions.tex
+% Competitive Exam Practice 12 - Instruction Pipelining and RISC vs. CISC
+%
+% No real PYQ is included: the local Week 12 scan contains relevant headings,
+% but OCR did not recover a complete stem and answer independently. Per the
+% sourcing protocol, those candidates are not presented as authentic PYQs.
+%
+% Compile from CompetitiveExam/CS401 on Windows/MiKTeX:
+%   $env:TEXINPUTS = "../../Preambles;"
+%   $env:BIBINPUTS = "../..;"
+%   xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{12.\arabic{section}}
+
+\title{Competitive Exam Practice 12: Instruction Pipelining and RISC vs. CISC\\
+  \large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option;
+MSQ = multiple-select; NAT = Numerical Answer Type. Every item below is
+\textit{[Original, GATE-pattern]}. No item is labelled as a real PYQ because
+the local scanned PYQ pages did not yield a complete, independently verifiable
+stem and answer.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+Twelve independent instructions execute in an ideal balanced five-stage
+pipeline with one cycle per stage and no stalls. What are the pipelined
+completion time and the finite-stream speedup over a non-pipelined execution,
+respectively? Report the speedup to two decimal places.
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+Consider the five-stage pipeline \texttt{IF, ID, EX, MEM, WB} and the sequence
+\texttt{LW R1,0(R2)}, \texttt{ADD R3,R1,R4}, and \texttt{SUB R5,R3,R6}.
+Load data is available after MEM; ALU results are forwarded at the end of EX.
+Starting the first IF in cycle 1, give the cycle in which \texttt{SUB} completes
+WB and the number of bubbles required, in the form ``cycle, bubbles''.
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+An ideal five-stage pipeline is full and has no hazards. Which statement is
+correct for a long independent instruction stream?
+\begin{enumerate}
+  \item[(A)] Each instruction has one-cycle latency and one-cycle throughput.
+  \item[(B)] Each instruction has approximately five-cycle latency, while
+    the stream can complete one instruction per cycle.
+  \item[(C)] Both latency and throughput are approximately five cycles per
+    instruction.
+  \item[(D)] Throughput improves only if the pipeline has one stage.
+\end{enumerate}
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]}
+Branches are $20\%$ of the dynamic instruction stream. The predictor
+mispredicts $10\%$ of branches, and each misprediction costs 3 cycles. Ignoring
+all other effects, what is the branch contribution to CPI? Report to two
+decimal places.
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+In a five-stage pipeline, an instruction in MEM and a younger instruction in
+IF request the same single-ported unified memory in the same cycle. Which pair
+is the most direct classification and one valid remedy?
+\begin{enumerate}
+  \item[(A)] Data hazard; forward the producer's ALU result
+  \item[(B)] Structural hazard; split instruction and data memories
+  \item[(C)] Control hazard; rename the destination register
+  \item[(D)] Data hazard; add a branch-prediction entry
+\end{enumerate}
+
+\begin{sloppypar}
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MSQ, 1 mark]}
+Which statements are correct about the RISC/CISC comparison in a fixed
+workload?
+\begin{enumerate}
+  \item[(A)] RISC often favors regular formats and register-centered
+    execution.
+  \item[(B)] CISC can express more work per architectural instruction.
+  \item[(C)] RISC always has fewer instructions and CISC always has lower CPI.
+  \item[(D)] Total time should be compared using instruction count, CPI, and
+    clock rate, rather than an ISA label alone.
+\end{enumerate}
+\end{sloppypar}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+For the same workload, a RISC-like implementation executes
+$1.20\times10^9$ instructions at CPI $=1.1$ and $f=2.4$~GHz. A CISC-like
+implementation executes $0.80\times10^9$ instructions at CPI $=2.0$ and
+$f=3.0$~GHz. Which statement is correct?
+\begin{enumerate}
+  \item[(A)] RISC-like is faster because its CPI is lower.
+  \item[(B)] CISC-like is faster because its total time is approximately
+    $0.533$~s versus $0.550$~s.
+  \item[(C)] Both take the same time because CPI is the only relevant metric.
+  \item[(D)] No comparison is possible without knowing the instruction names.
+\end{enumerate}
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MSQ, 1 mark]}
+Which statements correctly identify parallelism or workload constraints?
+\begin{enumerate}
+  \item[(A)] One instruction applied to eight data elements is SIMD-style
+    data parallelism.
+  \item[(B)] Independent cores executing different tiles are MIMD-style
+    parallelism.
+  \item[(C)] A large working set can make cache and virtual-memory behavior
+    relevant even when the front end is pipelined.
+  \item[(D)] A higher clock rate alone proves that an implementation is
+    faster for every workload.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}
