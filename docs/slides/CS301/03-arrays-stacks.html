@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="03-arrays-stacks_files/libs/clipboard/clipboard.min.js"></script>
+<script src="03-arrays-stacks_files/libs/quarto-html/tabby.min.js"></script>
+<script src="03-arrays-stacks_files/libs/quarto-html/popper.min.js"></script>
+<script src="03-arrays-stacks_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="03-arrays-stacks_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="03-arrays-stacks_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="03-arrays-stacks_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr.&nbsp;Auqib Hamid Lone">
+  <title>The First Structure: Arrays and the Stack ADT</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="03-arrays-stacks_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="03-arrays-stacks_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="03-arrays-stacks_files/libs/revealjs/dist/theme/quarto-463ba0fe91094e57f5f7b5ee1e3fd893.css">
+  <link href="03-arrays-stacks_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="03-arrays-stacks_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="03-arrays-stacks_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="03-arrays-stacks_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">The First Structure: Arrays and the Stack ADT</h1>
+  <p class="subtitle">Week 3 — Address Calculation and the Stack ADT over Arrays</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr.&nbsp;Auqib Hamid Lone
+</div>
+        <p class="quarto-title-affiliation">
+            GCET Ganderbal
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="from-vocabulary-to-a-real-structure" class="slide level2">
+<h2>From Vocabulary to a Real Structure</h2>
+<div class="methodbox">
+<p><strong>What Week 2 gave us.</strong> A way to measure cost — <span class="math inline">\(T(n)\)</span>, the classes <span class="math inline">\(O\)</span>/<span class="math inline">\(\Omega\)</span>/<span class="math inline">\(\Theta\)</span>, and the best/worst/average distinction — without running any code.</p>
+</div>
+<ul>
+<li>That vocabulary was structure-free: it applied to any loop over any array.</li>
+<li>Today we point it at our <em>first</em> real structure: the array itself, and the first ADT built on top of one.</li>
+<li><span class="hi-gold"><strong>Today’s questions</strong></span>: how is an array’s address computed, and what is the simplest useful ADT we can build over it?</li>
+</ul>
+</section>
+<section id="the-calculator-needs-a-bracket-checker" class="slide level2">
+<h2>The Calculator Needs a Bracket-Checker</h2>
+<div class="keybox">
+<p><strong>Our running example.</strong> The expression processor reads <code>(a+b)*c</code>. Before it can convert or evaluate anything, it must know the brackets are balanced.</p>
+</div>
+<ul>
+<li>Reading left to right, an open bracket must wait for its matching close bracket — and the <em>most recent</em> open bracket closes <em>first</em>.</li>
+<li>That “most recent first” discipline is exactly what a <span class="hi-gold"><strong>stack</strong></span> gives us.</li>
+<li>Before we can build the stack, we need the structure underneath it: the array.</li>
+</ul>
+<p><span class="neutral">Weeks 1–2 built the vocabulary; from here on, each week is a structure, motivated by a job the previous one could not do.</span></p>
+</section>
+<section id="arrays-what-you-already-assumed" class="slide level2">
+<h2>Arrays: What You Already Assumed</h2>
+<div class="methodbox">
+<p><strong>You have used arrays since your first C course.</strong> <code>int A[10];</code> declares 10 integer-sized slots, indexed <code>A[0]</code> through <code>A[9]</code>.</p>
+</div>
+<ul>
+<li>You have always trusted that <code>A[i]</code> is fast — <span class="math inline">\(O(1)\)</span>, independent of <span class="math inline">\(n\)</span>.</li>
+<li><span class="hi-gold"><strong>Today’s first question</strong></span>: <em>why</em> is it <span class="math inline">\(O(1)\)</span>? What actually happens when the machine evaluates <code>A[i]</code>?</li>
+<li>The answer is a formula, not a mystery — and once we have it, we can extend it to two dimensions.</li>
+</ul>
+</section>
+<section id="section" class="slide level2 transition-slide">
+<h2></h2>
+<p>An array is not just “several boxes.” It is one formula for turning an index into an address.</p>
+</section>
+<section id="section-1" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 1</p>
+</div>
+<div class="section-divider-title">
+<p>Arrays and Address Calculation</p>
+</div>
+</section>
+<section id="what-an-array-really-is" class="slide level2">
+<h2>What an Array Really Is</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> An array is a block of <span class="math inline">\(n\)</span> equal-sized slots stored at <em>contiguous</em> addresses, so any slot’s address can be computed directly from its index <span class="citation" data-cites="HorowitzSahni2008_fundamentals_data_structures AhoHopcroftUllman1983_data_structures_algorithms">(<a href="#/references" role="doc-biblioref" onclick="">Horowitz and Sahni 2008</a>; <a href="#/references" role="doc-biblioref" onclick="">Aho et al. 1983</a>)</span>.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Contiguous</strong></span>: slot <span class="math inline">\(i+1\)</span> sits immediately after slot <span class="math inline">\(i\)</span> in memory — no gaps, no pointers between them.</li>
+<li>Every slot has the same size <span class="math inline">\(w\)</span> (in bytes) — <code>sizeof</code> the element type, a notion already familiar from Week 1.</li>
+<li><em>Because</em> the layout is regular, the address of any slot is <em>computed</em>, never searched for.</li>
+</ul>
+</section>
+<section id="the-1d-address-formula" class="slide level2">
+<h2>The 1D Address Formula</h2>
+<div class="methodbox">
+<p><strong>One-dimensional array address.</strong></p>
+<p><span class="math display">\[\text{addr}(A[i]) = \text{base} + i \times w\]</span></p>
+<p>where <code>base</code> is the address of <code>A[0]</code> and <span class="math inline">\(w\)</span> is the size (in bytes) of one element.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>base</strong></span>: fixed once the array is allocated.</li>
+<li><span class="hi-gold"><strong><span class="math inline">\(i \times w\)</span></strong></span>: how far past <code>base</code> slot <span class="math inline">\(i\)</span> sits.</li>
+<li>One multiplication and one addition — constant work, regardless of <span class="math inline">\(i\)</span> or <span class="math inline">\(n\)</span>.</li>
+</ul>
+<p><span class="hi-gold"><strong>This is why array access is <span class="math inline">\(O(1)\)</span>: the address formula does not grow with <span class="math inline">\(n\)</span>.</strong></span></p>
+</section>
+<section id="worked-example-finding-a4" class="slide level2">
+<h2>Worked Example: Finding <code>A[4]</code></h2>
+<div class="highlightbox">
+<p><strong>Setup.</strong> <code>int A[6];</code> with <code>base = 1000</code> and <span class="math inline">\(w = 4\)</span> bytes (a C <code>int</code>).</p>
+</div>
+<ul>
+<li><span class="math inline">\(\text{addr}(A[4]) = 1000 + 4 \times 4 = 1016\)</span>.</li>
+<li><span class="math inline">\(\text{addr}(A[0]) = 1000 + 0 \times 4 = 1000\)</span> — <code>base</code> itself.</li>
+<li><span class="math inline">\(\text{addr}(A[5]) = 1000 + 5 \times 4 = 1020\)</span> — the last valid slot for <span class="math inline">\(n = 6\)</span>.</li>
+</ul>
+<p><span class="neutral"><code>A[6]</code> would compute to address <span class="math inline">\(1024\)</span> — a real address, but one that belongs to whatever memory happens to follow the array. Nothing stops the formula from computing it; only the programmer’s discipline does.</span></p>
+</section>
+<section id="picture-the-1d-address-formula" class="slide level2">
+<h2>Picture: the 1D Address Formula</h2>
+
+<img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_00.svg" class="quarto-figure quarto-figure-center r-stretch"><ul>
+<li>Highlighted cell: index <span class="math inline">\(4\)</span>, computed above.</li>
+<li>Every other cell’s address follows the same one-line formula.</li>
+</ul>
+</section>
+<section id="from-one-dimension-to-two" class="slide level2">
+<h2>From One Dimension to Two</h2>
+<div class="methodbox">
+<p><strong>A table needs two indices.</strong> A <span class="math inline">\(3 \times 4\)</span> grid — <code>int A[3][4];</code> — has a row <span class="math inline">\(i\)</span> and a column <span class="math inline">\(j\)</span>, but memory itself has only <em>one</em> dimension: a single line of addresses.</p>
+</div>
+<ul>
+<li>Somebody has to decide <em>which order</em> the 12 slots are laid out in along that one line.</li>
+<li>There are exactly two standard choices — and the choice matters for the address formula, not for what the array can store.</li>
+<li><span class="hi-gold"><strong>Today’s second question</strong></span>: what are those two choices, and how does each compute an address?</li>
+</ul>
+</section>
+<section id="row-major-order" class="slide level2">
+<h2>Row-Major Order</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> Row-major order stores an array <em>row by row</em>: all of row <span class="math inline">\(0\)</span>, then all of row <span class="math inline">\(1\)</span>, and so on <span class="citation" data-cites="HorowitzSahni2008_fundamentals_data_structures AhoHopcroftUllman1983_data_structures_algorithms">(<a href="#/references" role="doc-biblioref" onclick="">Horowitz and Sahni 2008</a>; <a href="#/references" role="doc-biblioref" onclick="">Aho et al. 1983</a>)</span>.</p>
+</div>
+<ul>
+<li><p>For an <span class="math inline">\(r \times c\)</span> array of <span class="math inline">\(w\)</span>-byte elements:</p>
+<p><span class="math display">\[\text{addr}(A[i][j]) = \text{base} + ((i \times c) + j) \times w\]</span></p></li>
+<li><p><span class="hi-gold"><strong><span class="math inline">\(i \times c\)</span></strong></span>: skip over <span class="math inline">\(i\)</span> complete rows, each of length <span class="math inline">\(c\)</span>.</p></li>
+<li><p><span class="hi-gold"><strong><span class="math inline">\(+\,j\)</span></strong></span>: then step <span class="math inline">\(j\)</span> more slots into row <span class="math inline">\(i\)</span>.</p></li>
+</ul>
+<p><span class="neutral">This is the layout C itself uses for a declared 2D array — the reason <code>A[i][j]</code> and <code>*(A + i*c + j)</code> mean the same thing.</span></p>
+</section>
+<section id="column-major-order" class="slide level2">
+<h2>Column-Major Order</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> Column-major order stores an array <em>column by column</em>: all of column <span class="math inline">\(0\)</span>, then all of column <span class="math inline">\(1\)</span>, and so on.</p>
+</div>
+<ul>
+<li><p>For the same <span class="math inline">\(r \times c\)</span> array of <span class="math inline">\(w\)</span>-byte elements:</p>
+<p><span class="math display">\[\text{addr}(A[i][j]) = \text{base} + ((j \times r) + i) \times w\]</span></p></li>
+<li><p><span class="hi-gold"><strong><span class="math inline">\(j \times r\)</span></strong></span>: skip over <span class="math inline">\(j\)</span> complete columns, each of length <span class="math inline">\(r\)</span>.</p></li>
+<li><p><span class="hi-gold"><strong><span class="math inline">\(+\,i\)</span></strong></span>: then step <span class="math inline">\(i\)</span> more slots down column <span class="math inline">\(j\)</span>.</p></li>
+</ul>
+<p><span class="neutral">C and most C-family languages never use this order for a plain 2D array — but Fortran does, and it is the reason the two languages disagree about which loop order is cache-friendly.</span></p>
+</section>
+<section id="same-cell-two-different-numbers" class="slide level2">
+<h2>Same Cell, Two Different Numbers</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>Row-major linear index</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_01.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div><div class="column" style="width:48%;">
+<p><strong>Column-major linear index</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_02.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="neutral">Same physical array, same highlighted cell <span class="math inline">\(A[2][1]\)</span> — a different linear index depending on which order we chose.</span></p>
+</section>
+<section id="worked-example-the-same-cell-two-formulas" class="slide level2">
+<h2>Worked Example: the Same Cell, Two Formulas</h2>
+<div class="highlightbox">
+<p><strong>Setup.</strong> <code>int A[3][4];</code> (<span class="math inline">\(r = 3\)</span>, <span class="math inline">\(c = 4\)</span>) with <code>base = 1000</code> and <span class="math inline">\(w = 4\)</span> bytes. Find <span class="math inline">\(\text{addr}(A[2][1])\)</span> under each order.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Row-major</strong></span>: index <span class="math inline">\(= (2 \times 4) + 1 = 9\)</span>; <span class="math inline">\(\text{addr} = 1000 + 9 \times 4 = 1036\)</span>.</li>
+<li><span class="hi-gold"><strong>Column-major</strong></span>: index <span class="math inline">\(= (1 \times 3) + 2 = 5\)</span>; <span class="math inline">\(\text{addr} = 1000 + 5 \times 4 = 1020\)</span>.</li>
+</ul>
+<p><span class="hi-gold"><strong>The same cell lands at two different addresses — the major order is part of the array’s contract, not an implementation detail you can ignore.</strong></span></p>
+</section>
+<section id="check-your-prediction" class="slide level2">
+<h2>Check Your Prediction</h2>
+<div class="methodbox">
+<p><strong>Which formula would you use?</strong> A C program declares <code>int A[5][2];</code> and asks for <span class="math inline">\(\text{addr}(A[3][1])\)</span>.</p>
+</div>
+<ol type="1">
+<li>Row-major: index <span class="math inline">\(= (3 \times 2) + 1\)</span>.</li>
+<li>Column-major: index <span class="math inline">\(= (1 \times 5) + 3\)</span>.</li>
+<li>Both give the same index for this array.</li>
+</ol>
+<div class="highlightbox">
+<p><strong>Turn and talk.</strong> Compute both indices. Are they ever equal for a non-square array? What about <span class="math inline">\(A[i][j]\)</span> on the diagonal of a <em>square</em> array?</p>
+</div>
+</section>
+<section id="section-2" class="slide level2 transition-slide">
+<h2></h2>
+<p>The array gives us <span class="math inline">\(O(1)\)</span> access anywhere. Now restrict that access on purpose.</p>
+</section>
+<section id="section-3" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 2</p>
+</div>
+<div class="section-divider-title">
+<p>The Stack ADT</p>
+</div>
+</section>
+<section id="a-stack-of-plates" class="slide level2">
+<h2>A Stack of Plates</h2>
+<div class="methodbox">
+<p><strong>An everyday LIFO.</strong> You can only take the top plate off a stack of plates, and you can only add a new plate to the top.</p>
+</div>
+<ul>
+<li>You never remove the third plate from the top without first removing the two above it.</li>
+<li>The <em>last</em> plate placed is the <em>first</em> plate removed — <span class="hi-gold"><strong>Last-In-First-Out</strong></span>, or <span class="hi-gold"><strong>LIFO</strong></span>.</li>
+<li>A browser’s back button, a text editor’s undo history, and a function call’s local variables all obey the same discipline.</li>
+</ul>
+</section>
+<section id="the-stack-adt" class="slide level2">
+<h2>The Stack ADT</h2>
+<div class="methodbox">
+<p><strong>Definition.</strong> A stack is a collection with LIFO access: elements are inserted and removed only at one end, called the <span class="hi-gold"><strong>top</strong></span> <span class="citation" data-cites="Sedgewick2011_algorithms Karumanchi2017_data_structures_algorithms_made_easy">(<a href="#/references" role="doc-biblioref" onclick="">Sedgewick and Wayne 2011</a>; <a href="#/references" role="doc-biblioref" onclick="">Karumanchi 2017</a>)</span>.</p>
+</div>
+<ul>
+<li><code>push(x)</code>: add <span class="math inline">\(x\)</span> to the top.</li>
+<li><code>pop()</code>: remove and return the top element.</li>
+<li><code>peek()</code>: return the top element without removing it.</li>
+<li><code>isEmpty()</code> / <code>isFull()</code>: query the stack’s state.</li>
+</ul>
+<p><span class="neutral">Sedgewick frames stack, queue, and bag as three collection ADTs that differ <em>only</em> in which element comes out next (p.120).</span></p>
+</section>
+<section id="naming-the-adt-naming-the-implementation" class="slide level2">
+<h2>Naming the ADT, Naming the Implementation</h2>
+<div class="methodbox">
+<p><strong>Two different questions.</strong> <em>What</em> does a stack do? (the ADT contract.) <em>How</em> is it built? (the implementation.)</p>
+</div>
+<ul>
+<li>Today we implement the stack ADT <em>over an array</em> — the implementation we already understand from Act 1.</li>
+<li>Week 7 will implement the <em>same</em> contract over a linked list — proof that the contract and the implementation are separate ideas.</li>
+<li><span class="positive">“a stack, implemented here as an array”</span> — <span class="negative">“the array is a stack”</span> conflates the two.</li>
+</ul>
+</section>
+<section id="array-implementation-the-top-index" class="slide level2">
+<h2>Array Implementation: the <code>top</code> Index</h2>
+<div class="methodbox">
+<p><strong>One array, one index.</strong> Keep the stack’s elements in <code>A[0..capacity-1]</code> and track the index of the most recently pushed element in <code>top</code>.</p>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Empty stack</strong></span>: <span class="math inline">\(\texttt{top} = -1\)</span> — no element has been pushed yet.</li>
+<li><span class="hi-gold"><strong>One element</strong></span>: after one <code>push</code>, <span class="math inline">\(\texttt{top} = 0\)</span>.</li>
+<li><span class="hi-gold"><strong>Full stack</strong></span>: <span class="math inline">\(\texttt{top} = \texttt{capacity} - 1\)</span> — every slot is occupied.</li>
+</ul>
+</section>
+<section id="picture-the-top-index" class="slide level2">
+<h2>Picture: the <code>top</code> Index</h2>
+
+<img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_03.svg" class="quarto-figure quarto-figure-center r-stretch"><ul>
+<li>Occupied slots (indices <span class="math inline">\(0\)</span>–<span class="math inline">\(2\)</span>): shaded. Empty slots (indices <span class="math inline">\(3\)</span>–<span class="math inline">\(5\)</span>): unshaded.</li>
+<li><code>top = 2</code> — the array holds the elements, <code>top</code> is the only thing that changes on <code>push</code>/<code>pop</code>.</li>
+</ul>
+</section>
+<section id="push-traced" class="slide level2">
+<h2>Push, Traced</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>Before: <code>push(40)</code></strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_04.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div><div class="column" style="width:48%;">
+<p><strong>After: <code>push(40)</code></strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_05.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div></div>
+<div class="methodbox">
+<p><strong><code>push(x)</code></strong></p>
+<pre><code>top = top + 1; A[top] = x;</code></pre>
+</div>
+</section>
+<section id="pop-traced" class="slide level2">
+<h2>Pop, Traced</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>Before: <code>pop()</code></strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_06.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div><div class="column" style="width:48%;">
+<p><strong>After: <code>pop()</code> returns 40</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../Figures/CS301/03-arrays-stacks/tikz_exact_07.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div></div>
+<div class="methodbox">
+<p><strong><code>pop()</code></strong></p>
+<pre><code>x = A[top]; top = top - 1; return x;</code></pre>
+</div>
+</section>
+<section id="overflow-and-underflow" class="slide level2">
+<h2>Overflow and Underflow</h2>
+<div class="methodbox">
+<p><strong>The two failure modes.</strong> Every array implementation of a stack has a finite <code>capacity</code> — both ends of <code>top</code>’s range must be checked.</p>
+</div>
+<ul>
+<li><span class="negative">Stack overflow</span>: <code>push</code> when <span class="math inline">\(\texttt{top} = \texttt{capacity} - 1\)</span> — there is no slot left.</li>
+<li><span class="negative">Stack underflow</span>: <code>pop</code> or <code>peek</code> when <span class="math inline">\(\texttt{top} = -1\)</span> — there is nothing to remove.</li>
+<li><span class="hi-gold"><strong>Every correct <code>push</code>/<code>pop</code> checks its boundary first</strong></span> — an unchecked <code>push</code> silently corrupts whatever memory follows the array (Week 1’s array-bounds hazard, recurring here).</li>
+</ul>
+</section>
+<section id="the-cost-of-push-and-pop" class="slide level2">
+<h2>The Cost of Push and Pop</h2>
+<div class="methodbox">
+<p><strong>Applying Week 2’s vocabulary.</strong> Both <code>push</code> and <code>pop</code> do a fixed amount of work: one boundary check, one index update, one array access.</p>
+</div>
+<ul>
+<li><span class="positive"><code>push</code> is <span class="math inline">\(O(1)\)</span> worst case.</span></li>
+<li><span class="positive"><code>pop</code> is <span class="math inline">\(O(1)\)</span> worst case.</span></li>
+<li><span class="negative">“Stacks are fast”</span> — <span class="neutral">incomplete: fast at <em>which</em> operation, in <em>which</em> case?</span></li>
+</ul>
+<p><span class="hi-gold"><strong>Name the operation, give the bound, state the case — Week 2’s habit applies to every structure from here on.</strong></span></p>
+</section>
+<section id="check-your-prediction-1" class="slide level2">
+<h2>Check Your Prediction</h2>
+<div class="methodbox">
+<p><strong>Trace it yourself.</strong> Start from an empty stack (<code>top = -1</code>). Perform, in order: <code>push(5)</code>, <code>push(8)</code>, <code>pop()</code>, <code>push(3)</code>, <code>peek()</code>.</p>
+</div>
+<ol type="1">
+<li>What does <code>peek()</code> return at the end?</li>
+<li>What is <code>top</code> after all five operations?</li>
+<li>Which single operation, if it were removed from this sequence, would still leave the final <code>top</code> correct but change the returned value of <code>peek()</code>?</li>
+</ol>
+</section>
+<section id="section-4" class="slide level2 transition-slide">
+<h2></h2>
+<p>A stack is only useful once we ask it to solve a real problem.</p>
+</section>
+<section id="section-5" class="slide level2 section-divider">
+<h2></h2>
+<div class="section-divider-label">
+<p>Section 3</p>
+</div>
+<div class="section-divider-title">
+<p>Applications</p>
+</div>
+</section>
+<section id="application-1-are-the-brackets-balanced" class="slide level2">
+<h2>Application 1: Are the Brackets Balanced?</h2>
+<div class="methodbox">
+<p><strong>The calculator’s first job.</strong> Before converting or evaluating <code>(a+b)*c</code>, confirm every open bracket has a matching close bracket, in the right order <span class="citation" data-cites="HorowitzSahni2008_fundamentals_data_structures AhoHopcroftUllman1983_data_structures_algorithms">(<a href="#/references" role="doc-biblioref" onclick="">Horowitz and Sahni 2008</a>; <a href="#/references" role="doc-biblioref" onclick="">Aho et al. 1983</a>)</span>.</p>
+</div>
+<ul>
+<li><code>((a+b)</code>: unbalanced — one open bracket never closes.</li>
+<li><code>(a+b))</code>: unbalanced — a close bracket with no partner.</li>
+<li><code>(a+(b*c))</code>: balanced — and note the <em>last</em> opened bracket is the <em>first</em> to close. LIFO, again.</li>
+</ul>
+</section>
+<section id="balanced-parenthesis-algorithm" class="slide level2">
+<h2>Balanced-Parenthesis Algorithm</h2>
+<div class="methodbox">
+<p><strong>Scan once, push opens, pop on closes</strong></p>
+<pre><code>for each character c in the expression:
+    if c is an opening bracket:  push(c)
+    if c is a closing bracket:
+        if stack isEmpty:       return false  // nothing to match
+        top = pop()
+        if top does not match c: return false // e.g. "(]"
+return stack isEmpty  // every open bracket was matched</code></pre>
+</div>
+<ul>
+<li>A closing bracket with an empty stack, or a mismatched pop, fails immediately — no need to scan further.</li>
+</ul>
+</section>
+<section id="balanced-parenthesis-trace" class="slide level2">
+<h2>Balanced-Parenthesis Trace</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: center;">char read</th>
+<th style="text-align: center;">action</th>
+<th style="text-align: left;">stack (top on right)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>(</code></td>
+<td style="text-align: center;">push</td>
+<td style="text-align: left;"><code>(</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>a</code></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;"><code>(</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>+</code></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;"><code>(</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>b</code></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;"><code>(</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>)</code></td>
+<td style="text-align: center;">pop, matches</td>
+<td style="text-align: left;"><em>(empty)</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>*</code></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;"><em>(empty)</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>c</code></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;"><em>(empty)</em></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Input: <code>(a+b)*c</code>. Stack is empty at the end <span class="math inline">\(\Rightarrow\)</span> balanced.</li>
+<li>Only bracket characters ever touch the stack; letters and operators pass through untouched.</li>
+</ul>
+</section>
+<section id="what-failure-looks-like" class="slide level2">
+<h2>What Failure Looks Like</h2>
+<div class="methodbox">
+<p><strong>Two ways the check can fail.</strong> Trace <code>(a+b))</code> and <code>a+b)*(c</code>.</p>
+</div>
+<ul>
+<li><code>(a+b))</code>: after the first <code>)</code> pops and matches, the stack is empty; the <em>second</em> <code>)</code> finds an empty stack <span class="math inline">\(\Rightarrow\)</span> <span class="negative">return false</span> immediately.</li>
+<li><code>a+b)*(c</code>: the <code>)</code> arrives with the stack empty (nothing was ever pushed) <span class="math inline">\(\Rightarrow\)</span> <span class="negative">return false</span> immediately.</li>
+<li><span class="neutral">Both failures are detected the instant they occur — the algorithm never needs to look at the whole string once a mismatch is certain.</span></li>
+</ul>
+</section>
+<section id="application-2-evaluating-postfix" class="slide level2">
+<h2>Application 2: Evaluating Postfix</h2>
+<div class="methodbox">
+<p><strong>Why postfix?</strong> Postfix (operator <em>after</em> its operands, e.g.&nbsp;<code>a b +</code>) needs no parentheses and no precedence rules to evaluate <span class="citation" data-cites="HorowitzSahni2008_fundamentals_data_structures AhoHopcroftUllman1983_data_structures_algorithms">(<a href="#/references" role="doc-biblioref" onclick="">Horowitz and Sahni 2008</a>; <a href="#/references" role="doc-biblioref" onclick="">Aho et al. 1983</a>)</span>.</p>
+</div>
+<ul>
+<li>Our calculator’s <code>(a+b)*c</code> becomes the postfix string <code>a b + c *</code>.</li>
+<li><span class="hi-gold"><strong>Today</strong></span>: given a postfix string, evaluate it with a stack.</li>
+<li><span class="neutral"><em>Converting</em> infix to postfix is next week’s job — today we only evaluate a postfix string we are handed.</span></li>
+</ul>
+</section>
+<section id="postfix-evaluation-algorithm" class="slide level2">
+<h2>Postfix Evaluation Algorithm</h2>
+<div class="methodbox">
+<p><strong>Operands push; operators pop two, push the result</strong></p>
+<pre><code>for each token t in the postfix string:
+    if t is an operand:   push(t)
+    if t is an operator:
+        right = pop()
+        left  = pop()
+        push(left OP right)   // OP is the operator t
+return pop()  // the final, only, value left on the stack</code></pre>
+</div>
+<ul>
+<li><span class="hi-gold"><strong>Order matters</strong></span>: the operand popped <em>first</em> is the right operand — it was pushed <em>last</em>.</li>
+</ul>
+</section>
+<section id="postfix-evaluation-trace" class="slide level2">
+<h2>Postfix Evaluation Trace</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: center;">token</th>
+<th style="text-align: left;">action</th>
+<th style="text-align: left;">stack (top on right)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: left;">push</td>
+<td style="text-align: left;"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: left;">push</td>
+<td style="text-align: left;"><span class="math inline">\(2,3\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(+\)</span></td>
+<td style="text-align: left;">pop <span class="math inline">\(3\)</span>, pop <span class="math inline">\(2\)</span>, push <span class="math inline">\(2{+}3\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(5\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: left;">push</td>
+<td style="text-align: left;"><span class="math inline">\(5,4\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(*\)</span></td>
+<td style="text-align: left;">pop <span class="math inline">\(4\)</span>, pop <span class="math inline">\(5\)</span>, push <span class="math inline">\(5{\times}4\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(20\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Postfix string: <code>2 3 + 4 *</code> — our calculator’s shape, with <span class="math inline">\(a=2\)</span>, <span class="math inline">\(b=3\)</span>, <span class="math inline">\(c=4\)</span>: <span class="math inline">\((a+b) \times c\)</span>.</li>
+<li>Final answer: the single value left on the stack, <span class="math inline">\(20\)</span>.</li>
+</ul>
+</section>
+<section id="cost-of-the-two-applications" class="slide level2">
+<h2>Cost of the Two Applications</h2>
+<div class="methodbox">
+<p><strong>One pass, constant work per token.</strong> Both algorithms read every character or token exactly once, and each <code>push</code>/<code>pop</code> is <span class="math inline">\(O(1)\)</span>.</p>
+</div>
+<ul>
+<li><span class="positive">Balanced-parenthesis check: <span class="math inline">\(O(n)\)</span> worst case</span>, <span class="math inline">\(n\)</span> = length of the expression.</li>
+<li><span class="positive">Postfix evaluation: <span class="math inline">\(O(n)\)</span> worst case</span>, <span class="math inline">\(n\)</span> = number of tokens.</li>
+<li><span class="neutral">Compare this to the naive alternative — matching brackets by scanning back and forth without a stack, which degrades toward <span class="math inline">\(O(n^2)\)</span> on nested input.</span></li>
+</ul>
+</section>
+<section id="section-6" class="slide level2 transition-slide">
+<h2></h2>
+<p>Two structures down. Time to consolidate before Week 4 converts infix to postfix.</p>
+</section>
+<section id="three-common-mistakes" class="slide level2">
+<h2>Three Common Mistakes</h2>
+<ul>
+<li><span class="negative">Forgetting the overflow/underflow check</span> — an unchecked <code>push</code> past <code>capacity</code> or <code>pop</code> on <code>top = -1</code> is undefined behaviour, not a graceful failure.</li>
+<li><span class="negative">Mixing up row-major and column-major</span> — the same <span class="math inline">\(A[i][j]\)</span> computes to two different addresses; state which order you mean before writing the formula.</li>
+<li><span class="negative">Treating <code>pop</code> as “erasing” memory</span> — <code>pop</code> only moves <code>top</code>; the old value is logically gone but physically still sitting there until overwritten.</li>
+</ul>
+</section>
+<section id="week-3-summary" class="slide level2">
+<h2>Week 3 Summary</h2>
+<ul>
+<li><span class="hi-gold"><strong>1D address</strong></span>: <span class="math inline">\(\text{addr}(A[i]) = \text{base} + i \times w\)</span> — <span class="math inline">\(O(1)\)</span>, independent of <span class="math inline">\(n\)</span>.</li>
+<li><span class="hi-gold"><strong>Row-major</strong></span>: <span class="math inline">\(\text{base} + ((i \times c) + j) \times w\)</span>; <span class="hi-gold"><strong>column-major</strong></span>: <span class="math inline">\(\text{base} + ((j \times r) + i) \times w\)</span>.</li>
+<li><span class="hi-gold"><strong>Stack ADT</strong></span>: <code>push</code>/<code>pop</code>/<code>peek</code>, LIFO, <code>top = -1</code> when empty — implemented here over an array.</li>
+<li><span class="hi-gold"><strong>Applications</strong></span>: balanced-parenthesis checking and postfix evaluation, both <span class="math inline">\(O(n)\)</span> with a stack.</li>
+</ul>
+<div class="highlightbox">
+<p><strong>Next week.</strong> Expression evaluation and recursion — converting infix to postfix and prefix, and the runtime stack behind every recursive call.</p>
+</div>
+</section>
+<section id="before-you-go-predict" class="slide level2">
+<h2>Before You Go: Predict</h2>
+<div class="methodbox">
+<p><strong>One structure, two implementations.</strong> Week 7 will implement this same stack ADT over a linked list instead of an array.</p>
+</div>
+<ol type="1">
+<li>Which operation, if any, do you expect to get <em>more</em> expensive on a linked list?</li>
+<li>Which problem — overflow, or something else — does a linked list implementation remove entirely?</li>
+<li>Does the ADT’s contract (<code>push</code>/<code>pop</code>/<code>peek</code>) change at all between the two implementations?</li>
+</ol>
+<p><span class="neutral">If your answer to (3) is “yes,” revisit “Naming the ADT, Naming the Implementation” from today.</span></p>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-AhoHopcroftUllman1983_data_structures_algorithms" class="csl-entry" role="listitem">
+Aho, Alfred V., John E. Hopcroft, and Jeffrey D. Ullman. 1983. <em>Data Structures and Algorithms</em>. 1st ed. Addison-Wesley.
+</div>
+<div id="ref-HorowitzSahni2008_fundamentals_data_structures" class="csl-entry" role="listitem">
+Horowitz, Ellis, and Sartaj Sahni. 2008. <em>Fundamentals of Data Structures</em>. 2nd ed. Galgotia Booksource.
+</div>
+<div id="ref-Karumanchi2017_data_structures_algorithms_made_easy" class="csl-entry" role="listitem">
+Karumanchi, Narasimha. 2017. <em>Data Structures and Algorithms Made Easy</em>. CareerMonk Publications.
+</div>
+<div id="ref-Sedgewick2011_algorithms" class="csl-entry" role="listitem">
+Sedgewick, Robert, and Kevin Wayne. 2011. <em>Algorithms</em>. 4th ed. Addison-Wesley.
+</div>
+</div>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>CS301</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="03-arrays-stacks_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="03-arrays-stacks_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;: &quot;a1fe2658b43b4757be5204e3c4812746&quot;}"></script>
+
+
+    <script data-goatcounter="https://academic-workflow.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+    
+
+</body></html>
