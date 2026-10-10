@@ -1,0 +1,80 @@
+% =============================================================================
+% CompetitiveExam/CS401/10-virtual-memory-storage-answers.tex
+% Independent answer key for 10-virtual-memory-storage-questions.tex.
+%
+% Q1 is a verified real GATE CS 2004 question from the local GATEOverflow
+% Volume 3 source, PDF p.92. Its answer is independently recomputed below.
+% Q2-Q8 are original GATE-pattern questions grounded in the completed Week 10
+% deck and notes. No textbook claim below uses an unverified page number:
+% P&H ARM 5e Sec. 5.7, p.441 and Sec. 5.11, p.481, and Stallings 11e
+% Sec. 7.1 (PDF p.265) and Sec. 7.2 (PDF pp.276-288) are indexed anchors.
+%
+% Compile from CompetitiveExam/CS401 on Windows/MiKTeX:
+%   $env:TEXINPUTS = "../../Preambles;"
+%   $env:BIBINPUTS = "../..;"
+%   xelatex -interaction=nonstopmode 10-virtual-memory-storage-answers.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{10.\arabic{section}}
+
+\title{Competitive Exam Practice 10 --- Answer Key\\
+  \large Virtual Memory and Secondary Storage}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Provenance is repeated for auditability: Q1 is a verified real PYQ;
+Q2--Q8 are original GATE-pattern questions. The derivations are independent
+of the question file and were checked arithmetically after drafting.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2004 Q47, verified real PYQ ---
+GATEOverflow V3 p.92]} \textbf{1260 ns.} A TLB hit costs $150$ ns for the
+memory access. A TLB miss costs $3\times150=450$ ns because two page-table
+accesses and the final access are required. Thus the mean cost per access is
+$0.9(150)+0.1(450)=180$ ns, and two accesses cost $360$ ns. The mean page-fault
+cost is $8$ ms$/10{,}000=800$ ns per instruction. Therefore
+$100+360+800=1260$ ns.
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{9438.} A $1$ KiB
+page has a $10$-bit offset. For \texttt{0xABCDE}, the low ten bits are
+\texttt{0x0DE} $=222$ and the VPN is the high ten bits, $687$. With frame $9$,
+the physical address is $9\times1024+222=9438$ (\texttt{0x24DE}). The offset
+is unchanged.
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{70 ns.} A hit
+costs $10+50=60$ ns. A miss costs $10+3(50)=160$ ns. Hence
+$0.9(60)+0.1(160)=54+16=70$ ns.
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{(B).} The
+offset must satisfy $0\leq550<600$, so the reference is valid. Segmentation
+then forms $\text{base}+\text{offset}=12{,}000+550=12{,}550$.
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{88 KiB.}
+Best-fit chooses the smallest hole that can hold $212$ KiB, namely $300$ KiB.
+The selected remainder is $300-212=88$ KiB.
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{0000.}
+$1010\mathbin{\mathop{\oplus}}0110=1100$ and
+$1100\mathbin{\mathop{\oplus}}1100=0000$, so
+$P=0000$.
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{8.4667 ms
+(approximately).} At $7200$ rpm, one rotation takes
+$60/7200=8.3333$ ms, so average rotational latency is $4.1667$ ms. The
+total is $4+4.1667+0.2+0.1=8.4667$ ms.
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{(C).} RAID 0
+uses striping without redundancy. Paging uses fixed-size frames and can leave
+internal fragmentation; segmentation uses variable-size logical units; RAID 1
+uses mirroring, while RAID 6 uses dual parity.
+\end{enumerate}
+
+\end{document}

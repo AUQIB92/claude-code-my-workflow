@@ -1,0 +1,93 @@
+% =============================================================================
+% Assignments/CS401/10-virtual-memory-storage-assignment.tex
+% Assignment 10: Virtual Memory and Secondary Storage
+%
+% Student set -- NO answers. Solution key: 10-virtual-memory-storage-solutions.tex
+% Sourced strictly from Slides/CS401/10-virtual-memory-storage.tex and
+% Notes/CS401/10-virtual-memory-storage-notes.tex.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 10-virtual-memory-storage-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 10-virtual-memory-storage-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 10-virtual-memory-storage-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{10.\arabic{section}}
+
+\title{Assignment 10: Virtual Memory and Secondary Storage}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Answer every question. Show all working for Numerical and Design questions.
+
+\section{Conceptual}
+
+\textbf{Q1.} A TLB is a small associative cache of page translations, while a
+page table is the larger map from VPN to PFN. Explain why the TLB must compare
+stored VPNs in parallel, and describe the complete path for (a) a TLB hit and
+(b) a TLB miss whose page-table entry is valid. Include the hardware cost that
+associative lookup introduces.
+
+\textbf{Q2.} A memory system can use fixed-size paging or variable-size
+segmentation. Compare the two schemes for (a) the unit being placed, (b) the
+kind of fragmentation each makes likely, and (c) protection or sharing. Then
+explain why a page fault is not automatically a program error, while an illegal
+address or permission failure may terminate the process.
+
+\section{Numerical}
+
+\textbf{Q3.} A system has a 20-bit virtual address, 1~KiB pages, and 16
+physical frames. The page-table entry for the VPN of virtual address
+\texttt{0xABCDE} is valid and maps that page to physical frame 9.
+\begin{enumerate}
+  \item[(a)] Compute the virtual-page-number and offset field widths.
+  \item[(b)] Split \texttt{0xABCDE} into VPN and offset, giving both hexadecimal
+        and decimal values.
+  \item[(c)] Compute the physical-address field widths and the translated
+        physical address in hexadecimal and decimal. Verify that the offset is
+        unchanged.
+\end{enumerate}
+
+\textbf{Q4.} A disk access has seek time $8$~ms, rotational latency
+$3$~ms, transfer time $1.5$~ms, and controller time $0.5$~ms. A RAID~5 array
+stores three corresponding four-bit data blocks
+\[
+  D_0=1101,\qquad D_1=0011,\qquad D_2=0101.
+\]
+\begin{enumerate}
+  \item[(a)] Compute the HDD access time using the lecture's decomposition.
+  \item[(b)] Compute the RAID~5 parity block $P=D_0\mathbin{\oplus}D_1\mathbin{\oplus}D_2$.
+  \item[(c)] If $D_2$ fails, reconstruct it from $D_0$, $D_1$, and $P$,
+        showing both XOR steps.
+\end{enumerate}
+
+\section{Design}
+
+\textbf{Q5.} A process references a virtual page whose page-table entry is
+invalid. There is no free physical frame, and the selected victim page is
+dirty. Design the page-fault handling sequence from the hardware trap through
+restart of the faulting instruction. State where the validity/protection check,
+dirty write-back, page-in, page-table update, and TLB update occur. Then state
+how the sequence changes if the access fails the protection check.
+
+\textbf{Q6.} A storage-backed system must support two workloads: (i) an
+active operating-system working set with frequent random accesses and (ii) a
+server workload that needs high throughput and continued availability after
+one disk failure. For each workload, choose the most defensible medium or
+organisation from the lecture's table (SSD/flash, HDD, optical, RAID~0,
+RAID~1, or RAID~5), and justify the choice using the relevant bottleneck and
+trade-off. Explain why the other choices are less suitable for that workload.
+
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+
+\end{document}

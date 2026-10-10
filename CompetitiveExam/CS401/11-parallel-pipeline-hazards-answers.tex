@@ -1,0 +1,93 @@
+% =============================================================================
+% CompetitiveExam/CS401/11-parallel-pipeline-hazards-answers.tex
+% Independent answer key for 11-parallel-pipeline-hazards-questions.tex.
+%
+% Q1-Q2 are complete real PYQs recovered from the local GATEOverflow V3
+% compilation and checked independently from the stems. Q3-Q8 are original
+% GATE-pattern questions. Cycle counts and hazard resolutions are recomputed
+% from the stated stage-availability assumptions, not copied from the deck.
+%
+% Compile from CompetitiveExam/CS401 on Windows/MiKTeX:
+%   $env:TEXINPUTS = "../../Preambles;"
+%   $env:BIBINPUTS = "../..;"
+%   xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-answers.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{11.\arabic{section}}
+
+\title{Competitive Exam Practice 11 --- Answer Key\\
+  \large Parallel Processing and Pipeline Hazards}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{sloppypar}
+\noindent Provenance is repeated for auditability. Q1 and Q2 are verified real
+PYQs from the local GATEOverflow compilation; Q3--Q8 are original GATE-pattern
+questions. The answers below were independently derived from each stem. The
+pipeline schedule explicitly marks the load-use bubble and the forwarding path.
+\end{sloppypar}
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CSE 2002 Q2.6, verified real PYQ ---
+GATEOverflow V3 p.81]} \textbf{(D).} Unequal stage delays limit the clock to
+the slowest stage; data dependencies create data hazards; and shared hardware
+can create structural hazards. Each can reduce pipelined performance.
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2008 Q76, verified real PYQ ---
+GATEOverflow V3 p.83]} \textbf{(A).} A delayed branch defines a delay slot:
+the instruction immediately following the branch in program memory executes
+regardless of whether the branch is taken. The instruction is selected before
+the branch outcome is known.
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{10 cycles,
+speedup $3.00$.} For $k=5$ stages and $n=6$ instructions,
+$T_{\mathrm{pipe}}=k+(n-1)=5+5=10$. The non-pipelined time is $nk=30$,
+so the finite-stream speedup is $30/10=3.00$.
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{cycle 8,
+1 bubble.} The schedule is:
+\begin{center}
+\begin{tabular}{c|cccccccc}
+\textbf{Instruction} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\hline
+\texttt{LW}  & IF & ID & EX & MEM & WB & & & \\
+\texttt{ADD} & & IF & ID & stall & EX & MEM & WB & \\
+\texttt{SUB} & & & IF & stall & ID & EX & MEM & WB
+\end{tabular}
+\end{center}
+The load value arrives after MEM, so the immediately following ADD needs one
+bubble even with forwarding. The ADD result is then forwarded to SUB, so no
+second bubble is needed.
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{(A).} One
+instruction operates on many data elements, which is SIMD. Independent cores
+run independent instruction streams on their tiles, which is MIMD.
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{(B).} Two
+stages demand one unavailable resource at the same time, so this is a
+structural hazard. Splitting instruction and data memories permits both
+accesses to proceed; stalling is another valid remedy.
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{0.03 CPI.}
+The expected contribution is
+\[
+  \Delta\mathrm{CPI}=f_{br}p_{miss}P_{flush}
+  =0.20\times0.05\times3=0.03.
+\]
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{(A) and (C).}
+Forwarding removes many ALU-to-ALU RAW stalls, but a load-use value can arrive
+too late and still requires a bubble. A misprediction invalidates younger
+wrong-path instructions. Register renaming removes false WAR/WAW name
+conflicts, not a true RAW dependence on a value that has not been produced.
+\end{enumerate}
+
+\end{document}

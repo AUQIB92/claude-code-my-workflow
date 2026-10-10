@@ -1,0 +1,110 @@
+% =============================================================================
+% CompetitiveExam/CS401/11-parallel-pipeline-hazards-questions.tex
+% Competitive Exam Practice 11 - Parallel Processing and Pipeline Hazards
+%
+% Student-facing file. Answers are in 11-parallel-pipeline-hazards-answers.tex.
+% Q1 and Q2 are complete, locally sourced real PYQs. Q3-Q8 are original
+% GATE-pattern questions written from the completed Week 11 deck and notes.
+%
+% Compile from CompetitiveExam/CS401 on Windows/MiKTeX:
+%   $env:TEXINPUTS = "../../Preambles;"
+%   $env:BIBINPUTS = "../..;"
+%   xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{11.\arabic{section}}
+
+\title{Competitive Exam Practice 11: Parallel Processing and Pipeline Hazards\\
+  \large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option;
+MSQ = multiple-select; NAT = Numerical Answer Type. Provenance tags separate
+verified real past-year questions from original practice material.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CSE 2002 Q2.6, verified real PYQ ---
+GATEOverflow V3 p.81]} \textbf{[MCQ, 1 mark]} The performance of a pipelined
+processor suffers if:
+\begin{enumerate}
+  \item[(A)] the pipeline stages have different delays
+  \item[(B)] consecutive instructions are dependent on each other
+  \item[(C)] the pipeline stages share hardware resources
+  \item[(D)] All of the above
+\end{enumerate}
+
+\item[\textbf{Q2}] \textit{[GATE CSE 2008 Q76, verified real PYQ ---
+GATEOverflow V3 p.83]} \textbf{[MCQ, 1 mark]} Delayed branching can help in
+the handling of control hazards. For all delayed conditional branch
+instructions, irrespective of whether the condition evaluates to true or
+false,
+\begin{enumerate}
+  \item[(A)] the instruction following the conditional branch instruction in
+  memory is executed
+  \item[(B)] the first instruction in the fall-through path is executed
+  \item[(C)] the first instruction in the taken path is executed
+  \item[(D)] the branch takes longer to execute than any other instruction
+\end{enumerate}
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+Six independent instructions execute in an ideal balanced five-stage pipeline
+with one cycle per stage and no stalls. What are the pipelined completion time
+and the finite-stream speedup over a non-pipelined execution, respectively?
+Report the speedup to two decimal places.
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+Consider a five-stage pipeline (IF, ID, EX, MEM, WB) and the sequence
+\texttt{LW R1,0(R2)} followed immediately by \texttt{ADD R3,R1,R4} and then
+\texttt{SUB R5,R3,R6}. Load data is available after MEM; ALU results are
+forwarded at the end of EX. Starting the first IF in cycle 1, in which cycle
+does \texttt{SUB} complete WB, and how many bubbles are required?
+Give the two integers in the form ``cycle, bubbles''.
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+One vector instruction applies the same addition operation to eight data
+elements, while four independent cores execute different matrix tiles. Which
+pair correctly identifies the parallelism in the two cases?
+\begin{enumerate}
+  \item[(A)] SIMD, then MIMD
+  \item[(B)] MIMD, then SIMD
+  \item[(C)] SISD, then MISD
+  \item[(D)] ILP, then DLP
+\end{enumerate}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+In a five-stage pipeline, an instruction in MEM and a younger instruction in
+IF request the same single-ported unified memory in the same cycle. Which is
+the most direct classification and one valid remedy?
+\begin{enumerate}
+  \item[(A)] Data hazard; forward the producer's ALU result
+  \item[(B)] Structural hazard; split instruction and data memories
+  \item[(C)] Control hazard; rename the destination register
+  \item[(D)] Data hazard; insert a branch prediction entry
+\end{enumerate}
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]}
+Branches comprise $20\%$ of instructions, the branch misprediction rate is
+$5\%$, and a misprediction flush costs 3 cycles. Ignoring all other effects,
+what is the branch contribution to CPI? Report to two decimal places.
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MSQ, 1 mark]}
+Which statements are correct for the five-stage model used in this week?
+\begin{enumerate}
+  \item[(A)] Forwarding can remove many ALU-to-ALU RAW stalls.
+  \item[(B)] Forwarding always removes the immediately following load-use
+  stall.
+  \item[(C)] A branch misprediction can require flushing younger instructions.
+  \item[(D)] A true RAW dependence can be eliminated by register renaming.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}

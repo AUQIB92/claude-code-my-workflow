@@ -1,0 +1,112 @@
+% =============================================================================
+% Assignment 12: Instruction Pipelining and RISC vs. CISC
+%
+% Student set -- NO answers. Solution key:
+% 12-pipelining-risc-cisc-solutions.tex
+% Sourced strictly from Slides/CS401/12-pipelining-risc-cisc.tex and
+% Notes/CS401/12-pipelining-risc-cisc-notes.tex.
+%
+% Compile from Assignments/CS401 with Windows MiKTeX/XeLaTeX:
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-assignment.tex
+%   BIBINPUTS="../..;" bibtex 12-pipelining-risc-cisc-assignment
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-assignment.tex
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-assignment.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{12.\arabic{section}}
+
+\title{Assignment 12: Instruction Pipelining and RISC vs. CISC}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent This assignment follows Week 12's treatment of pipeline timing,
+hazards, workload-based design, and RISC/CISC trade-offs
+\cite{Stallings2015_computer_organization,PattersonHennessy2017_computer_organization_design}.
+
+\noindent Answer every question. Show all working for Numerical and Design
+questions. State the assumptions that make each shortcut valid.
+
+\section{Conceptual}
+
+\textbf{Q1.} A five-stage pipeline has stages IF, ID, EX, MEM, and WB. Explain
+the difference between the latency of one instruction and the steady-state
+throughput of an independent instruction stream. Then explain why pipeline
+registers and the slowest stage constrain the clock period, and name two
+effects that can keep a finite stream below its ideal speedup.
+
+\textbf{Q2.} The operation \texttt{A[i] = A[i] + 1} can be represented by the
+register-centered sequence
+\texttt{LOAD R1,[R2+R3]}; \texttt{ADD R1,R1,1};
+\texttt{STORE [R2+R3],R1}, or by a memory-rich instruction such as
+\texttt{INC [R2+R3]}. Compare the pipeline and implementation consequences of
+these two tendencies. Explain why the statement ``RISC always has fewer
+instructions and CISC always has lower CPI'' is too strong, and identify the
+measure that should decide the comparison for a fixed workload.
+
+\section{Numerical}
+
+\textbf{Q3.} Eight independent instructions execute in a balanced five-stage
+pipeline, with one cycle per stage, no hazards, and no extra
+pipeline-register cost.
+\begin{enumerate}
+  \item[(a)] Draw the complete timing table through the WB of the eighth
+        instruction.
+  \item[(b)] Compute the sequential time, ideal pipelined time, and finite-
+        stream speedup.
+  \item[(c)] State the limiting ideal speedup as the stream becomes very long.
+        Distinguish this limit from one-instruction latency and from
+        steady-state throughput.
+\end{enumerate}
+
+\textbf{Q4.} Consider the four-instruction stream
+\begin{center}
+\texttt{LW R4,8(R5)}; \quad \texttt{ADD R6,R4,R7}; \quad
+\texttt{SUB R8,R6,R9}; \quad \texttt{OR R10,R11,R12}.
+\end{center}
+Use the same five-stage model. Assume that load data becomes available after
+MEM, the immediately dependent ALU instruction needs it at the start of EX,
+and ALU results can be forwarded. Draw the timing table for cycles 1 through
+9, mark the bubble, identify both RAW dependences, and state which value is
+forwarded on each dependence.
+
+\section{Design}
+
+\textbf{Q5.} Two implementations execute the same workload. The RISC-like
+implementation executes $1.50\times10^9$ instructions at CPI $=1.2$ and
+$f=2.5$~GHz. The CISC-like implementation executes
+$0.90\times10^9$ instructions at CPI $=2.1$ and $f=3.0$~GHz.
+\begin{enumerate}
+  \item[(a)] Compute both CPU times using
+        $T_{CPU}=\mathrm{IC}\times\mathrm{CPI}/f$.
+  \item[(b)] Identify the faster implementation for this workload and compute
+        its percentage time advantage relative to the slower one.
+  \item[(c)] Explain why the higher CPI does not by itself determine the
+        result, and name two workload or system changes that could reverse it.
+\end{enumerate}
+
+\textbf{Q6.} Write a design recommendation for each workload below. For each
+recommendation, select the more helpful tendency (regular, register-centered
+RISC or richer, memory-oriented CISC), justify it with at least two entries
+from the Week 12 trade-off discussion, identify one risk or cost, and name the
+measurements that should be collected before making a final decision.
+\begin{enumerate}
+  \item[(a)] Embedded control: tight power budget, predictable loops, limited
+        memory, and fixed sensor operations.
+  \item[(b)] Cloud analytics: a large software base, diverse branches, high
+        throughput, and frequent vector or multicore parallelism.
+\end{enumerate}
+Conclude by explaining why neither recommendation is a universal ranking of
+RISC and CISC.
+
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+
+\end{document}

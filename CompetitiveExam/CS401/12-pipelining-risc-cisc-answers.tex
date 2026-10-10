@@ -1,0 +1,116 @@
+% =============================================================================
+% CompetitiveExam/CS401/12-pipelining-risc-cisc-answers.tex
+% Independent answer key for 12-pipelining-risc-cisc-questions.tex.
+%
+% All eight questions are original GATE-pattern questions. Answers were
+% independently recomputed from the stated assumptions; no answer is copied
+% from an unverified PYQ key.
+%
+% Compile from CompetitiveExam/CS401 on Windows/MiKTeX:
+%   $env:TEXINPUTS = "../../Preambles;"
+%   $env:BIBINPUTS = "../..;"
+%   xelatex -interaction=nonstopmode 12-pipelining-risc-cisc-answers.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{12.\arabic{section}}
+
+\title{Competitive Exam Practice 12 --- Answer Key\\
+  \large Instruction Pipelining and RISC vs. CISC}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{sloppypar}
+\noindent All eight items are \textit{[Original, GATE-pattern]}; the local
+scanned PYQ source did not provide a complete, independently verifiable stem
+and answer for a Week 12 item. The calculations below are independent checks
+of the question file, especially the pipeline schedules and performance
+equation.
+\end{sloppypar}
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[Original, GATE-pattern]} \textbf{10 cycles,
+speedup $3.75$.} For $k=5$ and $n=12$,
+\[
+  T_{\mathrm{pipe}}=k+n-1=5+11=16,
+  \qquad T_{\mathrm{seq}}=nk=12\times5=60.
+\]
+Thus $S=60/16=3.75$. The limiting large-stream speedup is 5, but it is not
+the answer for this finite stream.
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{cycle 8,
+1 bubble.} The schedule is:
+\begin{center}
+\begin{tabular}{c|cccccccc}
+\textbf{Instruction} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\hline
+\texttt{LW}  & IF & ID & EX & MEM & WB & & & \\
+\texttt{ADD} & & IF & ID & stall & EX & MEM & WB & \\
+\texttt{SUB} & & & IF & stall & ID & EX & MEM & WB
+\end{tabular}
+\end{center}
+The load-use RAW dependence needs one bubble because the load value is not
+available for the immediately following EX stage. The ADD ALU result is
+forwarded to SUB, so no second bubble is needed.
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{(B).} A single
+instruction still traverses IF, ID, EX, MEM, and WB, so its ideal latency is
+about five cycles. Once the pipeline is full, independent instructions can
+complete at one per cycle.
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{0.06 CPI.}
+The expected penalty per instruction is
+\[
+  \Delta\mathrm{CPI}=f_{br}p_{miss}P_{flush}
+  =0.20\times0.10\times3=0.06.
+\]
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{(B).} Two
+stages demand one unavailable resource in the same cycle, which is a
+structural hazard. Separate instruction and data memories remove this
+particular conflict; stalling is another possible remedy.
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{(A), (B), and
+(D).} These are design tendencies and a valid measurement rule. Statement (C)
+is too strong: instruction count, CPI, clock rate, stalls, cache behavior,
+code size, and the workload interact through
+$T_{CPU}=\mathrm{IC}\times\mathrm{CPI}/f$.
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{(B).} Using
+$T_{CPU}=\mathrm{IC}\times\mathrm{CPI}/f$,
+\[
+  T_R=\frac{1.20\times10^9\times1.1}{2.4\times10^9}=0.550~\mathrm{s},
+  \qquad
+  T_C=\frac{0.80\times10^9\times2.0}{3.0\times10^9}
+      =0.533\overline{3}~\mathrm{s}.
+\]
+The CISC-like implementation is faster for this stated workload despite its
+higher CPI.
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{(A), (B), and
+(C).} A single instruction over many data elements is SIMD-style; independent
+cores running independent instruction streams are MIMD-style. A large working
+set can expose cache and virtual-memory costs. Statement (D) is false because
+total time also depends on instruction count, CPI, stalls, and memory behavior.
+\end{enumerate}
+
+\section*{Source Boundaries and Verification}
+The questions are derived from the completed Week 12 deck and notes. The
+textbook concepts are standard treatments supported by the indexed sources:
+Patterson and Hennessy, ARM 5e, Ch.~4 §§4.5--4.8 (pipeline and hazards),
+Ch.~6 §§6.2--6.3 (parallelism), and App.~D (RISC survey); Stallings 11e,
+Ch.~16 §16.4 and Ch.~17 §§17.5, 17.9 (pipeline and RISC/CISC). These are
+supporting references, not claims that any constructed question appeared in
+those books or in GATE. The local PYQ registry identifies Week 12 pages, but
+OCR did not recover a complete stem and answer; therefore no real PYQ claim is
+made here. All eight answers were recomputed from the explicit assumptions in
+the stems, including the two timing tables and both CPI/time calculations.
+
+\end{document}

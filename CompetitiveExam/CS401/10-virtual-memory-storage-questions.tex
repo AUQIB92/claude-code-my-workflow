@@ -1,0 +1,95 @@
+% =============================================================================
+% CompetitiveExam/CS401/10-virtual-memory-storage-questions.tex
+% Competitive Exam Practice 10 - Week 10: Virtual Memory and Secondary Storage
+%
+% Student-facing file. Answers are in 10-virtual-memory-storage-answers.tex.
+% The only real PYQ below is Q1: its full text was recovered from the local
+% GATEOverflow Volume 3 PDF by OCR (PDF p.92). All other questions are clearly
+% marked original GATE-pattern questions; no unverified PYQ claim is used.
+%
+% Compile from CompetitiveExam/CS401 on Windows/MiKTeX:
+%   $env:TEXINPUTS = "../../Preambles;"
+%   $env:BIBINPUTS = "../..;"
+%   xelatex -interaction=nonstopmode 10-virtual-memory-storage-questions.tex
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{10.\arabic{section}}
+
+\title{Competitive Exam Practice 10: Virtual Memory and Secondary Storage\\
+  \large GATE (Computer Science) Pattern}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Each question carries 1--2 marks. MCQ = single correct option;
+NAT = Numerical Answer Type. Provenance tags distinguish verified past-year
+questions from original practice material.
+
+\begin{enumerate}
+\item[\textbf{Q1}] \textit{[GATE CS 2004 Q47, verified real PYQ ---
+GATEOverflow V3 p.92]} \textbf{[NAT, 2 marks]} Consider a system with a
+two-level paging scheme in which a regular memory access takes $150$ ns and
+servicing a page fault takes $8$ ms. An average instruction takes $100$ ns of
+CPU time and requires two memory accesses. The TLB hit ratio is $90\%$, and
+the page-fault rate is one in every $10{,}000$ instructions. What is the
+effective average instruction execution time, in ns? Assume that a TLB miss
+requires two page-table accesses and the final data/instruction access.
+
+\item[\textbf{Q2}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+A machine has a $20$-bit virtual address, $1$ KiB pages, and $16$ physical
+frames. The virtual address is \texttt{0xABCDE}. If its virtual page maps to
+physical frame $9$, give the physical address in decimal.
+
+\item[\textbf{Q3}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]}
+A TLB lookup takes $10$ ns and a main-memory access takes $50$ ns. On a TLB
+hit, one memory access is needed after the lookup; on a TLB miss, two page-
+table accesses and one final data access are needed after the lookup. If the
+TLB hit ratio is $90\%$ and there are no page faults, what is the effective
+access time in ns?
+
+\item[\textbf{Q4}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+A segment-table entry has base address $12{,}000$ and limit $600$. Which
+statement is correct for logical address $(s, 550)$ when the entry is valid?
+\begin{enumerate}
+  \item[(A)] It is invalid because the physical address exceeds the limit.
+  \item[(B)] It is valid and translates to physical address $12{,}550$.
+  \item[(C)] It is valid and translates to physical address $12{,}000$.
+  \item[(D)] It is invalid because segmentation uses fixed-size pages.
+\end{enumerate}
+
+\item[\textbf{Q5}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+\begin{sloppypar}
+Free holes have sizes $100$, $500$, $200$, $300$, and $600$ KiB, in that
+order. A process requests $212$ KiB. What is the remaining size, in KiB, of
+the selected hole under best-fit allocation?
+\end{sloppypar}
+
+\item[\textbf{Q6}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 2 marks]}
+In a RAID 5 stripe, three surviving data blocks are
+$D_0=1010$, $D_1=0110$, and $D_2=1100$. Compute the 4-bit parity block
+$P=D_0\mathbin{\mathop{\oplus}}D_1\mathbin{\mathop{\oplus}}D_2$ and report $P$
+as a binary number.
+
+\item[\textbf{Q7}] \textit{[Original, GATE-pattern]} \textbf{[NAT, 1 mark]}
+An HDD has average seek time $4$ ms, rotational speed $7{,}200$ rpm, transfer
+time $0.2$ ms, and controller overhead $0.1$ ms. Using average rotational
+latency of half a rotation, what is the approximate access time in ms?
+
+\item[\textbf{Q8}] \textit{[Original, GATE-pattern]} \textbf{[MCQ, 1 mark]}
+Which pairing is correct?
+\begin{enumerate}
+  \item[(A)] Paging -- external fragmentation is the defining cost.
+  \item[(B)] Segmentation -- all allocation units have equal size.
+  \item[(C)] RAID 0 -- striping without redundancy.
+  \item[(D)] RAID 1 -- distributed dual parity.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}

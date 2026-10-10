@@ -1,0 +1,108 @@
+% =============================================================================
+% Assignments/CS401/11-parallel-pipeline-hazards-assignment.tex
+% Assignment 11: Parallel Processing and Pipeline Hazards
+%
+% Student set -- NO answers. Solution key: 11-parallel-pipeline-hazards-solutions.tex
+% Sourced strictly from Slides/CS401/11-parallel-pipeline-hazards.tex and
+% Notes/CS401/11-parallel-pipeline-hazards-notes.tex.
+%
+% Compile with: cd Assignments/CS401 &&
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-assignment.tex
+%   BIBINPUTS=../..;$BIBINPUTS bibtex 11-parallel-pipeline-hazards-assignment
+%   TEXINPUTS=../../Preambles;$TEXINPUTS xelatex -interaction=nonstopmode 11-parallel-pipeline-hazards-assignment.tex (x2)
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS401}
+\renewcommand{\thesection}{11.\arabic{section}}
+
+\title{Assignment 11: Parallel Processing and Pipeline Hazards}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent This assignment follows the Week 11 treatment of parallel
+organization and instruction pipelining in Hamacher, Ch.~5 and Ch.~10, and
+Stallings, \S16.4 and \S20.1 \cite{Hamacher2002_computer_organization,Stallings2015_computer_organization}.
+
+\noindent Answer every question. Show all working for Numerical and Design questions.
+
+\section{Conceptual}
+
+\textbf{Q1.} Classify each organization as SISD, SIMD, MISD, or MIMD. For
+each answer, justify the classification by naming the instruction streams and
+data streams rather than counting hardware units alone.
+\begin{enumerate}
+  \item[(a)] One scalar core executes one instruction sequence to sum one
+        scalar array.
+  \item[(b)] One vector instruction adds corresponding elements of two
+        eight-element vectors.
+  \item[(c)] Four cores execute independent instruction sequences on four
+        independent matrix tiles.
+  \item[(d)] Several independent filters inspect the same sensor stream;
+        state the strict stream-based classification and the practical
+        implementation described in the lecture.
+\end{enumerate}
+
+\textbf{Q2.} A five-stage pipeline has one shared memory port. In one cycle,
+an instruction in MEM requests a data access while the next instruction in IF
+requests an instruction fetch. In two separate cases, a dependent ADD needs a
+preceding ALU result and a dependent ADD needs a preceding load result.
+Classify each situation as structural, data/RAW, or control, and state the
+cheapest correct response described by the lecture. Explain why forwarding
+does not remove the load-use delay.
+
+\section{Numerical}
+
+\textbf{Q3.} Five independent instructions execute in a balanced five-stage
+pipeline with one cycle per stage and no hazards.
+\begin{enumerate}
+  \item[(a)] Draw the complete timing table for cycles 1 through 9 using the
+        stages IF, ID, EX, MEM, and WB.
+  \item[(b)] Compute the sequential time, ideal pipelined time, and finite-
+        stream speedup.
+  \item[(c)] State the large-stream ideal speedup limit and distinguish it
+        from the latency of one instruction.
+\end{enumerate}
+
+\textbf{Q4.} Consider the following three-instruction stream in the same
+five-stage model:
+\begin{center}
+\texttt{LW R2,4(R3)};\quad \texttt{ADD R5,R2,R6};\quad
+\texttt{SUB R7,R5,R8}.
+\end{center}
+Assume load data is available after MEM, the dependent ALU operation needs it
+at the start of EX, and ALU results can be forwarded. Draw the timing table
+for cycles 1 through 8, mark every stall or bubble, and explain which value is
+forwarded on which dependence.
+
+\section{Design}
+
+\textbf{Q5.} A workload has branch frequency $f_{br}=0.25$, misprediction rate
+$p_{miss}=0.04$, and a flush penalty $P_{flush}=3$ cycles. Compute the
+approximate branch contribution $\Delta\mathrm{CPI}$. Then recompute it when
+a deeper pipeline raises the flush penalty to 5 cycles. State the throughput
+trade-off that the two numbers reveal.
+
+\textbf{Q6.} Use the running stream
+\begin{center}
+\texttt{LW R1,0(R2)}; \texttt{ADD R3,R1,R4}; \texttt{SUB R5,R3,R6};
+\texttt{BEQ R5,R0,L}; \texttt{OR R7,R8,R9}.
+\end{center}
+For each adjacent relationship, identify the dependency or hazard, state the
+stage/resource/value that creates the problem, and choose a resolution from
+stalling, forwarding, scheduling, prediction, or flushing. Identify which
+relationship requires one load-use bubble, which can use ALU forwarding, and
+which may invalidate younger instructions after a branch. Conclude with one
+trade-off among throughput, latency, area, power, complexity, or recovery cost.
+
+\bibliographystyle{plain}
+\bibliography{../../Bibliography_base}
+
+\end{document}

@@ -1,0 +1,127 @@
+% =============================================================================
+% Assignments/CS301/06-linked-lists-singly-coding-assignment.tex
+% Coding Assignment 6: P1 (Delete at Position) + P2 (Merge Sorted Lists)
+%
+% Student-facing problem statement. Instructor-only files live in
+% Assignments/CS301/06-linked-lists-singly-coding/:
+%   p1_reference_solution.c, p1_test_hidden.c   (NEVER published)
+%   p2_reference_solution.c, p2_test_hidden.c   (NEVER published)
+%   autograder.sh                                (NEVER published)
+%   sll.h, sll_common.c, p1_starter.c, p1_test_visible.c,
+%   p2_starter.c, p2_test_visible.c  (provided to students)
+%
+% Week 6 institute practical: singly-linked-list operations --
+% syllabi/CS301.md Week 6 row ("instructor-supplied
+% (singly-linked-list operations)"). P1 extends the lecture's
+% deleteHead/deleteValue (Slides/CS301/06-linked-lists-singly.tex) to
+% deletion by 0-based position, which the lecture never builds; P2 merges
+% two sorted lists by rewiring, which the lecture never builds (and which
+% Week 7 reuses for polynomials). Both use fresh lists of their own,
+% distinct from the written assignment's 6->11->14, 6->11->9, 4->12->20,
+% and 5->12->17->23 traces too.
+%
+% Compile with (Windows/MiKTeX, ';'-joined TEXINPUTS): cd Assignments/CS301 &&
+%   TEXINPUTS="../../Preambles;" xelatex -interaction=nonstopmode 06-linked-lists-singly-coding-assignment.tex
+%   (Windows/MiKTeX uses ; not : as the path separator)
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\input{../../Preambles/header}
+\coursecode{CS301}
+\renewcommand{\thesection}{6.\arabic{section}}
+
+\title{Coding Assignment 6: P1 -- Delete at Position, P2 -- Merge Sorted Lists}
+\author{Auqib Hamid Lone\\[0.3em]
+  \emph{Department of Computer Science \& Engineering}, \emph{GCET Ganderbal}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Due:} two weeks from issue. There is no automatic late penalty --- if you need more time, ask before the deadline and an extension will be granted (see the course policy in the syllabus).
+
+\noindent This assignment autogrades \textbf{two} institute practicals on Week 6's singly linked list (\texttt{head} is the list handle, \texttt{p->next} is the successor link, \texttt{NULL} terminates the chain): \textbf{P1} (delete the node at a 0-based position) and \textbf{P2} (merge two sorted lists into one). The contract for both is given to you in \texttt{sll.h} --- \emph{do not modify it}. Helpers (\texttt{newNode}, \texttt{buildList}, \texttt{freeList}, \texttt{listToArray}, \texttt{listLength}) are implemented in \texttt{sll\_common.c} --- \emph{do not modify it either}. Each part is a separate program with its own starter file and hidden test suite.
+
+\section{Why this problem}
+
+The lecture built deletion by head and deletion by value, and traced reversal --- but never deletion \emph{by position} (drop the $k$-th entry of a log without knowing its value) and never \emph{merging} two ordered chains (combine two sorted runs without allocating anything new). Both are the same pointer surgery the lecture drilled --- save, unlink, free (P1); adopt-a-successor rewiring (P2) --- applied to the cases the lecture's own traces did not cover.
+
+\section{Part 1 (P1): Delete at Position}
+
+Implement in \texttt{p1.c} (start from \texttt{p1\_starter.c}):
+
+\begin{verbatim}
+int deleteAtPosition(struct node **head, int pos);
+\end{verbatim}
+
+\texttt{pos} is a 0-based index: \texttt{pos == 0} removes the head (the lecture's save/advance/free triple), \texttt{pos > 0} walks to the predecessor exactly as the lecture's \texttt{deleteValue} walk does, then unlinks and frees. Return $0$ on success. Return $-1$ and change \textbf{nothing} (no unlink, no free) when the list is empty, \texttt{pos} is negative, or \texttt{pos} is at or past the end of the list.
+
+\subsection{Constraints}
+
+\begin{itemize}
+  \item The parameter must stay \texttt{struct node **head}: removing position $0$ reassigns the caller's \texttt{head}, exactly the lecture's double-pointer discipline.
+  \item Unlink \emph{before} freeing --- the predecessor must point around the victim first (lecture's use-after-free rule).
+  \item Time $O(n)$ worst case, $n$ = list length (the walk dominates); auxiliary space $O(1)$.
+  \item Your code must compile with \texttt{gcc -Wall -Wextra} without errors or warnings, with no global/static mutable state.
+\end{itemize}
+
+\subsection{Worked examples (these are the visible tests)}
+
+All on the list \texttt{head -> 7 -> 13 -> 19 -> 27 -> NULL}:
+
+\begin{itemize}
+  \item \texttt{deleteAtPosition(\&h, 1)} returns $0$; the list becomes \texttt{7 -> 19 -> 27 -> NULL}.
+  \item \texttt{deleteAtPosition(\&h, 0)} returns $0$; the list becomes \texttt{13 -> 19 -> 27 -> NULL}.
+  \item \texttt{deleteAtPosition(\&h, 3)} returns $0$; the list becomes \texttt{7 -> 13 -> 19 -> NULL}.
+  \item \texttt{deleteAtPosition(\&h, 4)} returns $-1$; the list is unchanged.
+  \item A singleton list \texttt{42 -> NULL} with \texttt{pos = 0} returns $0$ and leaves \texttt{h == NULL}.
+\end{itemize}
+
+\section{Part 2 (P2): Merge Two Sorted Lists}
+
+Implement in \texttt{p2.c} (start from \texttt{p2\_starter.c}):
+
+\begin{verbatim}
+struct node *mergeSorted(struct node *a, struct node *b);
+\end{verbatim}
+
+Both inputs are ascending (either may be \texttt{NULL} for empty). \textbf{Reuse the existing nodes}: rewire \texttt{next} links only --- allocate nothing, free nothing, so every input node appears exactly once in the result. Return the head of the merged list (\texttt{NULL} only when both inputs are empty). On ties (\texttt{a->data == b->data}), take the node from \texttt{a} first. After the call, the old \texttt{a}/\texttt{b} heads are owned by the merged list --- do not use them.
+
+\subsection{Constraints}
+
+\begin{itemize}
+  \item Time $O(n+m)$ worst case ($n, m$ = input lengths, each node visited once); auxiliary space $O(1)$ besides a few pointers.
+  \item Your code must compile with \texttt{gcc -Wall -Wextra} without errors or warnings, with no global/static mutable state.
+\end{itemize}
+
+\subsection{Worked examples (these are the visible tests)}
+
+\begin{itemize}
+  \item \texttt{mergeSorted([2, 8, 21], [5, 15, 33])} returns\\ \texttt{2 -> 5 -> 8 -> 15 -> 21 -> 33 -> NULL}.
+  \item \texttt{mergeSorted([3, 11, 29], [])} returns \texttt{3 -> 11 -> 29 -> NULL}.
+  \item \texttt{mergeSorted([], [])} returns \texttt{NULL}.
+  \item \texttt{mergeSorted([4, 9, 18], [9, 18, 26])} returns\\ \texttt{4 -> 9 -> 9 -> 18 -> 18 -> 26 -> NULL}.
+\end{itemize}
+
+\section{What to submit for each part}
+
+\begin{enumerate}
+  \item \textbf{P1:} \texttt{p1.c} (your completed implementation) and the unmodified \texttt{sll.h}, \texttt{sll\_common.c}.
+  \item \textbf{P2:} \texttt{p2.c} (your completed implementation) and the unmodified \texttt{sll.h}, \texttt{sll\_common.c}.
+\end{enumerate}
+
+Sanity-check locally before submitting:
+\begin{verbatim}
+gcc -Wall -Wextra -o p1_test p1_test_visible.c p1.c sll_common.c && ./p1_test
+gcc -Wall -Wextra -o p2_test p2_test_visible.c p2.c sll_common.c && ./p2_test
+\end{verbatim}
+All worked examples above should pass. The autograder then compiles each part against its own \emph{hidden} test suite. Each hidden suite covers, at minimum:
+\begin{itemize}
+  \item the worked examples above, re-checked on fresh data;
+  \item boundary sizes (empty/singleton/negative-position for P1; empty/singleton/tie for P2);
+  \item structure-specific adversarial cases --- for P1: head/tail/out-of-range/huge-position, draining a list to empty, all-duplicate lists, a 100-element list; for P2: one side entirely smaller, unequal lengths, negative values, duplicates within and across lists, a 500-node merge, sortedness plus node conservation on every merge;
+  \item and a batch of randomly generated inputs checked against an independent oracle.
+\end{itemize}
+
+\end{document}
