@@ -1,0 +1,29 @@
+{
+  "artifact": "Assignments/CS301/03-arrays-stacks-coding-assignment.tex",
+  "claims": [
+    {
+      "algorithm_id": "P1_is_balanced",
+      "location": "Assignments/CS301/03-arrays-stacks-coding/p1_reference_solution.c",
+      "pseudocode_or_code": "scan expr left to right; push every opener; on a closer, pop and check the popped opener matches the closer's type (return false on empty-pop or type mismatch); after the scan, balanced iff the stack is empty",
+      "language_hint": "c",
+      "claimed_complexity": "O(n)",
+      "claimed_complexity_case": "worst-case",
+      "worked_example": {
+        "input": "{[(a+b)*c]-d}",
+        "claimed_output": 1
+      }
+    },
+    {
+      "algorithm_id": "P2_eval_postfix",
+      "location": "Assignments/CS301/03-arrays-stacks-coding/p2_reference_solution.c",
+      "pseudocode_or_code": "for each whitespace-separated token: if operand, push; if operator, pop right then left, push left OP right; return the single value left on the stack",
+      "language_hint": "c",
+      "claimed_complexity": "O(n)",
+      "claimed_complexity_case": "worst-case",
+      "worked_example": {
+        "input": "12 2 3 * -",
+        "claimed_output": 6
+      }
+    }
+  ]
+}
